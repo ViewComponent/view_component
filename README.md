@@ -30,9 +30,9 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 
 ## Maintainers
 
-| pic | @mention |
 |---|---|
 | ![@joelhawksley](https://avatars3.githubusercontent.com/u/1940294?s=64) | [@joelhawksley](https://github.com/joelhawksley) |
+| ![@natashau](https://avatars3.githubusercontent.com/u/18093541?s=64) | [@natashau](https://github.com/natashau) |
 | ![@tenderlove](https://avatars3.githubusercontent.com/u/3124?s=64) | [@tenderlove](https://github.com/tenderlove) |
 
 ## License
