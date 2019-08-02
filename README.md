@@ -32,8 +32,8 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 
 | pic | @mention |
 |---|---|
-| ![@joelhawksley](https://avatars3.githubusercontent.com/u/179065?s=64) | [@joelhawksley](https://github.com/joelhawksley) |
-| ![@tenderlove](https://avatars3.githubusercontent.com/u/235?s=64) | [@tenderlove](https://github.com/tenderlove) |
+| ![@joelhawksley](https://avatars3.githubusercontent.com/u/1940294?s=64) | [@joelhawksley](https://github.com/joelhawksley) |
+| ![@tenderlove](https://avatars3.githubusercontent.com/u/3124?s=64) | [@tenderlove](https://github.com/tenderlove) |
 
 ## License
 
