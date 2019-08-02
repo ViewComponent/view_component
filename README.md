@@ -1,5 +1,5 @@
 # ActionView::Component
-`ActionView::Component` is a framework for building view components.
+`ActionView::Component` is a framework for building view components in Rails.
 
 ## Installation
 Add this line to your application's Gemfile:
