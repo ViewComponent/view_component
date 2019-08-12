@@ -1,4 +1,5 @@
 require "test_helper"
+require_relative "../fixtures/components/test_component_with_too_many_sidecar_files"
 require_relative "../fixtures/components/test_component_without_initializer"
 require_relative "../fixtures/components/test_component_without_template"
 require_relative "../fixtures/components/test_component"
@@ -19,6 +20,14 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes exception.message, "Could not find a template for TestComponentWithoutTemplate"
   end
 
+  def test_raises_error_when_more_then_one_sidecar_template_is_present
+    error = assert_raises StandardError do
+      render_component(TestComponentWithTooManySidecarFiles.new)
+    end
+
+    assert_includes error.message, "More than one template found for TestComponentWithTooManySidecarFiles."
+  end
+
   def test_raises_error_when_initializer_is_not_defined
     exception = assert_raises NotImplementedError do
       render_component(TestComponentWithoutInitializer.new)
@@ -34,7 +43,7 @@ class ActionView::ComponentTest < Minitest::Test
 
     assert_includes exception.message, "Content can't be blank"
   end
-  
+
   def test_renders_content_from_block
     result = render_component(TestWrapperComponent.new) do
       "content"
