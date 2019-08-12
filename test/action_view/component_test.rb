@@ -61,6 +61,13 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes result.text, "bar"
   end
 
+  def test_renders_erb_template
+    result = render_component(TestErbComponent.new(message: "bar")) { "foo" }
+
+    assert_includes result.text, "foo"
+    assert_includes result.text, "bar"
+  end
+
   def trim_result(html)
     html.delete(" \t\r\n")
   end
