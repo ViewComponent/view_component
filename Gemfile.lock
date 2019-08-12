@@ -143,11 +143,11 @@ PLATFORMS
 DEPENDENCIES
   actionview-component!
   bundler (>= 1.14)
-  haml-rails
+  haml-rails (~> 2.0)
   minitest (~> 5.0)
   rails (~> 5.2.2.1.ca21bd1ba2)
   rake (~> 10.0)
-  slim
+  slim (~> 4.0)
 
 BUNDLED WITH
    2.0.2
