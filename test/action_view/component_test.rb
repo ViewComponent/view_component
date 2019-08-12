@@ -1,9 +1,4 @@
 require "test_helper"
-require_relative "../fixtures/components/test_component_with_too_many_sidecar_files"
-require_relative "../fixtures/components/test_component_without_initializer"
-require_relative "../fixtures/components/test_component_without_template"
-require_relative "../fixtures/components/test_component"
-require_relative "../fixtures/components/test_wrapper_component"
 
 class ActionView::ComponentTest < Minitest::Test
   def test_render_component
@@ -50,6 +45,20 @@ class ActionView::ComponentTest < Minitest::Test
     end
 
     assert_equal trim_result(result.css("span").first.to_html), "<span>content</span>"
+  end
+
+  def test_renders_slim_template
+    result = render_component(TestSlimComponent.new(message: "bar")) { "foo" }
+
+    assert_includes result.text, "foo"
+    assert_includes result.text, "bar"
+  end
+
+  def test_renders_haml_template
+    result = render_component(TestHamlComponent.new(message: "bar")) { "foo" }
+
+    assert_includes result.text, "foo"
+    assert_includes result.text, "bar"
   end
 
   def trim_result(html)
