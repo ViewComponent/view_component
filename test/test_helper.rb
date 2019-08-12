@@ -15,3 +15,7 @@ require "rails/test_help"
 def render_component(component, &block)
   Nokogiri::HTML(component.render_in(ApplicationController.new.view_context, &block))
 end
+
+def trim_result(html)
+  html.delete(" \t\r\n")
+end

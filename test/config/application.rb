@@ -12,3 +12,5 @@ module Dummy
   class Application < Rails::Application
   end
 end
+
+Dummy::Application.config.secret_key_base = 'foo'

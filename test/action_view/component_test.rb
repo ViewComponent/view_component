@@ -73,8 +73,4 @@ class ActionView::ComponentTest < Minitest::Test
 
     assert_includes result.text, "/"
   end
-
-  def trim_result(html)
-    html.delete(" \t\r\n")
-  end
 end
