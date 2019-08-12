@@ -32,13 +32,6 @@ module ActionView
     # returns:
     # <span title="greeting">Hello, world!</span>
     #
-    def render_in(view_context, *args, &block)
-      self.class.compile
-      @content = view_context.capture(&block) if block_given?
-      validate!
-      call
-    end
-
     def initialize(*); end
 
     class << self
