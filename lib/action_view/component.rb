@@ -86,7 +86,11 @@ module ActionView
       def compiled_template
         handler = ActionView::Template.handler_for_extension(template_handler)
 
-        handler.call(DummyTemplate.new(template))
+        if handler.method(:call).parameters.length > 1
+          handler.call(DummyTemplate.new, template)
+        else
+          handler.call(DummyTemplate.new(template))
+        end
       end
 
       def template_handler
