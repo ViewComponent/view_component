@@ -1,5 +1,6 @@
 require "action_view"
 require "active_model"
+require "rails/version" unless defined?(Rails::VERSION)
 
 # Monkey patch ActionView::Base#render to support ActionView::Component
 #
@@ -13,7 +14,7 @@ class ActionView::Base
     end
   end
 
-  prepend RenderMonkeyPatch
+  prepend RenderMonkeyPatch unless Rails::VERSION::MINOR > 0 && Rails::VERSION::MAJOR == 6
 end
 
 module ActionView

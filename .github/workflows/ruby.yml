@@ -4,9 +4,10 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        rails_version: ["~> 5.2.3", "6.0.0.rc2"]
     steps:
     - uses: actions/checkout@master
     - name: Set up Ruby 2.6
@@ -18,3 +19,5 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
         bundle exec rake
+      env:
+        RAILS_VERSION: ${{ matrix.rails_version }}
