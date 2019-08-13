@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rails_version: ["~> 5.2.3", "6.0.0.rc2"]
+        rails_version: ["5.2.3", "6.0.0.rc2"]
     steps:
     - uses: actions/checkout@master
     - name: Set up Ruby 2.6
