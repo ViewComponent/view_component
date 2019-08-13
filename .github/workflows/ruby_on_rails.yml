@@ -1,4 +1,4 @@
-name: Ruby
+name: Ruby on Rails
 
 on: [push]
 
@@ -8,12 +8,13 @@ jobs:
     strategy:
       matrix:
         rails_version: ["5.2.3", "6.0.0.rc2", "master"]
+        ruby_version: ["2.5.x", "2.6.x"]
     steps:
     - uses: actions/checkout@master
-    - name: Set up Ruby 2.6
+    - name: Setup Ruby
       uses: actions/setup-ruby@v1
       with:
-        version: 2.6.x
+        version: ${{ matrix.ruby_version }}
     - name: Build and test with Rake
       run: |
         gem install bundler
