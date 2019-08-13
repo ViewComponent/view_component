@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["opensource+actionview-component@github.com"]
 
   spec.summary       = %q{View components for Rails}
-  spec.description   = %q{View components for Rails}
+  spec.description   = %q{View components for Rails, intended for upstreaming in Rails 6.1}
   spec.homepage      = "https://github.com/github/actionview-component"
   spec.license       = "MIT"
 
@@ -28,6 +28,8 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+
+  spec.required_ruby_version = '>= 2.5.0'
 
   spec.add_development_dependency "bundler", ">= 1.14"
   spec.add_development_dependency "rake", "~> 10.0"
