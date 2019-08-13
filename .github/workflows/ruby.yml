@@ -8,10 +8,10 @@ jobs:
     strategy:
       matrix:
         rails_version: ["5.2.3", "6.0.0.rc2", "master"]
-        ruby_version: ["2.5.0", "2.6.0"]
+        ruby_version: ["2.5.x", "2.6.x"]
     steps:
     - uses: actions/checkout@master
-    - name: Set up Ruby
+    - name: Setup Ruby
       uses: actions/setup-ruby@v1
       with:
         version: ${{ matrix.ruby_version }}
