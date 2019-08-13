@@ -28,14 +28,6 @@ $ gem install actionview-component
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/github/actionview-component. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
-## Maintainers
-
-| | |
-|---|---|
-| ![@joelhawksley](https://avatars3.githubusercontent.com/u/1940294?s=64) | [@joelhawksley](https://github.com/joelhawksley) |
-| ![@natashau](https://avatars3.githubusercontent.com/u/18093541?s=64) | [@natashau](https://github.com/natashau) |
-| ![@tenderlove](https://avatars3.githubusercontent.com/u/3124?s=64) | [@tenderlove](https://github.com/tenderlove) |
-
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
