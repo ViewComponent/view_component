@@ -1,5 +1,21 @@
 require "action_view"
 require "active_model"
+require "rails/version" unless defined?(Rails::VERSION)
+
+# Monkey patch ActionView::Base#render to support ActionView::Component
+#
+# Necessary until we upstream component support into Rails
+class ActionView::Base
+  module RenderMonkeyPatch
+    def render(component, _ = nil, &block)
+      return super unless component.respond_to?(:render_in)
+
+      component.render_in(self, &block)
+    end
+  end
+
+  prepend RenderMonkeyPatch unless Rails::VERSION::MINOR > 0 && Rails::VERSION::MAJOR == 6
+end
 
 module ActionView
   class Component < ActionView::Base
@@ -47,7 +63,7 @@ module ActionView
 
         super
       end
-      
+
       def compile
         @compiled ||= nil
         return if @compiled

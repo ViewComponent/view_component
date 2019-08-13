@@ -1,6 +1,10 @@
 source "https://rubygems.org"
 gemspec
 
-DEFAULT_RAILS_VERSION = "5.2.2.1.ca21bd1ba2"
+rails_version = "#{ENV['RAILS_VERSION'] || '5.2.3'}"
 
-gem "rails", "~> #{ENV['RAILS_VERSION'] || DEFAULT_RAILS_VERSION}"
+if rails_version == "master"
+  gem "rails", github: 'rails/rails'
+else
+  gem "rails", rails_version
+end
