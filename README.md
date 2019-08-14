@@ -39,7 +39,7 @@ Components allow us to test our views in isolation, use code coverage tools, and
 
 ### When should I use components?
 
-Components are most effectively used in cases where view code is reused or needs to be tested directly.
+Components are most effective in cases where view code is reused or needs to be tested directly.
 
 ### Using components
 
