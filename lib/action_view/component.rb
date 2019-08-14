@@ -80,28 +80,16 @@ module ActionView
         @compiled = true
       end
 
-      def template
-        File.read(template_file_path)
-      end
-
       private
 
       def compiled_template
-        handler = ActionView::Template.handler_for_extension(template_handler)
+        handler = ActionView::Template.handler_for_extension(File.extname(template_file_path).gsub(".", ""))
+        template = File.read(template_file_path)
 
         if handler.method(:call).parameters.length > 1
           handler.call(DummyTemplate.new, template)
         else
           handler.call(DummyTemplate.new(template))
-        end
-      end
-
-      def template_handler
-        # Does the subclass implement .template ? If so, we assume the template is an ERB HEREDOC
-        if self.method(:template).owner == self.singleton_class
-          :erb
-        else
-          File.extname(template_file_path).gsub(".", "").to_sym
         end
       end
 
