@@ -6,7 +6,8 @@ require "rails/version" unless defined?(Rails::VERSION)
 
 # Monkey patch ActionView::Base#render to support ActionView::Component
 #
-# Necessary until we upstream component support into Rails
+# Upstreamed in https://github.com/rails/rails/pull/36388
+# Necessary for Rails versions < 6.1.0.alpha
 class ActionView::Base
   module RenderMonkeyPatch
     def render(component, _ = nil, &block)
@@ -25,13 +26,13 @@ module ActionView
 
     include ActiveModel::Validations
 
-    # Entrypoint for rendering components. Called by our monkey patch of ActionView::Base#render.
+    # Entrypoint for rendering components. Called by ActionView::Base#render.
     #
     # view_context: ActionView context from calling view
     # args(hash): params to be passed to component being rendered
-    # block: optional block to be called within the view context
+    # block: optional block to be captured within the view context
     #
-    # returns HTML that has been escaped with the ERB pipeline
+    # returns HTML that has been escaped by the respective template handler
     #
     # Example subclass:
     #
