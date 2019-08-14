@@ -19,7 +19,7 @@ And then execute:
 $ bundle
 ```
 
-In `application.rb`, add:
+In `config/application.rb`, add:
 
 ```bash
 require "action_view/component"
