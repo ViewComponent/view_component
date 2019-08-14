@@ -11,7 +11,7 @@ This gem is meant to serve as a precursor to upstreaming this functionality into
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'actionview-component'
+gem "actionview-component"
 ```
 
 And then execute:
