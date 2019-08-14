@@ -55,7 +55,7 @@ Render components by passing an instance to `#render`:
 
 Components are subclasses of `ActionView::Component`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component` and inherit from that instead.
 
-Components _must_ define sit alongside a template file (in any format supported by Rails) with the same base name:
+Components _must_ sit alongside a template file (in any format supported by Rails) with the same base name:
 
 `app/components/greeting.html.erb`
 ```erb
