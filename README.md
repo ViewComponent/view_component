@@ -172,7 +172,7 @@ Yes. This gem is tested against ERB, Haml, and Slim, but it should support most 
 
 Inline templates have been removed (for now) due to concerns raised by [@soutaro](https://github.com/soutaro) regarding compatibility with the type systems being worked on for Ruby 3.
 
-### Isn't just like X library?
+### Isn't this just like X library?
 
 `ActionView::Component` is far from a novel idea! Popular implementations of view components in Ruby include, but are not limited to:
 
