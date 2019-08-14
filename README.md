@@ -43,7 +43,7 @@ Components are most effectively used in cases where view code is reused or needs
 
 ### Using components
 
-Render components in templates by passing an instance to `#render`:
+Render components by passing an instance to `#render`:
 
 ```erb
 <div class="container">
