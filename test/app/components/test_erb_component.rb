@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TestErbComponent < ActionView::Component
   validates :content, presence: true
 

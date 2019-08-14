@@ -19,9 +19,10 @@ And then execute:
 $ bundle
 ```
 
-Or install it yourself as:
+In `application.rb`, add:
+
 ```bash
-$ gem install actionview-component
+require "action_view/component"
 ```
 
 ## Contributing
