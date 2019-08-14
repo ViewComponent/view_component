@@ -73,8 +73,6 @@ class Greeting < ActionView::Component
 end
 ```
 
-Under the hood, `ActionView::Component` compiles the template using the existing ActionView pipeline.
-
 #### Validations
 
 `ActionView::Component` includes `ActiveModel::Validations`, so components can validate their attributes:
