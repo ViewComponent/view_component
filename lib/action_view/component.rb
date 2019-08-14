@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "action_view"
 require "active_model"
 require "rails/version" unless defined?(Rails::VERSION)

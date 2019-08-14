@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rubygems"
 gemfile = File.expand_path("../../../../../../Gemfile", __FILE__)
 

@@ -21,5 +21,6 @@ jobs:
         bundle update
         bundle install --jobs 4 --retry 3
         bundle exec rake
+        bundle exec rubocop
       env:
         RAILS_VERSION: ${{ matrix.rails_version }}

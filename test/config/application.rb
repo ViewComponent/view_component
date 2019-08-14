@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require File.expand_path("../boot", __FILE__)
 
 require "active_model/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
+require "action_view/component"
 require "sprockets/railtie"
 
 require "haml"
@@ -13,4 +16,4 @@ module Dummy
   end
 end
 
-Dummy::Application.config.secret_key_base = 'foo'
+Dummy::Application.config.secret_key_base = "foo"
