@@ -63,6 +63,7 @@ module ActionView
         super
       end
 
+      # Compile template to #call instance method, assuming it hasn't been compiled already
       def compile
         return if @compiled
 
