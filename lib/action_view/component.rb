@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require "action_view"
-require "active_model"
-require "rails/version" unless defined?(Rails::VERSION)
-
 # Monkey patch ActionView::Base#render to support ActionView::Component
 #
 # Upstreamed in https://github.com/rails/rails/pull/36388
