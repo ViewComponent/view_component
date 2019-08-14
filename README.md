@@ -170,7 +170,7 @@ Yes. This gem is tested against ERB, Haml, and Slim, but it should support most 
 
 ### What happened to inline templates?
 
-Inline templates have been removed (for now) due to concerns raised by [@soutaro](https://github.com/soutaro) regarding compatibility with the type systems being worked on for Ruby 3.
+Inline templates have been removed (for now) due to concerns raised by [@soutaro](https://github.com/soutaro) regarding compatibility with the type systems being developed for Ruby 3.
 
 ### Isn't this just like X library?
 
