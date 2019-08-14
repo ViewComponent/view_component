@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-require "action_view"
-require "active_model"
-require "rails/version" unless defined?(Rails::VERSION)
-
 # Monkey patch ActionView::Base#render to support ActionView::Component
 #
-# Necessary until we upstream component support into Rails
+# Upstreamed in https://github.com/rails/rails/pull/36388
+# Necessary for Rails versions < 6.1.0.alpha
 class ActionView::Base
   module RenderMonkeyPatch
     def render(component, _ = nil, &block)
@@ -25,13 +22,13 @@ module ActionView
 
     include ActiveModel::Validations
 
-    # Entrypoint for rendering components. Called by our monkey patch of ActionView::Base#render.
+    # Entrypoint for rendering components. Called by ActionView::Base#render.
     #
     # view_context: ActionView context from calling view
     # args(hash): params to be passed to component being rendered
-    # block: optional block to be called within the view context
+    # block: optional block to be captured within the view context
     #
-    # returns HTML that has been escaped with the ERB pipeline
+    # returns HTML that has been escaped by the respective template handler
     #
     # Example subclass:
     #
@@ -66,41 +63,27 @@ module ActionView
         super
       end
 
+      # Compile template to #call instance method, assuming it hasn't been compiled already.
+      # We could in theory do this on app boot, at least in production environments.
+      # Right now this just compiles the template the first time the component is rendered.
       def compile
-        @compiled ||= nil
         return if @compiled
 
-        class_eval(
-          "def call; @output_buffer = ActionView::OutputBuffer.new; " +
-          compiled_template +
-          "; end"
-        )
+        class_eval("def call; @output_buffer = ActionView::OutputBuffer.new; #{compiled_template}; end")
 
         @compiled = true
-      end
-
-      def template
-        File.read(template_file_path)
       end
 
       private
 
       def compiled_template
-        handler = ActionView::Template.handler_for_extension(template_handler)
+        handler = ActionView::Template.handler_for_extension(File.extname(template_file_path).gsub(".", ""))
+        template = File.read(template_file_path)
 
         if handler.method(:call).parameters.length > 1
           handler.call(DummyTemplate.new, template)
         else
           handler.call(DummyTemplate.new(template))
-        end
-      end
-
-      def template_handler
-        # Does the subclass implement .template ? If so, we assume the template is an ERB HEREDOC
-        if self.method(:template).owner == self.singleton_class
-          :erb
-        else
-          File.extname(template_file_path).gsub(".", "").to_sym
         end
       end
 
