@@ -5,7 +5,13 @@
 
 ## Roadmap
 
-This gem is meant to serve as a precursor to upstreaming this functionality into Rails. It also serves to enable the usage of view components in older versions of Rails.
+Preliminary support for rendering components was merged into Rails `6.1.0.alpha` in https://github.com/rails/rails/pull/36388.
+
+This gem is meant to serve as a precursor to upstreaming `ActionView::Component` into Rails. It also serves to enable the usage of view components in older versions of Rails.
+
+## Compatibility
+
+`actionview-component` is tested for compatibility with all combinations of Ruby 2.5/2.6 and Rails 5.2.3/6.0.0.rc2/6.1.0.alpha.
 
 ## Installation
 Add this line to your application's Gemfile:
