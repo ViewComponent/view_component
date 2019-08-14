@@ -25,6 +25,101 @@ In `config/application.rb`, add:
 require "action_view/component"
 ```
 
+## Guide
+
+### What are components?
+
+`ActionView::Component`s are Ruby classes that are used to render views. They take data as input and return output-safe HTML. Think of them as an evolution of the presenter/decorator/view model pattern, inspired by [React Components](https://reactjs.org/docs/react-component.html).
+
+### Why components?
+
+Traditional Rails views are hard to test efficiently, difficult to measure with code coverage tools, and often fall short of basic Ruby code standards.
+
+Components allow us to test our views in isolation, use code coverage tools, and leverage Ruby to its full potential.
+
+### When should I use components?
+
+Components are most effectively used in cases where view code is reused or needs to be tested directly.
+
+### Using components
+
+Render components in templates by passing an instance to `#render`:
+
+```erb
+<div class="container">
+  <%= render Greeting.new(name: "Sarah") %>
+</div>
+```
+
+### Building components
+
+Components are subclasses of `ActionView::Component`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component` and inherit from that instead.
+
+Components _must_ define sit alongside a template file (in any format supported by Rails) with the same base name:
+
+`app/components/greeting.html.erb`
+```erb
+<h1>Hello, <%= name %></h1>
+```
+
+`app/components/greeting.rb`
+```ruby
+class Greeting < ActionView::Component
+  attr_reader: :name
+
+  def initialize(name:)
+    @name = name
+  end
+end
+```
+
+Under the hood, `ActionView::Component` compiles the template using the existing ActionView pipeline.
+
+#### Validations
+
+`ActionView::Component` includes `ActiveModel::Validations`, so components can validate their attributes:
+
+```ruby
+class Greeting < ActionView::Component
+  validates :name, length: { minimum: 2, maximum: 50 }
+
+  def initialize(name:)
+    @name = name
+  end
+
+  private
+
+  attr_reader :name
+end
+```
+
+#### Rendering content
+
+Components can also render content passed as a block. To do so, simply return `content` inside the template:
+
+`app/components/heading.rb`
+```ruby
+class Heading < ActionView::Component
+end
+```
+
+`app/components/heading.html.erb`
+```erb
+<h1><%= content %></h1>
+```
+
+Under the hood, `ActionView::Component` captures the output of the passed block within the context of the original view and assigns it to `content`.
+
+In use:
+
+```ruby
+<%= render Heading.new do %>Components are fun!<% end %>
+```
+
+Returns:
+
+`<h1>Components are fun!</h1>`
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/github/actionview-component. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct. We recommend reading the [contributing guide](./CONTRIBUTING.md) as well.
