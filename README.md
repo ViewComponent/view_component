@@ -57,7 +57,7 @@ Components are subclasses of `ActionView::Component`. You may wish to create an 
 
 #### Implementation
 
-Components _must_ sit alongside a template file (in any format supported by Rails) with the same base name:
+An `ActionView::Component` is implemented as a Ruby file alongside a template file (in any format supported by Rails) with the same base name:
 
 `app/components/greeting.html.erb`
 ```erb
@@ -76,6 +76,8 @@ class Greeting < ActionView::Component
   attr_reader: :name
 end
 ```
+
+Generally, only the `initialize` method should be public.
 
 #### Validations
 
