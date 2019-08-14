@@ -67,11 +67,13 @@ Components _must_ sit alongside a template file (in any format supported by Rail
 `app/components/greeting.rb`
 ```ruby
 class Greeting < ActionView::Component
-  attr_reader: :name
-
   def initialize(name:)
     @name = name
   end
+
+  private
+
+  attr_reader: :name
 end
 ```
 
