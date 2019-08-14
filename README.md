@@ -39,96 +39,147 @@ require "action_view/component"
 
 ### Why components?
 
-Traditional Rails views are hard to test efficiently, difficult to measure with code coverage tools, and often fall short of basic Ruby code standards.
+In working on views in the Rails monolith at GitHub (which has over 3700 templates), we have run into several key pain points:
 
-Components allow us to test our views in isolation, use code coverage tools, and leverage Ruby to its full potential.
+#### Testing
+
+Currently, Rails encourages testing views via integration or system tests. This discourages us from testing our views thoroughly, due to the costly overhead of exercising the routing/controller layer, instead of just the view. It also often leads to partials being tested for each view they are included in, cheapening the benefit of DRYing up our views.
+
+#### Code Coverage
+
+Many common Ruby code coverage tools cannot properly handle coverage of views, making it difficult to audit how thorough our tests are and leading to gaps in our test suite.
+
+#### Data Flow
+
+Unlike a method declaration on an object, views do not declare the values they are expected to receive, making it hard to figure out what context is necessary to render them. This often leads to subtle bugs when we reuse a view across different contexts.
+
+#### Standards
+
+Our views often fail even the most basic standards of code quality we expect out of our Ruby classes: long methods, deep conditional nesting, and mystery guests abound.
+
+### What are the benefits?
+
+#### Testing
+
+`ActionView::Component` allows views to be unit-tested. In the main GitHub codebase, our unit tests run in around 25ms/test, vs. ~6s/test for integration tests.
+
+#### Code Coverage
+
+`ActionView::Component` is at least partially compatible with code coverage tools. We’ve seen some success with SimpleCov.
+
+#### Data flow
+
+By clearly defining the context necessary to render a component, we’ve found them to be easier to reuse than partials.
+
+#### Performance
+
+In early benchmarks, we’ve seen performance improvements over the existing rendering pipeline. For a test page with nested renders 10 levels deep, we’re seeing around a 5x increase in speed over partials:
+
+```
+Comparison:
+           component:     6515.4 i/s
+             partial:     1251.2 i/s - 5.21x  slower
+```
+
+_Rails 6.1.0.alpha, [joelhawksley/actionview-component-demo](https://github.com/joelhawksley/actionview-component-demo), /benchmark route, via `RAILS_ENV=production rails s`, measured with [evanphx/benchmark-ips](https://github.com/evanphx/benchmark-ips)_
 
 ### When should I use components?
 
 Components are most effective in cases where view code is reused or needs to be tested directly.
 
-### Using components
-
-Render components by passing an instance to `#render`:
-
-```erb
-<div class="container">
-  <%= render Greeting.new(name: "Sarah") %>
-</div>
-```
-
 ### Building components
 
-Components are subclasses of `ActionView::Component`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component` and inherit from that instead.
+Components are subclasses of `ActionView::Component` and live in `app/components`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component` and inherit from that instead.
+
+Components support ActiveModel validations. Components are validated after initialization, but before rendering.
+
+Content passed to an `ActionView::Component` as a block is captured and assigned to the `content` accessor.
 
 #### Implementation
 
-An `ActionView::Component` is implemented as a Ruby file alongside a template file (in any format supported by Rails) with the same base name:
+An `ActionView::Component` is a Ruby file and corresponding template file (in any format supported by Rails) with the same base name:
 
-`app/components/greeting.html.erb`
-```erb
-<h1>Hello, <%= name %></h1>
-```
-
-`app/components/greeting.rb`
+`app/components/test_component.rb`:
 ```ruby
-class Greeting < ActionView::Component
-  def initialize(name:)
-    @name = name
+class TestComponent < ActionView::Component
+  validates :content, :title, presence: true
+
+  def initialize(title:)
+    @title = title
   end
 
   private
 
-  attr_reader: :name
+  attr_reader :title
 end
 ```
 
-Generally, only the `initialize` method should be public.
-
-#### Validations
-
-`ActionView::Component` includes `ActiveModel::Validations`, so components can validate their attributes:
-
-```ruby
-class Greeting < ActionView::Component
-  validates :name, length: { minimum: 2, maximum: 50 }
-
-  def initialize(name:)
-    @name = name
-  end
-
-  private
-
-  attr_reader :name
-end
-```
-
-#### Rendering content
-
-Components can also render content passed as a block. To do so, simply return `content` inside the template:
-
-`app/components/heading.rb`
-```ruby
-class Heading < ActionView::Component
-end
-```
-
-`app/components/heading.html.erb`
+`app/components/test_component.html.erb`:
 ```erb
-<h1><%= content %></h1>
+<span title="<%= title %>"><%= content %></span>
 ```
 
-Under the hood, `ActionView::Component` captures the output of the passed block within the context of the original view and assigns it to `content`.
+We can render it in a view as:
 
-In use:
+```erb
+<%= render(TestComponent.new(title: "my title")) do %>
+  Hello, World!
+<% end %>
+```
+
+Which returns:
+
+```html
+<span title="my title">Hello, World!</span>
+```
+
+#### Error case
+
+If the component is rendered with a blank title:
+
+```erb
+<%= render(TestComponent.new(title: "")) do %>
+  Hello, World!
+<% end %>
+```
+
+An error will be raised:
+
+`ActiveModel::ValidationError: Validation failed: Title can't be blank`
+
+### Testing
+
+Components are unit tested directly. The `render_component` test helper renders a component and wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
 
 ```ruby
-<%= render Heading.new do %>Components are fun!<% end %>
+def test_render_component
+  assert_equal(
+    %(<span title="my title">Hello, World!</span>),
+    render_component(TestComponent.new(title: "my title")) { "Hello, World!" }.css("span").to_html
+  )
+end
 ```
 
-Returns:
+In general, we’ve found it makes the most sense to test components based on their rendered HTML.
 
-`<h1>Components are fun!</h1>`
+## Frequently Asked Questions
+
+### Can I use other templating languages besides ERB?
+
+Yes. This gem is tested against ERB, Haml, and Slim, but it should support most Rails template handlers.
+
+### What happened to inline templates?
+
+Inline templates have been removed (for now) due to concerns raised by [@soutaro](https://github.com/soutaro) regarding compatibility with the type systems being worked on for Ruby 3.
+
+### Isn't just like X library?
+
+`ActionView::Component` is far from a novel idea! Popular implementations of view components in Ruby include, but are not limited to:
+
+- [trailblazer/cells](https://github.com/trailblazer/cells)
+- [dry-rb/dry-view](https://github.com/dry-rb/dry-view)
+- [komposable/komponent](https://github.com/komposable/komponent)
+- [activeadmin/arbre](https://github.com/activeadmin/arbre)
 
 ## Resources
 
