@@ -64,14 +64,9 @@ module ActionView
       end
 
       def compile
-        @compiled ||= nil
         return if @compiled
 
-        class_eval(
-          "def call; @output_buffer = ActionView::OutputBuffer.new; " +
-          compiled_template +
-          "; end"
-        )
+        class_eval("def call; @output_buffer = ActionView::OutputBuffer.new; #{compiled_template}; end")
 
         @compiled = true
       end
