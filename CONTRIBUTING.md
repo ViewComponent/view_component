@@ -27,6 +27,27 @@ Here are a few things you can do that will increase the likelihood of your pull 
 - Keep your change as focused as possible. If there are multiple changes you would like to make that are not dependent upon each other, consider submitting them as separate pull requests.
 - Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 
+## Releasing
+
+If you are the current maintainer of this gem:
+
+1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
+1. Make sure your local dependencies are up to date: `bundle`
+1. Ensure that tests are green: `bundle exec rake`
+1. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') gem build actionview-component.gemspec`
+1. Test the test gem:
+   1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
+   1. Install the new gem locally
+   1. Test behavior locally, branch deploy, whatever needs to happen
+1. Bump gem version in `action_view/component`.
+1. Make a PR to github/actionview-component.
+1. Build a local gem: `gem build actionview-component.gemspec`
+1. Merge github/actionview-component PR
+1. Tag and push: `git tag vx.xx.xx; git push --tags`
+1. Create a GitHub release with the pushed tag (https://github.com/github/actionview-component/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]`
+1. Push to rubygems.pkg.github.com -- `gem push --key github --host https://rubygems.pkg.github.com/github actionview-component-VERSION.gem`. See [Configuring RubyGems for use with GitHub Package Registry][gpr] for more details.
+1. Push to rubygems.org -- `gem push actionview-component-VERSION.gem`
+
 ## Resources
 
 - [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
