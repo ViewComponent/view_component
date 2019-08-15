@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActionView
   module ComponentTestHelpers
     def render_component(component, &block)
