@@ -152,11 +152,17 @@ An error will be raised:
 Components are unit tested directly. The `render_component` test helper renders a component and wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
 
 ```ruby
-def test_render_component
-  assert_equal(
-    %(<span title="my title">Hello, World!</span>),
-    render_component(TestComponent.new(title: "my title")) { "Hello, World!" }.css("span").to_html
-  )
+require "action_view/component_test_helpers"
+
+class MyComponentTest < Minitest::Test
+  include ActionView::ComponentTestHelpers
+  
+  def test_render_component
+    assert_equal(
+      %(<span title="my title">Hello, World!</span>),
+      render_component(TestComponent.new(title: "my title")) { "Hello, World!" }.css("span").to_html
+    )
+  end
 end
 ```
 
