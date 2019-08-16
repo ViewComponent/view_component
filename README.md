@@ -11,7 +11,7 @@ Preliminary support for rendering components was merged into Rails `6.1.0.alpha`
 
 ## Compatibility
 
-`actionview-component` is tested for compatibility with all combinations of Ruby `2.5`/`2.6` and Rails `5.2.3`/`6.0.0.rc2`/`6.1.0.alpha`.
+`actionview-component` is tested for compatibility with all combinations of Ruby `2.5`/`2.6` and Rails `5.2.3`/`6.0.0`/`6.1.0.alpha`.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -156,7 +156,7 @@ require "action_view/component_test_helpers"
 
 class MyComponentTest < Minitest::Test
   include ActionView::ComponentTestHelpers
-  
+
   def test_render_component
     assert_equal(
       %(<span title="my title">Hello, World!</span>),
