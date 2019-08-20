@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    actionview-component (0.2.0)
+    actionview-component (1.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -74,7 +74,7 @@ GEM
     mini_portile2 (2.4.0)
     minitest (5.11.3)
     nio4r (2.4.0)
-    nokogiri (1.10.3)
+    nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     parallel (1.17.0)
     parser (2.6.3.0)
