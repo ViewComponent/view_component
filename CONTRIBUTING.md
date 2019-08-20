@@ -45,7 +45,6 @@ If you are the current maintainer of this gem:
 1. Merge github/actionview-component PR
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
 1. Create a GitHub release with the pushed tag (https://github.com/github/actionview-component/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]`
-1. Push to rubygems.pkg.github.com -- `gem push --key github --host https://rubygems.pkg.github.com/github actionview-component-VERSION.gem`. See [Configuring RubyGems for use with GitHub Package Registry][gpr] for more details.
 1. Push to rubygems.org -- `gem push actionview-component-VERSION.gem`
 
 ## Resources
