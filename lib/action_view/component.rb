@@ -67,7 +67,7 @@ module ActionView
       # We could in theory do this on app boot, at least in production environments.
       # Right now this just compiles the template the first time the component is rendered.
       def compile
-        return if @compiled
+        return if @compiled && Rails.env.production?
 
         class_eval("def call; @output_buffer = ActionView::OutputBuffer.new; #{compiled_template}; end")
 
