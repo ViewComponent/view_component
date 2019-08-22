@@ -16,7 +16,7 @@ class ActionView::ComponentTest < Minitest::Test
       render_component(TestComponentWithoutTemplate.new)
     end
 
-    assert_includes exception.message, "Could not find a template for TestComponentWithoutTemplate"
+    assert_includes exception.message, "Could not find a template file for TestComponentWithoutTemplate"
   end
 
   def test_raises_error_when_more_then_one_sidecar_template_is_present

@@ -100,7 +100,7 @@ module ActionView
 
         if sibling_files.length == 0
           raise NotImplementedError.new(
-            "Could not find a template for #{self}. Either define a .template method or add a sidecar template file."
+            "Could not find a template file for #{self}."
           )
         end
 
