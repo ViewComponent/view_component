@@ -67,7 +67,7 @@ module ActionView
       # We could in theory do this on app boot, at least in production environments.
       # Right now this just compiles the template the first time the component is rendered.
       def compile
-        return if @compiled
+        return if @compiled && ActionView::Base.cache_template_loading
 
         class_eval("def call; @output_buffer = ActionView::OutputBuffer.new; #{compiled_template}; end")
 
@@ -100,7 +100,7 @@ module ActionView
 
         if sibling_files.length == 0
           raise NotImplementedError.new(
-            "Could not find a template for #{self}. Either define a .template method or add a sidecar template file."
+            "Could not find a template file for #{self}."
           )
         end
 

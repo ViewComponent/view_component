@@ -16,7 +16,7 @@ class ActionView::ComponentTest < Minitest::Test
       render_component(TestComponentWithoutTemplate.new)
     end
 
-    assert_includes exception.message, "Could not find a template for TestComponentWithoutTemplate"
+    assert_includes exception.message, "Could not find a template file for TestComponentWithoutTemplate"
   end
 
   def test_raises_error_when_more_then_one_sidecar_template_is_present
@@ -76,5 +76,42 @@ class ActionView::ComponentTest < Minitest::Test
     result = render_component(TestRouteComponent.new)
 
     assert_includes result.text, "/"
+  end
+
+  def test_template_changes_are_not_reflected_in_production
+    ActionView::Base.cache_template_loading = true
+
+    assert_equal "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
+
+    modify_file "app/components/test_component.html.erb", "<div>Goodbye world!</div>" do
+      assert_equal  "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
+    end
+
+    assert_equal "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
+  end
+
+  def test_template_changes_are_reflected_outside_production
+    ActionView::Base.cache_template_loading = false
+
+    assert_equal "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
+
+    modify_file "app/components/test_component.html.erb", "<div>Goodbye world!</div>" do
+      assert_equal "<div>Goodbye world!</div>", render_component(TestComponent.new).css("div").first.to_html
+    end
+
+    assert_equal "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
+  end
+
+  private
+
+  def modify_file(file, content)
+    filename = Rails.root.join(file)
+    old_content = File.read(filename)
+    begin
+      File.open(filename, "wb+") { |f| f.write(content) }
+      yield
+    ensure
+      File.open(filename, "wb+") { |f| f.write(old_content) }
+    end
   end
 end
