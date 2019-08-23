@@ -69,7 +69,7 @@ module ActionView
       def compile
         # Only use compiled method if we're in production. Eventually, we'll probably want to
         # use something like Rails.application.config for this toggle instead.
-        return if @compiled && Rails.env.production?
+        return if @compiled && ActionView::Base.cache_template_loading
 
         class_eval("def call; @output_buffer = ActionView::OutputBuffer.new; #{compiled_template}; end")
 

@@ -79,18 +79,20 @@ class ActionView::ComponentTest < Minitest::Test
   end
 
   def test_template_changes_are_not_reflected_in_production
-    Rails.stub(:env, ActiveSupport::StringInquirer.new("production")) do
-      assert_equal "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
+    ActionView::Base.cache_template_loading = true
 
-      modify_file "app/components/test_component.html.erb", "<div>Goodbye world!</div>" do
-        assert_equal  "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
-      end
+    assert_equal "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
 
-      assert_equal "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
+    modify_file "app/components/test_component.html.erb", "<div>Goodbye world!</div>" do
+      assert_equal  "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
     end
+
+    assert_equal "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
   end
 
   def test_template_changes_are_reflected_outside_production
+    ActionView::Base.cache_template_loading = false
+
     assert_equal "<div>hello,world!</div>", render_component(TestComponent.new).css("div").first.to_html
 
     modify_file "app/components/test_component.html.erb", "<div>Goodbye world!</div>" do
