@@ -28,7 +28,7 @@ $ bundle
 In `config/application.rb`, add:
 
 ```bash
-require "action_view/component"
+require "action_view/component/base"
 ```
 
 ## Guide
