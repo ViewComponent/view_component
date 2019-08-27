@@ -21,7 +21,7 @@ class ActionView::Base
     end
   end
 
-  prepend RenderMonkeyPatch unless Rails::VERSION::MINOR > 0 && Rails::VERSION::MAJOR == 6
+  prepend RenderMonkeyPatch
 end
 
 module ActionView
