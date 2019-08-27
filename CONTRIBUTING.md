@@ -39,7 +39,7 @@ If you are the current maintainer of this gem:
    1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
    1. Install the new gem locally
    1. Test behavior locally, branch deploy, whatever needs to happen
-1. Bump gem version in `action_view/component`.
+1. Bump gem version in `actionview-component.gemspec`.
 1. Make a PR to github/actionview-component.
 1. Build a local gem: `gem build actionview-component.gemspec`
 1. Merge github/actionview-component PR
