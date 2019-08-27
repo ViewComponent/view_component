@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TestHamlComponent < ActionView::Component
+class HamlComponent < ActionView::Component
   validates :content, presence: true
 
   def initialize(message:)

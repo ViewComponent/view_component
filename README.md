@@ -91,6 +91,8 @@ Components are most effective in cases where view code is reused or needs to be 
 
 Components are subclasses of `ActionView::Component` and live in `app/components`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component` and inherit from that instead.
 
+Component class names end in -`Component`.
+
 Components support ActiveModel validations. Components are validated after initialization, but before rendering.
 
 Content passed to an `ActionView::Component` as a block is captured and assigned to the `content` accessor.

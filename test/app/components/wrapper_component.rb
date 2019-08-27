@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TestWrapperComponent < ActionView::Component
+class WrapperComponent < ActionView::Component
   validates :content, presence: true
 
   def initialize(*); end
