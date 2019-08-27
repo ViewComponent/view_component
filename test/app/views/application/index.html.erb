@@ -1,1 +1,1 @@
-<span><%= render ErbComponent.new(message: "bar") do %>Foo<% end %></span>
+<span><%= render component: ErbComponent, locals: { message: "bar" } do %>Foo<% end %></span>

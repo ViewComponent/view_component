@@ -2,18 +2,18 @@
 
 # Monkey patch ActionView::Base#render to support ActionView::Component
 #
-# Upstreamed in https://github.com/rails/rails/pull/36388
-# Necessary for Rails versions < 6.1.0.alpha
+# A previous version of this monkey patch was merged in https://github.com/rails/rails/pull/36388,
+# but we'll need to make further upstream changes to support the component: syntax
 class ActionView::Base
   module RenderMonkeyPatch
-    def render(component, _ = nil, &block)
-      return super unless component.respond_to?(:render_in)
+    def render(options = {}, &block)
+      return super unless options.has_key?(:component)
 
-      component.render_in(self, &block)
+      options[:component].new(options[:locals]).render_in(self, &block)
     end
   end
 
-  prepend RenderMonkeyPatch unless Rails::VERSION::MINOR > 0 && Rails::VERSION::MAJOR == 6
+  prepend RenderMonkeyPatch
 end
 
 module ActionView
@@ -42,7 +42,7 @@ module ActionView
       # <span title="<%= @title %>">Hello, <%= content %>!</span>
       #
       # In use:
-      # <%= render MyComponent.new(title: "greeting") do %>world<% end %>
+      # <%= render MyComponent, locals: { title: "greeting" } do %>world<% end %>
       # returns:
       # <span title="greeting">Hello, world!</span>
       #
