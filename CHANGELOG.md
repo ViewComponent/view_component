@@ -1,4 +1,4 @@
-*   Components are now rendered with `render MyComponent, locals: { foo: :bar }` syntax.
+*   Components are now rendered with `render MyComponent, locals: { foo: :bar }` syntax. The existing `render MyComponent.new(foo: :bar)` syntax will be deprecated in version 2.0.
 
     *Joel Hawksley*
 
