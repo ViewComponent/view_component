@@ -124,7 +124,7 @@ end
 We can render it in a view as:
 
 ```erb
-<%= render(TestComponent.new(title: "my title")) do %>
+<%= render(TestComponent, locals: { title: "my title" }) do %>
   Hello, World!
 <% end %>
 ```
@@ -140,7 +140,7 @@ Which returns:
 If the component is rendered with a blank title:
 
 ```erb
-<%= render(TestComponent.new(title: "")) do %>
+<%= render(TestComponent, locals: { title: "" }) do %>
   Hello, World!
 <% end %>
 ```
@@ -162,7 +162,7 @@ class MyComponentTest < Minitest::Test
   def test_render_component
     assert_equal(
       %(<span title="my title">Hello, World!</span>),
-      render_component(TestComponent.new(title: "my title")) { "Hello, World!" }.css("span").to_html
+      render_component(TestComponent, title: "my title") { "Hello, World!" }.css("span").to_html
     )
   end
 end
