@@ -3,7 +3,7 @@
 require "test_helper"
 
 class ActionView::ComponentTest < Minitest::Test
-  include ActionView::ComponentTestHelpers
+  include ActionView::Component::TestHelpers
 
   def test_render_component
     result = render_component(MyComponent.new)
