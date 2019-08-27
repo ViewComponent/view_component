@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TestSlimComponent < ActionView::Component
+class SlimComponent < ActionView::Component
   validates :content, presence: true
 
   def initialize(message:)
