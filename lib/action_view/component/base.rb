@@ -19,8 +19,6 @@ end
 module ActionView
   module Component
     class Base < ActionView::Base
-      VERSION = "1.0.0"
-
       include ActiveModel::Validations
 
       # Entrypoint for rendering components. Called by ActionView::Base#render.
