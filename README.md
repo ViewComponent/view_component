@@ -89,7 +89,7 @@ Components are most effective in cases where view code is reused or needs to be 
 
 ### Building components
 
-Components are subclasses of `ActionView::Component` and live in `app/components`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component` and inherit from that instead.
+Components are subclasses of `ActionView::Component::Base` and live in `app/components`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component::Base` and inherit from that instead.
 
 Component class names end in -`Component`.
 
@@ -103,7 +103,7 @@ An `ActionView::Component` is a Ruby file and corresponding template file (in an
 
 `app/components/test_component.rb`:
 ```ruby
-class TestComponent < ActionView::Component
+class TestComponent < ActionView::Component::Base
   validates :content, :title, presence: true
 
   def initialize(title:)
@@ -154,10 +154,10 @@ An error will be raised:
 Components are unit tested directly. The `render_component` test helper renders a component and wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
 
 ```ruby
-require "action_view/component_test_helpers"
+require "action_view/component/test_helpers"
 
 class MyComponentTest < Minitest::Test
-  include ActionView::ComponentTestHelpers
+  include ActionView::Component::TestHelpers
 
   def test_render_component
     assert_equal(
