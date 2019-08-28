@@ -2,18 +2,28 @@
 
 # Monkey patch ActionView::Base#render to support ActionView::Component
 #
-# Upstreamed in https://github.com/rails/rails/pull/36388
-# Necessary for Rails versions < 6.1.0.alpha
+# A version of this monkey patch was upstreamed in https://github.com/rails/rails/pull/36388
+# We'll need to upstream an updated version of this eventually.
 class ActionView::Base
   module RenderMonkeyPatch
-    def render(component, _ = nil, &block)
-      return super unless component.respond_to?(:render_in)
+    def render(options = {}, args = {}, &block)
+      if options.respond_to?(:render_in)
+        ActiveSupport::Deprecation.warn(
+          "passing component instances to `render` has been deprecated and will be removed in v2.0.0. Use `render MyComponent, foo: :bar` instead."
+        )
 
-      component.render_in(self, &block)
+        options.render_in(self, &block)
+      elsif options.is_a?(Class) && options < ActionView::Component::Base
+        options.new(args).render_in(self, &block)
+      elsif options.is_a?(Hash) && options.has_key?(:component)
+        options[:component].new(options[:locals]).render_in(self, &block)
+      else
+        super
+      end
     end
   end
 
-  prepend RenderMonkeyPatch unless Rails::VERSION::MINOR > 0 && Rails::VERSION::MAJOR == 6
+  prepend RenderMonkeyPatch
 end
 
 module ActionView
@@ -42,7 +52,7 @@ module ActionView
       # <span title="<%= @title %>">Hello, <%= content %>!</span>
       #
       # In use:
-      # <%= render MyComponent.new(title: "greeting") do %>world<% end %>
+      # <%= render MyComponent, title: "greeting" do %>world<% end %>
       # returns:
       # <span title="greeting">Hello, world!</span>
       #

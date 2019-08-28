@@ -124,7 +124,7 @@ end
 We can render it in a view as:
 
 ```erb
-<%= render(TestComponent.new(title: "my title")) do %>
+<%= render(TestComponent, title: "my title") do %>
   Hello, World!
 <% end %>
 ```
@@ -135,12 +135,24 @@ Which returns:
 <span title="my title">Hello, World!</span>
 ```
 
+##### Supported `render` syntaxes
+
+Components can be rendered via:
+
+`render(TestComponent, foo: :bar)`
+
+`render(component: TestComponent, locals: { foo: :bar })`
+
+The following syntax has been deprecated and will be removed in v2.0.0:
+
+`render(TestComponent.new(foo: :bar)`
+
 #### Error case
 
 If the component is rendered with a blank title:
 
 ```erb
-<%= render(TestComponent.new(title: "")) do %>
+<%= render(TestComponent, title: "") do %>
   Hello, World!
 <% end %>
 ```
@@ -151,7 +163,7 @@ An error will be raised:
 
 ### Testing
 
-Components are unit tested directly. The `render_component` test helper renders a component and wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
+Components are unit tested directly. The `render_inline` test helper wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
 
 ```ruby
 require "action_view/component/test_helpers"
@@ -162,7 +174,7 @@ class MyComponentTest < Minitest::Test
   def test_render_component
     assert_equal(
       %(<span title="my title">Hello, World!</span>),
-      render_component(TestComponent.new(title: "my title")) { "Hello, World!" }.css("span").to_html
+      render_inline(TestComponent, title: "my title") { "Hello, World!" }.css("span").to_html
     )
   end
 end
