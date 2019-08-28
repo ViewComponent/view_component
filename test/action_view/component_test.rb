@@ -77,9 +77,16 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes result.text, "foo"
     assert_includes result.text, "bar"
   end
-  
+
   def test_renders_erb_template_with_old_syntax
     result = render_inline(ErbComponent.new(message: "bar")) { "foo" }
+
+    assert_includes result.text, "foo"
+    assert_includes result.text, "bar"
+  end
+
+  def test_renders_erb_template_with_hash_syntax
+    result = render_inline(component: ErbComponent, locals: { message: "bar" }) { "foo" }
 
     assert_includes result.text, "foo"
     assert_includes result.text, "bar"
