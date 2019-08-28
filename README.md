@@ -135,6 +135,20 @@ Which returns:
 <span title="my title">Hello, World!</span>
 ```
 
+##### Supported `render` syntaxes
+
+Components can be rendered via:
+
+`render(TestComponent, foo: :bar)`
+
+`render(TestComponent, locals: { foo: :bar })`
+
+`render(component: TestComponent, locals: { foo: :bar })`
+
+The following syntax is supported, but will be deprecated in v2.0.0:
+
+`render(TestComponent.new(foo: :bar)`
+
 #### Error case
 
 If the component is rendered with a blank title:
