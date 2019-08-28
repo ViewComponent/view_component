@@ -1,3 +1,7 @@
+*   The `render_component` test helper has been renamed to `render_inline`.
+
+    *Joel Hawksley*
+
 *   Components are now rendered with `render MyComponent, foo: :bar` syntax. The existing `render MyComponent.new(foo: :bar)` syntax will be deprecated in version 2.0.
 
     *Joel Hawksley*
