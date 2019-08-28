@@ -7,8 +7,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rails_version: ["5.2.3", "6.0.0", "master"]
-        ruby_version: ["2.5.x", "2.6.x"]
+        rails_version: [5.0.0, 5.2.3, 6.0.0, master]
+        ruby_version: [2.3.x, 2.4.x, 2.5.x, 2.6.x]
+        exclude:
+          - rails_version: master
+            ruby_version: 2.4.x
+          - rails_version: master
+            ruby_version: 2.3.x
+          - rails_version: 6.0.0
+            ruby_version: 2.4.x
+          - rails_version: 6.0.0
+            ruby_version: 2.3.x
     steps:
     - uses: actions/checkout@master
     - name: Setup Ruby
@@ -17,7 +26,7 @@ jobs:
         version: ${{ matrix.ruby_version }}
     - name: Build and test with Rake
       run: |
-        gem install bundler
+        gem install bundler:1.14.0
         bundle update
         bundle install --jobs 4 --retry 3
         bundle exec rake

@@ -1,3 +1,5 @@
+*   `actionview-component` is now tested against Ruby 2.3/2.4 and Rails 5.0.0.
+
 # v1.2.0
 
 *   The `render_component` test helper has been renamed to `render_inline`. `render_component` has been deprecated and will be removed in v2.0.0.

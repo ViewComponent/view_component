@@ -72,7 +72,7 @@ GEM
     mimemagic (0.3.3)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.11.3)
+    minitest (5.1.0)
     nio4r (2.4.0)
     nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
@@ -149,7 +149,7 @@ DEPENDENCIES
   actionview-component!
   bundler (>= 1.14)
   haml (~> 5)
-  minitest (~> 5.0)
+  minitest (= 5.1.0)
   rails (= 5.2.3)
   rake (~> 10.0)
   rubocop (~> 0.59)
@@ -157,4 +157,4 @@ DEPENDENCIES
   slim (~> 4.0)
 
 BUNDLED WITH
-   2.0.2
+   1.17.3

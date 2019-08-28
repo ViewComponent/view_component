@@ -11,7 +11,7 @@ Preliminary support for rendering components was merged into Rails `6.1.0.alpha`
 
 ## Compatibility
 
-`actionview-component` is tested for compatibility with all combinations of Ruby `2.5`/`2.6` and Rails `5.2.3`/`6.0.0`/`6.1.0.alpha`.
+`actionview-component` is tested for compatibility with combinations of Ruby `2.3`/`2.4`/`2.5`/`2.6` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`6.1.0.alpha`.
 
 ## Installation
 Add this line to your application's Gemfile:
