@@ -8,9 +8,7 @@ class ActionView::Base
   module RenderMonkeyPatch
     def render(component, **args, &block)
       if component.respond_to?(:render_in)
-        ActiveSupport::Deprecation.warn(
-          "passing component instances to `render` will be deprecated in actionview-component 2.0. Use `render MyComponent, foo: :bar` instead."
-        )
+        ActiveSupport::Deprecation.warn(ActionView::Component::Base::SYNTAX_DEPRECATION_WARNING)
 
         component.render_in(self, &block)
       elsif component < ActionView::Component::Base
@@ -28,6 +26,8 @@ end
 module ActionView
   module Component
     class Base < ActionView::Base
+      SYNTAX_DEPRECATION_WARNING = "passing component instances to `render` will be deprecated in actionview-component 2.0. Use `render MyComponent, foo: :bar` instead."
+
       include ActiveModel::Validations
 
       # Entrypoint for rendering components. Called by ActionView::Base#render.
