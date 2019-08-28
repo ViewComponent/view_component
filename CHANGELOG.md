@@ -19,3 +19,7 @@
     *Joel Hawksley, John Hawthorn*
 
 # v1.0.0
+
+This release extracts the `ActionView::Component` library from the GitHub application.
+
+It will be published on RubyGems under the existing `actionview-component` gem name, as @chancancode has passed us ownership of the gem.
