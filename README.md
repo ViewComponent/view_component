@@ -124,7 +124,7 @@ end
 We can render it in a view as:
 
 ```erb
-<%= render(TestComponent, locals: { title: "my title" }) do %>
+<%= render(TestComponent, title: "my title") do %>
   Hello, World!
 <% end %>
 ```
@@ -140,7 +140,7 @@ Which returns:
 If the component is rendered with a blank title:
 
 ```erb
-<%= render(TestComponent, locals: { title: "" }) do %>
+<%= render(TestComponent, title: "") do %>
   Hello, World!
 <% end %>
 ```

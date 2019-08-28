@@ -52,20 +52,27 @@ class ActionView::ComponentTest < Minitest::Test
   end
 
   def test_renders_slim_template
-    result = render_component(SlimComponent, locals: { message: "bar" }) { "foo" }
+    result = render_component(SlimComponent, message: "bar") { "foo" }
 
     assert_includes result.text, "foo"
     assert_includes result.text, "bar"
   end
 
   def test_renders_haml_template
-    result = render_component(HamlComponent, locals: { message: "bar" }) { "foo" }
+    result = render_component(HamlComponent, message: "bar") { "foo" }
 
     assert_includes result.text, "foo"
     assert_includes result.text, "bar"
   end
 
   def test_renders_erb_template
+    result = render_component(ErbComponent, message: "bar") { "foo" }
+
+    assert_includes result.text, "foo"
+    assert_includes result.text, "bar"
+  end
+
+  def test_renders_erb_template_with_locals
     result = render_component(ErbComponent, locals: { message: "bar" }) { "foo" }
 
     assert_includes result.text, "foo"

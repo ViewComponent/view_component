@@ -14,7 +14,8 @@ class ActionView::Base
 
         component.render_in(self, &block)
       elsif component < ActionView::Component::Base
-        component.new(args[:locals]).render_in(self, &block)
+        locals = args[:locals] ? args[:locals] : args
+        component.new(locals).render_in(self, &block)
       else
         super
       end
@@ -50,7 +51,7 @@ module ActionView
       # <span title="<%= @title %>">Hello, <%= content %>!</span>
       #
       # In use:
-      # <%= render MyComponent, locals: { title: "greeting" } do %>world<% end %>
+      # <%= render MyComponent, title: "greeting" do %>world<% end %>
       # returns:
       # <span title="greeting">Hello, world!</span>
       #
