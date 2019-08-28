@@ -6,7 +6,7 @@ module ActionView
       def render_component(component, **args, &block)
         if component.respond_to?(:render_in)
           ActiveSupport::Deprecation.warn(
-            "passing component instances to `render` will be deprecated in actionview-component 2.0. Use `render MyComponent.new(foo: :bar)` instead."
+            "passing component instances to `render` will be deprecated in actionview-component 2.0. Use `render MyComponent, foo: :bar` instead."
           )
 
           Nokogiri::HTML(component.render_in(ApplicationController.new.view_context, &block))
