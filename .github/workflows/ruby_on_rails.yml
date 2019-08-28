@@ -7,21 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
-          - rails_version: "master"
-            ruby_version: "2.6.x"
-          - rails_version: "master"
-            ruby_version: "2.5.x"
-          - rails_version: "6.0.0"
-            ruby_version: "2.6.x"
-          - rails_version: "6.0.0"
-            ruby_version: "2.5.x"
-          - rails_version: "5.2.3"
-            ruby_version: "2.6.x"
-          - rails_version: "5.2.3"
-            ruby_version: "2.5.x"
-          - rails_version: "5.0.0"
-            ruby_version: "2.2.x"
+        rails_version: [5.2.3, 6.0.0, master]
+        ruby_version: [2.4.x, 2.5.x, 2.6.x]
+        exclude:
+          - rails_version: master
+            ruby_version: 2.4.x
+          - rails_version: 6.0.0
+            ruby_version: 2.4.x
     steps:
     - uses: actions/checkout@master
     - name: Setup Ruby
