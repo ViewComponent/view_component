@@ -9,12 +9,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_equal trim_result(response.body), "<span><div>Foobar</div></span>"
   end
 
-  test "rendering component in a view with locals syntax" do
-    get "/locals"
-    assert_response :success
-    assert_equal trim_result(response.body), "<span><div>Foobar</div></span>"
-  end
-
   test "rendering component in a view with component: syntax" do
     get "/component"
     assert_response :success

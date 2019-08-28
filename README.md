@@ -141,8 +141,6 @@ Components can be rendered via:
 
 `render(TestComponent, foo: :bar)`
 
-`render(TestComponent, locals: { foo: :bar })`
-
 `render(component: TestComponent, locals: { foo: :bar })`
 
 The following syntax is supported, but will be deprecated in v2.0.0:
