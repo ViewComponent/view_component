@@ -4,14 +4,7 @@ module ActionView
   module Component
     module TestHelpers
       def render_component(component, **args, &block)
-        if component.respond_to?(:render_in)
-          ActiveSupport::Deprecation.warn(ActionView::Component::Base::SYNTAX_DEPRECATION_WARNING)
-
-          Nokogiri::HTML(component.render_in(ApplicationController.new.view_context, &block))
-        else
-          locals = args[:locals] ? args[:locals] : args
-          Nokogiri::HTML(component.new(locals).render_in(ApplicationController.new.view_context, &block))
-        end
+        Nokogiri::HTML(ApplicationController.new.view_context.render(component, args, &block))
       end
     end
   end
