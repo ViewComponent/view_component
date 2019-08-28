@@ -6,10 +6,16 @@
 
     *Joel Hawksley*
 
+# v1.1.0
+
 *   Components now inherit from ActionView::Component::Base
 
     *Joel Hawksley*
 
+# v1.0.1
+
 *   Always recompile component templates outside production.
 
     *Joel Hawksley, John Hawthorn*
+
+# v1.0.0
