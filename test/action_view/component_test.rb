@@ -11,6 +11,12 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
   end
 
+  def test_render_component_with_old_helper
+    result = render_component(MyComponent)
+
+    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
+  end
+
   def test_raises_error_when_sidecar_template_is_missing
     exception = assert_raises NotImplementedError do
       render_inline(MissingTemplateComponent)
