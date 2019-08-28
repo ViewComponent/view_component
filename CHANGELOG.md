@@ -6,7 +6,7 @@
 
     *Joel Hawksley*
 
-*   Components now inherit from ActionView::Component::base
+*   Components now inherit from ActionView::Component::Base
 
     *Joel Hawksley*
 
