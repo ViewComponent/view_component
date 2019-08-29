@@ -71,6 +71,14 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes result.text, "bar"
   end
 
+  def test_renders_button_to_component
+    result = render_inline(ButtonToComponent) { "foo" }
+
+    assert_equal '<input type="submit" value="foo">', result.css("input[type=submit]").to_html
+    assert result.css("form[class='button_to'][action='/'][method='post']").present?
+    assert result.css("input[type='hidden'][name='authenticity_token']").present?
+  end
+
   def test_renders_erb_template
     result = render_inline(ErbComponent, message: "bar") { "foo" }
 
