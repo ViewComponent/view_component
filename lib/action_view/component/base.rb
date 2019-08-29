@@ -58,6 +58,7 @@ module ActionView
       #
       def render_in(view_context, *args, &block)
         self.class.compile
+        @view_renderer ||= view_context.view_renderer
         @content = view_context.capture(&block) if block_given?
         validate!
         call
