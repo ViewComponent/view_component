@@ -62,6 +62,7 @@ module ActionView
         self.class.compile
         self.controller = view_context.controller
         @view_renderer ||= view_context.view_renderer
+        @lookup_context ||= view_context.lookup_context
         @content = view_context.capture(&block) if block_given?
         validate!
         call
