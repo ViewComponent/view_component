@@ -1,3 +1,5 @@
+*   Components are rendered with enough controller context to support rendering of partials and forms.
+
 # v1.2.1
 
 *   `actionview-component` is now tested against Ruby 2.3/2.4 and Rails 5.0.0.
