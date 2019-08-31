@@ -33,14 +33,6 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
   end
 
-  def test_raises_error_when_initializer_is_not_defined
-    exception = assert_raises NotImplementedError do
-      render_inline(MissingInitializerComponent)
-    end
-
-    assert_includes exception.message, "must implement #initialize"
-  end
-
   def test_checks_validations
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(WrapperComponent)
@@ -96,6 +88,16 @@ class ActionView::ComponentTest < Minitest::Test
     result = render_inline(RouteComponent)
 
     assert_includes result.text, "/"
+  end
+
+  def test_extending_component_without_own_template
+    result = render_inline(ExtendingWithoutOwnTemplateComponent, message: "foo").css("div").first.to_html
+    assert_equal result, "<div>base: extended foo</div>"
+  end
+
+  def test_extending_component_with_own_template
+    result = render_inline(ExtendingWithOwnTemplateComponent, message: "bar").css("div").first.to_html
+    assert_equal result, "<div>extending: extended bar</div>"
   end
 
   def test_template_changes_are_not_reflected_in_production

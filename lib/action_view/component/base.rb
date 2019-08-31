@@ -97,23 +97,24 @@ module ActionView
         end
 
         def template_file_path
-          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
+          ancestors.each do |klass|
+            raise(NotImplementedError, "Could not find a template file for #{self}.") if klass == ActionView::Component::Base
 
-          filename = self.instance_method(:initialize).source_location[0]
-          filename_without_extension = filename[0..-(File.extname(filename).length + 1)]
-          sibling_files = Dir["#{filename_without_extension}.*"] - [filename]
+            next unless klass.is_a?(Class)
+            next unless klass.private_method_defined?(:initialize)
+            next unless klass.instance_method(:initialize).owner == klass
 
-          if sibling_files.length > 1
-            raise StandardError.new("More than one template found for #{self}. There can only be one sidecar template file per component.")
+            filename = klass.instance_method(:initialize).source_location[0]
+            filename_without_extension = Pathname.new(filename).sub_ext("").to_s
+            sibling_files = Dir["#{filename_without_extension}.*"] - [filename]
+            next if sibling_files.empty?
+
+            if sibling_files.length > 1
+              raise StandardError, "More than one template found for #{klass}. There can only be one sidecar template file per component."
+            end
+
+            return sibling_files[0]
           end
-
-          if sibling_files.length == 0
-            raise NotImplementedError.new(
-              "Could not find a template file for #{self}."
-            )
-          end
-
-          sibling_files[0]
         end
       end
 
