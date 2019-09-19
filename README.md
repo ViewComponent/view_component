@@ -9,6 +9,10 @@ This gem is meant to serve as a precursor to upstreaming the `ActionView::Compon
 
 Preliminary support for rendering components was merged into Rails `6.1.0.alpha` in https://github.com/rails/rails/pull/36388. Assuming `ActionView::Component` makes it into Rails `6.1`, this gem will then exist to serve as a backport.
 
+## Design philosophy
+
+As the goal of this gem is to be upstreamed into Rails, it is designed to integrate as seamlessly as possible, with the [least surprise](https://www.artima.com/intv/ruby4.html).
+
 ## Compatibility
 
 `actionview-component` is tested for compatibility with combinations of Ruby `2.3`/`2.4`/`2.5`/`2.6` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`6.1.0.alpha`.
