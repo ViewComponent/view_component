@@ -106,6 +106,12 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal "<div>hello,partial world!</div>", result.css("div").first.to_html
   end
 
+  def test_renders_content_for_template
+    result = render_component(ContentForComponent.new)
+
+    assert_equal "<div>Hello content for</div>", result.css("div").first.to_html
+  end
+
   def test_renders_route_helper
     result = render_inline(RouteComponent)
 
