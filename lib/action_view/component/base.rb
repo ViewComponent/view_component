@@ -61,7 +61,6 @@ module ActionView
       def render_in(view_context, *args, &block)
         self.class.compile
         self.controller = view_context.controller
-        @view_context = view_context
         @view_renderer ||= view_context.view_renderer
         @lookup_context ||= view_context.lookup_context
 
@@ -69,12 +68,6 @@ module ActionView
         validate!
         call
       end
-
-      def compiled_method_container
-        @view_context.compiled_method_container
-      end
-
-      delegate_missing_to :@view_context
 
       def initialize(*); end
 
