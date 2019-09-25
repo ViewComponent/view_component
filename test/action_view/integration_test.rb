@@ -16,15 +16,9 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "rendering component with a partial" do
-    if Rails::VERSION::MAJOR >= 6
-      assert_raises ActionView::Template::Error do
-        get "/partial_component"
-      end
-    else
-      get "/partial_component"
-      assert_response :success
-      assert_equal trim_result(response.body), "partial:<div>hello,partialworld!</div>component:<div>hello,partialworld!</div>"
-    end
+    get "/partial"
+    assert_response :success
+    assert_equal trim_result(response.body), "partial:<div>hello,partialworld!</div>component:<div>hello,partialworld!</div>"
   end
 
   test "rendering component in a view with deprecated syntax" do
