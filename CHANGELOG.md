@@ -1,3 +1,5 @@
+# v1.3.0
+
 *   Components are rendered with enough controller context to support rendering of partials and forms.
 
     *Patrick Sinclair, Joel Hawksley, Aaron Patterson*
