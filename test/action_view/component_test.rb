@@ -121,7 +121,7 @@ class ActionView::ComponentTest < Minitest::Test
   def test_renders_url_helper
     result = render_inline(UrlComponent)
 
-    assert_includes result.text, "/"
+    assert_includes result.text, "http://test.host/"
   end
 
   def test_template_changes_are_not_reflected_in_production
