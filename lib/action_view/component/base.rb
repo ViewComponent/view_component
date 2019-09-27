@@ -30,6 +30,10 @@ module ActionView
   module Component
     class Base < ActionView::Base
       include ActiveModel::Validations
+      include ActiveSupport::Configurable
+      include ActionController::RequestForgeryProtection
+
+      delegate :render, to: :view_context
 
       # Entrypoint for rendering components. Called by ActionView::Base#render.
       #
@@ -58,6 +62,12 @@ module ActionView
       #
       def render_in(view_context, *args, &block)
         self.class.compile
+        self.controller = view_context.controller
+        @view_context = view_context
+        @view_renderer ||= view_context.view_renderer
+        @lookup_context ||= view_context.lookup_context
+        @view_flow ||= view_context.view_flow
+
         @content = view_context.capture(&block) if block_given?
         validate!
         call
@@ -136,7 +146,7 @@ module ActionView
 
       private
 
-      attr_reader :content
+      attr_reader :content, :view_context
     end
   end
 end

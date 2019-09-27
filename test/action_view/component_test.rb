@@ -71,6 +71,14 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes result.text, "bar"
   end
 
+  def test_renders_button_to_component
+    result = render_inline(ButtonToComponent) { "foo" }
+
+    assert_equal '<input type="submit" value="foo">', result.css("input[type=submit]").to_html
+    assert result.css("form[class='button_to'][action='/'][method='post']").present?
+    assert result.css("input[type='hidden'][name='authenticity_token']").present?
+  end
+
   def test_renders_erb_template
     result = render_inline(ErbComponent, message: "bar") { "foo" }
 
@@ -92,10 +100,34 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes result.text, "bar"
   end
 
-  def test_renders_route_helper
-    result = render_inline(RouteComponent)
+  def test_renders_partial_template
+    result = render_inline(PartialComponent)
+
+    assert_equal "<div>hello,partial world!</div>", result.css("div").first.to_html
+  end
+
+  def test_renders_content_for_template
+    result = render_inline(ContentForComponent)
+
+    assert_equal "<div>Hello content for</div>", result.css("div").first.to_html
+  end
+
+  def test_renders_path_helper
+    result = render_inline(PathComponent)
 
     assert_includes result.text, "/"
+  end
+
+  def test_renders_url_helper
+    result = render_inline(UrlComponent)
+
+    assert_includes result.text, "http://test.host/"
+  end
+
+  def test_renders_another_component
+    result = render_inline(AnotherComponent)
+
+    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
   end
 
   def test_template_changes_are_not_reflected_in_production
