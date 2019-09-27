@@ -112,8 +112,8 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal "<div>Hello content for</div>", result.css("div").first.to_html
   end
 
-  def test_renders_route_helper
-    result = render_inline(RouteComponent)
+  def test_renders_path_helper
+    result = render_inline(PathComponent)
 
     assert_includes result.text, "/"
   end

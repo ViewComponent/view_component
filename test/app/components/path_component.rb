@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RouteComponent < ActionView::Component::Base
+class PathComponent < ActionView::Component::Base
   def initialize(*)
   end
 end
