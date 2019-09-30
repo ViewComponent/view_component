@@ -33,8 +33,6 @@ module ActionView
       include ActiveSupport::Configurable
       include ActionController::RequestForgeryProtection
 
-      delegate :render, to: :view_context
-
       # Entrypoint for rendering components. Called by ActionView::Base#render.
       #
       # view_context: ActionView context from calling view
@@ -74,6 +72,14 @@ module ActionView
       end
 
       def initialize(*); end
+
+      def render(options = {}, args = {}, &block)
+        if options.is_a?(Hash) && options.has_key?(:partial)
+          view_context.render(options, args, &block)
+        else
+          super
+        end
+      end
 
       class << self
         def inherited(child)
