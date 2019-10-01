@@ -1,3 +1,9 @@
+# v1.3.1
+
+*   Fix bug where rendering nested content caused an error.
+
+    *Joel Hawksley, Aaron Patterson*
+
 # v1.3.0
 
 *   Components are rendered with enough controller context to support rendering of partials and forms.
