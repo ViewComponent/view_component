@@ -1,3 +1,9 @@
+# v1.3.2
+
+*   Support rendering views from inside component templates.
+
+    *Patrick Sinclair*
+
 # v1.3.1
 
 *   Fix bug where rendering nested content caused an error.
