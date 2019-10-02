@@ -1,3 +1,9 @@
+# v1.3.3
+
+*   Do not raise error when sidecar files that are not templates exist.
+
+    *Joel Hawksley*
+
 # v1.3.2
 
 *   Support rendering views from inside component templates.

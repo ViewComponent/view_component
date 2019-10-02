@@ -6,7 +6,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "actionview-component"
-  spec.version       = "1.3.2"
+  spec.version       = "1.3.3"
   spec.authors       = ["GitHub Open Source"]
   spec.email         = ["opensource+actionview-component@github.com"]
 
