@@ -130,6 +130,12 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
   end
 
+  def test_renders_component_with_css_sidecar
+    result = render_inline(CssSidecarFileComponent)
+
+    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
+  end
+
   def test_template_changes_are_not_reflected_in_production
     ActionView::Base.cache_template_loading = true
 
