@@ -26,7 +26,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "rendering component with a partial" do
     get "/partial"
     assert_response :success
-    assert_equal trim_result(response.body), "partial:<div>hello,partialworld!</div>component:<div>hello,partialworld!</div>"
+    assert_equal trim_result(response.body), "partial:<div>hello,partialworld!</div>component:<div>hello,partialworld!</div><div>hello,partialworld!</div>"
   end
 
   test "rendering component in a view with deprecated syntax" do
