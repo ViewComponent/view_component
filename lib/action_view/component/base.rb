@@ -61,6 +61,7 @@ module ActionView
       def render_in(view_context, *args, &block)
         self.class.compile
         self.controller = view_context.controller
+        self.request = controller.request
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer
         @lookup_context ||= view_context.lookup_context
