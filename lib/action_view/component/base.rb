@@ -94,7 +94,12 @@ module ActionView
         def compile
           return if @compiled && ActionView::Base.cache_template_loading
 
-          class_eval("def call; @output_buffer = ActionView::OutputBuffer.new; #{compiled_template}; end")
+          class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def call
+              @output_buffer = ActionView::OutputBuffer.new
+              #{compiled_template}
+            end
+          RUBY
 
           @compiled = true
         end
