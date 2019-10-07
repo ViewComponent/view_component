@@ -1,3 +1,9 @@
+# v1.3.4
+
+* Template errors surface correct file and line number.
+
+    *Justin Coyne*
+
 * Allow access to `request` inside components.
 
     *Joel Hawksley*
