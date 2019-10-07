@@ -8,7 +8,11 @@ module ActionView
       end
 
       def controller
-        @controller ||= ApplicationController.new.tap { |c| c.request = ActionDispatch::TestRequest.create }
+        @controller ||= ApplicationController.new.tap { |c| c.request = request }
+      end
+
+      def request
+        @request ||= ActionDispatch::TestRequest.create
       end
 
       def render_component(component, **args, &block)

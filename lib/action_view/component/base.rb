@@ -60,7 +60,6 @@ module ActionView
       #
       def render_in(view_context, *args, &block)
         self.class.compile
-        self.controller = view_context.controller
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer
         @lookup_context ||= view_context.lookup_context
@@ -151,6 +150,14 @@ module ActionView
       end
 
       private
+
+      def controller
+        @controller ||= view_context.controller
+      end
+
+      def request
+        @request ||= controller.request
+      end
 
       attr_reader :content, :view_context
     end
