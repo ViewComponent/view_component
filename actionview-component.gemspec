@@ -3,10 +3,11 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require "action_view/component/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "actionview-component"
-  spec.version       = "1.3.4"
+  spec.version       = ActionView::Component::VERSION::STRING
   spec.authors       = ["GitHub Open Source"]
   spec.email         = ["opensource+actionview-component@github.com"]
 
