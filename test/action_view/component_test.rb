@@ -118,6 +118,12 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes result.text, "/"
   end
 
+  def test_renders_nested_path_helper
+    result = render_inline(PathComponentContainer)
+
+    assert_includes result.text, "/"
+  end
+
   def test_renders_url_helper
     result = render_inline(UrlComponent)
 
