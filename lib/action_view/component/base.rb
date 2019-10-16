@@ -125,7 +125,8 @@ module ActionView
 
           filename = self.instance_method(:initialize).source_location[0]
           filename_without_extension = filename[0..-(File.extname(filename).length + 1)]
-          sibling_template_files = Dir["#{filename_without_extension}.????.{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [filename]
+          sibling_template_files = file_path_array(filename_without_extension) - [filename]
+          sibling_template_files = file_path_array(Rails.root.join("app", "views", "components", File.basename(filename, ".*")).to_s) if sibling_template_files.blank?
 
           if sibling_template_files.length > 1
             raise StandardError.new("More than one template found for #{self}. There can only be one sidecar template file per component.")
@@ -139,6 +140,11 @@ module ActionView
 
           sibling_template_files[0]
         end
+
+        def file_path_array(filename)
+          Dir["#{filename}.????.{#{ActionView::Template.template_handler_extensions.join(',')}}"]
+        end
+        
       end
 
       class DummyTemplate

@@ -188,6 +188,12 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal version_string, ::ActionView::Component::VERSION::STRING
   end
 
+  def test_renders_component_with_template_in_view_directory
+    result = render_inline(ViewBasedComponent)
+
+    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,viewbasedcomponent!</div>"
+  end
+
   private
 
   def modify_file(file, content)
