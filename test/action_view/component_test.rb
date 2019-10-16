@@ -188,6 +188,12 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
   end
 
+  def test_renders_component_with_asset_url
+    result = render_inline(AssetComponent)
+
+    assert_match %r{<div>http://assets.example.com/assets/application-\w+.css</div>}, trim_result(result.css("div").first.to_html)
+  end
+
   def test_template_changes_are_not_reflected_in_production
     old_value = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = true

@@ -14,6 +14,7 @@ require "slim"
 
 module Dummy
   class Application < Rails::Application
+    config.action_controller.asset_host = "http://assets.example.com"
   end
 end
 

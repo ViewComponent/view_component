@@ -73,6 +73,7 @@ module ActionView
         @variant = @lookup_context.variants.first
         old_current_template = @current_template
         @current_template = self
+        clone_config(view_context.config)
 
         @content = view_context.capture(&block) if block_given?
         validate!
@@ -241,6 +242,15 @@ module ActionView
       end
 
       ActiveSupport.run_load_hooks(:action_view_component, self)
+      private
+
+      def clone_config(other_config)
+        %i(asset_host asset_dir).each do |key|
+          other_config.try(key).tap do |value|
+            config.try("#{key}=", value) if config.public_send(key).blank? && value.present?
+          end
+        end
+      end
     end
   end
 end
