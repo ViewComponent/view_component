@@ -144,7 +144,6 @@ module ActionView
         def file_path_array(filename)
           Dir["#{filename}.????.{#{ActionView::Template.template_handler_extensions.join(',')}}"]
         end
-        
       end
 
       class DummyTemplate
