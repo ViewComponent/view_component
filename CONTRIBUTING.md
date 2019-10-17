@@ -32,7 +32,7 @@ Here are a few things you can do that will increase the likelihood of your pull 
 If you are the current maintainer of this gem:
 
 1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
-1. Bump gem version in `actionview-component.gemspec`.
+1. Bump gem version in `lib/action_view/component/version.rb`.
 1. Make sure your local dependencies are up to date: `bundle`
 1. Ensure that tests are green: `bundle exec rake`
 1. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') gem build actionview-component.gemspec`
