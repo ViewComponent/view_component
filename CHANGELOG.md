@@ -1,3 +1,17 @@
+# v1.3.5
+
+* Re-expose `controller` method.
+
+    *Michael Emhofer, Joel Hawksley*
+
+* Gem version numbers are now accessible through `ActionView::Component::VERSION`
+
+    *Richard Macklin*
+
+* Fix typo in README
+
+    *ars moriendi*
+
 # v1.3.4
 
 * Template errors surface correct file and line number.
