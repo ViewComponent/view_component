@@ -149,7 +149,7 @@ Components can be rendered via:
 
 The following syntax has been deprecated and will be removed in v2.0.0:
 
-`render(TestComponent.new(foo: :bar)`
+`render(TestComponent.new(foo: :bar))`
 
 #### Error case
 
