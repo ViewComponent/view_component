@@ -166,6 +166,22 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal "<div>hello,world!</div>", render_inline(MyComponent).css("div").first.to_html
   end
 
+  def test_that_it_has_a_version_number
+    refute_nil ::ActionView::Component::VERSION::MAJOR
+    assert_kind_of Integer, ::ActionView::Component::VERSION::MAJOR
+    refute_nil ::ActionView::Component::VERSION::MINOR
+    assert_kind_of Integer, ::ActionView::Component::VERSION::MINOR
+    refute_nil ::ActionView::Component::VERSION::PATCH
+    assert_kind_of Integer, ::ActionView::Component::VERSION::PATCH
+
+    version_string = [
+      ::ActionView::Component::VERSION::MAJOR,
+      ::ActionView::Component::VERSION::MINOR,
+      ::ActionView::Component::VERSION::PATCH
+    ].join(".")
+    assert_equal version_string, ::ActionView::Component::VERSION::STRING
+  end
+
   private
 
   def modify_file(file, content)
