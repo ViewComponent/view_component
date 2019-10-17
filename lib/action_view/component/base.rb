@@ -80,6 +80,10 @@ module ActionView
         end
       end
 
+      def controller
+        @controller ||= view_context.controller
+      end
+
       class << self
         def inherited(child)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
@@ -155,10 +159,6 @@ module ActionView
       end
 
       private
-
-      def controller
-        @controller ||= view_context.controller
-      end
 
       def request
         @request ||= controller.request
