@@ -142,9 +142,7 @@ module ActionView
           end
 
           if sibling_template_files.length == 0
-            raise NotImplementedError.new(
-              "Could not find a template file for #{self}."
-            )
+            raise NotImplementedError.new("Could not find a template file for #{self}.")
           end
 
           sibling_template_files[0]
