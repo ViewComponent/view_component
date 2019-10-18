@@ -88,10 +88,7 @@ module ActionView
       # Looks for the source file path of the initialize method of the instance's class.
       # Removes the first part of the path and the extension.
       def virtual_path
-        self.class.instance_method(:initialize)
-                  .source_location
-                  .first
-                  .gsub(%r{(.*app/)|(.rb)}, "")
+        self.class.source_location.gsub(%r{(.*app/)|(.rb)}, "")
       end
 
       class << self
@@ -101,11 +98,16 @@ module ActionView
           super
         end
 
+        def source_location
+          instance_method(:initialize).source_location[0]
+        end
+
         # Compile template to #call instance method, assuming it hasn't been compiled already.
         # We could in theory do this on app boot, at least in production environments.
         # Right now this just compiles the template the first time the component is rendered.
         def compile
           return if @compiled && ActionView::Base.cache_template_loading
+          ensure_initializer_defined
 
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def call
@@ -119,6 +121,17 @@ module ActionView
 
         private
 
+        # Require #initialize to be defined so that we can use
+        # method#source_location to look up the file name
+        # of the component.
+        #
+        # If we were able to only support Ruby 2.7+,
+        # We could just use Module#const_source_location,
+        # rendering this unnecessary.
+        def ensure_initializer_defined
+          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
+        end
+
         def compiled_template
           handler = ActionView::Template.handler_for_extension(File.extname(template_file_path).gsub(".", ""))
           template = File.read(template_file_path)
@@ -131,20 +144,15 @@ module ActionView
         end
 
         def template_file_path
-          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
-
-          filename = self.instance_method(:initialize).source_location[0]
-          filename_without_extension = filename.split(".")[0]
-          sibling_template_files = Dir["#{filename_without_extension}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [filename]
+          sibling_template_files =
+            Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]
 
           if sibling_template_files.length > 1
             raise StandardError.new("More than one template found for #{self}. There can only be one sidecar template file per component.")
           end
 
           if sibling_template_files.length == 0
-            raise NotImplementedError.new(
-              "Could not find a template file for #{self}."
-            )
+            raise NotImplementedError.new("Could not find a template file for #{self}.")
           end
 
           sibling_template_files[0]
