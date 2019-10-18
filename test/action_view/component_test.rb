@@ -148,6 +148,12 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal trim_result(result.css("div").first.to_html), "<div>0.0.0.0</div>"
   end
 
+  def test_renders_component_without_format
+    result = render_inline(NoFormatComponent)
+
+    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
+  end
+
   def test_template_changes_are_not_reflected_in_production
     old_value = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = true
