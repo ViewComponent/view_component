@@ -107,6 +107,7 @@ module ActionView
         # Right now this just compiles the template the first time the component is rendered.
         def compile
           return if @compiled && ActionView::Base.cache_template_loading
+          ensure_initializer_defined
 
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def call
@@ -120,6 +121,17 @@ module ActionView
 
         private
 
+        # Require #initialize to be defined so that we can use
+        # method#source_location to look up the file name
+        # of the component.
+        #
+        # If we were able to only support Ruby 2.7+,
+        # We could just use Module#const_source_location,
+        # rendering this unnecessary.
+        def ensure_initializer_defined
+          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
+        end
+
         def compiled_template
           handler = ActionView::Template.handler_for_extension(File.extname(template_file_path).gsub(".", ""))
           template = File.read(template_file_path)
@@ -132,8 +144,6 @@ module ActionView
         end
 
         def template_file_path
-          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
-
           sibling_template_files =
             Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]
 
