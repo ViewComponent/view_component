@@ -88,10 +88,12 @@ module ActionView
       # Looks for the source file path of the initialize method of the instance's class.
       # Removes the first part of the path and the extension.
       def virtual_path
-        self.class.instance_method(:initialize)
-                  .source_location
-                  .first
-                  .gsub(%r{(.*app/)|(.rb)}, "")
+        self.
+          class.
+          instance_method(:initialize).
+          source_location.
+          first.
+          gsub(%r{(.*app/)|(.rb)}, "")
       end
 
       class << self
