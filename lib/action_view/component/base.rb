@@ -64,6 +64,7 @@ module ActionView
         @view_renderer ||= view_context.view_renderer
         @lookup_context ||= view_context.lookup_context
         @view_flow ||= view_context.view_flow
+        @virtual_path ||= virtual_path
 
         @content = view_context.capture(&block) if block_given?
         validate!
@@ -82,6 +83,15 @@ module ActionView
 
       def controller
         @controller ||= view_context.controller
+      end
+
+      # Looks for the source file path of the initialize method of the instance's class.
+      # Removes the first part of the path and the extension.
+      def virtual_path
+        self.class.instance_method(:initialize)
+                  .source_location
+                  .first
+                  .gsub(%r{(.*app/)|(.rb)}, "")
       end
 
       class << self
