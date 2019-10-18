@@ -1,5 +1,5 @@
 en:
   components:
-    with_translations:
+    translations_component:
       title: Lorem ipsum
       subtitle: More lorem ipsum

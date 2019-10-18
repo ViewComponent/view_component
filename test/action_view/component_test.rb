@@ -188,12 +188,12 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal version_string, ::ActionView::Component::VERSION::STRING
   end
 
-  def test_component_with_translations
-    assert_includes render_inline(WithTranslations).css("div").first.to_html,
-                    "<h1>#{I18n.t('components.with_translations.title')}</h1>"
+  def test_renders_component_with_translations
+    assert_includes render_inline(TranslationsComponent).css("div").first.to_html,
+                    "<h1>#{I18n.t('components.translations_component.title')}</h1>"
 
-    assert_includes render_inline(WithTranslations).css("div").first.to_html,
-                    "<h2>#{I18n.t('components.with_translations.subtitle')}</h2>"
+    assert_includes render_inline(TranslationsComponent).css("div").first.to_html,
+                    "<h2>#{I18n.t('components.translations_component.subtitle')}</h2>"
   end
 
   private
