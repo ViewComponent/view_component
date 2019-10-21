@@ -1,3 +1,13 @@
+# v1.3.6
+
+* Allow template file names without format.
+
+    *Joel Hawksley*
+
+* Add support for translations.
+
+    *Juan Manuel Ramallo*
+
 # v1.3.5
 
 * Re-expose `controller` method.

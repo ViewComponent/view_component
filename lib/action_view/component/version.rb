@@ -5,7 +5,7 @@ module ActionView
     module VERSION
       MAJOR = 1
       MINOR = 3
-      PATCH = 5
+      PATCH = 6
 
       STRING = [MAJOR, MINOR, PATCH].join(".")
     end
