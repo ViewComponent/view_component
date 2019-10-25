@@ -4,7 +4,7 @@ module ActionView
   module Component
     module TestHelpers
       def render_inline(component, **args, &block)
-        Nokogiri::HTML(controller.view_context.render(component, args, &block))
+        Nokogiri::HTML(controller.view_context.render(component, args, &block)).css("body > *")
       end
 
       def controller
