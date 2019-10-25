@@ -5,13 +5,13 @@ require "test_helper"
 class ActionView::ComponentTest < Minitest::Test
   include ActionView::Component::TestHelpers
 
-  def test_render_component
+  def test_render_inline
     result = render_inline(MyComponent)
 
     assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
   end
 
-  def test_render_component_with_old_helper
+  def test_render_inline_with_old_helper
     result = render_component(MyComponent)
 
     assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
