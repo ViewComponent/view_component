@@ -59,16 +59,18 @@ module ActionView
       # <span title="greeting">Hello, world!</span>
       #
       def render_in(view_context, *args, &block)
-        self.class.compile
+        @lookup_context ||= view_context.lookup_context
+        variant = @lookup_context.variants[0]
+        self.class.compile(variant)
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer
-        @lookup_context ||= view_context.lookup_context
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
 
         @content = view_context.capture(&block) if block_given?
         validate!
-        call
+
+        method(self.class.call_method_name(variant).to_sym).call
       end
 
       def initialize(*); end
@@ -102,21 +104,28 @@ module ActionView
           instance_method(:initialize).source_location[0]
         end
 
+        def call_method_name(variant)
+          "call#{'_' + variant.to_s if variant}"
+        end
+
         # Compile template to #call instance method, assuming it hasn't been compiled already.
         # We could in theory do this on app boot, at least in production environments.
         # Right now this just compiles the template the first time the component is rendered.
-        def compile
-          return if @compiled && ActionView::Base.cache_template_loading
+        # Passing a variant will compile the template to the #call_{variant} method, if not compiled already.
+        # When variant is nil, it compiles the main template.
+        def compile(variant = nil)
+          @compiled ||= {}
+          return if @compiled[variant] && ActionView::Base.cache_template_loading
           ensure_initializer_defined
 
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def call
+            def #{call_method_name(variant)}
               @output_buffer = ActionView::OutputBuffer.new
-              #{compiled_template}
+              #{compiled_template(variant)}
             end
           RUBY
 
-          @compiled = true
+          @compiled[variant] = true
         end
 
         private
@@ -132,9 +141,10 @@ module ActionView
           raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
         end
 
-        def compiled_template
-          handler = ActionView::Template.handler_for_extension(File.extname(template_file_path).gsub(".", ""))
-          template = File.read(template_file_path)
+        def compiled_template(variant)
+          file_path = template_file_path(variant)
+          handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
+          template = File.read(file_path)
 
           if handler.method(:call).parameters.length > 1
             handler.call(DummyTemplate.new, template)
@@ -143,19 +153,33 @@ module ActionView
           end
         end
 
-        def template_file_path
+        def template_file_path(variant)
           sibling_template_files =
             Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]
+          variant_template_files = sibling_template_files.select { |file| file.split(".").drop(1).join.include?("+") }
+          main_template_files = sibling_template_files - variant_template_files
+          if main_template_files.length > 1
+            raise StandardError.new("More than one template found for #{self}. There can only be one main template file per component.")
+          end
 
-          if sibling_template_files.length > 1
-            raise StandardError.new("More than one template found for #{self}. There can only be one sidecar template file per component.")
+          variant_names = variant_template_files.map { |path| path.gsub(%r{(.*\+)|(\..*)}, "") }
+          if variant_names.length != variant_names.uniq.length
+            raise StandardError.new("More than one template found for a variant in #{self}. There can only be one template file per variant.")
           end
 
           if sibling_template_files.length == 0
             raise NotImplementedError.new("Could not find a template file for #{self}.")
           end
 
-          sibling_template_files[0]
+          if variant.nil?
+            main_template_files[0]
+          else
+            unless variant_names.include?(variant.to_s)
+              raise StandardError.new("Variant #{variant} could not be found for #{self}.")
+            end
+
+            variant_template_files.detect { |file| file.include?("+#{variant}") }
+          end
         end
       end
 
