@@ -25,12 +25,30 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes exception.message, "Could not find a template file for MissingTemplateComponent"
   end
 
-  def test_raises_error_when_more_then_one_sidecar_template_is_present
+  def test_raises_error_when_more_than_one_sidecar_template_is_present
     error = assert_raises StandardError do
       render_inline(TooManySidecarFilesComponent)
     end
 
     assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
+  end
+
+  def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
+    error = assert_raises StandardError do
+      render_inline(TooManySidecarFilesForVariantComponent)
+    end
+
+    assert_includes error.message, "More than one template found for a variant in TooManySidecarFilesForVariantComponent."
+  end
+
+  def test_raises_error_when_variant_template_is_not_present
+    with_variant :phone do
+      error = assert_raises StandardError do
+        render_inline(MyComponent)
+      end
+
+      assert_includes error.message, "Variant phone could not be found for MyComponent."
+    end
   end
 
   def test_raises_error_when_initializer_is_not_defined

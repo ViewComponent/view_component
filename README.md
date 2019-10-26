@@ -186,6 +186,21 @@ end
 
 In general, we’ve found it makes the most sense to test components based on their rendered HTML.
 
+#### Action Pack Variants
+
+To test a specific variant you can wrap your test with the `with_variant` helper method as:
+
+```ruby
+def test_render_component_for_tablet
+  with_variant :tablet do
+    assert_equal(
+      %(<span title="my title">Hello, tablets!</span>),
+      render_inline(TestComponent, title: "my title") { "Hello, tablets!" }.css("span").to_html
+    )
+  end
+end
+```
+
 ## Frequently Asked Questions
 
 ### Can I use other templating languages besides ERB?
