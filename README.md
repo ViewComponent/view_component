@@ -203,6 +203,69 @@ def test_render_component_for_tablet
 end
 ```
 
+### Previewing Components
+Action View Component previews provide a way to see how components look by visiting a special URL that renders them.
+In the previous example, the preview class for `TestComponent` should be named `TestComponentPreview` and located in `test/components/previews/test_component_preview.rb`.
+To see the preview of the component with a given title, implement a method that returns the locals (as a hash) to be passed to the component.
+The method can be named after what you want to preview given the locals you use, and you can define many examples (methods) as you want:
+
+```ruby
+# test/components/previews/test_component_preview.rb
+
+class TestComponentPreview < ActionView::Component::Preview
+  def with_default_title
+    {
+      title: "Test component default"
+    }
+  end
+
+  def with_long_title
+    {
+      title: "This is a really long title to see how the component renders this"
+    }
+  end
+end
+```
+
+Then the previews will be available in <http://localhost:3000/rails/components/test_component/with_default_title>
+and <http://localhost:3000/rails/components/test_component/with_long_title>.
+
+To specify the stylesheets and javascript used by your previews you must create a dummy layout file in `test/components/previews/layouts/`.
+
+```erb
+<!-- test/components/previews/layouts/application.html.erb -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dummy Layout</title>
+  <%= stylesheet_link_tag "application" %>
+</head>
+<body>
+  <%= yield %>
+</body>
+</html>
+```
+
+All previews will use `test/components/previews/layouts/application.*` as the default layout. You can set a different layout by calling `set_layout` in your preview class.
+
+```ruby
+# test/components/previews/test_component_preview.rb
+class TestComponentPreview < ActionView::Component::Preview
+  set_layout :admin
+
+  ...
+end
+```
+
+By default, the preview classes live in `test/components/previews`.
+This can be configured using the `preview_path` option.
+For example, if you want to change it to `lib/component_previews`, you can configure it in config/application.rb:
+
+```ruby
+config.action_view_component.preview_path = "#{Rails.root}/lib/component_previews"
+```
+
 ## Frequently Asked Questions
 
 ### Can I use other templating languages besides ERB?

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'preview'
+
 # Monkey patch ActionView::Base#render to support ActionView::Component
 #
 # A version of this monkey patch was upstreamed in https://github.com/rails/rails/pull/36388
@@ -32,6 +34,7 @@ module ActionView
       include ActiveModel::Validations
       include ActiveSupport::Configurable
       include ActionController::RequestForgeryProtection
+      include ActionView::Component::Previews
 
       validate :variant_exists
 
@@ -231,6 +234,8 @@ module ActionView
           "text/html"
         end
       end
+
+      ActiveSupport.run_load_hooks(:action_view_component, self)
     end
   end
 end
