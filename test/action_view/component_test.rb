@@ -5,15 +5,17 @@ require "test_helper"
 class ActionView::ComponentTest < Minitest::Test
   include ActionView::Component::TestHelpers
 
-  def test_render_component
+  def test_render_inline
     result = render_inline(MyComponent)
 
+    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
     assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
   end
 
-  def test_render_component_with_old_helper
+  def test_render_inline_with_old_helper
     result = render_component(MyComponent)
 
+    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
     assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
   end
 
@@ -103,13 +105,13 @@ class ActionView::ComponentTest < Minitest::Test
   def test_renders_partial_template
     result = render_inline(PartialComponent)
 
-    assert_equal "<div>hello,partial world!</div>", result.css("div").first.to_html
+    assert_equal "<div>hello,partial world!</div>", result.first.to_html
   end
 
   def test_renders_content_for_template
     result = render_inline(ContentForComponent)
 
-    assert_equal "<div>Hello content for</div>", result.css("div").first.to_html
+    assert_equal "<div>Hello content for</div>", result.first.to_html
   end
 
   def test_renders_path_helper
@@ -133,38 +135,38 @@ class ActionView::ComponentTest < Minitest::Test
   def test_renders_another_component
     result = render_inline(AnotherComponent)
 
-    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
+    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
   end
 
   def test_renders_component_with_css_sidecar
     result = render_inline(CssSidecarFileComponent)
 
-    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
+    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
   end
 
   def test_renders_component_with_request_context
     result = render_inline(RequestComponent)
 
-    assert_equal trim_result(result.css("div").first.to_html), "<div>0.0.0.0</div>"
+    assert_equal trim_result(result.first.to_html), "<div>0.0.0.0</div>"
   end
 
   def test_renders_component_without_format
     result = render_inline(NoFormatComponent)
 
-    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
+    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
   end
 
   def test_template_changes_are_not_reflected_in_production
     old_value = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = true
 
-    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).css("div").first.to_html
+    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
 
     modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
-      assert_equal  "<div>hello,world!</div>", render_inline(MyComponent).css("div").first.to_html
+      assert_equal  "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
     end
 
-    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).css("div").first.to_html
+    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
 
     ActionView::Base.cache_template_loading = old_value
   end
@@ -173,13 +175,13 @@ class ActionView::ComponentTest < Minitest::Test
     old_value = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = false
 
-    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).css("div").first.to_html
+    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
 
     modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
-      assert_equal "<div>Goodbye world!</div>", render_inline(MyComponent).css("div").first.to_html
+      assert_equal "<div>Goodbye world!</div>", render_inline(MyComponent).first.to_html
     end
 
-    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).css("div").first.to_html
+    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
 
     ActionView::Base.cache_template_loading = old_value
   end
@@ -201,10 +203,10 @@ class ActionView::ComponentTest < Minitest::Test
   end
 
   def test_renders_component_with_translations
-    assert_includes render_inline(TranslationsComponent).css("div").first.to_html,
+    assert_includes render_inline(TranslationsComponent).first.to_html,
                     "<h1>#{I18n.t('components.translations_component.title')}</h1>"
 
-    assert_includes render_inline(TranslationsComponent).css("div").first.to_html,
+    assert_includes render_inline(TranslationsComponent).first.to_html,
                     "<h2>#{I18n.t('components.translations_component.subtitle')}</h2>"
   end
 

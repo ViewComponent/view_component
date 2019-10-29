@@ -178,7 +178,7 @@ class MyComponentTest < Minitest::Test
   def test_render_component
     assert_equal(
       %(<span title="my title">Hello, World!</span>),
-      render_inline(TestComponent, title: "my title") { "Hello, World!" }.css("span").to_html
+      render_inline(TestComponent, title: "my title") { "Hello, World!" }.to_html
     )
   end
 end
