@@ -208,6 +208,10 @@ class ActionView::ComponentTest < Minitest::Test
                     "<h2>#{I18n.t('components.translations_component.subtitle')}</h2>"
   end
 
+  def test_renders_component_with_rb_in_its_name
+    assert_equal "Editorb!\n", render_inline(EditorbComponent).text
+  end
+
   private
 
   def modify_file(file, content)
