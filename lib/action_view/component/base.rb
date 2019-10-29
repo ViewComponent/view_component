@@ -9,7 +9,7 @@ class ActionView::Base
     def render(options = {}, args = {}, &block)
       if options.respond_to?(:render_in)
         ActiveSupport::Deprecation.warn(
-          "passing component instances to (`render MyComponent.new(foo: :bar)`) has been deprecated and will be removed in v2.0.0. Use `render MyComponent, foo: :bar` instead."
+          "passing component instances (`render MyComponent.new(foo: :bar)`) has been deprecated and will be removed in v2.0.0. Use `render MyComponent, foo: :bar` instead."
         )
 
         options.render_in(self, &block)
