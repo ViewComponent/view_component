@@ -168,7 +168,7 @@ DEPENDENCIES
   minitest (= 5.1.0)
   rails (= 6.0.0)
   rake (~> 10.0)
-  rubocop (~> 0.59)
+  rubocop (= 0.74)
   rubocop-github (~> 0.13.0)
   slim (~> 4.0)
 
