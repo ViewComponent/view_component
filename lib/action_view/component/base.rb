@@ -65,11 +65,14 @@ module ActionView
         @lookup_context ||= view_context.lookup_context
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
-        variant = @lookup_context.variants[0]
+        @variant = @lookup_context.variants[0]
 
         @content = view_context.capture(&block) if block_given?
         validate!
-        call(variant)
+
+        ensure_variant_template_exists
+
+        send(self.class.call_method_name(@variant))
       end
 
       def initialize(*); end
@@ -99,6 +102,14 @@ module ActionView
           super
         end
 
+        def call_method_name(variant)
+          if variant.present?
+            "call_#{variant}"
+          else
+            "call"
+          end
+        end
+
         def source_location
           instance_method(:initialize).source_location[0]
         end
@@ -109,24 +120,23 @@ module ActionView
         def compile
           return if @compiled && ActionView::Base.cache_template_loading
           ensure_initializer_defined
-          set_compiled_templates
+          ensure_templates_defined
 
-          class_eval <<-'RUBY', __FILE__, __LINE__ + 1
-            def call(variant = nil)
+          class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def #{call_method_name(nil)}
               @output_buffer = ActionView::OutputBuffer.new
-              template = if variant
-                unless variant_template = self.class.instance_variable_get(:@variant_templates)[variant]
-                  raise StandardError.new("Variant #{variant} could not be found for #{self.class}.")
-                end
-
-                variant_template
-              else
-                self.class.instance_variable_get(:@main_template)
-              end
-
-              eval template
+              #{@main_template}
             end
           RUBY
+
+          variants.each do |path, name|
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
+              def #{call_method_name(name)}
+                @output_buffer = ActionView::OutputBuffer.new
+                #{compiled_template(path)}
+              end
+            RUBY
+          end
 
           @compiled = true
         end
@@ -155,16 +165,20 @@ module ActionView
           end
         end
 
-        def set_compiled_templates
+        def variants
+          @variant_template_files.map { |path| [path, path.gsub(%r{(.*\+)|(\..*)}, "")] }.to_h
+        end
+
+        def ensure_templates_defined
           sibling_template_files =
             Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]
-          variant_template_files = sibling_template_files.select { |file| file.split(".").drop(1).join.include?("+") }
-          main_template_files = sibling_template_files - variant_template_files
+          @variant_template_files = sibling_template_files.select { |file| file.split(".").drop(1).join.include?("+") }
+          main_template_files = sibling_template_files - @variant_template_files
+
           if main_template_files.length > 1
             raise StandardError.new("More than one template found for #{self}. There can only be one main template file per component.")
           end
 
-          variants = variant_template_files.map { |path| [path, path.gsub(%r{(.*\+)|(\..*)}, "")] }.to_h
           if variants.values.length != variants.values.uniq.length
             raise StandardError.new("More than one template found for a variant in #{self}. There can only be one template file per variant.")
           end
@@ -199,6 +213,12 @@ module ActionView
       end
 
       private
+
+      def ensure_variant_template_exists
+        if @variant && !respond_to?(self.class.call_method_name(@variant))
+          raise StandardError.new("Variant #{@variant} could not be found for #{self.class.name}.")
+        end
+      end
 
       def request
         @request ||= controller.request
