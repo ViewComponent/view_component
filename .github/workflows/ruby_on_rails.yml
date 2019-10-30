@@ -23,7 +23,7 @@ jobs:
     - name: Setup Ruby
       uses: actions/setup-ruby@v1
       with:
-        version: ${{ matrix.ruby_version }}
+        ruby-version: ${{ matrix.ruby_version }}
     - name: Build and test with Rake
       run: |
         gem install bundler:1.14.0
