@@ -49,7 +49,7 @@ class ActionView::ComponentTest < Minitest::Test
         render_inline(MyComponent)
       end
 
-      assert_includes error.message, "Variant phone could not be found for MyComponent."
+      assert_includes error.message, "A template for the variant 'phone' could not be found for MyComponent."
     end
   end
 

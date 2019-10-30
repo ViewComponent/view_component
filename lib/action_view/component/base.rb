@@ -216,7 +216,7 @@ module ActionView
 
       def ensure_variant_template_exists
         if @variant && !respond_to?(self.class.call_method_name(@variant))
-          raise StandardError.new("Variant #{@variant} could not be found for #{self.class.name}.")
+          raise StandardError.new("A template for the variant '#{@variant}' could not be found for #{self.class.name}.")
         end
       end
 
