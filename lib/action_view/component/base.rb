@@ -128,61 +128,50 @@ module ActionView
         # Right now this just compiles the template the first time the component is rendered.
         def compile
           return if @compiled && ActionView::Base.cache_template_loading
-          
-          ensure_templates_defined
-          define_call_methods
+
+          validate_templates
+
+          templates.each do |template|
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
+              def #{call_method_name(template[:variant])}
+                @output_buffer = ActionView::OutputBuffer.new
+                #{compiled_template(template[:path])}
+              end
+            RUBY
+          end
 
           @compiled = true
         end
 
         def variants
-          @variant_template_files.map { |path| [path, path.gsub(%r{(.*\+)|(\..*)}, "")] }.to_h
+          templates.map { |template| template[:variant] }
+        end
+
+        def templates
+          (Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]).each_with_object([]) do |path, memo|
+            memo << {
+              path: path,
+              variant: path.split(".").second.split("+")[1]&.to_sym,
+              handler: path.split(".").last
+            }
+          end
         end
 
         private
 
-        def ensure_templates_defined
-          sibling_template_files =
-            Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]
-
-          @variant_template_files = sibling_template_files.select { |file| file.split(".").drop(1).join.include?("+") }
-
-          main_template_files = sibling_template_files - @variant_template_files
-
-          if main_template_files.length > 1
-            raise StandardError.new("More than one template found for #{self}. There can only be one main template file per component.")
+        def validate_templates
+          if templates.select { |template| template[:variant].nil? }.length > 1
+            raise StandardError.new("More than one template found for #{self}. There can only be one default template file per component.")
           end
 
-          if variants.values.length != variants.values.uniq.length
-            raise StandardError.new("More than one template found for a variant in #{self}. There can only be one template file per variant.")
+          variants.each_with_object(Hash.new(0)) { |variant, counts| counts[variant] += 1 }.each do |variant, count|
+            next unless count > 1
+
+            raise StandardError.new("More than one template found for variant '#{variant}' in #{self}. There can only be one template file per variant.")
           end
 
-          if sibling_template_files.length == 0
+          if templates.empty?
             raise NotImplementedError.new("Could not find a template file for #{self}.")
-          end
-
-          @main_template = compiled_template(main_template_files[0])
-          @variant_templates = {}.with_indifferent_access
-          variants.each do |file_path, variant_name|
-            @variant_templates[variant_name] = compiled_template(file_path)
-          end
-        end
-
-        def define_call_methods
-          class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{call_method_name(nil)}
-              @output_buffer = ActionView::OutputBuffer.new
-              #{@main_template}
-            end
-          RUBY
-
-          variants.each do |path, name|
-            class_eval <<-RUBY, __FILE__, __LINE__ + 1
-              def #{call_method_name(name)}
-                @output_buffer = ActionView::OutputBuffer.new
-                #{compiled_template(path)}
-              end
-            RUBY
           end
         end
 
@@ -218,7 +207,7 @@ module ActionView
       private
 
       def variant_exists
-        return if self.class.variants.values.map(&:to_sym).include?(@variant) || @variant.nil?
+        return if self.class.variants.include?(@variant) || @variant.nil?
 
         errors.add(:variant, "'#{@variant}' has no template defined")
       end

@@ -40,7 +40,7 @@ class ActionView::ComponentTest < Minitest::Test
       render_inline(TooManySidecarFilesForVariantComponent)
     end
 
-    assert_includes error.message, "More than one template found for a variant in TooManySidecarFilesForVariantComponent."
+    assert_includes error.message, "More than one template found for variant 'test' in TooManySidecarFilesForVariantComponent"
   end
 
   def test_raises_error_when_variant_template_is_not_present
