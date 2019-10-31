@@ -119,25 +119,10 @@ module ActionView
         # Right now this just compiles the template the first time the component is rendered.
         def compile
           return if @compiled && ActionView::Base.cache_template_loading
-          
+
           ensure_initializer_defined
           ensure_templates_defined
-
-          class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{call_method_name(nil)}
-              @output_buffer = ActionView::OutputBuffer.new
-              #{@main_template}
-            end
-          RUBY
-
-          variants.each do |path, name|
-            class_eval <<-RUBY, __FILE__, __LINE__ + 1
-              def #{call_method_name(name)}
-                @output_buffer = ActionView::OutputBuffer.new
-                #{compiled_template(path)}
-              end
-            RUBY
-          end
+          define_call_methods
 
           @compiled = true
         end
@@ -157,17 +142,6 @@ module ActionView
         # rendering this unnecessary.
         def ensure_initializer_defined
           raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
-        end
-
-        def compiled_template(file_path)
-          handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
-          template = File.read(file_path)
-
-          if handler.method(:call).parameters.length > 1
-            handler.call(DummyTemplate.new, template)
-          else
-            handler.call(DummyTemplate.new(template))
-          end
         end
 
         def ensure_templates_defined
@@ -194,6 +168,35 @@ module ActionView
           @variant_templates = {}.with_indifferent_access
           variants.each do |file_path, variant_name|
             @variant_templates[variant_name] = compiled_template(file_path)
+          end
+        end
+
+        def define_call_methods
+          class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def #{call_method_name(nil)}
+              @output_buffer = ActionView::OutputBuffer.new
+              #{@main_template}
+            end
+          RUBY
+
+          variants.each do |path, name|
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
+              def #{call_method_name(name)}
+                @output_buffer = ActionView::OutputBuffer.new
+                #{compiled_template(path)}
+              end
+            RUBY
+          end
+        end
+
+        def compiled_template(file_path)
+          handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
+          template = File.read(file_path)
+
+          if handler.method(:call).parameters.length > 1
+            handler.call(DummyTemplate.new, template)
+          else
+            handler.call(DummyTemplate.new(template))
           end
         end
       end
