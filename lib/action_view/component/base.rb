@@ -172,7 +172,9 @@ module ActionView
         def ensure_templates_defined
           sibling_template_files =
             Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]
+
           @variant_template_files = sibling_template_files.select { |file| file.split(".").drop(1).join.include?("+") }
+          
           main_template_files = sibling_template_files - @variant_template_files
 
           if main_template_files.length > 1
@@ -216,7 +218,7 @@ module ActionView
 
       def variant_exists
         return if self.class.variants.values.map(&:to_sym).include?(@variant) || @variant.nil?
-        
+
         errors.add(:variant, "'#{@variant}' has no template defined")
       end
 
