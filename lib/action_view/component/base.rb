@@ -119,6 +119,7 @@ module ActionView
         # Right now this just compiles the template the first time the component is rendered.
         def compile
           return if @compiled && ActionView::Base.cache_template_loading
+          
           ensure_initializer_defined
           ensure_templates_defined
 
@@ -174,7 +175,7 @@ module ActionView
             Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]
 
           @variant_template_files = sibling_template_files.select { |file| file.split(".").drop(1).join.include?("+") }
-          
+
           main_template_files = sibling_template_files - @variant_template_files
 
           if main_template_files.length > 1
