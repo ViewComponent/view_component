@@ -111,6 +111,15 @@ module ActionView
         end
 
         def source_location
+          # Require #initialize to be defined so that we can use
+          # method#source_location to look up the file name
+          # of the component.
+          #
+          # If we were able to only support Ruby 2.7+,
+          # We could just use Module#const_source_location,
+          # rendering this unnecessary.
+          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
+
           instance_method(:initialize).source_location[0]
         end
 
@@ -119,8 +128,7 @@ module ActionView
         # Right now this just compiles the template the first time the component is rendered.
         def compile
           return if @compiled && ActionView::Base.cache_template_loading
-
-          ensure_initializer_defined
+          
           ensure_templates_defined
           define_call_methods
 
@@ -132,17 +140,6 @@ module ActionView
         end
 
         private
-
-        # Require #initialize to be defined so that we can use
-        # method#source_location to look up the file name
-        # of the component.
-        #
-        # If we were able to only support Ruby 2.7+,
-        # We could just use Module#const_source_location,
-        # rendering this unnecessary.
-        def ensure_initializer_defined
-          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
-        end
 
         def ensure_templates_defined
           sibling_template_files =
