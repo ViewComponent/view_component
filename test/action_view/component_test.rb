@@ -45,11 +45,11 @@ class ActionView::ComponentTest < Minitest::Test
 
   def test_raises_error_when_variant_template_is_not_present
     with_variant :phone do
-      error = assert_raises StandardError do
+      error = assert_raises ActiveModel::ValidationError do
         render_inline(MyComponent)
       end
 
-      assert_includes error.message, "A template for the variant 'phone' could not be found for MyComponent."
+      assert_includes error.message, "Validation failed: Variant 'phone' has no template defined"
     end
   end
 

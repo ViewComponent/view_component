@@ -33,6 +33,8 @@ module ActionView
       include ActiveSupport::Configurable
       include ActionController::RequestForgeryProtection
 
+      validate :variant_exists
+
       # Entrypoint for rendering components. Called by ActionView::Base#render.
       #
       # view_context: ActionView context from calling view
@@ -69,8 +71,6 @@ module ActionView
 
         @content = view_context.capture(&block) if block_given?
         validate!
-
-        ensure_variant_template_exists
 
         send(self.class.call_method_name(@variant))
       end
@@ -141,6 +141,10 @@ module ActionView
           @compiled = true
         end
 
+        def variants
+          @variant_template_files.map { |path| [path, path.gsub(%r{(.*\+)|(\..*)}, "")] }.to_h
+        end
+
         private
 
         # Require #initialize to be defined so that we can use
@@ -163,10 +167,6 @@ module ActionView
           else
             handler.call(DummyTemplate.new(template))
           end
-        end
-
-        def variants
-          @variant_template_files.map { |path| [path, path.gsub(%r{(.*\+)|(\..*)}, "")] }.to_h
         end
 
         def ensure_templates_defined
@@ -214,10 +214,10 @@ module ActionView
 
       private
 
-      def ensure_variant_template_exists
-        if @variant && !respond_to?(self.class.call_method_name(@variant))
-          raise StandardError.new("A template for the variant '#{@variant}' could not be found for #{self.class.name}.")
-        end
+      def variant_exists
+        return if self.class.variants.values.map(&:to_sym).include?(@variant) || @variant.nil?
+        
+        errors.add(:variant, "'#{@variant}' has no template defined")
       end
 
       def request
