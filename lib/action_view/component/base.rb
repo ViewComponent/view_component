@@ -68,11 +68,15 @@ module ActionView
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
+        old_current_template = @current_template
+        @current_template = self
 
         @content = view_context.capture(&block) if block_given?
         validate!
 
         send(self.class.call_method_name(@variant))
+      ensure
+        @current_template = old_current_template
       end
 
       def initialize(*); end
@@ -93,6 +97,14 @@ module ActionView
       # Removes the first part of the path and the extension.
       def virtual_path
         self.class.source_location.gsub(%r{(.*app/)|(\.rb)}, "")
+      end
+
+      def view_cache_dependencies
+        []
+      end
+
+      def format # :nodoc:
+        @variant
       end
 
       private
@@ -137,7 +149,7 @@ module ActionView
           instance_method(:initialize).source_location[0]
         end
 
-        # Compile templates to instance methodsa, assuming they haven't been compiled already.
+        # Compile templates to instance methods, assuming they haven't been compiled already.
         # We could in theory do this on app boot, at least in production environments.
         # Right now this just compiles the first time the component is rendered.
         def compile
@@ -194,6 +206,7 @@ module ActionView
           handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
           template = File.read(file_path)
 
+          # This can be removed once this code is merged into Rails
           if handler.method(:call).parameters.length > 1
             handler.call(DummyTemplate.new, template)
           else

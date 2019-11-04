@@ -7,4 +7,5 @@ Dummy::Application.routes.draw do
   get :partial, to: "application#partial"
   get :content, to: "application#content"
   get :variants, to: "application#variants"
+  get :cached, to: "application#cached"
 end
