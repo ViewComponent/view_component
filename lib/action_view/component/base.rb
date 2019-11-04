@@ -160,6 +160,10 @@ module ActionView
         private
 
         def validate_templates
+          if templates.empty?
+            raise NotImplementedError.new("Could not find a template file for #{self}.")
+          end
+          
           if templates.select { |template| template[:variant].nil? }.length > 1
             raise StandardError.new("More than one template found for #{self}. There can only be one default template file per component.")
           end
@@ -168,10 +172,6 @@ module ActionView
             next unless count > 1
 
             raise StandardError.new("More than one template found for variant '#{variant}' in #{self}. There can only be one template file per variant.")
-          end
-
-          if templates.empty?
-            raise NotImplementedError.new("Could not find a template file for #{self}.")
           end
         end
 
