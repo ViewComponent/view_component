@@ -2,7 +2,6 @@
 
 class ApplicationController < ActionController::Base
   def variants
-    request.variant = :tablet if params[:tablet]
-    request.variant = :phone if params[:phone]
+    request.variant = params[:variant].to_sym if params[:variant]
   end
 end

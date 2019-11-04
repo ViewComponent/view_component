@@ -38,34 +38,34 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "rendering component without variant" do
     get "/variants"
     assert_response :success
-    assert_equal "<span>Default</span>", trim_result(response.body)
+    assert_equal "Default", trim_result(response.body)
   end
 
   test "rendering component with tablet variant" do
-    get "/variants?tablet=true"
+    get "/variants?variant=tablet"
     assert_response :success
-    assert_equal "<span>Tablet</span>", trim_result(response.body)
+    assert_equal "Tablet", trim_result(response.body)
   end
 
   test "rendering component several times with different variants" do
-    get "/variants?tablet=true"
+    get "/variants?variant=tablet"
     assert_response :success
-    assert_equal "<span>Tablet</span>", trim_result(response.body)
+    assert_equal "Tablet", trim_result(response.body)
 
-    get "/variants?phone=true"
+    get "/variants?variant=phone"
     assert_response :success
-    assert_equal "<span>Phone</span>", trim_result(response.body)
+    assert_equal "Phone", trim_result(response.body)
 
     get "/variants"
     assert_response :success
-    assert_equal "<span>Default</span>", trim_result(response.body)
+    assert_equal "Default", trim_result(response.body)
 
-    get "/variants?tablet=true"
+    get "/variants?variant=tablet"
     assert_response :success
-    assert_equal "<span>Tablet</span>", trim_result(response.body)
+    assert_equal "Tablet", trim_result(response.body)
 
-    get "/variants?phone=true"
+    get "/variants?variant=phone"
     assert_response :success
-    assert_equal "<span>Phone</span>", trim_result(response.body)
+    assert_equal "Phone", trim_result(response.body)
   end
 end
