@@ -147,23 +147,24 @@ module ActionView
           templates.map { |template| template[:variant] }
         end
 
-        def templates
-          (Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]).each_with_object([]) do |path, memo|
-            memo << {
-              path: path,
-              variant: path.split(".").second.split("+")[1]&.to_sym,
-              handler: path.split(".").last
-            }
-          end
-        end
-
         private
+
+        def templates
+          @templates ||=
+            (Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]).each_with_object([]) do |path, memo|
+              memo << {
+                path: path,
+                variant: path.split(".").second.split("+")[1]&.to_sym,
+                handler: path.split(".").last
+              }
+            end
+        end
 
         def validate_templates
           if templates.empty?
             raise NotImplementedError.new("Could not find a template file for #{self}.")
           end
-          
+
           if templates.select { |template| template[:variant].nil? }.length > 1
             raise StandardError.new("More than one template found for #{self}. There can only be one default template file per component.")
           end
