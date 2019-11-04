@@ -29,7 +29,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_equal trim_result(response.body), "partial:<div>hello,partialworld!</div>component:<div>hello,partialworld!</div><div>hello,partialworld!</div>"
   end
 
-  test "rendering component in a view with deprecated syntax" do
+  test "rendering component with deprecated syntax" do
     get "/deprecated"
     assert_response :success
     assert_equal trim_result(response.body), "<span><div>Foobar</div></span>"
