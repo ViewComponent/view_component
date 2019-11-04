@@ -22,6 +22,14 @@ module ActionView
 
         render_inline(component, args, &block)
       end
+
+      def with_variant(variant)
+        old_variants = controller.view_context.lookup_context.variants
+
+        controller.view_context.lookup_context.variants = variant
+        yield
+        controller.view_context.lookup_context.variants = old_variants
+      end
     end
   end
 end

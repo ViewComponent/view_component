@@ -33,6 +33,8 @@ module ActionView
       include ActiveSupport::Configurable
       include ActionController::RequestForgeryProtection
 
+      validate :variant_exists
+
       # Entrypoint for rendering components. Called by ActionView::Base#render.
       #
       # view_context: ActionView context from calling view
@@ -65,10 +67,12 @@ module ActionView
         @lookup_context ||= view_context.lookup_context
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
+        @variant = @lookup_context.variants.first
 
         @content = view_context.capture(&block) if block_given?
         validate!
-        call
+
+        send(self.class.call_method_name(@variant))
       end
 
       def initialize(*); end
@@ -91,6 +95,20 @@ module ActionView
         self.class.source_location.gsub(%r{(.*app/)|(\.rb)}, "")
       end
 
+      private
+
+      def variant_exists
+        return if self.class.variants.include?(@variant) || @variant.nil?
+
+        errors.add(:variant, "'#{@variant}' has no template defined")
+      end
+
+      def request
+        @request ||= controller.request
+      end
+
+      attr_reader :content, :view_context
+
       class << self
         def inherited(child)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
@@ -98,64 +116,89 @@ module ActionView
           super
         end
 
+        def call_method_name(variant)
+          if variant.present?
+            "call_#{variant}"
+          else
+            "call"
+          end
+        end
+
         def source_location
+          # Require #initialize to be defined so that we can use
+          # method#source_location to look up the file name
+          # of the component.
+          #
+          # If we were able to only support Ruby 2.7+,
+          # We could just use Module#const_source_location,
+          # rendering this unnecessary.
+          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
+
           instance_method(:initialize).source_location[0]
         end
 
-        # Compile template to #call instance method, assuming it hasn't been compiled already.
+        # Compile templates to instance methodsa, assuming they haven't been compiled already.
         # We could in theory do this on app boot, at least in production environments.
-        # Right now this just compiles the template the first time the component is rendered.
+        # Right now this just compiles the first time the component is rendered.
         def compile
           return if @compiled && ActionView::Base.cache_template_loading
-          ensure_initializer_defined
 
-          class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def call
-              @output_buffer = ActionView::OutputBuffer.new
-              #{compiled_template}
-            end
-          RUBY
+          validate_templates
+
+          templates.each do |template|
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
+              def #{call_method_name(template[:variant])}
+                @output_buffer = ActionView::OutputBuffer.new
+                #{compiled_template(template[:path])}
+              end
+            RUBY
+          end
 
           @compiled = true
         end
 
-        private
-
-        # Require #initialize to be defined so that we can use
-        # method#source_location to look up the file name
-        # of the component.
-        #
-        # If we were able to only support Ruby 2.7+,
-        # We could just use Module#const_source_location,
-        # rendering this unnecessary.
-        def ensure_initializer_defined
-          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
+        def variants
+          templates.map { |template| template[:variant] }
         end
 
-        def compiled_template
-          handler = ActionView::Template.handler_for_extension(File.extname(template_file_path).gsub(".", ""))
-          template = File.read(template_file_path)
+        private
+
+        def templates
+          @templates ||=
+            (Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]).each_with_object([]) do |path, memo|
+              memo << {
+                path: path,
+                variant: path.split(".").second.split("+")[1]&.to_sym,
+                handler: path.split(".").last
+              }
+            end
+        end
+
+        def validate_templates
+          if templates.empty?
+            raise NotImplementedError.new("Could not find a template file for #{self}.")
+          end
+
+          if templates.select { |template| template[:variant].nil? }.length > 1
+            raise StandardError.new("More than one template found for #{self}. There can only be one default template file per component.")
+          end
+
+          variants.each_with_object(Hash.new(0)) { |variant, counts| counts[variant] += 1 }.each do |variant, count|
+            next unless count > 1
+
+            raise StandardError.new("More than one template found for variant '#{variant}' in #{self}. There can only be one template file per variant.")
+          end
+        end
+
+        def compiled_template(file_path)
+          handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
+          template = File.read(file_path)
 
           if handler.method(:call).parameters.length > 1
             handler.call(DummyTemplate.new, template)
           else
             handler.call(DummyTemplate.new(template))
           end
-        end
-
-        def template_file_path
-          sibling_template_files =
-            Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]
-
-          if sibling_template_files.length > 1
-            raise StandardError.new("More than one template found for #{self}. There can only be one sidecar template file per component.")
-          end
-
-          if sibling_template_files.length == 0
-            raise NotImplementedError.new("Could not find a template file for #{self}.")
-          end
-
-          sibling_template_files[0]
         end
       end
 
@@ -175,14 +218,6 @@ module ActionView
           "text/html"
         end
       end
-
-      private
-
-      def request
-        @request ||= controller.request
-      end
-
-      attr_reader :content, :view_context
     end
   end
 end

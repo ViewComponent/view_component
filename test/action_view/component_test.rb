@@ -27,12 +27,30 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes exception.message, "Could not find a template file for MissingTemplateComponent"
   end
 
-  def test_raises_error_when_more_then_one_sidecar_template_is_present
+  def test_raises_error_when_more_than_one_sidecar_template_is_present
     error = assert_raises StandardError do
       render_inline(TooManySidecarFilesComponent)
     end
 
     assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
+  end
+
+  def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
+    error = assert_raises StandardError do
+      render_inline(TooManySidecarFilesForVariantComponent)
+    end
+
+    assert_includes error.message, "More than one template found for variant 'test' in TooManySidecarFilesForVariantComponent"
+  end
+
+  def test_raises_error_when_variant_template_is_not_present
+    with_variant :phone do
+      error = assert_raises ActiveModel::ValidationError do
+        render_inline(MyComponent)
+      end
+
+      assert_includes error.message, "Validation failed: Variant 'phone' has no template defined"
+    end
   end
 
   def test_raises_error_when_initializer_is_not_defined
@@ -79,6 +97,14 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal '<input type="submit" value="foo">', result.css("input[type=submit]").to_html
     assert result.css("form[class='button_to'][action='/'][method='post']").present?
     assert result.css("input[type='hidden'][name='authenticity_token']").present?
+  end
+
+  def test_renders_component_with_variant
+    with_variant :phone do
+      result = render_inline(VariantsComponent)
+
+      assert_includes result.text, "Phone"
+    end
   end
 
   def test_renders_erb_template

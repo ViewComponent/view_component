@@ -29,9 +29,43 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_equal trim_result(response.body), "partial:<div>hello,partialworld!</div>component:<div>hello,partialworld!</div><div>hello,partialworld!</div>"
   end
 
-  test "rendering component in a view with deprecated syntax" do
+  test "rendering component with deprecated syntax" do
     get "/deprecated"
     assert_response :success
     assert_equal trim_result(response.body), "<span><div>Foobar</div></span>"
+  end
+
+  test "rendering component without variant" do
+    get "/variants"
+    assert_response :success
+    assert_equal "Default", trim_result(response.body)
+  end
+
+  test "rendering component with tablet variant" do
+    get "/variants?variant=tablet"
+    assert_response :success
+    assert_equal "Tablet", trim_result(response.body)
+  end
+
+  test "rendering component several times with different variants" do
+    get "/variants?variant=tablet"
+    assert_response :success
+    assert_equal "Tablet", trim_result(response.body)
+
+    get "/variants?variant=phone"
+    assert_response :success
+    assert_equal "Phone", trim_result(response.body)
+
+    get "/variants"
+    assert_response :success
+    assert_equal "Default", trim_result(response.body)
+
+    get "/variants?variant=tablet"
+    assert_response :success
+    assert_equal "Tablet", trim_result(response.body)
+
+    get "/variants?variant=phone"
+    assert_response :success
+    assert_equal "Phone", trim_result(response.body)
   end
 end
