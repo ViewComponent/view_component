@@ -68,4 +68,16 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal "Phone", trim_result(response.body)
   end
+
+  test "rendering component with caching" do
+    ActionController::Base.perform_caching = true
+
+    get "/cached"
+    assert_response :success
+    assert_equal "Cached", trim_result(response.body)
+
+    get "/cached"
+    
+    ActionController::Base.perform_caching = false
+  end
 end
