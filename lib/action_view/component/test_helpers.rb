@@ -26,7 +26,7 @@ module ActionView
       def with_variant(variant)
         old_variants = controller.view_context.lookup_context.variants
 
-        controller.view_context.lookup_context.variants = [variant]
+        controller.view_context.lookup_context.variants = variant
         yield
         controller.view_context.lookup_context.variants = old_variants
       end
