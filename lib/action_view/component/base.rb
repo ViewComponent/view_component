@@ -68,6 +68,7 @@ module ActionView
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
+        @current_template = DummyTemplate.new(virtual_path: @virtual_path)
 
         @content = view_context.capture(&block) if block_given?
         validate!
@@ -93,6 +94,10 @@ module ActionView
       # Removes the first part of the path and the extension.
       def virtual_path
         self.class.source_location.gsub(%r{(.*app/)|(\.rb)}, "")
+      end
+
+      def view_cache_dependencies
+        []
       end
 
       private
@@ -203,10 +208,11 @@ module ActionView
       end
 
       class DummyTemplate
-        attr_reader :source
+        attr_reader :source, :virtual_path
 
-        def initialize(source = nil)
+        def initialize(source = nil, virtual_path: nil)
           @source = source
+          @virtual_path = virtual_path
         end
 
         def identifier
@@ -216,6 +222,14 @@ module ActionView
         # we'll eventually want to update this to support other types
         def type
           "text/html"
+        end
+
+        def virtual_path
+          @virtual_path
+        end
+
+        def format
+          type
         end
       end
     end
