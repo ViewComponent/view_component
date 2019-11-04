@@ -68,12 +68,15 @@ module ActionView
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
-        @current_template = DummyTemplate.new(virtual_path: @virtual_path)
+        old_current_template = @current_template
+        @current_template = self
 
         @content = view_context.capture(&block) if block_given?
         validate!
 
         send(self.class.call_method_name(@variant))
+      ensure
+        @current_template = old_current_template
       end
 
       def initialize(*); end
@@ -98,6 +101,10 @@ module ActionView
 
       def view_cache_dependencies
         []
+      end
+
+      def format # :nodoc:
+        @variant
       end
 
       private
@@ -208,11 +215,10 @@ module ActionView
       end
 
       class DummyTemplate
-        attr_reader :source, :virtual_path
+        attr_reader :source
 
-        def initialize(source = nil, virtual_path: nil)
+        def initialize(source = nil)
           @source = source
-          @virtual_path = virtual_path
         end
 
         def identifier
@@ -222,14 +228,6 @@ module ActionView
         # we'll eventually want to update this to support other types
         def type
           "text/html"
-        end
-
-        def virtual_path
-          @virtual_path
-        end
-
-        def format
-          type
         end
       end
     end
