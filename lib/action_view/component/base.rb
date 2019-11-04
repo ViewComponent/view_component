@@ -67,7 +67,7 @@ module ActionView
         @lookup_context ||= view_context.lookup_context
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
-        @variant = @lookup_context.variants[0]
+        @variant = @lookup_context.variants.first
 
         @content = view_context.capture(&block) if block_given?
         validate!
