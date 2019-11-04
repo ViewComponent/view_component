@@ -99,6 +99,14 @@ class ActionView::ComponentTest < Minitest::Test
     assert result.css("input[type='hidden'][name='authenticity_token']").present?
   end
 
+  def test_renders_component_with_variant
+    with_variant :phone do
+      result = render_inline(VariantsComponent)
+
+      assert_includes result.text, "Phone"
+    end
+  end
+
   def test_renders_erb_template
     result = render_inline(ErbComponent, message: "bar") { "foo" }
 
