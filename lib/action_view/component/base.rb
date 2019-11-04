@@ -95,6 +95,20 @@ module ActionView
         self.class.source_location.gsub(%r{(.*app/)|(\.rb)}, "")
       end
 
+      private
+
+      def variant_exists
+        return if self.class.variants.include?(@variant) || @variant.nil?
+
+        errors.add(:variant, "'#{@variant}' has no template defined")
+      end
+
+      def request
+        @request ||= controller.request
+      end
+
+      attr_reader :content, :view_context
+
       class << self
         def inherited(child)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
@@ -204,20 +218,6 @@ module ActionView
           "text/html"
         end
       end
-
-      private
-
-      def variant_exists
-        return if self.class.variants.include?(@variant) || @variant.nil?
-
-        errors.add(:variant, "'#{@variant}' has no template defined")
-      end
-
-      def request
-        @request ||= controller.request
-      end
-
-      attr_reader :content, :view_context
     end
   end
 end
