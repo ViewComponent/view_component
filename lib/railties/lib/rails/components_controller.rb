@@ -9,7 +9,9 @@ class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
   before_action :find_preview, only: [:preview, :example]
   before_action :require_local!, unless: :show_previews?
 
-  content_security_policy(false)
+  if respond_to?(:content_security_policy)
+    content_security_policy(false)
+  end
 
   def index
     @previews = ActionView::Component::Preview.all
