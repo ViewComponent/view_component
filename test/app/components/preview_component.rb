@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PreviewComponent < ActionView::Component::Base
   validates :title, presence: true
 

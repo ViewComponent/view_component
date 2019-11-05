@@ -52,7 +52,7 @@ module ActionView
 
         # Returns the component object class associated to the preview.
         def component
-          self.name.sub(%r{Preview$}, '').constantize
+          self.name.sub(%r{Preview$}, "").constantize
         end
 
         # Returns all of the available examples for the component preview.
@@ -95,7 +95,7 @@ module ActionView
         private
 
         def ensure_layout_exists
-          @layout_name ||= 'application'
+          @layout_name ||= "application"
 
           unless @layout_path = Dir["#{preview_path}/layouts/#{@layout_name}.*"].first
             raise StandardError.new("Layout #{@layout_name} does not exist. It must be present in '#{preview_path}/layouts/#{@layout_name}.*'")

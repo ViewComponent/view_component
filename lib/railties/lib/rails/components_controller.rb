@@ -15,7 +15,7 @@ class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
   def index
     @previews = ActionView::Component::Preview.all
     @page_title = "Component Previews"
-    render template: 'components/index'
+    render template: "components/index"
   end
 
   def preview

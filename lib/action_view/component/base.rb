@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'preview'
+require_relative "preview"
 
 # Monkey patch ActionView::Base#render to support ActionView::Component
 #
