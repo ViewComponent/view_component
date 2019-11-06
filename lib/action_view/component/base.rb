@@ -177,7 +177,7 @@ module ActionView
 
         def templates
           @templates ||=
-            (Dir["#{source_location.split(".")[0]}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]).each_with_object([]) do |path, memo|
+            (Dir["#{source_location.sub(/#{File.extname(source_location)}$/, '')}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]).each_with_object([]) do |path, memo|
               memo << {
                 path: path,
                 variant: path.split(".").second.split("+")[1]&.to_sym,
