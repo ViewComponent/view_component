@@ -28,12 +28,6 @@ class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
     end
   end
 
-  def example
-    @example_preview = File.basename(params[:path])
-    @example = @preview.call(@example_preview, params)
-    render template: "components/example", layout: @preview.layout
-  end
-
   private
 
   def show_previews? # :doc:

@@ -4,6 +4,6 @@
 <% end %>
 <div>
   <% @preview.examples.each do |example| %>
-    <%= render "components/preview", example: example, preview_name: @preview.preview_name %>
+    <%= render "components/preview", example: example, preview: @preview %>
   <% end %>
 </div>

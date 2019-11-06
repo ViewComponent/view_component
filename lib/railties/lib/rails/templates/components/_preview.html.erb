@@ -2,14 +2,17 @@
   <h3><%= example.titleize %></h3>
 
   <style>
-    iframe {
+    .preview__container {
+      border: 1px #e8e8e8 solid;
+      border-radius: 3px;
+      box-sizing: border-box;
+      padding: 16px;
       width: 100%;
-      height: auto;
-      border: 1px solid #cccccc;
+      display: inline-block;
     }
   </style>
 
-  <iframe src="<%= "/rails/components/example/#{preview_name}/#{example}" %>"
-          frameborder="0"></iframe>
-
+  <div class="preview__container">
+    <%= raw preview.call(example) %>
+  </div>
 </div>
