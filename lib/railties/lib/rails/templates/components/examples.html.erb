@@ -1,8 +1,9 @@
 <h3><%= @preview.preview_name.titleize %></h3>
-<ul>
+<% if @preview.summary %>
+  <p><%= @preview.summary %></p>
+<% end %>
+<div>
   <% @preview.examples.each do |example| %>
-    <li>
-      <%= link_to example, "/rails/components/#{@preview.preview_name}/#{example}" %>
-    </li>
+    <%= render "components/preview", example: example, preview_name: @preview.preview_name %>
   <% end %>
-</ul>
+</div>

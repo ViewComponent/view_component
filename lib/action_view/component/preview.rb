@@ -37,6 +37,8 @@ module ActionView
       class << self
         include ActionView::Component::TestHelpers
 
+        attr_reader :summary
+
         # Returns all component preview classes.
         def all
           load_previews if descendants.empty?
@@ -75,11 +77,6 @@ module ActionView
           all.find { |p| p.preview_name == preview }
         end
 
-        # Setter for layout name
-        def set_layout(layout_name)
-          @layout_name ||= layout_name
-        end
-
         # Returns the path of the layout to be used when rendering the component
         def layout
           ensure_layout_exists
@@ -90,6 +87,16 @@ module ActionView
         # Returns the underscored name of the component preview without the suffix.
         def preview_name
           name.sub(/Preview$/, "").underscore
+        end
+
+        # Setter for layout name.
+        def set_layout(layout_name)
+          @layout_name ||= layout_name
+        end
+
+        # Settter for summary description.
+        def set_summary(summary)
+          @summary ||= summary
         end
 
         private

@@ -5,8 +5,8 @@ require "rails/application_controller"
 class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
   prepend_view_path File.expand_path("templates", __dir__)
 
-  around_action :set_locale, only: :preview
-  before_action :find_preview, only: [:preview, :example]
+  around_action :set_locale, only: :examples
+  before_action :find_preview, only: [:examples, :example]
   before_action :require_local!, unless: :show_previews?
 
   if respond_to?(:content_security_policy)
@@ -19,20 +19,12 @@ class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
     render template: "components/index"
   end
 
-  def preview
+  def examples
     @component_name = File.basename(params[:path]).camelize
 
     if params[:path] == @preview.preview_name
       @page_title = "Component Previews for #{@preview.preview_name}"
       render template: "components/examples"
-    else
-      @example_preview = File.basename(params[:path])
-
-      if @preview.example_exists?(@example_preview)
-        render template: "components/preview"
-      else
-        raise AbstractController::ActionNotFound, "Component preview '#{@component_preview}' not found in #{@preview.name}"
-      end
     end
   end
 

@@ -1,0 +1,15 @@
+<div class="preview" id="<%= example %>">
+  <h3><%= example.titleize %></h3>
+
+  <style>
+    iframe {
+      width: 100%;
+      height: auto;
+      border: 1px solid #cccccc;
+    }
+  </style>
+
+  <iframe src="<%= "/rails/components/example/#{preview_name}/#{example}" %>"
+          frameborder="0"></iframe>
+
+</div>

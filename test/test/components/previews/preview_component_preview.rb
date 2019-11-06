@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PreviewComponentPreview < ActionView::Component::Preview
+  set_summary "Classic summary for a component"
+
   def default
     { cta: "Click me!", title: "Lorem Ipsum" }
   end
