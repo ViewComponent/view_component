@@ -1,3 +1,25 @@
+# v1.4.0
+
+* Fix bug where components broke in application paths with periods.
+
+    *Anton, Joel Hawksley*
+
+* Add support for `cache_if` in component templates.
+
+    *Aaron Patterson, Joel Hawksley*
+
+* Add support for variants.
+
+    *Juan Manuel Ramallo*
+
+* Fix bug in virtual path lookup.
+
+    *Juan Manuel Ramallo*
+
+* Preselect the rendered component in render_inline.
+
+    *Elia Schito*
+
 # v1.3.6
 
 * Allow template file names without format.
