@@ -204,9 +204,9 @@ end
 ```
 
 ### Previewing Components
-Action View Component previews provide a way to see how components look by visiting a special URL that renders them.
-In the previous example, the preview class for `TestComponent` should be named `TestComponentPreview` and located in `test/components/previews/test_component_preview.rb`.
-To see the preview of the component with a given title, implement a method that returns the locals (as a hash) to be passed to the component.
+ActionView::Component::Preview`s provide a way to see how components look by visiting a special URL that renders them.
+In the previous example, the preview class for `TestComponent` would be called `TestComponentPreview` and located in `test/components/previews/test_component_preview.rb`.
+To see the preview of the component with a given title, implement a method that calls the ActionView's render method.
 The method can be named after what you want to preview given the locals you use, and you can define many examples (methods) as you want:
 
 ```ruby
@@ -214,15 +214,11 @@ The method can be named after what you want to preview given the locals you use,
 
 class TestComponentPreview < ActionView::Component::Preview
   def with_default_title
-    {
-      title: "Test component default"
-    }
+    render(TestComponent, title: "Test component default")
   end
 
   def with_long_title
-    {
-      title: "This is a really long title to see how the component renders this"
-    }
+    render(TestComponent, title: "This is a really long title to see how the component renders this")
   end
 end
 ```

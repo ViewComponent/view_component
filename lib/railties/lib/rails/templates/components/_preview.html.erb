@@ -12,7 +12,5 @@
     }
   </style>
 
-  <div class="preview__container">
-    <%= raw preview.call(example) %>
-  </div>
+  <iframe srcdoc="<%= preview.call(example).gsub("\n", "") %>" frameborder="0" class="preview__container"></iframe>
 </div>

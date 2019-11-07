@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "active_support/descendants_tracker"
-require "roadie"
 require_relative "test_helpers"
 
 module ActionView
@@ -28,9 +27,13 @@ module ActionView
 
     class Preview
       extend ActiveSupport::DescendantsTracker
+      include ActionView::Component::TestHelpers
+
+      def render(component, *locals)
+        render_inline(component, *locals)
+      end
 
       class << self
-        include ActionView::Component::TestHelpers
 
         attr_reader :summary
 
@@ -40,17 +43,13 @@ module ActionView
           descendants
         end
 
-        # Returns the rendered component.
+        # Returns the html of the component in its layout
         def call(example)
-          locals = new.public_send(example)
-          example_html = render_inline(component, locals)
+          example_html = new.public_send(example)
 
-          buffer = Rails::ComponentsController.render(template: "components/example",
-                                                      layout: layout,
-                                                      assigns: { example: example_html })
-          Nokogiri::HTML(
-            ::Roadie::Document.new(buffer).transform
-          ).css("body > *")
+          Rails::ComponentsController.render(template: "components/example",
+                                             layout: layout,
+                                             assigns: { example: example_html })
         end
 
         # Returns the component object class associated to the preview.
