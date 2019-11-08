@@ -97,6 +97,8 @@ Components are subclasses of `ActionView::Component::Base` and live in `app/comp
 
 Component class names end in -`Component`.
 
+Component module names are plural, as they are for controllers. (`Users::AvatarComponent`)
+
 Components support ActiveModel validations. Components are validated after initialization, but before rendering.
 
 Content passed to an `ActionView::Component` as a block is captured and assigned to the `content` accessor.
