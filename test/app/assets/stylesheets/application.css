@@ -1,0 +1,24 @@
+html {
+  font-family: sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+p {
+  color: blue;
+  font-weight: light;
+}
+
+.preview-component {
+  background: lightgray;
+  font-family: sans-serif;
+  padding: 10px;
+}
+
+.btn {
+  background: black;
+  color: white;
+  font-family: sans-serif;
+}

@@ -1,7 +1,4 @@
 <h3><%= @preview.preview_name.titleize %></h3>
-<% if @preview.summary %>
-  <p><%= @preview.summary %></p>
-<% end %>
 <div>
   <% @preview.examples.each do |example| %>
     <%= render "components/preview", example: example, preview: @preview %>

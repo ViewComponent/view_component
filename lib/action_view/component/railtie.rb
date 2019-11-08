@@ -4,6 +4,7 @@ require "active_job/railtie"
 require "action_view"
 require "rails"
 require "railties/lib/rails/components_controller"
+require "railties/lib/rails/component_examples_controller"
 
 module ActionView
   module Component

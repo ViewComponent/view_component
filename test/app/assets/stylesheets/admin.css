@@ -1,0 +1,27 @@
+html {
+  font-family: sans-serif;
+}
+
+body {
+  background: #333;
+  color: white;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: white;
+  font-weight: bold;
+}
+
+p {
+  color: blue;
+  color: white;
+  font-weight: light;
+}
+
+div {
+  border-bottom: 5px solid green;
+  display: inline-block;
+  padding: 15px;
+  margin: 15px;
+}

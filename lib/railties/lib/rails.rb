@@ -2,4 +2,5 @@
 
 module Rails
   autoload :ComponentsController
+  autoload :ComponentExamplesController
 end

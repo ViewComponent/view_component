@@ -34,9 +34,6 @@ module ActionView
       end
 
       class << self
-
-        attr_reader :summary
-
         # Returns all component preview classes.
         def all
           load_previews if descendants.empty?
@@ -47,9 +44,9 @@ module ActionView
         def call(example)
           example_html = new.public_send(example)
 
-          Rails::ComponentsController.render(template: "components/example",
-                                             layout: layout,
-                                             assigns: { example: example_html })
+          Rails::ComponentExamplesController.render(template: "examples/show",
+                                                    layout: @layout || "layouts/application",
+                                                    assigns: { example: example_html })
         end
 
         # Returns the component object class associated to the preview.
@@ -77,37 +74,17 @@ module ActionView
           all.find { |p| p.preview_name == preview }
         end
 
-        # Returns the path of the layout to be used when rendering the component
-        def layout
-          ensure_layout_exists
-
-          @layout_path
-        end
-
         # Returns the underscored name of the component preview without the suffix.
         def preview_name
           name.sub(/Preview$/, "").underscore
         end
 
         # Setter for layout name.
-        def set_layout(layout_name)
-          @layout_name ||= layout_name
-        end
-
-        # Settter for summary description.
-        def set_summary(summary)
-          @summary ||= summary
+        def layout(layout_name)
+          @layout = layout_name
         end
 
         private
-
-        def ensure_layout_exists
-          @layout_name ||= "application"
-
-          unless @layout_path = Dir["#{preview_path}/layouts/#{@layout_name}.*"].first
-            raise StandardError.new("Layout #{@layout_name} does not exist. It must be present in '#{preview_path}/layouts/#{@layout_name}.*'")
-          end
-        end
 
         def load_previews
           if preview_path
