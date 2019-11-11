@@ -1,0 +1,13 @@
+Description:
+============
+    Stubs out a new component with its respective template and test.
+    Pass the component name, either CamelCased or under_scored, and an optional list of attributes as arguments.
+
+Example:
+========
+    bin/rails generate action_view:component Profile name age
+
+    creates a Profile action_view:component class, test and template:
+        Component:    app/components/profile.rb
+        Template:     app/components/profile.html.erb
+        Test:         test/components/profile_test.rb

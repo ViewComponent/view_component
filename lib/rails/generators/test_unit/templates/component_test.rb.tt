@@ -1,0 +1,8 @@
+require "test_helper"
+
+class <%= class_name %>Test < ActiveSupport::TestCase
+  # test "component does something useful" do
+  #   component = <%= class_name %>.new
+  #   assert component
+  # end
+end

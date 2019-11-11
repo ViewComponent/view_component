@@ -1,0 +1,7 @@
+class <%= class_name %> < ActionView::Component::Base
+  validates :content, presence: true
+
+  def initialize(<%= initialize_signature %>)
+    <%= initialize_body %>
+  end
+end
