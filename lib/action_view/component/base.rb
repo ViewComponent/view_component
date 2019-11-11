@@ -93,6 +93,11 @@ module ActionView
         @controller ||= view_context.controller
       end
 
+      # Provides a proxy to access helper methods through
+      def helpers
+        @helpers ||= view_context
+      end
+
       # Looks for the source file path of the initialize method of the instance's class.
       # Removes the first part of the path and the extension.
       def virtual_path

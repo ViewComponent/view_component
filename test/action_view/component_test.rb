@@ -140,6 +140,12 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal "<div>Hello content for</div>", result.first.to_html
   end
 
+  def test_renders_helper_method_through_proxy
+    result = render_inline(HelpersProxyComponent)
+
+    assert_equal "<div>Hello helper method</div>", result.first.to_html
+  end
+
   def test_renders_path_helper
     result = render_inline(PathComponent)
 
