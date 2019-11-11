@@ -22,3 +22,27 @@ p {
   color: white;
   font-family: sans-serif;
 }
+
+.State {
+  display: inline-block;
+  padding: 4px 8px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #6a737d;
+  border-radius: 3px;
+}
+
+.State--green {
+  background-color: #2cbe4e;
+}
+
+.State--red {
+  background-color: #cb2431;
+}
+
+.State--purple {
+  background-color: #6f42c1;
+}
