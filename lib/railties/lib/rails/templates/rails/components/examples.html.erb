@@ -1,6 +1,0 @@
-<h3><%= @preview.preview_name.titleize %></h3>
-<div>
-  <% @preview.examples.each do |example| %>
-    <%= render "components/preview", example: example, preview: @preview %>
-  <% end %>
-</div>

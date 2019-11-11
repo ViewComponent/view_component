@@ -48,7 +48,7 @@ module ActionView
         if options.show_previews
           app.routes.prepend do
             get "/rails/components" => "rails/components#index", :internal => true
-            get "/rails/components/*path" => "rails/components#examples", :internal => true
+            get "/rails/components/*path" => "rails/components#previews", :internal => true
           end
 
           if options.preview_path

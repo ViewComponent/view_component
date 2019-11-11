@@ -2,7 +2,7 @@
   <h3><%= link_to preview.preview_name.titleize, "/rails/components/#{preview.preview_name}" %></h3>
   <ul>
     <% preview.examples.each do |preview_example| %>
-      <li><%= link_to preview_example, "/rails/components/#{preview.preview_name}##{preview_example}" %></li>
+      <li><%= link_to preview_example, "/rails/components/#{preview.preview_name}/#{preview_example}" %></li>
     <% end %>
   </ul>
 <% end %>
