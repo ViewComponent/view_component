@@ -226,29 +226,13 @@ end
 Then the previews will be available in <http://localhost:3000/rails/components/test_component/with_default_title>
 and <http://localhost:3000/rails/components/test_component/with_long_title>.
 
-To specify the stylesheets and javascript used by your previews you must create a dummy layout file in `test/components/previews/layouts/`.
-
-```erb
-<!-- test/components/previews/layouts/application.html.erb -->
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Dummy Layout</title>
-  <%= stylesheet_link_tag "application" %>
-</head>
-<body>
-  <%= yield %>
-</body>
-</html>
-```
-
-All previews will use `test/components/previews/layouts/application.*` as the default layout. You can set a different layout by calling `set_layout` in your preview class.
+Previews will use your application's layout `app/views/layouts/application`. But you can also use any other layout from your app to render the preview.
 
 ```ruby
 # test/components/previews/test_component_preview.rb
+
 class TestComponentPreview < ActionView::Component::Preview
-  set_layout :admin
+  layout "admin"
 
   ...
 end
