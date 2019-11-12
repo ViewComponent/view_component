@@ -207,7 +207,7 @@ end
 ActionView::Component::Preview`s provide a way to see how components look by visiting a special URL that renders them.
 In the previous example, the preview class for `TestComponent` would be called `TestComponentPreview` and located in `test/components/previews/test_component_preview.rb`.
 To see the preview of the component with a given title, implement a method that renders the component.
-The method can be named after what you want to preview given the locals you use, and you can define many examples (methods) as you want:
+You can define as many examples as you want:
 
 ```ruby
 # test/components/previews/test_component_preview.rb
