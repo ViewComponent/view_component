@@ -240,7 +240,7 @@ end
 
 By default, the preview classes live in `test/components/previews`.
 This can be configured using the `preview_path` option.
-For example, if you want to change it to `lib/component_previews`, you can configure it in config/application.rb:
+For example, if you want to use `lib/component_previews`, set the following in `config/application.rb`:
 
 ```ruby
 config.action_view_component.preview_path = "#{Rails.root}/lib/component_previews"
