@@ -18,9 +18,13 @@ module Rails
 
       private
 
+      def parent_class
+        defined?(ApplicationComponent) ? "ApplicationComponent" : "ActionView::Component::Base"
+      end
+
       def initialize_signature
         if attributes.present?
-          attributes.map { |attr| "#{attr.name}:" }.join(", ")
+          attributes.map(&:name).join(":, ")
         else
           "*"
         end
