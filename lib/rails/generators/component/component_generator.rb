@@ -18,6 +18,13 @@ module Rails
 
       private
 
+      def requires_content?
+        return @requires_content if @asked
+
+        @asked = true
+        @requires_content = ask("Would you like #{class_name} to require content? (Y/n)").downcase == "y"
+      end
+
       def parent_class
         defined?(ApplicationComponent) ? "ApplicationComponent" : "ActionView::Component::Base"
       end
