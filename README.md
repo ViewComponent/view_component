@@ -223,7 +223,7 @@ class TestComponentPreview < ActionView::Component::Preview
 end
 ```
 
-Then the previews will be available in <http://localhost:3000/rails/components/test_component/with_default_title>
+The previews will be available in <http://localhost:3000/rails/components/test_component/with_default_title>
 and <http://localhost:3000/rails/components/test_component/with_long_title>.
 
 Previews will use your application's layout `app/views/layouts/application`. But you can also use any other layout from your app to render the preview.
