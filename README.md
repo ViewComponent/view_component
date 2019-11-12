@@ -226,7 +226,7 @@ end
 The previews will be available in <http://localhost:3000/rails/components/test_component/with_default_title>
 and <http://localhost:3000/rails/components/test_component/with_long_title>.
 
-Previews will use your application's layout `app/views/layouts/application`. But you can also use any other layout from your app to render the preview.
+Previews use the application layout by default, but you can also use other layouts from your app:
 
 ```ruby
 # test/components/previews/test_component_preview.rb
