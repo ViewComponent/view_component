@@ -1,0 +1,48 @@
+html {
+  font-family: sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+p {
+  color: blue;
+  font-weight: light;
+}
+
+.preview-component {
+  background: lightgray;
+  font-family: sans-serif;
+  padding: 10px;
+}
+
+.btn {
+  background: black;
+  color: white;
+  font-family: sans-serif;
+}
+
+.State {
+  display: inline-block;
+  padding: 4px 8px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #6a737d;
+  border-radius: 3px;
+}
+
+.State--green {
+  background-color: #2cbe4e;
+}
+
+.State--red {
+  background-color: #cb2431;
+}
+
+.State--purple {
+  background-color: #6f42c1;
+}

@@ -203,6 +203,49 @@ def test_render_component_for_tablet
 end
 ```
 
+### Previewing Components
+ActionView::Component::Preview`s provide a way to see how components look by visiting a special URL that renders them.
+In the previous example, the preview class for `TestComponent` would be called `TestComponentPreview` and located in `test/components/previews/test_component_preview.rb`.
+To see the preview of the component with a given title, implement a method that renders the component.
+You can define as many examples as you want:
+
+```ruby
+# test/components/previews/test_component_preview.rb
+
+class TestComponentPreview < ActionView::Component::Preview
+  def with_default_title
+    render(TestComponent, title: "Test component default")
+  end
+
+  def with_long_title
+    render(TestComponent, title: "This is a really long title to see how the component renders this")
+  end
+end
+```
+
+The previews will be available in <http://localhost:3000/rails/components/test_component/with_default_title>
+and <http://localhost:3000/rails/components/test_component/with_long_title>.
+
+Previews use the application layout by default, but you can also use other layouts from your app:
+
+```ruby
+# test/components/previews/test_component_preview.rb
+
+class TestComponentPreview < ActionView::Component::Preview
+  layout "admin"
+
+  ...
+end
+```
+
+By default, the preview classes live in `test/components/previews`.
+This can be configured using the `preview_path` option.
+For example, if you want to use `lib/component_previews`, set the following in `config/application.rb`:
+
+```ruby
+config.action_view_component.preview_path = "#{Rails.root}/lib/component_previews"
+```
+
 ## Frequently Asked Questions
 
 ### Can I use other templating languages besides ERB?

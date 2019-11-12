@@ -1,0 +1,6 @@
+<h3><%= @preview.preview_name.titleize %></h3>
+<ul>
+  <% @preview.examples.each do |example| %>
+    <li><%= link_to example, "/rails/components/#{@preview.preview_name}/#{example}" %></li>
+  <% end %>
+</ul>
