@@ -5,9 +5,9 @@ Description:
 
 Example:
 ========
-    bin/rails generate action_view:component Profile name age
+    bin/rails generate component Profile name age
 
-    creates a Profile action_view:component class, test and template:
+    creates a Profile component class, test and template:
         Component:    app/components/profile.rb
         Template:     app/components/profile.html.erb
         Test:         test/components/profile_test.rb
