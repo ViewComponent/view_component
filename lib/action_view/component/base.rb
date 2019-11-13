@@ -32,6 +32,8 @@ module ActionView
   module Component
     class Base < ActionView::Base
       IDENTIFIER_PLACEHOLDER = ""
+
+      # we'll eventually want to update this to support other types
       TYPE_PLACEHOLDER = "text/html"
 
       include ActiveModel::Validations
@@ -246,7 +248,6 @@ module ActionView
           IDENTIFIER_PLACEHOLDER
         end
 
-        # we'll eventually want to update this to support other types
         def type
           TYPE_PLACEHOLDER
         end
