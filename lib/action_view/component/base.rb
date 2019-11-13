@@ -181,6 +181,14 @@ module ActionView
           templates.map { |template| template[:variant] }
         end
 
+        def type
+          "text/html"
+        end
+
+        def identifier
+          ""
+        end
+
         private
 
         def templates
@@ -216,7 +224,7 @@ module ActionView
 
           # This can be removed once this code is merged into Rails
           if handler.method(:call).parameters.length > 1
-            handler.call(DummyTemplate.new, template)
+            handler.call(self, template)
           else
             handler.call(DummyTemplate.new(template))
           end
