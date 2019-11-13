@@ -31,6 +31,9 @@ end
 module ActionView
   module Component
     class Base < ActionView::Base
+      IDENTIFIER_PLACEHOLDER = ""
+      TYPE_PLACEHOLDER = "text/html"
+
       include ActiveModel::Validations
       include ActiveSupport::Configurable
       include ActionController::RequestForgeryProtection
@@ -182,11 +185,11 @@ module ActionView
         end
 
         def type
-          "text/html"
+          TYPE_PLACEHOLDER
         end
 
         def identifier
-          ""
+          IDENTIFIER_PLACEHOLDER
         end
 
         private
@@ -222,15 +225,16 @@ module ActionView
           handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
           template = File.read(file_path)
 
-          # This can be removed once this code is merged into Rails
           if handler.method(:call).parameters.length > 1
             handler.call(self, template)
           else
+            # This can be removed once this code is merged into Rails
             handler.call(DummyTemplate.new(template))
           end
         end
       end
 
+      # This can be removed once this code is merged into Rails
       class DummyTemplate
         attr_reader :source
 
@@ -239,12 +243,12 @@ module ActionView
         end
 
         def identifier
-          ""
+          IDENTIFIER_PLACEHOLDER
         end
 
         # we'll eventually want to update this to support other types
         def type
-          "text/html"
+          TYPE_PLACEHOLDER
         end
       end
 
