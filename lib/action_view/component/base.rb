@@ -231,25 +231,8 @@ module ActionView
             handler.call(self, template)
           else
             # This can be removed once this code is merged into Rails
-            handler.call(DummyTemplate.new(template))
+            handler.call(OpenStruct.new(source: template, identifier: IDENTIFIER_PLACEHOLDER, type: TYPE_PLACEHOLDER))
           end
-        end
-      end
-
-      # This can be removed once this code is merged into Rails
-      class DummyTemplate
-        attr_reader :source
-
-        def initialize(source)
-          @source = source
-        end
-
-        def identifier
-          IDENTIFIER_PLACEHOLDER
-        end
-
-        def type
-          TYPE_PLACEHOLDER
         end
       end
 
