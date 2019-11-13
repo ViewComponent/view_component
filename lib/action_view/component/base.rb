@@ -240,7 +240,7 @@ module ActionView
       class DummyTemplate
         attr_reader :source
 
-        def initialize(source = nil)
+        def initialize(source)
           @source = source
         end
 
