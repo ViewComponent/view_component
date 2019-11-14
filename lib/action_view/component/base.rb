@@ -101,10 +101,9 @@ module ActionView
         @helpers ||= view_context
       end
 
-      # Looks for the source file path of the initialize method of the instance's class.
       # Removes the first part of the path and the extension.
       def virtual_path
-        self.class.source_location.gsub(%r{(.*app/)|(\.rb)}, "")
+        self.class.source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
       end
 
       def view_cache_dependencies
