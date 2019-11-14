@@ -31,11 +31,6 @@ end
 module ActionView
   module Component
     class Base < ActionView::Base
-      IDENTIFIER_PLACEHOLDER = ""
-
-      # we'll eventually want to update this to support other types
-      TYPE_PLACEHOLDER = "text/html"
-
       include ActiveModel::Validations
       include ActiveSupport::Configurable
       include ActionController::RequestForgeryProtection
@@ -186,12 +181,13 @@ module ActionView
           templates.map { |template| template[:variant] }
         end
 
+        # we'll eventually want to update this to support other types
         def type
-          TYPE_PLACEHOLDER
+          "text/html"
         end
 
         def identifier
-          IDENTIFIER_PLACEHOLDER
+          ""
         end
 
         private
@@ -230,7 +226,7 @@ module ActionView
           if handler.method(:call).parameters.length > 1
             handler.call(self, template)
           else # remove before upstreaming into Rails
-            handler.call(OpenStruct.new(source: template, identifier: IDENTIFIER_PLACEHOLDER, type: TYPE_PLACEHOLDER))
+            handler.call(OpenStruct.new(source: template, identifier: identifier, type: type))
           end
         end
       end
