@@ -229,8 +229,7 @@ module ActionView
 
           if handler.method(:call).parameters.length > 1
             handler.call(self, template)
-          else
-            # This can be removed once this code is merged into Rails
+          else # remove before upstreaming into Rails
             handler.call(OpenStruct.new(source: template, identifier: IDENTIFIER_PLACEHOLDER, type: TYPE_PLACEHOLDER))
           end
         end
