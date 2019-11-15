@@ -236,10 +236,10 @@ class ActionView::ComponentTest < Minitest::Test
 
   def test_renders_component_with_translations
     assert_includes render_inline(TranslationsComponent).first.to_html,
-                    "<h1>#{I18n.t('components.translations_component.title')}</h1>"
+                    "<h1>#{I18n.t('translations_component.title')}</h1>"
 
     assert_includes render_inline(TranslationsComponent).first.to_html,
-                    "<h2>#{I18n.t('components.translations_component.subtitle')}</h2>"
+                    "<h2>#{I18n.t('translations_component.subtitle')}</h2>"
   end
 
   def test_renders_component_with_rb_in_its_name
