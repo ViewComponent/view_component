@@ -105,14 +105,14 @@ Content passed to an `ActionView::Component` as a block is captured and assigned
 
 #### Quick start
 
-Use the provided component generator to quickly get going with a new `ActionView::Component`.
+Use the component generator to create a new `ActionView::Component`.
 
-The generator expects the component name and the list of accepted properties as arguments. 
+The generator accepts the component name and the list of accepted properties as arguments:
 
 ```bash
 bin/rails generate component Example title content
       invoke  test_unit
-      create    test/components/example_component_test.rb
+      create  test/components/example_component_test.rb
       create  app/components/example_component.rb
       create  app/components/example_component.html.erb
 ```
