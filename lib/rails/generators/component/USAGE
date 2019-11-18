@@ -8,6 +8,6 @@ Example:
     bin/rails generate component Profile name age
 
     creates a Profile component and test:
-        Component:    app/components/profile.rb
-        Template:     app/components/profile.html.erb
-        Test:         test/components/profile_test.rb
+        Component:    app/components/profile_component.rb
+        Template:     app/components/profile_component.html.erb
+        Test:         test/components/profile_component_test.rb
