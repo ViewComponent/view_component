@@ -7,16 +7,21 @@ module Rails
 
       argument :attributes, type: :array, default: [], banner: "attribute"
       hook_for :test_framework
+      check_class_collision suffix: "Component"
 
       def create_component_file
-        template "component.rb", File.join("app/components",  "#{file_name}.rb")
+        template "component.rb", File.join("app/components",  "#{file_name}_component.rb")
       end
 
       def create_template_file
-        template "component.html.erb", File.join("app/components",  "#{file_name}.html.erb")
+        template "component.html.erb", File.join("app/components",  "#{file_name}_component.html.erb")
       end
 
       private
+
+      def file_name
+        @_file_name ||= super.sub(/_component\z/i, "")
+      end
 
       def requires_content?
         return @requires_content if @asked

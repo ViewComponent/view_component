@@ -4,9 +4,16 @@ module TestUnit
   module Generators
     class ComponentGenerator < ::Rails::Generators::NamedBase
       source_root File.expand_path("templates", __dir__)
+      check_class_collision suffix: "ComponentTest"
 
       def create_test_file
-        template "component_test.rb", File.join("test/components",  "#{file_name}_test.rb")
+        template "component_test.rb", File.join("test/components", "#{file_name}_component_test.rb")
+      end
+
+      private
+
+      def file_name
+        @_file_name ||= super.sub(/_component\z/i, "")
       end
     end
   end

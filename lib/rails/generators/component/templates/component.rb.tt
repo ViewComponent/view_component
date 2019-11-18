@@ -1,4 +1,4 @@
-class <%= class_name %> < <%= parent_class %>
+class <%= class_name %>Component < <%= parent_class %>
   <%- if requires_content? -%>
   validates :content, presence: true
   <%- end -%>
