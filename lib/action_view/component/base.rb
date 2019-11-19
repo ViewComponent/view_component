@@ -180,6 +180,15 @@ module ActionView
           templates.map { |template| template[:variant] }
         end
 
+        # we'll eventually want to update this to support other types
+        def type
+          "text/html"
+        end
+
+        def identifier
+          ""
+        end
+
         private
 
         def templates
@@ -213,29 +222,11 @@ module ActionView
           handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
           template = File.read(file_path)
 
-          # This can be removed once this code is merged into Rails
           if handler.method(:call).parameters.length > 1
-            handler.call(DummyTemplate.new, template)
-          else
-            handler.call(DummyTemplate.new(template))
+            handler.call(self, template)
+          else # remove before upstreaming into Rails
+            handler.call(OpenStruct.new(source: template, identifier: identifier, type: type))
           end
-        end
-      end
-
-      class DummyTemplate
-        attr_reader :source
-
-        def initialize(source = nil)
-          @source = source
-        end
-
-        def identifier
-          ""
-        end
-
-        # we'll eventually want to update this to support other types
-        def type
-          "text/html"
         end
       end
 
