@@ -42,6 +42,12 @@ module ActionView
         end
       end
 
+      initializer "action_view_component.compile_templates" do
+        ActiveSupport.on_load(:after_initialize) do
+          ActionView::Component::Base.descendants.each(&:compile) if config.eager_load
+        end
+      end
+
       config.after_initialize do |app|
         options = app.config.action_view_component
 
