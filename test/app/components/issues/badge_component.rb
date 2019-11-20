@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Issues
-  class Badge < ActionView::Component::Base
+  class BadgeComponent < ActionView::Component::Base
     STATES = {
       open: {
         color: :green,

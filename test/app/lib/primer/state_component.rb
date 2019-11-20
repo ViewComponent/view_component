@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Primer
-  class State < ActionView::Component::Base
+  class StateComponent < ActionView::Component::Base
     COLOR_CLASS_MAPPINGS = {
       default: "",
       green: "State--green",
