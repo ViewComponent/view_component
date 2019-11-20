@@ -92,11 +92,16 @@ class ActionView::ComponentTest < Minitest::Test
   end
 
   def test_renders_button_to_component
+    old_value = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+
     result = render_inline(ButtonToComponent) { "foo" }
 
     assert_equal '<input type="submit" value="foo">', result.css("input[type=submit]").to_html
     assert result.css("form[class='button_to'][action='/'][method='post']").present?
     assert result.css("input[type='hidden'][name='authenticity_token']").present?
+
+    ActionController::Base.allow_forgery_protection = old_value
   end
 
   def test_renders_component_with_variant

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "active_support/concern"
 require "active_support/descendants_tracker"
 require_relative "test_helpers"
 
