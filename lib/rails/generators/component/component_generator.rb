@@ -36,7 +36,7 @@ module Rails
 
       def initialize_signature
         if attributes.present?
-          attributes.map(&:name).join(":, ")
+          attributes.map { |attr| "#{attr.name}:" }.join(", ")
         else
           "*"
         end
