@@ -7,7 +7,6 @@ module ActionView
   module Component
     class Railtie < Rails::Railtie # :nodoc:
       config.action_view_component = ActiveSupport::OrderedOptions.new
-      config.eager_load_namespaces << ActionView::Component
 
       # Disabled due to issues with ActionView::Component::Base not defining .logger
       # initializer "action_view_component.logger" do
