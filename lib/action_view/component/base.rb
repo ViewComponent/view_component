@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "active_model"
+require "active_support/configurable"
 require_relative "preview"
 
 # Monkey patch ActionView::Base#render to support ActionView::Component
@@ -33,8 +35,9 @@ module ActionView
     class Base < ActionView::Base
       include ActiveModel::Validations
       include ActiveSupport::Configurable
-      include ActionController::RequestForgeryProtection
       include ActionView::Component::Previews
+
+      delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 
       validate :variant_exists
 

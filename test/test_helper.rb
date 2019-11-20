@@ -3,8 +3,7 @@
 require "bundler/setup"
 require "pp"
 require "pathname"
-root_path = Pathname(File.expand_path("../..", __FILE__))
-$LOAD_PATH.unshift root_path.join("lib").to_s
+require "action_view/component/base"
 require "minitest/autorun"
 require "action_view/component/test_helpers"
 
