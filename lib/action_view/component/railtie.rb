@@ -9,9 +9,10 @@ module ActionView
       config.action_view_component = ActiveSupport::OrderedOptions.new
       config.eager_load_namespaces << ActionView::Component
 
-      initializer "action_view_component.logger" do
-        ActiveSupport.on_load(:action_view_component) { self.logger ||= Rails.logger }
-      end
+      # Disabled due to issues with ActionView::Component::Base not defining .logger
+      # initializer "action_view_component.logger" do
+      #   ActiveSupport.on_load(:action_view_component) { self.logger ||= Rails.logger }
+      # end
 
       initializer "action_view_component.set_configs" do |app|
         options = app.config.action_view_component
