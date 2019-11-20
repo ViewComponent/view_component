@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Monkey patch ActionView::Base#render to support ActionView::Component
 #
 # A version of this monkey patch was upstreamed in https://github.com/rails/rails/pull/36388
