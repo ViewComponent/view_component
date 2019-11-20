@@ -7,7 +7,7 @@ require_relative "preview"
 
 module ActionView
   module Component
-    class Base < ::ActionView::Base
+    class Base < ActionView::Base
       include ActiveModel::Validations
       include ActiveSupport::Configurable
       include ActionView::Component::Previews
