@@ -84,4 +84,34 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     ActionController::Base.perform_caching = false
     Rails.cache.clear
   end
+
+  test "renders component preview" do
+    get "/rails/components/my_component/default"
+
+    assert_includes response.body, "<div>hello,world!</div>"
+  end
+
+  test "renders preview component default preview" do
+    get "/rails/components/preview_component/default"
+
+    assert_includes response.body, "Click me!"
+  end
+
+  test "renders preview component with_cta preview" do
+    get "/rails/components/preview_component/without_cta"
+
+    assert_includes response.body, "More lorem..."
+  end
+
+  test "renders badge component open preview" do
+    get "/rails/components/issues/badge_component/open"
+
+    assert_includes response.body, "Open"
+  end
+
+  test "renders badge component closed preview" do
+    get "/rails/components/issues/badge_component/closed"
+
+    assert_includes response.body, "Closed"
+  end
 end
