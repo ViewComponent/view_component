@@ -1,3 +1,23 @@
+# v1.5.0
+
+Note: `actionview-component` is now loaded by requiring `actionview/component`, not `actionview/component/base`.
+
+* Fix issue with generating component method signatures.
+
+    *Ryan Workman, Dylan Clark*
+
+* Create component generator.
+
+    *Vinicius Stock*
+
+* Add helpers proxy.
+
+    *Kasper Meyer*
+
+* Introduce ActionView::Component::Previews.
+
+    *Juan Manuel Ramallo*
+
 # v1.4.0
 
 * Fix bug where components broke in application paths with periods.
