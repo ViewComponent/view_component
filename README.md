@@ -262,20 +262,21 @@ config.action_view_component.preview_path = "#{Rails.root}/lib/component_preview
 
 ### Setting up RSpec
 
-If you're using RSpec, you can configure component specs to have access to test helpers. Create
-`spec/support/actionview_component.rb` with:
+If you're using RSpec, you can configure component specs to have access to test helpers. Add the following to
+`spec/rails_helper.rb`:
 
 ```ruby
 require "action_view/component/test_helpers"
 
 RSpec.configure do |config|
+    # ...
+
     # Ensure that the test helpers are available in component specs
     config.include ActionView::Component::TestHelpers, type: :component
 end
 ```
 
-And then ensure it's required in `spec/rails_helper.rb`. Specs created by the generator should now have access to the
-test helpers like `render_inline`.
+Specs created by the generator should now have access to test helpers like `render_inline`.
 
 ## Frequently Asked Questions
 
