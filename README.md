@@ -278,6 +278,9 @@ end
 
 Specs created by the generator should now have access to test helpers like `render_inline`.
 
+To use component previews, you'll want to [configure the preview path](#previewing-components) so that preview
+classes live somewhere besides the `test/` directory which is not present when RSpec is used.
+
 ## Frequently Asked Questions
 
 ### Can I use other templating languages besides ERB?
