@@ -1,3 +1,9 @@
+# v1.5.1
+
+* Update railties class to work with Rails 6.
+
+    *Juan Manuel Ramallo*
+
 # v1.5.0
 
 Note: `actionview-component` is now loaded by requiring `actionview/component`, not `actionview/component/base`.
