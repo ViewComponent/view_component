@@ -27,6 +27,14 @@ module ActionView
         end
       end
 
+      initializer "action_view_component.set_autoload_paths" do |app|
+        options = app.config.action_view_component
+
+        if options.show_previews && options.preview_path
+          ActiveSupport::Dependencies.autoload_paths << options.preview_path
+        end
+      end
+
       initializer "action_view_component.compile_config_methods" do
         ActiveSupport.on_load(:action_view_component) do
           config.compile_methods! if config.respond_to?(:compile_methods!)
@@ -44,12 +52,8 @@ module ActionView
 
         if options.show_previews
           app.routes.prepend do
-            get "/rails/components" => "rails/components#index", :internal => true
+            get "/rails/components"       => "rails/components#index", :internal => true
             get "/rails/components/*path" => "rails/components#previews", :internal => true
-          end
-
-          if options.preview_path
-            ActiveSupport::Dependencies.autoload_paths << options.preview_path
           end
         end
       end
