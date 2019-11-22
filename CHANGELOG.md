@@ -1,3 +1,9 @@
+# v1.5.2
+
+* Disable eager loading initializer.
+
+    *Kasper Meyer*
+
 # v1.5.1
 
 * Update railties class to work with Rails 6.
