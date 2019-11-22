@@ -41,11 +41,12 @@ module ActionView
         end
       end
 
-      initializer "action_view_component.eager_load_actions" do
-        ActiveSupport.on_load(:after_initialize) do
-          ActionView::Component::Base.descendants.each(&:action_methods) if config.eager_load
-        end
-      end
+      # Disabled because `ActionView::Component::Base` doesn't implement `#action_methods`
+      # initializer "action_view_component.eager_load_actions" do
+      #   ActiveSupport.on_load(:after_initialize) do
+      #     ActionView::Component::Base.descendants.each(&:action_methods) if config.eager_load
+      #   end
+      # end
 
       config.after_initialize do |app|
         options = app.config.action_view_component
