@@ -22,6 +22,7 @@ jobs:
         ruby-version: ${{ matrix.ruby_version }}
     - name: Build and test with Rake
       run: |
+        sudo apt-get install libsqlite3-dev
         gem install bundler:1.14.0
         bundle update
         bundle install --jobs 4 --retry 3
