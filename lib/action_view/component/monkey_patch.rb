@@ -15,6 +15,12 @@ class ActionView::Base
         options.render_in(self, &block)
       elsif options.is_a?(Class) && options < ActionView::Component::Base
         options.new(args).render_in(self, &block)
+      elsif options.respond_to?(:to_component_class) && !options.to_component_class.nil?
+        component_class = options.to_component_class
+        initialize_params = component_class.instance_method(:initialize).parameters.map(&:last)
+        component_attributes = options.attributes.symbolize_keys.slice(*initialize_params)
+
+        component_class.new(component_attributes).render_in(self, &block)
       elsif options.is_a?(Hash) && options.has_key?(:component)
         options[:component].new(options[:locals]).render_in(self, &block)
       else
@@ -24,4 +30,12 @@ class ActionView::Base
   end
 
   prepend RenderMonkeyPatch
+end
+
+class ActiveRecord::Base
+  def to_component_class
+    class_name = "#{self.class.name}Component"
+
+    class_name.constantize if defined?(class_name)
+  end
 end

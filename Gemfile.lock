@@ -146,6 +146,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    sqlite3 (1.4.1)
     temple (0.8.1)
     thor (0.20.3)
     thread_safe (0.3.6)
@@ -171,6 +172,7 @@ DEPENDENCIES
   rubocop (= 0.74)
   rubocop-github (~> 0.13.0)
   slim (~> 4.0)
+  sqlite3 (~> 1.4)
 
 BUNDLED WITH
    1.17.3

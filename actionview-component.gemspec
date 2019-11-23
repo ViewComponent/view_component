@@ -41,4 +41,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "slim", "~> 4.0"
   spec.add_development_dependency "rubocop", "= 0.74"
   spec.add_development_dependency "rubocop-github", "~> 0.13.0"
+  spec.add_development_dependency "sqlite3", "~> 1.4"
 end

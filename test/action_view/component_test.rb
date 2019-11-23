@@ -251,6 +251,13 @@ class ActionView::ComponentTest < Minitest::Test
     assert_equal "Editorb!\n", render_inline(EditorbComponent).text
   end
 
+  def test_to_component_class
+    post = Post.new(title: "Awesome post")
+
+    assert_equal PostComponent, post.to_component_class
+    assert_equal "<span>The Awesome post component!</span>", render_inline(post).first.to_html
+  end
+
   private
 
   def modify_file(file, content)
