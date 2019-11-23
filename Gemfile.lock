@@ -172,7 +172,7 @@ DEPENDENCIES
   rubocop (= 0.74)
   rubocop-github (~> 0.13.0)
   slim (~> 4.0)
-  sqlite3 (~> 1.4)
+  sqlite3 (>= 1.4.0)
 
 BUNDLED WITH
    1.17.3
