@@ -278,7 +278,7 @@ end
 
 Specs created by the generator should now have access to test helpers like `render_inline`.
 
-To use component previews, you'll want to [configure the preview path](#previewing-components) so that preview
+To use component previews add this into your application.rb: `config.action_view_component.preview_path = "#{Rails.root}/spec/components/previews"`
 classes live somewhere besides the `test/` directory which is not present when RSpec is used.
 
 ## Frequently Asked Questions
