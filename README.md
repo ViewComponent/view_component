@@ -51,7 +51,7 @@ Currently, Rails encourages testing views via integration or system tests. This 
 
 #### Code Coverage
 
-Many common Ruby code coverage tools cannot properly handle coverage of views, making it difficult to audit how thorough our tests are and leading to gaps in our test suite.
+Common Ruby code tools do not handle views which makes it difficult to test for auditing thoroughness.
 
 #### Data Flow
 
