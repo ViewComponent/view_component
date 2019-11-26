@@ -163,6 +163,24 @@ Components can be rendered via:
 
 `render(component: TestComponent, locals: { foo: :bar })`
 
+**Rendering components through models**
+
+Passing model instances will cause render to look for its respective component class.
+
+The component is instantiated with the rendered model instance.
+
+Example for a `Post` model.
+
+`render(@post)`
+
+```ruby
+class PostComponent < ActionView::Component
+  def initialize(post)
+    @post = post
+  end
+end
+```
+
 The following syntax has been deprecated and will be removed in v2.0.0:
 
 `render(TestComponent.new(foo: :bar))`
