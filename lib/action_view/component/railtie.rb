@@ -5,11 +5,6 @@ module ActionView
     class Railtie < Rails::Railtie # :nodoc:
       config.action_view_component = ActiveSupport::OrderedOptions.new
 
-      # Disabled due to issues with ActionView::Component::Base not defining .logger
-      # initializer "action_view_component.logger" do
-      #   ActiveSupport.on_load(:action_view_component) { self.logger ||= Rails.logger }
-      # end
-
       initializer "action_view_component.set_configs" do |app|
         options = app.config.action_view_component
 
@@ -40,13 +35,6 @@ module ActionView
           config.compile_methods! if config.respond_to?(:compile_methods!)
         end
       end
-
-      # Disabled because `ActionView::Component::Base` doesn't implement `#action_methods`
-      # initializer "action_view_component.eager_load_actions" do
-      #   ActiveSupport.on_load(:after_initialize) do
-      #     ActionView::Component::Base.descendants.each(&:action_methods) if config.eager_load
-      #   end
-      # end
 
       config.after_initialize do |app|
         options = app.config.action_view_component
