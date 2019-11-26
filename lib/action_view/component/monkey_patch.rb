@@ -17,6 +17,8 @@ class ActionView::Base
         options.new(args).render_in(self, &block)
       elsif options.is_a?(Hash) && options.has_key?(:component)
         options[:component].new(options[:locals]).render_in(self, &block)
+      elsif options.respond_to?(:to_component_class) && !options.to_component_class.nil?
+        options.to_component_class.new(options).render_in(self, &block)
       else
         super
       end
