@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PostComponent < ActionView::Component::Base
-  def initialize(title:)
-    @title = title
+  def initialize(post)
+    @post = post
   end
 end

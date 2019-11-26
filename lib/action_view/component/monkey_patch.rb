@@ -18,11 +18,7 @@ class ActionView::Base
       elsif options.is_a?(Hash) && options.has_key?(:component)
         options[:component].new(options[:locals]).render_in(self, &block)
       elsif options.respond_to?(:to_component_class) && !options.to_component_class.nil?
-        component_class = options.to_component_class
-        initialize_params = component_class.instance_method(:initialize).parameters.map(&:last)
-        component_attributes = options.attributes.symbolize_keys.slice(*initialize_params)
-
-        component_class.new(component_attributes).render_in(self, &block)
+        options.to_component_class.new(options).render_in(self, &block)
       else
         super
       end
