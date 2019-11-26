@@ -1,3 +1,13 @@
+# v1.5.3
+
+* Add support for RSpec to generators.
+
+    *Dylan Clark, Ryan Workman*
+
+* Require controllers as part of setting autoload paths.
+
+    *Joel Hawksley*
+
 # v1.5.2
 
 * Disable eager loading initializer.
