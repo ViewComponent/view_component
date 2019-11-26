@@ -163,10 +163,6 @@ Components can be rendered via:
 
 `render(component: TestComponent, locals: { foo: :bar })`
 
-The following syntax has been deprecated and will be removed in v2.0.0:
-
-`render(TestComponent.new(foo: :bar))`
-
 #### Error case
 
 If the component is rendered with a blank title:
