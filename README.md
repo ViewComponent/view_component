@@ -165,11 +165,11 @@ Components can be rendered via:
 
 **Rendering components through models**
 
-Passing model instances will cause render to look for its respective component class.
+Passing model instances will cause `render` to look for its respective component class.
 
 The component is instantiated with the rendered model instance.
 
-Example for a `Post` model.
+Example for a `Post` model:
 
 `render(@post)`
 
