@@ -7,7 +7,7 @@
 
 This gem is meant to serve as a precursor to upstreaming the `ActionView::Component` class into Rails. It also serves to enable the usage of `ActionView::Component` in older versions of Rails.
 
-Preliminary support for rendering components was merged into Rails `6.1.0.alpha` in https://github.com/rails/rails/pull/36388. Assuming `ActionView::Component` makes it into Rails `6.1`, this gem will then exist to serve as a backport.
+Preliminary support for rendering components was merged into Rails `6.1.0.alpha` in https://github.com/rails/rails/pull/36388. Assuming `ActionView::Component` makes it into Rails, this gem will then exist to serve as a backport.
 
 ## Design philosophy
 
@@ -163,6 +163,24 @@ Components can be rendered via:
 
 `render(component: TestComponent, locals: { foo: :bar })`
 
+**Rendering components through models**
+
+Passing model instances will cause `render` to look for its respective component class.
+
+The component is instantiated with the rendered model instance.
+
+Example for a `Post` model:
+
+`render(@post)`
+
+```ruby
+class PostComponent < ActionView::Component
+  def initialize(post)
+    @post = post
+  end
+end
+```
+
 #### Error case
 
 If the component is rendered with a blank title:
@@ -254,6 +272,30 @@ For example, if you want to use `lib/component_previews`, set the following in `
 
 ```ruby
 config.action_view_component.preview_path = "#{Rails.root}/lib/component_previews"
+```
+
+### Setting up RSpec
+
+If you're using RSpec, you can configure component specs to have access to test helpers. Add the following to
+`spec/rails_helper.rb`:
+
+```ruby
+require "action_view/component/test_helpers"
+
+RSpec.configure do |config|
+    # ...
+
+    # Ensure that the test helpers are available in component specs
+    config.include ActionView::Component::TestHelpers, type: :component
+end
+```
+
+Specs created by the generator should now have access to test helpers like `render_inline`.
+
+To use component previews, set the following in `config/application.rb`:
+
+```ruby
+config.action_view_component.preview_path = "#{Rails.root}/spec/components/previews"
 ```
 
 ## Frequently Asked Questions
