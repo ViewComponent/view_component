@@ -1,8 +1,6 @@
 require "test_helper"
 
-class <%= class_name %>ComponentTest < ActiveSupport::TestCase
-  include ActionView::Component::TestHelpers
-
+class <%= class_name %>ComponentTest < ActionView::Component::TestCase
   test "component renders something useful" do
     # assert_equal(
     #   %(<span title="my title">Hello, components!</span>),

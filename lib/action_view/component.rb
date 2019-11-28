@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
-require "action_view/component/monkey_patch"
-require "action_view/component/active_model_conversion_monkey_patch"
-require "action_view/component/base"
-require "action_view/component/railtie"
+require "active_model"
+require "action_view"
+require "active_support/dependencies/autoload"
+
+module ActionView
+  module Component
+    extend ActiveSupport::Autoload
+
+    autoload :Base
+    autoload :Conversion
+    autoload :Preview
+    autoload :Previewable
+    autoload :TestHelpers
+    autoload :TestCase
+    autoload :RenderMonkeyPatch
+  end
+end
+
+ActiveModel::Conversion.include ActionView::Component::Conversion

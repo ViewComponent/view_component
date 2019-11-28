@@ -2,9 +2,7 @@
 
 require "test_helper"
 
-class ActionView::ComponentTest < Minitest::Test
-  include ActionView::Component::TestHelpers
-
+class ActionView::ComponentTest < ActionView::Component::TestCase
   def test_render_inline
     result = render_inline(MyComponent)
 

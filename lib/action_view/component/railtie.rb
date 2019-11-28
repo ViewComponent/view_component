@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rails"
+
 module ActionView
   module Component
     class Railtie < Rails::Railtie # :nodoc:
@@ -33,6 +35,12 @@ module ActionView
       initializer "action_view_component.compile_config_methods" do
         ActiveSupport.on_load(:action_view_component) do
           config.compile_methods! if config.respond_to?(:compile_methods!)
+        end
+      end
+
+      initializer "action_view_component.monkey_patch_render" do
+        ActiveSupport.on_load(:action_view) do
+          ActionView::Base.prepend ActionView::Component::RenderMonkeyPatch
         end
       end
 

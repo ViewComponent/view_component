@@ -32,7 +32,7 @@ $ bundle
 In `config/application.rb`, add:
 
 ```bash
-require "action_view/component"
+require "action_view/component/railtie"
 ```
 
 ## Guide
@@ -204,12 +204,10 @@ An error will be raised:
 Components are unit tested directly. The `render_inline` test helper wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
 
 ```ruby
-require "action_view/component/test_helpers"
+require "action_view/component/test_case"
 
-class MyComponentTest < Minitest::Test
-  include ActionView::Component::TestHelpers
-
-  def test_render_component
+class MyComponentTest < ActionView::Component::TestCase
+  test "render component" do
     assert_equal(
       %(<span title="my title">Hello, World!</span>),
       render_inline(TestComponent, title: "my title") { "Hello, World!" }.to_html
@@ -225,7 +223,7 @@ In general, we’ve found it makes the most sense to test components based on th
 To test a specific variant you can wrap your test with the `with_variant` helper method as:
 
 ```ruby
-def test_render_component_for_tablet
+test "render component for table" do
   with_variant :tablet do
     assert_equal(
       %(<span title="my title">Hello, tablets!</span>),

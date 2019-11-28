@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
-require "active_model"
-require "action_view"
 require "active_support/configurable"
-require_relative "preview"
 
 module ActionView
   module Component
     class Base < ActionView::Base
       include ActiveModel::Validations
       include ActiveSupport::Configurable
-      include ActionView::Component::Previews
+      include ActionView::Component::Previewable
 
       delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 
