@@ -102,6 +102,14 @@ class ActionView::ComponentTest < Minitest::Test
     end
   end
 
+  def test_renders_default_template_when_variant_template_is_not_present
+    with_variant :variant_without_template do
+      result = render_inline(VariantsComponent)
+
+      assert_includes result.text, "Default"
+    end
+  end
+
   def test_renders_erb_template
     result = render_inline(ErbComponent, message: "bar") { "foo" }
 
