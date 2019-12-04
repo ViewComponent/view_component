@@ -43,16 +43,6 @@ class ActionView::ComponentTest < Minitest::Test
     assert_includes error.message, "More than one template found for variant 'test' in TooManySidecarFilesForVariantComponent"
   end
 
-  def test_raises_error_when_variant_template_is_not_present
-    with_variant :phone do
-      error = assert_raises ActiveModel::ValidationError do
-        render_inline(MyComponent)
-      end
-
-      assert_includes error.message, "Validation failed: Variant 'phone' has no template defined"
-    end
-  end
-
   def test_raises_error_when_initializer_is_not_defined
     exception = assert_raises NotImplementedError do
       render_inline(MissingInitializerComponent)
