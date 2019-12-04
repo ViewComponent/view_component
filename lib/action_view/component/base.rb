@@ -14,8 +14,6 @@ module ActionView
 
       delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 
-      validate :variant_exists
-
       # Entrypoint for rendering components. Called by ActionView::Base#render.
       #
       # view_context: ActionView context from calling view
@@ -93,12 +91,6 @@ module ActionView
       end
 
       private
-
-      def variant_exists
-        return if self.class.variants.include?(@variant) || @variant.nil?
-
-        errors.add(:variant, "'#{@variant}' has no template defined")
-      end
 
       def request
         @request ||= controller.request
