@@ -53,7 +53,13 @@ module ActionView
         @content = view_context.capture(&block) if block_given?
         validate!
 
-        send(self.class.call_method_name(@variant))
+        call_method_name = if self.respond_to?(self.class.call_method_name(@variant))
+          self.class.call_method_name(@variant)
+        else
+          "call"
+        end
+
+        send(call_method_name)
       ensure
         @current_template = old_current_template
       end
