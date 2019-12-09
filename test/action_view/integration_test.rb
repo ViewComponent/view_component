@@ -6,7 +6,13 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "rendering component in a view" do
     get "/"
     assert_response :success
-    assert_equal trim_result(response.body), "<span><div>Foobar</div></span>"
+    assert_html_matches <<~HTML, response.body
+      <span><div>
+        Foo
+        bar
+      </div>
+      </span>
+    HTML
   end
 
   test "rendering component with content" do
@@ -20,53 +26,71 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "rendering component in a view with component: syntax" do
     get "/component"
     assert_response :success
-    assert_equal trim_result(response.body), "<span><div>Foobar</div></span>"
+    assert_html_matches <<~HTML, response.body
+      <span><div>
+        Foo
+        bar
+      </div>
+      </span>
+    HTML
   end
 
   test "rendering component with a partial" do
     get "/partial"
     assert_response :success
-    assert_equal trim_result(response.body), "partial:<div>hello,partialworld!</div>component:<div>hello,partialworld!</div><div>hello,partialworld!</div>"
+    assert_html_matches <<~HTML, response.body
+      partial:<div>hello,partial world!</div>
+
+      component:<div>hello,partial world!</div>
+
+      <div>hello,partial world!</div>
+    HTML
   end
 
   test "rendering component with deprecated syntax" do
     get "/deprecated"
     assert_response :success
-    assert_equal trim_result(response.body), "<span><div>Foobar</div></span>"
+    assert_html_matches <<~HTML, response.body
+      <span><div>
+        Foo
+        bar
+      </div>
+      </span>
+    HTML
   end
 
   test "rendering component without variant" do
     get "/variants"
     assert_response :success
-    assert_equal "Default", trim_result(response.body)
+    assert_html_matches "Default", response.body
   end
 
   test "rendering component with tablet variant" do
     get "/variants?variant=tablet"
     assert_response :success
-    assert_equal "Tablet", trim_result(response.body)
+    assert_html_matches "Tablet", response.body
   end
 
   test "rendering component several times with different variants" do
     get "/variants?variant=tablet"
     assert_response :success
-    assert_equal "Tablet", trim_result(response.body)
+    assert_html_matches "Tablet", response.body
 
     get "/variants?variant=phone"
     assert_response :success
-    assert_equal "Phone", trim_result(response.body)
+    assert_html_matches "Phone", response.body
 
     get "/variants"
     assert_response :success
-    assert_equal "Default", trim_result(response.body)
+    assert_html_matches "Default", response.body
 
     get "/variants?variant=tablet"
     assert_response :success
-    assert_equal "Tablet", trim_result(response.body)
+    assert_html_matches "Tablet", response.body
 
     get "/variants?variant=phone"
     assert_response :success
-    assert_equal "Phone", trim_result(response.body)
+    assert_html_matches "Phone", response.body
   end
 
   test "rendering component with caching" do
@@ -75,11 +99,11 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     get "/cached"
     assert_response :success
-    assert_equal "Cached", trim_result(response.body)
+    assert_html_matches "Cached", response.body
 
     get "/cached"
     assert_response :success
-    assert_equal "Cached", trim_result(response.body)
+    assert_html_matches "Cached", response.body
 
     ActionController::Base.perform_caching = false
     Rails.cache.clear

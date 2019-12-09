@@ -8,15 +8,15 @@ class ActionView::ComponentTest < Minitest::Test
   def test_render_inline
     result = render_inline(MyComponent)
 
-    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
-    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
+    assert_html_matches "<div>hello,world!</div>", result.to_html
+    assert_html_matches "<div>hello,world!</div>", result.css("div").to_html
   end
 
   def test_render_inline_with_old_helper
     result = render_component(MyComponent)
 
-    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
-    assert_equal trim_result(result.css("div").first.to_html), "<div>hello,world!</div>"
+    assert_html_matches "<div>hello,world!</div>", result.to_html
+    assert_html_matches "<div>hello,world!</div>", result.css("div").to_html
   end
 
   def test_raises_error_when_sidecar_template_is_missing
@@ -74,7 +74,7 @@ class ActionView::ComponentTest < Minitest::Test
       "content"
     end
 
-    assert_equal trim_result(result.css("span").first.to_html), "<span>content</span>"
+    assert_html_matches result.css("span").to_html, "<span>content</span>"
   end
 
   def test_renders_slim_template
@@ -97,7 +97,7 @@ class ActionView::ComponentTest < Minitest::Test
 
     result = render_inline(ButtonToComponent) { "foo" }
 
-    assert_equal '<input type="submit" value="foo">', result.css("input[type=submit]").to_html
+    assert_html_matches '<input type="submit" value="foo">', result.css("input[type=submit]").to_html
     assert result.css("form[class='button_to'][action='/'][method='post']").present?
     assert result.css("input[type='hidden'][name='authenticity_token']").present?
 
@@ -136,19 +136,23 @@ class ActionView::ComponentTest < Minitest::Test
   def test_renders_partial_template
     result = render_inline(PartialComponent)
 
-    assert_equal "<div>hello,partial world!</div>", result.first.to_html
+    assert_html_matches <<~HTML, result.to_html
+      <div>hello,partial world!</div>
+
+      <div>hello,partial world!</div>
+    HTML
   end
 
   def test_renders_content_for_template
     result = render_inline(ContentForComponent)
 
-    assert_equal "<div>Hello content for</div>", result.first.to_html
+    assert_html_matches "<div>Hello content for</div>", result.to_html
   end
 
   def test_renders_helper_method_through_proxy
     result = render_inline(HelpersProxyComponent)
 
-    assert_equal "<div>Hello helper method</div>", result.first.to_html
+    assert_html_matches "<div>Hello helper method</div>", result.to_html
   end
 
   def test_renders_path_helper
@@ -172,38 +176,38 @@ class ActionView::ComponentTest < Minitest::Test
   def test_renders_another_component
     result = render_inline(AnotherComponent)
 
-    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
+    assert_html_matches "<div>hello,world!</div>", result.to_html
   end
 
   def test_renders_component_with_css_sidecar
     result = render_inline(CssSidecarFileComponent)
 
-    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
+    assert_html_matches "<div>hello, world!</div>", result.to_html
   end
 
   def test_renders_component_with_request_context
     result = render_inline(RequestComponent)
 
-    assert_equal trim_result(result.first.to_html), "<div>0.0.0.0</div>"
+    assert_html_matches "<div>0.0.0.0</div>", result.to_html
   end
 
   def test_renders_component_without_format
     result = render_inline(NoFormatComponent)
 
-    assert_equal trim_result(result.first.to_html), "<div>hello,world!</div>"
+    assert_html_matches "<div>hello,world!</div>", result.to_html
   end
 
   def test_template_changes_are_not_reflected_in_production
     old_value = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = true
 
-    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
+    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent).to_html
 
     modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
-      assert_equal  "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
+      assert_html_matches  "<div>hello,world!</div>", render_inline(MyComponent).to_html
     end
 
-    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
+    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent).to_html
 
     ActionView::Base.cache_template_loading = old_value
   end
@@ -212,13 +216,13 @@ class ActionView::ComponentTest < Minitest::Test
     old_value = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = false
 
-    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
+    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent).to_html
 
     modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
-      assert_equal "<div>Goodbye world!</div>", render_inline(MyComponent).first.to_html
+      assert_html_matches "<div>Goodbye world!</div>", render_inline(MyComponent).to_html
     end
 
-    assert_equal "<div>hello,world!</div>", render_inline(MyComponent).first.to_html
+    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent).to_html
 
     ActionView::Base.cache_template_loading = old_value
   end
@@ -236,26 +240,26 @@ class ActionView::ComponentTest < Minitest::Test
       ::ActionView::Component::VERSION::MINOR,
       ::ActionView::Component::VERSION::PATCH
     ].join(".")
-    assert_equal version_string, ::ActionView::Component::VERSION::STRING
+    assert_html_matches version_string, ::ActionView::Component::VERSION::STRING
   end
 
   def test_renders_component_with_translations
-    assert_includes render_inline(TranslationsComponent).first.to_html,
+    assert_includes render_inline(TranslationsComponent).to_html,
                     "<h1>#{I18n.t('translations_component.title')}</h1>"
 
-    assert_includes render_inline(TranslationsComponent).first.to_html,
+    assert_includes render_inline(TranslationsComponent).to_html,
                     "<h2>#{I18n.t('translations_component.subtitle')}</h2>"
   end
 
   def test_renders_component_with_rb_in_its_name
-    assert_equal "Editorb!\n", render_inline(EditorbComponent).text
+    assert_html_matches "Editorb!\n", render_inline(EditorbComponent).text
   end
 
   def test_to_component_class
     post = Post.new(title: "Awesome post")
 
-    assert_equal PostComponent, post.to_component_class
-    assert_equal "<span>The Awesome post component!</span>", render_inline(post).first.to_html
+    assert_html_matches PostComponent, post.to_component_class
+    assert_html_matches "<span>The Awesome post component!</span>", render_inline(post).to_html
   end
 
   private
