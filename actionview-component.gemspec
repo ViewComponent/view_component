@@ -39,6 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "= 5.1.0"
   spec.add_development_dependency "haml", "~> 5"
   spec.add_development_dependency "slim", "~> 4.0"
+  spec.add_development_dependency "better_html", "= 1.0.14"
   spec.add_development_dependency "rubocop", "= 0.74"
   spec.add_development_dependency "rubocop-github", "~> 0.13.0"
 end
