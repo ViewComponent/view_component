@@ -9,7 +9,7 @@ class BetterHtmlTest < ActiveSupport::TestCase
   include BetterHtml::TestHelper::SafeErbTester
 
   ERB_GLOB = Rails.root.join(
-    'app', '**', '{*.htm,*.html,*.htm.erb,*.html.erb,*.html+*.erb}'
+    "app", "**", "{*.htm,*.html,*.htm.erb,*.html.erb,*.html+*.erb}"
   )
 
   Dir[ERB_GLOB].each do |filename|
