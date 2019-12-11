@@ -156,7 +156,7 @@ module ActionView
         end
 
         def identifier
-          ""
+          source_location
         end
 
         private
