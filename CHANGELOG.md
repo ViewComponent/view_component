@@ -1,3 +1,33 @@
+# v1.6.0
+
+* Avoid dropping elements in the render_inline test helper.
+
+    *@dark-panda*
+
+* Add test for helpers.asset_url.
+
+    *Christopher Coleman*
+
+* Add rudimentary compatibility with better_html.
+
+    *Joel Hawksley*
+
+* Template-less variants fall back to default template.
+
+    *Asger Behncke Jacobsen*, *Cesario Uy*
+
+* Generated tests use new naming convention.
+
+    *Simon Træls Ravn*
+
+* Eliminate sqlite dependency.
+
+    *Simon Dawson*
+
+* Add support for rendering components via #to_component_class
+
+    *Vinicius Stock*
+
 # v1.5.3
 
 * Add support for RSpec to generators.
