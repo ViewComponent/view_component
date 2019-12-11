@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "better_html"
 require "better_html/test_helper/safe_erb_tester"
 
 # This test exists to ensure basic non-breaking compatiblity with Shopify/better_html
