@@ -161,13 +161,19 @@ module ActionView
 
         private
 
+        def matching_views_in_source_location
+          (Dir["#{source_location.sub(/#{File.extname(source_location)}$/, '')}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location])
+        end
+
         def templates
           @templates ||=
-            (Dir["#{source_location.sub(/#{File.extname(source_location)}$/, '')}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]).each_with_object([]) do |path, memo|
+            matching_views_in_source_location.each_with_object([]) do |path, memo|
+              pieces = File.basename(path).split(".")
+
               memo << {
                 path: path,
-                variant: path.split(".").second.split("+")[1]&.to_sym,
-                handler: path.split(".").last
+                variant: pieces.second.split("+")[1]&.to_sym,
+                handler: pieces.last
               }
             end
         end
