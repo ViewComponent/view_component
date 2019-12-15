@@ -3,6 +3,7 @@
 require "active_model"
 require "action_view"
 require "active_support/dependencies/autoload"
+require "action_view/component/railtie"
 
 module ActionView
   module Component

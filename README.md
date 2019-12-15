@@ -223,7 +223,7 @@ In general, we’ve found it makes the most sense to test components based on th
 To test a specific variant you can wrap your test with the `with_variant` helper method as:
 
 ```ruby
-test "render component for table" do
+test "render component for tablet" do
   with_variant :tablet do
     assert_equal(
       %(<span title="my title">Hello, tablets!</span>),
