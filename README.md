@@ -174,7 +174,7 @@ Example for a `Post` model:
 `render(@post)`
 
 ```ruby
-class PostComponent < ActionView::Component
+class PostComponent < ActionView::Component::Base
   def initialize(post)
     @post = post
   end
