@@ -3,9 +3,8 @@
 require "bundler/setup"
 require "pp"
 require "pathname"
-require "action_view/component/base"
+require "action_view/component"
 require "minitest/autorun"
-require "action_view/component/test_helpers"
 
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
