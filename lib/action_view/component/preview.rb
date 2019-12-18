@@ -8,8 +8,8 @@ module ActionView
       extend ActiveSupport::DescendantsTracker
       include ActionView::Component::TestHelpers
 
-      def render(component, *locals)
-        render_inline(component, *locals)
+      def render(component, *locals, &block)
+        render_inline(component, *locals, &block)
       end
 
       class << self

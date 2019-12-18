@@ -127,6 +127,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "More lorem..."
   end
 
+  test "renders preview component with content preview" do
+    get "/rails/components/preview_component/with_content"
+
+    assert_includes response.body, "some content"
+  end
+
   test "renders badge component open preview" do
     get "/rails/components/issues/badge_component/open"
 
