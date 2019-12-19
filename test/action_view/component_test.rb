@@ -17,38 +17,6 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_html_matches "<div>hello,world!</div>", result.css("div").to_html
   end
 
-  def test_raises_error_when_sidecar_template_is_missing
-    exception = assert_raises NotImplementedError do
-      render_inline(MissingTemplateComponent)
-    end
-
-    assert_includes exception.message, "Could not find a template file for MissingTemplateComponent"
-  end
-
-  def test_raises_error_when_more_than_one_sidecar_template_is_present
-    error = assert_raises StandardError do
-      render_inline(TooManySidecarFilesComponent)
-    end
-
-    assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
-  end
-
-  def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
-    error = assert_raises StandardError do
-      render_inline(TooManySidecarFilesForVariantComponent)
-    end
-
-    assert_includes error.message, "More than one template found for variant 'test' in TooManySidecarFilesForVariantComponent"
-  end
-
-  def test_raises_error_when_initializer_is_not_defined
-    exception = assert_raises NotImplementedError do
-      render_inline(MissingInitializerComponent)
-    end
-
-    assert_includes exception.message, "must implement #initialize"
-  end
-
   def test_checks_validations
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(WrapperComponent)
