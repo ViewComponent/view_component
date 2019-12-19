@@ -110,6 +110,10 @@ module ActionView
           end
         end
 
+        def has_initializer?
+          self.instance_method(:initialize).owner == self
+        end
+
         def source_location
           # Require #initialize to be defined so that we can use
           # method#source_location to look up the file name
@@ -118,16 +122,26 @@ module ActionView
           # If we were able to only support Ruby 2.7+,
           # We could just use Module#const_source_location,
           # rendering this unnecessary.
-          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
+          raise NotImplementedError.new("#{self} must implement #initialize.") unless has_initializer?
 
           instance_method(:initialize).source_location[0]
+        end
+
+        def eager_load!
+          self.descendants.each do |descendant|
+            descendant.compile if descendant.has_initializer?
+          end
+        end
+
+        def compiled?
+          @compiled && ActionView::Base.cache_template_loading
         end
 
         # Compile templates to instance methods, assuming they haven't been compiled already.
         # We could in theory do this on app boot, at least in production environments.
         # Right now this just compiles the first time the component is rendered.
         def compile
-          return if @compiled && ActionView::Base.cache_template_loading
+          return if compiled?
 
           validate_templates
 
