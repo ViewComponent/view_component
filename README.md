@@ -32,7 +32,7 @@ $ bundle
 In `config/application.rb`, add:
 
 ```bash
-require "action_view/component/railtie"
+require "action_view/component/"
 ```
 
 ## Guide
