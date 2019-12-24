@@ -20,11 +20,14 @@ module ActionView
         end
 
         # Returns the html of the component in its layout
-        def call(example)
+        def call(example, layout: nil)
           example_html = new.public_send(example)
+          if layout.nil?
+            layout = @layout.nil? ? "layouts/application" : @layout
+          end
 
           Rails::ComponentExamplesController.render(template: "examples/show",
-                                                    layout: @layout || "layouts/application",
+                                                    layout: layout,
                                                     assigns: { example: example_html })
         end
 
