@@ -52,8 +52,8 @@ class ActionView::PreviewTest < ActionView::Component::TestCase
 
   def assert_html_document(preview_result, expected_title, expected_body)
     result = Nokogiri::HTML(preview_result)
-    assert_html_matches expected_title, result.css('title').inner_html
-    assert_html_matches expected_body, result.css('body').inner_html
+    assert_html_matches expected_title, result.css("title").inner_html
+    assert_html_matches expected_body, result.css("body").inner_html
   end
 
   def assert_html_fragment(preview_result, expected_fragment)
