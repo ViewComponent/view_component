@@ -1,20 +1,15 @@
 # frozen_string_literal: true
 
-require "active_model"
-require "action_view"
 require "active_support/configurable"
-require_relative "preview"
 
 module ActionView
   module Component
     class Base < ActionView::Base
       include ActiveModel::Validations
       include ActiveSupport::Configurable
-      include ActionView::Component::Previews
+      include ActionView::Component::Previewable
 
       delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
-
-      validate :variant_exists
 
       # Entrypoint for rendering components. Called by ActionView::Base#render.
       #
@@ -94,12 +89,6 @@ module ActionView
 
       private
 
-      def variant_exists
-        return if self.class.variants.include?(@variant) || @variant.nil?
-
-        errors.add(:variant, "'#{@variant}' has no template defined")
-      end
-
       def request
         @request ||= controller.request
       end
@@ -114,11 +103,15 @@ module ActionView
         end
 
         def call_method_name(variant)
-          if variant.present?
+          if variant.present? && variants.include?(variant)
             "call_#{variant}"
           else
             "call"
           end
+        end
+
+        def has_initializer?
+          self.instance_method(:initialize).owner == self
         end
 
         def source_location
@@ -129,16 +122,26 @@ module ActionView
           # If we were able to only support Ruby 2.7+,
           # We could just use Module#const_source_location,
           # rendering this unnecessary.
-          raise NotImplementedError.new("#{self} must implement #initialize.") unless self.instance_method(:initialize).owner == self
+          raise NotImplementedError.new("#{self} must implement #initialize.") unless has_initializer?
 
           instance_method(:initialize).source_location[0]
+        end
+
+        def eager_load!
+          self.descendants.each do |descendant|
+            descendant.compile if descendant.has_initializer?
+          end
+        end
+
+        def compiled?
+          @compiled && ActionView::Base.cache_template_loading
         end
 
         # Compile templates to instance methods, assuming they haven't been compiled already.
         # We could in theory do this on app boot, at least in production environments.
         # Right now this just compiles the first time the component is rendered.
         def compile
-          return if @compiled && ActionView::Base.cache_template_loading
+          return if compiled?
 
           validate_templates
 
@@ -164,18 +167,24 @@ module ActionView
         end
 
         def identifier
-          ""
+          source_location
         end
 
         private
 
+        def matching_views_in_source_location
+          (Dir["#{source_location.sub(/#{File.extname(source_location)}$/, '')}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location])
+        end
+
         def templates
           @templates ||=
-            (Dir["#{source_location.sub(/#{File.extname(source_location)}$/, '')}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location]).each_with_object([]) do |path, memo|
+            matching_views_in_source_location.each_with_object([]) do |path, memo|
+              pieces = File.basename(path).split(".")
+
               memo << {
                 path: path,
-                variant: path.split(".").second.split("+")[1]&.to_sym,
-                handler: path.split(".").last
+                variant: pieces.second.split("+")[1]&.to_sym,
+                handler: pieces.last
               }
             end
         end

@@ -1,37 +1,15 @@
 # frozen_string_literal: true
 
-require "active_support/concern"
 require "active_support/descendants_tracker"
-require_relative "test_helpers"
 
 module ActionView
-  module Component #:nodoc:
-    module Previews
-      extend ActiveSupport::Concern
-
-      included do
-        # Set the location of component previews through app configuration:
-        #
-        #     config.action_view_component.preview_path = "#{Rails.root}/lib/component_previews"
-        #
-        mattr_accessor :preview_path, instance_writer: false
-
-        # Enable or disable component previews through app configuration:
-        #
-        #     config.action_view_component.show_previews = true
-        #
-        # Defaults to +true+ for development environment
-        #
-        mattr_accessor :show_previews, instance_writer: false
-      end
-    end
-
+  module Component # :nodoc:
     class Preview
       extend ActiveSupport::DescendantsTracker
       include ActionView::Component::TestHelpers
 
-      def render(component, *locals)
-        render_inline(component, *locals)
+      def render(component, *locals, &block)
+        render_inline(component, *locals, &block)
       end
 
       class << self
@@ -42,11 +20,14 @@ module ActionView
         end
 
         # Returns the html of the component in its layout
-        def call(example)
+        def call(example, layout: nil)
           example_html = new.public_send(example)
+          if layout.nil?
+            layout = @layout.nil? ? "layouts/application" : @layout
+          end
 
           Rails::ComponentExamplesController.render(template: "examples/show",
-                                                    layout: @layout || "layouts/application",
+                                                    layout: layout,
                                                     assigns: { example: example_html })
         end
 

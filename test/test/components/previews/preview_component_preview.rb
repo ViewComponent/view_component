@@ -8,4 +8,8 @@ class PreviewComponentPreview < ActionView::Component::Preview
   def without_cta
     render(PreviewComponent, title: "More lorem...")
   end
+
+  def with_content
+    render(PreviewComponent, title: "title") { "some content" }
+  end
 end

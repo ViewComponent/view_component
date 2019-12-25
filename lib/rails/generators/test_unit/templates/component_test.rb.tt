@@ -1,12 +1,10 @@
 require "test_helper"
 
-class <%= class_name %>ComponentTest < ActiveSupport::TestCase
-  include ActionView::Component::TestHelpers
-
+class <%= class_name %>ComponentTest < ActionView::Component::TestCase
   test "component renders something useful" do
     # assert_equal(
     #   %(<span title="my title">Hello, components!</span>),
-    #   render_inline(<%= class_name %>, attr: "value") { "Hello, components!" }.css("span").to_html
+    #   render_inline(<%= class_name %>Component, attr: "value") { "Hello, components!" }.css("span").to_html
     # )
   end
 end
