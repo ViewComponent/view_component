@@ -1,3 +1,29 @@
+# v1.6.1
+
+* Allow Previews to have no layout.
+
+    *Jon Palmer*
+
+* Bump rack from 2.0.7 to 2.0.8.
+
+    *Dependabot*
+
+* Compile components on application boot when eager loading is enabled.
+
+    *Joel Hawksley*
+
+* Previews support content blocks.
+
+    *Cesario Uy*
+
+* Follow Rails conventions. (refactor)
+
+    *Rainer Borene*
+
+* Fix edge case issue with extracting variants from less conventional source_locations.
+
+    *Ryan Workman*
+
 # v1.6.0
 
 * Avoid dropping elements in the render_inline test helper.
