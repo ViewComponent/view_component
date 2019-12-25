@@ -20,11 +20,12 @@ class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
   end
 
   def previews
-    if params[:path] == @preview.preview_name
+    if preview_params[:path] == @preview.preview_name
       @page_title = "Component Previews for #{@preview.preview_name}"
       render template: "components/previews"
     else
-      @example_name = File.basename(params[:path])
+      @example_name = File.basename(preview_params[:path])
+      @example_args = preview_params.except(:path, :controller, :action).to_h.symbolize_keys
       render template: "components/preview", layout: false
     end
   end
@@ -51,5 +52,9 @@ class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
     I18n.with_locale(params[:locale] || I18n.default_locale) do
       yield
     end
+  end
+
+  def preview_params
+    @preview_params ||= params.permit!
   end
 end

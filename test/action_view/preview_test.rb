@@ -48,6 +48,70 @@ class ActionView::PreviewTest < ActionView::Component::TestCase
     )
   end
 
+  def test_preview_with_content
+    assert_html_document(
+      ErbComponentPreview.call(:default),
+      "Action View Component - Test",
+      <<~HTML
+        <div>
+          Hello World!
+          Bye!
+        </div>
+      HTML
+    )
+  end
+
+  def test_preview_with_args
+    assert_html_document(
+      ErbComponentPreview.call(:with_args),
+      "Action View Component - Test",
+      <<~HTML
+        <div>
+          Hello World!
+          Bye!
+        </div>
+      HTML
+    )
+  end
+
+  def test_preview_with_args_overrides
+    assert_html_document(
+      ErbComponentPreview.call(:with_args, example_args: {message: "See ya!"}),
+      "Action View Component - Test",
+      <<~HTML
+        <div>
+          Hello World!
+          See ya!
+        </div>
+      HTML
+    )
+  end
+
+  def test_preview_with_content_args_overrides
+    assert_html_document(
+      ErbComponentPreview.call(:with_args, example_args: {message: "See ya!", content: "Hi There!"}),
+      "Action View Component - Test",
+      <<~HTML
+        <div>
+          Hi There!
+          See ya!
+        </div>
+      HTML
+    )
+  end
+
+  def test_preview_with_content_and_layout_args_overrides
+    assert_html_fragment(
+      ErbComponentPreview.call(:with_args, layout: false, example_args: {message: "See ya!", content: "Hi There!"}),
+      <<~HTML
+        <div>
+          Hi There!
+          See ya!
+        </div>
+      HTML
+    )
+  end
+
   private
 
   def assert_html_document(preview_result, expected_title, expected_body)

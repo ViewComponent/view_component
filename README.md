@@ -256,6 +256,41 @@ end
 The previews will be available in <http://localhost:3000/rails/components/test_component/with_default_title>
 and <http://localhost:3000/rails/components/test_component/with_long_title>.
 
+#### Previews with dynamic properties
+
+Previews can also be configured with properite to be passed to the Component from url parameters.
+
+The last example can be configured to make both `title` and `content` dynamic:
+
+```ruby
+# test/components/previews/test_component_preview.rb
+
+class TestComponentPreview < ActionView::Component::Preview
+  def with_default_title(title: "Test component default", content: "Hello, World!")
+    render(TestComponent, title: title) { content }
+  end
+  
+  ...
+end
+```
+
+The preview available at <http://localhost:3000/rails/components/test_component/with_default_title>
+would render the component html using the default values:
+
+```html
+<span title="Test component default">Hello, World!</span>
+```
+
+However, we can now override the `title` and `content` from the url. For example the url:
+<http://localhost:3000/rails/components/test_component/with_default_title?title=title%20override&content=Bye!> 
+will render the component html:
+
+```html
+<span title="title override">Bye!</span>
+```
+
+#### Preview Layouts
+
 Previews use the application layout by default, but you can also use other layouts from your app:
 
 ```ruby
@@ -267,6 +302,8 @@ class TestComponentPreview < ActionView::Component::Preview
   ...
 end
 ```
+
+#### Configuring preview classes location
 
 By default, the preview classes live in `test/components/previews`.
 This can be configured using the `preview_path` option.

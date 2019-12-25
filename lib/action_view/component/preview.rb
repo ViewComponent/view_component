@@ -20,8 +20,9 @@ module ActionView
         end
 
         # Returns the html of the component in its layout
-        def call(example, layout: nil)
-          example_html = new.public_send(example)
+        def call(example, layout: nil, example_args: {})
+
+          example_html = example_html(example, example_args)
           if layout.nil?
             layout = @layout.nil? ? "layouts/application" : @layout
           end
@@ -80,6 +81,17 @@ module ActionView
 
         def show_previews
           Base.show_previews
+        end
+
+        def example_html(example, params)
+          example_method = new.public_method(example)
+
+          if example_method.arity == 0
+            example_method.call
+          else
+            method_args = example_method.parameters.map(&:last)
+            example_method.call(**params.slice(*method_args))
+          end
         end
       end
     end

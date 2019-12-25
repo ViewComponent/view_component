@@ -145,6 +145,41 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Closed"
   end
 
+  test "renders preview with args uses defaults" do
+    get "/rails/components/erb_component/with_args"
+
+    assert_includes response.body, "Hello World!"
+    assert_includes response.body, "Bye!"
+  end
+
+  test "renders preview with args override" do
+    get "/rails/components/erb_component/with_args", params: {message: "See ya later!"}
+
+    assert_includes response.body, "Hello World!"
+    assert_includes response.body, "See ya later!"
+  end
+
+  test "renders preview with content override" do
+    get "/rails/components/erb_component/with_args", params: {message: "See ya later!", content: "Hey Buddy!"}
+
+    assert_includes response.body, "Hey Buddy!"
+    assert_includes response.body, "See ya later!"
+  end
+
+  test "renders preview with args extra params don't cause error" do
+    get "/rails/components/erb_component/with_args", params: { message: "See ya later!", foo: "bar"}
+
+    assert_includes response.body, "Hello World!"
+    assert_includes response.body, "See ya later!"
+  end
+
+  test "renders preview without args with params don't cause error" do
+    get "/rails/components/erb_component/default", params: { message: "See ya later!", foo: "bar"}
+
+    assert_includes response.body, "Hello World!"
+    assert_includes response.body, "Bye!"
+  end
+
   test "compiles unreferenced component" do
     assert UnreferencedComponent.compiled?
   end
