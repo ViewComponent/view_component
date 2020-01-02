@@ -1,0 +1,11 @@
+<%= render ContentAreasComponent do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great <%= Date.today.strftime("%A") %>.</p>
+  <% end %>
+  <% component.with(:title) do %>
+    <h1>Hi!</h1>
+  <% end %>
+  <% component.with(:footer) do %>
+    <h3>Bye!</h3>
+  <% end %>
+<% end %>

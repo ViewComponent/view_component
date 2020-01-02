@@ -107,51 +107,63 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     HTML
   end
 
-  def test_renders_content_for_template_with_initialize_arguments
-    result = render_inline(ContentForComponent, title: "Hi!", footer: "Bye!") { "Have a nice day." }
+  def test_renders_content_for_template
+    result = render_inline(ContentForComponent)
 
-    assert_html_matches "<div>\nHi!\nHave a nice day.\nBye!\n</div>", result.to_html
+    assert_html_matches "<div>Hello content for</div>", result.to_html
   end
 
-  def test_renders_content_for_template_with_content_for_content
-    result = render_inline(ContentForComponent, footer: "Bye!") do |component|
-      component.content_for(:title, "Hello!")
-      "Have a nice day."
+  def test_renders_content_areas_template_with_initialize_arguments
+    result = render_inline(ContentAreasComponent, title: "Hi!", footer: "Bye!") do |component|
+      component.with(:body) { "Have a nice day." }
+    end
+  end
+
+  def test_renders_content_areas_template_with_content
+    result = render_inline(ContentAreasComponent, footer: "Bye!") do |component|
+      component.with(:title, "Hello!")
+      component.with(:body) { "Have a nice day." }
     end
 
     assert_html_matches "<div>\nHello!\nHave a nice day.\nBye!\n</div>", result.to_html
   end
 
-  def test_renders_content_for_template_with_content_for_block
-    result = render_inline(ContentForComponent, footer: "Bye!") do |component|
-      component.content_for(:title) { "Hello!" }
-      "Have a nice day."
+  def test_renders_content_areas_template_with_block
+    result = render_inline(ContentAreasComponent, footer: "Bye!") do |component|
+      component.with(:title) { "Hello!" }
+      component.with(:body) { "Have a nice day." }
     end
 
     assert_html_matches "<div>\nHello!\nHave a nice day.\nBye!\n</div>", result.to_html
   end
 
-
-  def test_renders_content_for_template_appends_content_for_values
-    result = render_inline(ContentForComponent, footer: "Bye!") do |component|
-      component.content_for(:title) { "Hello!" }
-      component.content_for(:title, "Hi!")
-      "Have a nice day."
-    end
-
-    assert_html_matches "<div>\nHello!Hi!\nHave a nice day.\nBye!\n</div>", result.to_html
-  end
-
-  def test_renders_content_for_template_replace_content_for_with_flush
-    result = render_inline(ContentForComponent, footer: "Bye!") do |component|
-      component.content_for(:title) { "Hello!" }
-      component.content_for(:title, "Hi!", flush: true)
-      "Have a nice day."
+  def test_renders_content_areas_template_replaces_content
+    result = render_inline(ContentAreasComponent, footer: "Bye!") do |component|
+      component.with(:title) { "Hello!" }
+      component.with(:title, "Hi!")
+      component.with(:body) { "Have a nice day." }
     end
 
     assert_html_matches "<div>\nHi!\nHave a nice day.\nBye!\n</div>", result.to_html
   end
 
+  def test_renders_content_area_does_not_capture_block_content
+    exception = assert_raises ActiveModel::ValidationError do
+      render_inline(ContentAreasComponent, title: "Hi!", footer: "Bye!") { "Have a nice day." }
+    end
+
+    assert_includes exception.message, "Body can't be blank"
+  end
+
+  def test_renders_content_areas_template_raise_with_unknown_content_areas
+    exception = assert_raises StandardError do
+      render_inline(ContentAreasComponent, footer: "Bye!") do |component|
+        component.with(:foo) { "Hello!" }
+      end
+    end
+
+    assert_includes exception.message, "Unknown content_area 'foo' - expected one of '[:title, :body, :footer]'"
+  end
 
   def test_renders_helper_method_through_proxy
     result = render_inline(HelpersProxyComponent)

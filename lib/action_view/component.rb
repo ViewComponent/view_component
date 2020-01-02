@@ -13,7 +13,7 @@ module ActionView
     autoload :Conversion
     autoload :Preview
     autoload :Previewable
-    autoload :ContentFor
+    autoload :ContentAreas
     autoload :TestHelpers
     autoload :TestCase
     autoload :RenderMonkeyPatch

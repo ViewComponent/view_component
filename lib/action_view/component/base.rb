@@ -8,7 +8,7 @@ module ActionView
       include ActiveModel::Validations
       include ActiveSupport::Configurable
       include ActionView::Component::Previewable
-      include ActionView::Component::ContentFor
+      include ActionView::Component::ContentAreas
 
       delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 

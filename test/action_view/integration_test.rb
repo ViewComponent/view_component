@@ -36,20 +36,21 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "rendering component with content_for" do
-    get "/content_for"
+    get "/content_areas"
     assert_response :success
 
-    assert_html_matches <<~HTML, response.body
-      <div>
+    expected_string = %(
+    <div>
         <h1>Hi!</h1>
 
-
-        <p>Have a great day.</p>
+        <p>Have a great #{Date.today.strftime("%A")}.</p>
 
         <h3>Bye!</h3>
 
       </div>
-    HTML
+    )
+
+    assert_html_matches expected_string, response.body
   end
 
   test "rendering component with a partial" do

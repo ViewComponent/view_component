@@ -124,7 +124,7 @@ An `ActionView::Component` is a Ruby file and corresponding template file (in an
 `app/components/test_component.rb`:
 ```ruby
 class TestComponent < ActionView::Component::Base
-  validates :content, :title, presence: true
+  validates :body, :title, presence: true
 
   def initialize(title:)
     @title = title
@@ -198,6 +198,55 @@ If the component is rendered with a blank title:
 An error will be raised:
 
 `ActiveModel::ValidationError: Validation failed: Title can't be blank`
+
+#### Content Areas
+
+A component can be configured to have multiple 'content areas' which can be captured and later rendered in the components view. For example:
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :user, :header, :body, presence: true
+
+  set_content_areas :header
+
+  def initialize(user:)
+    @user = user
+  end
+end
+```
+
+`app/components/modal_component.html.erb`:
+```erb
+<div class="modal">
+  <div class="header"><%= header %></div>
+  <div class="body"><%= body %>"></div>
+</div>
+```
+
+We can render it in a view as:
+
+```erb
+<%= render(TestComponent, user: {name: 'Jane'}) do |component| %>
+  <% component.with(:body) do %>
+      Hello <%= user[:name] %>
+    <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+Which returns:
+
+```html
+<div class="modal">
+  <div class="header">Hello Jane</div>
+  <div class="body"><p>Have a great day.</p></div>
+</div>
+```
+
+Content for areas can be either as arguments to the render method or as the content of the block passed to the `with` method.
 
 ### Testing
 
