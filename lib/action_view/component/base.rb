@@ -8,6 +8,7 @@ module ActionView
       include ActiveModel::Validations
       include ActiveSupport::Configurable
       include ActionView::Component::Previewable
+      include ActionView::Component::ContentFor
 
       delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 
@@ -47,7 +48,8 @@ module ActionView
         old_current_template = @current_template
         @current_template = self
 
-        @content = view_context.capture(&block) if block_given?
+        @content = view_context.capture(self, &block) if block_given?
+
         validate!
 
         send(self.class.call_method_name(@variant))

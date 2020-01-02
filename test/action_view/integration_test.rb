@@ -35,6 +35,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     HTML
   end
 
+  test "rendering component with content_for" do
+    get "/content_for"
+    assert_response :success
+
+    assert_html_matches <<~HTML, response.body
+      <div>
+        <h1>Hi!</h1>
+
+
+        <p>Have a great day.</p>
+
+        <h3>Bye!</h3>
+
+      </div>
+    HTML
+  end
+
   test "rendering component with a partial" do
     get "/partial"
     assert_response :success

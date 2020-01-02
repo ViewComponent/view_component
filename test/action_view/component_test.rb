@@ -107,11 +107,51 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     HTML
   end
 
-  def test_renders_content_for_template
-    result = render_inline(ContentForComponent)
+  def test_renders_content_for_template_with_initialize_arguments
+    result = render_inline(ContentForComponent, title: "Hi!", footer: "Bye!") { "Have a nice day." }
 
-    assert_html_matches "<div>Hello content for</div>", result.to_html
+    assert_html_matches "<div>\nHi!\nHave a nice day.\nBye!\n</div>", result.to_html
   end
+
+  def test_renders_content_for_template_with_content_for_content
+    result = render_inline(ContentForComponent, footer: "Bye!") do |component|
+      component.content_for(:title, "Hello!")
+      "Have a nice day."
+    end
+
+    assert_html_matches "<div>\nHello!\nHave a nice day.\nBye!\n</div>", result.to_html
+  end
+
+  def test_renders_content_for_template_with_content_for_block
+    result = render_inline(ContentForComponent, footer: "Bye!") do |component|
+      component.content_for(:title) { "Hello!" }
+      "Have a nice day."
+    end
+
+    assert_html_matches "<div>\nHello!\nHave a nice day.\nBye!\n</div>", result.to_html
+  end
+
+
+  def test_renders_content_for_template_appends_content_for_values
+    result = render_inline(ContentForComponent, footer: "Bye!") do |component|
+      component.content_for(:title) { "Hello!" }
+      component.content_for(:title, "Hi!")
+      "Have a nice day."
+    end
+
+    assert_html_matches "<div>\nHello!Hi!\nHave a nice day.\nBye!\n</div>", result.to_html
+  end
+
+  def test_renders_content_for_template_replace_content_for_with_flush
+    result = render_inline(ContentForComponent, footer: "Bye!") do |component|
+      component.content_for(:title) { "Hello!" }
+      component.content_for(:title, "Hi!", flush: true)
+      "Have a nice day."
+    end
+
+    assert_html_matches "<div>\nHi!\nHave a nice day.\nBye!\n</div>", result.to_html
+  end
+
 
   def test_renders_helper_method_through_proxy
     result = render_inline(HelpersProxyComponent)
