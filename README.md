@@ -228,7 +228,7 @@ We can render it in a view as:
 
 ```erb
 <%= render(TestComponent, user: {name: 'Jane'}) do |component| %>
-  <% component.with(:body) do %>
+  <% component.with(:header) do %>
       Hello <%= user[:name] %>
     <% end %>
   <% component.with(:body) do %>
