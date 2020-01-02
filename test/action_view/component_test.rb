@@ -165,6 +165,14 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_includes exception.message, "Unknown content_area 'foo' - expected one of '[:title, :body, :footer]'"
   end
 
+  def test_set_content_areas_raise_with_content_keyword
+    exception = assert_raises StandardError do
+      ContentAreasComponent.set_content_areas :content
+    end
+
+    assert_includes exception.message, ":content is a reserved content_area internal to ActionView:Component"
+  end
+
   def test_renders_helper_method_through_proxy
     result = render_inline(HelpersProxyComponent)
 
