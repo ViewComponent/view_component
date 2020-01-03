@@ -11,7 +11,7 @@ module ActionView
       end
 
       class_methods do
-        def set_content_areas(*areas)
+        def with_content_areas(*areas)
           if areas.include?(:content)
             raise StandardError.new ":content is a reserved content_area internal to ActionView:Component. Please use another area name, perhaps ':body'"
           end

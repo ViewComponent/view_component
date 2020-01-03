@@ -208,7 +208,7 @@ A component can be configured to have multiple 'content areas' which can be capt
 class ModalComponent < ActionView::Component::Base
   validates :user, :header, :body, presence: true
 
-  set_content_areas :header
+  with_content_areas :header
 
   def initialize(user:)
     @user = user
