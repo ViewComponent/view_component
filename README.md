@@ -201,7 +201,7 @@ An error will be raised:
 
 #### Content Areas
 
-A component can be configured to have multiple 'content areas' which can be captured and later rendered in the components view. For example:
+A component can be configured to have multiple 'content areas' which can be captured and later rendered in the component's view. For example:
 
 `app/components/modal_component.rb`:
 ```ruby

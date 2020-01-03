@@ -43,7 +43,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     <div>
         <h1>Hi!</h1>
 
-        <p>Have a great #{Date.today.strftime("%A")}.</p>
+        <p>Did you know that 1+1=2?</p>
 
         <h3>Bye!</h3>
 
