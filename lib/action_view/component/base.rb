@@ -127,12 +127,6 @@ module ActionView
           instance_method(:initialize).source_location[0]
         end
 
-        def eager_load!
-          self.descendants.each do |descendant|
-            descendant.compile if descendant.has_initializer?
-          end
-        end
-
         def compiled?
           @compiled && ActionView::Base.cache_template_loading
         end
