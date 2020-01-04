@@ -15,10 +15,12 @@ module ActionView
 
           options.render_in(self, &block)
         elsif options.is_a?(Class) && options < ActionView::Component::Base
-          options.new(args).render_in(self, &block)
+          options.safe_new(args).render_in(self, &block)
         elsif options.is_a?(Hash) && options.has_key?(:component)
-          options[:component].new(options[:locals]).render_in(self, &block)
+          options[:component].safe_new(options[:locals]).render_in(self, &block)
         elsif options.respond_to?(:to_component_class) && !options.to_component_class.nil?
+          # In this case, the `options` passed to `new` is the object on which `#to_component_class` is called. So we
+          # want the non-zero arity initializer to be called.
           options.to_component_class.new(options).render_in(self, &block)
         else
           super

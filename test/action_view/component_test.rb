@@ -17,6 +17,41 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_html_matches "<div>hello,world!</div>", result.css("div").to_html
   end
 
+  def test_zero_arity_initializers
+      result = render_inline(ZeroArityComponent)
+
+      assert_html_matches "<div>hello,world!</div>", result.to_html
+  end
+
+  def test_zero_arity_initializers_with_hash_syntax
+    result = render_inline(component: ZeroArityComponent, locals: {})
+
+    assert_html_matches "<div>hello,world!</div>", result.to_html
+  end
+
+
+  def test_zero_arity_initializers_with_hash_syntax_and_no_locals
+    result = render_inline(component: ZeroArityComponent)
+
+    assert_html_matches "<div>hello,world!</div>", result.to_html
+  end
+
+  def test_zero_arity_initializer_with_to_component_class
+    exception = assert_raises ArgumentError do
+      render_inline(ZeroArity.new)
+    end
+
+    assert_includes exception.message, "wrong number of arguments (given 1, expected 0)"
+  end
+
+  def test_zero_arity_initializer_arguments_not_dropped
+    exception = assert_raises ArgumentError do
+      render_inline(ZeroArityComponent, unnecessary_attr: "Hello")
+    end
+
+    assert_includes exception.message, "wrong number of arguments (given 1, expected 0)"
+  end
+
   def test_checks_validations
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(WrapperComponent)
