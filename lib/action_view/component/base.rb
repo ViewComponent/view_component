@@ -37,7 +37,7 @@ module ActionView
       # <span title="greeting">Hello, world!</span>
       #
       def render_in(view_context, *args, &block)
-        self.class.compile
+        self.class.compile!
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer
         @lookup_context ||= view_context.lookup_context
@@ -110,34 +110,37 @@ module ActionView
           end
         end
 
-        def has_initializer?
-          self.instance_method(:initialize).owner == self
-        end
-
         def source_location
-          # Require #initialize to be defined so that we can use
-          # method#source_location to look up the file name
-          # of the component.
-          #
-          # If we were able to only support Ruby 2.7+,
-          # We could just use Module#const_source_location,
-          # rendering this unnecessary.
-          raise NotImplementedError.new("#{self} must implement #initialize.") unless has_initializer?
-
-          instance_method(:initialize).source_location[0]
+          @source_location ||=
+              begin
+                # Require #initialize to be defined so that we can use
+                # method#source_location to look up the file name
+                # of the component.
+                #
+                # If we were able to only support Ruby 2.7+,
+                # We could just use Module#const_source_location,
+                # rendering this unnecessary.
+                #
+                initialize_method = instance_method(:initialize)
+                initialize_method.source_location[0] if initialize_method.owner == self
+              end
         end
 
         def compiled?
           @compiled && ActionView::Base.cache_template_loading
         end
 
+        def compile!
+          compile(true)
+        end
+
         # Compile templates to instance methods, assuming they haven't been compiled already.
         # We could in theory do this on app boot, at least in production environments.
         # Right now this just compiles the first time the component is rendered.
-        def compile
+        def compile(raise_if_invalid = false)
           return if compiled?
 
-          validate_templates
+          return unless valid?(raise_if_invalid)
 
           templates.each do |template|
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -183,20 +186,32 @@ module ActionView
             end
         end
 
-        def validate_templates
+        def valid?(raise_if_invalid)
+          if source_location.nil?
+            raise NotImplementedError.new("#{self} must implement #initialize.") if raise_if_invalid
+            return false
+          end
+
           if templates.empty?
-            raise NotImplementedError.new("Could not find a template file for #{self}.")
+            raise NotImplementedError.new("Could not find a template file for #{self}.") if raise_if_invalid
+            return false
           end
 
-          if templates.select { |template| template[:variant].nil? }.length > 1
-            raise StandardError.new("More than one template found for #{self}. There can only be one default template file per component.")
+          if templates.count { |template| template[:variant].nil? } > 1
+            raise StandardError.new("More than one template found for #{self}. There can only be one default template file per component.") if raise_if_invalid
+            return false
           end
 
-          variants.each_with_object(Hash.new(0)) { |variant, counts| counts[variant] += 1 }.each do |variant, count|
-            next unless count > 1
+          invalid_variants = templates
+                                 .group_by { |template| template[:variant] }
+                                 .map { |variant, grouped| variant if grouped.length > 1 }
+                                 .compact
 
-            raise StandardError.new("More than one template found for variant '#{variant}' in #{self}. There can only be one template file per variant.")
+          unless invalid_variants.empty?
+            raise StandardError.new("More than one template found for variant(s) '#{invalid_variants.join(', ')}' in #{self}. There can only be one template file per variant.") if raise_if_invalid
+            return false
           end
+          true
         end
 
         def compiled_template(file_path)

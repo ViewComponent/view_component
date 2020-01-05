@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-require "invalid_components_test_helper"
-require "invalid/missing_initializer_component"
-require "invalid/missing_template_component"
-require "invalid/too_many_sidecar_files_component"
-require "invalid/too_many_sidecar_files_for_variant_component"
-
 class ActionView::InvalidComponentTest < ActionView::Component::TestCase
   def test_raises_error_when_initializer_is_not_defined
     exception = assert_raises NotImplementedError do
@@ -36,6 +30,6 @@ class ActionView::InvalidComponentTest < ActionView::Component::TestCase
       render_inline(TooManySidecarFilesForVariantComponent)
     end
 
-    assert_includes error.message, "More than one template found for variant 'test' in TooManySidecarFilesForVariantComponent"
+    assert_includes error.message, "More than one template found for variant(s) 'test, testing' in TooManySidecarFilesForVariantComponent"
   end
 end

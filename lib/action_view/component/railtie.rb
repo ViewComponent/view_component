@@ -35,9 +35,7 @@ module ActionView
 
       initializer "action_view_component.eager_load_actions" do
         ActiveSupport.on_load(:after_initialize) do
-          ActionView::Component::Base.descendants.each do |descendant|
-            descendant.compile if descendant.has_initializer? && config.eager_load
-          end
+          ActionView::Component::Base.descendants.each(&:compile)
         end
       end
 
