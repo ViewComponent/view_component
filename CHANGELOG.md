@@ -1,3 +1,17 @@
+# v1.6.2
+
+* Fix Uninitialized Constant error.
+
+    *Jon Palmer*
+
+* Add basic github issue and PR templates.
+
+    *Dylan Clark*
+
+* Update readme phrasing around previews.
+
+    *Justin Coyne*
+
 # v1.6.1
 
 * Allow Previews to have no layout.
