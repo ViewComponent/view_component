@@ -124,7 +124,7 @@ An `ActionView::Component` is a Ruby file and corresponding template file (in an
 `app/components/test_component.rb`:
 ```ruby
 class TestComponent < ActionView::Component::Base
-  validates :body, :title, presence: true
+  validates :content, :title, presence: true
 
   def initialize(title:)
     @title = title
@@ -228,7 +228,7 @@ end
 We can render it in a view as:
 
 ```erb
-<%= render(TestComponent, user: {name: 'Jane'}) do |component| %>
+<%= render(ModalComponent, user: {name: 'Jane'}) do |component| %>
   <% component.with(:header) do %>
       Hello <%= user[:name] %>
     <% end %>
@@ -266,7 +266,7 @@ end
 ```
 
 ```erb
-<%= render(TestComponent, header: "Hi!") do |component| %>
+<%= render(ModalComponent, header: "Hi!") do |component| %>
   <% help_enabled? && component.with(:header) do %>
     <span class="help_icon"><%= component.header %></span>
   <% end %>
@@ -293,7 +293,7 @@ end
 
 `app/views/render_arg.html.erb`:
 ```erb
-<%= render(TestComponent, header: "Hi!") do |component| %>
+<%= render(ModalComponent, header: "Hi!") do |component| %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
@@ -302,7 +302,7 @@ end
 
 `app/views/with_block.html.erb`:
 ```erb
-<%= render(TestComponent) do |component| %>
+<%= render(ModalComponent) do |component| %>
   <% component.with(:header) do %>
     <span class="help_icon">Hello</span> 
   <% end %>
@@ -339,7 +339,7 @@ end
 
 `app/views/render_arg.html.erb`:
 ```erb
-<%= render(TestComponent, header: "Hi!") do |component| %>
+<%= render(ModalComponent, header: "Hi!") do |component| %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
@@ -348,7 +348,7 @@ end
 
 `app/views/with_block.html.erb`:
 ```erb
-<%= render(TestComponent) do |component| %>
+<%= render(ModalComponent) do |component| %>
   <% component.with(:header) do %>
     <span class="help_icon">Hello</span> 
   <% end %>
@@ -360,7 +360,7 @@ end
 
 `app/views/no_header.html.erb`:
 ```erb
-<%= render(TestComponent) do |component| %>
+<%= render(ModalComponent) do |component| %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
