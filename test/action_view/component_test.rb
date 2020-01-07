@@ -125,7 +125,20 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
       component.with(:body) { "Have a nice day." }
     end
 
-    assert_html_matches "<div>\nHello!\nHave a nice day.\nBye!\n</div>", result.to_html
+    expected_html =
+      %(<div>
+          <div class="title">
+            Hello!
+          </div>
+          <div class="body">
+            Have a nice day.
+          </div>
+          <div class="footer">
+            Bye!
+          </div>
+        </div>)
+
+    assert_html_matches expected_html, result.to_html
   end
 
   def test_renders_content_areas_template_with_block
@@ -134,7 +147,20 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
       component.with(:body) { "Have a nice day." }
     end
 
-    assert_html_matches "<div>\nHello!\nHave a nice day.\nBye!\n</div>", result.to_html
+    expected_html =
+      %(<div>
+          <div class="title">
+            Hello!
+          </div>
+          <div class="body">
+            Have a nice day.
+          </div>
+          <div class="footer">
+            Bye!
+          </div>
+        </div>)
+
+    assert_html_matches expected_html, result.to_html
   end
 
   def test_renders_content_areas_template_replaces_content
@@ -144,7 +170,42 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
       component.with(:body) { "Have a nice day." }
     end
 
-    assert_html_matches "<div>\nHi!\nHave a nice day.\nBye!\n</div>", result.to_html
+    expected_html =
+      %(<div>
+          <div class="title">
+            Hi!
+          </div>
+          <div class="body">
+            Have a nice day.
+          </div>
+          <div class="footer">
+            Bye!
+          </div>
+        </div>)
+
+    assert_html_matches expected_html, result.to_html
+  end
+
+  def test_renders_content_areas_template_can_wrap_render_arguments
+    result = render_inline(ContentAreasComponent, title: "Hello!", footer: "Bye!") do |component|
+      component.with(:title) { "<strong>#{component.title}</strong>".html_safe }
+      component.with(:body) { "Have a nice day." }
+    end
+
+    expected_html =
+      %(<div>
+          <div class="title">
+            <strong>Hello!</strong>
+          </div>
+          <div class="body">
+            Have a nice day.
+          </div>
+          <div class="footer">
+            Bye!
+          </div>
+        </div>)
+
+    assert_html_matches expected_html, result.to_html
   end
 
   def test_renders_content_area_does_not_capture_block_content
@@ -156,7 +217,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_content_areas_template_raise_with_unknown_content_areas
-    exception = assert_raises StandardError do
+    exception = assert_raises ArgumentError do
       render_inline(ContentAreasComponent, footer: "Bye!") do |component|
         component.with(:foo) { "Hello!" }
       end
@@ -166,7 +227,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_with_content_areas_raise_with_content_keyword
-    exception = assert_raises StandardError do
+    exception = assert_raises ArgumentError do
       ContentAreasComponent.with_content_areas :content
     end
 

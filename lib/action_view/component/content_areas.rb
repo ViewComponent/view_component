@@ -13,7 +13,7 @@ module ActionView
       class_methods do
         def with_content_areas(*areas)
           if areas.include?(:content)
-            raise StandardError.new ":content is a reserved content_area internal to ActionView:Component. Please use another area name, perhaps ':body'"
+            raise ArgumentError.new ":content is a reserved content_area internal to ActionView:Component. Please use another area name, perhaps ':body'"
           end
           attr_reader *areas
           self.content_areas = areas
@@ -22,22 +22,15 @@ module ActionView
 
       def with(area, content = nil, &block)
         unless content_areas.include?(area)
-          raise StandardError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
+          raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
         end
 
         if block_given?
           content = view_context.capture(&block)
         end
 
-        set_area(area, content)
+        instance_variable_set("@#{area}".to_sym, content)
         nil
-      end
-
-      private
-
-      def set_area(area, value)
-        instance_variable_name = "@#{area}".to_sym
-        instance_variable_set(instance_variable_name, value)
       end
     end
   end

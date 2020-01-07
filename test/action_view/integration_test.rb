@@ -39,15 +39,22 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/content_areas"
     assert_response :success
 
+    
     expected_string = %(
     <div>
+      <div class="title">
         <h1>Hi!</h1>
 
+      </div>
+      <div class="body">
         <p>Did you know that 1+1=2?</p>
 
+      </div>
+      <div class="footer">
         <h3>Bye!</h3>
 
       </div>
+    </div>
     )
 
     assert_html_matches expected_string, response.body

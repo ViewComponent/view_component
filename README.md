@@ -201,14 +201,15 @@ An error will be raised:
 
 #### Content Areas
 
-A component can be configured to have multiple 'content areas' which can be captured and later rendered in the component's view. For example:
+
+A component can declare additional content areas to be rendered in the component. For example:
 
 `app/components/modal_component.rb`:
 ```ruby
 class ModalComponent < ActionView::Component::Base
   validates :user, :header, :body, presence: true
 
-  with_content_areas :header
+  with_content_areas :header, :body
 
   def initialize(user:)
     @user = user
@@ -246,7 +247,125 @@ Which returns:
 </div>
 ```
 
-Content for areas can be either as arguments to the render method or as the content of the block passed to the `with` method.
+Content for content areas can be passed as arguments to the render method or as named blocks passed to the `with` method.
+The allows a few different combinations of ways to render the component.
+
+##### Required Render argument optionally overridden or wrapped by a named block
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :header, :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(header:)
+    @header = header
+  end
+end
+```
+
+```erb
+<%= render(TestComponent, header: "Hi!") do |component| %>
+  <% help_enabled? && component.with(:header) do %>
+    <span class="help_icon"><%= component.header %></span>
+  <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+##### Required argument passed by render argument or by named block
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :header, :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(header: nil)
+    @header = header
+  end
+end
+```
+
+`app/views/render_arg.html.erb`:
+```erb
+<%= render(TestComponent, header: "Hi!") do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+`app/views/with_block.html.erb`:
+```erb
+<%= render(TestComponent) do |component| %>
+  <% component.with(:header) do %>
+    <span class="help_icon">Hello</span> 
+  <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+##### Optional argument passed by render argument or by named block or neither
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(header: nil)
+    @header = header
+  end
+end
+```
+
+`app/components/modal_component.html.erb`:
+```erb
+<div class="modal">
+  <% if header %>
+    <div class="header"><%= header %></div>
+  <% end %>
+  <div class="body"><%= body %>"></div>
+</div>
+```
+
+`app/views/render_arg.html.erb`:
+```erb
+<%= render(TestComponent, header: "Hi!") do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+`app/views/with_block.html.erb`:
+```erb
+<%= render(TestComponent) do |component| %>
+  <% component.with(:header) do %>
+    <span class="help_icon">Hello</span> 
+  <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+`app/views/no_header.html.erb`:
+```erb
+<%= render(TestComponent) do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
 
 ### Testing
 
