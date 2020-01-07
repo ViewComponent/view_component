@@ -39,7 +39,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/content_areas"
     assert_response :success
 
-    
     expected_string = %(
     <div>
       <div class="title">
