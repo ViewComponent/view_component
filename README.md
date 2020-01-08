@@ -248,9 +248,9 @@ Which returns:
 ```
 
 Content for content areas can be passed as arguments to the render method or as named blocks passed to the `with` method.
-The allows a few different combinations of ways to render the component.
+This allows a few different combinations of ways to render the component:
 
-##### Required Render argument optionally overridden or wrapped by a named block
+##### Required render argument optionally overridden or wrapped by a named block
 
 `app/components/modal_component.rb`:
 ```ruby
@@ -312,7 +312,7 @@ end
 <% end %>
 ```
 
-##### Optional argument passed by render argument or by named block or neither
+##### Optional argument passed by render argument, by named block, or neither
 
 `app/components/modal_component.rb`:
 ```ruby
