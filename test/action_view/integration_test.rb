@@ -35,6 +35,30 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     HTML
   end
 
+  test "rendering component with content_for" do
+    get "/content_areas"
+    assert_response :success
+
+    expected_string = %(
+    <div>
+      <div class="title">
+        <h1>Hi!</h1>
+
+      </div>
+      <div class="body">
+        <p>Did you know that 1+1=2?</p>
+
+      </div>
+      <div class="footer">
+        <h3>Bye!</h3>
+
+      </div>
+    </div>
+    )
+
+    assert_html_matches expected_string, response.body
+  end
+
   test "rendering component with a partial" do
     get "/partial"
     assert_response :success

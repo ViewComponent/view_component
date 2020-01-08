@@ -199,6 +199,174 @@ An error will be raised:
 
 `ActiveModel::ValidationError: Validation failed: Title can't be blank`
 
+#### Content Areas
+
+
+A component can declare additional content areas to be rendered in the component. For example:
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :user, :header, :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(user:)
+    @user = user
+  end
+end
+```
+
+`app/components/modal_component.html.erb`:
+```erb
+<div class="modal">
+  <div class="header"><%= header %></div>
+  <div class="body"><%= body %>"></div>
+</div>
+```
+
+We can render it in a view as:
+
+```erb
+<%= render(ModalComponent, user: {name: 'Jane'}) do |component| %>
+  <% component.with(:header) do %>
+      Hello <%= user[:name] %>
+    <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+Which returns:
+
+```html
+<div class="modal">
+  <div class="header">Hello Jane</div>
+  <div class="body"><p>Have a great day.</p></div>
+</div>
+```
+
+Content for content areas can be passed as arguments to the render method or as named blocks passed to the `with` method.
+This allows a few different combinations of ways to render the component:
+
+##### Required render argument optionally overridden or wrapped by a named block
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :header, :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(header:)
+    @header = header
+  end
+end
+```
+
+```erb
+<%= render(ModalComponent, header: "Hi!") do |component| %>
+  <% help_enabled? && component.with(:header) do %>
+    <span class="help_icon"><%= component.header %></span>
+  <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+##### Required argument passed by render argument or by named block
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :header, :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(header: nil)
+    @header = header
+  end
+end
+```
+
+`app/views/render_arg.html.erb`:
+```erb
+<%= render(ModalComponent, header: "Hi!") do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+`app/views/with_block.html.erb`:
+```erb
+<%= render(ModalComponent) do |component| %>
+  <% component.with(:header) do %>
+    <span class="help_icon">Hello</span> 
+  <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+##### Optional argument passed by render argument, by named block, or neither
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(header: nil)
+    @header = header
+  end
+end
+```
+
+`app/components/modal_component.html.erb`:
+```erb
+<div class="modal">
+  <% if header %>
+    <div class="header"><%= header %></div>
+  <% end %>
+  <div class="body"><%= body %>"></div>
+</div>
+```
+
+`app/views/render_arg.html.erb`:
+```erb
+<%= render(ModalComponent, header: "Hi!") do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+`app/views/with_block.html.erb`:
+```erb
+<%= render(ModalComponent) do |component| %>
+  <% component.with(:header) do %>
+    <span class="help_icon">Hello</span> 
+  <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+`app/views/no_header.html.erb`:
+```erb
+<%= render(ModalComponent) do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
 ### Testing
 
 Components are unit tested directly. The `render_inline` test helper wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
