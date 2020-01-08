@@ -231,7 +231,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
       ContentAreasComponent.with_content_areas :content
     end
 
-    assert_includes exception.message, ":content is a reserved content_area internal to ActionView:Component"
+    assert_includes exception.message, ":content is a reserved content area name"
   end
 
   def test_renders_helper_method_through_proxy

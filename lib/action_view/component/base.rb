@@ -8,9 +8,11 @@ module ActionView
       include ActiveModel::Validations
       include ActiveSupport::Configurable
       include ActionView::Component::Previewable
-      include ActionView::Component::ContentAreas
 
       delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
+
+      class_attribute :content_areas, default: []
+      self.content_areas = [] # default doesn't work until Rails 5.2
 
       # Entrypoint for rendering components. Called by ActionView::Base#render.
       #
@@ -89,6 +91,19 @@ module ActionView
         @variant
       end
 
+      def with(area, content = nil, &block)
+        unless content_areas.include?(area)
+          raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
+        end
+
+        if block_given?
+          content = view_context.capture(&block)
+        end
+
+        instance_variable_set("@#{area}".to_sym, content)
+        nil
+      end
+
       private
 
       def request
@@ -164,6 +179,14 @@ module ActionView
 
         def identifier
           source_location
+        end
+
+        def with_content_areas(*areas)
+          if areas.include?(:content)
+            raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
+          end
+          attr_reader *areas
+          self.content_areas = areas
         end
 
         private
