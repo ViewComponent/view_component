@@ -131,16 +131,19 @@ module ActionView
         end
 
         def compile!
-          compile(true)
+          compile(validate: true)
         end
 
         # Compile templates to instance methods, assuming they haven't been compiled already.
         # We could in theory do this on app boot, at least in production environments.
         # Right now this just compiles the first time the component is rendered.
-        def compile(raise_if_invalid = false)
+        def compile(validate: false)
           return if compiled?
 
-          return unless valid?(raise_if_invalid)
+          if template_errors.present?
+            raise ActionView::Component::TemplateError.new(template_errors) if validate
+            return false
+          end
 
           templates.each do |template|
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -170,6 +173,7 @@ module ActionView
         private
 
         def matching_views_in_source_location
+          return [] unless source_location
           (Dir["#{source_location.sub(/#{File.extname(source_location)}$/, '')}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location])
         end
 
@@ -180,38 +184,34 @@ module ActionView
 
               memo << {
                 path: path,
-                variant: pieces.second.split("+")[1]&.to_sym,
+                variant: pieces.second.split("+").second&.to_sym,
                 handler: pieces.last
               }
             end
         end
 
-        def valid?(raise_if_invalid)
-          if source_location.nil?
-            raise NotImplementedError.new("#{self} must implement #initialize.") if raise_if_invalid
-            return false
-          end
+        def template_errors
+          @template_errors ||=
+            begin
+              errors = []
+              errors << "#{self} must implement #initialize." if source_location.nil?
+              errors << "Could not find a template file for #{self}." if templates.empty?
 
-          if templates.empty?
-            raise NotImplementedError.new("Could not find a template file for #{self}.") if raise_if_invalid
-            return false
-          end
+              if templates.count { |template| template[:variant].nil? } > 1
+                errors << "More than one template found for #{self}. There can only be one default template file per component."
+              end
 
-          if templates.count { |template| template[:variant].nil? } > 1
-            raise StandardError.new("More than one template found for #{self}. There can only be one default template file per component.") if raise_if_invalid
-            return false
-          end
+              invalid_variants = templates
+                                   .group_by { |template| template[:variant] }
+                                   .map { |variant, grouped| variant if grouped.length > 1 }
+                                   .compact
+                                   .sort
 
-          invalid_variants = templates
-                                 .group_by { |template| template[:variant] }
-                                 .map { |variant, grouped| variant if grouped.length > 1 }
-                                 .compact
-
-          unless invalid_variants.empty?
-            raise StandardError.new("More than one template found for variant(s) '#{invalid_variants.join(', ')}' in #{self}. There can only be one template file per variant.") if raise_if_invalid
-            return false
-          end
-          true
+              unless invalid_variants.empty?
+                errors << "More than one template found for #{'variant'.pluralize(invalid_variants.count)} #{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{self}. There can only be one template file per variant."
+              end
+              errors
+            end
         end
 
         def compiled_template(file_path)

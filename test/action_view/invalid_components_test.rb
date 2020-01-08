@@ -2,7 +2,7 @@
 
 class ActionView::InvalidComponentTest < ActionView::Component::TestCase
   def test_raises_error_when_initializer_is_not_defined
-    exception = assert_raises NotImplementedError do
+    exception = assert_raises ActionView::Component::TemplateError do
       render_inline(MissingInitializerComponent)
     end
 
@@ -10,7 +10,7 @@ class ActionView::InvalidComponentTest < ActionView::Component::TestCase
   end
 
   def test_raises_error_when_sidecar_template_is_missing
-    exception = assert_raises NotImplementedError do
+    exception = assert_raises ActionView::Component::TemplateError do
       render_inline(MissingTemplateComponent)
     end
 
@@ -18,7 +18,7 @@ class ActionView::InvalidComponentTest < ActionView::Component::TestCase
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_is_present
-    error = assert_raises StandardError do
+    error = assert_raises ActionView::Component::TemplateError do
       render_inline(TooManySidecarFilesComponent)
     end
 
@@ -26,10 +26,10 @@ class ActionView::InvalidComponentTest < ActionView::Component::TestCase
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
-    error = assert_raises StandardError do
+    error = assert_raises ActionView::Component::TemplateError do
       render_inline(TooManySidecarFilesForVariantComponent)
     end
 
-    assert_includes error.message, "More than one template found for variant(s) 'test, testing' in TooManySidecarFilesForVariantComponent"
+    assert_includes error.message, "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
   end
 end
