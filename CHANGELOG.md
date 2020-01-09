@@ -1,3 +1,9 @@
+# Pending
+
+* Remove initializer requirement for Ruby 2.7+
+
+    *Dylan Clark*
+
 # v1.8.1
 
 * Run validation checks before calling `#render?`.

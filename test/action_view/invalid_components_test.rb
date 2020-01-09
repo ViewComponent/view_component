@@ -2,6 +2,8 @@
 
 class ActionView::InvalidComponentTest < ActionView::Component::TestCase
   def test_raises_error_when_initializer_is_not_defined
+    skip if const_source_location_supported?
+
     exception = assert_raises ActionView::Component::TemplateError do
       render_inline(MissingInitializerComponent)
     end

@@ -142,15 +142,11 @@ module ActionView
 
         def source_location
           @source_location ||=
-              begin
-                # Require #initialize to be defined so that we can use
-                # method#source_location to look up the file name
-                # of the component.
-                #
-                # If we were able to only support Ruby 2.7+,
-                # We could just use Module#const_source_location,
-                # rendering this unnecessary.
-                #
+              if const_source_location_supported?
+                const_source_location(self.name)[0]
+              else
+                # Require `#initialize` to be defined so that we can use `method#source_location`
+                # to look up the filename of the component.
                 initialize_method = instance_method(:initialize)
                 initialize_method.source_location[0] if initialize_method.owner == self
               end
@@ -210,6 +206,10 @@ module ActionView
 
         private
 
+        def const_source_location_supported?
+          respond_to? :const_source_location # introduced in Ruby 2.7
+        end
+
         def matching_views_in_source_location
           return [] unless source_location
           (Dir["#{source_location.chomp(File.extname(source_location))}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location])
@@ -232,7 +232,12 @@ module ActionView
           @template_errors ||=
             begin
               errors = []
-              errors << "#{self} must implement #initialize." if source_location.nil?
+              if source_location.nil? && !const_source_location_supported?
+                # Require `#initialize` to be defined so that we can use `method#source_location`
+                # to look up the filename of the component.
+                errors << "#{self} must implement #initialize."
+              end
+
               errors << "Could not find a template file for #{self}." if templates.empty?
 
               if templates.count { |template| template[:variant].nil? } > 1
