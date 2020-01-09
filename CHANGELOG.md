@@ -1,3 +1,13 @@
+# v1.7.0
+
+* Simplify validation of templates and compilation.
+
+    *Jon Palmer*
+
+* Add support for multiple content areas.
+
+    *Jon Palmer*
+
 # v1.6.2
 
 * Fix Uninitialized Constant error.
