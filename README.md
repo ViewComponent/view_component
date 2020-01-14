@@ -382,7 +382,7 @@ class PopupComponent < ActionView::Component::Base
     @current_user = current_user
   end
 
-  # show popup only for signed users
+  # show popup for signed users only
   def show_popup?
     current_user.present?
   end

@@ -359,13 +359,6 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_html_matches "<span>The Awesome post component!</span>", render_inline(post).to_html
   end
 
-  def test_to_component_class
-    post = Post.new(title: "Awesome post")
-
-    assert_html_matches PostComponent, post.to_component_class
-    assert_html_matches "<span>The Awesome post component!</span>", render_inline(post).to_html
-  end
-
   private
 
   def modify_file(file, content)
