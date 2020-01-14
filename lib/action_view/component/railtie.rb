@@ -24,7 +24,6 @@ module ActionView
 
       initializer "action_view_component.set_autoload_paths" do |app|
         require "railties/lib/rails/components_controller"
-        require "railties/lib/rails/component_examples_controller"
 
         options = app.config.action_view_component
 

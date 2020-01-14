@@ -26,9 +26,7 @@ module ActionView
             layout = @layout.nil? ? "layouts/application" : @layout
           end
 
-          Rails::ComponentExamplesController.render(template: "examples/show",
-                                                    layout: layout,
-                                                    assigns: { example: example_html })
+          ApplicationController.render(inline: "<%= raw('#{example_html}') %>", layout: layout)
         end
 
         # Returns the component object class associated to the preview.
