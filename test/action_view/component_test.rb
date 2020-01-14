@@ -346,6 +346,14 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_html_matches "Editorb!\n", render_inline(EditorbComponent).text
   end
 
+  def test_conditional_rendering
+    assert_includes render_inline(ConditionalRenderComponent, should_render: true).to_html,
+                    "<div>component was rendered</div>"
+
+    assert_equal render_inline(ConditionalRenderComponent, should_render: false).to_html,
+                    ""
+  end
+
   def test_to_component_class
     post = Post.new(title: "Awesome post")
 

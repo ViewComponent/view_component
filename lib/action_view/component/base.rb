@@ -40,6 +40,8 @@ module ActionView
       # <span title="greeting">Hello, world!</span>
       #
       def render_in(view_context, *args, &block)
+        return '' unless render?
+
         self.class.compile!
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer
@@ -57,6 +59,10 @@ module ActionView
         send(self.class.call_method_name(@variant))
       ensure
         @current_template = old_current_template
+      end
+
+      def render?
+        true
       end
 
       def initialize(*); end
