@@ -199,7 +199,7 @@ module ActionView
 
         def matching_views_in_source_location
           return [] unless source_location
-          (Dir["#{source_location.sub(/#{File.extname(source_location)}$/, '')}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location])
+          (Dir["#{source_location.chomp(File.extname(source_location))}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location])
         end
 
         def templates

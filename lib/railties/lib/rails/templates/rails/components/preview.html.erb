@@ -1,1 +1,1 @@
-<%= raw @preview.call(@example_name) %>
+<%= render(@render_args[:component], **@render_args[:args], &@render_args[:block])%>
