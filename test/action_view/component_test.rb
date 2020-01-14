@@ -17,6 +17,12 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_html_matches "<div>hello,world!</div>", result.css("div").to_html
   end
 
+  def test_skip_render
+    result = render_component(SkippedComponent)
+
+    assert_html_matches "", result.to_html
+  end
+
   def test_checks_validations
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(WrapperComponent)
@@ -344,6 +350,13 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
   def test_renders_component_with_rb_in_its_name
     assert_html_matches "Editorb!\n", render_inline(EditorbComponent).text
+  end
+
+  def test_to_component_class
+    post = Post.new(title: "Awesome post")
+
+    assert_html_matches PostComponent, post.to_component_class
+    assert_html_matches "<span>The Awesome post component!</span>", render_inline(post).to_html
   end
 
   def test_to_component_class

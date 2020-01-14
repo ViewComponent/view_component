@@ -367,6 +367,28 @@ end
 <% end %>
 ```
 
+### Render by condition
+
+Method `render_if` could be defined at the class level. When resolved to `false` the component wouldn't be rendered:
+
+`app/components/popup_component.rb`:
+```ruby
+class PopupComponent < ActionView::Component::Base
+  render_if { show_popup? }
+
+  attr_reader :current_user
+
+  def initialize(current_user: nil)
+    @current_user = current_user
+  end
+
+  # show popup only for signed users
+  def show_popup?
+    current_user.present?
+  end
+end
+```
+
 ### Testing
 
 Components are unit tested directly. The `render_inline` test helper wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:

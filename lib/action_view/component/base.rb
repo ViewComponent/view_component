@@ -47,6 +47,9 @@ module ActionView
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
+
+        return '' unless should_render?
+
         old_current_template = @current_template
         @current_template = self
 
@@ -57,6 +60,15 @@ module ActionView
         send(self.class.call_method_name(@variant))
       ensure
         @current_template = old_current_template
+      end
+
+      def should_render?
+        case self.class.render_conditions
+        when Proc
+          instance_eval(&self.class.render_conditions)
+        else
+          true
+        end
       end
 
       def initialize(*); end
@@ -193,6 +205,16 @@ module ActionView
           end
           attr_reader *areas
           self.content_areas = areas
+        end
+
+        attr_reader :render_conditions
+
+        def render_if(&block)
+          unless block_given?
+            raise ArgumentError.new ":render_if expects block to be given"
+          end
+
+          @render_conditions = block
         end
 
         private
