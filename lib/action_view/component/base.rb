@@ -48,7 +48,7 @@ module ActionView
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
 
-        return '' unless should_render?
+        return "" unless should_render?
 
         old_current_template = @current_template
         @current_template = self
