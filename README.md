@@ -304,7 +304,7 @@ end
 ```erb
 <%= render(ModalComponent) do |component| %>
   <% component.with(:header) do %>
-    <span class="help_icon">Hello</span> 
+    <span class="help_icon">Hello</span>
   <% end %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
@@ -350,7 +350,7 @@ end
 ```erb
 <%= render(ModalComponent) do |component| %>
   <% component.with(:header) do %>
-    <span class="help_icon">Hello</span> 
+    <span class="help_icon">Hello</span>
   <% end %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
@@ -365,6 +365,57 @@ end
     <p>Have a great day.</p>
   <% end %>
 <% end %>
+```
+
+### Conditional Rendering
+
+Components can implement a `#render?` method which indicates if they should be rendered, or not at all.
+
+For example, you might have a component that displays a "Please confirm your email address" banner to users who haven't confirmed their email address. The logic for rendering the banner would need to go in either the component template:
+
+```
+<!-- app/components/confirm_email_component.html.erb -->
+<% if user.requires_confirmation? %>
+  <div class="alert">
+    Please confirm your email address.
+  </div>
+<% end %>
+```
+
+or the view that renders the component:
+
+```erb
+<!-- app/views/_banners.html.erb -->
+<% if current_user.requires_confirmation? %>
+  <%= render(ConfirmEmailComponent, user: current_user) %>
+<% end %>
+```
+
+The `#render?` hook allows you to move this logic into the Ruby class, leaving your views more readable and declarative in style:
+
+```ruby
+# app/components/confirm_email_component.rb
+class ConfirmEmailComponent < ApplicationComponent
+  def initialize(user:)
+    @user = user
+  end
+
+  def render?
+    @user.requires_confirmation?
+  end
+end
+```
+
+```
+<!-- app/components/confirm_email_component.html.erb -->
+<div class="banner">
+  Please confirm your email address.
+</div>
+```
+
+```erb
+<!-- app/views/_banners.html.erb -->
+<%= render(ConfirmEmailComponent, user: current_user) %>
 ```
 
 ### Testing
