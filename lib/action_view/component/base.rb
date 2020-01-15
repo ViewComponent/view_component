@@ -40,15 +40,20 @@ module ActionView
       # <span title="greeting">Hello, world!</span>
       #
       def render_in(view_context, *args, &block)
-        return "" unless render?
-
-        self.class.compile!
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer
         @lookup_context ||= view_context.lookup_context
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
+
+        compile_and_render(&block)
+      end
+
+      def compile_and_render(&block)
+        return "" unless render?
+        
+        self.class.compile!
         old_current_template = @current_template
         @current_template = self
 
