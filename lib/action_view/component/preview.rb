@@ -6,10 +6,9 @@ module ActionView
   module Component # :nodoc:
     class Preview
       extend ActiveSupport::DescendantsTracker
-      include ActionView::Component::TestHelpers
 
-      def render(component, *locals, &block)
-        render_inline(component, *locals, &block)
+      def render(component, **args, &block)
+        { component: component, args: args, block: block }
       end
 
       class << self
@@ -19,21 +18,14 @@ module ActionView
           descendants
         end
 
-        # Returns the html of the component in its layout
-        def call(example, layout: nil)
-          example_html = new.public_send(example)
-          if layout.nil?
-            layout = @layout.nil? ? "layouts/application" : @layout
-          end
-
-          Rails::ComponentExamplesController.render(template: "examples/show",
-                                                    layout: layout,
-                                                    assigns: { example: example_html })
+        # Returns the arguments for rendering of the component in its layout
+        def render_args(example)
+          new.public_send(example).merge(layout: @layout)
         end
 
         # Returns the component object class associated to the preview.
         def component
-          self.name.sub(%r{Preview$}, "").constantize
+          name.chomp("Preview").constantize
         end
 
         # Returns all of the available examples for the component preview.
@@ -58,7 +50,7 @@ module ActionView
 
         # Returns the underscored name of the component preview without the suffix.
         def preview_name
-          name.sub(/Preview$/, "").underscore
+          name.chomp("Preview").underscore
         end
 
         # Setter for layout name.

@@ -2,10 +2,12 @@
 
 require "test_helper"
 
-class ActionView::PreviewTest < ActionView::Component::TestCase
+class ActionView::PreviewTest < ActionDispatch::IntegrationTest
   def test_preview
+    get "/rails/components/preview_component/default"
+
     assert_html_document(
-      PreviewComponentPreview.call(:default),
+      response.body,
       "Action View Component - Test",
       <<~HTML
         <div class="preview-component">
@@ -19,31 +21,20 @@ class ActionView::PreviewTest < ActionView::Component::TestCase
   end
 
   def test_preview_with_layout
+    get "/rails/components/my_component/default"
+
     assert_html_document(
-      MyComponentPreview.call(:default),
+      response.body,
       "Action View Component - Admin - Test",
       "<div>hello,world!</div>"
     )
   end
 
-  def test_preview_layout_override_with_false
-    assert_html_fragment(
-      MyComponentPreview.call(:default, layout: false),
-      "<div>hello,world!</div>"
-    )
-  end
-
   def test_preview_with_no_layout
-    assert_html_fragment(
-      NoLayoutPreview.call(:default),
-      "<div>hello,world!</div>"
-    )
-  end
+    get "/rails/components/no_layout/default"
 
-  def test_preview_with_no_layout_override
-    assert_html_document(
-      NoLayoutPreview.call(:default, layout: "application"),
-      "Action View Component - Test",
+    assert_html_fragment(
+      response.body,
       "<div>hello,world!</div>"
     )
   end
