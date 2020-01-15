@@ -56,7 +56,7 @@ module ActionView
 
       def compile_and_render(&block)
         return "" unless render?
-        
+
         self.class.compile!
         old_current_template = @current_template
         @current_template = self
