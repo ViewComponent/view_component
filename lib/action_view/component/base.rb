@@ -40,6 +40,10 @@ module ActionView
       # <span title="greeting">Hello, world!</span>
       #
       def render_in(view_context, *args, &block)
+        if self.class.source_location.nil?
+          raise ActionView::Component::MissingInitializerError.new("#{self.class} must implement #initialize.")
+        end
+
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer
         @lookup_context ||= view_context.lookup_context
@@ -230,7 +234,6 @@ module ActionView
           @template_errors ||=
             begin
               errors = []
-              errors << "#{self} must implement #initialize." if source_location.nil?
               errors << "Could not find a template file for #{self}." if templates.empty?
 
               if templates.count { |template| template[:variant].nil? } > 1

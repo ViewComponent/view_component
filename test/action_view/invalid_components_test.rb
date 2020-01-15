@@ -2,7 +2,7 @@
 
 class ActionView::InvalidComponentTest < ActionView::Component::TestCase
   def test_raises_error_when_initializer_is_not_defined
-    exception = assert_raises ActionView::Component::TemplateError do
+    exception = assert_raises ActionView::Component::MissingInitializerError do
       render_inline(MissingInitializerComponent)
     end
 
