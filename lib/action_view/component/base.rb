@@ -40,8 +40,6 @@ module ActionView
       # <span title="greeting">Hello, world!</span>
       #
       def render_in(view_context, *args, &block)
-        return "" unless render?
-
         self.class.compile!
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer
@@ -49,6 +47,9 @@ module ActionView
         @view_flow ||= view_context.view_flow
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
+
+        return "" unless render?
+
         old_current_template = @current_template
         @current_template = self
 
