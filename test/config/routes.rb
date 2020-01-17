@@ -9,5 +9,5 @@ Dummy::Application.routes.draw do
   get :content, to: "application#content"
   get :variants, to: "application#variants"
   get :cached, to: "application#cached"
-  get :cookies_check, to: "application#cookies_check"
+  get :render_check, to: "application#render_check"
 end

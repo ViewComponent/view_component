@@ -134,11 +134,13 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "optional rendering component depending on request context" do
-    get "/cookies_check"
+    get "/render_check"
     assert_response :success
     assert_includes response.body, "Rendered"
 
-    get "/cookies_check"
+    cookies[:shown] = true
+
+    get "/render_check"
     assert_response :success
     assert_empty response.body.strip
   end
