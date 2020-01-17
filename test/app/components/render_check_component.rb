@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CookiesCheckComponent < ActionView::Component::Base
+class RenderCheckComponent < ActionView::Component::Base
   def initialize(*); end
 
   def render?
