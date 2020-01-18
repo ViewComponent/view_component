@@ -17,7 +17,7 @@ module Rails
       hook_for :test_framework
 
       hook_for :template_engine do |instance, template_engine|
-        instance.invoke template_engine, [ instance.name ], require_content: instance.send(:requires_content?)
+        instance.invoke template_engine, [instance.name], require_content: instance.send(:requires_content?)
       end
 
       private
