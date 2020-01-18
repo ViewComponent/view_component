@@ -14,7 +14,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   arguments %w[user]
 
   def test_component_without_required_content
-    run_generator
+    without_required_content { run_generator }
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/class UserComponent < /, component)
@@ -27,7 +27,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   end
 
   def test_component_with_required_content
-    run_generator %w[user --require-content]
+    with_required_content { run_generator }
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/class UserComponent < /, component)
@@ -40,9 +40,23 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   end
 
   def test_component_with_namespace
-    run_generator %w[admins/user]
+    with_required_content { run_generator %w[admins/user] }
 
     assert_file "app/components/admins/user_component.rb", /class Admins::UserComponent < /
     assert_file "app/components/admins/user_component.html.erb"
+  end
+
+  private
+
+  def with_required_content
+    Thor::LineEditor.stub :readline, "Y" do
+      yield
+    end
+  end
+
+  def without_required_content
+    Thor::LineEditor.stub :readline, "n" do
+      yield
+    end
   end
 end
