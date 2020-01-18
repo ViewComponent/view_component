@@ -27,6 +27,7 @@ module Rails
       end
 
       def requires_content?
+        return if behavior == :revoke
         return @requires_content if @asked
 
         @asked = true
