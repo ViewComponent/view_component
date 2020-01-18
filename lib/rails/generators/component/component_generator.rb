@@ -6,7 +6,7 @@ module Rails
       source_root File.expand_path("templates", __dir__)
 
       argument :attributes, type: :array, default: [], banner: "attribute"
-      hook_for :test_framework
+      hook_for :template_engine, :test_framework
       check_class_collision suffix: "Component"
 
       def create_component_file
