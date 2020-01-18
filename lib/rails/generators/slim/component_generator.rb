@@ -7,6 +7,8 @@ module Slim
     class ComponentGenerator < Erb::Generators::ComponentGenerator
       source_root File.expand_path("templates", __dir__)
 
+      class_option :require_content, type: :boolean, default: false
+
       def copy_view_file
         template "component.html.slim", File.join("app/components", class_path, "#{file_name}_component.html.slim")
       end
@@ -14,10 +16,7 @@ module Slim
       private
 
       def requires_content?
-        return @requires_content if @asked
-
-        @asked = true
-        @requires_content = ask("Would you like #{class_name} to require content? (Y/n)").downcase == "y"
+        options["require_content"]
       end
 
       def file_name
