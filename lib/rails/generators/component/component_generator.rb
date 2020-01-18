@@ -13,10 +13,6 @@ module Rails
         template "component.rb", File.join("app/components", class_path, "#{file_name}_component.rb")
       end
 
-      def create_template_file
-        template "component.html.erb", File.join("app/components", class_path, "#{file_name}_component.html.erb")
-      end
-
       private
 
       def file_name
