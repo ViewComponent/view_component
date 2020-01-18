@@ -2,3 +2,7 @@ inherit_gem:
   rubocop-github:
     - config/default.yml
     - config/rails.yml
+
+AllCops:
+  Exclude:
+    - "test/tmp/**/*"

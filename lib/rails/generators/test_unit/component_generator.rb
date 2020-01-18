@@ -7,7 +7,7 @@ module TestUnit
       check_class_collision suffix: "ComponentTest"
 
       def create_test_file
-        template "component_test.rb", File.join("test/components", "#{file_name}_component_test.rb")
+        template "component_test.rb", File.join("test/components", class_path, "#{file_name}_component_test.rb")
       end
 
       private
