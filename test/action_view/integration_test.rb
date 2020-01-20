@@ -121,13 +121,13 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
     ActionController::Base.perform_caching = true
 
-    get "/cached"
+    get "/cached?version=1"
     assert_response :success
-    assert_html_matches "Cached", response.body
+    assert_html_matches "Cache 1", response.body
 
-    get "/cached"
+    get "/cached?version=2"
     assert_response :success
-    assert_html_matches "Cached", response.body
+    assert_html_matches "Cache 1", response.body
 
     ActionController::Base.perform_caching = false
     Rails.cache.clear
