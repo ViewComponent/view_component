@@ -354,6 +354,12 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
                     ""
   end
 
+  def test_render_check
+    assert_includes render_inline(RenderCheckComponent).text, "Rendered"
+    controller.view_context.cookies[:shown] = true
+    assert_empty render_inline(RenderCheckComponent).text, ""
+  end
+
   def test_to_component_class
     post = Post.new(title: "Awesome post")
 
