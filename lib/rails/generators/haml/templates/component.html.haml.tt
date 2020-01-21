@@ -1,0 +1,5 @@
+<%- if requires_content? -%>
+<%= "= content" %>
+<%- else -%>
+%div Add <%= class_name %> template here
+<%- end -%>
