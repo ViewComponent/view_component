@@ -133,6 +133,18 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
   end
 
+  test "optional rendering component depending on request context" do
+    get "/render_check"
+    assert_response :success
+    assert_includes response.body, "Rendered"
+
+    cookies[:shown] = true
+
+    get "/render_check"
+    assert_response :success
+    assert_empty response.body.strip
+  end
+
   test "renders component preview" do
     get "/rails/components/my_component/default"
 
