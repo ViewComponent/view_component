@@ -1,4 +1,4 @@
-<!-- https://github.com/github/actionview-component/blob/master/CONTRIBUTING.md#submitting-a-pull-request  -->
+<!-- See https://github.com/github/actionview-component/blob/master/CONTRIBUTING.md#submitting-a-pull-request  -->
 
 ### Summary
 
@@ -14,6 +14,4 @@ request, mention that information here. This could include
 benchmarks, or other information.
 
 If you are updating any of the CHANGELOG files or are asked to update the
-CHANGELOG files by reviewers, please add the CHANGELOG entry at the top of the file.
-
-Thanks for contributing to actionview-component! -->
+CHANGELOG files by reviewers, please add the CHANGELOG entry at the top of the file. -->

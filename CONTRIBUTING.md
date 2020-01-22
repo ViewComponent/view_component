@@ -1,4 +1,4 @@
-## Contributing
+# Contributing
 
 [fork]: https://github.com/github/actionview-component/fork
 [pr]: https://github.com/github/actionview-component/compare
@@ -15,9 +15,11 @@ Please note that this project is released with a [Contributor Code of Conduct][c
 
 0. [Fork][fork] and clone the repository
 0. Configure and install the dependencies: `bundle`
-0. Make sure the tests pass on your machine: `rake`
+0. Make sure the tests pass on your machine: `bundle exec rake`
 0. Create a new branch: `git checkout -b my-branch-name`
 0. Make your change, add tests, and make sure the tests still pass
+0. Add an entry to the top of `CHANGELOG.md` for your changes
+0. If it's your first time contributing, add yourself to the contributors at the bottom of `README.md`
 0. Push to your fork and [submit a pull request][pr]
 0. Pat your self on the back and wait for your pull request to be reviewed and merged.
 
@@ -36,20 +38,9 @@ If you are the current maintainer of this gem:
 1. Add version heading/entries to `CHANGELOG.md`.
 1. Make sure your local dependencies are up to date: `bundle`
 1. Ensure that tests are green: `bundle exec rake`
-1. Build a test gem `GEM_VERSION=$(git describe --tags 2>/dev/null | sed 's/-/./g' | sed 's/v//') gem build actionview-component.gemspec`
-1. Test the test gem:
-   1. Bump the Gemfile and Gemfile.lock versions for an app which relies on this gem
-   1. Install the new gem locally
-   1. Test behavior locally, branch deploy, whatever needs to happen
 1. Make a PR to github/actionview-component.
 1. Build a local gem: `gem build actionview-component.gemspec`
 1. Merge github/actionview-component PR
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
 1. Create a GitHub release with the pushed tag (https://github.com/github/actionview-component/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]`
 1. Push to rubygems.org -- `gem push actionview-component-VERSION.gem`
-
-## Resources
-
-- [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
-- [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
-- [GitHub Help](https://help.github.com)
