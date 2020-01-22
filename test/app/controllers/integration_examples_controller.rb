@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ApplicationController < ActionController::Base
+class IntegrationExamplesController < ActionController::Base
   layout false
 
   def variants
