@@ -119,6 +119,12 @@ module ActionView
 
       attr_reader :content, :view_context
 
+      # The controller used for testing components.
+      # Defaults to ApplicationController. This should be set early
+      # in the initialization process and should be set to a string.
+      mattr_accessor :test_controller
+      @@test_controller = "ApplicationController"
+
       class << self
         def inherited(child)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers

@@ -201,7 +201,6 @@ An error will be raised:
 
 #### Content Areas
 
-
 A component can declare additional content areas to be rendered in the component. For example:
 
 `app/components/modal_component.rb`:
@@ -493,6 +492,16 @@ For example, if you want to use `lib/component_previews`, set the following in `
 
 ```ruby
 config.action_view_component.preview_path = "#{Rails.root}/lib/component_previews"
+```
+
+#### Configuring TestController
+
+By default components tests and previews expect your Rails project to contain an `ApplicationController` class from which Controller classes inherit.
+This can be configured using the `test_controller` option.
+For example, if your controllers inherit from `BaseController`, set the following in `config/application.rb`:
+
+```ruby
+config.action_view_component.test_controller = "BaseController"
 ```
 
 ### Setting up RSpec
