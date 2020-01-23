@@ -365,6 +365,15 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_empty render_inline(RenderCheckComponent).text, ""
   end
 
+  def test_override_render_template
+    Rails.cache.clear
+
+    assert_includes render_inline(OverridedRenderComponent, version: 1).to_html, "Cache 1"
+    assert_includes render_inline(OverridedRenderComponent, version: 2).to_html, "Cache 1"
+
+    Rails.cache.clear
+  end
+
   def test_to_component_class
     post = Post.new(title: "Awesome post")
 

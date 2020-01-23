@@ -48,6 +48,28 @@ module ActionView
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
 
+        return "" unless render?
+
+        render_template(&block)
+      end
+
+      # Method which actual do render. Called by #render_in
+      # For example, it can be used to cache component
+      #
+      # block: optional block to be captured within the view context
+      #
+      # Example subclass:
+      #
+      # app/components/my_component.rb:
+      # class MyComponent < ActionView::Component::Base
+      #   def render_template(&block)
+      #     Rails.cache.fetch(cache_key) do
+      #       super
+      #     end
+      #   end
+      # end
+      #
+      def render_template(&block)
         old_current_template = @current_template
         @current_template = self
 

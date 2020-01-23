@@ -417,6 +417,21 @@ end
 <%= render(ConfirmEmailComponent, user: current_user) %>
 ```
 
+### Override Render
+
+Components can override a `#render_template` method which renders compiled template. For example, you can wrap rendering with controller-level caching:
+
+```ruby
+# app/components/overrided_render_component.rb
+class OverridedRenderComponent < ActionView::Component::Base
+  def render_template
+    Rails.cache.fetch("cached-component") do
+      super
+    end
+  end
+end
+```
+
 ### Testing
 
 Components are unit tested directly. The `render_inline` test helper wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:

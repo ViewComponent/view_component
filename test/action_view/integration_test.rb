@@ -145,6 +145,20 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_empty response.body.strip
   end
 
+  test "override render_template" do
+    Rails.cache.clear
+
+    get "/overrided_render?version=1"
+    assert_response :success
+    assert_html_matches "Cache 1", response.body
+
+    get "/overrided_render?version=2"
+    assert_response :success
+    assert_html_matches "Cache 1", response.body
+
+    Rails.cache.clear
+  end
+
   test "renders component preview" do
     get "/rails/components/my_component/default"
 
