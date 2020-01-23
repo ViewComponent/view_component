@@ -1,3 +1,29 @@
+# v1.8.0
+
+* Remove the unneeded ComponentExamplesController and simplify preview rendering.
+
+    *Jon Palmer*
+
+* Add `#render?` hook to easily allow components to be no-ops.
+
+    *Kyle Fox*
+
+* Don't assume ApplicationController exists.
+
+    *Jon Palmer*
+
+* Allow some additional checks to overrided render?
+
+    *Sergey Malykh*
+
+* Fix generator placing namespaced components in the root directory.
+
+    *Asger Behncke Jacobsen*
+
+* Fix cache test.
+
+    *Sergey Malykh*
+
 # v1.7.0
 
 * Simplify validation of templates and compilation.
