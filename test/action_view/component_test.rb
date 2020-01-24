@@ -352,6 +352,11 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
     assert_equal render_inline(ConditionalRenderComponent, should_render: false).to_html,
                     ""
+
+    exception = assert_raises ActiveModel::ValidationError do
+      render_inline(ConditionalRenderComponent, should_render: nil)
+    end
+    assert_equal exception.message, "Validation failed: Should render is not included in the list"
   end
 
   def test_render_check
