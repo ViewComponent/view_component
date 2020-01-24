@@ -1,3 +1,7 @@
+* Run validation checks before calling `#render?`.
+
+    *Ash Wilson*
+
 # v1.8.0
 
 * Remove the unneeded ComponentExamplesController and simplify preview rendering.
