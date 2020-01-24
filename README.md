@@ -583,10 +583,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |@elia|@cesariouy|@spdawson|@rmacklin|@michaelem|
 |Milan||United Kingdom||Berlin|
 
-|<img src="https://avatars.githubusercontent.com/mellowfish?s=256" alt="mellowfish" width="128" />|<img src="https://avatars.githubusercontent.com/horacio?s=256" alt="horacio" width="128" />|<img src="https://avatars.githubusercontent.com/dukex?s=256" alt="dukex" width="128" />|<img src="https://avatars.githubusercontent.com/dark-panda?s=256" alt="dark-panda" width="128" />|
-|:---:|:---:|:---:|:---:|
-|@mellowfish|@horacio|@dukex|@dark-panda|
-|Spring Hill, TN|Buenos Aires|São Paulo||
+|<img src="https://avatars.githubusercontent.com/mellowfish?s=256" alt="mellowfish" width="128" />|<img src="https://avatars.githubusercontent.com/horacio?s=256" alt="horacio" width="128" />|<img src="https://avatars.githubusercontent.com/dukex?s=256" alt="dukex" width="128" />|<img src="https://avatars.githubusercontent.com/dark-panda?s=256" alt="dark-panda" width="128" />|<img src="https://avatars.githubusercontent.com/smashwilson?s=256" alt="smashwilson" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@mellowfish|@horacio|@dukex|@dark-panda|@smashwilson|
+|Spring Hill, TN|Buenos Aires|São Paulo||Gambrills, MD|
 
 ## License
 
