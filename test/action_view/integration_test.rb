@@ -133,6 +133,20 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
   end
 
+  test "override render output" do
+    Rails.cache.clear
+
+    get "/overrided_render?version=1"
+    assert_response :success
+    assert_html_matches "Cache 1", response.body
+
+    get "/overrided_render?version=2"
+    assert_response :success
+    assert_html_matches "Cache 1", response.body
+
+    Rails.cache.clear
+  end
+
   test "optional rendering component depending on request context" do
     get "/render_check"
     assert_response :success

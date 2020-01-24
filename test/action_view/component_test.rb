@@ -350,6 +350,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_includes render_inline(ConditionalRenderComponent, should_render: true).to_html,
                     "<div>component was rendered</div>"
 
+<<<<<<< HEAD
     assert_equal render_inline(ConditionalRenderComponent, should_render: false).to_html,
                     ""
 
@@ -357,12 +358,31 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
       render_inline(ConditionalRenderComponent, should_render: nil)
     end
     assert_equal exception.message, "Validation failed: Should render is not included in the list"
+=======
+    assert_empty render_inline(ConditionalRenderComponent, should_render: false).text
+>>>>>>> add (before|around|after)_render hooks
   end
 
   def test_render_check
     assert_includes render_inline(RenderCheckComponent).text, "Rendered"
     controller.view_context.cookies[:shown] = true
-    assert_empty render_inline(RenderCheckComponent).text, ""
+    assert_empty render_inline(RenderCheckComponent).text
+  end
+
+  def test_render_callbacks
+    component_instance = CallbacksComponent.new
+
+    assert_includes component_instance.render_in(controller.view_context), "Rendered"
+    assert_equal [:before, :before_around, :after, :after_around], component_instance.events
+  end
+
+  def test_override_render_output
+    Rails.cache.clear
+
+    assert_includes render_inline(OverridedRenderComponent, version: 1).to_html, "Cache 1"
+    assert_includes render_inline(OverridedRenderComponent, version: 2).to_html, "Cache 1"
+
+    Rails.cache.clear
   end
 
   def test_to_component_class

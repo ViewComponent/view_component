@@ -366,9 +366,9 @@ end
 <% end %>
 ```
 
-### Conditional Rendering
+### Render Callbacks
 
-Components can implement a `#render?` method which indicates if they should be rendered, or not at all.
+Components can implement a `#before_render`, `#around_render` and `#after_render` hooks.
 
 For example, you might have a component that displays a "Please confirm your email address" banner to users who haven't confirmed their email address. The logic for rendering the banner would need to go in either the component template:
 
@@ -390,20 +390,22 @@ or the view that renders the component:
 <% end %>
 ```
 
-The `#render?` hook allows you to move this logic into the Ruby class, leaving your views more readable and declarative in style:
+The `#before_render` hook allows you to move this logic into the Ruby class, leaving your views more readable and declarative in style:
 
 ```ruby
 # app/components/confirm_email_component.rb
 class ConfirmEmailComponent < ApplicationComponent
+  before_render do
+    self.rendered_output = '' unless @user.requires_confirmation?
+  end
+
   def initialize(user:)
     @user = user
   end
-
-  def render?
-    @user.requires_confirmation?
-  end
 end
 ```
+
+Setting `@rendered_output` to non `nil` in `#before_render` value prevents the component to be rendered.
 
 ```
 <!-- app/components/confirm_email_component.html.erb -->
@@ -415,6 +417,21 @@ end
 ```erb
 <!-- app/views/_banners.html.erb -->
 <%= render(ConfirmEmailComponent, user: current_user) %>
+```
+
+The `#around_render` hook allows to add cache into the Ruby class instead of view-level caching. 
+
+```ruby
+# app/components/my_component.rb:
+class MyComponent < ActionView::Component::Base
+  around_render :render_cached
+
+  def render_cached
+    self.rendered_output = Rails.cache.fetch(cache_key) do
+      yield
+    end
+  end
+end
 ```
 
 ### Testing

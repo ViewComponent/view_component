@@ -8,11 +8,14 @@ module ActionView
       include ActiveModel::Validations
       include ActiveSupport::Configurable
       include ActionView::Component::Previewable
+      include ActionView::Component::Callbacks
 
       delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 
       class_attribute :content_areas, default: []
       self.content_areas = [] # default doesn't work until Rails 5.2
+
+      attr_accessor :rendered_output
 
       # Entrypoint for rendering components. Called by ActionView::Base#render.
       #
@@ -48,6 +51,7 @@ module ActionView
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
 
+<<<<<<< HEAD
         old_current_template = @current_template
         @current_template = self
 
@@ -60,10 +64,18 @@ module ActionView
         send(self.class.call_method_name(@variant))
       ensure
         @current_template = old_current_template
+=======
+        run_callbacks :render do
+          render_template(&block)
+        end
+
+        rendered_output
+>>>>>>> add (before|around|after)_render hooks
       end
 
-      def render?
-        true
+      # method used in (before|around)_render hooks to halt the filter chain
+      def render_performed?
+        rendered_output != nil
       end
 
       def initialize(*); end
@@ -112,6 +124,21 @@ module ActionView
       end
 
       private
+
+      # Method which actual do render. Called by #render_in
+      # Sets @rendered_output
+      def render_template(&block)
+        old_current_template = @current_template
+        @current_template = self
+
+        @content = view_context.capture(self, &block) if block_given?
+
+        validate!
+
+        self.rendered_output = send(self.class.call_method_name(@variant))
+      ensure
+        @current_template = old_current_template
+      end
 
       def request
         @request ||= controller.request
