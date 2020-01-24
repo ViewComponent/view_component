@@ -1,3 +1,5 @@
+# v1.8.1
+
 * Run validation checks before calling `#render?`.
 
     *Ash Wilson*
