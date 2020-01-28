@@ -1,3 +1,85 @@
+# v1.8.1
+
+* Run validation checks before calling `#render?`.
+
+    *Ash Wilson*
+
+# v1.8.0
+
+* Remove the unneeded ComponentExamplesController and simplify preview rendering.
+
+    *Jon Palmer*
+
+* Add `#render?` hook to easily allow components to be no-ops.
+
+    *Kyle Fox*
+
+* Don't assume ApplicationController exists.
+
+    *Jon Palmer*
+
+* Allow some additional checks to overrided render?
+
+    *Sergey Malykh*
+
+* Fix generator placing namespaced components in the root directory.
+
+    *Asger Behncke Jacobsen*
+
+* Fix cache test.
+
+    *Sergey Malykh*
+
+# v1.7.0
+
+* Simplify validation of templates and compilation.
+
+    *Jon Palmer*
+
+* Add support for multiple content areas.
+
+    *Jon Palmer*
+
+# v1.6.2
+
+* Fix Uninitialized Constant error.
+
+    *Jon Palmer*
+
+* Add basic github issue and PR templates.
+
+    *Dylan Clark*
+
+* Update readme phrasing around previews.
+
+    *Justin Coyne*
+
+# v1.6.1
+
+* Allow Previews to have no layout.
+
+    *Jon Palmer*
+
+* Bump rack from 2.0.7 to 2.0.8.
+
+    *Dependabot*
+
+* Compile components on application boot when eager loading is enabled.
+
+    *Joel Hawksley*
+
+* Previews support content blocks.
+
+    *Cesario Uy*
+
+* Follow Rails conventions. (refactor)
+
+    *Rainer Borene*
+
+* Fix edge case issue with extracting variants from less conventional source_locations.
+
+    *Ryan Workman*
+
 # v1.6.0
 
 * Avoid dropping elements in the render_inline test helper.

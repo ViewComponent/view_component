@@ -4,6 +4,7 @@ require "rails/application_controller"
 
 class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
   prepend_view_path File.expand_path("templates/rails", __dir__)
+  prepend_view_path "#{Rails.root}/app/views/" if defined?(Rails.root)
 
   around_action :set_locale, only: :previews
   before_action :find_preview, only: :previews
@@ -25,7 +26,10 @@ class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
       render template: "components/previews"
     else
       @example_name = File.basename(params[:path])
-      render template: "components/preview", layout: false
+      @render_args = @preview.render_args(@example_name)
+      layout = @render_args[:layout]
+      opts = layout.nil? ? {} : { layout: layout }
+      render template: "components/preview", **opts
     end
   end
 

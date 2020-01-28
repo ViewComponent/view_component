@@ -10,11 +10,11 @@ module Rails
       check_class_collision suffix: "Component"
 
       def create_component_file
-        template "component.rb", File.join("app/components",  "#{file_name}_component.rb")
+        template "component.rb", File.join("app/components", class_path, "#{file_name}_component.rb")
       end
 
       def create_template_file
-        template "component.html.erb", File.join("app/components",  "#{file_name}_component.html.erb")
+        template "component.html.erb", File.join("app/components", class_path, "#{file_name}_component.html.erb")
       end
 
       private

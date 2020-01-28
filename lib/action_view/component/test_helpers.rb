@@ -8,7 +8,7 @@ module ActionView
       end
 
       def controller
-        @controller ||= ApplicationController.new.tap { |c| c.request = request }
+        @controller ||= Base.test_controller.constantize.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)
       end
 
       def request

@@ -35,6 +35,30 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     HTML
   end
 
+  test "rendering component with content_for" do
+    get "/content_areas"
+    assert_response :success
+
+    expected_string = %(
+    <div>
+      <div class="title">
+        <h1>Hi!</h1>
+
+      </div>
+      <div class="body">
+        <p>Did you know that 1+1=2?</p>
+
+      </div>
+      <div class="footer">
+        <h3>Bye!</h3>
+
+      </div>
+    </div>
+    )
+
+    assert_html_matches expected_string, response.body
+  end
+
   test "rendering component with a partial" do
     get "/partial"
     assert_response :success
@@ -85,16 +109,28 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
     ActionController::Base.perform_caching = true
 
-    get "/cached"
+    get "/cached?version=1"
     assert_response :success
-    assert_html_matches "Cached", response.body
+    assert_html_matches "Cache 1", response.body
 
-    get "/cached"
+    get "/cached?version=2"
     assert_response :success
-    assert_html_matches "Cached", response.body
+    assert_html_matches "Cache 1", response.body
 
     ActionController::Base.perform_caching = false
     Rails.cache.clear
+  end
+
+  test "optional rendering component depending on request context" do
+    get "/render_check"
+    assert_response :success
+    assert_includes response.body, "Rendered"
+
+    cookies[:shown] = true
+
+    get "/render_check"
+    assert_response :success
+    assert_empty response.body.strip
   end
 
   test "renders component preview" do
@@ -135,5 +171,9 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   test "compiles unreferenced component" do
     assert UnreferencedComponent.compiled?
+  end
+
+  test "does not compile components without initializers" do
+    assert !MissingInitializerComponent.compiled?
   end
 end

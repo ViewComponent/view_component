@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails"
+require "action_view/component"
 
 module ActionView
   module Component
@@ -23,13 +24,17 @@ module ActionView
 
       initializer "action_view_component.set_autoload_paths" do |app|
         require "railties/lib/rails/components_controller"
-        require "railties/lib/rails/component_examples_controller"
 
-        app.config.eager_load_namespaces << ActionView::Component::Base
         options = app.config.action_view_component
 
         if options.show_previews && options.preview_path
           ActiveSupport::Dependencies.autoload_paths << options.preview_path
+        end
+      end
+
+      initializer "action_view_component.eager_load_actions" do
+        ActiveSupport.on_load(:after_initialize) do
+          ActionView::Component::Base.descendants.each(&:compile)
         end
       end
 

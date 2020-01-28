@@ -195,6 +195,224 @@ An error will be raised:
 
 `ActiveModel::ValidationError: Validation failed: Title can't be blank`
 
+#### Content Areas
+
+A component can declare additional content areas to be rendered in the component. For example:
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :user, :header, :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(user:)
+    @user = user
+  end
+end
+```
+
+`app/components/modal_component.html.erb`:
+```erb
+<div class="modal">
+  <div class="header"><%= header %></div>
+  <div class="body"><%= body %>"></div>
+</div>
+```
+
+We can render it in a view as:
+
+```erb
+<%= render(ModalComponent, user: {name: 'Jane'}) do |component| %>
+  <% component.with(:header) do %>
+      Hello <%= user[:name] %>
+    <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+Which returns:
+
+```html
+<div class="modal">
+  <div class="header">Hello Jane</div>
+  <div class="body"><p>Have a great day.</p></div>
+</div>
+```
+
+Content for content areas can be passed as arguments to the render method or as named blocks passed to the `with` method.
+This allows a few different combinations of ways to render the component:
+
+##### Required render argument optionally overridden or wrapped by a named block
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :header, :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(header:)
+    @header = header
+  end
+end
+```
+
+```erb
+<%= render(ModalComponent, header: "Hi!") do |component| %>
+  <% help_enabled? && component.with(:header) do %>
+    <span class="help_icon"><%= component.header %></span>
+  <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+##### Required argument passed by render argument or by named block
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :header, :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(header: nil)
+    @header = header
+  end
+end
+```
+
+`app/views/render_arg.html.erb`:
+```erb
+<%= render(ModalComponent, header: "Hi!") do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+`app/views/with_block.html.erb`:
+```erb
+<%= render(ModalComponent) do |component| %>
+  <% component.with(:header) do %>
+    <span class="help_icon">Hello</span>
+  <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+##### Optional argument passed by render argument, by named block, or neither
+
+`app/components/modal_component.rb`:
+```ruby
+class ModalComponent < ActionView::Component::Base
+  validates :body, presence: true
+
+  with_content_areas :header, :body
+
+  def initialize(header: nil)
+    @header = header
+  end
+end
+```
+
+`app/components/modal_component.html.erb`:
+```erb
+<div class="modal">
+  <% if header %>
+    <div class="header"><%= header %></div>
+  <% end %>
+  <div class="body"><%= body %>"></div>
+</div>
+```
+
+`app/views/render_arg.html.erb`:
+```erb
+<%= render(ModalComponent, header: "Hi!") do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+`app/views/with_block.html.erb`:
+```erb
+<%= render(ModalComponent) do |component| %>
+  <% component.with(:header) do %>
+    <span class="help_icon">Hello</span>
+  <% end %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+`app/views/no_header.html.erb`:
+```erb
+<%= render(ModalComponent) do |component| %>
+  <% component.with(:body) do %>
+    <p>Have a great day.</p>
+  <% end %>
+<% end %>
+```
+
+### Conditional Rendering
+
+Components can implement a `#render?` method which indicates if they should be rendered, or not at all.
+
+For example, you might have a component that displays a "Please confirm your email address" banner to users who haven't confirmed their email address. The logic for rendering the banner would need to go in either the component template:
+
+```
+<!-- app/components/confirm_email_component.html.erb -->
+<% if user.requires_confirmation? %>
+  <div class="alert">
+    Please confirm your email address.
+  </div>
+<% end %>
+```
+
+or the view that renders the component:
+
+```erb
+<!-- app/views/_banners.html.erb -->
+<% if current_user.requires_confirmation? %>
+  <%= render(ConfirmEmailComponent, user: current_user) %>
+<% end %>
+```
+
+The `#render?` hook allows you to move this logic into the Ruby class, leaving your views more readable and declarative in style:
+
+```ruby
+# app/components/confirm_email_component.rb
+class ConfirmEmailComponent < ApplicationComponent
+  def initialize(user:)
+    @user = user
+  end
+
+  def render?
+    @user.requires_confirmation?
+  end
+end
+```
+
+```
+<!-- app/components/confirm_email_component.html.erb -->
+<div class="banner">
+  Please confirm your email address.
+</div>
+```
+
+```erb
+<!-- app/views/_banners.html.erb -->
+<%= render(ConfirmEmailComponent, user: current_user) %>
+```
+
 ### Testing
 
 Components are unit tested directly. The `render_inline` test helper wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
@@ -230,7 +448,7 @@ end
 ```
 
 ### Previewing Components
-`ActionView::Component::Preview`s provide a way to see how components look by visiting a special URL that renders them.
+`ActionView::Component::Preview` provides a way to see how components look by visiting a special URL that renders them.
 In the previous example, the preview class for `TestComponent` would be called `TestComponentPreview` and located in `test/components/previews/test_component_preview.rb`.
 To see the preview of the component with a given title, implement a method that renders the component.
 You can define as many examples as you want:
@@ -270,6 +488,16 @@ For example, if you want to use `lib/component_previews`, set the following in `
 
 ```ruby
 config.action_view_component.preview_path = "#{Rails.root}/lib/component_previews"
+```
+
+#### Configuring TestController
+
+By default components tests and previews expect your Rails project to contain an `ApplicationController` class from which Controller classes inherit.
+This can be configured using the `test_controller` option.
+For example, if your controllers inherit from `BaseController`, set the following in `config/application.rb`:
+
+```ruby
+config.action_view_component.test_controller = "BaseController"
 ```
 
 ### Setting up RSpec
@@ -326,6 +554,35 @@ Inline templates have been removed (for now) due to concerns raised by [@soutaro
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/github/actionview-component. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct. We recommend reading the [contributing guide](./CONTRIBUTING.md) as well.
+
+## Contributors
+
+`actionview-component` is built by:
+
+|<img src="https://avatars.githubusercontent.com/joelhawksley?s=256" alt="joelhawksley" width="128" />|<img src="https://avatars.githubusercontent.com/tenderlove?s=256" alt="tenderlove" width="128" />|<img src="https://avatars.githubusercontent.com/jonspalmer?s=256" alt="jonspalmer" width="128" />|<img src="https://avatars.githubusercontent.com/juanmanuelramallo?s=256" alt="juanmanuelramallo" width="128" />|<img src="https://avatars.githubusercontent.com/vinistock?s=256" alt="vinistock" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@joelhawksley|@tenderlove|@jonspalmer|@juanmanuelramallo|@vinistock|
+|Denver|Seattle|Boston||Toronto|
+
+|<img src="https://avatars.githubusercontent.com/metade?s=256" alt="metade" width="128" />|<img src="https://avatars.githubusercontent.com/asgerb?s=256" alt="asgerb" width="128" />|<img src="https://avatars.githubusercontent.com/xronos-i-am?s=256" alt="xronos-i-am" width="128" />|<img src="https://avatars.githubusercontent.com/dylnclrk?s=256" alt="dylnclrk" width="128" />|<img src="https://avatars.githubusercontent.com/kaspermeyer?s=256" alt="kaspermeyer" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@metade|@asgerb|@xronos-i-am|@dylnclrk|@kaspermeyer|
+|London|Copenhagen|Russia, Kirov|Berkeley, CA|Denmark|
+
+|<img src="https://avatars.githubusercontent.com/rdavid1099?s=256" alt="rdavid1099" width="128" />|<img src="https://avatars.githubusercontent.com/kylefox?s=256" alt="kylefox" width="128" />|<img src="https://avatars.githubusercontent.com/traels?s=256" alt="traels" width="128" />|<img src="https://avatars.githubusercontent.com/rainerborene?s=256" alt="rainerborene" width="128" />|<img src="https://avatars.githubusercontent.com/jcoyne?s=256" alt="jcoyne" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@rdavid1099|@kylefox|@traels|@rainerborene|@jcoyne|
+|Los Angeles|Edmonton|Odense, Denmark|Brazil|Minneapolis|
+
+|<img src="https://avatars.githubusercontent.com/elia?s=256" alt="elia" width="128" />|<img src="https://avatars.githubusercontent.com/cesariouy?s=256" alt="cesariouy" width="128" />|<img src="https://avatars.githubusercontent.com/spdawson?s=256" alt="spdawson" width="128" />|<img src="https://avatars.githubusercontent.com/rmacklin?s=256" alt="rmacklin" width="128" />|<img src="https://avatars.githubusercontent.com/michaelem?s=256" alt="michaelem" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@elia|@cesariouy|@spdawson|@rmacklin|@michaelem|
+|Milan||United Kingdom||Berlin|
+
+|<img src="https://avatars.githubusercontent.com/mellowfish?s=256" alt="mellowfish" width="128" />|<img src="https://avatars.githubusercontent.com/horacio?s=256" alt="horacio" width="128" />|<img src="https://avatars.githubusercontent.com/dukex?s=256" alt="dukex" width="128" />|<img src="https://avatars.githubusercontent.com/dark-panda?s=256" alt="dark-panda" width="128" />|<img src="https://avatars.githubusercontent.com/smashwilson?s=256" alt="smashwilson" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@mellowfish|@horacio|@dukex|@dark-panda|@smashwilson|
+|Spring Hill, TN|Buenos Aires|São Paulo||Gambrills, MD|
 
 ## License
 
