@@ -1,2 +1,3 @@
-layout:<%= render partial: "test_layout" %>
-component:<%= render LayoutComponent %>
+<%= render LayoutComponent do %>
+  <div>hello from layout caller block</div>
+<% end %>

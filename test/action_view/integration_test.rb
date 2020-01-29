@@ -75,10 +75,9 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/layout"
     assert_response :success
     assert_html_matches <<~HTML, response.body
-      layout:<div>hello,layout world!</div>
+      <div class="layout">hello from layout caller block</div>
 
-      component:<div>hello,layout world!</div>
-      <div>hello,layout world!</div>
+      <div class="layout">hello from layout caller block</div>
     HTML
   end
 
