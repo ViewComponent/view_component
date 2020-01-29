@@ -6,6 +6,7 @@ Dummy::Application.routes.draw do
   get :component, to: "integration_examples#component"
   get :content_areas, to: "integration_examples#content_areas"
   get :partial, to: "integration_examples#partial"
+  get :layout, to: "integration_examples#layout"
   get :content, to: "integration_examples#content"
   get :variants, to: "integration_examples#variants"
   get :cached, to: "integration_examples#cached"

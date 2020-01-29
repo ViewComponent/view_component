@@ -71,6 +71,17 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     HTML
   end
 
+  test "rendering component with a layout" do
+    get "/layout"
+    assert_response :success
+    assert_html_matches <<~HTML, response.body
+      layout:<div>hello,layout world!</div>
+
+      component:<div>hello,layout world!</div>
+      <div>hello,layout world!</div>
+    HTML
+  end
+
   test "rendering component with deprecated syntax" do
     get "/deprecated"
     assert_response :success
