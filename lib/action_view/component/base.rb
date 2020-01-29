@@ -69,7 +69,7 @@ module ActionView
       def initialize(*); end
 
       def render(options = {}, args = {}, &block)
-        if options.is_a?(String) || (options.is_a?(Hash) && options.has_key?(:partial))
+        if options.is_a?(String) || (options.is_a?(Hash) && (options.has_key?(:partial) || options.has_key?(:layout)))
           view_context.render(options, args, &block)
         else
           super
