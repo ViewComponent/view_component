@@ -51,26 +51,15 @@ module ActionView
         @virtual_path ||= virtual_path
         @variant = @lookup_context.variants.first
 
-<<<<<<< HEAD
-        old_current_template = @current_template
-        @current_template = self
-
         @content = view_context.capture(self, &block) if block_given?
 
         validate!
 
-        return "" unless render?
-
-        send(self.class.call_method_name(@variant))
-      ensure
-        @current_template = old_current_template
-=======
         run_callbacks :render do
           render_template(&block)
         end
 
         rendered_output
->>>>>>> add (before|around|after)_render hooks
       end
 
       # method used in (before|around)_render hooks to halt the filter chain
@@ -130,10 +119,6 @@ module ActionView
       def render_template(&block)
         old_current_template = @current_template
         @current_template = self
-
-        @content = view_context.capture(self, &block) if block_given?
-
-        validate!
 
         self.rendered_output = send(self.class.call_method_name(@variant))
       ensure

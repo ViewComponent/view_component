@@ -350,17 +350,12 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_includes render_inline(ConditionalRenderComponent, should_render: true).to_html,
                     "<div>component was rendered</div>"
 
-<<<<<<< HEAD
-    assert_equal render_inline(ConditionalRenderComponent, should_render: false).to_html,
-                    ""
+    assert_empty render_inline(ConditionalRenderComponent, should_render: false).text
 
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(ConditionalRenderComponent, should_render: nil)
     end
     assert_equal exception.message, "Validation failed: Should render is not included in the list"
-=======
-    assert_empty render_inline(ConditionalRenderComponent, should_render: false).text
->>>>>>> add (before|around|after)_render hooks
   end
 
   def test_render_check
