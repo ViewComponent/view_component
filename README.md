@@ -138,7 +138,7 @@ end
 
 `app/components/test_component.html.erb`:
 ```erb
-<span title="<%= title %>"><%= content %></span>
+<span title="<%= @title %>"><%= @content %></span>
 ```
 
 We can render it in a view as:
@@ -219,8 +219,8 @@ end
 `app/components/modal_component.html.erb`:
 ```erb
 <div class="modal">
-  <div class="header"><%= header %></div>
-  <div class="body"><%= body %>"></div>
+  <div class="header"><%= @header %></div>
+  <div class="body"><%= @body %>"></div>
 </div>
 ```
 
@@ -329,10 +329,10 @@ end
 `app/components/modal_component.html.erb`:
 ```erb
 <div class="modal">
-  <% if header %>
-    <div class="header"><%= header %></div>
+  <% if @header %>
+    <div class="header"><%= @header %></div>
   <% end %>
-  <div class="body"><%= body %>"></div>
+  <div class="body"><%= @body %>"></div>
 </div>
 ```
 
@@ -374,7 +374,7 @@ For example, you might have a component that displays a "Please confirm your ema
 
 ```
 <!-- app/components/confirm_email_component.html.erb -->
-<% if user.requires_confirmation? %>
+<% if @user.requires_confirmation? %>
   <div class="alert">
     Please confirm your email address.
   </div>
