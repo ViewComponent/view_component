@@ -1,4 +1,6 @@
-# Pending
+* Deprecate allowing public methods on components.
+
+    *Joel Hawksley*
 
 * Remove initializer requirement for Ruby 2.7+
 

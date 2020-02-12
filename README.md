@@ -434,7 +434,7 @@ class MyComponentTest < ActionView::Component::TestCase
 end
 ```
 
-In general, we’ve found it makes the most sense to test components based on their rendered HTML.
+In general, we’ve found it makes the most sense to test components based on their rendered HTML. A warning will be raised if any public methods are defined on a component.
 
 #### Action Pack Variants
 
