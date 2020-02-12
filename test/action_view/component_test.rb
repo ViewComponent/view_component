@@ -378,6 +378,10 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_html_matches "Hello, world!", render_inline(MissingInitializerComponent).text
   end
 
+  def test_component_with_public_method
+    assert_includes render_inline(PublicMethodComponent).text, "Public method component"
+  end
+
   private
 
   def modify_file(file, content)

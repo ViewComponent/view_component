@@ -9,6 +9,8 @@ module ActionView
       include ActiveSupport::Configurable
       include ActionView::Component::Previewable
 
+      ALLOWED_PUBLIC_INSTANCE_METHODS = [:default_url_options?, :default_url_options, :default_url_options=].freeze
+
       delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 
       class_attribute :content_areas, default: []
@@ -169,6 +171,12 @@ module ActionView
           if template_errors.present?
             raise ActionView::Component::TemplateError.new(template_errors) if validate
             return false
+          end
+
+          (self.instance_methods(false) - ALLOWED_PUBLIC_INSTANCE_METHODS).each do |disallowed_public_instance_method|
+            ActiveSupport::Deprecation.warn(
+              "Only #initialize can be public: #{disallowed_public_instance_method} must be private. This warning will become an exception in v2.0.0"
+            )
           end
 
           templates.each do |template|
