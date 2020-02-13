@@ -331,7 +331,7 @@ end
 `app/components/modal_component.html.erb`:
 ```erb
 <div class="modal">
-  <% if @header %>
+  <% if header %>
     <div class="header"><%= header %></div>
   <% end %>
   <div class="body"><%= body %></div>
@@ -376,7 +376,7 @@ For example, you might have a component that displays a "Please confirm your ema
 
 ```
 <!-- app/components/confirm_email_component.html.erb -->
-<% if @user.requires_confirmation? %>
+<% if user.requires_confirmation? %>
   <div class="alert">
     Please confirm your email address.
   </div>
