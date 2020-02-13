@@ -155,6 +155,67 @@ Which returns:
 <span title="my title">Hello, World!</span>
 ```
 
+##### Validation
+
+Components inherited from `ActionView::Component::Base` extends with `ActionModel::Validations` by default. You can skip this behaviour by config:
+
+`config/application.rb`:
+```ruby
+config.action_view_component.validation_module = 'DryValidation'
+```
+
+You can define your own validation mechanism. `validation_module` should be set to the string that represents module name. Validation module has to provide `validate!` method:
+
+`app/contracts/profile_contract.rb`:
+```ruby
+class ProfileContract < Dry::Validation::Contract
+  params do
+    required(:email).filled(:string)
+  end
+
+  rule(:email) do
+    unless value.include?('@')
+      key.failure('has invalid format')
+    end
+  end
+end
+```
+
+`lib/dry_validation.rb`
+```ruby
+module DryValidation do
+  def validate!
+    result = self.class.contract.call(validation_params)
+
+    unless result.errors.empty?
+      raise RuntimeError.new(result.errors.inspect)
+    end
+  end
+end
+```
+
+`app/components/profile_component.rb`:
+```ruby
+class ProfileComponent < ActionView::Component::Base
+  class << self
+    def contract
+      @contract ||= ProfileContract.new
+    end
+  end
+
+  attr_reader :email
+  private :email
+
+  def initialize(email:)
+    @email = email
+  end
+
+  private def validation_params
+    {email: email}
+  end
+end
+```
+
 ##### Supported `render` syntaxes
 
 Components can be rendered via:

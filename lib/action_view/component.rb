@@ -17,6 +17,7 @@ module ActionView
     autoload :TestCase
     autoload :RenderMonkeyPatch
     autoload :TemplateError
+    autoload :NoOpValidations
   end
 end
 

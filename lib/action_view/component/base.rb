@@ -5,7 +5,6 @@ require "active_support/configurable"
 module ActionView
   module Component
     class Base < ActionView::Base
-      include ActiveModel::Validations
       include ActiveSupport::Configurable
       include ActionView::Component::Previewable
 
@@ -13,6 +12,10 @@ module ActionView
 
       class_attribute :content_areas, default: []
       self.content_areas = [] # default doesn't work until Rails 5.2
+
+      # `validation_module` should be set to a string if present
+      class_attribute :validation_module, default: "ActiveModel::Validations"
+      self.validation_module = "ActiveModel::Validations" # default doesn't work until Rails 5.2
 
       # Entrypoint for rendering components. Called by ActionView::Base#render.
       #
@@ -128,6 +131,7 @@ module ActionView
       class << self
         def inherited(child)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
+          child.include self.validation_module ? self.validation_module.safe_constantize : ActionView::Component::NoOpValidations
 
           super
         end

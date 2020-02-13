@@ -365,6 +365,13 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_empty render_inline(RenderCheckComponent).text, ""
   end
 
+  def test_custom_validation
+    exception = assert_raises RuntimeError do
+      render_inline(CustomValidationComponent)
+    end
+    assert_equal exception.message, "validate! was called"
+  end
+
   def test_to_component_class
     post = Post.new(title: "Awesome post")
 
