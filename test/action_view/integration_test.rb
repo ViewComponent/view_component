@@ -71,18 +71,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     HTML
   end
 
-  test "rendering component with deprecated syntax" do
-    get "/deprecated"
-    assert_response :success
-    assert_html_matches <<~HTML, response.body
-      <span><div>
-        Foo
-        bar
-      </div>
-      </span>
-    HTML
-  end
-
   test "rendering component without variant" do
     get "/variants"
     assert_response :success

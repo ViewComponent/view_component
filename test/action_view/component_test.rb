@@ -4,14 +4,14 @@ require "test_helper"
 
 class ActionView::ComponentTest < ActionView::Component::TestCase
   def test_render_inline
-    result = render_inline(MyComponent)
+    result = render_inline(MyComponent.new)
 
     assert_html_matches "<div>hello,world!</div>", result.to_html
     assert_html_matches "<div>hello,world!</div>", result.css("div").to_html
   end
 
   def test_render_inline_with_old_helper
-    result = render_component(MyComponent)
+    result = render_component(MyComponent.new)
 
     assert_html_matches "<div>hello,world!</div>", result.to_html
     assert_html_matches "<div>hello,world!</div>", result.css("div").to_html
@@ -19,14 +19,14 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
   def test_checks_validations
     exception = assert_raises ActiveModel::ValidationError do
-      render_inline(WrapperComponent)
+      render_inline(WrapperComponent.new)
     end
 
     assert_includes exception.message, "Content can't be blank"
   end
 
   def test_renders_content_from_block
-    result = render_inline(WrapperComponent) do
+    result = render_inline(WrapperComponent.new) do
       "content"
     end
 
@@ -34,14 +34,14 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_slim_template
-    result = render_inline(SlimComponent, message: "bar") { "foo" }
+    result = render_inline(SlimComponent.new(message: "bar")) { "foo" }
 
     assert_includes result.text, "foo"
     assert_includes result.text, "bar"
   end
 
   def test_renders_haml_template
-    result = render_inline(HamlComponent, message: "bar") { "foo" }
+    result = render_inline(HamlComponent.new(message: "bar")) { "foo" }
 
     assert_includes result.text, "foo"
     assert_includes result.text, "bar"
@@ -51,7 +51,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     old_value = ActionController::Base.allow_forgery_protection
     ActionController::Base.allow_forgery_protection = true
 
-    result = render_inline(ButtonToComponent) { "foo" }
+    result = render_inline(ButtonToComponent.new) { "foo" }
 
     assert_html_matches '<input type="submit" value="foo">', result.css("input[type=submit]").to_html
     assert result.css("form[class='button_to'][action='/'][method='post']").present?
@@ -62,7 +62,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
   def test_renders_component_with_variant
     with_variant :phone do
-      result = render_inline(VariantsComponent)
+      result = render_inline(VariantsComponent.new)
 
       assert_includes result.text, "Phone"
     end
@@ -70,20 +70,20 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
   def test_renders_default_template_when_variant_template_is_not_present
     with_variant :variant_without_template do
-      result = render_inline(VariantsComponent)
+      result = render_inline(VariantsComponent.new)
 
       assert_includes result.text, "Default"
     end
   end
 
-  def test_renders_erb_template
+  def test_renders_erb_template_with_old_syntax
     result = render_inline(ErbComponent, message: "bar") { "foo" }
 
     assert_includes result.text, "foo"
     assert_includes result.text, "bar"
   end
 
-  def test_renders_erb_template_with_old_syntax
+  def test_renders_erb_template
     result = render_inline(ErbComponent.new(message: "bar")) { "foo" }
 
     assert_includes result.text, "foo"
@@ -98,7 +98,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_partial_template
-    result = render_inline(PartialComponent)
+    result = render_inline(PartialComponent.new)
 
     assert_html_matches <<~HTML, result.to_html
       <div>hello,partial world!</div>
@@ -108,19 +108,19 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_content_for_template
-    result = render_inline(ContentForComponent)
+    result = render_inline(ContentForComponent.new)
 
     assert_html_matches "<div>Hello content for</div>", result.to_html
   end
 
   def test_renders_content_areas_template_with_initialize_arguments
-    result = render_inline(ContentAreasComponent, title: "Hi!", footer: "Bye!") do |component|
+    result = render_inline(ContentAreasComponent.new(title: "Hi!", footer: "Bye!")) do |component|
       component.with(:body) { "Have a nice day." }
     end
   end
 
   def test_renders_content_areas_template_with_content
-    result = render_inline(ContentAreasComponent, footer: "Bye!") do |component|
+    result = render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
       component.with(:title, "Hello!")
       component.with(:body) { "Have a nice day." }
     end
@@ -142,7 +142,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_content_areas_template_with_block
-    result = render_inline(ContentAreasComponent, footer: "Bye!") do |component|
+    result = render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
       component.with(:title) { "Hello!" }
       component.with(:body) { "Have a nice day." }
     end
@@ -164,7 +164,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_content_areas_template_replaces_content
-    result = render_inline(ContentAreasComponent, footer: "Bye!") do |component|
+    result = render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
       component.with(:title) { "Hello!" }
       component.with(:title, "Hi!")
       component.with(:body) { "Have a nice day." }
@@ -187,7 +187,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_content_areas_template_can_wrap_render_arguments
-    result = render_inline(ContentAreasComponent, title: "Hello!", footer: "Bye!") do |component|
+    result = render_inline(ContentAreasComponent.new(title: "Hello!", footer: "Bye!")) do |component|
       component.with(:title) { "<strong>#{component.title}</strong>".html_safe }
       component.with(:body) { "Have a nice day." }
     end
@@ -210,7 +210,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
   def test_renders_content_area_does_not_capture_block_content
     exception = assert_raises ActiveModel::ValidationError do
-      render_inline(ContentAreasComponent, title: "Hi!", footer: "Bye!") { "Have a nice day." }
+      render_inline(ContentAreasComponent.new(title: "Hi!", footer: "Bye!")) { "Have a nice day." }
     end
 
     assert_includes exception.message, "Body can't be blank"
@@ -218,7 +218,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
   def test_renders_content_areas_template_raise_with_unknown_content_areas
     exception = assert_raises ArgumentError do
-      render_inline(ContentAreasComponent, footer: "Bye!") do |component|
+      render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
         component.with(:foo) { "Hello!" }
       end
     end
@@ -235,55 +235,55 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_helper_method_through_proxy
-    result = render_inline(HelpersProxyComponent)
+    result = render_inline(HelpersProxyComponent.new)
 
     assert_html_matches "<div>Hello helper method</div>", result.to_html
   end
 
   def test_renders_path_helper
-    result = render_inline(PathComponent)
+    result = render_inline(PathComponent.new)
 
     assert_includes result.text, "/"
   end
 
   def test_renders_nested_path_helper
-    result = render_inline(PathComponentContainer)
+    result = render_inline(PathContainerComponent.new)
 
     assert_includes result.text, "/"
   end
 
   def test_renders_url_helper
-    result = render_inline(UrlComponent)
+    result = render_inline(UrlComponent.new)
 
     assert_includes result.text, "http://test.host/"
   end
 
   def test_renders_another_component
-    result = render_inline(AnotherComponent)
+    result = render_inline(AnotherComponent.new)
 
     assert_html_matches "<div>hello,world!</div>", result.to_html
   end
 
   def test_renders_component_with_css_sidecar
-    result = render_inline(CssSidecarFileComponent)
+    result = render_inline(CssSidecarFileComponent.new)
 
     assert_html_matches "<div>hello, world!</div>", result.to_html
   end
 
   def test_renders_component_with_request_context
-    result = render_inline(RequestComponent)
+    result = render_inline(RequestComponent.new)
 
     assert_html_matches "<div>0.0.0.0</div>", result.to_html
   end
 
   def test_renders_component_without_format
-    result = render_inline(NoFormatComponent)
+    result = render_inline(NoFormatComponent.new)
 
     assert_html_matches "<div>hello,world!</div>", result.to_html
   end
 
   def test_renders_component_with_asset_url
-    result = render_inline(AssetComponent)
+    result = render_inline(AssetComponent.new)
 
     assert_match %r{<div>http://assets.example.com/assets/application-\w+.css</div>}, trim_result(result.css("div").first.to_html)
   end
@@ -292,13 +292,13 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     old_value = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = true
 
-    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent).to_html
+    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent.new).to_html
 
     modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
-      assert_html_matches  "<div>hello,world!</div>", render_inline(MyComponent).to_html
+      assert_html_matches  "<div>hello,world!</div>", render_inline(MyComponent.new).to_html
     end
 
-    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent).to_html
+    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent.new).to_html
 
     ActionView::Base.cache_template_loading = old_value
   end
@@ -307,13 +307,13 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     old_value = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = false
 
-    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent).to_html
+    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent.new).to_html
 
     modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
-      assert_html_matches "<div>Goodbye world!</div>", render_inline(MyComponent).to_html
+      assert_html_matches "<div>Goodbye world!</div>", render_inline(MyComponent.new).to_html
     end
 
-    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent).to_html
+    assert_html_matches "<div>hello,world!</div>", render_inline(MyComponent.new).to_html
 
     ActionView::Base.cache_template_loading = old_value
   end
@@ -335,34 +335,34 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_component_with_translations
-    assert_includes render_inline(TranslationsComponent).to_html,
+    assert_includes render_inline(TranslationsComponent.new).to_html,
                     "<h1>#{I18n.t('translations_component.title')}</h1>"
 
-    assert_includes render_inline(TranslationsComponent).to_html,
+    assert_includes render_inline(TranslationsComponent.new).to_html,
                     "<h2>#{I18n.t('translations_component.subtitle')}</h2>"
   end
 
   def test_renders_component_with_rb_in_its_name
-    assert_html_matches "Editorb!\n", render_inline(EditorbComponent).text
+    assert_html_matches "Editorb!\n", render_inline(EditorbComponent.new).text
   end
 
   def test_conditional_rendering
-    assert_includes render_inline(ConditionalRenderComponent, should_render: true).to_html,
+    assert_includes render_inline(ConditionalRenderComponent.new(should_render: true)).to_html,
                     "<div>component was rendered</div>"
 
-    assert_equal render_inline(ConditionalRenderComponent, should_render: false).to_html,
+    assert_equal render_inline(ConditionalRenderComponent.new(should_render: false)).to_html,
                     ""
 
     exception = assert_raises ActiveModel::ValidationError do
-      render_inline(ConditionalRenderComponent, should_render: nil)
+      render_inline(ConditionalRenderComponent.new(should_render: nil))
     end
     assert_equal exception.message, "Validation failed: Should render is not included in the list"
   end
 
   def test_render_check
-    assert_includes render_inline(RenderCheckComponent).text, "Rendered"
+    assert_includes render_inline(RenderCheckComponent.new).text, "Rendered"
     controller.view_context.cookies[:shown] = true
-    assert_empty render_inline(RenderCheckComponent).text, ""
+    assert_empty render_inline(RenderCheckComponent.new).text, ""
   end
 
   def test_to_component_class
@@ -375,7 +375,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   def test_missing_initializer
     skip unless const_source_location_supported?
 
-    assert_html_matches "Hello, world!", render_inline(MissingInitializerComponent).text
+    assert_html_matches "Hello, world!", render_inline(MissingInitializerComponent.new).text
   end
 
   private
