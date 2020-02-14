@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    actionview-component (1.9.0)
+    actionview-component (1.10.0)
 
 GEM
   remote: https://rubygems.org/

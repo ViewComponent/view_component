@@ -4,7 +4,7 @@ module ActionView
   module Component
     module VERSION
       MAJOR = 1
-      MINOR = 9
+      MINOR = 10
       PATCH = 0
 
       STRING = [MAJOR, MINOR, PATCH].join(".")
