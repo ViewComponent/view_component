@@ -1,3 +1,5 @@
+* Deprecate all `render` syntaxes except for `render(MyComponent.new(foo: :bar))`
+
 # v1.9.0
 
 * Remove initializer requirement for Ruby 2.7+
