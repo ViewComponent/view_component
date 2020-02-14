@@ -144,7 +144,7 @@ end
 We can render it in a view as:
 
 ```erb
-<%= render(TestComponent, title: "my title") do %>
+<%= render(TestComponent.new(title: "my title")) do %>
   Hello, World!
 <% end %>
 ```
@@ -155,42 +155,12 @@ Which returns:
 <span title="my title">Hello, World!</span>
 ```
 
-##### Supported `render` syntaxes
-
-Components can be rendered via:
-
-`render(TestComponent, foo: :bar)`
-
-`render(component: TestComponent, locals: { foo: :bar })`
-
-**Rendering components through models**
-
-Passing model instances will cause `render` to look for its respective component class.
-
-The component is instantiated with the rendered model instance.
-
-Example for a `Post` model:
-
-`render(@post)`
-
-```ruby
-class PostComponent < ActionView::Component::Base
-  def initialize(post)
-    @post = post
-  end
-end
-```
-
-The following syntax has been deprecated and will be removed in v2.0.0:
-
-`render(TestComponent.new(foo: :bar))`
-
 #### Error case
 
 If the component is rendered with a blank title:
 
 ```erb
-<%= render(TestComponent, title: "") do %>
+<%= render(TestComponent.new(title: "")) do %>
   Hello, World!
 <% end %>
 ```
@@ -227,7 +197,7 @@ end
 We can render it in a view as:
 
 ```erb
-<%= render(ModalComponent, user: {name: 'Jane'}) do |component| %>
+<%= render(ModalComponent.new(user: {name: 'Jane'})) do |component| %>
   <% component.with(:header) do %>
       Hello <%= user[:name] %>
     <% end %>
@@ -265,7 +235,7 @@ end
 ```
 
 ```erb
-<%= render(ModalComponent, header: "Hi!") do |component| %>
+<%= render(ModalComponent.new(header: "Hi!")) do |component| %>
   <% help_enabled? && component.with(:header) do %>
     <span class="help_icon"><%= component.header %></span>
   <% end %>
@@ -292,7 +262,7 @@ end
 
 `app/views/render_arg.html.erb`:
 ```erb
-<%= render(ModalComponent, header: "Hi!") do |component| %>
+<%= render(ModalComponent.new(header: "Hi!")) do |component| %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
@@ -338,7 +308,7 @@ end
 
 `app/views/render_arg.html.erb`:
 ```erb
-<%= render(ModalComponent, header: "Hi!") do |component| %>
+<%= render(ModalComponent.new(header: "Hi!")) do |component| %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
@@ -347,7 +317,7 @@ end
 
 `app/views/with_block.html.erb`:
 ```erb
-<%= render(ModalComponent) do |component| %>
+<%= render(ModalComponent.new) do |component| %>
   <% component.with(:header) do %>
     <span class="help_icon">Hello</span>
   <% end %>
@@ -359,7 +329,7 @@ end
 
 `app/views/no_header.html.erb`:
 ```erb
-<%= render(ModalComponent) do |component| %>
+<%= render(ModalComponent.new) do |component| %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
@@ -386,7 +356,7 @@ or the view that renders the component:
 ```erb
 <!-- app/views/_banners.html.erb -->
 <% if current_user.requires_confirmation? %>
-  <%= render(ConfirmEmailComponent, user: current_user) %>
+  <%= render(ConfirmEmailComponent.new(user: current_user)) %>
 <% end %>
 ```
 
@@ -414,7 +384,7 @@ end
 
 ```erb
 <!-- app/views/_banners.html.erb -->
-<%= render(ConfirmEmailComponent, user: current_user) %>
+<%= render(ConfirmEmailComponent.new(user: current_user)) %>
 ```
 
 ### Testing
@@ -428,7 +398,7 @@ class MyComponentTest < ActionView::Component::TestCase
   test "render component" do
     assert_equal(
       %(<span title="my title">Hello, World!</span>),
-      render_inline(TestComponent, title: "my title") { "Hello, World!" }.to_html
+      render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }.to_html
     )
   end
 end
@@ -445,7 +415,7 @@ test "render component for tablet" do
   with_variant :tablet do
     assert_equal(
       %(<span title="my title">Hello, tablets!</span>),
-      render_inline(TestComponent, title: "my title") { "Hello, tablets!" }.css("span").to_html
+      render_inline(TestComponent.new(title: "my title")) { "Hello, tablets!" }.css("span").to_html
     )
   end
 end
@@ -462,11 +432,11 @@ You can define as many examples as you want:
 
 class TestComponentPreview < ActionView::Component::Preview
   def with_default_title
-    render(TestComponent, title: "Test component default")
+    render(TestComponent.new(title: "Test component default"))
   end
 
   def with_long_title
-    render(TestComponent, title: "This is a really long title to see how the component renders this")
+    render(TestComponent.new(title: "This is a really long title to see how the component renders this"))
   end
 end
 ```
