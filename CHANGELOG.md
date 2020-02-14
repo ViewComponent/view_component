@@ -1,4 +1,4 @@
-# Pending
+# v1.9.0
 
 * Remove initializer requirement for Ruby 2.7+
 
