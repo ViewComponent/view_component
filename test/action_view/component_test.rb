@@ -247,7 +247,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_renders_nested_path_helper
-    result = render_inline(PathComponentContainer)
+    result = render_inline(PathContainerComponent.new)
 
     assert_includes result.text, "/"
   end
