@@ -1,3 +1,5 @@
+_Note: This gem is in the process of a name / API change, see https://github.com/github/actionview-component/issues/206_
+
 # ActionView::Component
 `ActionView::Component` is a framework for building view components in Rails.
 
