@@ -34,18 +34,4 @@ class HamlGeneratorTest < Rails::Generators::TestCase
 
     assert_file "app/components/admins/user_component.html.haml"
   end
-
-  private
-
-  def with_required_content
-    Thor::LineEditor.stub :readline, "Y" do
-      yield
-    end
-  end
-
-  def without_required_content
-    Thor::LineEditor.stub :readline, "n" do
-      yield
-    end
-  end
 end

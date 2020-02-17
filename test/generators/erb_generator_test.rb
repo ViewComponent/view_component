@@ -22,7 +22,7 @@ class ErbGeneratorTest < Rails::Generators::TestCase
   end
 
   def test_component_without_required_content
-    run_generator %w[user]
+    run_generator
 
     assert_file "app/components/user_component.html.erb" do |view|
       assert_match(/<div>Add User template here<\/div>/, view)
