@@ -119,6 +119,18 @@ bin/rails generate component Example title content
       create  app/components/example_component.html.erb
 ```
 
+`ActionView::Component` includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in your Rails config (`config.generators.template_engine`) by default.
+
+If you want to override this behavior, you can pass the template engine as an option to the generator:
+
+```bash
+bin/rails generate component Example title content --template-engine slim
+      invoke test_unit
+      create  test/components/example_component_test.rb
+      create  app/components/example_component.rb
+      create  app/components/example_component.html.slim
+```
+
 #### Implementation
 
 An `ActionView::Component` is a Ruby file and corresponding template file (in any format supported by Rails) with the same base name:

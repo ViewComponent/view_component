@@ -1,3 +1,7 @@
+* Add erb, haml, & slim template generators
+
+    *Asger Behncke Jacobsen*
+
 # v1.10.0
 
 * Deprecate all `render` syntaxes except for `render(MyComponent.new(foo: :bar))`
