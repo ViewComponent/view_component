@@ -296,8 +296,8 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   def test_renders_component_with_translations
     render_inline(TranslationsComponent.new)
 
-    assert_selector("h1", text: I18n.t('translations_component.title'))
-    assert_selector("h2", text: I18n.t('translations_component.subtitle'))
+    assert_selector("h1", text: I18n.t("translations_component.title"))
+    assert_selector("h2", text: I18n.t("translations_component.subtitle"))
   end
 
   def test_renders_component_with_rb_in_its_name
@@ -329,7 +329,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     controller.view_context.cookies[:shown] = true
 
     render_inline(RenderCheckComponent.new)
-    
+
     assert_no_text("Rendered")
   end
 

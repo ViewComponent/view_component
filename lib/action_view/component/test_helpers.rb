@@ -13,7 +13,7 @@ module ActionView
 
       def render_inline(component, **args, &block)
         @raw = controller.view_context.render(component, args, &block)
-        
+
         Nokogiri::HTML.fragment(@raw)
       end
 
