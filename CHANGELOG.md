@@ -1,3 +1,5 @@
+# v1.11.0
+
 * Add support for Capybara matchers.
 
     *Joel Hawksley*

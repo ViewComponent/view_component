@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    actionview-component (1.10.0)
+    actionview-component (1.11.0)
       capybara (>= 3.26)
 
 GEM
