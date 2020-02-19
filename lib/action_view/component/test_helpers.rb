@@ -1,10 +1,20 @@
 # frozen_string_literal: true
 
+require "capybara/minitest"
+
 module ActionView
   module Component
     module TestHelpers
+      include Capybara::Minitest::Assertions
+
+      def page
+        Capybara::Node::Simple.new(@raw)
+      end
+
       def render_inline(component, **args, &block)
-        Nokogiri::HTML.fragment(controller.view_context.render(component, args, &block))
+        @raw = controller.view_context.render(component, args, &block)
+        
+        Nokogiri::HTML.fragment(@raw)
       end
 
       def controller
