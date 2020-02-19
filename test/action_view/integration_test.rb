@@ -6,13 +6,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "rendering component in a view" do
     get "/"
     assert_response :success
-    assert_html_matches <<~HTML, response.body
-      <span><div>
-        Foo
-        bar
-      </div>
-      </span>
-    HTML
+
+    assert_select("div", "Foo\n  bar")
   end
 
   test "rendering component with content" do
@@ -26,49 +21,25 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "rendering component in a view with component: syntax" do
     get "/component"
     assert_response :success
-    assert_html_matches <<~HTML, response.body
-      <span><div>
-        Foo
-        bar
-      </div>
-      </span>
-    HTML
+
+    assert_select("div", "Foo\n  bar")
   end
 
   test "rendering component with content_for" do
     get "/content_areas"
     assert_response :success
 
-    expected_string = %(
-    <div>
-      <div class="title">
-        <h1>Hi!</h1>
-
-      </div>
-      <div class="body">
-        <p>Did you know that 1+1=2?</p>
-
-      </div>
-      <div class="footer">
-        <h3>Bye!</h3>
-
-      </div>
-    </div>
-    )
-
-    assert_html_matches expected_string, response.body
+    assert_select(".title h1", "Hi!")
+    assert_select(".body p", "Did you know that 1+1=2?")
+    assert_select(".footer h3", "Bye!")
   end
 
   test "rendering component with a partial" do
     get "/partial"
     assert_response :success
-    assert_html_matches <<~HTML, response.body
-      partial:<div>hello,partial world!</div>
-
-      component:<div>hello,partial world!</div>
-
-      <div>hello,partial world!</div>
-    HTML
+    
+    assert_includes response.body, "partial:<div>hello,partial world!"
+    assert_includes response.body, "component:<div>hello,partial world!"
   end
 
   test "rendering component without variant" do
