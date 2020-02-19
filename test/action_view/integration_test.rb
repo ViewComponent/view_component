@@ -74,35 +74,35 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "rendering component without variant" do
     get "/variants"
     assert_response :success
-    assert_html_matches "Default", response.body
+    assert_includes response.body, "Default"
   end
 
   test "rendering component with tablet variant" do
     get "/variants?variant=tablet"
     assert_response :success
-    assert_html_matches "Tablet", response.body
+    assert_includes response.body, "Tablet"
   end
 
   test "rendering component several times with different variants" do
     get "/variants?variant=tablet"
     assert_response :success
-    assert_html_matches "Tablet", response.body
+    assert_includes response.body, "Tablet"
 
     get "/variants?variant=phone"
     assert_response :success
-    assert_html_matches "Phone", response.body
+    assert_includes response.body, "Phone"
 
     get "/variants"
     assert_response :success
-    assert_html_matches "Default", response.body
+    assert_includes response.body, "Default"
 
     get "/variants?variant=tablet"
     assert_response :success
-    assert_html_matches "Tablet", response.body
+    assert_includes response.body, "Tablet"
 
     get "/variants?variant=phone"
     assert_response :success
-    assert_html_matches "Phone", response.body
+    assert_includes response.body, "Phone"
   end
 
   test "rendering component with caching" do
@@ -111,11 +111,11 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     get "/cached?version=1"
     assert_response :success
-    assert_html_matches "Cache 1", response.body
+    assert_includes response.body, "Cache 1"
 
     get "/cached?version=2"
     assert_response :success
-    assert_html_matches "Cache 1", response.body
+    assert_includes response.body, "Cache 1"
 
     ActionController::Base.perform_caching = false
     Rails.cache.clear
