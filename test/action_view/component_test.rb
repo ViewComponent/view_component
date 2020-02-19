@@ -346,7 +346,7 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
     render_inline(MissingInitializerComponent.new)
 
-    assert_select("div", "Hello, world!")
+    assert_text("Hello, world!")
   end
 
   def test_assert_select
