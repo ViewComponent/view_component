@@ -1,3 +1,7 @@
+* Add support for Capybara matchers.
+
+    *Joel Hawksley*
+
 * Add erb, haml, & slim template generators
 
     *Asger Behncke Jacobsen*
