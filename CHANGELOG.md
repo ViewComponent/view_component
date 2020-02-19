@@ -1,3 +1,5 @@
+# v1.11.1
+
 * Relax Capybara requirement.
 
     *Joel Hawksley*
