@@ -37,7 +37,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "rendering component with a partial" do
     get "/partial"
     assert_response :success
-    
+
     assert_includes response.body, "partial:<div>hello,partial world!"
     assert_includes response.body, "component:<div>hello,partial world!"
   end
