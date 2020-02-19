@@ -17,7 +17,7 @@ As the goal of this gem is to be upstreamed into Rails, it is designed to integr
 
 ## Compatibility
 
-`actionview-component` is tested for compatibility with combinations of Ruby `2.5`/`2.6` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`6.1.0.alpha`.
+`actionview-component` is tested for compatibility with combinations of Ruby `2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`6.1.0.alpha`.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -403,17 +403,16 @@ end
 
 ### Testing
 
-Components are unit tested directly. The `render_inline` test helper wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
+Components are unit tested directly. The `render_inline` test helper is compatible with Capybara matchers, allowing us to test the component above as:
 
 ```ruby
 require "action_view/component/test_case"
 
 class MyComponentTest < ActionView::Component::TestCase
   test "render component" do
-    assert_equal(
-      %(<span title="my title">Hello, World!</span>),
-      render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }.to_html
-    )
+    render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
+
+    assert_selector("span[title='my title']", "Hello, World!")
   end
 end
 ```
@@ -427,10 +426,9 @@ To test a specific variant you can wrap your test with the `with_variant` helper
 ```ruby
 test "render component for tablet" do
   with_variant :tablet do
-    assert_equal(
-      %(<span title="my title">Hello, tablets!</span>),
-      render_inline(TestComponent.new(title: "my title")) { "Hello, tablets!" }.css("span").to_html
-    )
+    render_inline(TestComponent.new(title: "my title")) { "Hello, tablets!" }
+
+    assert_selector("span[title='my title']", "Hello, tablets!")
   end
 end
 ```

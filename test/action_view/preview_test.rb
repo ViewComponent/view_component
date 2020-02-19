@@ -52,4 +52,7 @@ class ActionView::PreviewTest < ActionDispatch::IntegrationTest
     assert_html_matches expected_fragment, result.to_html
   end
 
+  def assert_html_matches(expected, actual)
+    assert_equal(trim_result(expected), trim_result(actual))
+  end
 end
