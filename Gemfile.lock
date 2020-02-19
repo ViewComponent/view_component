@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     actionview-component (1.11.0)
-      capybara (>= 3.26)
+      capybara (>= 3)
 
 GEM
   remote: https://rubygems.org/
