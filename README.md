@@ -1,5 +1,7 @@
 _Note: This gem is in the process of a name / API change, see https://github.com/github/actionview-component/issues/206_
 
+_You are viewing the README for the development version of ActionView::Component. If you are using the current release version you can find the README at https://github.com/github/actionview-component/blob/v1.11.1/README.md_
+
 # ActionView::Component
 `ActionView::Component` is a framework for building view components in Rails.
 
