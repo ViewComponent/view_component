@@ -189,6 +189,8 @@ class ModalComponent < ActionView::Component::Base
   def initialize(user:)
     @user = user
   end
+
+  attr_reader :user
 end
 ```
 
@@ -196,7 +198,7 @@ end
 ```erb
 <div class="modal">
   <div class="header"><%= header %></div>
-  <div class="body"><%= body %>"></div>
+  <div class="body"><%= body %></div>
 </div>
 ```
 
@@ -205,7 +207,7 @@ We can render it in a view as:
 ```erb
 <%= render(ModalComponent.new(user: {name: 'Jane'})) do |component| %>
   <% component.with(:header) do %>
-      Hello <%= user[:name] %>
+      Hello <%= component.user[:name] %>
     <% end %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
@@ -242,7 +244,7 @@ end
 
 ```erb
 <%= render(ModalComponent.new(header: "Hi!")) do |component| %>
-  <% help_enabled? && component.with(:header) do %>
+  <% component.with(:header) do %>
     <span class="help_icon"><%= component.header %></span>
   <% end %>
   <% component.with(:body) do %>
@@ -308,7 +310,7 @@ end
   <% if header %>
     <div class="header"><%= header %></div>
   <% end %>
-  <div class="body"><%= body %>"></div>
+  <div class="body"><%= body %></div>
 </div>
 ```
 
@@ -370,7 +372,7 @@ The `#render?` hook allows you to move this logic into the Ruby class, leaving y
 
 ```ruby
 # app/components/confirm_email_component.rb
-class ConfirmEmailComponent < ApplicationComponent
+class ConfirmEmailComponent < ActionView::Component::Base
   def initialize(user:)
     @user = user
   end
@@ -378,6 +380,8 @@ class ConfirmEmailComponent < ApplicationComponent
   def render?
     @user.requires_confirmation?
   end
+
+  attr_reader :user
 end
 ```
 
