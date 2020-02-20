@@ -17,7 +17,6 @@ module ActionView
       # Entrypoint for rendering components.
       #
       # view_context: ActionView context from calling view
-      # args(hash): params to be passed to component being rendered
       # block: optional block to be captured within the view context
       #
       # returns HTML that has been escaped by the respective template handler
@@ -39,7 +38,7 @@ module ActionView
       # returns:
       # <span title="greeting">Hello, world!</span>
       #
-      def render_in(view_context, *args, &block)
+      def render_in(view_context, &block)
         self.class.compile!
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer
