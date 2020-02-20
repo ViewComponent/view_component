@@ -79,23 +79,13 @@ Our views often fail even the most basic standards of code quality we expect out
 
 By clearly defining the context necessary to render a component, we’ve found them to be easier to reuse than partials.
 
-#### Performance
-
-In early benchmarks, we’ve seen performance improvements over the existing rendering pipeline. For a test page with nested renders 10 levels deep, we’re seeing around a 5x increase in speed over partials:
-
-```
-Comparison:
-           component:     6515.4 i/s
-             partial:     1251.2 i/s - 5.21x  slower
-```
-
-_Rails 6.1.0.alpha, [joelhawksley/actionview-component-demo](https://github.com/joelhawksley/actionview-component-demo), /benchmark route, via `RAILS_ENV=production rails s`, measured with [evanphx/benchmark-ips](https://github.com/evanphx/benchmark-ips)_
-
 ### When should I use components?
 
 Components are most effective in cases where view code is reused or needs to be tested directly.
 
 ### Building components
+
+#### Conventions
 
 Components are subclasses of `ActionView::Component::Base` and live in `app/components`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component::Base` and inherit from that instead.
 
