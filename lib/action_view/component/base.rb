@@ -14,10 +14,9 @@ module ActionView
       class_attribute :content_areas, default: []
       self.content_areas = [] # default doesn't work until Rails 5.2
 
-      # Entrypoint for rendering components. Called by ActionView::Base#render.
+      # Entrypoint for rendering components.
       #
       # view_context: ActionView context from calling view
-      # args(hash): params to be passed to component being rendered
       # block: optional block to be captured within the view context
       #
       # returns HTML that has been escaped by the respective template handler
@@ -35,11 +34,11 @@ module ActionView
       # <span title="<%= @title %>">Hello, <%= content %>!</span>
       #
       # In use:
-      # <%= render MyComponent, title: "greeting" do %>world<% end %>
+      # <%= render MyComponent.new(title: "greeting") do %>world<% end %>
       # returns:
       # <span title="greeting">Hello, world!</span>
       #
-      def render_in(view_context, *args, &block)
+      def render_in(view_context, &block)
         self.class.compile!
         @view_context = view_context
         @view_renderer ||= view_context.view_renderer

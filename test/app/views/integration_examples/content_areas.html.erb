@@ -1,4 +1,4 @@
-<%= render ContentAreasComponent do |component| %>
+<%= render(ContentAreasComponent.new) do |component| %>
   <% component.with(:body) do %>
     <p>Did you know that 1+1=<%= 1+1 %>?</p>
   <% end %>

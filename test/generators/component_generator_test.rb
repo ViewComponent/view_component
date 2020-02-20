@@ -14,41 +14,58 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   arguments %w[user]
 
   def test_component_with_required_content
-    Thor::LineEditor.stub :readline, "Y" do
-      run_generator
-    end
+    with_required_content { run_generator }
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/class UserComponent < /, component)
       assert_match(/validates :content, presence: true/, component)
     end
-
-    assert_file "app/components/user_component.html.erb" do |view|
-      assert_match(/<%= content %>/, view)
-    end
   end
 
   def test_component_without_required_content
-    Thor::LineEditor.stub :readline, "n" do
-      run_generator
-    end
+    without_required_content { run_generator }
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/class UserComponent < /, component)
       refute_match(/validates :content, presence: true/, component)
     end
-
-    assert_file "app/components/user_component.html.erb" do |view|
-      assert_match(/<div>Add User template here<\/div>/, view)
-    end
   end
 
   def test_component_with_namespace
-    Thor::LineEditor.stub :readline, "n" do
-      run_generator %w[admins/user]
-    end
+    with_required_content { run_generator %w[admins/user] }
 
     assert_file "app/components/admins/user_component.rb", /class Admins::UserComponent < /
-    assert_file "app/components/admins/user_component.html.erb"
+  end
+
+  def test_invoking_erb_template_engine
+    without_required_content { run_generator %w[user --template-engine erb] }
+
+    assert_file "app/components/user_component.html.erb"
+  end
+
+  def test_invoking_slim_template_engine
+    without_required_content { run_generator %w[user --template-engine slim] }
+
+    assert_file "app/components/user_component.html.slim"
+  end
+
+  def test_invoking_haml_template_engine
+    without_required_content { run_generator %w[user --template-engine haml] }
+
+    assert_file "app/components/user_component.html.haml"
+  end
+
+  private
+
+  def with_required_content
+    Thor::LineEditor.stub :readline, "Y" do
+      yield
+    end
+  end
+
+  def without_required_content
+    Thor::LineEditor.stub :readline, "n" do
+      yield
+    end
   end
 end

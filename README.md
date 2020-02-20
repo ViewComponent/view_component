@@ -1,3 +1,7 @@
+_Note: This gem is in the process of a name / API change, see https://github.com/github/actionview-component/issues/206_
+
+_You are viewing the README for the development version of ActionView::Component. If you are using the current release version you can find the README at https://github.com/github/actionview-component/blob/v1.11.1/README.md_
+
 # ActionView::Component
 `ActionView::Component` is a framework for building view components in Rails.
 
@@ -5,17 +9,17 @@
 
 ## Roadmap
 
-This gem is meant to serve as a precursor to upstreaming the `ActionView::Component` class into Rails. It also serves to enable the usage of `ActionView::Component` in older versions of Rails.
+Support for third-party component frameworks was merged into Rails `6.1.0.alpha` in https://github.com/rails/rails/pull/36388 and https://github.com/rails/rails/pull/37919. Our goal with this project is to provide a first-class component framework for this new capability in Rails.
 
-Preliminary support for rendering components was merged into Rails `6.1.0.alpha` in https://github.com/rails/rails/pull/36388. Assuming `ActionView::Component` makes it into Rails, this gem will then exist to serve as a backport.
+This gem includes a patch that enables that support for Rails `5.0.0` through `6.1.0.alpha`.
 
 ## Design philosophy
 
-As the goal of this gem is to be upstreamed into Rails, it is designed to integrate as seamlessly as possible, with the [least surprise](https://www.artima.com/intv/ruby4.html).
+This library is designed to integrate as seamlessly as possible with Rails, with the [least surprise](https://www.artima.com/intv/ruby4.html).
 
 ## Compatibility
 
-`actionview-component` is tested for compatibility with combinations of Ruby `2.4`/`2.5`/`2.6` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`6.1.0.alpha`.
+`actionview-component` is tested for compatibility with combinations of Ruby `2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`6.1.0.alpha`.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -75,23 +79,13 @@ Our views often fail even the most basic standards of code quality we expect out
 
 By clearly defining the context necessary to render a component, we’ve found them to be easier to reuse than partials.
 
-#### Performance
-
-In early benchmarks, we’ve seen performance improvements over the existing rendering pipeline. For a test page with nested renders 10 levels deep, we’re seeing around a 5x increase in speed over partials:
-
-```
-Comparison:
-           component:     6515.4 i/s
-             partial:     1251.2 i/s - 5.21x  slower
-```
-
-_Rails 6.1.0.alpha, [joelhawksley/actionview-component-demo](https://github.com/joelhawksley/actionview-component-demo), /benchmark route, via `RAILS_ENV=production rails s`, measured with [evanphx/benchmark-ips](https://github.com/evanphx/benchmark-ips)_
-
 ### When should I use components?
 
 Components are most effective in cases where view code is reused or needs to be tested directly.
 
 ### Building components
+
+#### Conventions
 
 Components are subclasses of `ActionView::Component::Base` and live in `app/components`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component::Base` and inherit from that instead.
 
@@ -115,6 +109,18 @@ bin/rails generate component Example title content
       create  test/components/example_component_test.rb
       create  app/components/example_component.rb
       create  app/components/example_component.html.erb
+```
+
+`ActionView::Component` includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in your Rails config (`config.generators.template_engine`) by default.
+
+If you want to override this behavior, you can pass the template engine as an option to the generator:
+
+```bash
+bin/rails generate component Example title content --template-engine slim
+      invoke test_unit
+      create  test/components/example_component_test.rb
+      create  app/components/example_component.rb
+      create  app/components/example_component.html.slim
 ```
 
 #### Implementation
@@ -144,7 +150,7 @@ end
 We can render it in a view as:
 
 ```erb
-<%= render(TestComponent, title: "my title") do %>
+<%= render(TestComponent.new(title: "my title")) do %>
   Hello, World!
 <% end %>
 ```
@@ -155,42 +161,12 @@ Which returns:
 <span title="my title">Hello, World!</span>
 ```
 
-##### Supported `render` syntaxes
-
-Components can be rendered via:
-
-`render(TestComponent, foo: :bar)`
-
-`render(component: TestComponent, locals: { foo: :bar })`
-
-**Rendering components through models**
-
-Passing model instances will cause `render` to look for its respective component class.
-
-The component is instantiated with the rendered model instance.
-
-Example for a `Post` model:
-
-`render(@post)`
-
-```ruby
-class PostComponent < ActionView::Component::Base
-  def initialize(post)
-    @post = post
-  end
-end
-```
-
-The following syntax has been deprecated and will be removed in v2.0.0:
-
-`render(TestComponent.new(foo: :bar))`
-
 #### Error case
 
 If the component is rendered with a blank title:
 
 ```erb
-<%= render(TestComponent, title: "") do %>
+<%= render(TestComponent.new(title: "")) do %>
   Hello, World!
 <% end %>
 ```
@@ -229,7 +205,7 @@ end
 We can render it in a view as:
 
 ```erb
-<%= render(ModalComponent, user: {name: 'Jane'}) do |component| %>
+<%= render(ModalComponent.new(user: {name: 'Jane'})) do |component| %>
   <% component.with(:header) do %>
       Hello <%= component.user[:name] %>
     <% end %>
@@ -267,7 +243,7 @@ end
 ```
 
 ```erb
-<%= render(ModalComponent, header: "Hi!") do |component| %>
+<%= render(ModalComponent.new(header: "Hi!")) do |component| %>
   <% component.with(:header) do %>
     <span class="help_icon"><%= component.header %></span>
   <% end %>
@@ -294,7 +270,7 @@ end
 
 `app/views/render_arg.html.erb`:
 ```erb
-<%= render(ModalComponent, header: "Hi!") do |component| %>
+<%= render(ModalComponent.new(header: "Hi!")) do |component| %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
@@ -340,7 +316,7 @@ end
 
 `app/views/render_arg.html.erb`:
 ```erb
-<%= render(ModalComponent, header: "Hi!") do |component| %>
+<%= render(ModalComponent.new(header: "Hi!")) do |component| %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
@@ -349,7 +325,7 @@ end
 
 `app/views/with_block.html.erb`:
 ```erb
-<%= render(ModalComponent) do |component| %>
+<%= render(ModalComponent.new) do |component| %>
   <% component.with(:header) do %>
     <span class="help_icon">Hello</span>
   <% end %>
@@ -361,7 +337,7 @@ end
 
 `app/views/no_header.html.erb`:
 ```erb
-<%= render(ModalComponent) do |component| %>
+<%= render(ModalComponent.new) do |component| %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
@@ -388,7 +364,7 @@ or the view that renders the component:
 ```erb
 <!-- app/views/_banners.html.erb -->
 <% if current_user.requires_confirmation? %>
-  <%= render(ConfirmEmailComponent, user: current_user) %>
+  <%= render(ConfirmEmailComponent.new(user: current_user)) %>
 <% end %>
 ```
 
@@ -418,22 +394,21 @@ end
 
 ```erb
 <!-- app/views/_banners.html.erb -->
-<%= render(ConfirmEmailComponent, user: current_user) %>
+<%= render(ConfirmEmailComponent.new(user: current_user)) %>
 ```
 
 ### Testing
 
-Components are unit tested directly. The `render_inline` test helper wraps the result in `Nokogiri.HTML`, allowing us to test the component above as:
+Components are unit tested directly. The `render_inline` test helper is compatible with Capybara matchers, allowing us to test the component above as:
 
 ```ruby
 require "action_view/component/test_case"
 
 class MyComponentTest < ActionView::Component::TestCase
   test "render component" do
-    assert_equal(
-      %(<span title="my title">Hello, World!</span>),
-      render_inline(TestComponent, title: "my title") { "Hello, World!" }.to_html
-    )
+    render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
+
+    assert_selector("span[title='my title']", "Hello, World!")
   end
 end
 ```
@@ -447,10 +422,9 @@ To test a specific variant you can wrap your test with the `with_variant` helper
 ```ruby
 test "render component for tablet" do
   with_variant :tablet do
-    assert_equal(
-      %(<span title="my title">Hello, tablets!</span>),
-      render_inline(TestComponent, title: "my title") { "Hello, tablets!" }.css("span").to_html
-    )
+    render_inline(TestComponent.new(title: "my title")) { "Hello, tablets!" }
+
+    assert_selector("span[title='my title']", "Hello, tablets!")
   end
 end
 ```
@@ -466,11 +440,11 @@ You can define as many examples as you want:
 
 class TestComponentPreview < ActionView::Component::Preview
   def with_default_title
-    render(TestComponent, title: "Test component default")
+    render(TestComponent.new(title: "Test component default"))
   end
 
   def with_long_title
-    render(TestComponent, title: "This is a really long title to see how the component renders this")
+    render(TestComponent.new(title: "This is a really long title to see how the component renders this"))
   end
 end
 ```

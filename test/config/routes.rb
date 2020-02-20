@@ -2,7 +2,6 @@
 
 Dummy::Application.routes.draw do
   root to: "integration_examples#index"
-  get :deprecated, to: "integration_examples#deprecated"
   get :component, to: "integration_examples#component"
   get :content_areas, to: "integration_examples#content_areas"
   get :partial, to: "integration_examples#partial"

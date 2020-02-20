@@ -1,4 +1,26 @@
-# Pending
+# v1.11.1
+
+* Relax Capybara requirement.
+
+    *Joel Hawksley*
+
+# v1.11.0
+
+* Add support for Capybara matchers.
+
+    *Joel Hawksley*
+
+* Add erb, haml, & slim template generators
+
+    *Asger Behncke Jacobsen*
+
+# v1.10.0
+
+* Deprecate all `render` syntaxes except for `render(MyComponent.new(foo: :bar))`
+
+    *Joel Hawksley*
+
+# v1.9.0
 
 * Remove initializer requirement for Ruby 2.7+
 

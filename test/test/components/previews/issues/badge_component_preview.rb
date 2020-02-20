@@ -3,11 +3,11 @@
 module Issues
   class BadgeComponentPreview < ActionView::Component::Preview
     def open
-      render(Issues::BadgeComponent, state: :open)
+      render(Issues::BadgeComponent.new(state: :open))
     end
 
     def closed
-      render(Issues::BadgeComponent, state: :closed)
+      render(Issues::BadgeComponent.new(state: :closed))
     end
   end
 end
