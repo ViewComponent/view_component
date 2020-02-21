@@ -355,6 +355,12 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_selector("div")
   end
 
+  def test_no_validations_component
+    render_inline(NoValidationsComponent.new)
+
+    assert_selector("div")
+  end
+
   private
 
   def modify_file(file, content)
