@@ -52,13 +52,17 @@ module ActionView
 
         @content = view_context.capture(self, &block) if block_given?
 
-        validate!
+        before_render_check
 
         return "" unless render?
 
         send(self.class.call_method_name(@variant))
       ensure
         @current_template = old_current_template
+      end
+
+      def before_render_check
+        validate!
       end
 
       def render?
