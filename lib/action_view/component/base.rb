@@ -54,9 +54,11 @@ module ActionView
 
         before_render_check
 
-        return "" unless render?
-
-        send(self.class.call_method_name(@variant))
+        if render?
+          send(self.class.call_method_name(@variant))
+        else
+          ""
+        end
       ensure
         @current_template = old_current_template
       end
