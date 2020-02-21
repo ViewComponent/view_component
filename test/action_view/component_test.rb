@@ -361,6 +361,18 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_selector("div")
   end
 
+  def test_fallback_to_default
+    render_inline(FallbackToDefaultComponent.new(color: :gray))
+
+    assert_text("blue")
+  end
+
+  def test_fallback_to_default_valid_option
+    render_inline(FallbackToDefaultComponent.new(color: :green))
+
+    assert_text("green")
+  end
+
   private
 
   def modify_file(file, content)

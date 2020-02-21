@@ -1,3 +1,7 @@
+* Add from_options_with_default to Base.
+
+    *Joel Hawksley*
+
 # v1.11.1
 
 * Relax Capybara requirement.

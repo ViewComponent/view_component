@@ -116,6 +116,14 @@ module ActionView
         nil
       end
 
+      def from_options_with_default(value, default, allowed_values)
+        if allowed_values.include?(value)
+          value
+        else
+          default
+        end
+      end
+
       private
 
       def request
