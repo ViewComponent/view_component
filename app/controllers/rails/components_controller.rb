@@ -3,7 +3,7 @@
 require "rails/application_controller"
 
 class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
-  prepend_view_path File.expand_path("templates/rails", __dir__)
+  prepend_view_path File.expand_path("../../../lib/railties/lib/rails/templates/rails", __dir__)
   prepend_view_path "#{Rails.root}/app/views/" if defined?(Rails.root)
 
   around_action :set_locale, only: :previews
