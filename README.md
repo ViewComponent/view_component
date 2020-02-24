@@ -11,7 +11,7 @@ _You are viewing the README for the development version of ActionView::Component
 
 Support for third-party component frameworks was merged into Rails `6.1.0.alpha` in https://github.com/rails/rails/pull/36388 and https://github.com/rails/rails/pull/37919. Our goal with this project is to provide a first-class component framework for this new capability in Rails.
 
-This gem includes a patch that enables that support for Rails `5.0.0` through `6.1.0.alpha`.
+This gem includes a backport of those changes for Rails `5.0.0` through `6.1.0.alpha`.
 
 ## Design philosophy
 
