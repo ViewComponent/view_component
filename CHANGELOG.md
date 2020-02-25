@@ -1,3 +1,9 @@
+# master
+
+* Restructure Railtie into Engine
+    
+    *Sean Doyle*
+
 # v1.11.1
 
 * Relax Capybara requirement.
