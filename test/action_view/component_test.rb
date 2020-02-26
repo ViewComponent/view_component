@@ -341,14 +341,6 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_selector("span", text: "The Awesome post component!")
   end
 
-  def test_missing_initializer
-    skip unless const_source_location_supported?
-
-    render_inline(MissingInitializerComponent.new)
-
-    assert_text("Hello, world!")
-  end
-
   def test_assert_select
     render_inline(MyComponent.new)
 
