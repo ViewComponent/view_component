@@ -1,7 +1,11 @@
 # master
 
+* Revert: Remove initializer requirement for Ruby 2.7+
+
+    *Joel Hawksley*
+
 * Restructure Railtie into Engine
-    
+
     *Sean Doyle*
 
 # v1.11.1

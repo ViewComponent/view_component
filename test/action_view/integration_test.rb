@@ -145,14 +145,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "does not compile components without initializers" do
-    skip if const_source_location_supported?
-
     assert !MissingInitializerComponent.compiled?
-  end
-
-  test "compiles components without initializers" do
-    skip unless const_source_location_supported?
-
-    assert MissingInitializerComponent.compiled?
   end
 end

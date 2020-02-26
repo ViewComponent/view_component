@@ -508,8 +508,7 @@ config.action_view_component.preview_path = "#{Rails.root}/spec/components/previ
 
 ### Initializer requirement
 
-In Ruby 2.6.x and below, ActionView::Component requires the presence of an `initialize` method in each component. 
-However, `initialize` is no longer required for projects using 2.7.x and above.
+ActionView::Component requires the presence of an `initialize` method in each component.
 
 ## Frequently Asked Questions
 
