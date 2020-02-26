@@ -1,5 +1,7 @@
 # master
 
+# v1.12.0
+
 * Revert: Remove initializer requirement for Ruby 2.7+
 
     *Joel Hawksley*
@@ -7,6 +9,10 @@
 * Restructure Railtie into Engine
 
     *Sean Doyle*
+
+* Allow components to override before_render_check
+
+    *Joel Hawksley*
 
 # v1.11.1
 
