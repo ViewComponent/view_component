@@ -32,4 +32,12 @@ class ActionView::InvalidComponentTest < ActionView::Component::TestCase
 
     assert_includes error.message, "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
   end
+
+  def test_backtrace_returns_correct_file_and_line_number
+    error = assert_raises NameError do
+      render_inline(ExceptionInTemplateComponent)
+    end
+
+    assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
+  end
 end
