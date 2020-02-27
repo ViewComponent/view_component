@@ -175,7 +175,7 @@ module ActionView
           end
 
           templates.each do |template|
-            class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            class_eval <<-RUBY, template[:path], -1
               def #{call_method_name(template[:variant])}
                 @output_buffer = ActionView::OutputBuffer.new
                 #{compiled_template(template[:path])}
