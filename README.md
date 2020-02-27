@@ -570,6 +570,11 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |@mellowfish|@horacio|@dukex|@dark-panda|@smashwilson|
 |Spring Hill, TN|Buenos Aires|São Paulo||Gambrills, MD|
 
+|<img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" />|
+|:---:|
+|@blakewilliams|
+|Boston, MA|
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
