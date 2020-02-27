@@ -1,5 +1,9 @@
 # master
 
+* Improve backtraces from exceptions raised in templates
+
+    *Blake Williams*
+
 # v1.12.0
 
 * Revert: Remove initializer requirement for Ruby 2.7+
