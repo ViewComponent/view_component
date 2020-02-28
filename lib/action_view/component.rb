@@ -16,6 +16,7 @@ module ActionView
     autoload :TestHelpers
     autoload :TestCase
     autoload :RenderMonkeyPatch
+    autoload :RenderingMonkeyPatch
     autoload :TemplateError
   end
 end

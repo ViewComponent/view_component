@@ -1,6 +1,10 @@
 # master
 
-* Improve backtraces from exceptions raised in templates
+* Allow components to be rendered inside controllers.
+
+    *Joel Hawksley*
+
+* Improve backtraces from exceptions raised in templates.
 
     *Blake Williams*
 
