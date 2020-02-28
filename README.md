@@ -521,6 +521,19 @@ Which generates <http://localhost:3000/rails/view_components/test_component/with
 <http://localhost:3000/rails/view_components/test_component/with_long_title>,
 and <http://localhost:3000/rails/view_components/test_component/with_content_block>.
 
+It's also possible to set dynamic values from the params by setting them as arguments:
+
+`test/components/previews/test_component_preview.rb`
+```ruby
+class TestComponentPreview < ViewComponent::Preview
+  def with_dynamic_title(title: "Test component default")
+    render(TestComponent.new(title: title))
+  end
+end
+```
+
+You'll then be able to pass down a value with <http://localhost:3000/rails/components/test_component/with_dynamic_title?title=Custom+title>.
+
 The `ViewComponent::Preview` base class includes
 [`ActionView::Helpers::TagHelper`][tag-helper], which provides the [`tag`][tag]
 and [`content_tag`][content_tag] view helper methods.
@@ -648,10 +661,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
 |Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
-|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|
-|:---:|:---:|
-|@simonrand|@fugufish|
-|Dublin, Ireland|Salt Lake City, Utah|
+|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|
+|:---:|:---:|:---:|
+|@simonrand|@fugufish|@cover|
+|Dublin, Ireland|Salt Lake City, Utah|Barcelona|
 
 ## License
 

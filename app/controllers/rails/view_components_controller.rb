@@ -30,7 +30,7 @@ class Rails::ViewComponentsController < Rails::ApplicationController # :nodoc:
     else
       prepend_application_view_paths
       @example_name = File.basename(params[:path])
-      @render_args = @preview.render_args(@example_name)
+      @render_args = @preview.render_args(@example_name, params: params.permit!)
       layout = @render_args[:layout]
       opts = layout.nil? ? {} : { layout: layout }
       # rubocop:disable GitHub/RailsControllerRenderPathsExist
