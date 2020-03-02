@@ -3,9 +3,9 @@
 module ActionView
   module Component
     module RenderingMonkeyPatch # :nodoc:
-      def render(options = {}, args = {}, &block)
+      def render(options = {}, args = {})
         if options.respond_to?(:render_in)
-          self.response_body = options.render_in(self.view_context, &block)
+          self.response_body = options.render_in(self.view_context)
         else
           super
         end
