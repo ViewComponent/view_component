@@ -1,11 +1,25 @@
-# Migration in progress
-
-This gem is in the process of a name / API change from `ActionView::Component` to `ViewComponent`, see https://github.com/github/actionview-component/issues/206.
-
 # ActionView::Component
 A view component framework for Rails.
 
 **Current Status**: Used in production at GitHub. Because of this, all changes will be thoroughly vetted, which could slow down the process of contributing. We will do our best to actively communicate status of pull requests with any contributors. If you have any substantial changes that you would like to make, it would be great to first [open an issue](http://github.com/github/actionview-component/issues/new) to discuss them with us.
+
+## Migration in progress
+
+This gem is in the process of a name / API change from `ActionView::Component` to `ViewComponent`, see https://github.com/github/actionview-component/issues/206.
+
+### What's changing in the migration
+
+1. `ActionView::Component::Base` is now `ViewComponent::Base`.
+1. Components can only be rendered with `render(MyComponent.new)` syntax.
+1. Validations are no longer supported by default.
+
+### How to migrate to ViewComponent
+
+1. In `application.rb`, require `view_component/engine`
+1. Update components to inherit from `ViewComponent::Base`.
+1. Update component tests to inherit from `ViewComponent::TestCase`.
+1. Update component previes to inherit from `ViewComponent::Preview`.
+1. Include `ViewComponent::TestHelpers` in your test suite.
 
 ## Roadmap
 
