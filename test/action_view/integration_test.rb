@@ -10,6 +10,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "Foo\n  bar")
   end
 
+  test "rendering component in a controller" do
+    get "/controller_inline_baseline"
+
+    assert_select("div", "bar")
+    assert_response :success
+
+    baseline_response = response.body
+
+    get "/controller_inline"
+    assert_select("div", "bar")
+    assert_response :success
+
+    inline_response = response.body
+
+    assert_equal baseline_response, inline_response
+  end
+
   test "rendering component with content" do
     get "/content"
     assert_response :success
