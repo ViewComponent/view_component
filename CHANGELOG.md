@@ -1,5 +1,7 @@
 # master
 
+# v1.13.0
+
 * Allow components to be rendered inside controllers.
 
     *Joel Hawksley*
