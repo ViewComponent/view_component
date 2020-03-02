@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Issues
-  class BadgeComponentPreview < ActionView::Component::Preview
+  class BadgeComponentPreview < ViewComponent::Preview
     def open
       render(Issues::BadgeComponent.new(state: :open))
     end

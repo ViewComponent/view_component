@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ControllerInlineComponent < ActionView::Component::Base
+class ControllerInlineComponent < ViewComponent::Base
   def initialize(message:)
     @message = message
   end

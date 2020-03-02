@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class MyComponent < ActionView::Component::Base
+class MyComponent < ViewComponent::Base
   def initialize(*); end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Issues
-  class BadgeComponent < ActionView::Component::Base
+  class BadgeComponent < ViewComponent::Base
     STATES = {
       open: {
         color: :green,
@@ -12,8 +12,6 @@ module Issues
         label: "Closed",
       },
     }.freeze
-
-    validates :state, inclusion: {in: STATES.keys}
 
     def initialize(state:)
       @state = state

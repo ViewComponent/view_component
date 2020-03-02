@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CacheIfComponent < ActionView::Component::Base
+class CacheIfComponent < ViewComponent::Base
   attr_reader :version
   private :version
 

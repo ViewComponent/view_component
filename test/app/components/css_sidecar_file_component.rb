@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CssSidecarFileComponent < ActionView::Component::Base
+class CssSidecarFileComponent < ViewComponent::Base
   def initialize(*)
   end
 end

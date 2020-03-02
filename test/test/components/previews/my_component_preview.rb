@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class MyComponentPreview < ActionView::Component::Preview
+class MyComponentPreview < ViewComponent::Preview
   layout "admin"
 
   def default
-    render(MyComponent)
+    render(MyComponent.new)
   end
 end

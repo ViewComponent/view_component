@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ActionView::ComponentTest < ActionView::Component::TestCase
+class ViewComponentTest < ViewComponent::TestCase
   def test_render_inline
     render_inline(MyComponent.new)
 
@@ -13,14 +13,6 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     render_component(MyComponent.new)
 
     assert_selector("div", text: "hello,world!")
-  end
-
-  def test_checks_validations
-    exception = assert_raises ActiveModel::ValidationError do
-      render_inline(WrapperComponent.new)
-    end
-
-    assert_includes exception.message, "Content can't be blank"
   end
 
   def test_renders_content_from_block
@@ -73,22 +65,20 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     end
   end
 
-  def test_renders_erb_template_with_old_syntax
-    render_inline(ErbComponent, message: "bar") { "foo" }
+  def test_template_with_old_class_syntax_fails
+    assert_raises ArgumentError do
+      render_inline(ErbComponent, message: "bar") { "foo" }
+    end
+  end
 
-    assert_text("foo")
-    assert_text("bar")
+  def test_hash_render_syntax_fails
+    assert_raises ArgumentError do
+      render_inline(component: ErbComponent, locals: { message: "bar" }) { "foo" }
+    end
   end
 
   def test_renders_erb_template
     render_inline(ErbComponent.new(message: "bar")) { "foo" }
-
-    assert_text("foo")
-    assert_text("bar")
-  end
-
-  def test_renders_erb_template_with_hash_syntax
-    render_inline(component: ErbComponent, locals: { message: "bar" }) { "foo" }
 
     assert_text("foo")
     assert_text("bar")
@@ -155,14 +145,6 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     assert_selector(".title strong", text: "Hello!")
     assert_selector(".body", text: "Have a nice day.")
     assert_selector(".footer", text: "Bye!")
-  end
-
-  def test_renders_content_area_does_not_capture_block_content
-    exception = assert_raises ActiveModel::ValidationError do
-      render_inline(ContentAreasComponent.new(title: "Hi!", footer: "Bye!")) { "Have a nice day." }
-    end
-
-    assert_includes exception.message, "Body can't be blank"
   end
 
   def test_renders_content_areas_template_raise_with_unknown_content_areas
@@ -278,19 +260,19 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
   end
 
   def test_that_it_has_a_version_number
-    refute_nil ::ActionView::Component::VERSION::MAJOR
-    assert_kind_of Integer, ::ActionView::Component::VERSION::MAJOR
-    refute_nil ::ActionView::Component::VERSION::MINOR
-    assert_kind_of Integer, ::ActionView::Component::VERSION::MINOR
-    refute_nil ::ActionView::Component::VERSION::PATCH
-    assert_kind_of Integer, ::ActionView::Component::VERSION::PATCH
+    refute_nil ::ViewComponent::VERSION::MAJOR
+    assert_kind_of Integer, ::ViewComponent::VERSION::MAJOR
+    refute_nil ::ViewComponent::VERSION::MINOR
+    assert_kind_of Integer, ::ViewComponent::VERSION::MINOR
+    refute_nil ::ViewComponent::VERSION::PATCH
+    assert_kind_of Integer, ::ViewComponent::VERSION::PATCH
 
     version_string = [
-      ::ActionView::Component::VERSION::MAJOR,
-      ::ActionView::Component::VERSION::MINOR,
-      ::ActionView::Component::VERSION::PATCH
+      ::ViewComponent::VERSION::MAJOR,
+      ::ViewComponent::VERSION::MINOR,
+      ::ViewComponent::VERSION::PATCH
     ].join(".")
-    assert_equal version_string, ::ActionView::Component::VERSION::STRING
+    assert_equal version_string, ::ViewComponent::VERSION::STRING
   end
 
   def test_renders_component_with_translations
@@ -315,10 +297,10 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
     assert_no_text("component was rendered")
 
-    exception = assert_raises ActiveModel::ValidationError do
+    exception = assert_raises RuntimeError do
       render_inline(ConditionalRenderComponent.new(should_render: nil))
     end
-    assert_equal exception.message, "Validation failed: Should render is not included in the list"
+    assert_equal exception.message, "should_render wasn't validated!"
   end
 
   def test_render_check
@@ -331,14 +313,6 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
     render_inline(RenderCheckComponent.new)
 
     assert_no_text("Rendered")
-  end
-
-  def test_to_component_class
-    post = Post.new(title: "Awesome post")
-
-    render_inline(post).to_html
-
-    assert_selector("span", text: "The Awesome post component!")
   end
 
   def test_assert_select

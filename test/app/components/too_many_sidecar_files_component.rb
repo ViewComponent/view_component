@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TooManySidecarFilesComponent < ActionView::Component::Base
+class TooManySidecarFilesComponent < ViewComponent::Base
   def initialize(*)
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Primer
-  class StateComponent < ActionView::Component::Base
+  class StateComponent < ViewComponent::Base
     COLOR_CLASS_MAPPINGS = {
       default: "",
       green: "State--green",
@@ -10,8 +10,6 @@ module Primer
     }.freeze
 
     attr_reader :color, :title
-    validates :color, inclusion: {in: COLOR_CLASS_MAPPINGS.keys}
-    validates :title, :content, presence: true
 
     def initialize(color: :default, title:)
       @color, @title = color, title

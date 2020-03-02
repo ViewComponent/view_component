@@ -3,7 +3,7 @@
 require "test_helper"
 require_relative File.expand_path("../../../lib/rails/generators/test_unit/component_generator", __FILE__)
 
-class ActionView::TestUnitGeneratorTest < ::Rails::Generators::TestCase
+class ViewComponent::TestUnitGeneratorTest < ::Rails::Generators::TestCase
   tests TestUnit::Generators::ComponentGenerator
   destination File.expand_path("../tmp", File.dirname(__FILE__))
 

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class SlimComponent < ActionView::Component::Base
-  validates :content, presence: true
-
+class SlimComponent < ViewComponent::Base
   def initialize(message:)
     @message = message
   end

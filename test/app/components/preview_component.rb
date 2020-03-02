@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class PreviewComponent < ActionView::Component::Base
-  validates :title, presence: true
-
+class PreviewComponent < ViewComponent::Base
   def initialize(cta: nil, title:)
     @cta = cta
     @title = title

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class NoFormatComponent < ActionView::Component::Base
+class NoFormatComponent < ViewComponent::Base
   def initialize(*); end
 end

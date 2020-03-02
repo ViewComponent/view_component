@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class VariantsComponent < ActionView::Component::Base
+class VariantsComponent < ViewComponent::Base
   def initialize(*)
   end
 end

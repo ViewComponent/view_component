@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class HelpersProxyComponent < ActionView::Component::Base
+class HelpersProxyComponent < ViewComponent::Base
   def initialize(*); end
 end

@@ -39,7 +39,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/component"
     assert_response :success
 
-    assert_select("div", "Foo\n  bar")
+    assert_select("span", "Foo")
   end
 
   test "rendering component with content_for" do

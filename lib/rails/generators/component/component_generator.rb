@@ -35,7 +35,7 @@ module Rails
       end
 
       def parent_class
-        defined?(ApplicationComponent) ? "ApplicationComponent" : "ActionView::Component::Base"
+        defined?(ApplicationComponent) ? "ApplicationComponent" : "ViewComponent::Base"
       end
 
       def initialize_signature

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-class ButtonToComponent < ActionView::Component::Base
-  validates :content, presence: true
-
+class ButtonToComponent < ViewComponent::Base
   def initialize(*); end
 end
