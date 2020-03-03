@@ -18,7 +18,7 @@ This gem is in the process of a name / API change from `ActionView::Component` t
 1. In `application.rb`, require `view_component/engine`
 1. Update components to inherit from `ViewComponent::Base`.
 1. Update component tests to inherit from `ViewComponent::TestCase`.
-1. Update component previes to inherit from `ViewComponent::Preview`.
+1. Update component previews to inherit from `ViewComponent::Preview`.
 1. Include `ViewComponent::TestHelpers` in your test suite.
 
 ## Roadmap
