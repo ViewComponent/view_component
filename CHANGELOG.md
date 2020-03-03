@@ -1,5 +1,7 @@
 # master
 
+# v1.14.0
+
 * Rename ActionView::Component::Base to ViewComponent::Base
 
     *Joel Hawksley*
