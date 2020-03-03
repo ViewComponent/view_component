@@ -17,7 +17,7 @@ class ViewComponent::TestUnitGeneratorTest < ::Rails::Generators::TestCase
 
   test "generates component" do
     assert_file "../tmp/test/components/dummy_component_test.rb" do |content|
-      assert_match(/render_inline\(DummyComponent, attr: "value"\) { "Hello, components!" }.css\("span"\).to_html/, content)
+      assert_match(/render_inline\(DummyComponent.new\(attr: "value"\)\) { "Hello, components!" }.css\("span"\).to_html/, content)
     end
   end
 end
