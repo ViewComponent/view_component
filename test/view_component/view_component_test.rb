@@ -327,6 +327,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div")
   end
 
+  def test_validations_component
+    exception = assert_raises ActiveModel::ValidationError do
+      render_inline(ValidationsComponent.new)
+    end
+
+    assert_equal exception.message, "Validation failed: Content can't be blank"
+  end
+
   private
 
   def modify_file(file, content)

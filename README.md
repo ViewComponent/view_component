@@ -1,4 +1,4 @@
-# ActionView::Component
+# ViewComponent
 A view component framework for Rails.
 
 **Current Status**: Used in production at GitHub. Because of this, all changes will be thoroughly vetted, which could slow down the process of contributing. We will do our best to actively communicate status of pull requests with any contributors. If you have any substantial changes that you would like to make, it would be great to first [open an issue](http://github.com/github/actionview-component/issues/new) to discuss them with us.
@@ -107,8 +107,6 @@ Component class names end in -`Component`.
 
 Component module names are plural, as they are for controllers. (`Users::AvatarComponent`)
 
-Components support ActiveModel validations. Components are validated after initialization, but before rendering.
-
 Content passed to a `ViewComponent` as a block is captured and assigned to the `content` accessor.
 
 #### Quick start
@@ -144,8 +142,6 @@ A `ViewComponent` is a Ruby file and corresponding template file (in any format 
 `app/components/test_component.rb`:
 ```ruby
 class TestComponent < ViewComponent::Base
-  validates :content, :title, presence: true
-
   def initialize(title:)
     @title = title
   end
@@ -175,20 +171,6 @@ Which returns:
 <span title="my title">Hello, World!</span>
 ```
 
-#### Error case
-
-If the component is rendered with a blank title:
-
-```erb
-<%= render(TestComponent.new(title: "")) do %>
-  Hello, World!
-<% end %>
-```
-
-An error will be raised:
-
-`ActiveModel::ValidationError: Validation failed: Title can't be blank`
-
 #### Content Areas
 
 A component can declare additional content areas to be rendered in the component. For example:
@@ -196,8 +178,6 @@ A component can declare additional content areas to be rendered in the component
 `app/components/modal_component.rb`:
 ```ruby
 class ModalComponent < ViewComponent::Base
-  validates :user, :header, :body, presence: true
-
   with_content_areas :header, :body
 
   def initialize(user:)
@@ -246,8 +226,6 @@ This allows a few different combinations of ways to render the component:
 `app/components/modal_component.rb`:
 ```ruby
 class ModalComponent < ViewComponent::Base
-  validates :header, :body, presence: true
-
   with_content_areas :header, :body
 
   def initialize(header:)
@@ -272,8 +250,6 @@ end
 `app/components/modal_component.rb`:
 ```ruby
 class ModalComponent < ViewComponent::Base
-  validates :header, :body, presence: true
-
   with_content_areas :header, :body
 
   def initialize(header: nil)
@@ -308,8 +284,6 @@ end
 `app/components/modal_component.rb`:
 ```ruby
 class ModalComponent < ViewComponent::Base
-  validates :body, presence: true
-
   with_content_areas :header, :body
 
   def initialize(header: nil)

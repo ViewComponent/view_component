@@ -160,17 +160,17 @@ module ViewComponent
       end
 
       def compile!
-        compile(validate: true)
+        compile(raise_template_errors: true)
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
       # We could in theory do this on app boot, at least in production environments.
       # Right now this just compiles the first time the component is rendered.
-      def compile(validate: false)
+      def compile(raise_template_errors: false)
         return if compiled?
 
         if template_errors.present?
-          raise ViewComponent::TemplateError.new(template_errors) if validate
+          raise ViewComponent::TemplateError.new(template_errors) if raise_template_errors
           return false
         end
 
