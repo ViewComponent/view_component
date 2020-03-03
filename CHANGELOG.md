@@ -1,5 +1,9 @@
 # master
 
+* Fix bug where generator created invalid test code.
+
+    *Joel Hawksley*
+
 # v1.14.0
 
 * Rename ActionView::Component::Base to ViewComponent::Base

@@ -5,7 +5,7 @@ RSpec.describe <%= class_name %>Component, type: :component do
 
   # it "renders something useful" do
   #   expect(
-  #     render_inline(described_class, attr: "value") { "Hello, components!" }.css("p").to_html
+  #     render_inline(described_class.new(attr: "value")) { "Hello, components!" }.css("p").to_html
   #   ).to include(
   #     "Hello, components!"
   #   )
