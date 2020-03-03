@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MissingTemplateComponent < ActionView::Component::Base
+class MissingTemplateComponent < ViewComponent::Base
   def initialize(*)
   end
 end

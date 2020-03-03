@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class AssetComponent < ActionView::Component::Base
+class AssetComponent < ViewComponent::Base
   def initialize(*); end
 end

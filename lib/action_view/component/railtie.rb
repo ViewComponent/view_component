@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-require "action_view/component/engine"
+require "view_component/engine"

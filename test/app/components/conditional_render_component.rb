@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class ConditionalRenderComponent < ActionView::Component::Base
-  validates :should_render, inclusion: { in: [true, false] }
-
+class ConditionalRenderComponent < ViewComponent::Base
   def initialize(should_render:)
     @should_render = should_render
   end

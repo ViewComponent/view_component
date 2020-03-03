@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class UnreferencedComponent < ActionView::Component::Base
+class UnreferencedComponent < ViewComponent::Base
   def initialize(*)
   end
 end

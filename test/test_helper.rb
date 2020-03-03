@@ -3,7 +3,6 @@
 require "bundler/setup"
 require "pp"
 require "pathname"
-require "action_view/component"
 require "minitest/autorun"
 
 # Configure Rails Envinronment

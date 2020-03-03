@@ -15,7 +15,7 @@ class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
   end
 
   def index
-    @previews = ActionView::Component::Preview.all
+    @previews = ViewComponent::Preview.all
     @page_title = "Component Previews"
     # rubocop:disable GitHub/RailsControllerRenderPathsExist
     render "components/index"
@@ -42,16 +42,16 @@ class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
   private
 
   def show_previews? # :doc:
-    ActionView::Component::Base.show_previews
+    ViewComponent::Base.show_previews
   end
 
   def find_preview # :doc:
     candidates = []
     params[:path].to_s.scan(%r{/|$}) { candidates << $` }
-    preview = candidates.detect { |candidate| ActionView::Component::Preview.exists?(candidate) }
+    preview = candidates.detect { |candidate| ViewComponent::Preview.exists?(candidate) }
 
     if preview
-      @preview = ActionView::Component::Preview.find(preview)
+      @preview = ViewComponent::Preview.find(preview)
     else
       raise AbstractController::ActionNotFound, "Component preview '#{params[:path]}' not found"
     end

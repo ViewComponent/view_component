@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RenderCheckComponent < ActionView::Component::Base
+class RenderCheckComponent < ViewComponent::Base
   def initialize(*); end
 
   def render?

@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-class MissingInitializerComponent < ActionView::Component::Base
+class MissingInitializerComponent < ViewComponent::Base
 end

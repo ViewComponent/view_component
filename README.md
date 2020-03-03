@@ -1,11 +1,25 @@
-_Note: This gem is in the process of a name / API change, see https://github.com/github/actionview-component/issues/206_
-
-_You are viewing the README for the development version of ActionView::Component. If you are using the current release version you can find the README at https://github.com/github/actionview-component/blob/v1.11.1/README.md_
-
-# ActionView::Component
-`ActionView::Component` is a framework for building view components in Rails.
+# ViewComponent
+A view component framework for Rails.
 
 **Current Status**: Used in production at GitHub. Because of this, all changes will be thoroughly vetted, which could slow down the process of contributing. We will do our best to actively communicate status of pull requests with any contributors. If you have any substantial changes that you would like to make, it would be great to first [open an issue](http://github.com/github/actionview-component/issues/new) to discuss them with us.
+
+## Migration in progress
+
+This gem is in the process of a name / API change from `ActionView::Component` to `ViewComponent`, see https://github.com/github/actionview-component/issues/206.
+
+### What's changing in the migration
+
+1. `ActionView::Component::Base` is now `ViewComponent::Base`.
+1. Components can only be rendered with `render(MyComponent.new)` syntax.
+1. Validations are no longer supported by default.
+
+### How to migrate to ViewComponent
+
+1. In `application.rb`, require `view_component/engine`
+1. Update components to inherit from `ViewComponent::Base`.
+1. Update component tests to inherit from `ViewComponent::TestCase`.
+1. Update component previews to inherit from `ViewComponent::Preview`.
+1. Include `ViewComponent::TestHelpers` in your test suite.
 
 ## Roadmap
 
@@ -36,14 +50,14 @@ $ bundle
 In `config/application.rb`, add:
 
 ```bash
-require "action_view/component/railtie"
+require "view_component/engine"
 ```
 
 ## Guide
 
 ### What are components?
 
-`ActionView::Component`s are Ruby classes that are used to render views. They take data as input and return output-safe HTML. Think of them as an evolution of the presenter/decorator/view model pattern, inspired by [React Components](https://reactjs.org/docs/react-component.html).
+`ViewComponent`s are Ruby classes that are used to render views. They take data as input and return output-safe HTML. Think of them as an evolution of the presenter/decorator/view model pattern, inspired by [React Components](https://reactjs.org/docs/react-component.html).
 
 ### Why components?
 
@@ -69,11 +83,11 @@ Our views often fail even the most basic standards of code quality we expect out
 
 #### Testing
 
-`ActionView::Component` allows views to be unit-tested. In the main GitHub codebase, our unit tests run in around 25ms/test, vs. ~6s/test for integration tests.
+`ViewComponent` allows views to be unit-tested. In the main GitHub codebase, our unit tests run in around 25ms/test, vs. ~6s/test for integration tests.
 
 #### Code Coverage
 
-`ActionView::Component` is at least partially compatible with code coverage tools. We’ve seen some success with SimpleCov.
+`ViewComponent` is at least partially compatible with code coverage tools. We’ve seen some success with SimpleCov.
 
 #### Data flow
 
@@ -87,19 +101,17 @@ Components are most effective in cases where view code is reused or needs to be 
 
 #### Conventions
 
-Components are subclasses of `ActionView::Component::Base` and live in `app/components`. You may wish to create an `ApplicationComponent` that is a subclass of `ActionView::Component::Base` and inherit from that instead.
+Components are subclasses of `ViewComponent::Base` and live in `app/components`. You may wish to create an `ApplicationComponent` that is a subclass of `ViewComponent::Base` and inherit from that instead.
 
 Component class names end in -`Component`.
 
 Component module names are plural, as they are for controllers. (`Users::AvatarComponent`)
 
-Components support ActiveModel validations. Components are validated after initialization, but before rendering.
-
-Content passed to an `ActionView::Component` as a block is captured and assigned to the `content` accessor.
+Content passed to a `ViewComponent` as a block is captured and assigned to the `content` accessor.
 
 #### Quick start
 
-Use the component generator to create a new `ActionView::Component`.
+Use the component generator to create a new `ViewComponent`.
 
 The generator accepts the component name and the list of accepted properties as arguments:
 
@@ -111,7 +123,7 @@ bin/rails generate component Example title content
       create  app/components/example_component.html.erb
 ```
 
-`ActionView::Component` includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in your Rails config (`config.generators.template_engine`) by default.
+`ViewComponent` includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in your Rails config (`config.generators.template_engine`) by default.
 
 If you want to override this behavior, you can pass the template engine as an option to the generator:
 
@@ -125,13 +137,11 @@ bin/rails generate component Example title content --template-engine slim
 
 #### Implementation
 
-An `ActionView::Component` is a Ruby file and corresponding template file (in any format supported by Rails) with the same base name:
+A `ViewComponent` is a Ruby file and corresponding template file (in any format supported by Rails) with the same base name:
 
 `app/components/test_component.rb`:
 ```ruby
-class TestComponent < ActionView::Component::Base
-  validates :content, :title, presence: true
-
+class TestComponent < ViewComponent::Base
   def initialize(title:)
     @title = title
   end
@@ -161,29 +171,13 @@ Which returns:
 <span title="my title">Hello, World!</span>
 ```
 
-#### Error case
-
-If the component is rendered with a blank title:
-
-```erb
-<%= render(TestComponent.new(title: "")) do %>
-  Hello, World!
-<% end %>
-```
-
-An error will be raised:
-
-`ActiveModel::ValidationError: Validation failed: Title can't be blank`
-
 #### Content Areas
 
 A component can declare additional content areas to be rendered in the component. For example:
 
 `app/components/modal_component.rb`:
 ```ruby
-class ModalComponent < ActionView::Component::Base
-  validates :user, :header, :body, presence: true
-
+class ModalComponent < ViewComponent::Base
   with_content_areas :header, :body
 
   def initialize(user:)
@@ -231,9 +225,7 @@ This allows a few different combinations of ways to render the component:
 
 `app/components/modal_component.rb`:
 ```ruby
-class ModalComponent < ActionView::Component::Base
-  validates :header, :body, presence: true
-
+class ModalComponent < ViewComponent::Base
   with_content_areas :header, :body
 
   def initialize(header:)
@@ -257,9 +249,7 @@ end
 
 `app/components/modal_component.rb`:
 ```ruby
-class ModalComponent < ActionView::Component::Base
-  validates :header, :body, presence: true
-
+class ModalComponent < ViewComponent::Base
   with_content_areas :header, :body
 
   def initialize(header: nil)
@@ -293,9 +283,7 @@ end
 
 `app/components/modal_component.rb`:
 ```ruby
-class ModalComponent < ActionView::Component::Base
-  validates :body, presence: true
-
+class ModalComponent < ViewComponent::Base
   with_content_areas :header, :body
 
   def initialize(header: nil)
@@ -372,7 +360,7 @@ The `#render?` hook allows you to move this logic into the Ruby class, leaving y
 
 ```ruby
 # app/components/confirm_email_component.rb
-class ConfirmEmailComponent < ActionView::Component::Base
+class ConfirmEmailComponent < ViewComponent::Base
   def initialize(user:)
     @user = user
   end
@@ -402,9 +390,9 @@ end
 Components are unit tested directly. The `render_inline` test helper is compatible with Capybara matchers, allowing us to test the component above as:
 
 ```ruby
-require "action_view/component/test_case"
+require "view_component/test_case"
 
-class MyComponentTest < ActionView::Component::TestCase
+class MyComponentTest < ViewComponent::TestCase
   test "render component" do
     render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
 
@@ -430,7 +418,7 @@ end
 ```
 
 ### Previewing Components
-`ActionView::Component::Preview` provides a way to see how components look by visiting a special URL that renders them.
+`ViewComponent::Preview` provides a way to see how components look by visiting a special URL that renders them.
 In the previous example, the preview class for `TestComponent` would be called `TestComponentPreview` and located in `test/components/previews/test_component_preview.rb`.
 To see the preview of the component with a given title, implement a method that renders the component.
 You can define as many examples as you want:
@@ -438,7 +426,7 @@ You can define as many examples as you want:
 ```ruby
 # test/components/previews/test_component_preview.rb
 
-class TestComponentPreview < ActionView::Component::Preview
+class TestComponentPreview < ViewComponent::Preview
   def with_default_title
     render(TestComponent.new(title: "Test component default"))
   end
@@ -457,7 +445,7 @@ Previews use the application layout by default, but you can also use other layou
 ```ruby
 # test/components/previews/test_component_preview.rb
 
-class TestComponentPreview < ActionView::Component::Preview
+class TestComponentPreview < ViewComponent::Preview
   layout "admin"
 
   ...
@@ -488,13 +476,13 @@ If you're using RSpec, you can configure component specs to have access to test 
 `spec/rails_helper.rb`:
 
 ```ruby
-require "action_view/component/test_helpers"
+require "view_component/test_helpers"
 
 RSpec.configure do |config|
     # ...
 
     # Ensure that the test helpers are available in component specs
-    config.include ActionView::Component::TestHelpers, type: :component
+    config.include ViewComponent::TestHelpers, type: :component
 end
 ```
 
@@ -508,7 +496,7 @@ config.action_view_component.preview_path = "#{Rails.root}/spec/components/previ
 
 ### Initializer requirement
 
-ActionView::Component requires the presence of an `initialize` method in each component.
+`ViewComponent` requires the presence of an `initialize` method in each component.
 
 ## Frequently Asked Questions
 
@@ -522,7 +510,7 @@ Inline templates have been removed (for now) due to concerns raised by [@soutaro
 
 ### Isn't this just like X library?
 
-`ActionView::Component` is far from a novel idea! Popular implementations of view components in Ruby include, but are not limited to:
+`ViewComponent` is far from a novel idea! Popular implementations of view components in Ruby include, but are not limited to:
 
 - [trailblazer/cells](https://github.com/trailblazer/cells)
 - [dry-rb/dry-view](https://github.com/dry-rb/dry-view)

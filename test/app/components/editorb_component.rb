@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class EditorbComponent < ActionView::Component::Base
+class EditorbComponent < ViewComponent::Base
   def initialize(*); end
 end

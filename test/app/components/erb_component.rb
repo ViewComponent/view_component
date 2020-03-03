@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class ErbComponent < ActionView::Component::Base
-  validates :content, presence: true
-
+class ErbComponent < ViewComponent::Base
   def initialize(message:)
     @message = message
   end

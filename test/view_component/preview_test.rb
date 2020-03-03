@@ -2,13 +2,13 @@
 
 require "test_helper"
 
-class ActionView::PreviewTest < ActionDispatch::IntegrationTest
+class ViewComponent::PreviewTest < ActionDispatch::IntegrationTest
   def test_preview
     get "/rails/components/preview_component/default"
 
     assert_html_document(
       response.body,
-      "Action View Component - Test",
+      "ViewComponent - Test",
       <<~HTML
         <div class="preview-component">
         <h1>Lorem Ipsum</h1>
@@ -25,7 +25,7 @@ class ActionView::PreviewTest < ActionDispatch::IntegrationTest
 
     assert_html_document(
       response.body,
-      "Action View Component - Admin - Test",
+      "ViewComponent - Admin - Test",
       "<div>hello,world!</div>"
     )
   end

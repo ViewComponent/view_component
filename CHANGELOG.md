@@ -1,5 +1,9 @@
 # master
 
+* Rename ActionView::Component::Base to ViewComponent::Base
+
+    *Joel Hawksley*
+
 # v1.13.0
 
 * Allow components to be rendered inside controllers.

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ExceptionInTemplateComponent < ActionView::Component::Base
+class ExceptionInTemplateComponent < ViewComponent::Base
   def initialize(*)
   end
 end

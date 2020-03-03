@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PreviewComponentPreview < ActionView::Component::Preview
+class PreviewComponentPreview < ViewComponent::Preview
   def default
     render(PreviewComponent.new(cta: "Click me!", title: "Lorem Ipsum"))
   end

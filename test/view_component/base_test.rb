@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ActionView::Component::Base::UnitTest < Minitest::Test
+class ViewComponent::Base::UnitTest < Minitest::Test
   def test_templates_parses_all_types_of_paths
     file_path = [
       "/Users/fake.user/path/to.templates/component/test_component.html+phone.erb",
@@ -15,8 +15,8 @@ class ActionView::Component::Base::UnitTest < Minitest::Test
       {variant: nil, handler: "haml"}
     ]
 
-    ActionView::Component::Base.stub(:matching_views_in_source_location, file_path) do
-      templates = ActionView::Component::Base.send(:templates)
+    ViewComponent::Base.stub(:matching_views_in_source_location, file_path) do
+      templates = ViewComponent::Base.send(:templates)
 
       templates.each_with_index do |template, index|
         assert_equal(template[:path], file_path[index])

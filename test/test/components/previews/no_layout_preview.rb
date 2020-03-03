@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class NoLayoutPreview < ActionView::Component::Preview
+class NoLayoutPreview < ViewComponent::Preview
   layout false
 
   def default
-    render(MyComponent)
+    render(MyComponent.new)
   end
 end
