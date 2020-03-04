@@ -1,5 +1,6 @@
 Name: Dave Paola
-Github Handle: @dpaola2
+
+Github Handle: [@dpaola2](https://github.com/dpaola2)
 
 [Jellyswitch](https://www.jellyswitch.com) is a coworking space management platform
 
