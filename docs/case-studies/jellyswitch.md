@@ -1,3 +1,8 @@
+Name: Dave Paola
+Github Handle: @dpaola2
+
+[Jellyswitch](https://www.jellyswitch.com) is a coworking space management platform
+
 In response to [this tweet](https://twitter.com/joelhawksley/status/1232674647327547394):
 
 I recently began refactoring many of my partials into components. Along the way I discovered an interesting use case, which was to componentize the various bootstrap components I was already using.
