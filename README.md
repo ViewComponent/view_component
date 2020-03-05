@@ -33,7 +33,7 @@ This library is designed to integrate as seamlessly as possible with Rails, with
 
 ## Compatibility
 
-`actionview-component` is tested for compatibility with combinations of Ruby `2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`6.1.0.alpha`.
+`actionview-component` is tested for compatibility with combinations of Ruby `2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`master`.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -61,11 +61,9 @@ require "view_component/engine"
 
 ### Why components?
 
-In working on views in the Rails monolith at GitHub (which has over 3700 templates), we have run into several key pain points:
-
 #### Testing
 
-Currently, Rails encourages testing views via integration or system tests. This discourages us from testing our views thoroughly, due to the costly overhead of exercising the routing/controller layer, instead of just the view. It also often leads to partials being tested for each view they are included in, cheapening the benefit of DRYing up our views.
+Rails encourages testing views with integration tests. This discourages us from testing our views thoroughly, due to the costly overhead of exercising the routing/controller layer, instead of just the view. It often leads to partials being tested for each view they are included in, reducing their benefit.
 
 #### Code Coverage
 
@@ -73,17 +71,17 @@ Many common Ruby code coverage tools cannot properly handle coverage of views, m
 
 #### Data Flow
 
-Unlike a method declaration on an object, views do not declare the values they are expected to receive, making it hard to figure out what context is necessary to render them. This often leads to subtle bugs when we reuse a view across different contexts.
+Unlike a method declaration on an object, views do not declare the values they are expected to receive, making it hard to figure out what context is necessary to render them. This often leads to subtle bugs when reusing a view in different contexts.
 
 #### Standards
 
-Our views often fail even the most basic standards of code quality we expect out of our Ruby classes: long methods, deep conditional nesting, and mystery guests abound.
+Views often fail the basic standards of code quality we expect out of our Ruby classes: long methods, deep conditional nesting, and mystery guests abound.
 
 ### What are the benefits?
 
 #### Testing
 
-`ViewComponent` allows views to be unit-tested. In the main GitHub codebase, our unit tests run in around 25ms/test, vs. ~6s/test for integration tests.
+`ViewComponent`s can be unit-tested. In theGitHub codebase, our component unit tests run in around 25 milliseconds, compared to around six seconds for integration tests.
 
 #### Code Coverage
 
@@ -95,7 +93,7 @@ By clearly defining the context necessary to render a component, we’ve found t
 
 ### When should I use components?
 
-Components are most effective in cases where view code is reused or needs to be tested directly.
+Components are most effective in cases where view code is reused or benefits from being tested directly.
 
 ### Building components
 
@@ -123,21 +121,17 @@ bin/rails generate component Example title content
       create  app/components/example_component.html.erb
 ```
 
-`ViewComponent` includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in your Rails config (`config.generators.template_engine`) by default.
+`ViewComponent` includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in your Rails configuration (`config.generators.template_engine`) by default.
 
-If you want to override this behavior, you can pass the template engine as an option to the generator:
+You can also pass the template engine as an option to the generator:
 
 ```bash
 bin/rails generate component Example title content --template-engine slim
-      invoke test_unit
-      create  test/components/example_component_test.rb
-      create  app/components/example_component.rb
-      create  app/components/example_component.html.slim
 ```
 
 #### Implementation
 
-A `ViewComponent` is a Ruby file and corresponding template file (in any format supported by Rails) with the same base name:
+A `ViewComponent` is a Ruby file and corresponding template file with the same base name:
 
 `app/components/test_component.rb`:
 ```ruby
@@ -145,16 +139,12 @@ class TestComponent < ViewComponent::Base
   def initialize(title:)
     @title = title
   end
-
-  private
-
-  attr_reader :title
 end
 ```
 
 `app/components/test_component.html.erb`:
 ```erb
-<span title="<%= title %>"><%= content %></span>
+<span title="<%= @title %>"><%= content %></span>
 ```
 
 We can render it in a view as:
@@ -180,11 +170,8 @@ A component can declare additional content areas to be rendered in the component
 class ModalComponent < ViewComponent::Base
   with_content_areas :header, :body
 
-  def initialize(user:)
-    @user = user
+  def initialize(*)
   end
-
-  attr_reader :user
 end
 ```
 
@@ -199,9 +186,9 @@ end
 We can render it in a view as:
 
 ```erb
-<%= render(ModalComponent.new(user: {name: 'Jane'})) do |component| %>
+<%= render(ModalComponent.new) do |component| %>
   <% component.with(:header) do %>
-      Hello <%= component.user[:name] %>
+      Hello Jane
     <% end %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
@@ -218,128 +205,14 @@ Which returns:
 </div>
 ```
 
-Content for content areas can be passed as arguments to the render method or as named blocks passed to the `with` method.
-This allows a few different combinations of ways to render the component:
-
-##### Required render argument optionally overridden or wrapped by a named block
-
-`app/components/modal_component.rb`:
-```ruby
-class ModalComponent < ViewComponent::Base
-  with_content_areas :header, :body
-
-  def initialize(header:)
-    @header = header
-  end
-end
-```
-
-```erb
-<%= render(ModalComponent.new(header: "Hi!")) do |component| %>
-  <% component.with(:header) do %>
-    <span class="help_icon"><%= component.header %></span>
-  <% end %>
-  <% component.with(:body) do %>
-    <p>Have a great day.</p>
-  <% end %>
-<% end %>
-```
-
-##### Required argument passed by render argument or by named block
-
-`app/components/modal_component.rb`:
-```ruby
-class ModalComponent < ViewComponent::Base
-  with_content_areas :header, :body
-
-  def initialize(header: nil)
-    @header = header
-  end
-end
-```
-
-`app/views/render_arg.html.erb`:
-```erb
-<%= render(ModalComponent.new(header: "Hi!")) do |component| %>
-  <% component.with(:body) do %>
-    <p>Have a great day.</p>
-  <% end %>
-<% end %>
-```
-
-`app/views/with_block.html.erb`:
-```erb
-<%= render(ModalComponent) do |component| %>
-  <% component.with(:header) do %>
-    <span class="help_icon">Hello</span>
-  <% end %>
-  <% component.with(:body) do %>
-    <p>Have a great day.</p>
-  <% end %>
-<% end %>
-```
-
-##### Optional argument passed by render argument, by named block, or neither
-
-`app/components/modal_component.rb`:
-```ruby
-class ModalComponent < ViewComponent::Base
-  with_content_areas :header, :body
-
-  def initialize(header: nil)
-    @header = header
-  end
-end
-```
-
-`app/components/modal_component.html.erb`:
-```erb
-<div class="modal">
-  <% if header %>
-    <div class="header"><%= header %></div>
-  <% end %>
-  <div class="body"><%= body %></div>
-</div>
-```
-
-`app/views/render_arg.html.erb`:
-```erb
-<%= render(ModalComponent.new(header: "Hi!")) do |component| %>
-  <% component.with(:body) do %>
-    <p>Have a great day.</p>
-  <% end %>
-<% end %>
-```
-
-`app/views/with_block.html.erb`:
-```erb
-<%= render(ModalComponent.new) do |component| %>
-  <% component.with(:header) do %>
-    <span class="help_icon">Hello</span>
-  <% end %>
-  <% component.with(:body) do %>
-    <p>Have a great day.</p>
-  <% end %>
-<% end %>
-```
-
-`app/views/no_header.html.erb`:
-```erb
-<%= render(ModalComponent.new) do |component| %>
-  <% component.with(:body) do %>
-    <p>Have a great day.</p>
-  <% end %>
-<% end %>
-```
-
 ### Conditional Rendering
 
-Components can implement a `#render?` method which indicates if they should be rendered, or not at all.
+Components can implement a `#render?` method to determine if they should be rendered.
 
-For example, you might have a component that displays a "Please confirm your email address" banner to users who haven't confirmed their email address. The logic for rendering the banner would need to go in either the component template:
+For example, given a component that displays a banner to users who haven't confirmed their email address, the logic for whether to render the banner would need to go in either the component template:
 
+`app/components/confirm_email_component.html.erb`
 ```
-<!-- app/components/confirm_email_component.html.erb -->
 <% if user.requires_confirmation? %>
   <div class="alert">
     Please confirm your email address.
@@ -349,17 +222,17 @@ For example, you might have a component that displays a "Please confirm your ema
 
 or the view that renders the component:
 
+`app/views/_banners.html.erb`
 ```erb
-<!-- app/views/_banners.html.erb -->
 <% if current_user.requires_confirmation? %>
   <%= render(ConfirmEmailComponent.new(user: current_user)) %>
 <% end %>
 ```
 
-The `#render?` hook allows you to move this logic into the Ruby class, leaving your views more readable and declarative in style:
+Instead, the `#render?` hook expresses this logic in the Ruby class, simplifying the view:
 
+`app/components/confirm_email_component.rb`
 ```ruby
-# app/components/confirm_email_component.rb
 class ConfirmEmailComponent < ViewComponent::Base
   def initialize(user:)
     @user = user
@@ -368,26 +241,24 @@ class ConfirmEmailComponent < ViewComponent::Base
   def render?
     @user.requires_confirmation?
   end
-
-  attr_reader :user
 end
 ```
 
+`app/components/confirm_email_component.html.erb`
 ```
-<!-- app/components/confirm_email_component.html.erb -->
 <div class="banner">
   Please confirm your email address.
 </div>
 ```
 
+`app/views/_banners.html.erb`
 ```erb
-<!-- app/views/_banners.html.erb -->
 <%= render(ConfirmEmailComponent.new(user: current_user)) %>
 ```
 
 ### Testing
 
-Components are unit tested directly. The `render_inline` test helper is compatible with Capybara matchers, allowing us to test the component above as:
+Components are unit tested directly. The `render_inline` test helper is compatible with Capybara matchers:
 
 ```ruby
 require "view_component/test_case"
