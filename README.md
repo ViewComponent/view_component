@@ -7,6 +7,7 @@ A view component framework for Rails.
 
 This gem is in the process of a name / API change from `ActionView::Component` to `ViewComponent`, see https://github.com/github/view-component/issues/206.
 
+
 ### What's changing in the migration
 
 1. `ActionView::Component::Base` is now `ViewComponent::Base`.
