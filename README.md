@@ -1,11 +1,11 @@
 # ViewComponent
 A view component framework for Rails.
 
-**Current Status**: Used in production at GitHub. Because of this, all changes will be thoroughly vetted, which could slow down the process of contributing. We will do our best to actively communicate status of pull requests with any contributors. If you have any substantial changes that you would like to make, it would be great to first [open an issue](http://github.com/github/view-component/issues/new) to discuss them with us.
+**Current Status**: Used in production at GitHub. Because of this, all changes will be thoroughly vetted, which could slow down the process of contributing. We will do our best to actively communicate status of pull requests with any contributors. If you have any substantial changes that you would like to make, it would be great to first [open an issue](http://github.com/github/view_component/issues/new) to discuss them with us.
 
 ## Migration in progress
 
-This gem is in the process of a name / API change from `ActionView::Component` to `ViewComponent`, see https://github.com/github/view-component/issues/206.
+This gem is in the process of a name / API change from `ActionView::Component` to `ViewComponent`, see https://github.com/github/view_component/issues/206.
 
 ### What's changing in the migration
 
@@ -527,7 +527,7 @@ Inline templates have been removed (for now) due to concerns raised by [@soutaro
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/github/view-component. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct. We recommend reading the [contributing guide](./CONTRIBUTING.md) as well.
+Bug reports and pull requests are welcome on GitHub at https://github.com/github/view_component. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct. We recommend reading the [contributing guide](./CONTRIBUTING.md) as well.
 
 ## Contributors
 

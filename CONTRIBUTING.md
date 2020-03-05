@@ -1,7 +1,7 @@
 # Contributing
 
-[fork]: https://github.com/github/view-component/fork
-[pr]: https://github.com/github/view-component/compare
+[fork]: https://github.com/github/view_component/fork
+[pr]: https://github.com/github/view_component/compare
 [style]: https://github.com/styleguide/ruby
 [code-of-conduct]: CODE_OF_CONDUCT.md
 
@@ -38,9 +38,9 @@ If you are the current maintainer of this gem:
 1. Add version heading/entries to `CHANGELOG.md`.
 1. Make sure your local dependencies are up to date: `bundle`
 1. Ensure that tests are green: `bundle exec rake`
-1. Make a PR to github/view-component.
+1. Make a PR to github/view_component.
 1. Build a local gem: `gem build actionview-component.gemspec`
-1. Merge github/view-component PR
+1. Merge github/view_component PR
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
-1. Create a GitHub release with the pushed tag (https://github.com/github/view-component/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]`
+1. Create a GitHub release with the pushed tag (https://github.com/github/view_component/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]`
 1. Push to rubygems.org -- `gem push actionview-component-VERSION.gem`

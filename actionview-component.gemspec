@@ -9,11 +9,11 @@ Gem::Specification.new do |spec|
   spec.name          = "actionview-component"
   spec.version       = ViewComponent::VERSION::STRING
   spec.authors       = ["GitHub Open Source"]
-  spec.email         = ["opensource+view-component@github.com"]
+  spec.email         = ["opensource+view_component@github.com"]
 
   spec.summary       = %q{View components for Rails}
   spec.description   = %q{View components for Rails}
-  spec.homepage      = "https://github.com/github/view-component"
+  spec.homepage      = "https://github.com/github/view_component"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
