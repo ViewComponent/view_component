@@ -151,7 +151,11 @@ module ViewComponent
             # Require `#initialize` to be defined so that we can use `method#source_location`
             # to look up the filename of the component.
             initialize_method = instance_method(:initialize)
-            initialize_method.source_location[0] if initialize_method.owner == self
+            if initialize_method.owner == self
+              initialize_method.source_location[0]
+            else
+              instance_methods(false).map { |m| instance_method(m).source_location[0] }.first
+            end
           end
       end
 
