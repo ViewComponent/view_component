@@ -81,7 +81,7 @@ Views often fail basic Ruby code quality standards: long methods, deep condition
 
 #### Code Coverage
 
-Many common Ruby code coverage tools cannot properly handle coverage of views, making it difficult to audit how thorough tests are and leading missing coverage in test suites.
+Many common Ruby code coverage tools cannot properly handle coverage of views, making it difficult to audit how thorough tests are and leading to missing coverage in test suites.
 
 `ViewComponent` is at least partially compatible with code coverage tools, such as SimpleCov.
 
