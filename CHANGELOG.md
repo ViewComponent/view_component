@@ -1,5 +1,9 @@
 # master
 
+* Bypass monkey patch on Rails 6.1 builds.
+
+    *Joel Hawksley*
+
 # v1.14.1
 
 * Fix bug where generator created invalid test code.
