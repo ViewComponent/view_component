@@ -161,6 +161,8 @@ Which returns:
 <span title="my title">Hello, World!</span>
 ```
 
+`ViewComponent` requires the presence of an `initialize` method in each component.
+
 #### Content Areas
 
 A component can declare additional content areas to be rendered in the component. For example:
@@ -258,7 +260,7 @@ end
 
 ### Testing
 
-Components are unit tested directly. The `render_inline` test helper is compatible with Capybara matchers:
+Unit test components directly, using the `render_inline` test helper and Capybara matchers:
 
 ```ruby
 require "view_component/test_case"
@@ -272,11 +274,9 @@ class MyComponentTest < ViewComponent::TestCase
 end
 ```
 
-In general, we’ve found it makes the most sense to test components based on their rendered HTML.
-
 #### Action Pack Variants
 
-To test a specific variant you can wrap your test with the `with_variant` helper method as:
+Use the `with_variant` helper to test specific variants:
 
 ```ruby
 test "render component for tablet" do
@@ -289,14 +289,10 @@ end
 ```
 
 ### Previewing Components
-`ViewComponent::Preview` provides a way to see how components look by visiting a special URL that renders them.
-In the previous example, the preview class for `TestComponent` would be called `TestComponentPreview` and located in `test/components/previews/test_component_preview.rb`.
-To see the preview of the component with a given title, implement a method that renders the component.
-You can define as many examples as you want:
+`ViewComponent::Preview`, like `ActionMailer::Preview`, provides a way to preview components in isolation:
 
+`test/components/previews/test_component_preview.rb`
 ```ruby
-# test/components/previews/test_component_preview.rb
-
 class TestComponentPreview < ViewComponent::Preview
   def with_default_title
     render(TestComponent.new(title: "Test component default"))
@@ -308,14 +304,13 @@ class TestComponentPreview < ViewComponent::Preview
 end
 ```
 
-The previews will be available in <http://localhost:3000/rails/components/test_component/with_default_title>
+Which generates <http://localhost:3000/rails/components/test_component/with_default_title>
 and <http://localhost:3000/rails/components/test_component/with_long_title>.
 
-Previews use the application layout by default, but you can also use other layouts from your app:
+Previews default to the application layout, but can be overridden:
 
+`test/components/previews/test_component_preview.rb`
 ```ruby
-# test/components/previews/test_component_preview.rb
-
 class TestComponentPreview < ViewComponent::Preview
   layout "admin"
 
@@ -323,51 +318,45 @@ class TestComponentPreview < ViewComponent::Preview
 end
 ```
 
-By default, the preview classes live in `test/components/previews`.
-This can be configured using the `preview_path` option.
-For example, if you want to use `lib/component_previews`, set the following in `config/application.rb`:
+Preview classes live in `test/components/previews`, can be configured using the `preview_path` option.
 
+To use `lib/component_previews`:
+
+`config/application.rb`
 ```ruby
 config.action_view_component.preview_path = "#{Rails.root}/lib/component_previews"
 ```
 
 #### Configuring TestController
 
-By default components tests and previews expect your Rails project to contain an `ApplicationController` class from which Controller classes inherit.
-This can be configured using the `test_controller` option.
-For example, if your controllers inherit from `BaseController`, set the following in `config/application.rb`:
+Component tests and previews assume the existence of an `ApplicationController` class, be can beconfigured using the `test_controller` option:
 
+`config/application.rb`
 ```ruby
 config.action_view_component.test_controller = "BaseController"
 ```
 
 ### Setting up RSpec
 
-If you're using RSpec, you can configure component specs to have access to test helpers. Add the following to
-`spec/rails_helper.rb`:
+To use RSpec, add the following:
 
+`spec/rails_helper.rb`
 ```ruby
 require "view_component/test_helpers"
 
 RSpec.configure do |config|
-    # ...
-
-    # Ensure that the test helpers are available in component specs
-    config.include ViewComponent::TestHelpers, type: :component
+  config.include ViewComponent::TestHelpers, type: :component
 end
 ```
 
-Specs created by the generator should now have access to test helpers like `render_inline`.
+Specs created by the generator have access to test helpers like `render_inline`.
 
-To use component previews, set the following in `config/application.rb`:
+To use component previews:
 
+`config/application.rb`
 ```ruby
 config.action_view_component.preview_path = "#{Rails.root}/spec/components/previews"
 ```
-
-### Initializer requirement
-
-`ViewComponent` requires the presence of an `initialize` method in each component.
 
 ## Frequently Asked Questions
 
