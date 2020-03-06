@@ -19,7 +19,7 @@ This gem is in the process of a name / API change from `ActionView::Component` t
 1. Update components to inherit from `ViewComponent::Base`.
 1. Update component tests to inherit from `ViewComponent::TestCase`.
 1. Update component previews to inherit from `ViewComponent::Preview`.
-2. Include `ViewComponent::TestHelpers` in the appropriate test helper file.
+1. Include `ViewComponent::TestHelpers` in the appropriate test helper file.
 
 ## Roadmap
 
@@ -36,15 +36,11 @@ This library is designed to integrate as seamlessly as possible with Rails, with
 `actionview-component` is tested for compatibility with combinations of Ruby `2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`master`.
 
 ## Installation
-Add this line to `Gemfile`:
+
+In `Gemfile`, add:
 
 ```ruby
 gem "actionview-component"
-```
-
-And then execute:
-```bash
-$ bundle
 ```
 
 In `config/application.rb`, add:
@@ -59,41 +55,35 @@ require "view_component/engine"
 
 `ViewComponent`s are Ruby classes that are used to render views. They take data as input and return output-safe HTML. Think of them as an evolution of the presenter/decorator/view model pattern, inspired by [React Components](https://reactjs.org/docs/react-component.html).
 
-### Why components?
+Components are most effective in cases where view code is reused or benefits from being tested directly.
+
+### Why should I use components?
 
 #### Testing
 
-Rails encourages testing views with integration tests. This discourages us from testing views thoroughly, due to the costly overhead of exercising the routing/controller layer, instead of just the view. It often leads to partials being tested for each view they are included in, reducing their benefit.
+Rails encourages testing views with integration tests. This discourages us from testing views thoroughly, due to the overhead of exercising the routing and controller layers in addition to the view.
 
-#### Code Coverage
+For partials, this means being tested for each view they are included in, reducing the benefit of reusing them.
 
-Many common Ruby code coverage tools cannot properly handle coverage of views, making it difficult to audit how thorough tests are and leading missing coverage in test suites.
+`ViewComponent`s can be unit-tested. In the GitHub codebase, our component unit tests run in around 25 milliseconds, compared to about six seconds for integration tests.
 
 #### Data Flow
 
 Unlike a method declaration on an object, views do not declare the values they are expected to receive, making it hard to figure out what context is necessary to render them. This often leads to subtle bugs when reusing a view in different contexts.
 
+By clearly defining the context necessary to render a `ViewComponent`, they're easier to reuse than partials.
+
 #### Standards
 
-Views often fail the basic standards of code quality expected out of Ruby classes: long methods, deep conditional nesting, and mystery guests abound.
+Views often fail basic Ruby code quality standards: long methods, deep conditional nesting, and mystery guests abound.
 
-### What are the benefits?
-
-#### Testing
-
-`ViewComponent`s can be unit-tested. In the GitHub codebase, our component unit tests run in around 25 milliseconds, compared to about six seconds for integration tests.
+`ViewComponent`s are Ruby objects, making it easy to follow code quality standards.
 
 #### Code Coverage
 
+Many common Ruby code coverage tools cannot properly handle coverage of views, making it difficult to audit how thorough tests are and leading missing coverage in test suites.
+
 `ViewComponent` is at least partially compatible with code coverage tools, such as SimpleCov.
-
-#### Data flow
-
-By clearly defining the context necessary to render a component, they're easier to reuse than partials.
-
-### When should I use components?
-
-Components are most effective in cases where view code is reused or benefits from being tested directly.
 
 ### Building components
 
