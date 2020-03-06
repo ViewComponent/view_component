@@ -19,7 +19,7 @@ This gem is in the process of a name / API change from `ActionView::Component` t
 1. Update components to inherit from `ViewComponent::Base`.
 1. Update component tests to inherit from `ViewComponent::TestCase`.
 1. Update component previews to inherit from `ViewComponent::Preview`.
-1. Include `ViewComponent::TestHelpers` in your test suite.
+2. Include `ViewComponent::TestHelpers` in the appropriate test helper file.
 
 ## Roadmap
 
@@ -36,7 +36,7 @@ This library is designed to integrate as seamlessly as possible with Rails, with
 `actionview-component` is tested for compatibility with combinations of Ruby `2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`master`.
 
 ## Installation
-Add this line to your application's Gemfile:
+Add this line to `Gemfile`:
 
 ```ruby
 gem "actionview-component"
@@ -63,11 +63,11 @@ require "view_component/engine"
 
 #### Testing
 
-Rails encourages testing views with integration tests. This discourages us from testing our views thoroughly, due to the costly overhead of exercising the routing/controller layer, instead of just the view. It often leads to partials being tested for each view they are included in, reducing their benefit.
+Rails encourages testing views with integration tests. This discourages us from testing views thoroughly, due to the costly overhead of exercising the routing/controller layer, instead of just the view. It often leads to partials being tested for each view they are included in, reducing their benefit.
 
 #### Code Coverage
 
-Many common Ruby code coverage tools cannot properly handle coverage of views, making it difficult to audit how thorough our tests are and leading to gaps in our test suite.
+Many common Ruby code coverage tools cannot properly handle coverage of views, making it difficult to audit how thorough tests are and leading missing coverage in test suites.
 
 #### Data Flow
 
@@ -75,21 +75,21 @@ Unlike a method declaration on an object, views do not declare the values they a
 
 #### Standards
 
-Views often fail the basic standards of code quality we expect out of our Ruby classes: long methods, deep conditional nesting, and mystery guests abound.
+Views often fail the basic standards of code quality expected out of Ruby classes: long methods, deep conditional nesting, and mystery guests abound.
 
 ### What are the benefits?
 
 #### Testing
 
-`ViewComponent`s can be unit-tested. In theGitHub codebase, our component unit tests run in around 25 milliseconds, compared to around six seconds for integration tests.
+`ViewComponent`s can be unit-tested. In the GitHub codebase, our component unit tests run in around 25 milliseconds, compared to about six seconds for integration tests.
 
 #### Code Coverage
 
-`ViewComponent` is at least partially compatible with code coverage tools. We’ve seen some success with SimpleCov.
+`ViewComponent` is at least partially compatible with code coverage tools, such as SimpleCov.
 
 #### Data flow
 
-By clearly defining the context necessary to render a component, we’ve found them to be easier to reuse than partials.
+By clearly defining the context necessary to render a component, they're easier to reuse than partials.
 
 ### When should I use components?
 
@@ -99,7 +99,7 @@ Components are most effective in cases where view code is reused or benefits fro
 
 #### Conventions
 
-Components are subclasses of `ViewComponent::Base` and live in `app/components`. You may wish to create an `ApplicationComponent` that is a subclass of `ViewComponent::Base` and inherit from that instead.
+Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's recommended to create an `ApplicationComponent` that is a subclass of `ViewComponent::Base` and inherit from that instead.
 
 Component class names end in -`Component`.
 
@@ -121,9 +121,9 @@ bin/rails generate component Example title content
       create  app/components/example_component.html.erb
 ```
 
-`ViewComponent` includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in your Rails configuration (`config.generators.template_engine`) by default.
+`ViewComponent` includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in the Rails configuration (`config.generators.template_engine`) by default.
 
-You can also pass the template engine as an option to the generator:
+The template engine can also be passed as an option to the generator:
 
 ```bash
 bin/rails generate component Example title content --template-engine slim
@@ -147,7 +147,7 @@ end
 <span title="<%= @title %>"><%= content %></span>
 ```
 
-We can render it in a view as:
+Which is rendered in a view as:
 
 ```erb
 <%= render(TestComponent.new(title: "my title")) do %>
@@ -185,7 +185,7 @@ end
 </div>
 ```
 
-We can render it in a view as:
+Which is rendered in a view as:
 
 ```erb
 <%= render(ModalComponent.new) do |component| %>
