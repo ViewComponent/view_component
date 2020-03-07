@@ -145,6 +145,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "some content"
   end
 
+  test "renders preview component with tag helper-generated content preview" do
+    get "/rails/components/preview_component/with_tag_helper_in_content"
+
+    assert_includes response.body, "<span>some content</span>"
+  end
+
   test "renders badge component open preview" do
     get "/rails/components/issues/badge_component/open"
 

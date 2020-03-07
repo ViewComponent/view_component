@@ -4,6 +4,7 @@ require "active_support/descendants_tracker"
 
 module ViewComponent # :nodoc:
   class Preview
+    include ActionView::Helpers::TagHelper
     extend ActiveSupport::DescendantsTracker
 
     def render(component, **args, &block)
