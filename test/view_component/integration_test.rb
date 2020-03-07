@@ -156,12 +156,4 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_includes response.body, "Closed"
   end
-
-  test "compiles unreferenced component" do
-    assert UnreferencedComponent.compiled?
-  end
-
-  test "does not compile components without initializers" do
-    assert !MissingInitializerComponent.compiled?
-  end
 end

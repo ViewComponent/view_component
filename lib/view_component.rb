@@ -12,8 +12,9 @@ module ViewComponent
   autoload :TestHelpers
   autoload :TestCase
   autoload :RenderMonkeyPatch
+  autoload :Rendering
   autoload :RenderingMonkeyPatch
-  autoload :TemplateError
+  autoload :ViewPaths
 end
 
 module ActionView

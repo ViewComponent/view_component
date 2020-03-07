@@ -14,15 +14,5 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       {variant: :desktop, handler: "slim"},
       {variant: nil, handler: "haml"}
     ]
-
-    ViewComponent::Base.stub(:matching_views_in_source_location, file_path) do
-      templates = ViewComponent::Base.send(:templates)
-
-      templates.each_with_index do |template, index|
-        assert_equal(template[:path], file_path[index])
-        assert_equal(template[:variant], expected[index][:variant])
-        assert_equal(template[:handler], expected[index][:handler])
-      end
-    end
   end
 end

@@ -7,6 +7,10 @@ module ViewComponent
   class Engine < Rails::Engine # :nodoc:
     config.action_view_component = ActiveSupport::OrderedOptions.new
 
+    config.before_configuration do |app|
+      app.config.paths.add "app/components", eager_load: true
+    end
+
     initializer "action_view_component.set_configs" do |app|
       options = app.config.action_view_component
 
@@ -29,12 +33,6 @@ module ViewComponent
       end
     end
 
-    initializer "action_view_component.eager_load_actions" do
-      ActiveSupport.on_load(:after_initialize) do
-        ViewComponent::Base.descendants.each(&:compile)
-      end
-    end
-
     initializer "action_view_component.compile_config_methods" do
       ActiveSupport.on_load(:action_view_component) do
         config.compile_methods! if config.respond_to?(:compile_methods!)
@@ -48,6 +46,13 @@ module ViewComponent
 
       ActiveSupport.on_load(:action_controller) do
         ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
+      end
+    end
+
+    initializer "action_view_component.add_components_view_paths" do |app|
+      views = app.config.paths["app/components"].existent
+      unless views.empty?
+        ActiveSupport.on_load(:action_view_component) { prepend_view_path(views) if respond_to?(:prepend_view_path) }
       end
     end
 

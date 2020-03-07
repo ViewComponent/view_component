@@ -15,6 +15,8 @@ require "slim"
 module Dummy
   class Application < Rails::Application
     config.action_controller.asset_host = "http://assets.example.com"
+
+    ViewComponent::Base.append_view_path Rails.root.join("app/lib")
   end
 end
 

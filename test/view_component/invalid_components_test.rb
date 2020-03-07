@@ -1,32 +1,26 @@
 # frozen_string_literal: true
 
 class ActionView::InvalidComponentTest < ViewComponent::TestCase
-  def test_raises_error_when_initializer_is_not_defined
-    exception = assert_raises ViewComponent::TemplateError do
-      render_inline(MissingInitializerComponent.new)
-    end
-
-    assert_includes exception.message, "must implement #initialize"
-  end
-
   def test_raises_error_when_sidecar_template_is_missing
-    exception = assert_raises ViewComponent::TemplateError do
+    exception = assert_raises ActionView::MissingTemplate do
       render_inline(MissingTemplateComponent.new)
     end
 
-    assert_includes exception.message, "Could not find a template file for MissingTemplateComponent"
+    assert_includes exception.message, "Missing template /missing_template_component"
   end
 
+  # FIXME: this is manage by ActionView now
   def test_raises_error_when_more_than_one_sidecar_template_is_present
-    error = assert_raises ViewComponent::TemplateError do
+    error = assert_raises ActionView::MissingTemplate do
       render_inline(TooManySidecarFilesComponent.new)
     end
 
     assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
   end
 
+  # FIXME: this is manage by ActionView now
   def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
-    error = assert_raises ViewComponent::TemplateError do
+    error = assert_raises ActionView::MissingTemplate do
       render_inline(TooManySidecarFilesForVariantComponent.new)
     end
 
@@ -34,7 +28,7 @@ class ActionView::InvalidComponentTest < ViewComponent::TestCase
   end
 
   def test_backtrace_returns_correct_file_and_line_number
-    error = assert_raises NameError do
+    error = assert_raises ActionView::Template::Error do
       render_inline(ExceptionInTemplateComponent.new)
     end
 
