@@ -1,5 +1,9 @@
 # master
 
+* Re-introduce ActionView::Component::TestHelpers
+
+    *Joel Hawksley*
+
 * Bypass monkey patch on Rails 6.1 builds.
 
     *Joel Hawksley*

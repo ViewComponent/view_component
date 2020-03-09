@@ -23,6 +23,7 @@ module ActionView
     autoload :Base
     autoload :Preview
     autoload :TestCase
+    autoload :TestHelpers
   end
 end
 

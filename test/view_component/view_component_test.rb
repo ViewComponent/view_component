@@ -9,12 +9,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
-  def test_render_inline_with_old_helper
-    render_component(MyComponent.new)
-
-    assert_selector("div", text: "hello,world!")
-  end
-
   def test_renders_content_from_block
     render_inline(WrapperComponent.new) do
       "content"
