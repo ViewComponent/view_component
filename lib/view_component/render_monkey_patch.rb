@@ -3,7 +3,7 @@
 module ViewComponent
   module RenderMonkeyPatch # :nodoc:
     def render(options = {}, args = {}, &block)
-      if options.respond_to?(:render_in)
+      if options.respond_to?(:render_in) && Rails.version.to_f < 6.1
         options.render_in(self, &block)
       elsif options.is_a?(Class) && options < ActionView::Component::Base
         ActiveSupport::Deprecation.warn(
