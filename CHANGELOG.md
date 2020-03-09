@@ -1,5 +1,9 @@
 # master
 
+* Re-introduce ActionView::Component::TestHelpers
+
+    *Joel Hawksley*
+
 * Make `ActionView::Helpers::TagHelper` available in Previews
 
     def with_html_content

@@ -2,7 +2,8 @@
 
 module ActionView
   module Component
-    class TestCase < ViewComponent::TestCase
+    class TestCase
+      include ActionView::Component::TestHelpers
     end
   end
 end

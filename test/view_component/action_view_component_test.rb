@@ -37,4 +37,10 @@ class ActionView::ComponentTest < ActionView::Component::TestCase
 
     assert_selector("span", text: "The Awesome post component!")
   end
+
+  def test_render_inline_with_old_helper
+    render_component(ActionViewComponent.new)
+
+    assert_selector("div", text: "hello,world!")
+  end
 end
