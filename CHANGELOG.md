@@ -1,5 +1,9 @@
 # master
 
+* Bypass monkey patch on Rails 6.1 builds.
+
+    *Joel Hawksley*
+    
 * Make `ActionView::Helpers::TagHelper` available in Previews
 
     def with_html_content
