@@ -1,15 +1,18 @@
 # master
 
-* Re-introduce ActionView::Component::TestHelpers
+# v1.15.0
+
+* Re-introduce ActionView::Component::TestHelpers.
 
     *Joel Hawksley*
 
 * Bypass monkey patch on Rails 6.1 builds.
 
     *Joel Hawksley*
-    
-* Make `ActionView::Helpers::TagHelper` available in Previews
 
+* Make `ActionView::Helpers::TagHelper` available in Previews.
+
+    ```ruby
     def with_html_content
       render(MyComponent.new) do
         tag.div do
@@ -17,6 +20,7 @@
         end
       end
     end
+    ```
 
     *Sean Doyle*
 
