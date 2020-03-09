@@ -291,11 +291,28 @@ class TestComponentPreview < ViewComponent::Preview
   def with_long_title
     render(TestComponent.new(title: "This is a really long title to see how the component renders this"))
   end
+
+  def with_content_block
+    render(TestComponent.new(title: "This component accepts a block of content") do
+      tag.div do
+        content_tag(:span, "Hello")
+      end
+    end
+  end
 end
 ```
 
-Which generates <http://localhost:3000/rails/components/test_component/with_default_title>
-and <http://localhost:3000/rails/components/test_component/with_long_title>.
+Which generates <http://localhost:3000/rails/components/test_component/with_default_title>,
+<http://localhost:3000/rails/components/test_component/with_long_title>,
+and <http://localhost:3000/rails/components/test_component/with_content_block>.
+
+The `ViewComponent::Preview` base class includes
+[`ActionView::Helpers::TagHelper`][tag-helper], which provides the [`tag`][tag]
+and [`content_tag`][content_tag] view helper methods.
+
+[tag-helper]: https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html
+[tag]: https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-tag
+[content_tag]: https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-content_tag
 
 Previews default to the application layout, but can be overridden:
 
@@ -412,6 +429,11 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |:---:|
 |@blakewilliams|
 |Boston, MA|
+
+|<img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" />|
+|:---:|
+|@seanpdoyle|
+|New York, NY|
 
 ## License
 

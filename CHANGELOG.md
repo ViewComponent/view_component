@@ -3,6 +3,18 @@
 * Bypass monkey patch on Rails 6.1 builds.
 
     *Joel Hawksley*
+    
+* Make `ActionView::Helpers::TagHelper` available in Previews
+
+    def with_html_content
+      render(MyComponent.new) do
+        tag.div do
+          content_tag(:span, "Hello")
+        end
+      end
+    end
+
+    *Sean Doyle*
 
 # v1.14.1
 

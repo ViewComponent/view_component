@@ -12,4 +12,8 @@ class PreviewComponentPreview < ViewComponent::Preview
   def with_content
     render(PreviewComponent.new(title: "title")) { "some content" }
   end
+
+  def with_tag_helper_in_content
+    render(PreviewComponent.new(title: "title")) { content_tag(:span, "some content") }
+  end
 end
