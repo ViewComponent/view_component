@@ -197,6 +197,24 @@ Which returns:
 </div>
 ```
 
+### Inline Component
+
+A component can be rendered without any template file as well.
+
+`app/components/inline_component.rb`:
+
+```ruby
+class InlineComponent < ViewComponent::Base
+  def call
+    if active?
+      link_to "Cancel integration", integration_path, method: :delete
+    else
+      link_to "Integrate now!", integration_path
+    end
+  end
+end
+```
+
 ### Conditional Rendering
 
 Components can implement a `#render?` method to determine if they should be rendered.

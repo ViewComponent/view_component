@@ -1,5 +1,9 @@
 # master
 
+# v1.16.0
+
+* Allow components to be rendered without a template file (aka inline component).
+
 # v1.15.0
 
 * Re-introduce ActionView::Component::TestHelpers.
