@@ -17,6 +17,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("span", text: "content")
   end
 
+  def test_render_without_template
+    render_inline(InlineComponent.new)
+
+    assert_predicate InlineComponent, :inlined?
+    assert_not_predicate InlineComponent, :compiled?
+    assert_selector("input[type='text'][name='name']")
+  end
+
   def test_renders_slim_template
     render_inline(SlimComponent.new(message: "bar")) { "foo" }
 
