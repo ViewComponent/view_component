@@ -11,7 +11,7 @@ module ViewComponent
     end
 
     def refute_component_rendered
-      assert_no_selector('body')
+      assert_no_selector("body")
     end
 
     def render_inline(component, **args, &block)
