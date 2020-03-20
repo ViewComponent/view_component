@@ -1,5 +1,9 @@
 # master
 
+* ViewComponent generators do not not prompt for content requirement.
+
+    *Joel Hawksley*
+
 # v1.16.0
 
 * Add `refute_component_rendered` test helper.

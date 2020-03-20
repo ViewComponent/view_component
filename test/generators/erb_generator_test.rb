@@ -13,15 +13,7 @@ class ErbGeneratorTest < Rails::Generators::TestCase
 
   arguments %w[user]
 
-  def test_component_with_required_content
-    run_generator %w[user --require-content]
-
-    assert_file "app/components/user_component.html.erb" do |view|
-      assert_match(/<%= content %>/, view)
-    end
-  end
-
-  def test_component_without_required_content
+  def test_component_generator
     run_generator
 
     assert_file "app/components/user_component.html.erb" do |view|
