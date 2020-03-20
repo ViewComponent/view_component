@@ -10,6 +10,10 @@ module ViewComponent
       Capybara::Node::Simple.new(@raw)
     end
 
+    def refute_component_rendered
+      assert_no_selector('body')
+    end
+
     def render_inline(component, **args, &block)
       @raw = controller.view_context.render(component, args, &block)
 

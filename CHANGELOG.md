@@ -2,6 +2,10 @@
 
 # v1.16.0
 
+* Add `refute_component_rendered` test helper.
+
+    *Joel Hawksley*
+
 * Allow components to be rendered without a template file (aka inline component).
 
 # v1.15.0
