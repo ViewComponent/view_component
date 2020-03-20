@@ -4,6 +4,10 @@
 
     *Joel Hawksley*
 
+* Add post-install message that gem has been renamed to `view_component`.
+
+    *Joel Hawksley*
+
 # v1.16.0
 
 * Add `refute_component_rendered` test helper.
