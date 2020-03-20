@@ -266,6 +266,8 @@ end
 <%= render(ConfirmEmailComponent.new(user: current_user)) %>
 ```
 
+To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`.
+
 ### Testing
 
 Unit test components directly, using the `render_inline` test helper and Capybara matchers:

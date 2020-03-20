@@ -315,6 +315,7 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(RenderCheckComponent.new)
 
     assert_no_text("Rendered")
+    refute_component_rendered
   end
 
   def test_assert_select
