@@ -132,7 +132,9 @@ module ViewComponent
 
     class << self
       def inherited(child)
-        child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
+        if defined?(Rails)
+          child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
+        end
 
         super
       end
