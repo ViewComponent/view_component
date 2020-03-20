@@ -35,13 +35,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Open"
   end
 
-  test "rendering component in a view with component: syntax" do
-    get "/component"
-    assert_response :success
-
-    assert_select("span", "Foo")
-  end
-
   test "rendering component with content_for" do
     get "/content_areas"
     assert_response :success
@@ -122,43 +115,43 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "renders component preview" do
-    get "/rails/components/my_component/default"
+    get "/rails/view_components/my_component/default"
 
     assert_includes response.body, "<div>hello,world!</div>"
   end
 
   test "renders preview component default preview" do
-    get "/rails/components/preview_component/default"
+    get "/rails/view_components/preview_component/default"
 
     assert_includes response.body, "Click me!"
   end
 
   test "renders preview component with_cta preview" do
-    get "/rails/components/preview_component/without_cta"
+    get "/rails/view_components/preview_component/without_cta"
 
     assert_includes response.body, "More lorem..."
   end
 
   test "renders preview component with content preview" do
-    get "/rails/components/preview_component/with_content"
+    get "/rails/view_components/preview_component/with_content"
 
     assert_includes response.body, "some content"
   end
 
   test "renders preview component with tag helper-generated content preview" do
-    get "/rails/components/preview_component/with_tag_helper_in_content"
+    get "/rails/view_components/preview_component/with_tag_helper_in_content"
 
     assert_includes response.body, "<span>some content</span>"
   end
 
   test "renders badge component open preview" do
-    get "/rails/components/issues/badge_component/open"
+    get "/rails/view_components/issues/badge_component/open"
 
     assert_includes response.body, "Open"
   end
 
   test "renders badge component closed preview" do
-    get "/rails/components/issues/badge_component/closed"
+    get "/rails/view_components/issues/badge_component/closed"
 
     assert_includes response.body, "Closed"
   end

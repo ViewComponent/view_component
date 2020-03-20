@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ActionView::InvalidComponentTest < ViewComponent::TestCase
+class InvalidComponentTest < ViewComponent::TestCase
   def test_raises_error_when_initializer_is_not_defined
     exception = assert_raises ViewComponent::TemplateError do
       render_inline(MissingInitializerComponent.new)

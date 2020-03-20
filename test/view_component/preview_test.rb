@@ -4,7 +4,7 @@ require "test_helper"
 
 class ViewComponent::PreviewTest < ActionDispatch::IntegrationTest
   def test_preview
-    get "/rails/components/preview_component/default"
+    get "/rails/view_components/preview_component/default"
 
     assert_html_document(
       response.body,
@@ -21,7 +21,7 @@ class ViewComponent::PreviewTest < ActionDispatch::IntegrationTest
   end
 
   def test_preview_with_layout
-    get "/rails/components/my_component/default"
+    get "/rails/view_components/my_component/default"
 
     assert_html_document(
       response.body,
@@ -31,7 +31,7 @@ class ViewComponent::PreviewTest < ActionDispatch::IntegrationTest
   end
 
   def test_preview_with_no_layout
-    get "/rails/components/no_layout/default"
+    get "/rails/view_components/no_layout/default"
 
     assert_html_fragment(
       response.body,

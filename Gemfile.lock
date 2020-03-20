@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    actionview-component (1.17.0)
+    view_component (2.0.0)
       capybara (~> 3)
 
 GEM
@@ -187,7 +187,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionview-component!
   better_html (~> 1)
   bundler (~> 1.14)
   haml (~> 5)
@@ -197,6 +196,7 @@ DEPENDENCIES
   rubocop (= 0.74)
   rubocop-github (~> 0.13.0)
   slim (~> 4.0)
+  view_component!
 
 BUNDLED WITH
    1.17.3
