@@ -8,8 +8,6 @@ module Rails
       argument :attributes, type: :array, default: [], banner: "attribute"
       check_class_collision suffix: "Component"
 
-      class_option :require_content, type: :boolean, default: false
-
       def create_component_file
         template "component.rb", File.join("app/components", class_path, "#{file_name}_component.rb")
       end
@@ -17,21 +15,13 @@ module Rails
       hook_for :test_framework
 
       hook_for :template_engine do |instance, template_engine|
-        instance.invoke template_engine, [instance.name], require_content: instance.send(:requires_content?)
+        instance.invoke template_engine, [instance.name]
       end
 
       private
 
       def file_name
         @_file_name ||= super.sub(/_component\z/i, "")
-      end
-
-      def requires_content?
-        return if behavior == :revoke
-        return @requires_content if @asked
-
-        @asked = true
-        @requires_content = ask("Would you like #{class_name} to require content? (Y/n)").downcase == "y"
       end
 
       def parent_class
