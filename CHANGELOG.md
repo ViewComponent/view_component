@@ -6,7 +6,13 @@
 
     *Joel Hawksley*
 
+* Check for Rails before invocation.
+
+    *Dave Paola*
+
 * Allow components to be rendered without a template file (aka inline component).
+
+    *Rainer Borene*
 
 # v1.15.0
 
