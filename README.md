@@ -33,7 +33,7 @@ This library is designed to integrate as seamlessly as possible with Rails, with
 
 ## Compatibility
 
-`actionview-component` is tested for compatibility with combinations of Ruby `2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`master`.
+`actionview-component` is tested for compatibility with combinations of Ruby `2.4`/`2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`master`.
 
 ## Installation
 

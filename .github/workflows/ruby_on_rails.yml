@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         rails_version: [5.0.0, 5.2.3, 6.0.0, master]
-        ruby_version: [2.5.x, 2.6.x, 2.7.x]
+        ruby_version: [2.4.x, 2.5.x, 2.6.x, 2.7.x]
         exclude:
           - rails_version: master
             ruby_version: 2.4.x
@@ -20,6 +20,10 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby_version }}
+    - name: Update rubygems when testing with Ruby 2.4.x
+      if: startsWith(matrix.ruby_version, '2.4')
+      run: |
+        gem update --system --no-document
     - name: Build and test with Rake
       run: |
         gem install bundler:1.17.3
