@@ -338,6 +338,20 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal exception.message, "Validation failed: Content can't be blank"
   end
 
+  # Some example usages:
+  #
+  # <%= render(ProductComponent.collection(@products)) %>
+  # <%= render(ProductComponent.collection(items: @products, as: :product, foo: foo)) %>
+  # <%= render(ProductComponent.new(product: @product)) %>
+
+  def test_render_collection
+    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
+    render_inline(ProductComponent.collection(items: @products, as: :product, extra: "extra"))
+
+    assert_selector("h1", count: 2)
+  end
+
+
   private
 
   def modify_file(file, content)
