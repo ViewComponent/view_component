@@ -43,5 +43,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "= 0.74"
   spec.add_development_dependency "rubocop-github", "~> 0.13.0"
 
-  spec.post_install_message = "actionview-component has been renamed to view_component, and will no longer be published in this namespace. Please update your Gemfile to use view_component."
+  spec.post_install_message = "WARNING: actionview-component has been renamed to view_component, and will no longer be published in this namespace. Please update your Gemfile to use view_component."
 end
