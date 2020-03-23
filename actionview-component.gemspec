@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["GitHub Open Source"]
   spec.email         = ["opensource+view_component@github.com"]
 
-  spec.summary       = %q{View components for Rails}
+  spec.summary       = %q{MOVED to view_component.}
   spec.homepage      = "https://github.com/github/view_component"
   spec.license       = "MIT"
 
