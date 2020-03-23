@@ -6,12 +6,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "view_component/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "actionview-component"
+  spec.name          = "view_component"
   spec.version       = ViewComponent::VERSION::STRING
   spec.authors       = ["GitHub Open Source"]
   spec.email         = ["opensource+view_component@github.com"]
 
-  spec.summary       = %q{MOVED to view_component.}
+  spec.summary       = %q{View components for Rails}
   spec.homepage      = "https://github.com/github/view_component"
   spec.license       = "MIT"
 
@@ -42,6 +42,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "better_html", "~> 1"
   spec.add_development_dependency "rubocop", "= 0.74"
   spec.add_development_dependency "rubocop-github", "~> 0.13.0"
-
-  spec.post_install_message = "WARNING: actionview-component has been renamed to view_component, and will no longer be published in this namespace. Please update your Gemfile to use view_component."
 end

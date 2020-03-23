@@ -274,6 +274,6 @@ module ViewComponent
       end
     end
 
-    ActiveSupport.run_load_hooks(:action_view_component, self)
+    ActiveSupport.run_load_hooks(:view_component, self)
   end
 end

@@ -15,7 +15,8 @@ This gem is in the process of a name / API change from `ActionView::Component` t
 
 ### How to migrate to ViewComponent
 
-1. In `application.rb`, require `view_component/engine`
+1. Update `Gemfile` to use `view_component`.
+1. In `application.rb`, require `view_component/engine`.
 1. Update components to inherit from `ViewComponent::Base`.
 1. Update component tests to inherit from `ViewComponent::TestCase`.
 1. Update component previews to inherit from `ViewComponent::Preview`.
@@ -33,14 +34,14 @@ This library is designed to integrate as seamlessly as possible with Rails, with
 
 ## Compatibility
 
-`actionview-component` is tested for compatibility with combinations of Ruby `2.4`/`2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`master`.
+`view_component` is tested for compatibility with combinations of Ruby `2.4`/`2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`master`.
 
 ## Installation
 
 In `Gemfile`, add:
 
 ```ruby
-gem "actionview-component"
+gem "view_component"
 ```
 
 In `config/application.rb`, add:
@@ -322,9 +323,9 @@ class TestComponentPreview < ViewComponent::Preview
 end
 ```
 
-Which generates <http://localhost:3000/rails/components/test_component/with_default_title>,
-<http://localhost:3000/rails/components/test_component/with_long_title>,
-and <http://localhost:3000/rails/components/test_component/with_content_block>.
+Which generates <http://localhost:3000/rails/view_components/test_component/with_default_title>,
+<http://localhost:3000/rails/view_components/test_component/with_long_title>,
+and <http://localhost:3000/rails/view_components/test_component/with_content_block>.
 
 The `ViewComponent::Preview` base class includes
 [`ActionView::Helpers::TagHelper`][tag-helper], which provides the [`tag`][tag]
@@ -351,7 +352,7 @@ To use `lib/component_previews`:
 
 `config/application.rb`
 ```ruby
-config.action_view_component.preview_path = "#{Rails.root}/lib/component_previews"
+config.view_component.preview_path = "#{Rails.root}/lib/component_previews"
 ```
 
 #### Configuring TestController
@@ -360,7 +361,7 @@ Component tests and previews assume the existence of an `ApplicationController` 
 
 `config/application.rb`
 ```ruby
-config.action_view_component.test_controller = "BaseController"
+config.view_component.test_controller = "BaseController"
 ```
 
 ### Setting up RSpec
@@ -382,7 +383,7 @@ To use component previews:
 
 `config/application.rb`
 ```ruby
-config.action_view_component.preview_path = "#{Rails.root}/spec/components/previews"
+config.view_component.preview_path = "#{Rails.root}/spec/components/previews"
 ```
 
 ## Frequently Asked Questions
@@ -418,7 +419,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 
 ## Contributors
 
-`actionview-component` is built by:
+`view_component` is built by:
 
 |<img src="https://avatars.githubusercontent.com/joelhawksley?s=256" alt="joelhawksley" width="128" />|<img src="https://avatars.githubusercontent.com/tenderlove?s=256" alt="tenderlove" width="128" />|<img src="https://avatars.githubusercontent.com/jonspalmer?s=256" alt="jonspalmer" width="128" />|<img src="https://avatars.githubusercontent.com/juanmanuelramallo?s=256" alt="juanmanuelramallo" width="128" />|<img src="https://avatars.githubusercontent.com/vinistock?s=256" alt="vinistock" width="128" />|
 |:---:|:---:|:---:|:---:|:---:|

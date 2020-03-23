@@ -34,13 +34,13 @@ Here are a few things you can do that will increase the likelihood of your pull 
 If you are the current maintainer of this gem:
 
 1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`
-1. Bump gem version in `lib/action_view/component/version.rb`. Try to adhere to SemVer.
+1. Bump gem version in `lib/view_component/version.rb`. Try to adhere to SemVer.
 1. Add version heading/entries to `CHANGELOG.md`.
 1. Make sure your local dependencies are up to date: `bundle`
 1. Ensure that tests are green: `bundle exec rake`
 1. Make a PR to github/view_component.
-1. Build a local gem: `gem build actionview-component.gemspec`
+1. Build a local gem: `gem build view_component.gemspec`
 1. Merge github/view_component PR
 1. Tag and push: `git tag vx.xx.xx; git push --tags`
 1. Create a GitHub release with the pushed tag (https://github.com/github/view_component/releases/new) and populate it with a list of the commits from `git log --pretty=format:"- %s" --reverse refs/tags/[OLD TAG]...refs/tags/[NEW TAG]`
-1. Push to rubygems.org -- `gem push actionview-component-VERSION.gem`
+1. Push to rubygems.org -- `gem push view_component-VERSION.gem`

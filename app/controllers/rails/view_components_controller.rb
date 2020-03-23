@@ -2,7 +2,7 @@
 
 require "rails/application_controller"
 
-class Rails::ComponentsController < Rails::ApplicationController # :nodoc:
+class Rails::ViewComponentsController < Rails::ApplicationController # :nodoc:
   prepend_view_path File.expand_path("../../../lib/railties/lib/rails/templates/rails", __dir__)
   prepend_view_path "#{Rails.root}/app/views/" if defined?(Rails.root)
 

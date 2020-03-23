@@ -6,7 +6,6 @@ module ViewComponent
   extend ActiveSupport::Autoload
 
   autoload :Base
-  autoload :Conversion
   autoload :Preview
   autoload :Previewable
   autoload :TestHelpers
@@ -15,16 +14,3 @@ module ViewComponent
   autoload :RenderingMonkeyPatch
   autoload :TemplateError
 end
-
-module ActionView
-  module Component
-    extend ActiveSupport::Autoload
-
-    autoload :Base
-    autoload :Preview
-    autoload :TestCase
-    autoload :TestHelpers
-  end
-end
-
-ActiveModel::Conversion.include ViewComponent::Conversion

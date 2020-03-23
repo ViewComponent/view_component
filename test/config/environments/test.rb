@@ -19,9 +19,9 @@ Dummy::Application.configure do
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection    = false
 
-  config.action_view_component.show_previews = true
+  config.view_component.show_previews = true
 
-  config.action_view_component.test_controller = "IntegrationExamplesController"
+  config.view_component.test_controller = "IntegrationExamplesController"
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
