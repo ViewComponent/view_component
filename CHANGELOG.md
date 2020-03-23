@@ -1,5 +1,11 @@
 # master
 
+# v2.0.1
+
+* Update `rails` dependency due to security advisory.
+
+    *Joel Hawksley*
+
 # v2.0.0
 
 * Move to `ViewComponent` namespace, removing all references to `ActionView`.

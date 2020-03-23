@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    view_component (2.0.0)
+    view_component (2.0.1)
       capybara (~> 3)
 
 GEM
