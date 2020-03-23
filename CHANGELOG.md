@@ -1,5 +1,11 @@
 # master
 
+# v1.17.0
+
+* Support Ruby 2.4 in CI.
+
+    *Andrew Mason*
+
 * ViewComponent generators do not not prompt for content requirement.
 
     *Joel Hawksley*
