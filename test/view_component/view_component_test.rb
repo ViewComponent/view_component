@@ -298,11 +298,6 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(ConditionalRenderComponent.new(should_render: false))
 
     assert_no_text("component was rendered")
-
-    exception = assert_raises RuntimeError do
-      render_inline(ConditionalRenderComponent.new(should_render: nil))
-    end
-    assert_equal exception.message, "should_render wasn't validated!"
   end
 
   def test_render_check

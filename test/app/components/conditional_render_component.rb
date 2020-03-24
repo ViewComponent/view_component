@@ -5,13 +5,7 @@ class ConditionalRenderComponent < ViewComponent::Base
     @should_render = should_render
   end
 
-  attr_reader :should_render
-
   def render?
-    unless [true, false].include?(should_render)
-      raise RuntimeError.new("should_render wasn't validated!")
-    end
-
-    should_render
+    @should_render
   end
 end
