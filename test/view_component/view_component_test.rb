@@ -360,9 +360,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal exception.message, "The value (Product) of the option `as` is not a valid Ruby identifier; make sure it starts with lowercase letter, and is followed by any combination of letters, numbers and underscores."
   end
 
-  # TODO: Requires new
-  # def test_render_collection_without_as
-  # end
+  def test_render_collection_without_as
+    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
+    render_inline(ProductItemComponent.collection(items: @products, extra: "extra"))
+
+    assert_selector("h2", count: 2)
+  end
 
   def test_render_single_item_from_collection
     @product = OpenStruct.new(title: "Bye")
@@ -370,7 +373,6 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_selector("h1", count: 1)
   end
-
 
   private
 
