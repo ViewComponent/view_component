@@ -2,7 +2,7 @@
 
 class ProductItemComponent < ViewComponent::Base
   def initialize(item:, extra:)
-    @product = item
+    @item = item
     @extra = extra
   end
 end
