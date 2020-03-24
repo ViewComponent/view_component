@@ -156,11 +156,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Closed"
   end
 
-  test "compiles unreferenced component" do
-    assert UnreferencedComponent.compiled?
+  test "test preview renders" do
+    get "/rails/view_components/preview_component/default"
+
+    assert_includes response.body, "ViewComponent - Test"
+    assert_select(".preview-component .btn", "Click me!")
   end
 
-  test "does not compile components without initializers" do
-    assert !MissingInitializerComponent.compiled?
+  test "test preview renders with layout" do
+    get "/rails/view_components/my_component/default"
+
+    assert_includes response.body, "ViewComponent - Admin - Test"
+    assert_select("div", "hello,world!")
+  end
+
+  test "test preview renders without layout" do
+    get "/rails/view_components/no_layout/default"
+
+    assert_select("div", "hello,world!")
   end
 end
