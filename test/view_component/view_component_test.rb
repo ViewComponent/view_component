@@ -351,6 +351,26 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("h1", count: 2)
   end
 
+  def test_render_collection_invalid_as
+    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
+    exception = assert_raises ArgumentError do
+      render_inline(ProductComponent.collection(items: @products, as: "Product"))
+    end
+
+    assert_equal exception.message, "The value (Product) of the option `as` is not a valid Ruby identifier; make sure it starts with lowercase letter, and is followed by any combination of letters, numbers and underscores."
+  end
+
+  # TODO: Requires new
+  # def test_render_collection_without_as
+  # end
+
+  def test_render_single_item_from_collection
+    @product = OpenStruct.new(title: "Bye")
+    render_inline(ProductComponent.new(product: @product, extra: "abc"))
+
+    assert_selector("h1", count: 1)
+  end
+
 
   private
 

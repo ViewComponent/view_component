@@ -6,16 +6,37 @@ require "view_component/previewable"
 
 module ViewComponent
   class CollectionBase
-    def initialize(component, opts)
+    def initialize(component, options)
       @component = component
-      @opts = opts
+      @options = options
     end
 
     def render_in(view_context, &block)
-      @opts[:items].map do |item|
-        # TODO: handle as: for kw_arg name and any additiona args (e.g., extra:)
-        @component.new(product: item, extra: "").render_in(view_context, &block)
+      as = as_variable(@options) || :item
+      args = @options.except(:items, :as)
+
+      @options[:items].map do |item|
+        args[as] = item
+        @component.new(args).render_in(view_context, &block)
       end.join
+    end
+
+    private
+
+    # Pulled from rails... maybe inherit from ActionView? (but these methods are private so...)
+    def as_variable(options)
+      if as = options[:as]
+        raise_invalid_option_as(as) unless /\A[a-z_]\w*\z/.match?(as.to_s)
+        as.to_sym
+      end
+    end
+
+    OPTION_AS_ERROR_MESSAGE  = "The value (%s) of the option `as` is not a valid Ruby identifier; " \
+                                "make sure it starts with lowercase letter, " \
+                                "and is followed by any combination of letters, numbers and underscores."
+
+    def raise_invalid_option_as(as)
+      raise ArgumentError.new(OPTION_AS_ERROR_MESSAGE % (as))
     end
   end
 
@@ -29,8 +50,8 @@ module ViewComponent
     self.content_areas = [] # default doesn't work until Rails 5.2
 
 
-    def self.collection(opts)
-      CollectionBase.new(self, opts)
+    def self.collection(options)
+      CollectionBase.new(self, options)
     end
 
     # Entrypoint for rendering components.
