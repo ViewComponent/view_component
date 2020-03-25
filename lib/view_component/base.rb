@@ -6,22 +6,35 @@ require "view_component/previewable"
 
 module ViewComponent
   class Collection
-    def initialize(component, options)
+    def initialize(component, object = nil, options)
       @component = component
+      @object = object
       @options = options
     end
 
     def render_in(view_context, &block)
       as = as_variable(@component.virtual_path, @options)
+      collection = collection_variable(@object, @options)
       args = @options.except(:collection, :as)
 
-      @options[:collection].map do |item|
+      collection.map do |item|
         args[as] = item
         @component.new(args).render_in(view_context, &block)
       end.join
     end
 
     private
+
+    def collection_variable(object, options)
+      if object.respond_to?(:to_ary)
+        object.to_ary
+      elsif options.key?(:collection)
+        collection = options[:collection]
+        collection ? collection.to_a : []
+      else
+        raise ArgumentError.new("Must specify the option `collection` or pass a valid collection object.")
+      end
+    end
 
     # Copied from https://github.com/rails/rails/blob/e2cf0b1d780b2e09f5270249ca021d94ce4fff9d/actionview/lib/action_view/renderer/partial_renderer.rb
     def as_variable(path, options)
@@ -52,8 +65,8 @@ module ViewComponent
     self.content_areas = [] # default doesn't work until Rails 5.2
 
     # Render a component collection.
-    def self.all(options)
-      Collection.new(self, options)
+    def self.all(*args)
+      Collection.new(self, *args)
     end
 
     # Entrypoint for rendering components.
