@@ -12,7 +12,7 @@ module ViewComponent
     end
 
     def render_in(view_context, &block)
-      as = as_variable(@options) || :item
+      as = as_variable(@options)
       args = @options.except(:collection, :as)
 
       @options[:collection].map do |item|
@@ -28,6 +28,8 @@ module ViewComponent
       if as = options[:as]
         raise_invalid_option_as(as) unless /\A[a-z_]\w*\z/.match?(as.to_s)
         as.to_sym
+      else
+        :item
       end
     end
 
