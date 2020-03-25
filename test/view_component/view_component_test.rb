@@ -397,9 +397,23 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_render_collection
     @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
+    render_inline(ProductComponent.all(collection: @products, extra: "extra"))
+
+    assert_selector("h1", count: 2)
+  end
+
+  def test_render_collection_specify_as
+    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
     render_inline(ProductComponent.all(collection: @products, as: :product, extra: "extra"))
 
     assert_selector("h1", count: 2)
+  end
+
+  def test_render_collection_custom_as
+    @coupons = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
+    render_inline(ProductCouponComponent.all(collection: @coupons, as: :item))
+
+    assert_selector("h3", count: 2)
   end
 
   def test_render_collection_invalid_as

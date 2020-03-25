@@ -12,7 +12,7 @@ module ViewComponent
     end
 
     def render_in(view_context, &block)
-      as = as_variable(@options)
+      as = as_variable(@component.virtual_path, @options)
       args = @options.except(:collection, :as)
 
       @options[:collection].map do |item|
@@ -23,13 +23,13 @@ module ViewComponent
 
     private
 
-    # Pulled from rails... maybe inherit from ActionView? (but these methods are private so...)
-    def as_variable(options)
+    # Copied from https://github.com/rails/rails/blob/e2cf0b1d780b2e09f5270249ca021d94ce4fff9d/actionview/lib/action_view/renderer/partial_renderer.rb
+    def as_variable(path, options)
       if as = options[:as]
         raise_invalid_option_as(as) unless /\A[a-z_]\w*\z/.match?(as.to_s)
         as.to_sym
       else
-        :item
+        File.basename(path).gsub(/_component/,"").to_sym
       end
     end
 
@@ -134,7 +134,11 @@ module ViewComponent
 
     # Removes the first part of the path and the extension.
     def virtual_path
-      self.class.source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
+      self.class.virtual_path
+    end
+
+    def self.virtual_path
+      source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
     end
 
     def view_cache_dependencies
