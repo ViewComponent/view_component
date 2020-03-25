@@ -446,15 +446,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |@mellowfish|@horacio|@dukex|@dark-panda|@smashwilson|
 |Spring Hill, TN|Buenos Aires|São Paulo||Gambrills, MD|
 
-|<img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" />|
-|:---:|
-|@blakewilliams|
-|Boston, MA|
-
-|<img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" />|
-|:---:|
-|@seanpdoyle|
-|New York, NY|
+|<img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" />|<img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" />|<img src="https://avatars.githubusercontent.com/tclem?s=256" alt="tclem" width="128" />|
+|:---:|:---:|:---:|
+|@blakewilliams|@seanpdoyle|@tclem|
+|Boston, MA|New York, NY|San Francisco, CA|
 
 ## License
 
