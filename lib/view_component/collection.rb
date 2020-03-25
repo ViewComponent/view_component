@@ -39,7 +39,7 @@ module ViewComponent
         raise_invalid_option_as(as) unless /\A[a-z_]\w*\z/.match?(as.to_s)
         as.to_sym
       else
-        File.basename(path).gsub(/_component/,"").to_sym
+        File.basename(path).gsub(/_component/, "").to_sym
       end
     end
 
