@@ -5,7 +5,7 @@ require "active_support/configurable"
 require "view_component/previewable"
 
 module ViewComponent
-  class CollectionBase
+  class Collection
     def initialize(component, options)
       @component = component
       @options = options
@@ -13,9 +13,9 @@ module ViewComponent
 
     def render_in(view_context, &block)
       as = as_variable(@options) || :item
-      args = @options.except(:items, :as)
+      args = @options.except(:collection, :as)
 
-      @options[:items].map do |item|
+      @options[:collection].map do |item|
         args[as] = item
         @component.new(args).render_in(view_context, &block)
       end.join
@@ -49,9 +49,9 @@ module ViewComponent
     class_attribute :content_areas, default: []
     self.content_areas = [] # default doesn't work until Rails 5.2
 
-
-    def self.collection(options)
-      CollectionBase.new(self, options)
+    # Render a component collection.
+    def self.all(options)
+      Collection.new(self, options)
     end
 
     # Entrypoint for rendering components.

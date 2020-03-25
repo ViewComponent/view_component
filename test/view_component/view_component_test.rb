@@ -388,13 +388,16 @@ class ViewComponentTest < ViewComponent::TestCase
 
   # Some example usages:
   #
-  # <%= render(ProductComponent.collection(@products)) %>
-  # <%= render(ProductComponent.collection(items: @products, as: :product, foo: foo)) %>
+  # TODO: requires knowing the iterator name.
+  # <%= render(ProductComponent.all(@products)) %>
+  #
+  # Done
+  # <%= render(ProductComponent.all(collection: @products, as: :product, foo: foo)) %>
   # <%= render(ProductComponent.new(product: @product)) %>
 
   def test_render_collection
     @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
-    render_inline(ProductComponent.collection(items: @products, as: :product, extra: "extra"))
+    render_inline(ProductComponent.all(collection: @products, as: :product, extra: "extra"))
 
     assert_selector("h1", count: 2)
   end
@@ -402,7 +405,7 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_render_collection_invalid_as
     @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
     exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.collection(items: @products, as: "Product"))
+      render_inline(ProductComponent.all(collection: @products, as: "Product"))
     end
 
     assert_equal exception.message, "The value (Product) of the option `as` is not a valid Ruby identifier; make sure it starts with lowercase letter, and is followed by any combination of letters, numbers and underscores."
@@ -410,7 +413,7 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_render_collection_without_as
     @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
-    render_inline(ProductItemComponent.collection(items: @products, extra: "extra"))
+    render_inline(ProductItemComponent.all(collection: @products, extra: "extra"))
 
     assert_selector("h2", count: 2)
   end
