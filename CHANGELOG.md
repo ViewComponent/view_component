@@ -1,5 +1,11 @@
 # master
 
+# v2.1.0
+
+* Support rendering collection (e.g., `render(MyComponent.all(@items))`).
+
+    *Tim Clem, Joel Hawksley*
+
 # v2.0.0
 
 * Move to `ViewComponent` namespace, removing all references to `ActionView`.
