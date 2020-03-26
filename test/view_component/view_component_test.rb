@@ -389,8 +389,8 @@ class ViewComponentTest < ViewComponent::TestCase
   # Rendering collections
 
   def test_render_collection
-    @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
-    render_inline(ProductComponent.with_collection(@products, notice: "On sale"))
+    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    render_inline(ProductComponent.with_collection(products, notice: "On sale"))
 
     assert_selector("h1", text: "Product", count: 2)
     assert_selector("h2", text: "Radio clock")
@@ -399,8 +399,8 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_render_collection_custom_collection_parameter_name
-    @coupons = [OpenStruct.new(percent_off: 20), OpenStruct.new(percent_off: 50)]
-    render_inline(ProductCouponComponent.with_collection(@coupons))
+    coupons = [OpenStruct.new(percent_off: 20), OpenStruct.new(percent_off: 50)]
+    render_inline(ProductCouponComponent.with_collection(coupons))
 
     assert_selector("h3", text: "20%")
     assert_selector("h3", text: "50%")
@@ -423,9 +423,9 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_render_collection_missing_arg
-    @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
     exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.with_collection(@products))
+      render_inline(ProductComponent.with_collection(products))
     end
 
     assert_match /missing keyword/, exception.message
@@ -433,8 +433,8 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_render_single_item_from_collection
-    @product = OpenStruct.new(name: "Mints")
-    render_inline(ProductComponent.new(product: @product, notice: "On sale"))
+    product = OpenStruct.new(name: "Mints")
+    render_inline(ProductComponent.new(product: product, notice: "On sale"))
 
     assert_selector("h1", text: "Product", count: 1)
     assert_selector("h2", text: "Mints")
