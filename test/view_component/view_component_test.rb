@@ -403,7 +403,9 @@ class ViewComponentTest < ViewComponent::TestCase
     @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
     render_inline(ProductComponent.all(@products, extra: "extra"))
 
-    assert_selector("h1", count: 2)
+    assert_selector("h1", text: "Hi")
+    assert_selector("h1", text: "Bye")
+    assert_selector("p", text: "extra", count: 2)
   end
 
   def test_render_collection_minimal_specify_as
