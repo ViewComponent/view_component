@@ -8,7 +8,7 @@ module ViewComponent
 
       @collection.map do |item|
         @component.new(@options.merge(as => item)).render_in(view_context, &block)
-      end.join
+      end.join.html_safe
     end
 
     private
