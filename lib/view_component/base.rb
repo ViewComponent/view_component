@@ -219,6 +219,15 @@ module ViewComponent
         self.content_areas = areas
       end
 
+      # Support overriding this component's collection parameter name
+      def with_collection_parameter(param)
+        @with_collection_parameter = param
+      end
+
+      def collection_parameter_name
+        (@with_collection_parameter || name.demodulize.underscore.chomp("_component")).to_sym
+      end
+
       private
 
       def matching_views_in_source_location
