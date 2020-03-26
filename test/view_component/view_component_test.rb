@@ -428,7 +428,8 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(ProductComponent.with_collection(@products))
     end
 
-    assert_equal exception.message, "missing keyword: notice"
+    assert_match /missing keyword/, exception.message
+    assert_match /notice/, exception.message
   end
 
   def test_render_single_item_from_collection
