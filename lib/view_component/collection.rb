@@ -9,8 +9,7 @@ module ViewComponent
       args = @options.except(:collection, :as)
 
       collection.map do |item|
-        args[as] = item
-        @component.new(args).render_in(view_context, &block)
+        @component.new(args.merge(as => item)).render_in(view_context, &block)
       end.join
     end
 
