@@ -10,7 +10,7 @@ module ViewComponent
     end
 
     def render_in(view_context, &block)
-      as = as_variable(@component.virtual_path, @options)
+      as = as_variable(@component, @options)
       collection = collection_variable(@object, @options)
       args = @options.except(:collection, :as)
 
@@ -34,12 +34,12 @@ module ViewComponent
     end
 
     # Copied from https://github.com/rails/rails/blob/e2cf0b1d780b2e09f5270249ca021d94ce4fff9d/actionview/lib/action_view/renderer/partial_renderer.rb
-    def as_variable(path, options)
+    def as_variable(component, options)
       if as = options[:as]
         raise_invalid_option_as(as) unless /\A[a-z_]\w*\z/.match?(as.to_s)
         as.to_sym
       else
-        File.basename(path).gsub(/_component/, "").to_sym
+        component.name.demodulize.underscore.chomp("_component").to_sym
       end
     end
 

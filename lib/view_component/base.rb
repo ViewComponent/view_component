@@ -97,12 +97,8 @@ module ViewComponent
     end
 
     # Removes the first part of the path and the extension.
-    def self.virtual_path
-      source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
-    end
-
     def virtual_path
-      self.class.virtual_path
+      self.class.source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
     end
 
     def view_cache_dependencies
