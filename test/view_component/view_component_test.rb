@@ -386,7 +386,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
   end
 
-  # Rendering collections
 
   def test_render_collection
     products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
