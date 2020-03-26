@@ -3,12 +3,6 @@
 
 module ViewComponent
   class Collection
-    def initialize(component, object = nil, options)
-      @component = component
-      @object = object
-      @options = options
-    end
-
     def render_in(view_context, &block)
       as = as_variable(@component, @options)
       collection = collection_variable(@object, @options)
@@ -21,6 +15,12 @@ module ViewComponent
     end
 
     private
+
+    def initialize(component, object = nil, options)
+      @component = component
+      @object = object
+      @options = options
+    end
 
     def collection_variable(object, options)
       if object.respond_to?(:to_ary)
