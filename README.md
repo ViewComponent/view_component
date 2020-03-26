@@ -269,6 +269,58 @@ end
 
 To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`.
 
+### Rendering collections
+
+It's possible to render collections with components:
+
+`app/view/products/index.html.erb`
+``` erb
+<%= render(ProductComponent.with_collection(@products)) %>
+```
+
+Where the `ProductComponent` and associated template might look something like the following. Notice that the constructor must take a `product` and the name of that parameter matches the name of the component.
+
+`app/components/product_component.rb`
+``` ruby
+class ProductComponent < ViewComponent::Base
+  def initialize(product:)
+    @product = product
+  end
+end
+```
+
+`app/components/product_component.html.erb`
+``` erb
+<li><%= @product.name %></li>
+```
+
+Additionally, extra arguments can be passed to the component and the name of the parameter can be changed:
+
+`app/view/products/index.html.erb`
+``` erb
+<%= render(ProductComponent.with_collection(@products, notice: "hi")) %>
+```
+
+`app/components/product_component.rb`
+``` ruby
+class ProductComponent < ViewComponent::Base
+  with_collection_parameter :item
+
+  def initialize(item:, notice:)
+    @item = item
+    @notice = notice
+  end
+end
+```
+
+`app/components/product_component.html.erb`
+``` erb
+<li>
+  <h2><%= @item.name %></h2>
+  <span><%= @notice %></span>
+</li>
+```
+
 ### Testing
 
 Unit test components directly, using the `render_inline` test helper and Capybara matchers:
