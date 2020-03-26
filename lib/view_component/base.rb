@@ -16,7 +16,7 @@ module ViewComponent
     self.content_areas = [] # default doesn't work until Rails 5.2
 
     # Render a component collection.
-    def self.all(*args)
+    def self.with_collection(*args)
       Collection.new(self, *args)
     end
 
