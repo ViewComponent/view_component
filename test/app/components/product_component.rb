@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ProductComponent < ViewComponent::Base
-  def initialize(product:, extra:)
+  def initialize(product:, notice:)
     @product = product
-    @extra = extra
+    @notice = notice
   end
 end

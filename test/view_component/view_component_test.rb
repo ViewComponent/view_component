@@ -99,7 +99,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_content_areas_template_with_initialize_arguments
-    render_inline(ContentAreasComponent.new(title: "Hi!", footer: "Bye!")) do |component|
+    render_inline(ContentAreasComponent.new(title: "Radio clock!", footer: "Bye!")) do |component|
       component.with(:body) { "Have a nice day." }
     end
   end
@@ -129,11 +129,11 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_renders_content_areas_template_replaces_content
     render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
       component.with(:title) { "Hello!" }
-      component.with(:title, "Hi!")
+      component.with(:title, "Radio clock!")
       component.with(:body) { "Have a nice day." }
     end
 
-    assert_selector(".title", text: "Hi!")
+    assert_selector(".title", text: "Radio clock!")
     assert_selector(".body", text: "Have a nice day.")
     assert_selector(".footer", text: "Bye!")
   end
@@ -386,84 +386,58 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
   end
 
-  # Some example usages:
-  #
-  # <%= render(ProductComponent.all(@products)) %>
-  # <%= render(ProductComponent.all(collection: @products, as: :product, foo: foo)) %>
-  # <%= render(ProductComponent.new(product: @product)) %>
+  # Rendering collections
 
   def test_render_collection
-    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
-    render_inline(ProductComponent.all(collection: @products, extra: "extra"))
+    @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    render_inline(ProductComponent.with_collection(@products, notice: "On sale"))
 
-    assert_selector("h1", count: 2)
+    assert_selector("h1", text: "Product", count: 2)
+    assert_selector("h2", text: "Radio clock")
+    assert_selector("h2", text: "Mints")
+    assert_selector("p", text: "On sale", count: 2)
   end
 
-  def test_render_collection_minimal
-    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
-    render_inline(ProductComponent.all(@products, extra: "extra"))
+  def test_render_collection_custom_collection_parameter_name
+    @coupons = [OpenStruct.new(percent_off: 20), OpenStruct.new(percent_off: 50)]
+    render_inline(ProductCouponComponent.with_collection(@coupons))
 
-    assert_selector("h1", text: "Hi")
-    assert_selector("h1", text: "Bye")
-    assert_selector("p", text: "extra", count: 2)
+    assert_selector("h3", text: "20%")
+    assert_selector("h3", text: "50%")
   end
 
-  def test_render_collection_minimal_specify_as
-    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
-    render_inline(ProductComponent.all(@products, as: :product, extra: "extra"))
+  def test_render_collection_nil_and_empty_collection
+    [nil, []].each do |collection|
+      render_inline(ProductComponent.with_collection(collection, notice: "On sale"))
 
-    assert_selector("h1", count: 2)
+      assert_no_text("Products")
+    end
   end
 
-  def test_render_collection_object_and_collection_key
-    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
-
-    render_inline(ProductComponent.all(@products, collection: [], extra: "extra"))
-    assert_selector("h1", count: 2)
-
-    render_inline(ProductComponent.all([], collection: @products, extra: "extra"))
-    refute_selector("h1")
-
-    render_inline(ProductComponent.all(nil, collection: @products, extra: "extra"))
-    assert_selector("h1", count: 2)
-  end
-
-  def test_render_collection_specify_as
-    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
-    render_inline(ProductComponent.all(collection: @products, as: :product, extra: "extra"))
-
-    assert_selector("h1", count: 2)
-  end
-
-  def test_render_collection_custom_as
-    @coupons = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
-    render_inline(ProductCouponComponent.all(collection: @coupons, as: :item))
-
-    assert_selector("h3", count: 2)
-  end
-
-  def test_render_collection_invalid_collection
+  def test_render_collection_missing_collection_object
     exception = assert_raises ArgumentError do
-      render_inline(ProductCouponComponent.all(as: :item))
+      render_inline(ProductComponent.with_collection(notice: "On sale"))
     end
 
-    assert_equal exception.message, "Must specify the option `collection` or pass a valid collection object."
+    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: {:notice=>\"On sale\"}"
   end
 
-  def test_render_collection_invalid_as
-    @products = [OpenStruct.new(title: "Hi"), OpenStruct.new(title: "Bye")]
+  def test_render_collection_missing_arg
+    @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
     exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.all(collection: @products, as: "Product"))
+      render_inline(ProductComponent.with_collection(@products))
     end
 
-    assert_equal exception.message, "The value (Product) of the option `as` is not a valid Ruby identifier; make sure it starts with lowercase letter, and is followed by any combination of letters, numbers and underscores."
+    assert_equal exception.message, "missing keyword: notice"
   end
 
   def test_render_single_item_from_collection
-    @product = OpenStruct.new(title: "Bye")
-    render_inline(ProductComponent.new(product: @product, extra: "abc"))
+    @product = OpenStruct.new(name: "Mints")
+    render_inline(ProductComponent.new(product: @product, notice: "On sale"))
 
-    assert_selector("h1", count: 1)
+    assert_selector("h1", text: "Product", count: 1)
+    assert_selector("h2", text: "Mints")
+    assert_selector("p", text: "On sale", count: 1)
   end
 
   private
