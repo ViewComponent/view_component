@@ -2,6 +2,7 @@
 
 require "action_view"
 require "active_support/configurable"
+require "view_component/collection"
 require "view_component/previewable"
 
 module ViewComponent
@@ -13,6 +14,11 @@ module ViewComponent
 
     class_attribute :content_areas, default: []
     self.content_areas = [] # default doesn't work until Rails 5.2
+
+    # Render a component collection.
+    def self.with_collection(*args)
+      Collection.new(self, *args)
+    end
 
     # Entrypoint for rendering components.
     #
@@ -211,6 +217,15 @@ module ViewComponent
         end
         attr_reader *areas
         self.content_areas = areas
+      end
+
+      # Support overriding this component's collection parameter name
+      def with_collection_parameter(param)
+        @with_collection_parameter = param
+      end
+
+      def collection_parameter_name
+        (@with_collection_parameter || name.demodulize.underscore.chomp("_component")).to_sym
       end
 
       private

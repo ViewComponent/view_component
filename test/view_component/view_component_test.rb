@@ -381,6 +381,60 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
   end
 
+
+  def test_render_collection
+    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    render_inline(ProductComponent.with_collection(products, notice: "On sale"))
+
+    assert_selector("h1", text: "Product", count: 2)
+    assert_selector("h2", text: "Radio clock")
+    assert_selector("h2", text: "Mints")
+    assert_selector("p", text: "On sale", count: 2)
+  end
+
+  def test_render_collection_custom_collection_parameter_name
+    coupons = [OpenStruct.new(percent_off: 20), OpenStruct.new(percent_off: 50)]
+    render_inline(ProductCouponComponent.with_collection(coupons))
+
+    assert_selector("h3", text: "20%")
+    assert_selector("h3", text: "50%")
+  end
+
+  def test_render_collection_nil_and_empty_collection
+    [nil, []].each do |collection|
+      render_inline(ProductComponent.with_collection(collection, notice: "On sale"))
+
+      assert_no_text("Products")
+    end
+  end
+
+  def test_render_collection_missing_collection_object
+    exception = assert_raises ArgumentError do
+      render_inline(ProductComponent.with_collection(notice: "On sale"))
+    end
+
+    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: {:notice=>\"On sale\"}"
+  end
+
+  def test_render_collection_missing_arg
+    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    exception = assert_raises ArgumentError do
+      render_inline(ProductComponent.with_collection(products))
+    end
+
+    assert_match /missing keyword/, exception.message
+    assert_match /notice/, exception.message
+  end
+
+  def test_render_single_item_from_collection
+    product = OpenStruct.new(name: "Mints")
+    render_inline(ProductComponent.new(product: product, notice: "On sale"))
+
+    assert_selector("h1", text: "Product", count: 1)
+    assert_selector("h2", text: "Mints")
+    assert_selector("p", text: "On sale", count: 1)
+  end
+
   private
 
   def modify_file(file, content)

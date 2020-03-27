@@ -175,4 +175,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_select("div", "hello,world!")
   end
+
+  test "renders collections" do
+    get "/products"
+
+    assert_select("h1", text: "Products for sale")
+    assert_select("h1", text: "Product", count: 2)
+    assert_select("h2", text: "Radio clock")
+    assert_select("h2", text: "Mints")
+    assert_select("p", text: "Today only", count: 2)
+  end
 end

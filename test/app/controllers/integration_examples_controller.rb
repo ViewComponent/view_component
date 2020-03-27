@@ -14,4 +14,8 @@ class IntegrationExamplesController < ActionController::Base
   def controller_inline_baseline
     render("integration_examples/_controller_inline", locals: { message: "bar" })
   end
+
+  def products
+    @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+  end
 end
