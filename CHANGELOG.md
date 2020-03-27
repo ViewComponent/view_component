@@ -4,7 +4,7 @@
 
 * Support rendering collections (e.g., `render(MyComponent.with_collection(@items))`).
 
-    *Tim Clem, Joel Hawksley*
+    *Tim Clem*
 
 # v2.0.0
 
