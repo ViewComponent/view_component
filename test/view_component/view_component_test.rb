@@ -99,7 +99,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_content_areas_template_with_initialize_arguments
-    render_inline(ContentAreasComponent.new(title: "Radio clock!", footer: "Bye!")) do |component|
+    render_inline(ContentAreasComponent.new(title: "Hi!", footer: "Bye!")) do |component|
       component.with(:body) { "Have a nice day." }
     end
   end
@@ -129,11 +129,11 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_renders_content_areas_template_replaces_content
     render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
       component.with(:title) { "Hello!" }
-      component.with(:title, "Radio clock!")
+      component.with(:title, "Hi!")
       component.with(:body) { "Have a nice day." }
     end
 
-    assert_selector(".title", text: "Radio clock!")
+    assert_selector(".title", text: "Hi!")
     assert_selector(".body", text: "Have a nice day.")
     assert_selector(".footer", text: "Bye!")
   end
