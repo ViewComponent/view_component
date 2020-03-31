@@ -1,0 +1,2 @@
+class ChildComponent < ParentComponent
+end
