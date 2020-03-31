@@ -89,7 +89,7 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_renders_partial_template
     render_inline(PartialComponent.new)
 
-    assert_text("hello,partial world!\n\nhello,partial world!")
+    assert_text("hello,partial world!", count: 2)
   end
 
   def test_renders_content_for_template
@@ -378,7 +378,6 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
   end
-
 
   def test_render_collection
     products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]

@@ -1,5 +1,9 @@
 # master
 
+* Add support for `config.action_view.annotate_template_file_names` (coming in Rails 6.1).
+
+    *Joel Hawksley*
+
 * Remove initializer requirement from the component.
 
     *Vasiliy Ermolovich*

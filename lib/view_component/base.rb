@@ -77,6 +77,10 @@ module ViewComponent
       true
     end
 
+    def self.short_identifier
+      @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
+    end
+
     def initialize(*); end
 
     def render(options = {}, args = {}, &block)
@@ -180,8 +184,20 @@ module ViewComponent
           return false
         end
 
+        # If template name annotations are turned on, a line is dynamically
+        # added with a comment. In this case, we want to return a different
+        # starting line number so errors that are raised will point to the
+        # correct line in the component template.
+        line_number =
+          if ActionView::Base.respond_to?(:annotate_template_file_names) &&
+            ActionView::Base.annotate_template_file_names
+            -2
+          else
+            -1
+          end
+
         templates.each do |template|
-          class_eval <<-RUBY, template[:path], -1
+          class_eval <<-RUBY, template[:path], line_number
             def #{call_method_name(template[:variant])}
               @output_buffer = ActionView::OutputBuffer.new
               #{compiled_template(template[:path])}
@@ -271,7 +287,7 @@ module ViewComponent
 
         if handler.method(:call).parameters.length > 1
           handler.call(self, template)
-        else # remove before upstreaming into Rails
+        else
           handler.call(OpenStruct.new(source: template, identifier: identifier, type: type))
         end
       end

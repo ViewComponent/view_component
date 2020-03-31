@@ -7,7 +7,6 @@ require "action_controller/railtie"
 require "action_view/railtie"
 require "view_component/engine"
 require "sprockets/railtie"
-require "better_html"
 
 require "haml"
 require "slim"
