@@ -283,7 +283,7 @@ module ViewComponent
 
         if handler.method(:call).parameters.length > 1
           handler.call(self, template)
-        else # remove before upstreaming into Rails
+        else
           handler.call(OpenStruct.new(source: template, identifier: identifier, type: type))
         end
       end
