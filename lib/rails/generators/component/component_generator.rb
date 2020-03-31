@@ -29,11 +29,9 @@ module Rails
       end
 
       def initialize_signature
-        if attributes.present?
-          attributes.map { |attr| "#{attr.name}:" }.join(", ")
-        else
-          "*"
-        end
+        return if attributes.blank?
+
+        attributes.map { |attr| "#{attr.name}:" }.join(", ")
       end
 
       def initialize_body

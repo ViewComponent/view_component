@@ -5,8 +5,6 @@ class ValidationsComponent < ViewComponent::Base
 
   validates :content, presence: true
 
-  def initialize(*); end
-
   def before_render_check
     validate!
   end
