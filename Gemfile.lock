@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    view_component (2.1.0)
+    view_component (2.2.0)
       capybara (~> 3)
 
 GEM
@@ -74,7 +74,7 @@ GEM
       parser (>= 2.4)
       smart_properties
     builder (3.2.4)
-    capybara (3.31.0)
+    capybara (3.32.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)

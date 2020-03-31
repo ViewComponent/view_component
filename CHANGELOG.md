@@ -1,5 +1,7 @@
 # master
 
+# v2.2.0
+
 * Add support for `config.action_view.annotate_template_file_names` (coming in Rails 6.1).
 
     *Joel Hawksley*
