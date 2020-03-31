@@ -376,7 +376,7 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(ExceptionInTemplateComponent.new)
     end
 
-    assert_match %r[app/components/exception_in_template_component\.html\.erb], error.backtrace[0]
+    assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
   end
 
   def test_render_collection
