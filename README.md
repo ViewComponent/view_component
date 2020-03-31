@@ -496,7 +496,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |<img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" />|<img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" />|<img src="https://avatars.githubusercontent.com/tclem?s=256" alt="tclem" width="128" />|<img src="https://avatars.githubusercontent.com/nashby?s=256" alt="nashby" width="128" />
 |:---:|:---:|:---:|
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|
-|Boston, MA|New York, NY|San Francisco, CA|Minsk
+|Boston, MA|New York, NY|San Francisco, CA|Minsk|
 
 ## License
 
