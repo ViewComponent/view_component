@@ -1,5 +1,9 @@
 # master
 
+* Remove initializer requirement from the component.
+
+    *Vasiliy Ermolovich*
+
 # v2.1.0
 
 * Support rendering collections (e.g., `render(MyComponent.with_collection(@items))`).

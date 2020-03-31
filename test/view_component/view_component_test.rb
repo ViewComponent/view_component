@@ -337,16 +337,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert UnreferencedComponent.compiled?
   end
 
-  def test_does_not_compile_components_without_initializers
-    refute MissingInitializerComponent.compiled?
+  def test_compiles_components_without_initializers
+    assert MissingInitializerComponent.compiled?
   end
 
-  def test_raises_error_when_initializer_is_not_defined
-    exception = assert_raises ViewComponent::TemplateError do
-      render_inline(MissingInitializerComponent.new)
-    end
+  def test_renders_when_initializer_is_not_defined
+    render_inline(MissingInitializerComponent.new)
 
-    assert_includes exception.message, "must implement #initialize"
+    assert_selector("div", text: "Hello, world!")
   end
 
   def test_raises_error_when_sidecar_template_is_missing

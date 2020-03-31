@@ -137,10 +137,14 @@ module ViewComponent
     @@test_controller = "ApplicationController"
 
     class << self
+      attr_accessor :source_location
+
       def inherited(child)
         if defined?(Rails)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
         end
+
+        child.source_location = caller_locations(1, 1)[0].absolute_path
 
         super
       end
@@ -151,16 +155,6 @@ module ViewComponent
         else
           "call"
         end
-      end
-
-      def source_location
-        @source_location ||=
-          begin
-            # Require `#initialize` to be defined so that we can use `method#source_location`
-            # to look up the filename of the component.
-            initialize_method = instance_method(:initialize)
-            initialize_method.source_location[0] if initialize_method.owner == self
-          end
       end
 
       def compiled?
@@ -252,12 +246,6 @@ module ViewComponent
         @template_errors ||=
           begin
             errors = []
-            if source_location.nil?
-              # Require `#initialize` to be defined so that we can use `method#source_location`
-              # to look up the filename of the component.
-              errors << "#{self} must implement #initialize."
-            end
-
             errors << "Could not find a template file for #{self}." if templates.empty?
 
             if templates.count { |template| template[:variant].nil? } > 1

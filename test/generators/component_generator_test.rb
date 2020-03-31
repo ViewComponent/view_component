@@ -18,6 +18,16 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/class UserComponent < /, component)
+      assert_no_match(/def initialize/, component)
+    end
+  end
+
+  def test_component_with_arguments
+    run_generator %w[user name]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/class UserComponent < /, component)
+      assert_match(/def initialize\(name:\)/, component)
     end
   end
 
