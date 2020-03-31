@@ -10,6 +10,21 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "Foo\n  bar")
   end
 
+  if Rails.version.to_f >= 6.1
+    test "rendering component with template annotations enabled" do
+      begin
+        ActionView::Base.annotate_template_file_names = true
+
+        get "/"
+        assert_response :success
+
+        assert_select("div", "Foo\n  bar")
+      ensure
+        ActionView::Base.annotate_template_file_names = false
+      end
+    end
+  end
+
   test "rendering component in a controller" do
     get "/controller_inline_baseline"
 

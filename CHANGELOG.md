@@ -1,5 +1,9 @@
 # master
 
+* Add support for `config.action_view.annotate_template_file_names` (coming in Rails 6.1).
+
+    *Joel Hawksley*
+
 # v2.1.0
 
 * Support rendering collections (e.g., `render(MyComponent.with_collection(@items))`).
