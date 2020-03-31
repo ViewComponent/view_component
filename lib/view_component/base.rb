@@ -77,6 +77,10 @@ module ViewComponent
       true
     end
 
+    def self.short_identifier
+      @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
+    end
+
     def initialize(*); end
 
     def render(options = {}, args = {}, &block)

@@ -12,16 +12,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   if Rails.version.to_f >= 6.1
     test "rendering component with template annotations enabled" do
-      begin
-        ActionView::Base.annotate_template_file_names = true
+      get "/"
+      assert_response :success
 
-        get "/"
-        assert_response :success
+      assert_includes response.body, "BEGIN app/components/erb_component.rb"
 
-        assert_select("div", "Foo\n  bar")
-      ensure
-        ActionView::Base.annotate_template_file_names = false
-      end
+      assert_select("div", "Foo\n  bar")
     end
   end
 
@@ -39,7 +35,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     inline_response = response.body
 
-    assert_equal baseline_response, inline_response
+    assert_includes inline_response, baseline_response
   end
 
   test "rendering component with content" do
@@ -63,8 +59,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/partial"
     assert_response :success
 
-    assert_includes response.body, "partial:<div>hello,partial world!"
-    assert_includes response.body, "component:<div>hello,partial world!"
+    assert_select("div", "hello,partial world!", count: 2)
   end
 
   test "rendering component without variant" do
@@ -126,7 +121,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     get "/render_check"
     assert_response :success
-    assert_empty response.body.strip
+    refute_includes response.body, "Rendered"
   end
 
   test "renders component preview" do
