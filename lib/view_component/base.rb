@@ -148,7 +148,10 @@ module ViewComponent
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
         end
 
-        child.source_location = caller_locations(1, 1)[0].absolute_path
+        # Derive the source location of the component Ruby file from the call stack.
+        # We need to ignore `inherited` frames here as they indicate that `inherited`
+        # has been re-defined by the consuming application, likely in ApplicationComponent.
+        child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].absolute_path
 
         super
       end
