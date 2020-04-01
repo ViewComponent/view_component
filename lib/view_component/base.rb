@@ -151,7 +151,7 @@ module ViewComponent
         # Derive the source location of the component Ruby file from the call stack.
         # We need to ignore `inherited` frames here as they indicated that this method
         # has been re-defined by the consuming application.
-        child.source_location = caller_locations.reject { |l| l.label == "inherited" }[0].absolute_path
+        child.source_location = caller_locations(1,10).reject { |l| l.label == "inherited" }[0].absolute_path
 
         super
       end
