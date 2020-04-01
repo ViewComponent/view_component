@@ -1,5 +1,11 @@
 # master
 
+# v2.2.1
+
+* Fix bug where template could not be found if `inherited` was redefined.
+
+    *Joel Hawksley*
+
 # v2.2.0
 
 * Add support for `config.action_view.annotate_template_file_names` (coming in Rails 6.1).
