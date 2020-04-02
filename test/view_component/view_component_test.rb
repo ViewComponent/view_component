@@ -31,6 +31,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
+  def test_render_child_without_template
+    render_inline(InlineChildComponent.new)
+
+    assert_predicate InlineChildComponent, :inlined?
+    assert_not_predicate InlineChildComponent, :compiled?
+    assert_selector("input[type='text'][name='name']")
+  end
+
   def test_renders_slim_template
     render_inline(SlimComponent.new(message: "bar")) { "foo" }
 
@@ -70,6 +78,34 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(VariantsComponent.new)
 
       assert_text("Default")
+    end
+  end
+
+  def test_renders_inline_variant_template_when_variant_template_is_not_present
+    with_variant :inline_variant do
+      render_inline(InlineVariantComponent.new)
+
+      assert_predicate InlineVariantComponent, :inlined?
+      assert_not_predicate InlineVariantComponent, :compiled?
+      assert_selector("input[type='text'][name='inline_variant']")
+    end
+  end
+
+  def test_renders_child_inline_variant_when_variant_template_is_not_present
+    with_variant :inline_variant do
+      render_inline(InlineVariantChildComponent.new)
+
+      assert_predicate InlineVariantChildComponent, :inlined?
+      assert_not_predicate InlineVariantChildComponent, :compiled?
+      assert_selector("input[type='text'][name='inline_variant']")
+    end
+  end
+
+  def test_renders_child_inline_variant_when_variant_template_is_present
+    with_variant :inline_variant do
+      render_inline(InlineVariantChildWithTemplateComponent.new)
+
+      assert_selector("div", text: "inline variant")
     end
   end
 

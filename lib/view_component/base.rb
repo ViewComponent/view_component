@@ -169,7 +169,7 @@ module ViewComponent
       end
 
       def inlined?
-        instance_methods(false).grep(/^call/).present? && templates.empty?
+        inline_calls.present? && templates.empty?
       end
 
       def compile!
@@ -212,6 +212,8 @@ module ViewComponent
       end
 
       def variants
+        return inline_variant_templates if inlined?
+
         templates.map { |template| template[:variant] }
       end
 
@@ -246,6 +248,25 @@ module ViewComponent
       end
 
       private
+
+      def compiled_template(file_path)
+        handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
+        template = File.read(file_path)
+
+        if handler.method(:call).parameters.length > 1
+          handler.call(self, template)
+        else
+          handler.call(OpenStruct.new(source: template, identifier: identifier, type: type))
+        end
+      end
+
+      def inline_calls
+        view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call/) }.uniq
+      end
+
+      def inline_variant_templates
+        inline_calls.reject { |call| call == :call }.map { |variant_call| variant_call.to_s.sub("call_", "").to_sym }
+      end
 
       def matching_views_in_source_location
         return [] unless source_location
@@ -288,15 +309,10 @@ module ViewComponent
           end
       end
 
-      def compiled_template(file_path)
-        handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
-        template = File.read(file_path)
-
-        if handler.method(:call).parameters.length > 1
-          handler.call(self, template)
-        else
-          handler.call(OpenStruct.new(source: template, identifier: identifier, type: type))
-        end
+      def view_component_ancestors
+        # Fetch only ViewComponent ancestor classes
+        all_ancestors = ancestors
+        all_ancestors[0...all_ancestors.index(ViewComponent::Base)] - included_modules
       end
     end
 
