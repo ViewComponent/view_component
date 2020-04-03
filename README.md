@@ -373,6 +373,10 @@ class CommentComponent < ViewComponent::Base
   def formatted_body
     simple_format(@comment.body)
   end
+
+  private
+
+  attr_reader :comment
 end
 ```
 
@@ -401,17 +405,19 @@ class Comment extends HTMLElement {
         float: right;
         font-size: 0.75em;
       }
-      .commenter { … }
+      .commenter { font-weight: bold; }
       .body { … }
     `
   }
 
-  connectedCallback() {
-    this.shadowRoot.innerHTML = `
+  constructor() {
+    super()
+    const shadow = this.attachShadow({mode: 'open'});
+    shadow.innerHTML = `
       <style>
         ${this.styles()}
       </style>
-      <slot name="posted"></span>
+      <slot name="posted"></slot>
       <div class="commenter">
         <slot name="avatar"></slot> <slot name="author"></slot>
       </div>
@@ -618,10 +624,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |@mellowfish|@horacio|@dukex|@dark-panda|@smashwilson|
 |Spring Hill, TN|Buenos Aires|São Paulo||Gambrills, MD|
 
-|<img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" />|<img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" />|<img src="https://avatars.githubusercontent.com/tclem?s=256" alt="tclem" width="128" />|<img src="https://avatars.githubusercontent.com/nashby?s=256" alt="nashby" width="128" />
-|:---:|:---:|:---:|:---:|
-|@blakewilliams|@seanpdoyle|@tclem|@nashby|
-|Boston, MA|New York, NY|San Francisco, CA|Minsk|
+|<img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" />|<img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" />|<img src="https://avatars.githubusercontent.com/tclem?s=256" alt="tclem" width="128" />|<img src="https://avatars.githubusercontent.com/nashby?s=256" alt="nashby" width="128" />|<img src="https://avatars.githubusercontent.com/jaredcwhite?s=256" alt="nashby" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
+|Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
 ## License
 
