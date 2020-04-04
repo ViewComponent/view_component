@@ -261,11 +261,17 @@ module ViewComponent
       end
 
       def inline_calls
-        view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call/) }.uniq
+        @inline_calls ||=
+          view_component_ancestors.flat_map do |ancestor|
+            ancestor.instance_methods(false).grep(/^call/)
+          end.uniq
       end
 
       def inline_variant_templates
-        inline_calls.reject { |call| call == :call }.map { |variant_call| variant_call.to_s.sub("call_", "").to_sym }
+        @inline_variant_templates ||=
+          inline_calls.reject { |call| call == :call }.map do |variant_call|
+            variant_call.to_s.sub("call_", "").to_sym
+          end
       end
 
       def matching_views_in_source_location
@@ -310,9 +316,13 @@ module ViewComponent
       end
 
       def view_component_ancestors
-        # Fetch only ViewComponent ancestor classes
-        all_ancestors = ancestors
-        all_ancestors[0...all_ancestors.index(ViewComponent::Base)] - included_modules
+        # Fetch only ViewComponent ancestor classes to limit the scope of
+        # finding inline calls
+        @view_component_ancestors ||=
+          begin
+            all_ancestors = ancestors
+            all_ancestors[0...all_ancestors.index(ViewComponent::Base)] - included_modules
+          end
       end
     end
 
