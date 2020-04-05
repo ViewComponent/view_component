@@ -319,10 +319,7 @@ module ViewComponent
         # Fetch only ViewComponent ancestor classes to limit the scope of
         # finding inline calls
         @view_component_ancestors ||=
-          begin
-            all_ancestors = ancestors
-            all_ancestors[0...all_ancestors.index(ViewComponent::Base)] - included_modules
-          end
+          ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - included_modules
       end
     end
 
