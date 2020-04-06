@@ -39,6 +39,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
+  def test_render_template_when_inline_and_template_exist
+    render_inline(InlineAndTemplateComponent.new)
+
+    assert_selector("div", text: "Template")
+  end
+
   def test_renders_slim_template
     render_inline(SlimComponent.new(message: "bar")) { "foo" }
 

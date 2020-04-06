@@ -215,7 +215,7 @@ class InlineVariantComponent < ViewComponent::Base
 end
 ```
 
-Using a mixture of templates and inline rendering in a component is not supported.
+Using a mixture of templates and inline rendering in a component is not supported (templates will be prioritized).
 
 ### Conditional Rendering
 
