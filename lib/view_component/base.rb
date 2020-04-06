@@ -212,7 +212,7 @@ module ViewComponent
       end
 
       def variants
-        return inline_variant_templates if inlined?
+        return inline_variant_templates if templates.blank?
 
         templates.map { |template| template[:variant] }
       end
