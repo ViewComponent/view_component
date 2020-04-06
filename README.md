@@ -209,13 +209,13 @@ class InlineVariantComponent < ViewComponent::Base
     link_to "Default", default_path
   end
 
-  def call_variant
-    link_to "variant", variant_path
+  def call_phone
+    link_to "Phone", phone_path
   end
 end
 ```
 
-Using a mixture of templates and inline rendering in a component is not supported (templates will be prioritized).
+Using a mixture of templates and inline render methods in a component is supported, however if both exist for a component (or specific variant) the template will take priority.
 
 ### Conditional Rendering
 

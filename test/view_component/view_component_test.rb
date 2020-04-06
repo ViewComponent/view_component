@@ -26,7 +26,7 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_render_without_template
     render_inline(InlineComponent.new)
 
-    assert_predicate InlineComponent, :inlined?
+    assert_predicate InlineComponent, :all_inlined?
     assert_not_predicate InlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
@@ -34,15 +34,39 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_render_child_without_template
     render_inline(InlineChildComponent.new)
 
-    assert_predicate InlineChildComponent, :inlined?
+    assert_predicate InlineChildComponent, :all_inlined?
     assert_not_predicate InlineChildComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
-  def test_render_template_when_inline_and_template_exist
-    render_inline(InlineAndTemplateComponent.new)
+  def test_render_template_when_template_and_inline_variant_exist
+    render_inline(DefaultTemplateAndInlineVariantComponent.new)
 
-    assert_selector("div", text: "Template")
+    assert_not_predicate DefaultTemplateAndInlineVariantComponent, :all_inlined?
+    assert_selector("div", text: "Default Template")
+  end
+
+  def test_render_variant_template_when_template_and_inline_variant_exist
+    with_variant :phone do
+      render_inline(DefaultTemplateAndInlineVariantComponent.new)
+
+      assert_text("Inline Phone Template")
+    end
+  end
+
+  def test_render_template_when_inline_and_template_variant_exist
+    render_inline(DefaultInlineAndVariantTemplateComponent.new)
+
+    assert_not_predicate DefaultInlineAndVariantTemplateComponent, :all_inlined?
+    assert_selector("div", text: "Inline Template")
+  end
+
+  def test_render_variant_template_when_inline_and_template_variant_exist
+    with_variant :phone do
+      render_inline(DefaultInlineAndVariantTemplateComponent.new)
+
+      assert_text("Phone Template")
+    end
   end
 
   def test_renders_slim_template
@@ -91,7 +115,7 @@ class ViewComponentTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantComponent.new)
 
-      assert_predicate InlineVariantComponent, :inlined?
+      assert_predicate InlineVariantComponent, :all_inlined?
       assert_not_predicate InlineVariantComponent, :compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
@@ -101,7 +125,7 @@ class ViewComponentTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantChildComponent.new)
 
-      assert_predicate InlineVariantChildComponent, :inlined?
+      assert_predicate InlineVariantChildComponent, :all_inlined?
       assert_not_predicate InlineVariantChildComponent, :compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end

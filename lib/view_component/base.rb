@@ -168,8 +168,8 @@ module ViewComponent
         @compiled && ActionView::Base.cache_template_loading
       end
 
-      def inlined?
-        inline_calls.present? && templates.empty?
+      def all_inlined?
+        inline_calls.any? && templates.empty?
       end
 
       def compile!
@@ -180,7 +180,7 @@ module ViewComponent
       # We could in theory do this on app boot, at least in production environments.
       # Right now this just compiles the first time the component is rendered.
       def compile(raise_template_errors: false)
-        return if compiled? || inlined?
+        return if compiled? || all_inlined?
 
         if template_errors.present?
           raise ViewComponent::TemplateError.new(template_errors) if raise_template_errors
@@ -212,9 +212,7 @@ module ViewComponent
       end
 
       def variants
-        return inline_variant_templates if templates.blank?
-
-        templates.map { |template| template[:variant] }
+        inline_variant_templates + templates.map { |template| template[:variant] }
       end
 
       # we'll eventually want to update this to support other types
