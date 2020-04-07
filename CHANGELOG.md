@@ -1,5 +1,9 @@
 # master
 
+* Add `Base.format` for better compatibility with `ActionView::Template`.
+
+    *Joel Hawksley*
+
 # v2.2.1
 
 * Fix bug where template could not be found if `inherited` was redefined.
