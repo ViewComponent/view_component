@@ -316,6 +316,137 @@ end
 </li>
 ```
 
+### Sidecar assets (experimental)
+
+We're experimenting with including Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
+
+To use the Webpacker gem to compile sidecar assets located in `app/components`:
+
+1. 1. In `config/webpacker.yml`, add `"app/components"` to the `resolved_paths` array (e.g. `resolved_paths: ["app/components"]`).
+2. In the Webpack entry file (often `app/javascript/packs/application.js`), add an import statement to a helper file, and in the helper file, import the components' Javascript:
+
+Near the top the entry file, add:
+
+```js
+import "../components"
+```
+
+Then add the following to a new file `app/javascript/components.js`:
+
+```js
+function importAll(r) {
+  r.keys().forEach(r)
+}
+
+importAll(require.context("../components", true, /_component.js$/))
+```
+
+Any file with the `_component.js` suffix, for example `app/components/widget_component.js`, will get compiled into the Webpack bundle. If that file itself imports another file, for example `app/components/widget_component.css`, that will also get compiled and bundled into Webpack's output stylesheet if Webpack is being used for styles.
+
+#### Encapsulating sidecar assets
+
+Ideally, sidecar Javascript/CSS should not "leak" out of the context of its associated component.
+
+One approach is to use Web Components, which contain all Javascript functionality, internal markup, and styles within the shadow root of the Web Component.
+
+For example:
+
+`app/components/comment_component.rb`
+```ruby
+class CommentComponent < ViewComponent::Base
+  def initialize(comment:)
+    @comment = comment
+  end
+
+  def commenter
+    @comment.user
+  end
+
+  def commenter_name
+    commenter.name
+  end
+
+  def avatar
+    commenter.avatar_image_url
+  end
+
+  def formatted_body
+    simple_format(@comment.body)
+  end
+
+  private
+
+  attr_reader :comment
+end
+```
+
+`app/components/comment_component.html.erb`
+```erb
+<my-comment comment-id="<%= comment.id %>">
+  <time slot="posted" datetime="<%= comment.created_at.iso8601 %>"><%= comment.created_at.strftime("%b %-d") %></time>
+
+  <div slot="avatar"><img src="<%= avatar %>" /></div>
+
+  <div slot="author"><%= commenter_name %></div>
+
+  <div slot="body"><%= formatted_body %></div>
+</my-comment>
+```
+
+`app/components/comment_component.js`
+```js
+class Comment extends HTMLElement {
+  styles() {
+    return `
+      :host {
+        display: block;
+      }
+      ::slotted(time) {
+        float: right;
+        font-size: 0.75em;
+      }
+      .commenter { font-weight: bold; }
+      .body { … }
+    `
+  }
+
+  constructor() {
+    super()
+    const shadow = this.attachShadow({mode: 'open'});
+    shadow.innerHTML = `
+      <style>
+        ${this.styles()}
+      </style>
+      <slot name="posted"></slot>
+      <div class="commenter">
+        <slot name="avatar"></slot> <slot name="author"></slot>
+      </div>
+      <div class="body">
+        <slot name="body"></slot>
+      </div>
+    `
+  }
+}
+customElements.define('my-comment', Comment)
+```
+
+##### Stimulus
+
+In Stimulus, create a 1:1 mapping between a Stimulus controller and a component. In order to load in Stimulus controllers from the `app/components` tree, amend the Stimulus boot code in `app/javascript/packs/application.js`:
+
+```js
+const application = Application.start()
+const context = require.context("controllers", true, /.js$/)
+const context_components = require.context("../../components", true, /_controller.js$/)
+application.load(
+  definitionsFromContext(context).concat(
+    definitionsFromContext(context_components)
+  )
+)
+```
+
+This will allow you to create files such as `app/components/widget_controller.js`, where the controller identifier matches the `data-controller` attribute in the component's HTML template.
+
 ### Testing
 
 Unit test components directly, using the `render_inline` test helper and Capybara matchers:
@@ -454,6 +585,8 @@ Inline templates have been removed (for now) due to concerns raised by [@soutaro
 
 ## Resources
 
+- [Components, HAML vs ERB, and Design Systems](https://the-ruby-blend.fireside.fm/4)
+- [Choosing the Right Tech Stack with Dave Paola](https://5by5.tv/rubyonrails/307)
 - [Rethinking the View Layer with Components, RailsConf 2019](https://www.youtube.com/watch?v=y5Z5a6QdA-M)
 - [Introducing ActionView::Component with Joel Hawksley, Ruby on Rails Podcast](http://5by5.tv/rubyonrails/276)
 - [Rails to Introduce View Components, Dev.to](https://dev.to/andy/rails-to-introduce-view-components-3ome)
@@ -493,10 +626,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |@mellowfish|@horacio|@dukex|@dark-panda|@smashwilson|
 |Spring Hill, TN|Buenos Aires|São Paulo||Gambrills, MD|
 
-|<img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" />|<img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" />|<img src="https://avatars.githubusercontent.com/tclem?s=256" alt="tclem" width="128" />|<img src="https://avatars.githubusercontent.com/nashby?s=256" alt="nashby" width="128" />
-|:---:|:---:|:---:|:---:|
-|@blakewilliams|@seanpdoyle|@tclem|@nashby|
-|Boston, MA|New York, NY|San Francisco, CA|Minsk|
+|<img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" />|<img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" />|<img src="https://avatars.githubusercontent.com/tclem?s=256" alt="tclem" width="128" />|<img src="https://avatars.githubusercontent.com/nashby?s=256" alt="nashby" width="128" />|<img src="https://avatars.githubusercontent.com/jaredcwhite?s=256" alt="jaredcwhite" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
+|Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
 ## License
 
