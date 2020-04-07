@@ -220,6 +220,10 @@ module ViewComponent
         "text/html"
       end
 
+      def format
+        :html
+      end
+
       def identifier
         source_location
       end
