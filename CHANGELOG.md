@@ -1,5 +1,7 @@
 # master
 
+# v2.2.2
+
 * Add `Base.format` for better compatibility with `ActionView::Template`.
 
     *Joel Hawksley*
