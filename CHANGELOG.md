@@ -1,5 +1,13 @@
 # master
 
+* Allow using inline render method(s) defined on a parent.
+
+    *Simon Rand*
+
+* Fix bug where inline variant render methods would never be called.
+
+    *Simon Rand*
+
 # v2.2.2
 
 * Add `Base.format` for better compatibility with `ActionView::Template`.

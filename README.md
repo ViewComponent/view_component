@@ -215,7 +215,7 @@ class InlineVariantComponent < ViewComponent::Base
 end
 ```
 
-Using a mixture of templates and inline render methods in a component is supported, however if both exist for a component (or specific variant) the template will take priority.
+Using a mixture of templates and inline render methods in a component is supported, however only one should be provided per component (or variant).
 
 ### Conditional Rendering
 
