@@ -143,6 +143,10 @@ module ViewComponent
     class << self
       attr_accessor :source_location
 
+      def all_templates_inlined?
+        @all_templates_inlined ||= inline_calls.any? && templates.empty?
+      end
+
       def inherited(child)
         if defined?(Rails)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
@@ -165,11 +169,7 @@ module ViewComponent
       end
 
       def compiled?
-        @compiled && ActionView::Base.cache_template_loading
-      end
-
-      def all_inlined?
-        inline_calls.any? && templates.empty?
+        all_templates_inlined? || (@compiled && ActionView::Base.cache_template_loading)
       end
 
       def compile!
@@ -180,7 +180,7 @@ module ViewComponent
       # We could in theory do this on app boot, at least in production environments.
       # Right now this just compiles the first time the component is rendered.
       def compile(raise_template_errors: false)
-        return if compiled? || all_inlined?
+        return if compiled?
 
         if template_errors.present?
           raise ViewComponent::TemplateError.new(template_errors) if raise_template_errors
@@ -209,10 +209,6 @@ module ViewComponent
         end
 
         @compiled = true
-      end
-
-      def variants
-        inline_variant_templates + templates.map { |template| template[:variant] }
       end
 
       # we'll eventually want to update this to support other types
@@ -266,10 +262,15 @@ module ViewComponent
       end
 
       def inline_variant_templates
-        @inline_variant_templates ||=
-          inline_calls.reject { |call| call == :call }.map do |variant_call|
-            variant_call.to_s.sub("call_", "").to_sym
-          end
+        @inline_variant_templates ||= templates_from_inline_calls(inline_calls)
+      end
+
+      def instance_inline_calls
+        @instance_inline_calls ||= instance_methods(false).grep(/^call/)
+      end
+
+      def instance_inline_variant_templates
+        templates_from_inline_calls(instance_inline_calls)
       end
 
       def matching_views_in_source_location
@@ -309,8 +310,36 @@ module ViewComponent
             unless invalid_variants.empty?
               errors << "More than one template found for #{'variant'.pluralize(invalid_variants.count)} #{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{self}. There can only be one template file per variant."
             end
+
+            if templates.find { |template| template[:variant].nil? } && instance_inline_calls.include?(:call)
+              errors << "Template file and inline render method found for #{self}. There can only be a template file or inline render method per component."
+            end
+
+            duplicate_template_file_and_inline_variant_calls =
+              templates.pluck(:variant) & instance_inline_variant_templates
+
+            unless duplicate_template_file_and_inline_variant_calls.empty?
+              count = duplicate_template_file_and_inline_variant_calls.count
+
+              errors << "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} found for #{'variant'.pluralize(count)} #{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} in #{self}. There can only be a template file or inline render method per variant."
+            end
+
             errors
           end
+      end
+
+      def templates_from_inline_calls(calls)
+        calls.reject { |call| call == :call }.map do |variant_call|
+          variant_call.to_s.sub("call_", "").to_sym
+        end
+      end
+
+      def variant_templates
+        @variant_templates ||= templates.map { |template| template[:variant] }
+      end
+
+      def variants
+        @variants ||= variant_templates + inline_variant_templates
       end
 
       def view_component_ancestors
