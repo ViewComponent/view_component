@@ -2,7 +2,6 @@ PATH
   remote: .
   specs:
     view_component (2.2.2)
-      capybara (~> 3)
 
 GEM
   remote: https://rubygems.org/
@@ -189,6 +188,7 @@ PLATFORMS
 DEPENDENCIES
   better_html (~> 1)
   bundler (~> 1.14)
+  capybara (~> 3)
   haml (~> 5)
   minitest (= 5.1.0)
   rails (= 6.0.2.2)
