@@ -265,12 +265,12 @@ module ViewComponent
         @inline_variant_templates ||= templates_from_inline_calls(inline_calls)
       end
 
-      def instance_inline_calls
-        @instance_inline_calls ||= instance_methods(false).grep(/^call/)
+      def inline_calls_defined_on_self
+        @inline_calls_not_defined_parents ||= instance_methods(false).grep(/^call/)
       end
 
-      def instance_inline_variant_templates
-        templates_from_inline_calls(instance_inline_calls)
+      def inline_variant_templates_defined_on_self
+        templates_from_inline_calls(inline_calls_defined_on_self)
       end
 
       def matching_views_in_source_location
@@ -311,12 +311,12 @@ module ViewComponent
               errors << "More than one template found for #{'variant'.pluralize(invalid_variants.count)} #{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{self}. There can only be one template file per variant."
             end
 
-            if templates.find { |template| template[:variant].nil? } && instance_inline_calls.include?(:call)
+            if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
               errors << "Template file and inline render method found for #{self}. There can only be a template file or inline render method per component."
             end
 
             duplicate_template_file_and_inline_variant_calls =
-              templates.pluck(:variant) & instance_inline_variant_templates
+              templates.pluck(:variant) & inline_variant_templates_defined_on_self
 
             unless duplicate_template_file_and_inline_variant_calls.empty?
               count = duplicate_template_file_and_inline_variant_calls.count
