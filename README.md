@@ -535,7 +535,7 @@ config.view_component.preview_path = "#{Rails.root}/lib/component_previews"
 
 #### Configuring TestController
 
-Component tests and previews assume the existence of an `ApplicationController` class, be can beconfigured using the `test_controller` option:
+Component tests and previews assume the existence of an `ApplicationController` class, be can be configured using the `test_controller` option:
 
 `config/application.rb`
 ```ruby
