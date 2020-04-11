@@ -4,7 +4,6 @@ require "rails/application_controller"
 
 class Rails::ViewComponentsController < Rails::ApplicationController # :nodoc:
   prepend_view_path File.expand_path("../../../lib/railties/lib/rails/templates/rails", __dir__)
-  prepend_view_path "#{Rails.root}/app/views/" if defined?(Rails.root)
 
   around_action :set_locale, only: :previews
   before_action :find_preview, only: :previews
@@ -18,7 +17,7 @@ class Rails::ViewComponentsController < Rails::ApplicationController # :nodoc:
     @previews = ViewComponent::Preview.all
     @page_title = "Component Previews"
     # rubocop:disable GitHub/RailsControllerRenderPathsExist
-    render "components/index"
+    render "components/index", layout: "application"
     # rubocop:enable GitHub/RailsControllerRenderPathsExist
   end
 
@@ -29,6 +28,7 @@ class Rails::ViewComponentsController < Rails::ApplicationController # :nodoc:
       render "components/previews"
       # rubocop:enable GitHub/RailsControllerRenderPathsExist
     else
+      prepend_application_view_paths
       @example_name = File.basename(params[:path])
       @render_args = @preview.render_args(@example_name)
       layout = @render_args[:layout]
@@ -61,5 +61,9 @@ class Rails::ViewComponentsController < Rails::ApplicationController # :nodoc:
     I18n.with_locale(params[:locale] || I18n.default_locale) do
       yield
     end
+  end
+
+  def prepend_application_view_paths
+    prepend_view_path Rails.root.join("app/views") if defined?(Rails.root)
   end
 end

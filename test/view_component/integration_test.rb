@@ -169,7 +169,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "test preview renders" do
     get "/rails/view_components/preview_component/default"
 
-    assert_includes response.body, "ViewComponent - Test"
     assert_select(".preview-component .btn", "Click me!")
   end
 
@@ -184,6 +183,24 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/rails/view_components/no_layout/default"
 
     assert_select("div", "hello,world!")
+  end
+
+  test "test preview renders application's layout by default" do
+    get "/rails/view_components/preview_component/default"
+
+    assert_includes response.body, "<title>ViewComponent - Test</title>"
+  end
+
+  test "test preview index renders rails application layout by default" do
+    get "/rails/view_components"
+
+    assert_includes response.body, "<title>Component Previews</title>"
+  end
+
+  test "test preview index of a component renders rails application layout by default" do
+    get "/rails/view_components/preview_component"
+
+    assert_includes response.body, "<title>Component Previews for preview_component</title>"
   end
 
   test "renders collections" do
