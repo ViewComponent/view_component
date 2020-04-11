@@ -17,7 +17,7 @@ class Rails::ViewComponentsController < Rails::ApplicationController # :nodoc:
     @previews = ViewComponent::Preview.all
     @page_title = "Component Previews"
     # rubocop:disable GitHub/RailsControllerRenderPathsExist
-    render "components/index", layout: "application"
+    render "components/index"
     # rubocop:enable GitHub/RailsControllerRenderPathsExist
   end
 
