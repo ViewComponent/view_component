@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
-require "capybara/minitest"
-
 module ViewComponent
   module TestHelpers
-    include Capybara::Minitest::Assertions
+    begin
+      require "capybara/minitest"
+      include Capybara::Minitest::Assertions
 
-    def page
-      Capybara::Node::Simple.new(@raw)
-    end
+      def page
+        Capybara::Node::Simple.new(@raw)
+      end
 
-    def refute_component_rendered
-      assert_no_selector("body")
+      def refute_component_rendered
+        assert_no_selector("body")
+      end
+    rescue LoadError
+      warn "WARNING in `ViewComponent::TestHelpers`: You must add `capybara` to your Gemfile to use Capybara assertions."
     end
 
     def render_inline(component, **args, &block)
