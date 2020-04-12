@@ -203,6 +203,17 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "<title>Component Previews for preview_component</title>"
   end
 
+  test "previews views are being rendered correctly" do
+    get "/rails/view_components"
+    assert_includes response.body, "<title>Component Previews</title>"
+
+    get "/rails/view_components/preview_component/default"
+    assert_includes response.body, "<title>ViewComponent - Test</title>"
+
+    get "/rails/view_components/preview_component"
+    assert_includes response.body, "<title>Component Previews for preview_component</title>"
+  end
+
   test "renders collections" do
     get "/products"
 
