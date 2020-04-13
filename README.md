@@ -3,24 +3,14 @@ A view component framework for Rails.
 
 **Current Status**: Used in production at GitHub. Because of this, all changes will be thoroughly vetted, which could slow down the process of contributing. We will do our best to actively communicate status of pull requests with any contributors. If you have any substantial changes that you would like to make, it would be great to first [open an issue](http://github.com/github/view_component/issues/new) to discuss them with us.
 
-## Migration in progress
+## Migration from ActionView::Component
 
-This gem is in the process of a name / API change from `ActionView::Component` to `ViewComponent`, see https://github.com/github/view_component/issues/206.
+This gem used to be called `ActionView::Component`.
+See [issue #206] for some background on the name change.
+Learn more about what changed and how to migrate [here][migration-info].
 
-### What's changing in the migration
-
-1. `ActionView::Component::Base` is now `ViewComponent::Base`.
-1. Components can only be rendered with `render(MyComponent.new)` syntax.
-1. Validations are no longer supported by default.
-
-### How to migrate to ViewComponent
-
-1. Update `Gemfile` to use `view_component`.
-1. In `application.rb`, require `view_component/engine`.
-1. Update components to inherit from `ViewComponent::Base`.
-1. Update component tests to inherit from `ViewComponent::TestCase`.
-1. Update component previews to inherit from `ViewComponent::Preview`.
-1. Include `ViewComponent::TestHelpers` in the appropriate test helper file.
+[issue #206]: https://github.com/github/view_component/issues/206
+[migration-info]: https://github.com/github/view_component/blob/v2.0.0/README.md#migration-in-progress
 
 ## Roadmap
 
