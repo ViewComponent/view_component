@@ -188,30 +188,30 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   test "test preview renders application's layout by default" do
     get "/rails/view_components/preview_component/default"
 
-    assert_includes response.body, "<title>ViewComponent - Test</title>"
+    assert_select "title", "ViewComponent - Test"
   end
 
   test "test preview index renders rails application layout by default" do
     get "/rails/view_components"
 
-    assert_includes response.body, "<title>Component Previews</title>"
+    assert_select "title", "Component Previews"
   end
 
   test "test preview index of a component renders rails application layout by default" do
     get "/rails/view_components/preview_component"
 
-    assert_includes response.body, "<title>Component Previews for preview_component</title>"
+    assert_select "title", "Component Previews for preview_component"
   end
 
   test "test preview related views are being rendered correctly" do
     get "/rails/view_components"
-    assert_includes response.body, "<title>Component Previews</title>"
+    assert_select "title", "Component Previews"
 
     get "/rails/view_components/preview_component/default"
-    assert_includes response.body, "<title>ViewComponent - Test</title>"
+    assert_select "title", "ViewComponent - Test"
 
     get "/rails/view_components/preview_component"
-    assert_includes response.body, "<title>Component Previews for preview_component</title>"
+    assert_select "title", "Component Previews for preview_component"
   end
 
   test "renders collections" do
