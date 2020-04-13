@@ -26,7 +26,6 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_render_without_template
     render_inline(InlineComponent.new)
 
-    assert_predicate InlineComponent, :all_templates_inlined?
     assert_predicate InlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
@@ -34,7 +33,6 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_render_child_without_template
     render_inline(InlineChildComponent.new)
 
-    assert_predicate InlineChildComponent, :all_templates_inlined?
     assert_predicate InlineChildComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
@@ -85,7 +83,6 @@ class ViewComponentTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantComponent.new)
 
-      assert_predicate InlineVariantComponent, :all_templates_inlined?
       assert_predicate InlineVariantComponent, :compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
@@ -95,7 +92,6 @@ class ViewComponentTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantChildComponent.new)
 
-      assert_predicate InlineVariantChildComponent, :all_templates_inlined?
       assert_predicate InlineVariantChildComponent, :compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
@@ -394,7 +390,7 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(MissingTemplateComponent.new)
     end
 
-    assert_includes exception.message, "Could not find a template file for MissingTemplateComponent"
+    assert_includes exception.message, "Could not find a template file or inline render method for MissingTemplateComponent"
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_is_present

@@ -143,10 +143,6 @@ module ViewComponent
     class << self
       attr_accessor :source_location
 
-      def all_templates_inlined?
-        @all_templates_inlined ||= inline_calls.any? && templates.empty?
-      end
-
       def inherited(child)
         if defined?(Rails)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
@@ -169,7 +165,7 @@ module ViewComponent
       end
 
       def compiled?
-        all_templates_inlined? || (@compiled && ActionView::Base.cache_template_loading)
+        @compiled && ActionView::Base.cache_template_loading
       end
 
       def compile!
@@ -185,6 +181,10 @@ module ViewComponent
         if template_errors.present?
           raise ViewComponent::TemplateError.new(template_errors) if raise_template_errors
           return false
+        end
+
+        define_singleton_method(:variants) do
+          templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
         end
 
         # If template name annotations are turned on, a line is dynamically
@@ -261,16 +261,8 @@ module ViewComponent
           end.uniq
       end
 
-      def inline_variant_templates
-        @inline_variant_templates ||= templates_from_inline_calls(inline_calls)
-      end
-
       def inline_calls_defined_on_self
-        @inline_calls_not_defined_parents ||= instance_methods(false).grep(/^call/)
-      end
-
-      def inline_variant_templates_defined_on_self
-        templates_from_inline_calls(inline_calls_defined_on_self)
+        @inline_calls_defined_on_self ||= instance_methods(false).grep(/^call/)
       end
 
       def matching_views_in_source_location
@@ -295,7 +287,10 @@ module ViewComponent
         @template_errors ||=
           begin
             errors = []
-            errors << "Could not find a template file for #{self}." if templates.empty?
+
+            if (templates + inline_calls).empty?
+              errors << "Could not find a template file or inline render method for #{self}."
+            end
 
             if templates.count { |template| template[:variant].nil? } > 1
               errors << "More than one template found for #{self}. There can only be one default template file per component."
@@ -316,7 +311,7 @@ module ViewComponent
             end
 
             duplicate_template_file_and_inline_variant_calls =
-              templates.pluck(:variant) & inline_variant_templates_defined_on_self
+              templates.pluck(:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
 
             unless duplicate_template_file_and_inline_variant_calls.empty?
               count = duplicate_template_file_and_inline_variant_calls.count
@@ -328,18 +323,10 @@ module ViewComponent
           end
       end
 
-      def templates_from_inline_calls(calls)
+      def variants_from_inline_calls(calls)
         calls.reject { |call| call == :call }.map do |variant_call|
           variant_call.to_s.sub("call_", "").to_sym
         end
-      end
-
-      def variant_templates
-        @variant_templates ||= templates.map { |template| template[:variant] }
-      end
-
-      def variants
-        @variants ||= variant_templates + inline_variant_templates
       end
 
       def view_component_ancestors
