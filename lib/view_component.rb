@@ -9,7 +9,5 @@ module ViewComponent
   autoload :Preview
   autoload :TestHelpers
   autoload :TestCase
-  autoload :RenderMonkeyPatch
-  autoload :RenderingMonkeyPatch
   autoload :TemplateError
 end
