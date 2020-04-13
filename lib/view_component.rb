@@ -7,7 +7,6 @@ module ViewComponent
 
   autoload :Base
   autoload :Preview
-  autoload :Previewable
   autoload :TestHelpers
   autoload :TestCase
   autoload :RenderMonkeyPatch
