@@ -256,9 +256,14 @@ module ViewComponent
 
       def inline_calls
         @inline_calls ||=
-          view_component_ancestors.flat_map do |ancestor|
-            ancestor.instance_methods(false).grep(/^call/)
-          end.uniq
+          begin
+            # Fetch only ViewComponent ancestor classes to limit the scope of
+            # finding inline calls
+            view_component_ancestors =
+              ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - included_modules
+
+            view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call/) }.uniq
+          end
       end
 
       def inline_calls_defined_on_self
@@ -327,13 +332,6 @@ module ViewComponent
         calls.reject { |call| call == :call }.map do |variant_call|
           variant_call.to_s.sub("call_", "").to_sym
         end
-      end
-
-      def view_component_ancestors
-        # Fetch only ViewComponent ancestor classes to limit the scope of
-        # finding inline calls
-        @view_component_ancestors ||=
-          ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - included_modules
       end
     end
 
