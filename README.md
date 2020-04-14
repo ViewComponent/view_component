@@ -455,7 +455,7 @@ This will allow you to create files such as `app/components/widget_controller.js
 
 ### Testing
 
-Unit test components directly, using the `render_inline` test helper and Capybara matchers:
+Unit test components directly, using the `render_inline` test helper. If you have a `capybara` test dependency, Capybara matchers will be available in your tests:
 
 ```ruby
 require "view_component/test_case"
@@ -466,6 +466,16 @@ class MyComponentTest < ViewComponent::TestCase
 
     assert_selector("span[title='my title']", "Hello, World!")
   end
+end
+```
+
+In the absence of `capybara`, you can make assertions on the `render_inline` return value, which is an instance of `Nokogiri::HTML::DocumentFragment`:
+
+```ruby
+test "render component" do
+  result = render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
+
+  assert_includes result.css("span[title='my title']").to_html, "Hello, World!"
 end
 ```
 
