@@ -8,6 +8,10 @@
 
     *Simon Rand*
 
+* ViewComponent preview index views use Rails internal layout instead of application's layout
+
+    *Juan Manuel Ramallo*
+
 # v2.2.2
 
 * Add `Base.format` for better compatibility with `ActionView::Template`.
