@@ -1,5 +1,9 @@
 # master
 
+* Remove `capybara` dependency.
+
+    *Richard Macklin*
+
 # v2.3.0
 
 * Allow using inline render method(s) defined on a parent.
