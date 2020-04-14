@@ -201,6 +201,22 @@ class InlineComponent < ViewComponent::Base
 end
 ```
 
+It is also possible to render variants inline by creating additional `call_` methods.
+
+```ruby
+class InlineVariantComponent < ViewComponent::Base
+  def call
+    link_to "Default", default_path
+  end
+
+  def call_phone
+    link_to "Phone", phone_path
+  end
+end
+```
+
+Using a mixture of templates and inline render methods in a component is supported, however only one should be provided per component (or variant).
+
 ### Conditional Rendering
 
 Components can implement a `#render?` method to determine if they should be rendered.
@@ -620,6 +636,11 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |:---:|:---:|:---:|:---:|:---:|
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
 |Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
+
+|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|
+|:---:|
+|@simonrand|
+|Dublin, Ireland|
 
 ## License
 

@@ -168,10 +168,6 @@ module ViewComponent
         @compiled && ActionView::Base.cache_template_loading
       end
 
-      def inlined?
-        instance_methods(false).grep(/^call/).present? && templates.empty?
-      end
-
       def compile!
         compile(raise_template_errors: true)
       end
@@ -180,11 +176,15 @@ module ViewComponent
       # We could in theory do this on app boot, at least in production environments.
       # Right now this just compiles the first time the component is rendered.
       def compile(raise_template_errors: false)
-        return if compiled? || inlined?
+        return if compiled?
 
         if template_errors.present?
           raise ViewComponent::TemplateError.new(template_errors) if raise_template_errors
           return false
+        end
+
+        define_singleton_method(:variants) do
+          templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
         end
 
         # If template name annotations are turned on, a line is dynamically
@@ -209,10 +209,6 @@ module ViewComponent
         end
 
         @compiled = true
-      end
-
-      def variants
-        templates.map { |template| template[:variant] }
       end
 
       # we'll eventually want to update this to support other types
@@ -247,6 +243,33 @@ module ViewComponent
 
       private
 
+      def compiled_template(file_path)
+        handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
+        template = File.read(file_path)
+
+        if handler.method(:call).parameters.length > 1
+          handler.call(self, template)
+        else
+          handler.call(OpenStruct.new(source: template, identifier: identifier, type: type))
+        end
+      end
+
+      def inline_calls
+        @inline_calls ||=
+          begin
+            # Fetch only ViewComponent ancestor classes to limit the scope of
+            # finding inline calls
+            view_component_ancestors =
+              ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - included_modules
+
+            view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call/) }.uniq
+          end
+      end
+
+      def inline_calls_defined_on_self
+        @inline_calls_defined_on_self ||= instance_methods(false).grep(/^call/)
+      end
+
       def matching_views_in_source_location
         return [] unless source_location
         (Dir["#{source_location.chomp(File.extname(source_location))}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location])
@@ -269,7 +292,10 @@ module ViewComponent
         @template_errors ||=
           begin
             errors = []
-            errors << "Could not find a template file for #{self}." if templates.empty?
+
+            if (templates + inline_calls).empty?
+              errors << "Could not find a template file or inline render method for #{self}."
+            end
 
             if templates.count { |template| template[:variant].nil? } > 1
               errors << "More than one template found for #{self}. There can only be one default template file per component."
@@ -284,18 +310,27 @@ module ViewComponent
             unless invalid_variants.empty?
               errors << "More than one template found for #{'variant'.pluralize(invalid_variants.count)} #{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{self}. There can only be one template file per variant."
             end
+
+            if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
+              errors << "Template file and inline render method found for #{self}. There can only be a template file or inline render method per component."
+            end
+
+            duplicate_template_file_and_inline_variant_calls =
+              templates.pluck(:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
+
+            unless duplicate_template_file_and_inline_variant_calls.empty?
+              count = duplicate_template_file_and_inline_variant_calls.count
+
+              errors << "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} found for #{'variant'.pluralize(count)} #{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} in #{self}. There can only be a template file or inline render method per variant."
+            end
+
             errors
           end
       end
 
-      def compiled_template(file_path)
-        handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
-        template = File.read(file_path)
-
-        if handler.method(:call).parameters.length > 1
-          handler.call(self, template)
-        else
-          handler.call(OpenStruct.new(source: template, identifier: identifier, type: type))
+      def variants_from_inline_calls(calls)
+        calls.reject { |call| call == :call }.map do |variant_call|
+          variant_call.to_s.sub("call_", "").to_sym
         end
       end
     end

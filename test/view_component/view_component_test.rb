@@ -26,8 +26,14 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_render_without_template
     render_inline(InlineComponent.new)
 
-    assert_predicate InlineComponent, :inlined?
-    assert_not_predicate InlineComponent, :compiled?
+    assert_predicate InlineComponent, :compiled?
+    assert_selector("input[type='text'][name='name']")
+  end
+
+  def test_render_child_without_template
+    render_inline(InlineChildComponent.new)
+
+    assert_predicate InlineChildComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
@@ -70,6 +76,32 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(VariantsComponent.new)
 
       assert_text("Default")
+    end
+  end
+
+  def test_renders_inline_variant_template_when_variant_template_is_not_present
+    with_variant :inline_variant do
+      render_inline(InlineVariantComponent.new)
+
+      assert_predicate InlineVariantComponent, :compiled?
+      assert_selector("input[type='text'][name='inline_variant']")
+    end
+  end
+
+  def test_renders_child_inline_variant_when_variant_template_is_not_present
+    with_variant :inline_variant do
+      render_inline(InlineVariantChildComponent.new)
+
+      assert_predicate InlineVariantChildComponent, :compiled?
+      assert_selector("input[type='text'][name='inline_variant']")
+    end
+  end
+
+  def test_renders_child_inline_variant_when_variant_template_is_present
+    with_variant :inline_variant do
+      render_inline(InlineVariantChildWithTemplateComponent.new)
+
+      assert_selector("div", text: "Template")
     end
   end
 
@@ -358,7 +390,7 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(MissingTemplateComponent.new)
     end
 
-    assert_includes exception.message, "Could not find a template file for MissingTemplateComponent"
+    assert_includes exception.message, "Could not find a template file or inline render method for MissingTemplateComponent"
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_is_present
@@ -375,6 +407,24 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     assert_includes error.message, "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
+  end
+
+  def test_raise_error_when_default_template_file_and_inline_default_call_exist
+    error = assert_raises ViewComponent::TemplateError do
+      render_inline(DefaultTemplateAndInlineDefaultTemplateComponent.new)
+    end
+
+    assert_includes error.message, "Template file and inline render method found for DefaultTemplateAndInlineDefaultTemplateComponent."
+  end
+
+  def test_raise_error_when_variant_template_file_and_inline_variant_call_exist
+    error = assert_raises ViewComponent::TemplateError do
+      with_variant :phone do
+        render_inline(VariantTemplateAndInlineVariantTemplateComponent.new)
+      end
+    end
+
+    assert_includes error.message, "Template file and inline render method found for variant 'phone' in VariantTemplateAndInlineVariantTemplateComponent."
   end
 
   def test_backtrace_returns_correct_file_and_line_number

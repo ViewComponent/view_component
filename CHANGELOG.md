@@ -1,5 +1,13 @@
 # master
 
+* Allow using inline render method(s) defined on a parent.
+
+    *Simon Rand*
+
+* Fix bug where inline variant render methods would never be called.
+
+    *Simon Rand*
+
 * ViewComponent preview index views use Rails internal layout instead of application's layout
 
     *Juan Manuel Ramallo*
