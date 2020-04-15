@@ -5,7 +5,7 @@ module ViewComponent # :nodoc:
 
     attr_reader :size
 
-    # The current iteration of the partial.
+    # The current iteration of the collection.
     attr_reader :index
 
     def initialize(size)
@@ -13,12 +13,12 @@ module ViewComponent # :nodoc:
       @index = -1
     end
 
-    # Check if this is the first iteration of the partial.
+    # Check if this is the first iteration of the collection.
     def first?
       index == 0
     end
 
-    # Check if this is the last iteration of the partial.
+    # Check if this is the last iteration of the collection.
     def last?
       index == size - 1
     end
