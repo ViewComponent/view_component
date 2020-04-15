@@ -1,5 +1,9 @@
 # master
 
+* Add `CollectionIteration` class for iteration convenience methods.
+
+    *Frank S*
+
 * Remove `autoload`s of internal modules (`Previewable`, `RenderMonkeyPatch`, `RenderingMonkeyPatch`).
 
     *Richard Macklin*

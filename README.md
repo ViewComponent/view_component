@@ -322,6 +322,32 @@ end
 </li>
 ```
 
+Templates also have access to the collection iteration object which has knowledge about which index the current object has in the collection and the total size of the collection. The iteration object also has two convenience methods, `first?` and `last?`.
+
+`app/components/product_component.rb`
+``` ruby
+class ProductComponent < ViewComponent::Base
+  def initialize(product:)
+    @product = product
+  end
+end
+```
+
+`app/components/product_component.html.erb`
+``` erb
+<li>
+  Product <%= product_iteration.index + 1 %> / <%= product_iteration.size %>
+  <br>
+  <%= @product.name %>
+
+  <% if product_iteration.first? %>
+    <p>First</p>
+  <% elsif product_iteration.last? %>
+    <p>Last</p>
+  <% end %>
+</li>
+```
+
 ### Sidecar assets (experimental)
 
 We're experimenting with including Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
