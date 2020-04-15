@@ -3,6 +3,7 @@
 require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
+require "view_component/collection_iteration"
 require "view_component/previewable"
 
 module ViewComponent
