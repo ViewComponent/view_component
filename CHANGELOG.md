@@ -4,6 +4,10 @@
 
     *Frank S*
 
+* Declare explicit dependency on `activesupport`.
+
+    *Richard Macklin*
+
 * Remove `autoload`s of internal modules (`Previewable`, `RenderMonkeyPatch`, `RenderingMonkeyPatch`).
 
     *Richard Macklin*
