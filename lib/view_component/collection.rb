@@ -4,14 +4,14 @@ module ViewComponent
   class Collection
 
     def render_in(view_context, &block)
-      as                = @component.collection_parameter_name
-      partial_iteration = CollectionIteration.new(@collection.size)
+      as        = @component.collection_parameter_name
+      iteration = CollectionIteration.new(@collection.size)
 
       @collection.map do |item|
-        partial_iteration.iterate!
+        iteration.iterate!
 
         component = @component.new(@options.merge(as => item))
-        component.send("#{iteration_attribute}=", partial_iteration)
+        component.send("#{iteration_attribute}=", iteration)
         component.render_in(view_context, &block)
       end.join.html_safe
     end
