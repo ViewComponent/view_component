@@ -1,5 +1,9 @@
 # master
 
+* Remove `autoload`s of internal modules (`Previewable`, `RenderMonkeyPatch`, `RenderingMonkeyPatch`).
+
+    *Richard Macklin*
+
 * Remove `capybara` dependency.
 
     *Richard Macklin*
