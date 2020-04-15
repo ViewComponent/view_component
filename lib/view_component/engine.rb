@@ -43,11 +43,17 @@ module ViewComponent
 
     initializer "view_component.monkey_patch_render" do
       ActiveSupport.on_load(:action_view) do
-        ActionView::Base.prepend ViewComponent::RenderMonkeyPatch if Rails.version.to_f < 6.1
+        if Rails.version.to_f < 6.1
+          require "view_component/render_monkey_patch"
+          ActionView::Base.prepend ViewComponent::RenderMonkeyPatch
+        end
       end
 
       ActiveSupport.on_load(:action_controller) do
-        ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch if Rails.version.to_f < 6.1
+        if Rails.version.to_f < 6.1
+          require "view_component/rendering_monkey_patch"
+          ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
+        end
       end
     end
 
