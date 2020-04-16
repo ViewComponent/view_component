@@ -52,7 +52,9 @@ module ViewComponent
       ActiveSupport.on_load(:action_controller) do
         if Rails.version.to_f < 6.1
           require "view_component/rendering_monkey_patch"
+          require "view_component/render_to_string_monkey_patch"
           ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
+          ActionController::Base.prepend ViewComponent::RenderToStringMonkeyPatch
         end
       end
     end
