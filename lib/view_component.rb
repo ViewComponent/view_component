@@ -12,5 +12,6 @@ module ViewComponent
   autoload :TestCase
   autoload :RenderMonkeyPatch
   autoload :RenderingMonkeyPatch
+  autoload :RenderToStringMonkeyPatch
   autoload :TemplateError
 end

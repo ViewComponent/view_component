@@ -8,7 +8,7 @@ module ViewComponent
     config.view_component = ActiveSupport::OrderedOptions.new
 
     initializer "view_component.set_configs" do |app|
-      options = app.config.view_component
+      options               = app.config.view_component
 
       options.show_previews = Rails.env.development? if options.show_previews.nil?
 
@@ -47,7 +47,10 @@ module ViewComponent
       end
 
       ActiveSupport.on_load(:action_controller) do
-        ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch if Rails.version.to_f < 6.1
+        if Rails.version.to_f < 6.1
+          ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
+          ActionController::Base.prepend ViewComponent::RenderToStringMonkeyPatch
+        end
       end
     end
 
@@ -56,7 +59,7 @@ module ViewComponent
 
       if options.show_previews
         app.routes.prepend do
-          get "/rails/view_components"       => "rails/view_components#index", :internal => true
+          get "/rails/view_components" => "rails/view_components#index", :internal => true
           get "/rails/view_components/*path" => "rails/view_components#previews", :internal => true
         end
       end
