@@ -3,6 +3,14 @@
 * Add `#render_to_string` support.
    *Jarod Reid*
 
+* Declare explicit dependency on `activesupport`.
+
+    *Richard Macklin*
+
+* Remove `autoload`s of internal modules (`Previewable`, `RenderMonkeyPatch`, `RenderingMonkeyPatch`).
+
+    *Richard Macklin*
+
 * Remove `capybara` dependency.
 
     *Richard Macklin*
