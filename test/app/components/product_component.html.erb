@@ -2,10 +2,5 @@
   <h1>Product</h1>
   <h2><%= @product.name %></h2>
   <p><%= @notice %></p>
-  <% if product_iteration.present? %>
-  <p>product_iteration.size: <%= product_iteration.size %></p>
-  <p><%= @product.name %> index: <%= product_iteration.index %></p>
-  <p><%= @product.name %> first: <%= product_iteration.first? %></p>
-  <p><%= @product.name %> last: <%= product_iteration.last? %></p>
-  <% end %>
+  <p><%= @product.name %> counter: <%= @counter %></p>
 </li>

@@ -222,15 +222,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("h2", text: "Radio clock")
     assert_select("h2", text: "Mints")
     assert_select("p", text: "Today only", count: 2)
-
-    assert_select("p", text: "product_iteration.size: 2", count: 2)
-
-    assert_select("p", text: "Radio clock index: 0")
-    assert_select("p", text: "Radio clock first: true")
-    assert_select("p", text: "Radio clock last: false")
-
-    assert_select("p", text: "Mints index: 1")
-    assert_select("p", text: "Mints first: false")
-    assert_select("p", text: "Mints last: true")
+    assert_select("p", text: "Radio clock counter: 0")
+    assert_select("p", text: "Mints counter: 1")
   end
 end
