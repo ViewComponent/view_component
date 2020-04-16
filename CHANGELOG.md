@@ -1,6 +1,6 @@
 # master
 
-* Add `CollectionIteration` class for iteration convenience methods.
+* Add counter variables when rendering collections.
 
     *Frank S*
 

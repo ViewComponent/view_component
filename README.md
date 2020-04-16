@@ -322,13 +322,14 @@ end
 </li>
 ```
 
-Templates also have access to the collection iteration object which has knowledge about which index the current object has in the collection and the total size of the collection. The iteration object also has two convenience methods, `first?` and `last?`.
+`ViewComponent` also makes an index variable available named after the component name or the name supplied to `with_collection_parameter` followed by `_counter`. To access this variable add it to your constructor as an argument.
 
 `app/components/product_component.rb`
 ``` ruby
 class ProductComponent < ViewComponent::Base
-  def initialize(product:)
+  def initialize(product:, product_counter:)
     @product = product
+    @counter = product_counter
   end
 end
 ```
@@ -336,15 +337,7 @@ end
 `app/components/product_component.html.erb`
 ``` erb
 <li>
-  Product <%= product_iteration.index + 1 %> / <%= product_iteration.size %>
-  <br>
-  <%= @product.name %>
-
-  <% if product_iteration.first? %>
-    <p>First</p>
-  <% elsif product_iteration.last? %>
-    <p>Last</p>
-  <% end %>
+  <%= @counter %> <%= @product.name %>
 </li>
 ```
 
@@ -673,10 +666,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
 |Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
-|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|
-|:---:|
-|@simonrand|
-|Dublin, Ireland|
+|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />
+|:---:|:---:|
+|@simonrand|@franks921|
+|Dublin, Ireland|South Africa|
 
 ## License
 

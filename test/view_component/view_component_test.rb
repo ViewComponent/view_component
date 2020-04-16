@@ -443,8 +443,8 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("h2", text: "Radio clock")
     assert_selector("h2", text: "Mints")
     assert_selector("p", text: "On sale", count: 2)
-    assert_selector("p", text: "Radio clock counter: 0")
-    assert_selector("p", text: "Mints counter: 1")
+    assert_selector("p", text: "Radio clock counter: 1")
+    assert_selector("p", text: "Mints counter: 2")
   end
 
   def test_render_collection_custom_collection_parameter_name

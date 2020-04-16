@@ -38,15 +38,14 @@ module ViewComponent
     end
 
     def component_options(item, iterator)
-      @options[collection_parameter_name]         = item
-      @options[collection_counter_parameter_name] = iterator.index if counter_argument_present?
-      # @options.merge!(:"#{collection_parameter_name}" => item)
-      # @options.merge!(:"#{collection_counter_parameter_name}" => iterator.index) if counter_argument_present?
-      @options
+      item_options = { collection_parameter_name => item }
+      item_options[collection_counter_parameter_name] = iterator.index + 1 if counter_argument_present?
+
+      @options.merge(item_options)
     end
 
     def counter_argument_present?
-      !!@component.instance_method(:initialize).parameters.dup.map(&:second).include?(collection_counter_parameter_name)
+      @_counter_argument_present ||= @component.instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter_name)
     end
   end
 end
