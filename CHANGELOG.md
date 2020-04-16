@@ -4,6 +4,8 @@
 
     *Frank S*
 
+# v2.4.0
+
 * Add `#render_to_string` support.
 
    *Jarod Reid*
