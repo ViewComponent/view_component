@@ -10,7 +10,7 @@ module ViewComponent # :nodoc:
 
     def initialize(size)
       @size  = size
-      @index = -1
+      @index = 0
     end
 
     # Check if this is the first iteration of the collection.

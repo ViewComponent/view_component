@@ -8,11 +8,12 @@ module ViewComponent
       iteration = CollectionIteration.new(@collection.size)
 
       @collection.map do |item|
-        iteration.iterate!
-
         component = @component.new(@options.merge(as => item))
         component.send("#{iteration_attribute}=", iteration)
-        component.render_in(view_context, &block)
+        content = component.render_in(view_context, &block)
+        iteration.iterate!
+
+        content
       end.join.html_safe
     end
 
