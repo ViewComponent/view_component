@@ -601,6 +601,7 @@ Inline templates have been removed (for now) due to concerns raised by [@soutaro
 
 ## Resources
 
+- [ViewComponent at GitHub with Joel Hawksley](https://the-ruby-blend.fireside.fm/9)
 - [Components, HAML vs ERB, and Design Systems](https://the-ruby-blend.fireside.fm/4)
 - [Choosing the Right Tech Stack with Dave Paola](https://5by5.tv/rubyonrails/307)
 - [Rethinking the View Layer with Components, RailsConf 2019](https://www.youtube.com/watch?v=y5Z5a6QdA-M)
