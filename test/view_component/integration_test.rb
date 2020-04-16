@@ -38,6 +38,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes inline_response, baseline_response
   end
 
+  test "rendering component in a controller using #render_to_string" do
+    get "/controller_inline_baseline"
+
+    assert_select("div", "bar")
+    assert_response :success
+
+    baseline_response = response.body
+
+    get "/controller_to_string"
+    assert_select("div", "bar")
+    assert_response :success
+
+    to_string_response = response.body
+
+    assert_includes to_string_response, baseline_response
+  end
+
   test "rendering component with content" do
     get "/content"
     assert_response :success

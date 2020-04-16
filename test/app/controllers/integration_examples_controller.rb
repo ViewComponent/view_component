@@ -15,6 +15,10 @@ class IntegrationExamplesController < ActionController::Base
     render("integration_examples/_controller_inline", locals: { message: "bar" })
   end
 
+  def controller_to_string
+    render(plain: render_to_string(ControllerInlineComponent.new(message: "bar")))
+  end
+
   def products
     @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
   end

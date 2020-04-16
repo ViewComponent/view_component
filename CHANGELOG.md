@@ -1,5 +1,9 @@
 # master
 
+* Add `#render_to_string` support.
+
+   *Jarod Reid*
+
 * Declare explicit dependency on `activesupport`.
 
     *Richard Macklin*
