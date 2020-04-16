@@ -1,5 +1,8 @@
 # master
 
+* Add `#render_to_string` support.
+   *Jarod Reid*
+
 * Remove `capybara` dependency.
 
     *Richard Macklin*
