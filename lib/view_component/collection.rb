@@ -4,7 +4,7 @@ module ViewComponent
   class Collection
 
     def render_in(view_context, &block)
-      iterator = CollectionIteration.new(@collection.size)
+      iterator = ActionView::PartialIteration.new(@collection.size)
 
       @collection.map do |item|
         content = @component.new(component_options(item, iterator)).render_in(view_context, &block)
@@ -29,10 +29,22 @@ module ViewComponent
       end
     end
 
-    def component_options(item, iterator)
-      as = @component.collection_parameter_name
+    def collection_parameter_name
+      @component.collection_parameter_name
+    end
 
-      @options.merge(as => item, "#{as}_counter": iterator.index)
+    def collection_counter_parameter_name
+      "#{collection_parameter_name}_counter".to_sym
+    end
+
+    def component_options(item, iterator)
+      @options.merge!(collection_parameter_name => item)
+      @options.merge!(collection_counter_parameter_name => iterator.index) if counter_argument_present?
+      @options
+    end
+
+    def counter_argument_present?
+      !!@component.instance_method(:initialize).parameters.dup.map(&:second).include?(collection_counter_parameter_name)
     end
   end
 end
