@@ -1,5 +1,9 @@
 # master
 
+* Add `default_preview_layout` configuration option to load custom app/views/layouts.
+
+    *Jared White, Juan Manuel Ramallo*
+
 # 2.17.0
 
 * Slots return stripped HTML, removing leading and trailing whitespace.
