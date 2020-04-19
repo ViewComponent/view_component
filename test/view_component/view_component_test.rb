@@ -457,8 +457,8 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_render_collection_custom_collection_parameter_name_counter
     photos = [
-      OpenStruct.new(title: 'Flowers', caption: 'Yellow flowers', url: 'https://example.com/flowers.jpg'),
-      OpenStruct.new(title: 'Mountains', caption: 'Mountains at sunset', url: 'https://example.com/mountains.jpg')
+      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
     ]
     render_inline(PhotoComponent.with_collection(photos))
 
