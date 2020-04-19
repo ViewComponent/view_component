@@ -16,9 +16,9 @@ module ViewComponent
     private
 
     def initialize(component, object, **options)
-      @component  = component
+      @component = component
       @collection = collection_variable(object || [])
-      @options    = options
+      @options = options
     end
 
     def collection_variable(object)
@@ -45,7 +45,7 @@ module ViewComponent
     end
 
     def counter_argument_present?
-      @_counter_argument_present ||= @component.instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter_name)
+      @counter_argument_present ||= @component.instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter_name)
     end
   end
 end
