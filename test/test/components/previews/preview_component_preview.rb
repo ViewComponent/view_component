@@ -16,4 +16,8 @@ class PreviewComponentPreview < ViewComponent::Preview
   def with_tag_helper_in_content
     render(PreviewComponent.new(title: "title")) { content_tag(:span, "some content") }
   end
+
+  def with_params(cta: "Default CTA", title: "Default title")
+    render(PreviewComponent.new(cta: cta, title: title))
+  end
 end

@@ -1,5 +1,9 @@
 # master
 
+* Add the ability to access params from preview examples.
+
+    *Fabio Cantoni*
+
 # v2.4.0
 
 * Add `#render_to_string` support.

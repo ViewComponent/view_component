@@ -19,8 +19,11 @@ module ViewComponent # :nodoc:
       end
 
       # Returns the arguments for rendering of the component in its layout
-      def render_args(example)
-        new.public_send(example).merge(layout: @layout)
+      def render_args(example, params: {})
+        example_params_names = instance_method(example).parameters.map(&:last)
+        provided_params = params.slice(*example_params_names).to_h.symbolize_keys
+        result = provided_params.empty? ? new.public_send(example) : new.public_send(example, **provided_params)
+        result.merge(layout: @layout)
       end
 
       # Returns the component object class associated to the preview.
