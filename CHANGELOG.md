@@ -1,5 +1,7 @@
 # master
 
+# v2.5.0
+
 * Add counter variables when rendering collections.
 
     *Frank S*
