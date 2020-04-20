@@ -443,6 +443,8 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("h2", text: "Radio clock")
     assert_selector("h2", text: "Mints")
     assert_selector("p", text: "On sale", count: 2)
+    assert_selector("p", text: "Radio clock counter: 1")
+    assert_selector("p", text: "Mints counter: 2")
   end
 
   def test_render_collection_custom_collection_parameter_name
@@ -451,6 +453,20 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_selector("h3", text: "20%")
     assert_selector("h3", text: "50%")
+  end
+
+  def test_render_collection_custom_collection_parameter_name_counter
+    photos = [
+      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+    ]
+    render_inline(CollectionCounterComponent.with_collection(photos))
+
+    assert_selector("figure[data-index=0]", { count: 1 })
+    assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
+
+    assert_selector("figure[data-index=1]", { count: 1 })
+    assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
   def test_render_collection_nil_and_empty_collection

@@ -322,6 +322,25 @@ end
 </li>
 ```
 
+`ViewComponent` defines a counter variable matching the parameter name above, followed by `_counter`. To access this variable, add it to `initialize` as an argument:
+
+`app/components/product_component.rb`
+``` ruby
+class ProductComponent < ViewComponent::Base
+  def initialize(product:, product_counter:)
+    @product = product
+    @counter = product_counter
+  end
+end
+```
+
+`app/components/product_component.html.erb`
+``` erb
+<li>
+  <%= @counter %> <%= @product.name %>
+</li>
+```
+
 ### Sidecar assets (experimental)
 
 We're experimenting with including Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
@@ -661,10 +680,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
 |Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
-|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|
+|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|
 |:---:|:---:|:---:|
-|@simonrand|@fugufish|@cover|
-|Dublin, Ireland|Salt Lake City, Utah|Barcelona|
+|@simonrand|@fugufish|@cover|@franks921|
+|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|
 
 ## License
 

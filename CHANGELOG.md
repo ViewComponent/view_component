@@ -1,5 +1,9 @@
 # master
 
+* Add counter variables when rendering collections.
+
+    *Frank S*
+
 * Add the ability to access params from preview examples.
 
     *Fabio Cantoni*
