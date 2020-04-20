@@ -29,23 +29,11 @@ module ViewComponent
       end
     end
 
-    def collection_parameter_name
-      @component.collection_parameter_name
-    end
-
-    def collection_counter_parameter_name
-      "#{collection_parameter_name}_counter".to_sym
-    end
-
     def component_options(item, iterator)
-      item_options = { collection_parameter_name => item }
-      item_options[collection_counter_parameter_name] = iterator.index + 1 if counter_argument_present?
+      item_options = { @component.collection_parameter_name => item }
+      item_options[@component.collection_counter_parameter_name] = iterator.index + 1 if @component.counter_argument_present?
 
       @options.merge(item_options)
-    end
-
-    def counter_argument_present?
-      @counter_argument_present ||= @component.instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter_name)
     end
   end
 end

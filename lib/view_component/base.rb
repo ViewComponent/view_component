@@ -241,6 +241,14 @@ module ViewComponent
         (@with_collection_parameter || name.demodulize.underscore.chomp("_component")).to_sym
       end
 
+      def collection_counter_parameter_name
+        "#{collection_parameter_name}_counter".to_sym
+      end
+
+      def counter_argument_present?
+        instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter_name)
+      end
+
       private
 
       def compiled_template(file_path)
