@@ -508,7 +508,7 @@ class TestComponentPreview < ViewComponent::Preview
   end
 
   def with_content_block
-    render(TestComponent.new(title: "This component accepts a block of content") do
+    render(TestComponent.new(title: "This component accepts a block of content")) do
       tag.div do
         content_tag(:span, "Hello")
       end
