@@ -187,6 +187,14 @@ module ViewComponent
           templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
         end
 
+        define_singleton_method(:collection_counter_parameter_name) do
+          "#{collection_parameter_name}_counter".to_sym
+        end
+
+        define_singleton_method(:counter_argument_present?) do
+          instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter_name)
+        end
+
         # If template name annotations are turned on, a line is dynamically
         # added with a comment. In this case, we want to return a different
         # starting line number so errors that are raised will point to the
@@ -239,14 +247,6 @@ module ViewComponent
 
       def collection_parameter_name
         (@with_collection_parameter || name.demodulize.underscore.chomp("_component")).to_sym
-      end
-
-      def collection_counter_parameter_name
-        "#{collection_parameter_name}_counter".to_sym
-      end
-
-      def counter_argument_present?
-        instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter_name)
       end
 
       private
