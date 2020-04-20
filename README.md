@@ -322,7 +322,7 @@ end
 </li>
 ```
 
-`ViewComponent` also makes a counter variable available named after the component name or the name supplied to `with_collection_parameter` followed by `_counter`. To access this variable add it to your constructor as an argument.
+`ViewComponent` defines a counter variable matching the parameter name above, followed by `_counter`. To access this variable, add it to the constructor as an argument:
 
 `app/components/product_component.rb`
 ``` ruby
