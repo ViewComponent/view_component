@@ -527,7 +527,7 @@ class TestComponentPreview < ViewComponent::Preview
   end
 
   def with_content_block
-    render(TestComponent.new(title: "This component accepts a block of content") do
+    render(TestComponent.new(title: "This component accepts a block of content")) do
       tag.div do
         content_tag(:span, "Hello")
       end
@@ -539,6 +539,19 @@ end
 Which generates <http://localhost:3000/rails/view_components/test_component/with_default_title>,
 <http://localhost:3000/rails/view_components/test_component/with_long_title>,
 and <http://localhost:3000/rails/view_components/test_component/with_content_block>.
+
+It's also possible to set dynamic values from the params by setting them as arguments:
+
+`test/components/previews/test_component_preview.rb`
+```ruby
+class TestComponentPreview < ViewComponent::Preview
+  def with_dynamic_title(title: "Test component default")
+    render(TestComponent.new(title: title))
+  end
+end
+```
+
+You'll then be able to pass down a value with <http://localhost:3000/rails/components/test_component/with_dynamic_title?title=Custom+title>.
 
 The `ViewComponent::Preview` base class includes
 [`ActionView::Helpers::TagHelper`][tag-helper], which provides the [`tag`][tag]
@@ -667,10 +680,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
 |Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
-|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|
+|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|
 |:---:|:---:|:---:|
-|@simonrand|@fugufish|@franks921|
-|Dublin, Ireland|Salt Lake City, Utah|South Africa|
+|@simonrand|@fugufish|@cover|@franks921|
+|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|
 
 ## License
 

@@ -153,6 +153,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Click me!"
   end
 
+  test "renders preview component default preview ignoring params" do
+    get "/rails/view_components/preview_component/default?cta=CTA+from+params"
+
+    assert_includes response.body, "Click me!"
+
+    refute_includes response.body, "CTA from params"
+  end
+
   test "renders preview component with_cta preview" do
     get "/rails/view_components/preview_component/without_cta"
 
@@ -169,6 +177,36 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/rails/view_components/preview_component/with_tag_helper_in_content"
 
     assert_includes response.body, "<span>some content</span>"
+  end
+
+  test "renders preview component with params preview with default values" do
+    get "/rails/view_components/preview_component/with_params"
+
+    assert_includes response.body, "Default CTA"
+    assert_includes response.body, "Default title"
+  end
+
+  test "renders preview component with params preview with one param" do
+    get "/rails/view_components/preview_component/with_params?cta=CTA+from+params"
+
+    assert_includes response.body, "CTA from params"
+    assert_includes response.body, "Default title"
+  end
+
+  test "renders preview component with params preview with multiple params" do
+    get "/rails/view_components/preview_component/with_params?cta=CTA+from+params&title=Title+from+params"
+
+    assert_includes response.body, "CTA from params"
+    assert_includes response.body, "Title from params"
+  end
+
+  test "renders preview component with params preview ignoring unsupported params" do
+    get "/rails/view_components/preview_component/with_params?cta=CTA+from+params&label=Label+from+params"
+
+    assert_includes response.body, "CTA from params"
+    assert_includes response.body, "Default title"
+
+    refute_includes response.body, "Label from params"
   end
 
   test "renders badge component open preview" do
