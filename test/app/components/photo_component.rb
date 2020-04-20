@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PhotoComponent < ViewComponent::Base
+class CollectionCounterComponent < ViewComponent::Base
   with_collection_parameter :item
 
   def initialize(item:, item_counter:)
