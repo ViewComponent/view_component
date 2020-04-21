@@ -5,6 +5,7 @@ module ViewComponent
     def render_in(view_context, &block)
       iterator = ActionView::PartialIteration.new(@collection.size)
 
+      @component.compile!
       @collection.map do |item|
         content = @component.new(component_options(item, iterator)).render_in(view_context, &block)
         iterator.iterate!

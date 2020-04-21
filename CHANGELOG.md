@@ -1,5 +1,11 @@
 # master
 
+# 2.5.1
+
+* Compile component before rendering collection.
+
+    Rainer Borene
+
 # v2.5.0
 
 * Add counter variables when rendering collections.
