@@ -504,6 +504,16 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("p", text: "On sale", count: 1)
   end
 
+  def test_render_collection_compile
+    items = [
+      OpenStruct.new(name: "Item 1"),
+      OpenStruct.new(name: "Item 2")
+    ]
+
+    render_inline(CollectionCompileComponent.with_collection(items))
+    assert_predicate CollectionCompileComponent, :compiled?
+  end
+
   private
 
   def modify_file(file, content)
