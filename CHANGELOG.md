@@ -4,7 +4,7 @@
 
 * Compile component before rendering collection.
 
-    Rainer Borene
+    *Rainer Borene*
 
 # v2.5.0
 
