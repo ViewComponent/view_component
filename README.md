@@ -341,6 +341,48 @@ end
 </li>
 ```
 
+### Helpers proxy
+
+You can call your original helper module methods from component through `helpers` proxy.
+
+```ruby
+module IconHelper
+  def icon(name)
+    tag.i data: { feather: name.to_s.dasherize }
+  end
+end
+
+class UserComponent < ViewComponent::Base
+  def profile_icon
+    helpers.icon :user
+  end
+end
+```
+
+You can use this with `delegate`.
+
+```ruby
+class UserComponent < ViewComponent::Base
+  delegate :icon, to: :helpers
+
+  def profile_icon
+    icon :user
+  end
+end
+```
+
+And you can also call it without `helpers` proxy, with include the helper explicitly.
+
+```ruby
+class UserComponent < ViewComponent::Base
+  include IconHelper
+
+  def profile_icon
+    icon :user
+  end
+end
+```
+
 ### Sidecar assets (experimental)
 
 We're experimenting with including Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
