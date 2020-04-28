@@ -341,6 +341,48 @@ end
 </li>
 ```
 
+### Using helpers
+
+Helper module methods can be used through the `helpers` proxy.
+
+```ruby
+module IconHelper
+  def icon(name)
+    tag.i data: { feather: name.to_s.dasherize }
+  end
+end
+
+class UserComponent < ViewComponent::Base
+  def profile_icon
+    helpers.icon :user
+  end
+end
+```
+
+The `helpers.` proxy can be used with `delegate`:
+
+```ruby
+class UserComponent < ViewComponent::Base
+  delegate :icon, to: :helpers
+
+  def profile_icon
+    icon :user
+  end
+end
+```
+
+Helpers can also be used by including the helper explicitly:
+
+```ruby
+class UserComponent < ViewComponent::Base
+  include IconHelper
+
+  def profile_icon
+    icon :user
+  end
+end
+```
+
 ### Sidecar assets (experimental)
 
 We're experimenting with including Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
