@@ -343,7 +343,7 @@ end
 
 ### Using helpers
 
-Helper module methods from component through the `helpers` proxy.
+Helper module methods can be used through the `helpers` proxy.
 
 ```ruby
 module IconHelper
@@ -371,7 +371,7 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
-Or by including the helper explicitly:
+Helpers can also be used by including the helper explicitly:
 
 ```ruby
 class UserComponent < ViewComponent::Base
