@@ -341,9 +341,9 @@ end
 </li>
 ```
 
-### Helpers proxy
+### Using helpers
 
-You can call your original helper module methods from component through `helpers` proxy.
+Helper module methods from component through the `helpers` proxy.
 
 ```ruby
 module IconHelper
@@ -359,7 +359,7 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
-You can use this with `delegate`.
+The `helpers.` proxy can be used with `delegate`:
 
 ```ruby
 class UserComponent < ViewComponent::Base
@@ -371,7 +371,7 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
-And you can also call it without `helpers` proxy, with include the helper explicitly.
+Or by including the helper explicitly:
 
 ```ruby
 class UserComponent < ViewComponent::Base
