@@ -9,10 +9,6 @@ class CardComponent < ViewComponent::Base
     header_attributes.fetch(:classes, "card-header")
   end
 
-  def header_data_attributes
-    header_attributes.fetch(:data, {})
-  end
-
   def body_class_names
     body_attributes.fetch(:classes, "card-body")
   end
