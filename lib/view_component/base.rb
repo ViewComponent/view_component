@@ -113,7 +113,7 @@ module ViewComponent
       @variant
     end
 
-    def with(area, content = nil, &block)
+    def with(area, content = nil, **attributes, &block)
       unless content_areas.include?(area)
         raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
       end
@@ -123,6 +123,7 @@ module ViewComponent
       end
 
       instance_variable_set("@#{area}".to_sym, content)
+      instance_variable_set("@#{area}_attributes".to_sym, attributes)
       nil
     end
 
@@ -237,6 +238,7 @@ module ViewComponent
           raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
         end
         attr_reader *areas
+        attr_reader *areas.map { |area| "#{area}_attributes" }
         self.content_areas = areas
       end
 

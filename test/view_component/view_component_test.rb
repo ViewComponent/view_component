@@ -504,6 +504,22 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("p", text: "On sale", count: 1)
   end
 
+  def test_content_area_named_attributes
+    render_inline(CardComponent.new) do |component|
+      component.with(:header, classes: "card-header mt-4", data: {controller: "card-header-controller"}) { "Card Header" }
+      component.with(:body, classes: "bg-primary") do
+        "Have a great day."
+      end
+      component.with(:footer, classes: "card-footer px-4") do
+        "footer"
+      end
+    end
+
+    assert_selector(".card-header.mt-4", text: "Card Header")
+    assert_selector(".bg-primary", text: "Have a great day.")
+    assert_selector(".card-footer.px-4", text: "footer")
+  end
+
   private
 
   def modify_file(file, content)
