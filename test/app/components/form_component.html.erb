@@ -1,0 +1,13 @@
+<div class="post_form">
+  <%= form_with model: post do |post_form| %>
+    <div class="header">
+      <%= header %>
+    </div>
+    <div class="body">
+      <%= body(post_form) %>
+    </div>
+    <div class="footer">
+      <%= footer(post_form) %>
+    </div>
+  <% end %>
+</div>

@@ -118,11 +118,11 @@ module ViewComponent
         raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
       end
 
-      if block_given?
-        content = view_context.capture(&block)
+      define_singleton_method(area) do |*args|
+        block = ->() { content } unless block_given?
+        view_context.capture(*args, &block)
       end
 
-      instance_variable_set("@#{area}".to_sym, content)
       nil
     end
 
@@ -236,7 +236,7 @@ module ViewComponent
         if areas.include?(:content)
           raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
         end
-        attr_reader *areas
+        attr_reader *areas # provide a default implementation for all areas. Will be redifined by calls to .with.
         self.content_areas = areas
       end
 

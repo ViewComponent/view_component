@@ -176,17 +176,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector(".footer", text: "Bye!")
   end
 
-  def test_renders_content_areas_template_can_wrap_render_arguments
-    render_inline(ContentAreasComponent.new(title: "Hello!", footer: "Bye!")) do |component|
-      component.with(:title) { "<strong>#{component.title}</strong>".html_safe }
-      component.with(:body) { "Have a nice day." }
-    end
-
-    assert_selector(".title strong", text: "Hello!")
-    assert_selector(".body", text: "Have a nice day.")
-    assert_selector(".footer", text: "Bye!")
-  end
-
   def test_renders_content_areas_template_raise_with_unknown_content_areas
     exception = assert_raises ArgumentError do
       render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
@@ -502,6 +491,24 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("h1", text: "Product", count: 1)
     assert_selector("h2", text: "Mints")
     assert_selector("p", text: "On sale", count: 1)
+  end
+
+  def test_content_area_named_attributes
+    render_inline(FormComponent.new) do |component|
+      component.with(:header) do ||
+        "Form Header: #{component.post.title}"
+      end
+      component.with(:body) do |form|
+        form.text_field :title
+      end
+      component.with(:footer) do |form|
+        form.submit "Save"
+      end
+    end
+
+    assert_selector(".header", text: "Form Header: Check It Out")
+    assert_selector(".body input[name='post[title]'][value='Check It Out']")
+    assert_selector(".footer input[value='Save']")
   end
 
   private
