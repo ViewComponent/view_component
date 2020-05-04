@@ -506,7 +506,7 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_content_area_named_attributes
     render_inline(CardComponent.new) do |component|
-      component.with(:header, classes: "card-header mt-4", data: {controller: "card-header-controller"}) { "Card Header" }
+      component.with(:header, classes: "card-header mt-4") { "Card Header" }
       component.with(:body, classes: "bg-primary") do
         "Have a great day."
       end
