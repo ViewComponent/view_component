@@ -2,8 +2,8 @@
 
 require "rails/application_controller"
 
-class Rails::ViewComponentsController < Rails::ApplicationController # :nodoc:
-  prepend_view_path File.expand_path("../../../lib/railties/lib/rails/templates/rails", __dir__)
+class ViewComponentsController < Rails::ApplicationController # :nodoc:
+  prepend_view_path File.expand_path("../views", __dir__)
 
   around_action :set_locale, only: :previews
   before_action :find_preview, only: :previews
@@ -16,26 +16,19 @@ class Rails::ViewComponentsController < Rails::ApplicationController # :nodoc:
   def index
     @previews = ViewComponent::Preview.all
     @page_title = "Component Previews"
-    # rubocop:disable GitHub/RailsControllerRenderPathsExist
-    render "components/index"
-    # rubocop:enable GitHub/RailsControllerRenderPathsExist
   end
 
   def previews
     if params[:path] == @preview.preview_name
       @page_title = "Component Previews for #{@preview.preview_name}"
-      # rubocop:disable GitHub/RailsControllerRenderPathsExist
-      render "components/previews"
-      # rubocop:enable GitHub/RailsControllerRenderPathsExist
+      render "view_components/previews"
     else
       prepend_application_view_paths
       @example_name = File.basename(params[:path])
       @render_args = @preview.render_args(@example_name, params: params.permit!)
       layout = @render_args[:layout]
       opts = layout.nil? ? {} : { layout: layout }
-      # rubocop:disable GitHub/RailsControllerRenderPathsExist
-      render "components/preview", **opts
-      # rubocop:enable GitHub/RailsControllerRenderPathsExist
+      render "view_components/preview", **opts
     end
   end
 
