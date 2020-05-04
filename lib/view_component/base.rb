@@ -169,17 +169,22 @@ module ViewComponent
       end
 
       def compile!
-        compile(raise_template_errors: true)
+        compile(raise_errors: true)
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
       # We could in theory do this on app boot, at least in production environments.
       # Right now this just compiles the first time the component is rendered.
-      def compile(raise_template_errors: false)
+      def compile(raise_errors: false)
         return if compiled?
 
+        if parameter_errors.present?
+          raise ArgumentError.new(parameter_errors.join(", ")) if raise_errors
+          return false
+        end
+
         if template_errors.present?
-          raise ViewComponent::TemplateError.new(template_errors) if raise_template_errors
+          raise ViewComponent::TemplateError.new(template_errors) if raise_errors
           return false
         end
 
@@ -293,6 +298,20 @@ module ViewComponent
               variant: pieces.second.split("+").second&.to_sym,
               handler: pieces.last
             }
+          end
+      end
+
+      def parameter_errors
+        @parameter_errors ||=
+          begin
+            errors = []
+
+            # If initializer omits with_collection_parameter
+            if @with_collection_parameter && !instance_method(:initialize).parameters.map(&:last).include?(@with_collection_parameter)
+              errors << "Collection parameter #{@with_collection_parameter} not used in component initializer."
+            end
+
+            errors
           end
       end
 

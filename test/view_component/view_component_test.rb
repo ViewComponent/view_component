@@ -504,6 +504,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("p", text: "On sale", count: 1)
   end
 
+  def test_collection_component_missing_parameter_name
+    exception = assert_raises ArgumentError do
+      render_inline(MissingCollectionParameterNameComponent.with_collection([]))
+    end
+
+    assert_match /Collection parameter foo not used in component initializer/, exception.message
+  end
+
   private
 
   def modify_file(file, content)
