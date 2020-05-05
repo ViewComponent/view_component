@@ -30,7 +30,11 @@ module ViewComponent
     end
 
     def component_options(item, iterator)
-      if !@component.instance_method(:initialize).parameters.map(&:last).include?(@component.collection_parameter_name)
+      # If the component does not set a custom collection parameter,
+      # make sure the default parameter is accepted by the
+      # component initializer.
+      if !@component.with_collection_parameter_attr &&
+        !@component.instance_method(:initialize).parameters.map(&:last).include?(@component.collection_parameter_name)
         raise ArgumentError.new(
           "#{@component} initializer must accept " \
           "`#{@component.collection_parameter_name}` collection parameter."

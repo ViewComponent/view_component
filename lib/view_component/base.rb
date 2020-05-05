@@ -251,7 +251,13 @@ module ViewComponent
       end
 
       def collection_parameter_name
-        (@with_collection_parameter || name.demodulize.underscore.chomp("_component")).to_sym
+        (with_collection_parameter_attr || name.demodulize.underscore.chomp("_component")).to_sym
+      end
+
+      # We use #with_collection_parameter as a setter,
+      # so this method is suffixed with _attr.
+      def with_collection_parameter_attr
+        @with_collection_parameter
       end
 
       private
@@ -307,12 +313,12 @@ module ViewComponent
             errors = []
 
             # If initializer omits with_collection_parameter
-            if @with_collection_parameter &&
-              !instance_method(:initialize).parameters.map(&:last).include?(@with_collection_parameter)
+            if with_collection_parameter_attr &&
+              !instance_method(:initialize).parameters.map(&:last).include?(with_collection_parameter_attr)
 
               errors <<
                 "#{self} initializer must accept " \
-                "`#{@with_collection_parameter}` collection parameter."
+                "`#{with_collection_parameter_attr}` collection parameter."
             end
 
             errors
