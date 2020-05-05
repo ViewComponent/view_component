@@ -39,15 +39,13 @@ Unlike traditional Rails views, ViewComponents can be unit-tested. In the GitHub
 
 Rails views are typically tested with slow integration tests that also exercise the routing and controller layers in addition to the view. This cost often discourages thorough test coverage.
 
-Because they can’t be tested directly, partials must be tested in the context of each route they are used, diminishing the value of the abstraction.
-
-With ViewComponent, integration tests can be reserved for integration checks, with permutations and corner cases covered at the unit level.
+With ViewComponent, integration tests can be reserved for end-to-end assertions, with permutations and corner cases covered at the unit level.
 
 #### Data Flow
 
-Traditional Rails views have an implicit interface, making it hard to reason about what information they need to render, leading to subtle bugs when rendering the same view in different contexts.
+Traditional Rails views have an implicit interface, making it hard to reason about what information is needed to render, leading to subtle bugs when rendering the same view in different contexts.
 
-ViewComponents use a standard Ruby initializer that clearly defines what they need to render, making them easier (and safer) to reuse than partials.
+ViewComponents use a standard Ruby initializer that clearly defines what is needed to render, making them easier (and safer) to reuse than partials.
 
 #### Standards
 
@@ -59,17 +57,17 @@ ViewComponents are Ruby objects, making it easy to follow (and enforce) code qua
 
 #### Conventions
 
-Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's recommended to create and inherit from an `ApplicationComponent` that is a subclass of `ViewComponent::Base`.
+Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's common practice to create and inherit from an `ApplicationComponent` that is a subclass of `ViewComponent::Base`.
 
-Component class names end in -`Component`.
+Component names end in -`Component`.
 
-Component module names are plural, as they are for controllers. (`Users::AvatarComponent`)
+Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
 
 #### Quick start
 
 Use the component generator to create a new ViewComponent.
 
-The generator accepts the component name and the list of accepted arguments:
+The generator accepts a component name and a list of arguments:
 
 ```bash
 bin/rails generate component Example title content
@@ -79,7 +77,7 @@ bin/rails generate component Example title content
       create  app/components/example_component.html.erb
 ```
 
-ViewComponent includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in the Rails configuration (`config.generators.template_engine`) by default.
+ViewComponent includes template generators for the `erb`, `haml`, and `slim` template engines and will default to the template engine specified in `config.generators.template_engine`.
 
 The template engine can also be passed as an option to the generator:
 
@@ -105,7 +103,7 @@ end
 <span title="<%= @title %>"><%= content %></span>
 ```
 
-Which is rendered in a view as:
+Rendered in a view as:
 
 ```erb
 <%= render(TestComponent.new(title: "my title")) do %>
@@ -113,7 +111,7 @@ Which is rendered in a view as:
 <% end %>
 ```
 
-Which returns:
+Returning:
 
 ```html
 <span title="my title">Hello, World!</span>
@@ -123,7 +121,7 @@ Which returns:
 
 Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor.
 
-A component can declare additional content areas to be rendered in the component. For example:
+ViewComponents can declare additional content areas. For example:
 
 `app/components/modal_component.rb`:
 ```ruby
@@ -140,7 +138,7 @@ end
 </div>
 ```
 
-Which is rendered in a view as:
+Rendered in a view as:
 
 ```erb
 <%= render(ModalComponent.new) do |component| %>
@@ -153,7 +151,7 @@ Which is rendered in a view as:
 <% end %>
 ```
 
-Which returns:
+Returning:
 
 ```html
 <div class="modal">
@@ -164,7 +162,7 @@ Which returns:
 
 ### Inline Component
 
-A component can also be rendered without a template file, by defining a `call` instance method:
+ViewComponents can render without a template file, by defining a `call` method:
 
 `app/components/inline_component.rb`:
 ```ruby
@@ -179,25 +177,25 @@ class InlineComponent < ViewComponent::Base
 end
 ```
 
-It is also possible to handle variants inline:
+It is also possible to define methods for variants:
 
 ```ruby
 class InlineVariantComponent < ViewComponent::Base
-  def call
-    link_to "Default", default_path
-  end
-
   def call_phone
     link_to "Phone", phone_path
+  end
+  
+  def call
+    link_to "Default", default_path
   end
 end
 ```
 
 ### Conditional Rendering
 
-Components can implement a `#render?` which is called after initialization to determine if the component should be rendered.
+Components can implement a `#render?` method to be called after initialization to determine if the component should render.
 
-For example: the logic for whether to render a view could go in either the component template:
+Traditionally, the logic for whether to render a view could go in either the component template:
 
 `app/components/confirm_email_component.html.erb`
 ```
@@ -246,7 +244,7 @@ _To assert that a component has not been rendered, use `refute_component_rendere
 
 ### Rendering collections
 
-Use `with_collection` to render a collection with a component:
+Use `with_collection` to render a ViewComponent with a collection:
 
 `app/view/products/index.html.erb`
 ``` erb
@@ -264,7 +262,9 @@ end
 
 [By default](https://github.com/github/view_component/blob/89f8fab4609c1ef2467cf434d283864b3c754473/lib/view_component/base.rb#L249), the component name is used to define the parameter passed into the component from the collection.
 
-Use `with_collection_parameter` to change the name of the parameter:
+#### `with_collection_parameter`
+
+Use `with_collection_parameter` to change the name of the collection parameter:
 
 `app/components/product_component.rb`
 ``` ruby
@@ -277,7 +277,9 @@ class ProductComponent < ViewComponent::Base
 end
 ```
 
-Additional arguments provided are passed to each component instance:
+#### Additional arguments
+
+Additional arguments besides the collection are passed to each component instance:
 
 `app/view/products/index.html.erb`
 ``` erb
@@ -303,6 +305,8 @@ end
   <span><%= @notice %></span>
 </li>
 ```
+
+#### Collection counter
 
 ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
 
