@@ -5,7 +5,7 @@ module ViewComponent
     def render_in(view_context, &block)
       iterator = ActionView::PartialIteration.new(@collection.size)
 
-      ensure_initializer_accepts_iterator
+      ensure_initializer_accepts_iterator!
       @component.compile!
       @collection.map do |item|
         content = @component.new(component_options(item, iterator)).render_in(view_context, &block)
@@ -37,7 +37,7 @@ module ViewComponent
       @options.merge(item_options)
     end
 
-    def ensure_initializer_accepts_iterator
+    def ensure_initializer_accepts_iterator!
       # If the component does not set a custom collection parameter,
       # make sure the default parameter is accepted by the
       # component initializer.
