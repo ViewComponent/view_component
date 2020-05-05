@@ -178,10 +178,7 @@ module ViewComponent
       def compile(raise_errors: false)
         return if compiled?
 
-        if parameter_errors.present?
-          raise ArgumentError.new(parameter_errors.join(", ")) if raise_errors
-          return false
-        end
+        validate_collection_parameter! if raise_errors
 
         if template_errors.present?
           raise ViewComponent::TemplateError.new(template_errors) if raise_errors
@@ -263,6 +260,23 @@ module ViewComponent
         @with_collection_parameter
       end
 
+      # Ensure the component initializer accepts the
+      # collection parameter. By default, we do not
+      # validate that the default parameter name
+      # is accepted, as support for collection
+      # rendering is optional.
+      def validate_collection_parameter!(validate_default: false)
+        parameter = validate_default ? collection_parameter_name : with_collection_parameter_attr
+
+        return unless parameter
+        return if instance_method(:initialize).parameters.map(&:last).include?(parameter)
+
+        raise ArgumentError.new(
+          "#{self} initializer must accept " \
+          "`#{parameter}` collection parameter."
+        )
+      end
+
       private
 
       def compiled_template(file_path)
@@ -307,24 +321,6 @@ module ViewComponent
               variant: pieces.second.split("+").second&.to_sym,
               handler: pieces.last
             }
-          end
-      end
-
-      def parameter_errors
-        @parameter_errors ||=
-          begin
-            errors = []
-
-            # If initializer omits with_collection_parameter
-            if with_collection_parameter_attr &&
-              !instance_method(:initialize).parameters.map(&:last).include?(with_collection_parameter_attr)
-
-              errors <<
-                "#{self} initializer must accept " \
-                "`#{with_collection_parameter_attr}` collection parameter."
-            end
-
-            errors
           end
       end
 
