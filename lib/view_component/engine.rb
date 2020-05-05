@@ -64,8 +64,8 @@ module ViewComponent
 
       if options.show_previews
         app.routes.prepend do
-          get "/rails/view_components"       => "rails/view_components#index", :internal => true
-          get "/rails/view_components/*path" => "rails/view_components#previews", :internal => true
+          get "/rails/view_components"       => "view_components#index", :internal => true
+          get "/rails/view_components/*path" => "view_components#previews", :internal => true
         end
       end
     end
