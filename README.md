@@ -1,30 +1,13 @@
 # ViewComponent
-A view component framework for Rails.
-
-**Current Status**: Used in production at GitHub. Because of this, all changes will be thoroughly vetted, which could slow down the process of contributing. We will do our best to actively communicate status of pull requests with any contributors. If you have any substantial changes that you would like to make, it would be great to first [open an issue](http://github.com/github/view_component/issues/new) to discuss them with us.
-
-## Migration from ActionView::Component
-
-This gem used to be called `ActionView::Component`.
-See [issue #206] for some background on the name change.
-Learn more about what changed and how to migrate [here][migration-info].
-
-[issue #206]: https://github.com/github/view_component/issues/206
-[migration-info]: https://github.com/github/view_component/blob/v2.0.0/README.md#migration-in-progress
-
-## Roadmap
-
-Support for third-party component frameworks was merged into Rails `6.1.0.alpha` in https://github.com/rails/rails/pull/36388 and https://github.com/rails/rails/pull/37919. Our goal with this project is to provide a first-class component framework for this new capability in Rails.
-
-This gem includes a backport of those changes for Rails `5.0.0` through `6.1.0.alpha`.
+ViewComponent is a framework for building view components that are reusable, testable & encapsulated, in Ruby on Rails.
 
 ## Design philosophy
-
-This library is designed to integrate as seamlessly as possible with Rails, with the [least surprise](https://www.artima.com/intv/ruby4.html).
+ViewComponent is designed to integrate as seamlessly as possible [with Rails](https://rubyonrails.org/doctrine/), with the [least surprise](https://www.artima.com/intv/ruby4.html). 
 
 ## Compatibility
+ViewComponent is [supported natively](https://edgeguides.rubyonrails.org/layouts_and_rendering.html#rendering-objects) in Rails 6.1, and compatible with Rails 5.0+ via an included [monkey patch](https://github.com/github/view_component/blob/master/lib/view_component/render_monkey_patch.rb).
 
-`view_component` is tested for compatibility with combinations of Ruby `2.4`/`2.5`/`2.6`/`2.7` and Rails `5.0.0`/`5.2.3`/`6.0.0`/`master`.
+ViewComponent is tested for compatibility [with combinations of](https://github.com/github/view_component/blob/22e3d4ccce70d8f32c7375e5a5ccc3f70b22a703/.github/workflows/ruby_on_rails.yml#L10-L11) Ruby 2.4+ and Rails 5+.
 
 ## Installation
 
@@ -44,7 +27,7 @@ require "view_component/engine"
 
 ### What are components?
 
-`ViewComponent`s are Ruby classes that are used to render views. They take data as input and return output-safe HTML. Think of them as an evolution of the presenter/decorator/view model pattern, inspired by [React Components](https://reactjs.org/docs/react-component.html).
+ViewComponents are Ruby objects that output HTML. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
 
 Components are most effective in cases where view code is reused or benefits from being tested directly.
 
@@ -52,47 +35,41 @@ Components are most effective in cases where view code is reused or benefits fro
 
 #### Testing
 
-Rails encourages testing views with integration tests. This discourages us from testing views thoroughly, due to the overhead of exercising the routing and controller layers in addition to the view.
+Unlike traditional Rails views, ViewComponents can be unit-tested. In the GitHub codebase, component unit tests take around 25 milliseconds each, compared to about six seconds for controller tests.
 
-For partials, this means being tested for each view they are included in, reducing the benefit of reusing them.
+Rails views are typically tested with slow integration tests that also exercise the routing and controller layers in addition to the view. This cost often discourages thorough test coverage.
 
-`ViewComponent`s can be unit-tested. In the GitHub codebase, our component unit tests run in around 25 milliseconds, compared to about six seconds for integration tests.
+Because they can’t be tested directly, partials must be tested in the context of each route they are used, diminishing the value of the abstraction.
+
+With ViewComponent, integration tests can be reserved for integration checks, with permutations and corner cases covered at the unit level.
 
 #### Data Flow
 
-Unlike a method declaration on an object, views do not declare the values they are expected to receive, making it hard to figure out what context is necessary to render them. This often leads to subtle bugs when reusing a view in different contexts.
+Traditional Rails views have an implicit interface, making it hard to reason about what information they need to render, leading to subtle bugs when rendering the same view in different contexts.
 
-By clearly defining the context necessary to render a `ViewComponent`, they're easier to reuse than partials.
+ViewComponents use a standard Ruby initializer that clearly defines what they need to render, making them easier (and safer) to reuse than partials.
 
 #### Standards
 
 Views often fail basic Ruby code quality standards: long methods, deep conditional nesting, and mystery guests abound.
 
-`ViewComponent`s are Ruby objects, making it easy to follow code quality standards.
-
-#### Code Coverage
-
-Many common Ruby code coverage tools cannot properly handle coverage of views, making it difficult to audit how thorough tests are and leading to missing coverage in test suites.
-
-`ViewComponent` is at least partially compatible with code coverage tools, such as SimpleCov.
+ViewComponents are Ruby objects, making it easy to follow (and enforce) code quality standards.
 
 ### Building components
 
 #### Conventions
 
-Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's recommended to create an `ApplicationComponent` that is a subclass of `ViewComponent::Base` and inherit from that instead.
+Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's recommended to create and inherit from an `ApplicationComponent` that is a subclass of `ViewComponent::Base`.
 
 Component class names end in -`Component`.
 
 Component module names are plural, as they are for controllers. (`Users::AvatarComponent`)
 
-Content passed to a `ViewComponent` as a block is captured and assigned to the `content` accessor.
-
 #### Quick start
 
-Use the component generator to create a new `ViewComponent`.
+Use the component generator to create a new ViewComponent.
 
-The generator accepts the component name and the list of accepted properties as arguments:
+The generator accepts the component name and the list of accepted arguments:
 
 ```bash
 bin/rails generate component Example title content
@@ -102,7 +79,7 @@ bin/rails generate component Example title content
       create  app/components/example_component.html.erb
 ```
 
-`ViewComponent` includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in the Rails configuration (`config.generators.template_engine`) by default.
+ViewComponent includes template generators for the `erb`, `haml`, and `slim` template engines and will use the template engine specified in the Rails configuration (`config.generators.template_engine`) by default.
 
 The template engine can also be passed as an option to the generator:
 
@@ -112,7 +89,7 @@ bin/rails generate component Example title content --template-engine slim
 
 #### Implementation
 
-A `ViewComponent` is a Ruby file and corresponding template file with the same base name:
+A ViewComponent is a Ruby file and corresponding template file with the same base name:
 
 `app/components/test_component.rb`:
 ```ruby
@@ -143,6 +120,8 @@ Which returns:
 ```
 
 #### Content Areas
+
+Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor.
 
 A component can declare additional content areas to be rendered in the component. For example:
 
@@ -185,10 +164,9 @@ Which returns:
 
 ### Inline Component
 
-A component can be rendered without any template file as well.
+A component can also be rendered without a template file, by defining a `call` instance method:
 
 `app/components/inline_component.rb`:
-
 ```ruby
 class InlineComponent < ViewComponent::Base
   def call
@@ -201,7 +179,7 @@ class InlineComponent < ViewComponent::Base
 end
 ```
 
-It is also possible to render variants inline by creating additional `call_` methods.
+It is also possible to handle variants inline:
 
 ```ruby
 class InlineVariantComponent < ViewComponent::Base
@@ -215,20 +193,16 @@ class InlineVariantComponent < ViewComponent::Base
 end
 ```
 
-Using a mixture of templates and inline render methods in a component is supported, however only one should be provided per component (or variant).
-
 ### Conditional Rendering
 
-Components can implement a `#render?` method to determine if they should be rendered.
+Components can implement a `#render?` which is called after initialization to determine if the component should be rendered.
 
-For example, given a component that displays a banner to users who haven't confirmed their email address, the logic for whether to render the banner would need to go in either the component template:
+For example: the logic for whether to render a view could go in either the component template:
 
 `app/components/confirm_email_component.html.erb`
 ```
 <% if user.requires_confirmation? %>
-  <div class="alert">
-    Please confirm your email address.
-  </div>
+  <div class="alert">Please confirm your email address.</div>
 <% end %>
 ```
 
@@ -241,7 +215,7 @@ or the view that renders the component:
 <% end %>
 ```
 
-Instead, the `#render?` hook expresses this logic in the Ruby class, simplifying the view:
+Using the `#render?` hook simplifies the view:
 
 `app/components/confirm_email_component.rb`
 ```ruby
@@ -268,18 +242,16 @@ end
 <%= render(ConfirmEmailComponent.new(user: current_user)) %>
 ```
 
-To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`.
+_To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`._
 
 ### Rendering collections
 
-It's possible to render collections with components:
+Use `with_collection` to render a collection with a component:
 
 `app/view/products/index.html.erb`
 ``` erb
 <%= render(ProductComponent.with_collection(@products)) %>
 ```
-
-Where the `ProductComponent` and associated template might look something like the following. Notice that the constructor must take a `product` and the name of that parameter matches the name of the component.
 
 `app/components/product_component.rb`
 ``` ruby
@@ -290,12 +262,22 @@ class ProductComponent < ViewComponent::Base
 end
 ```
 
-`app/components/product_component.html.erb`
-``` erb
-<li><%= @product.name %></li>
+[By default](https://github.com/github/view_component/blob/89f8fab4609c1ef2467cf434d283864b3c754473/lib/view_component/base.rb#L249), the component name is used to define the parameter passed into the component from the collection.
+
+Use `with_collection_parameter` to change the name of the parameter:
+
+`app/components/product_component.rb`
+``` ruby
+class ProductComponent < ViewComponent::Base
+  with_collection_parameter :item
+
+  def initialize(item:)
+    @item = item
+  end
+end
 ```
 
-Additionally, extra arguments can be passed to the component and the name of the parameter can be changed:
+Additional arguments provided are passed to each component instance:
 
 `app/view/products/index.html.erb`
 ``` erb
@@ -322,7 +304,7 @@ end
 </li>
 ```
 
-`ViewComponent` defines a counter variable matching the parameter name above, followed by `_counter`. To access this variable, add it to `initialize` as an argument:
+ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
 
 `app/components/product_component.rb`
 ``` ruby
@@ -343,7 +325,7 @@ end
 
 ### Using helpers
 
-Helper module methods can be used through the `helpers` proxy.
+Helper methods can be used through the `helpers` proxy:
 
 ```ruby
 module IconHelper
@@ -359,7 +341,7 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
-The `helpers.` proxy can be used with `delegate`:
+Which can be used with `delegate`:
 
 ```ruby
 class UserComponent < ViewComponent::Base
@@ -371,7 +353,7 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
-Helpers can also be used by including the helper explicitly:
+Helpers can also be used by including the helper:
 
 ```ruby
 class UserComponent < ViewComponent::Base
@@ -385,20 +367,18 @@ end
 
 ### Sidecar assets (experimental)
 
-We're experimenting with including Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
+It’s possible to include Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
 
 To use the Webpacker gem to compile sidecar assets located in `app/components`:
 
-1. 1. In `config/webpacker.yml`, add `"app/components"` to the `resolved_paths` array (e.g. `resolved_paths: ["app/components"]`).
+1. In `config/webpacker.yml`, add `"app/components"` to the `resolved_paths` array (e.g. `resolved_paths: ["app/components"]`).
 2. In the Webpack entry file (often `app/javascript/packs/application.js`), add an import statement to a helper file, and in the helper file, import the components' Javascript:
-
-Near the top the entry file, add:
 
 ```js
 import "../components"
 ```
 
-Then add the following to a new file `app/javascript/components.js`:
+Then, in `app/javascript/components.js`, add:
 
 ```js
 function importAll(r) {
@@ -408,7 +388,7 @@ function importAll(r) {
 importAll(require.context("../components", true, /_component.js$/))
 ```
 
-Any file with the `_component.js` suffix, for example `app/components/widget_component.js`, will get compiled into the Webpack bundle. If that file itself imports another file, for example `app/components/widget_component.css`, that will also get compiled and bundled into Webpack's output stylesheet if Webpack is being used for styles.
+Any file with the `_component.js` suffix (such as `app/components/widget_component.js`) will be compiled into the Webpack bundle. If that file itself imports another file, for example `app/components/widget_component.css`, it will also be compiled and bundled into Webpack's output stylesheet if Webpack is being used for styles.
 
 #### Encapsulating sidecar assets
 
@@ -512,11 +492,13 @@ application.load(
 )
 ```
 
-This will allow you to create files such as `app/components/widget_controller.js`, where the controller identifier matches the `data-controller` attribute in the component's HTML template.
+This enables the creation of files such as `app/components/widget_controller.js`, where the controller identifier matches the `data-controller` attribute in the component's HTML template.
 
 ### Testing
 
-Unit test components directly, using the `render_inline` test helper. If you have a `capybara` test dependency, Capybara matchers will be available in your tests:
+Unit test components directly, using the `render_inline` test helper, asserting against the rendered output. 
+
+Capybara matchers are available if the gem is installed:
 
 ```ruby
 require "view_component/test_case"
@@ -530,7 +512,7 @@ class MyComponentTest < ViewComponent::TestCase
 end
 ```
 
-In the absence of `capybara`, you can make assertions on the `render_inline` return value, which is an instance of `Nokogiri::HTML::DocumentFragment`:
+In the absence of `capybara`, assertion against the return values of `render_inline`, which is an instance of `Nokogiri::HTML::DocumentFragment`:
 
 ```ruby
 test "render component" do
@@ -593,17 +575,13 @@ class TestComponentPreview < ViewComponent::Preview
 end
 ```
 
-You'll then be able to pass down a value with <http://localhost:3000/rails/components/test_component/with_dynamic_title?title=Custom+title>.
+Which enables passing in a value with <http://localhost:3000/rails/components/test_component/with_dynamic_title?title=Custom+title>.
 
 The `ViewComponent::Preview` base class includes
-[`ActionView::Helpers::TagHelper`][tag-helper], which provides the [`tag`][tag]
-and [`content_tag`][content_tag] view helper methods.
+[`ActionView::Helpers::TagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html), which provides the [`tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-tag)
+and [`content_tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-content_tag) view helper methods.
 
-[tag-helper]: https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html
-[tag]: https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-tag
-[content_tag]: https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-content_tag
-
-Previews default to the application layout, but can be overridden:
+Previews use the application layout by default, but can use a specific layout with the `layout` option:
 
 `test/components/previews/test_component_preview.rb`
 ```ruby
@@ -614,9 +592,7 @@ class TestComponentPreview < ViewComponent::Preview
 end
 ```
 
-Preview classes live in `test/components/previews`, can be configured using the `preview_path` option.
-
-To use `lib/component_previews`:
+Preview classes live in `test/components/previews`, which can be configured using the `preview_path` option:
 
 `config/application.rb`
 ```ruby
@@ -625,7 +601,7 @@ config.view_component.preview_path = "#{Rails.root}/lib/component_previews"
 
 #### Configuring TestController
 
-Component tests and previews assume the existence of an `ApplicationController` class, be can be configured using the `test_controller` option:
+Component tests and previews assume the existence of an `ApplicationController` class, which be can be configured using the `test_controller` option:
 
 `config/application.rb`
 ```ruby
@@ -658,15 +634,11 @@ config.view_component.preview_path = "#{Rails.root}/spec/components/previews"
 
 ### Can I use other templating languages besides ERB?
 
-Yes. This gem is tested against ERB, Haml, and Slim, but it should support most Rails template handlers.
-
-### What happened to inline templates?
-
-Inline templates have been removed (for now) due to concerns raised by [@soutaro](https://github.com/soutaro) regarding compatibility with the type systems being developed for Ruby 3.
+Yes. ViewComponent is tested against ERB, Haml, and Slim, but it should support most Rails template handlers.
 
 ### Isn't this just like X library?
 
-`ViewComponent` is far from a novel idea! Popular implementations of view components in Ruby include, but are not limited to:
+ViewComponent is far from a novel idea! Popular implementations of view components in Ruby include, but are not limited to:
 
 - [trailblazer/cells](https://github.com/trailblazer/cells)
 - [dry-rb/dry-view](https://github.com/dry-rb/dry-view)
@@ -675,6 +647,7 @@ Inline templates have been removed (for now) due to concerns raised by [@soutaro
 
 ## Resources
 
+- [Encapsulating Views, RailsConf 2020](https://youtu.be/YVYRus_2KZM)
 - [ViewComponent at GitHub with Joel Hawksley](https://the-ruby-blend.fireside.fm/9)
 - [Components, HAML vs ERB, and Design Systems](https://the-ruby-blend.fireside.fm/4)
 - [Choosing the Right Tech Stack with Dave Paola](https://5by5.tv/rubyonrails/307)
@@ -690,7 +663,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 
 ## Contributors
 
-`view_component` is built by:
+ViewComponent is built by:
 
 |<img src="https://avatars.githubusercontent.com/joelhawksley?s=256" alt="joelhawksley" width="128" />|<img src="https://avatars.githubusercontent.com/tenderlove?s=256" alt="tenderlove" width="128" />|<img src="https://avatars.githubusercontent.com/jonspalmer?s=256" alt="jonspalmer" width="128" />|<img src="https://avatars.githubusercontent.com/juanmanuelramallo?s=256" alt="juanmanuelramallo" width="128" />|<img src="https://avatars.githubusercontent.com/vinistock?s=256" alt="vinistock" width="128" />|
 |:---:|:---:|:---:|:---:|:---:|
@@ -729,4 +702,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/github
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+ViewComponent is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
