@@ -254,12 +254,6 @@ module ViewComponent
         ).to_sym
       end
 
-      # We use #with_collection_parameter as a setter,
-      # so this method is suffixed with _attr.
-      def with_collection_parameter_attr
-        @with_collection_parameter
-      end
-
       # Ensure the component initializer accepts the
       # collection parameter. By default, we do not
       # validate that the default parameter name
@@ -278,6 +272,12 @@ module ViewComponent
       end
 
       private
+
+      # We use #with_collection_parameter as a setter,
+      # so this method is suffixed with _attr.
+      def with_collection_parameter_attr
+        @with_collection_parameter
+      end
 
       def compiled_template(file_path)
         handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
