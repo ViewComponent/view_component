@@ -307,8 +307,12 @@ module ViewComponent
             errors = []
 
             # If initializer omits with_collection_parameter
-            if @with_collection_parameter && !instance_method(:initialize).parameters.map(&:last).include?(@with_collection_parameter)
-              errors << "Collection parameter #{@with_collection_parameter} not used in component initializer."
+            if @with_collection_parameter &&
+              !instance_method(:initialize).parameters.map(&:last).include?(@with_collection_parameter)
+
+              errors <<
+                "#{self} initializer must accept " \
+                "`#{@with_collection_parameter}` collection parameter."
             end
 
             errors

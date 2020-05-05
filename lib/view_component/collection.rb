@@ -30,6 +30,13 @@ module ViewComponent
     end
 
     def component_options(item, iterator)
+      if !@component.instance_method(:initialize).parameters.map(&:last).include?(@component.collection_parameter_name)
+        raise ArgumentError.new(
+          "#{@component} initializer must accept " \
+          "`#{@component.collection_parameter_name}` collection parameter."
+        )
+      end
+
       item_options = { @component.collection_parameter_name => item }
       item_options[@component.collection_counter_parameter_name] = iterator.index + 1 if @component.counter_argument_present?
 
