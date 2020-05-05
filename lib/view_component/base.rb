@@ -251,7 +251,10 @@ module ViewComponent
       end
 
       def collection_parameter_name
-        (with_collection_parameter_attr || name.demodulize.underscore.chomp("_component")).to_sym
+        (
+          with_collection_parameter_attr ||
+          name.demodulize.underscore.chomp("_component")
+        ).to_sym
       end
 
       # We use #with_collection_parameter as a setter,
