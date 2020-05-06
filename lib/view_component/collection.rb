@@ -6,6 +6,8 @@ module ViewComponent
       iterator = ActionView::PartialIteration.new(@collection.size)
 
       @component.compile!
+      @component.validate_collection_parameter!(validate_default: true)
+
       @collection.map do |item|
         content = @component.new(component_options(item, iterator)).render_in(view_context, &block)
         iterator.iterate!
@@ -30,8 +32,8 @@ module ViewComponent
     end
 
     def component_options(item, iterator)
-      item_options = { @component.collection_parameter_name => item }
-      item_options[@component.collection_counter_parameter_name] = iterator.index + 1 if @component.counter_argument_present?
+      item_options = { @component.collection_parameter => item }
+      item_options[@component.collection_counter_parameter] = iterator.index + 1 if @component.counter_argument_present?
 
       @options.merge(item_options)
     end

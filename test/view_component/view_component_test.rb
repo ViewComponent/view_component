@@ -504,6 +504,24 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("p", text: "On sale", count: 1)
   end
 
+  def test_collection_component_missing_parameter_name
+    exception = assert_raises ArgumentError do
+      render_inline(MissingCollectionParameterNameComponent.with_collection([]))
+    end
+
+    assert_match /MissingCollectionParameterNameComponent initializer must accept `foo` collection parameter/, exception.message
+  end
+
+  def test_collection_component_missing_default_parameter_name
+    exception = assert_raises ArgumentError do
+      render_inline(
+        MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
+
+    assert_match /MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message
+  end
+
   private
 
   def modify_file(file, content)
