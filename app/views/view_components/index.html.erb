@@ -1,8 +1,8 @@
 <% @previews.each do |preview| %>
-  <h3><%= link_to preview.preview_name.titleize, "/rails/view_components/#{preview.preview_name}" %></h3>
+  <h3><%= link_to preview.preview_name.titleize, preview_view_component_path(preview.preview_name) %></h3>
   <ul>
     <% preview.examples.each do |preview_example| %>
-      <li><%= link_to preview_example, "/rails/view_components/#{preview.preview_name}/#{preview_example}" %></li>
+      <li><%= link_to preview_example, preview_view_component_path("#{preview.preview_name}/#{preview_example}") %></li>
     <% end %>
   </ul>
 <% end %>
