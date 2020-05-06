@@ -178,8 +178,6 @@ module ViewComponent
       def compile(raise_errors: false)
         return if compiled?
 
-        validate_collection_parameter! if raise_errors
-
         if template_errors.present?
           raise ViewComponent::TemplateError.new(template_errors) if raise_errors
           return false
@@ -189,13 +187,23 @@ module ViewComponent
           templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
         end
 
-        define_singleton_method(:collection_counter_parameter_name) do
-          "#{collection_parameter_name}_counter".to_sym
+        define_singleton_method(:collection_parameter) do
+          if provided_collection_parameter
+            provided_collection_parameter
+          else
+            name.demodulize.underscore.chomp("_component").to_sym
+          end
+        end
+
+        define_singleton_method(:collection_counter_parameter) do
+          "#{collection_parameter}_counter".to_sym
         end
 
         define_singleton_method(:counter_argument_present?) do
-          instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter_name)
+          instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter)
         end
+
+        validate_collection_parameter! if raise_errors
 
         # If template name annotations are turned on, a line is dynamically
         # added with a comment. In this case, we want to return a different
@@ -242,16 +250,9 @@ module ViewComponent
         self.content_areas = areas
       end
 
-      # Support overriding this component's collection parameter name
+      # Support overriding collection parameter name
       def with_collection_parameter(param)
-        @with_collection_parameter = param
-      end
-
-      def collection_parameter_name
-        (
-          with_collection_parameter_attr ||
-          name.demodulize.underscore.chomp("_component")
-        ).to_sym
+        @provided_collection_parameter = param
       end
 
       # Ensure the component initializer accepts the
@@ -260,7 +261,7 @@ module ViewComponent
       # is accepted, as support for collection
       # rendering is optional.
       def validate_collection_parameter!(validate_default: false)
-        parameter = validate_default ? collection_parameter_name : with_collection_parameter_attr
+        parameter = validate_default ? collection_parameter : provided_collection_parameter
 
         return unless parameter
         return if instance_method(:initialize).parameters.map(&:last).include?(parameter)
@@ -273,10 +274,8 @@ module ViewComponent
 
       private
 
-      # We use #with_collection_parameter as a setter,
-      # so this method is suffixed with _attr.
-      def with_collection_parameter_attr
-        @with_collection_parameter
+      def provided_collection_parameter
+        @provided_collection_parameter
       end
 
       def compiled_template(file_path)
