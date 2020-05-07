@@ -62,7 +62,7 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
     prepend_view_path Rails.root.join("app/views") if defined?(Rails.root)
   end
 
-  def url_helpers
-    Rails.application.routes.url_helpers
+  def preview_component_path
+    Rails.application.routes.url_helpers.preview_component_path
   end
 end
