@@ -9,8 +9,6 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
   before_action :find_preview, only: :previews
   before_action :require_local!, unless: :show_previews?
 
-  delegate :preview_component_path, to: :url_helpers
-
   if respond_to?(:content_security_policy)
     content_security_policy(false)
   end
@@ -60,9 +58,5 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
 
   def prepend_application_view_paths
     prepend_view_path Rails.root.join("app/views") if defined?(Rails.root)
-  end
-
-  def preview_component_path
-    Rails.application.routes.url_helpers.preview_component_path
   end
 end
