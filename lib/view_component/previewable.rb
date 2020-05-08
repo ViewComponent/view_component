@@ -27,7 +27,7 @@ module ViewComponent # :nodoc:
       #
       # Defaults to +/rails/view_components+ when `show_previews' is enabled
       #
-      mattr_accessor :preview_route, instance_writer: false
+      mattr_accessor :preview_route, instance_writer: false, default: "/rails/view_components"
     end
   end
 end
