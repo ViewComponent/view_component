@@ -14,7 +14,6 @@ module ViewComponent
 
       if options.show_previews
         options.preview_path ||= defined?(Rails.root) ? "#{Rails.root}/test/components/previews" : nil
-        options.preview_route ||= "/rails/view_components"
       end
 
       ActiveSupport.on_load(:view_component) do
