@@ -474,7 +474,7 @@ Preview classes live in `test/components/previews`, which can be configured usin
 config.view_component.preview_path = "#{Rails.root}/lib/component_previews"
 ```
 
-Previews are served from <http://localhost:3000/rails/view_components> by default. If you want to use a different endpoint you can configure the `preview_route` option:
+Previews are served from <http://localhost:3000/rails/view_components> by default. To use a different endpoint, set the `preview_route` option:
 
 `config/application.rb`
 ```ruby
