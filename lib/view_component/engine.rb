@@ -64,8 +64,8 @@ module ViewComponent
 
       if options.show_previews
         app.routes.prepend do
-          get options.preview_route, to: "view_components#index", as: "preview_view_components", internal: true
-          get "#{options.preview_route}/*path", to: "view_components#previews", as: "preview_view_component", internal: true
+          get options.preview_route, to: "view_components#index", as: :preview_view_components, internal: true
+          get "#{options.preview_route}/*path", to: "view_components#previews", as: :preview_view_component, internal: true
         end
       end
     end
