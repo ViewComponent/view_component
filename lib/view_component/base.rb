@@ -341,7 +341,22 @@ module ViewComponent
 
       def matching_views_in_source_location
         return [] unless source_location
-        (Dir["#{source_location.chomp(File.extname(source_location))}.*{#{ActionView::Template.template_handler_extensions.join(',')}}"] - [source_location])
+
+        location_without_extension = source_location.chomp(File.extname(source_location))
+
+        extenstions = ActionView::Template.template_handler_extensions.join(",")
+
+        # view files in the same directory as te component
+        sidecar_files = Dir["#{location_without_extension}.*{#{extenstions}}"]
+
+        # view files in a directory named like the component
+        directory = File.dirname(source_location)
+        filename = File.basename(source_location, ".rb")
+        component_name = name.demodulize.underscore
+
+        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extenstions}}"]
+
+        (sidecar_files - [source_location] + sidecar_directory_files)
       end
 
       def templates

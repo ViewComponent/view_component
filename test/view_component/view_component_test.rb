@@ -251,6 +251,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("hello, world!")
   end
 
+  def test_renders_component_with_sidecar_directory
+    render_inline(SidecarDirectoryComponent.new)
+
+    assert_text("hello, world!")
+  end
+
   def test_renders_component_with_request_context
     render_inline(RequestComponent.new)
 
@@ -435,6 +441,14 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     assert_includes error.message, "Template file and inline render method found for variant 'phone' in VariantTemplateAndInlineVariantTemplateComponent."
+  end
+
+  def test_raise_error_when_template_file_and_sidecar_directory_template_exist
+    error = assert_raises ViewComponent::TemplateError do
+      render_inline(TemplateAndSidecarDirectoryTemplateComponent.new)
+    end
+
+    assert_includes error.message, "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
   end
 
   def test_backtrace_returns_correct_file_and_line_number

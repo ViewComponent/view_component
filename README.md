@@ -191,6 +191,38 @@ class InlineVariantComponent < ViewComponent::Base
 end
 ```
 
+### Sidecar Assets
+
+ViewComponents supports two options for defining view files. 
+
+#### Sidecar view
+
+The simplest option is to place the view next to the Ruby component:
+
+```
+app/components
+├── ...
+├── test_component.rb
+├── test_component.html.erb
+├── ...
+```
+
+#### Sidecar directory
+
+As an alternative, views and other assets can be placed in a sidecar directory with the same name as the component, which can be useful for organizing views alongside other assets like Javascript and CSS.
+
+```
+app/components
+├── ...
+├── test_component.rb
+├── test_component
+|   ├── test_component.css
+|   ├── test_component.html.erb
+|   └── test_component.js
+├── ...
+
+```
+
 ### Conditional Rendering
 
 Components can implement a `#render?` method to be called after initialization to determine if the component should render.
