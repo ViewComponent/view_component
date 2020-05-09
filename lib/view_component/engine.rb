@@ -11,6 +11,7 @@ module ViewComponent
       options = app.config.view_component
 
       options.show_previews = Rails.env.development? if options.show_previews.nil?
+      options.preview_route ||= ViewComponent::Base.preview_route
 
       if options.show_previews
         options.preview_path ||= defined?(Rails.root) ? "#{Rails.root}/test/components/previews" : nil
