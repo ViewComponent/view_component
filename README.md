@@ -2,7 +2,7 @@
 ViewComponent is a framework for building view components that are reusable, testable & encapsulated, in Ruby on Rails.
 
 ## Design philosophy
-ViewComponent is designed to integrate as seamlessly as possible [with Rails](https://rubyonrails.org/doctrine/), with the [least surprise](https://www.artima.com/intv/ruby4.html). 
+ViewComponent is designed to integrate as seamlessly as possible [with Rails](https://rubyonrails.org/doctrine/), with the [least surprise](https://www.artima.com/intv/ruby4.html).
 
 ## Compatibility
 ViewComponent is [supported natively](https://edgeguides.rubyonrails.org/layouts_and_rendering.html#rendering-objects) in Rails 6.1, and compatible with Rails 5.0+ via an included [monkey patch](https://github.com/github/view_component/blob/master/lib/view_component/render_monkey_patch.rb).
@@ -184,7 +184,7 @@ class InlineVariantComponent < ViewComponent::Base
   def call_phone
     link_to "Phone", phone_path
   end
-  
+
   def call
     link_to "Default", default_path
   end
@@ -371,7 +371,7 @@ end
 
 ### Testing
 
-Unit test components directly, using the `render_inline` test helper, asserting against the rendered output. 
+Unit test components directly, using the `render_inline` test helper, asserting against the rendered output.
 
 Capybara matchers are available if the gem is installed:
 
@@ -473,6 +473,15 @@ Preview classes live in `test/components/previews`, which can be configured usin
 ```ruby
 config.view_component.preview_path = "#{Rails.root}/lib/component_previews"
 ```
+
+Previews are served from <http://localhost:3000/rails/view_components> by default. To use a different endpoint, set the `preview_route` option:
+
+`config/application.rb`
+```ruby
+config.view_component.preview_route = "/previews"
+```
+
+This example will make the previews available from <http://localhost:3000/previews>.
 
 #### Configuring TestController
 

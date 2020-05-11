@@ -20,6 +20,16 @@ module ViewComponent # :nodoc:
       # Defaults to +true+ for development environment
       #
       mattr_accessor :show_previews, instance_writer: false
+
+      # Set the entry route for component previews through app configuration:
+      #
+      #     config.view_component.preview_route = "/previews"
+      #
+      # Defaults to +/rails/view_components+ when `show_previews' is enabled
+      #
+      mattr_accessor :preview_route, instance_writer: false do
+        "/rails/view_components"
+      end
     end
   end
 end

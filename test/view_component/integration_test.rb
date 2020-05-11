@@ -280,4 +280,17 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("p", text: "Radio clock counter: 1")
     assert_select("p", text: "Mints counter: 2")
   end
+
+  test "renders the previews in the configured route" do
+    with_preview_route("/previews") do
+      get "/previews"
+      assert_select "title", "Component Previews"
+
+      get "/previews/preview_component/default"
+      assert_select "title", "ViewComponent - Test"
+
+      get "/previews/preview_component"
+      assert_select "title", "Component Previews for preview_component"
+    end
+  end
 end

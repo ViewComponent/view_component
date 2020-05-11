@@ -11,6 +11,7 @@ module ViewComponent
       options = app.config.view_component
 
       options.show_previews = Rails.env.development? if options.show_previews.nil?
+      options.preview_route ||= ViewComponent::Base.preview_route
 
       if options.show_previews
         options.preview_path ||= defined?(Rails.root) ? "#{Rails.root}/test/components/previews" : nil
@@ -64,8 +65,8 @@ module ViewComponent
 
       if options.show_previews
         app.routes.prepend do
-          get "/rails/view_components"       => "view_components#index", :internal => true
-          get "/rails/view_components/*path" => "view_components#previews", :internal => true
+          get options.preview_route, to: "view_components#index", as: :preview_view_components, internal: true
+          get "#{options.preview_route}/*path", to: "view_components#previews", as: :preview_view_component, internal: true
         end
       end
     end

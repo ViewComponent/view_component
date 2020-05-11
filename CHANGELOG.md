@@ -1,5 +1,9 @@
 # master
 
+* Add `config.view_component.preview_route` to set the endpoint for component previews. By default `/rails/view_components` is used.
+
+    *Juan Manuel Ramallo*
+
 * Raise error when initializer omits with_collection_parameter.
 
     *Joel Hawksley*
