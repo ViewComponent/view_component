@@ -169,17 +169,17 @@ module ViewComponent
       end
 
       def compile!
-        compile(raise_template_errors: true)
+        compile(raise_errors: true)
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
       # We could in theory do this on app boot, at least in production environments.
       # Right now this just compiles the first time the component is rendered.
-      def compile(raise_template_errors: false)
+      def compile(raise_errors: false)
         return if compiled?
 
         if template_errors.present?
-          raise ViewComponent::TemplateError.new(template_errors) if raise_template_errors
+          raise ViewComponent::TemplateError.new(template_errors) if raise_errors
           return false
         end
 
@@ -187,13 +187,23 @@ module ViewComponent
           templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
         end
 
-        define_singleton_method(:collection_counter_parameter_name) do
-          "#{collection_parameter_name}_counter".to_sym
+        define_singleton_method(:collection_parameter) do
+          if provided_collection_parameter
+            provided_collection_parameter
+          else
+            name.demodulize.underscore.chomp("_component").to_sym
+          end
+        end
+
+        define_singleton_method(:collection_counter_parameter) do
+          "#{collection_parameter}_counter".to_sym
         end
 
         define_singleton_method(:counter_argument_present?) do
-          instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter_name)
+          instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter)
         end
+
+        validate_collection_parameter! if raise_errors
 
         # If template name annotations are turned on, a line is dynamically
         # added with a comment. In this case, we want to return a different
@@ -240,16 +250,33 @@ module ViewComponent
         self.content_areas = areas
       end
 
-      # Support overriding this component's collection parameter name
+      # Support overriding collection parameter name
       def with_collection_parameter(param)
-        @with_collection_parameter = param
+        @provided_collection_parameter = param
       end
 
-      def collection_parameter_name
-        (@with_collection_parameter || name.demodulize.underscore.chomp("_component")).to_sym
+      # Ensure the component initializer accepts the
+      # collection parameter. By default, we do not
+      # validate that the default parameter name
+      # is accepted, as support for collection
+      # rendering is optional.
+      def validate_collection_parameter!(validate_default: false)
+        parameter = validate_default ? collection_parameter : provided_collection_parameter
+
+        return unless parameter
+        return if instance_method(:initialize).parameters.map(&:last).include?(parameter)
+
+        raise ArgumentError.new(
+          "#{self} initializer must accept " \
+          "`#{parameter}` collection parameter."
+        )
       end
 
       private
+
+      def provided_collection_parameter
+        @provided_collection_parameter
+      end
 
       def compiled_template(file_path)
         handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))

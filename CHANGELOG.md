@@ -4,6 +4,10 @@
 
     *Juan Manuel Ramallo*
 
+* Raise error when initializer omits with_collection_parameter.
+
+    *Joel Hawksley*
+
 # 2.5.1
 
 * Compile component before rendering collection.
