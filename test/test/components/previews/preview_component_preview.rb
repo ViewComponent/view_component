@@ -20,4 +20,10 @@ class PreviewComponentPreview < ViewComponent::Preview
   def with_params(cta: "Default CTA", title: "Default title")
     render(PreviewComponent.new(cta: cta, title: title))
   end
+
+  def wrapped_in_div
+    tag.div do
+      render(PreviewComponent.new(title: "Lorem Ipsum"))
+    end
+  end
 end

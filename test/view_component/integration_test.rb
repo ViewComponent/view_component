@@ -209,6 +209,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "Label from params"
   end
 
+  test "renders preview component wrapped in div" do
+    get "/rails/view_components/preview_component/wrapped_in_div"
+
+    assert_includes response.body, '<div><div class="preview-component">Lorem Ipsum</div></div>'
+  end
+
   test "renders badge component open preview" do
     get "/rails/view_components/issues/badge_component/open"
 
