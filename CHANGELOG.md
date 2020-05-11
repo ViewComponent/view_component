@@ -1,5 +1,9 @@
 # master
 
+* Add `config.view_component.preview_route` to set the endpoint for component previews. By default `/rails/view_component` is used.
+
+    *Juan Manuel Ramallo*
+
 # 2.5.1
 
 * Compile component before rendering collection.
