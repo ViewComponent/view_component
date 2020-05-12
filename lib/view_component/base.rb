@@ -47,7 +47,6 @@ module ViewComponent
     def render_in(view_context, &block)
       self.class.compile!
       @view_context = view_context
-      @view_renderer ||= view_context.view_renderer
       @lookup_context ||= view_context.lookup_context
 
       # Expose @view_flow variable required to support content_for
