@@ -86,6 +86,8 @@ module ViewComponent
 
     def initialize(*); end
 
+    # If trying to render a partial or template inside a component,
+    # pass the render call to the parent view_context.
     def render(options = {}, args = {}, &block)
       if options.is_a?(String) || (options.is_a?(Hash) && options.has_key?(:partial))
         view_context.render(options, args, &block)
