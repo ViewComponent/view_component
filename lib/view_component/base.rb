@@ -103,7 +103,7 @@ module ViewComponent
       @controller ||= view_context.controller
     end
 
-    # Provides a proxy to access helper methods through
+    # Provides a proxy to access helper methods
     def helpers
       @helpers ||= view_context
     end
