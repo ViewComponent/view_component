@@ -80,10 +80,6 @@ module ViewComponent
       true
     end
 
-    def self.short_identifier
-      @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
-    end
-
     def initialize(*); end
 
     # If trying to render a partial or template inside a component,
@@ -157,6 +153,11 @@ module ViewComponent
       # Render a component collection.
       def with_collection(*args)
         Collection.new(self, *args)
+      end
+
+      # Provide identifier for ActionView template annotations
+      def short_identifier
+        @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
       end
 
       def inherited(child)
