@@ -16,11 +16,6 @@ module ViewComponent
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
-    # Render a component collection.
-    def self.with_collection(*args)
-      Collection.new(self, *args)
-    end
-
     # Entrypoint for rendering components.
     #
     # view_context: ActionView context from calling view
@@ -150,6 +145,11 @@ module ViewComponent
 
     class << self
       attr_accessor :source_location
+
+      # Render a component collection.
+      def with_collection(*args)
+        Collection.new(self, *args)
+      end
 
       def inherited(child)
         if defined?(Rails)
