@@ -118,6 +118,7 @@ module ViewComponent
       @variant
     end
 
+    # Assign the provided content to the content area accessor
     def with(area, content = nil, &block)
       unless content_areas.include?(area)
         raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
