@@ -49,10 +49,12 @@ module ViewComponent
       @view_context = view_context
       @lookup_context ||= view_context.lookup_context
 
-      # Expose @view_flow variable required to support content_for
+      # For content_for
       @view_flow ||= view_context.view_flow
 
+      # For i18n support
       @virtual_path ||= virtual_path
+
       @variant = @lookup_context.variants.first
 
       old_current_template = @current_template
