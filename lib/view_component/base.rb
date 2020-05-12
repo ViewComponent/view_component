@@ -110,6 +110,7 @@ module ViewComponent
       self.class.source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
     end
 
+    # For caching, such as #cache_if
     def view_cache_dependencies
       []
     end
