@@ -13,8 +13,8 @@ module ViewComponent
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 
-    class_attribute :content_areas, default: []
-    self.content_areas = [] # default doesn't work until Rails 5.2
+    class_attribute :content_areas
+    self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
     # Render a component collection.
     def self.with_collection(*args)
