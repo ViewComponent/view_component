@@ -160,6 +160,7 @@ module ViewComponent
       end
 
       def inherited(child)
+        # If we're in Rails, add application url_helpers to the component context
         if defined?(Rails)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
         end
