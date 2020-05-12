@@ -115,7 +115,8 @@ module ViewComponent
       []
     end
 
-    def format # :nodoc:
+    # For caching, such as #cache_if
+    def format
       @variant
     end
 
