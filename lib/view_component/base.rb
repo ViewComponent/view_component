@@ -52,9 +52,10 @@ module ViewComponent
       # For content_for
       @view_flow ||= view_context.view_flow
 
-      # For i18n support
+      # For i18n
       @virtual_path ||= virtual_path
 
+      # For template variants (+phone, +desktop, etc.)
       @variant = @lookup_context.variants.first
 
       old_current_template = @current_template
