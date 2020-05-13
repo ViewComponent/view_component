@@ -310,8 +310,6 @@ module ViewComponent
 
       def provided_collection_parameter
         @provided_collection_parameter ||= nil
-
-        @provided_collection_parameter
       end
 
       def compiled_template(file_path)
