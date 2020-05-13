@@ -10,15 +10,11 @@ module ViewComponent
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
 
+    # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 
-    class_attribute :content_areas, default: []
-    self.content_areas = [] # default doesn't work until Rails 5.2
-
-    # Render a component collection.
-    def self.with_collection(*args)
-      Collection.new(self, *args)
-    end
+    class_attribute :content_areas
+    self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
     # Entrypoint for rendering components.
     #
@@ -45,17 +41,28 @@ module ViewComponent
     # <span title="greeting">Hello, world!</span>
     #
     def render_in(view_context, &block)
-      self.class.compile!
+      self.class.compile(raise_errors: true)
+
       @view_context = view_context
-      @view_renderer ||= view_context.view_renderer
       @lookup_context ||= view_context.lookup_context
+
+      # required for path helpers in older Rails versions
+      @view_renderer ||= view_context.view_renderer
+
+      # For content_for
       @view_flow ||= view_context.view_flow
+
+      # For i18n
       @virtual_path ||= virtual_path
+
+      # For template variants (+phone, +desktop, etc.)
       @variant = @lookup_context.variants.first
 
+      # For caching, such as #cache_if
       old_current_template = @current_template
       @current_template = self
 
+      # Assign captured content passed to component as a block to @content
       @content = view_context.capture(self, &block) if block_given?
 
       before_render_check
@@ -77,12 +84,10 @@ module ViewComponent
       true
     end
 
-    def self.short_identifier
-      @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
-    end
-
     def initialize(*); end
 
+    # If trying to render a partial or template inside a component,
+    # pass the render call to the parent view_context.
     def render(options = {}, args = {}, &block)
       if options.is_a?(String) || (options.is_a?(Hash) && options.has_key?(:partial))
         view_context.render(options, args, &block)
@@ -95,7 +100,7 @@ module ViewComponent
       @controller ||= view_context.controller
     end
 
-    # Provides a proxy to access helper methods through
+    # Provides a proxy to access helper methods
     def helpers
       @helpers ||= view_context
     end
@@ -105,14 +110,17 @@ module ViewComponent
       self.class.source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
     end
 
+    # For caching, such as #cache_if
     def view_cache_dependencies
       []
     end
 
-    def format # :nodoc:
+    # For caching, such as #cache_if
+    def format
       @variant
     end
 
+    # Assign the provided content to the content area accessor
     def with(area, content = nil, &block)
       unless content_areas.include?(area)
         raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
@@ -128,6 +136,9 @@ module ViewComponent
 
     private
 
+    # Exposes the current request to the component.
+    # Use sparingly as doing so introduces coupling
+    # that inhibits encapsulation & reuse.
     def request
       @request ||= controller.request
     end
@@ -143,7 +154,18 @@ module ViewComponent
     class << self
       attr_accessor :source_location
 
+      # Render a component collection.
+      def with_collection(*args)
+        Collection.new(self, *args)
+      end
+
+      # Provide identifier for ActionView template annotations
+      def short_identifier
+        @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
+      end
+
       def inherited(child)
+        # If we're in Rails, add application url_helpers to the component context
         if defined?(Rails)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
         end
@@ -168,13 +190,10 @@ module ViewComponent
         @compiled && ActionView::Base.cache_template_loading
       end
 
-      def compile!
-        compile(raise_errors: true)
-      end
-
       # Compile templates to instance methods, assuming they haven't been compiled already.
-      # We could in theory do this on app boot, at least in production environments.
-      # Right now this just compiles the first time the component is rendered.
+      #
+      # Do as much work as possible in this step, as doing so reduces the amount
+      # of work done each time a component is rendered.
       def compile(raise_errors: false)
         return if compiled?
 
