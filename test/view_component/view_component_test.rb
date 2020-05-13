@@ -491,8 +491,8 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(ProductComponent.with_collection(products))
     end
 
-    assert_match /missing keyword/, exception.message
-    assert_match /notice/, exception.message
+    assert_match(/missing keyword/, exception.message)
+    assert_match(/notice/, exception.message)
   end
 
   def test_render_single_item_from_collection
@@ -509,7 +509,7 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(MissingCollectionParameterNameComponent.with_collection([]))
     end
 
-    assert_match /MissingCollectionParameterNameComponent initializer must accept `foo` collection parameter/, exception.message
+    assert_match(/MissingCollectionParameterNameComponent initializer must accept `foo` collection parameter/, exception.message)
   end
 
   def test_collection_component_missing_default_parameter_name
@@ -519,7 +519,7 @@ class ViewComponentTest < ViewComponent::TestCase
       )
     end
 
-    assert_match /MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message
+    assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
   end
 
   private

@@ -59,6 +59,7 @@ module ViewComponent
       @variant = @lookup_context.variants.first
 
       # For caching, such as #cache_if
+      @current_template = nil unless defined?(@current_template)
       old_current_template = @current_template
       @current_template = self
 
@@ -187,6 +188,8 @@ module ViewComponent
       end
 
       def compiled?
+        @compiled ||= false
+
         @compiled && ActionView::Base.cache_template_loading
       end
 
@@ -201,6 +204,13 @@ module ViewComponent
           raise ViewComponent::TemplateError.new(template_errors) if raise_errors
           return false
         end
+
+        # Remove any existing singleton methods,
+        # as Ruby warns when redefining a method.
+        remove_possible_singleton_method(:variants)
+        remove_possible_singleton_method(:collection_parameter)
+        remove_possible_singleton_method(:collection_counter_parameter)
+        remove_possible_singleton_method(:counter_argument_present?)
 
         define_singleton_method(:variants) do
           templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
@@ -237,8 +247,13 @@ module ViewComponent
           end
 
         templates.each do |template|
+          # Remove existing compiled template methods,
+          # as Ruby warns when redefining a method.
+          method_name = call_method_name(template[:variant])
+          undef_method(method_name.to_sym) if instance_methods.include?(method_name.to_sym)
+
           class_eval <<-RUBY, template[:path], line_number
-            def #{call_method_name(template[:variant])}
+            def #{method_name}
               @output_buffer = ActionView::OutputBuffer.new
               #{compiled_template(template[:path])}
             end
@@ -265,7 +280,7 @@ module ViewComponent
         if areas.include?(:content)
           raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
         end
-        attr_reader *areas
+        attr_reader(*areas)
         self.content_areas = areas
       end
 
@@ -294,7 +309,7 @@ module ViewComponent
       private
 
       def provided_collection_parameter
-        @provided_collection_parameter
+        @provided_collection_parameter ||= nil
       end
 
       def compiled_template(file_path)

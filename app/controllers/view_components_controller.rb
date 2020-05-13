@@ -28,7 +28,7 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
       @render_args = @preview.render_args(@example_name, params: params.permit!)
       layout = @render_args[:layout]
       opts = layout.nil? ? {} : { layout: layout }
-      render "view_components/preview", **opts
+      render "view_components/preview", opts
     end
   end
 
