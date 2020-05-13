@@ -160,6 +160,129 @@ Returning:
 </div>
 ```
 
+#### Slots (experimental)
+
+_Slots are currently under development as a successor to Content Areas. The Slot APIs should be considered unfinished and subject to breaking changes in non-major releases of ViewComponent._
+
+Slots enable multiple blocks of content to be passed to a single ViewComponent.
+
+Slots exist in two forms: normal slots and collection slots.
+
+Normal slots can be rendered once per component. They expose an accessor with the name of the slot that returns an instance of `BoxComponent::Header`, etc.
+
+Collection slots can be rendered multiple times. They expose an accessor with the pluralized name of the slot (`#rows`), which is an Array of `BoxComponent::Row` instances.
+
+##### Defining Slots
+
+Slots can be defined in two ways:
+
+1) With the existing "macro" syntax:
+
+`with_slots :header`
+`with_collection_slots :row`
+
+2) As classes on the component object:
+
+```ruby
+class BoxComponent < ViewComponent::Base
+  class Header < ViewComponent::Slot; end
+  class Row < ViewComponent::CollectionSlot; end
+end
+```
+
+##### Example ViewComponent with Slots
+
+`# box_component.rb`
+```ruby
+class BoxComponent < ViewComponent::Base
+  with_slots :body, :footer
+
+  class Header < ViewComponent::Slot
+    def initialize(class_names: "")
+      @class_names = class_names
+    end
+
+    def class_names
+      "Box-header #{@class_names}"
+    end
+  end
+
+  class Row < ViewComponent::CollectionSlot
+    def initialize(theme: :gray)
+      @theme = theme
+    end
+
+    def theme_class_name
+      case @theme
+      when :gray
+        "Box-row--gray"
+      when :hover_gray
+        "Box-row--hover-gray"
+      when :yellow
+        "Box-row--yellow"
+      when :blue
+        "Box-row--blue"
+      when :hover_blue
+        "Box-row--hover-blue"
+      else
+        "Box-row--gray"
+      end
+    end
+  end
+end
+```
+
+`# box_component.html.erb`
+```erb
+<div class="Box">
+  <% if header %>
+    <div class="<%= header.class_names %>">
+      <%= header.content %>
+    </div>
+  <% end %>
+  <% if body %>
+    <div class="Box-body">
+      <%= body.content %>
+    </div>
+  <% end %>
+  <% if rows.any? %>
+    <ul>
+      <% rows.each do |row| %>
+        <li class="Box-row <%= row.theme_class_name %>">
+          <%= row.content %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if footer %>
+    <div class="Box-footer">
+      <%= footer %>
+    </div>
+  <% end %>
+</div>
+```
+
+`# index.html.erb`
+```erb
+<%= render(BoxComponent.new) do |component|
+  <% component.slot(:header, class_names: "my-class-name") do %>
+    This is my header!
+  <% end %>
+  <% component.slot(:body) do %>
+    This is the body.
+  <% end %>
+  <% component.slot(:row) do %>
+    Row one
+  <% end %>
+  <% component.slot(:row, theme: :yellow) do %>
+    Yellow row
+  <% end %>
+  <% component.slot(:footer) do %>
+    This is the footer.
+  <% end %>
+<% end %>
+```
+
 ### Inline Component
 
 ViewComponents can render without a template file, by defining a `call` method:
@@ -193,7 +316,7 @@ end
 
 ### Sidecar Assets
 
-ViewComponents supports two options for defining view files. 
+ViewComponents supports two options for defining view files.
 
 #### Sidecar view
 
