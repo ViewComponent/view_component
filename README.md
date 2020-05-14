@@ -382,7 +382,7 @@ class MyComponentTest < ViewComponent::TestCase
   test "render component" do
     render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
 
-    assert_selector("span[title='my title']", "Hello, World!")
+    assert_selector("span[title='my title']", text: "Hello, World!")
   end
 end
 ```
@@ -406,7 +406,7 @@ test "render component for tablet" do
   with_variant :tablet do
     render_inline(TestComponent.new(title: "my title")) { "Hello, tablets!" }
 
-    assert_selector("span[title='my title']", "Hello, tablets!")
+    assert_selector("span[title='my title']", text: "Hello, tablets!")
   end
 end
 ```
