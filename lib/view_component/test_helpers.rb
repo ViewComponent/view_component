@@ -17,6 +17,8 @@ module ViewComponent
       warn "WARNING in `ViewComponent::TestHelpers`: You must add `capybara` to your Gemfile to use Capybara assertions."
     end
 
+    attr_reader :rendered_component
+
     def render_inline(component, **args, &block)
       @rendered_component = controller.view_context.render(component, args, &block)
 

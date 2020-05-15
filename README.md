@@ -397,6 +397,16 @@ test "render component" do
 end
 ```
 
+Alternatively, assert against the raw output of the component, which is exposed as `rendered_component`:
+
+```ruby
+test "render component" do
+  render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
+
+  assert_includes rendered_component, "Hello, World!"
+end
+```
+
 #### Action Pack Variants
 
 Use the `with_variant` helper to test specific variants:
