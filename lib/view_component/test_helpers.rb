@@ -7,7 +7,7 @@ module ViewComponent
       include Capybara::Minitest::Assertions
 
       def page
-        Capybara::Node::Simple.new(@raw)
+        Capybara::Node::Simple.new(@rendered_component)
       end
 
       def refute_component_rendered
@@ -18,9 +18,9 @@ module ViewComponent
     end
 
     def render_inline(component, **args, &block)
-      @raw = controller.view_context.render(component, args, &block)
+      @rendered_component = controller.view_context.render(component, args, &block)
 
-      Nokogiri::HTML.fragment(@raw)
+      Nokogiri::HTML.fragment(@rendered_component)
     end
 
     def controller
