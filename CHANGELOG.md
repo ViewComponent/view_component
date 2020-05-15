@@ -1,5 +1,9 @@
 # master
 
+* Add `rendered_component` method to `ViewComponent::TestHelpers` which exposes the raw output of the rendered component.
+
+    *Richard Macklin*
+
 # 2.6.0
 
 * Add `config.view_component.preview_route` to set the endpoint for component previews. By default `/rails/view_components` is used.

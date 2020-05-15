@@ -387,13 +387,23 @@ class MyComponentTest < ViewComponent::TestCase
 end
 ```
 
-In the absence of `capybara`, assertion against the return values of `render_inline`, which is an instance of `Nokogiri::HTML::DocumentFragment`:
+In the absence of `capybara`, assert against the return value of `render_inline`, which is an instance of `Nokogiri::HTML::DocumentFragment`:
 
 ```ruby
 test "render component" do
   result = render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
 
   assert_includes result.css("span[title='my title']").to_html, "Hello, World!"
+end
+```
+
+Alternatively, assert against the raw output of the component, which is exposed as `rendered_component`:
+
+```ruby
+test "render component" do
+  render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
+
+  assert_includes rendered_component, "Hello, World!"
 end
 ```
 

@@ -7,7 +7,7 @@ module ViewComponent
       include Capybara::Minitest::Assertions
 
       def page
-        Capybara::Node::Simple.new(@raw)
+        Capybara::Node::Simple.new(@rendered_component)
       end
 
       def refute_component_rendered
@@ -17,10 +17,12 @@ module ViewComponent
       warn "WARNING in `ViewComponent::TestHelpers`: You must add `capybara` to your Gemfile to use Capybara assertions."
     end
 
-    def render_inline(component, **args, &block)
-      @raw = controller.view_context.render(component, args, &block)
+    attr_reader :rendered_component
 
-      Nokogiri::HTML.fragment(@raw)
+    def render_inline(component, **args, &block)
+      @rendered_component = controller.view_context.render(component, args, &block)
+
+      Nokogiri::HTML.fragment(@rendered_component)
     end
 
     def controller
