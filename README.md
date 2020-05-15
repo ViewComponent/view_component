@@ -387,7 +387,7 @@ class MyComponentTest < ViewComponent::TestCase
 end
 ```
 
-In the absence of `capybara`, assertion against the return values of `render_inline`, which is an instance of `Nokogiri::HTML::DocumentFragment`:
+In the absence of `capybara`, assert against the return value of `render_inline`, which is an instance of `Nokogiri::HTML::DocumentFragment`:
 
 ```ruby
 test "render component" do
