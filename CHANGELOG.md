@@ -4,6 +4,10 @@
 
     *Richard Macklin*
 
+* Support sidecar directories for views and other assets.
+
+    *Jon Palmer*
+
 # 2.6.0
 
 * Add `config.view_component.preview_route` to set the endpoint for component previews. By default `/rails/view_components` is used.
