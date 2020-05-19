@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    view_component (2.6.0)
+    view_component (2.7.0)
       activesupport (>= 5.0.0, < 7.0)
 
 GEM
