@@ -9,6 +9,8 @@ SimpleCov.start do
   ])
 end
 
+SimpleCov.minimum_coverage 98
+
 require "bundler/setup"
 require "pp"
 require "pathname"
