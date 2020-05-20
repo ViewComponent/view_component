@@ -2,6 +2,5 @@
 
 class MissingDefaultCollectionParameterComponent < ViewComponent::Base
   def call
-    ""
   end
 end
