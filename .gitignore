@@ -1,8 +1,10 @@
 *.gem
 *.rbc
 /.config
-/coverage/
-!*coverage.txt
+/coverage/assets
+/coverage/index.html
+/coverage/*.json
+/coverage/*.json.lock
 /InstalledFiles
 /pkg/
 /spec/reports/
