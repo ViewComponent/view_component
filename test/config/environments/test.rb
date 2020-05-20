@@ -36,7 +36,7 @@ Dummy::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
-  config.action_view.annotate_template_file_names = true if Rails.version.to_f >= 6.1
+  config.action_view.annotate_rendered_view_with_filenames = true if Rails.version.to_f >= 6.1
 
   config.eager_load = true
 end
