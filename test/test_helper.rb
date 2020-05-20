@@ -1,4 +1,13 @@
 # frozen_string_literal: true
+require "simplecov"
+require "simplecov-json"
+
+SimpleCov.start do
+  formatter SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::JSONFormatter,
+    SimpleCov::Formatter::HTMLFormatter
+  ])
+end
 
 require "bundler/setup"
 require "pp"
