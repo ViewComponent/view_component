@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 require "simplecov"
-require "simplecov-json"
+require "simplecov-erb"
 
 SimpleCov.start do
   formatter SimpleCov::Formatter::MultiFormatter.new([
-    SimpleCov::Formatter::JSONFormatter,
+    SimpleCov::Formatter::ERBFormatter,
     SimpleCov::Formatter::HTMLFormatter
   ])
 end

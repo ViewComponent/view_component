@@ -2,6 +2,7 @@
 *.rbc
 /.config
 /coverage/
+!*coverage.txt
 /InstalledFiles
 /pkg/
 /spec/reports/

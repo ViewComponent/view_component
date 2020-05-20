@@ -95,7 +95,6 @@ GEM
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.4)
-    json (2.3.0)
     loofah (2.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -163,10 +162,9 @@ GEM
     simplecov (0.18.5)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
-    simplecov-html (0.12.2)
-    simplecov-json (0.2.1)
-      json
+    simplecov-erb (0.1.1)
       simplecov
+    simplecov-html (0.12.2)
     slim (4.0.1)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
@@ -206,7 +204,7 @@ DEPENDENCIES
   rubocop (= 0.74)
   rubocop-github (~> 0.13.0)
   simplecov (~> 0.18.0)
-  simplecov-json (~> 0.2)
+  simplecov-erb (~> 0.1)
   slim (~> 4.0)
   view_component!
 
