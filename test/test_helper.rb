@@ -1,4 +1,15 @@
 # frozen_string_literal: true
+require "simplecov"
+require "simplecov-erb"
+
+SimpleCov.start do
+  formatter SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::ERBFormatter,
+    SimpleCov::Formatter::HTMLFormatter
+  ])
+end
+
+SimpleCov.minimum_coverage 98 # TODO: Get to 100!
 
 require "bundler/setup"
 require "pp"
