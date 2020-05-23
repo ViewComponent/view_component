@@ -24,7 +24,7 @@ module ViewComponent # :nodoc:
         provided_params = params.slice(*example_params_names).to_h.symbolize_keys
         result = provided_params.empty? ? new.public_send(example) : new.public_send(example, **provided_params)
         @layout = nil unless defined?(@layout)
-        result.merge(layout: @layout)
+        { layout: @layout }.tap { |args| args.merge!(result) if result }
       end
 
       # Returns the component object class associated to the preview.
@@ -60,6 +60,21 @@ module ViewComponent # :nodoc:
       # Setter for layout name.
       def layout(layout_name)
         @layout = layout_name
+      end
+
+      # Returns +true+ if the preview example has a template
+      def preview_example_template?(example)
+        return false unless example_exists?(example)
+
+        preview_example_template_path(example).present?
+      end
+
+      # Returns the relative path (from preview_path) to the preview example template if any
+      def preview_example_template_path(example)
+        path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.erb"].first
+        return nil unless path
+
+        Pathname.new(path).relative_path_from(preview_path).to_s
       end
 
       private

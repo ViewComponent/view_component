@@ -28,7 +28,7 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
       @render_args = @preview.render_args(@example_name, params: params.permit!)
       layout = @render_args[:layout]
       opts = layout.nil? ? {} : { layout: layout }
-      render "view_components/preview", opts
+      render template_path, opts # rubocop:disable GitHub/RailsControllerRenderLiteral
     end
   end
 
@@ -56,7 +56,20 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
     end
   end
 
+  def template_path
+    if @preview.preview_example_template?(@example_name)
+      prepend_preview_examples_view_path
+      @preview.preview_example_template_path(@example_name)
+    else
+      "view_components/preview"
+    end
+  end
+
   def prepend_application_view_paths
     prepend_view_path Rails.root.join("app/views") if defined?(Rails.root)
+  end
+
+  def prepend_preview_examples_view_path
+    prepend_view_path(ViewComponent::Base.preview_path)
   end
 end
