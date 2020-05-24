@@ -2,6 +2,6 @@
 
 module ViewComponent
   class Slot
-    include ViewComponent::Slotable
+    attr_accessor :content
   end
 end

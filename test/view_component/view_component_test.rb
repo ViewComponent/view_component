@@ -270,12 +270,12 @@ class ViewComponentTest < ViewComponent::TestCase
       end
     end
 
-    assert_includes exception.message, "Unknown slot 'foo' - expected one of '[:subtitle, :tab, :title, :item, :footer]'"
+    assert_includes exception.message, "Unknown slot 'foo' - expected one of '[:title, :subtitle, :footer, :tab, :item]'"
   end
 
   def test_with_slots_raise_with_content_keyword
     exception = assert_raises ArgumentError do
-      SlotsComponent.with_slots :content
+      SlotsComponent.with_slot :content
     end
 
     assert_includes exception.message, ":content is a reserved slot name"
