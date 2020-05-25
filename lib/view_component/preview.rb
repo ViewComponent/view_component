@@ -24,7 +24,8 @@ module ViewComponent # :nodoc:
         provided_params = params.slice(*example_params_names).to_h.symbolize_keys
         result = provided_params.empty? ? new.public_send(example) : new.public_send(example, **provided_params)
         @layout = nil unless defined?(@layout)
-        { layout: @layout }.tap { |args| args.merge!(result) if result }
+        result ||= {}
+        result.merge(layout: @layout)
       end
 
       # Returns the component object class associated to the preview.
