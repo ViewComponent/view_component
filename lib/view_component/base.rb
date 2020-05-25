@@ -159,7 +159,21 @@ module ViewComponent
 
       slot_config = slots.fetch(slot)
 
-      slot_instance = args.present? ? slot_config[:class].new(**args) : slot_config[:class].new
+      # Fetch the slot class and cache it in the config.
+      # 1. Is there a class_name passed? Then resolve.
+      # 2. Is there a constant defined mathing the slot name? Then resolve that.
+      # 3. Otherwise, use ViewComponent::Slot
+      slot_class = slot_config[:class] ||= begin
+        if slot_config[:class_name]
+          slot_config[:class_name].constantize
+        elsif Object.const_defined? "#{self.class.name}::#{slot.to_s.classify}"
+          "#{self.class.name}::#{slot.to_s.classify}".constantize
+        else
+          ViewComponent::Slot
+        end
+      end
+
+      slot_instance = args.present? ? slot_class.new(**args) : slot_class.new
 
       # Capture block and assign to slot_instance#content
       slot_instance.content = view_context.capture(&block) if block_given?
@@ -326,7 +340,7 @@ module ViewComponent
         plural_name = ActiveSupport::Inflector.pluralize(name) if collection
 
         self.slots[name] = {
-          class: class_name || Class.new(ViewComponent::Slot), collection: plural_name
+          class_name: class_name, collection: plural_name
         }
 
         if collection
