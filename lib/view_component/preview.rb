@@ -62,15 +62,10 @@ module ViewComponent # :nodoc:
         @layout = layout_name
       end
 
-      # Returns +true+ if the preview example has a template
-      def preview_example_template?(example)
-        return false unless example_exists?(example)
-
-        preview_example_template_path(example).present?
-      end
-
-      # Returns the relative path (from preview_path) to the preview example template if any
+      # Returns the relative path (from preview_path) to the preview example template if the example and template exists
       def preview_example_template_path(example)
+        return nil unless example_exists?(example)
+
         path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.erb"].first
         return nil unless path
 

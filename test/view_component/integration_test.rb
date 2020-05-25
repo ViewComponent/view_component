@@ -386,4 +386,31 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_includes response.body, "bar"
     end
   end
+
+  test "renders the inline component preview examples with default behaviour and with their own templates" do
+    get "/rails/view_components/inline_component/default"
+    assert_select "input" do
+      assert_select "[name=?]", "name"
+    end
+
+    get "/rails/view_components/inline_component/inside_form"
+    assert_select "form" do
+      assert_select "p", "Inside Form"
+      assert_select "input[name=?]", "name"
+    end
+
+    get "/rails/view_components/inline_component/outside_form"
+    assert_select "div" do
+      assert_select "p", "Outside Form"
+      assert_select "input[name=?]", "name"
+    end
+  end
+
+  test "render the preview example with its own template and a layout" do
+    get "/rails/view_components/my_component/inside_banner"
+    assert_includes response.body, "ViewComponent - Admin - Test"
+    assert_select ".banner" do
+      assert_select("div", "hello,world!")
+    end
+  end
 end
