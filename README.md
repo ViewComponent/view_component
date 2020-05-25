@@ -680,6 +680,28 @@ config.view_component.preview_route = "/previews"
 
 This example will make the previews available from <http://localhost:3000/previews>.
 
+#### Adding contextual HTML for previews
+Given the preview component lives in `test/components/previews/cell_component_preview.rb`, template files can be defined at `test/components/previews/cell_component_preview/`.
+
+`test/components/previews/cell_component_preview.rb`
+```ruby
+class CellComponentPreview < ViewComponent::Preview
+  def default
+  end
+end
+```
+
+`test/components/previews/cell_component_preview/default.html.erb`
+```erb
+<table class="table">
+  <tbody>
+    <tr>
+      <%= render CellComponent.new %>
+    </tr>
+  </tbody>
+</div>
+```
+
 #### Configuring TestController
 
 Component tests and previews assume the existence of an `ApplicationController` class, which be can be configured using the `test_controller` option:
