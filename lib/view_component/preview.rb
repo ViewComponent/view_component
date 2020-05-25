@@ -70,7 +70,7 @@ module ViewComponent # :nodoc:
         path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.erb"].first
         return nil unless path
 
-        Pathname.new(path).relative_path_from(preview_path).to_s
+        Pathname.new(path).relative_path_from(Pathname.new(preview_path)).to_s
       end
 
       private
