@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require "thor"
+require "view_component"
+require "view_component/version"
+require "rails/generators/plugins/view_component_plugin_generator"
+
+class ViewComponentApp < Thor
+  package_name "View Component"
+  map "-v" => :version
+
+  register(Rails::Generators::ViewComponentPluginGenerator, "engine", "engine", "Generates a Rails engine for your components that can be shared between apps")
+  
+  desc "version", "List Version of the ViewComponent library"
+  def version
+    puts ViewComponent::VERSION::STRING
+  end
+end
+
+ViewComponentApp.start
