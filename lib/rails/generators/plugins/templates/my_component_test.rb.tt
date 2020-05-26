@@ -1,0 +1,10 @@
+require "test_helper"
+
+module MyEngine
+  class MyComponentTest < ViewComponent::TestCase
+    def test_component
+      render_inline(MyEngine::MyComponent.new)
+      assert_selector "div"
+    end
+  end
+end

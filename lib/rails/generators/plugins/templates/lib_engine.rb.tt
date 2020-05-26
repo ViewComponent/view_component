@@ -1,0 +1,10 @@
+module <%= namespaced_name.camelize %>
+  module Components
+    class Engine < ::Rails::Engine
+      isolate_namespace <%= namespaced_name.camelize %>::Components
+    end
+  end
+end
+
+# Require all of the components in app
+Dir[<%= namespaced_name.camelize %>::Components::Engine.root.join(*%w(app *.rb))].each { |f| require f }

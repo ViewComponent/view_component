@@ -1,0 +1,4 @@
+module MyEngine
+  class MyComponent < ViewComponent::Base
+  end
+end

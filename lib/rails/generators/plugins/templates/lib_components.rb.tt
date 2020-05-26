@@ -1,0 +1,2 @@
+require "view_component/engine"
+require "<%= underscored_name %>/components/engine"
