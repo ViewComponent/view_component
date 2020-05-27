@@ -373,12 +373,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div")
   end
 
-  def test_no_validations_component
-    render_inline(NoValidationsComponent.new)
-
-    assert_selector("div")
-  end
-
   def test_validations_component
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(ValidationsComponent.new)
