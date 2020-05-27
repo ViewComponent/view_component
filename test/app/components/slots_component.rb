@@ -1,21 +1,14 @@
 # frozen_string_literal: true
 
 class SlotsComponent < ViewComponent::Base
-  with_slot(:title)
-  with_slot(:subtitle)
-  with_slot(:footer)
-  with_slot(:tab, collection: true)
-  with_slot(:item, class_name: "SlotsComponent::Item", collection: true)
+  with_slot :title
+  with_slot :subtitle
+  with_slot :footer, -> { Footer }
+  with_slot :tab, collection: true
+  with_slot :item, -> { Item }, collection: true
 
   def initialize(class_names: "")
     @class_names = class_names
-  end
-
-  private
-
-  class Title < ViewComponent::Slot
-    def initialize
-    end
   end
 
   class Item < ViewComponent::Slot
@@ -27,6 +20,7 @@ class SlotsComponent < ViewComponent::Base
       @highlighted ? "highlighted" : "normal"
     end
   end
+  private_constant :Item
 
   class Footer < ViewComponent::Slot
     attr_reader :class_names
@@ -35,4 +29,5 @@ class SlotsComponent < ViewComponent::Base
       @class_names = class_names
     end
   end
+  private_constant :Footer
 end

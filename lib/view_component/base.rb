@@ -160,18 +160,7 @@ module ViewComponent
       slot_config = slots.fetch(slot)
 
       # Fetch the slot class and cache it in the config.
-      # 1. Is there a class_name passed? Then resolve.
-      # 2. Is there a constant defined mathing the slot name? Then resolve that.
-      # 3. Otherwise, use ViewComponent::Slot
-      slot_class = slot_config[:class] ||= begin
-        if slot_config[:class_name]
-          slot_config[:class_name].constantize
-        elsif Object.const_defined? "#{self.class.name}::#{slot.to_s.classify}"
-          "#{self.class.name}::#{slot.to_s.classify}".constantize
-        else
-          ViewComponent::Slot
-        end
-      end
+      slot_class = slot_config[:class] ||= slot_config[:class_block].call
 
       slot_instance = args.present? ? slot_class.new(**args) : slot_class.new
 
@@ -332,7 +321,7 @@ module ViewComponent
         self.content_areas = areas
       end
 
-      def with_slot(name, class_name: nil, collection: false)
+      def with_slot(name, class_block = -> { ViewComponent::Slot }, collection: false)
         if name.to_s == "content"
           raise ArgumentError.new ":content is a reserved slot name. Please use another name, such as ':body'"
         end
@@ -340,7 +329,7 @@ module ViewComponent
         plural_name = ActiveSupport::Inflector.pluralize(name) if collection
 
         self.slots[name] = {
-          class_name: class_name, collection: plural_name
+          collection: plural_name, class_block: class_block
         }
 
         if collection
