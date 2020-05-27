@@ -66,7 +66,7 @@ module ViewComponent
       # Assign captured content passed to component as a block to @content
       @content = view_context.capture(self, &block) if block_given?
 
-      before_render_check
+      before_render
 
       if render?
         send(self.class.call_method_name(@variant))
@@ -75,6 +75,10 @@ module ViewComponent
       end
     ensure
       @current_template = old_current_template
+    end
+
+    def before_render
+      before_render_check
     end
 
     def before_render_check
@@ -203,6 +207,12 @@ module ViewComponent
         if template_errors.present?
           raise ViewComponent::TemplateError.new(template_errors) if raise_errors
           return false
+        end
+
+        if instance_methods(false).include?(:before_render_check)
+          ActiveSupport::Deprecation.warn(
+            "`before_render_check` will be removed in v3.0.0. Use `before_render` instead."
+          )
         end
 
         # Remove any existing singleton methods,
