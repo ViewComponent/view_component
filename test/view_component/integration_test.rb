@@ -308,4 +308,16 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         Rails.application.config.view_component.render_monkey_patch_enabled = old_value
       end
     end
+
+    test "renders component using the render_component helper" do
+      begin
+        old_value = Rails.application.config.view_component.render_monkey_patch_enabled
+        Rails.application.config.view_component.render_monkey_patch_enabled = false
+        get "/render_component"
+        assert_includes response.body, "bar"
+      ensure
+        Rails.application.config.view_component.render_monkey_patch_enabled = old_value
+      end
+    end
+  end
 end

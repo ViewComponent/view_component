@@ -59,6 +59,14 @@ module ViewComponent
       end
     end
 
+    initializer "view_component.include_render_component" do |app|
+      next if Rails.version.to_f >= 6.1 || app.config.view_component.render_monkey_patch_enabled
+
+      ActiveSupport.on_load(:action_view) do
+        require "view_component/render_component_helper"
+        ActionView::Base.include ViewComponent::RenderComponentHelper
+      end
+
       end
     end
 
