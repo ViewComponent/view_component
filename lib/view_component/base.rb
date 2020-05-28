@@ -16,6 +16,8 @@ module ViewComponent
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
+    mattr_accessor :render_monkey_patch_enabled, instance_writer: false
+
     # Entrypoint for rendering components.
     #
     # view_context: ActionView context from calling view

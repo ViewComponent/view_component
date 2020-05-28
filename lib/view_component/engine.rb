@@ -10,6 +10,7 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
+      options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
       options.show_previews = Rails.env.development? if options.show_previews.nil?
       options.preview_route ||= ViewComponent::Base.preview_route
 
