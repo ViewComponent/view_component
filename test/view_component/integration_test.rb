@@ -293,4 +293,19 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "title", "Component Previews for preview_component"
     end
   end
+
+  if Rails.version.to_f < 6.1
+    test "does not include render monkey patches if render_monkey_patch_enabled config is set to false" do
+      begin
+        old_value = Rails.application.config.view_component.render_monkey_patch_enabled
+
+        Rails.application.config.view_component.render_monkey_patch_enabled = false
+        assert(defined?(ViewComponent::RenderMonkeyPatch).nil?)
+        assert(defined?(ViewComponent::RenderingMonkeyPatch).nil?)
+        assert(defined?(ViewComponent::RenderToStringMonkeyPatch).nil?)
+
+      ensure
+        Rails.application.config.view_component.render_monkey_patch_enabled = old_value
+      end
+    end
 end

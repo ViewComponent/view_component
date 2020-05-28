@@ -43,21 +43,22 @@ module ViewComponent
       end
     end
 
-    initializer "view_component.monkey_patch_render" do
+    initializer "view_component.monkey_patch_render" do |app|
+      next if Rails.version.to_f >= 6.1 || !app.config.view_component.render_monkey_patch_enabled
+
       ActiveSupport.on_load(:action_view) do
-        if Rails.version.to_f < 6.1
-          require "view_component/render_monkey_patch"
-          ActionView::Base.prepend ViewComponent::RenderMonkeyPatch
-        end
+        require "view_component/render_monkey_patch"
+        ActionView::Base.prepend ViewComponent::RenderMonkeyPatch
       end
 
       ActiveSupport.on_load(:action_controller) do
-        if Rails.version.to_f < 6.1
-          require "view_component/rendering_monkey_patch"
-          require "view_component/render_to_string_monkey_patch"
-          ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
-          ActionController::Base.prepend ViewComponent::RenderToStringMonkeyPatch
-        end
+        require "view_component/rendering_monkey_patch"
+        require "view_component/render_to_string_monkey_patch"
+        ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
+        ActionController::Base.prepend ViewComponent::RenderToStringMonkeyPatch
+      end
+    end
+
       end
     end
 
