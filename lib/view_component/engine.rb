@@ -67,6 +67,11 @@ module ViewComponent
         ActionView::Base.include ViewComponent::RenderComponentHelper
       end
 
+      ActiveSupport.on_load(:action_controller) do
+        require "view_component/rendering_component_helper"
+        require "view_component/render_component_to_string_helper"
+        ActionController::Base.include ViewComponent::RenderingComponentHelper
+        ActionController::Base.include ViewComponent::RenderComponentToStringHelper
       end
     end
 
