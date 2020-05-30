@@ -57,7 +57,8 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
   end
 
   def template_path
-    if (path = @preview.preview_example_template_path(@example_name))
+    path = @preview.preview_example_template_path(@example_name)
+    if path.present?
       prepend_preview_examples_view_path
       path
     else
