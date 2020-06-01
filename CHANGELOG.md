@@ -2,7 +2,7 @@
 
 # 3.0.0
 
-* Change counter variable start iterating from `0` instead of `1`.
+* Change counter variable to start iterating from `0` instead of `1`.
 
     *Frank S*
 
