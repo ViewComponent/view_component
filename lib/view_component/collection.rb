@@ -33,7 +33,7 @@ module ViewComponent
 
     def component_options(item, iterator)
       item_options = { @component.collection_parameter => item }
-      item_options[@component.collection_counter_parameter] = iterator.index + 1 if @component.counter_argument_present?
+      item_options[@component.collection_counter_parameter] = iterator.index if @component.counter_argument_present?
 
       @options.merge(item_options)
     end
