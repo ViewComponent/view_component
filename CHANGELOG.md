@@ -1,5 +1,11 @@
 # master
 
+# 3.0.0
+
+* Change counter variable start iterating from `0` instead of `1`.
+
+    *Frank S*
+
 # 2.7.0
 
 * Add `rendered_component` method to `ViewComponent::TestHelpers` which exposes the raw output of the rendered component.
