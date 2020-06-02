@@ -30,3 +30,15 @@ def with_preview_route(new_value)
   Rails.application.config.view_component.preview_route = old_value
   app.reloader.reload!
 end
+
+def without_render_monkey_patch
+  begin
+    old_value = Rails.application.config.view_component.render_monkey_patch_enabled
+    Rails.application.config.view_component.render_monkey_patch_enabled = false
+    app.reloader.reload!
+    yield
+  ensure
+    Rails.application.config.view_component.render_monkey_patch_enabled = old_value
+    app.reloader.reload!
+  end
+end

@@ -296,27 +296,17 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   if Rails.version.to_f < 6.1
     test "does not include render monkey patches if render_monkey_patch_enabled config is set to false" do
-      begin
-        old_value = Rails.application.config.view_component.render_monkey_patch_enabled
-
-        Rails.application.config.view_component.render_monkey_patch_enabled = false
+      without_render_monkey_patch do
         assert(defined?(ViewComponent::RenderMonkeyPatch).nil?)
         assert(defined?(ViewComponent::RenderingMonkeyPatch).nil?)
         assert(defined?(ViewComponent::RenderToStringMonkeyPatch).nil?)
-
-      ensure
-        Rails.application.config.view_component.render_monkey_patch_enabled = old_value
       end
     end
 
     test "renders component using the render_component helper" do
-      begin
-        old_value = Rails.application.config.view_component.render_monkey_patch_enabled
-        Rails.application.config.view_component.render_monkey_patch_enabled = false
+      without_render_monkey_patch do
         get "/render_component"
         assert_includes response.body, "bar"
-      ensure
-        Rails.application.config.view_component.render_monkey_patch_enabled = old_value
       end
     end
   end
