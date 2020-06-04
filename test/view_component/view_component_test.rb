@@ -373,15 +373,18 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div")
   end
 
-  def test_no_validations_component
-    render_inline(NoValidationsComponent.new)
-
-    assert_selector("div")
-  end
-
   def test_validations_component
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(ValidationsComponent.new)
+    end
+
+    assert_equal exception.message, "Validation failed: Content can't be blank"
+  end
+
+  # TODO: Remove in v3.0.0
+  def test_before_render_check
+    exception = assert_raises ActiveModel::ValidationError do
+      render_inline(OldValidationsComponent.new)
     end
 
     assert_equal exception.message, "Validation failed: Content can't be blank"

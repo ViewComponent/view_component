@@ -193,7 +193,7 @@ end
 
 ### Sidecar Assets
 
-ViewComponents supports two options for defining view files. 
+ViewComponents supports two options for defining view files.
 
 #### Sidecar view
 
@@ -273,6 +273,19 @@ end
 ```
 
 _To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`._
+
+### `before_render`
+
+Components can define a `before_render` method to be called before a component is rendered, when `helpers` is able to be used:
+
+`app/components/confirm_email_component.rb`
+```ruby
+class MyComponent < ViewComponent::Base
+  def before_render
+    @my_icon = helpers.star_icon
+  end
+end
+```
 
 ### Rendering collections
 
