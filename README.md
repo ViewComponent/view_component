@@ -452,6 +452,21 @@ test "render component" do
 end
 ```
 
+To test components that use `with_content_areas`:
+
+```ruby
+test "renders content_areas template with content " do
+  render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
+    component.with(:title, "Hello!")
+    component.with(:body) { "Have a nice day." }
+  end
+
+  assert_selector(".title", text: "Hello!")
+  assert_selector(".body", text: "Have a nice day.")
+  assert_selector(".footer", text: "Bye!")
+end
+```
+
 #### Action Pack Variants
 
 Use the `with_variant` helper to test specific variants:
