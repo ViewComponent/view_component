@@ -22,7 +22,7 @@ module ViewComponent
       end
     end
 
-    initializer "view_component.set_autoload_paths" do |app|
+    initializer "view_component.set_autoload_paths", before: :bootstrap_hook do |app|
       options = app.config.view_component
 
       if options.show_previews && options.preview_path
