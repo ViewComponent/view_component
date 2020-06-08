@@ -1,5 +1,7 @@
 # master
 
+# 2.8.0
+
 * Add `before_render`, deprecating `before_render_check`.
 
     *Joel Hawksley*
