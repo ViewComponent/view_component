@@ -390,7 +390,7 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal exception.message, "Validation failed: Content can't be blank"
   end
 
-  def test_compiles_unreferenced_component
+  def test_compiles_unrendered_component
     assert UnreferencedComponent.compiled?
   end
 
