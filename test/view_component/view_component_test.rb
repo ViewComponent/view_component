@@ -527,7 +527,7 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_collection_component_with_trailing_comma_attr_reader
     exception = assert_raises ArgumentError do
       render_inline(
-        ProductReaderOopsComponent.with_collection([OpenStruct.new(name: "Mints")])
+        ProductReaderOopsComponent.with_collection(["foo"])
       )
     end
 
