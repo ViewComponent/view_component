@@ -780,7 +780,7 @@ ViewComponent is built by:
 
 |<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|<img src="https://avatars.githubusercontent.com/fsateler?s=256" alt="fsateler" width="128" />|
 |:---:|:---:|:---:|:---:|:---:|
-|@simonrand|@fugufish|@cover|@franks921|fsateler|
+|@simonrand|@fugufish|@cover|@franks921|@fsateler|
 |Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Chile|
 
 ## License
