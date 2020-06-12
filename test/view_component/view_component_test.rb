@@ -531,7 +531,7 @@ class ViewComponentTest < ViewComponent::TestCase
       )
     end
 
-    assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
+    refute_match(/ProductReaderOopsComponent initializer must accept `product_reader_oops` collection parameter/, exception.message)
   end
 
   private

@@ -7,4 +7,5 @@ Incomplete test coverage
 /lib/view_component/preview.rb: 92.31% (missed: 32,42,78)
 /lib/view_component/render_to_string_monkey_patch.rb: 83.33% (missed: 9)
 /lib/view_component/test_helpers.rb: 95.65% (missed: 17)
+/test/app/components/product_reader_oops_component.rb: 50.0% (missed: 8,9)
 /test/view_component/integration_test.rb: 97.55% (missed: 14,15,16,18,20)
