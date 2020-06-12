@@ -1,5 +1,9 @@
 # master
 
+* Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
+
+    *Max Beizer*
+
 # 2.9.0
 
 * Cache components per-request in development, preventing unnecessary recompilation during a single request.
