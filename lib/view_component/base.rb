@@ -307,7 +307,14 @@ module ViewComponent
         parameter = validate_default ? collection_parameter : provided_collection_parameter
 
         return unless parameter
-        return if instance_method(:initialize).parameters.map(&:last).include?(parameter)
+        return if initialize_parameters.map(&:last).include?(parameter)
+
+        # See https://github.com/github/view_component/pull/364
+        if initialize_parameters.empty?
+          raise ArgumentError.new(
+            "#{self} initializer is empty or invalid."
+          )
+        end
 
         raise ArgumentError.new(
           "#{self} initializer must accept " \
@@ -316,6 +323,10 @@ module ViewComponent
       end
 
       private
+
+      def initialize_parameters
+        instance_method(:initialize).parameters
+      end
 
       def provided_collection_parameter
         @provided_collection_parameter ||= nil

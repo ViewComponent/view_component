@@ -524,14 +524,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
   end
 
-  def test_collection_component_with_trailing_comma_attr_rader
+  def test_collection_component_with_trailing_comma_attr_reader
     exception = assert_raises ArgumentError do
       render_inline(
         ProductReaderOopsComponent.with_collection([OpenStruct.new(name: "Mints")])
       )
     end
 
-    refute_match(/ProductReaderOopsComponent initializer must accept `product_reader_oops` collection parameter/, exception.message)
+    assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
 
   private
