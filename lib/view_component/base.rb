@@ -309,7 +309,9 @@ module ViewComponent
         return unless parameter
         return if initialize_parameters.map(&:last).include?(parameter)
 
-        # See https://github.com/github/view_component/pull/364
+        # If Ruby cannot parse the component class, then the initalize
+        # parameters will be empty and ViewComponent will not be able to render
+        # the component.
         if initialize_parameters.empty?
           raise ArgumentError.new(
             "#{self} initializer is empty or invalid."
