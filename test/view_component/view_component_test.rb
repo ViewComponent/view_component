@@ -533,17 +533,4 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
-
-  private
-
-  def modify_file(file, content)
-    filename = Rails.root.join(file)
-    old_content = File.read(filename)
-    begin
-      File.open(filename, "wb+") { |f| f.write(content) }
-      yield
-    ensure
-      File.open(filename, "wb+") { |f| f.write(old_content) }
-    end
-  end
 end
