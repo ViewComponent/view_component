@@ -1,5 +1,7 @@
 # master
 
+# 2.9.0
+
 * Cache components per-request in development, preventing unnecessary recompilation during a single request.
 
     *Felipe Sateler*
