@@ -778,10 +778,10 @@ ViewComponent is built by:
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
 |Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
-|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|
-|:---:|:---:|:---:|:---:|
-|@simonrand|@fugufish|@cover|@franks921|
-|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|
+|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|<img src="https://avatars.githubusercontent.com/fsateler?s=256" alt="fsateler" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@simonrand|@fugufish|@cover|@franks921|@fsateler|
+|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Chile|
 
 ## License
 

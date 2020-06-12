@@ -3,6 +3,7 @@
 require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
+require "view_component/compile_cache"
 require "view_component/previewable"
 
 module ViewComponent
@@ -192,9 +193,7 @@ module ViewComponent
       end
 
       def compiled?
-        @compiled ||= false
-
-        @compiled && ActionView::Base.cache_template_loading
+        CompileCache.compiled?(self)
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
@@ -270,7 +269,7 @@ module ViewComponent
           RUBY
         end
 
-        @compiled = true
+        CompileCache.register self
       end
 
       # we'll eventually want to update this to support other types

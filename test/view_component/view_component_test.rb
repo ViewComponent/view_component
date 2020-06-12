@@ -275,9 +275,7 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text(%r{http://assets.example.com/assets/application-\w+.css})
   end
 
-  def test_template_changes_are_not_reflected_in_production
-    old_value = ActionView::Base.cache_template_loading
-    ActionView::Base.cache_template_loading = true
+  def test_template_changes_are_not_reflected_if_cache_is_not_cleared
 
     render_inline(MyComponent.new)
 
@@ -290,29 +288,6 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     render_inline(MyComponent.new)
-
-    ActionView::Base.cache_template_loading = old_value
-  end
-
-  def test_template_changes_are_reflected_outside_production
-    old_value = ActionView::Base.cache_template_loading
-    ActionView::Base.cache_template_loading = false
-
-    render_inline(MyComponent.new)
-
-    assert_text("hello,world!")
-
-    modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
-      render_inline(MyComponent.new)
-
-      assert_text("Goodbye world!")
-    end
-
-    render_inline(MyComponent.new)
-
-    assert_text("hello,world!")
-
-    ActionView::Base.cache_template_loading = old_value
   end
 
   def test_that_it_has_a_version_number
@@ -390,7 +365,7 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal exception.message, "Validation failed: Content can't be blank"
   end
 
-  def test_compiles_unreferenced_component
+  def test_compiles_unrendered_component
     assert UnreferencedComponent.compiled?
   end
 
@@ -547,18 +522,5 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
-  end
-
-  private
-
-  def modify_file(file, content)
-    filename = Rails.root.join(file)
-    old_content = File.read(filename)
-    begin
-      File.open(filename, "wb+") { |f| f.write(content) }
-      yield
-    ensure
-      File.open(filename, "wb+") { |f| f.write(old_content) }
-    end
   end
 end

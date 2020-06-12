@@ -1,5 +1,9 @@
 # master
 
+* Cache components per-request in development, preventing unnecessary recompilation during a single request.
+
+    *Felipe Sateler*
+
 # 2.8.0
 
 * Add `before_render`, deprecating `before_render_check`.
