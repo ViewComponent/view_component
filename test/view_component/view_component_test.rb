@@ -221,6 +221,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("Hello helper method")
   end
 
+  def test_renders_helper_method_within_nested_component
+    render_inline(ContainerComponent.new(nested_component: HelpersProxyComponent.new))
+
+    assert_text("Hello helper method")
+  end
+
   def test_renders_path_helper
     render_inline(PathComponent.new)
 

@@ -1,5 +1,10 @@
 # master
 
+* Fix bug where global Rails helpers are inaccessible from nested components.
+
+    *Franco Sebregondi*
+
+
 * Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
 
     *Max Beizer*
