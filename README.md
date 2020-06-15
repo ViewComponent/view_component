@@ -197,7 +197,7 @@ Slot classes should be subclasses of `ViewComponent::Slot`.
 class BoxComponent < ViewComponent::Base
   with_slot :body, :footer
   with_slot :header, class_name: "Header"
-  with_slot :row, collection: true, class_name: "Header"
+  with_slot :row, collection: true, class_name: "Row"
 
   class Header < ViewComponent::Slot
     def initialize(class_names: "")
