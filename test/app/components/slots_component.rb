@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 class SlotsComponent < ViewComponent::Base
+  with_slot :title, class_name: "Title"
   with_slot :subtitle
+  with_slot :footer, class_name: "Footer"
   with_slot :tab, collection: true
+  with_slot :item, collection: true, class_name: "Item"
 
   class Title < ViewComponent::Slot
     def initialize
     end
   end
 
-  class Item < ViewComponent::CollectionSlot
+  class Item < ViewComponent::Slot
     def initialize(highlighted: false)
       @highlighted = highlighted
     end

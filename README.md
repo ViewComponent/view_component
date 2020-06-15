@@ -174,29 +174,26 @@ Collection slots can be rendered multiple times. They expose an accessor with th
 
 ##### Defining Slots
 
-Slots can be defined in two ways:
-
-1) With the existing "macro" syntax:
+Slots are defined by the `with_slot` macro:
 
 `with_slot :header`
+
+To define a collection slot, add `collection: true`:
+
 `with_slot :row, collection: true`
 
-2) As classes on the component object:
+To define a slot with a custom class, pass `class_name`:
 
-```ruby
-class BoxComponent < ViewComponent::Base
-  class Header < ViewComponent::Slot; end
-  class Row < ViewComponent::CollectionSlot; end
-end
-```
+`with_slot :body, class_name: 'BodySlot`
 
 ##### Example ViewComponent with Slots
 
 `# box_component.rb`
 ```ruby
 class BoxComponent < ViewComponent::Base
-  with_slot :body
-  with_slot :footer
+  with_slot :body, :footer
+  with_slot :header, class_name: "Header"
+  with_slot :row, collection: true, class_name: "Header"
 
   class Header < ViewComponent::Slot
     def initialize(class_names: "")
@@ -208,7 +205,7 @@ class BoxComponent < ViewComponent::Base
     end
   end
 
-  class Row < ViewComponent::CollectionSlot
+  class Row < ViewComponent::Slot
     def initialize(theme: :gray)
       @theme = theme
     end
