@@ -308,14 +308,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_includes exception.message, ":content is a reserved slot name"
   end
 
-  def test_with_slot_raise_with_nefarious_name
-    exception = assert_raises ArgumentError do
-      SlotsComponent.with_slot :"<< self; do_something_nefarious; end;"
-    end
-
-    assert_includes exception.message, "<< self; do_something_nefarious; end; is an invalid slot name. Slot names can only include letters, numbers, and _."
-  end
-
   # In a previous implementation of slots,
   # the list of slots registered to a component
   # was accidentally assigned to all components!

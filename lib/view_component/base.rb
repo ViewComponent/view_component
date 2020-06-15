@@ -18,6 +18,7 @@ module ViewComponent
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
+    # Hash of registered Slots
     class_attribute :slots
     self.slots = {}
 
@@ -144,7 +145,9 @@ module ViewComponent
       nil
     end
 
-    # Build a Slot on a component.
+    # Build a Slot instance on a component,
+    # exposing it for use inside the
+    # component template.
     #
     # slot: Name of Slot, in symbol form
     # **args: Arguments to be passed to Slot initializer
@@ -164,6 +167,7 @@ module ViewComponent
 
       slot = slots[slot_name]
 
+      # The class name of the Slot, such as Header
       slot_class = self.class.const_get(slot[:class_name])
 
       # Instantiate Slot class, accommodating Slots that don't accept arguments
@@ -172,14 +176,21 @@ module ViewComponent
       # Capture block and assign to slot_instance#content
       slot_instance.content = view_context.capture(&block) if block_given?
 
-      # Assign the Slot instance to the slot accessor
       if slot[:collection]
-        instance_variable_set(slot[:instance_variable_name], []) unless instance_variable_defined?(slot[:instance_variable_name])
+        # Initialize instance variable as an empty array
+        # if slot is a collection and has yet to be initialized
+        unless instance_variable_defined?(slot[:instance_variable_name])
+          instance_variable_set(slot[:instance_variable_name], [])
+        end
+
+        # Append Slot instance to collection accessor Array
         instance_variable_get(slot[:instance_variable_name]) << slot_instance
       else
+         # Assign the Slot instance to the slot accessor
         instance_variable_set(slot[:instance_variable_name], slot_instance)
       end
 
+      # Return nil, as this method should not output anything to the view itself.
       nil
     end
 
@@ -342,36 +353,29 @@ module ViewComponent
 
       # support initalizing slots as:
       #
-      # with_slot :header, collection: true|false
+      # with_slot(
+      #   :header,
+      #   collection: true|false,
+      #   class_name: "Header" # class name string, used to instantiate Slot
+      # )
       def with_slot(*slot_names, collection: false, class_name: nil)
         slot_names.each do |slot_name|
+          # Ensure slot_name is not already declared
           if self.slots.key?(slot_name)
             raise ArgumentError.new("#{slot_name} slot declared multiple times")
           end
 
+          # Ensure slot name is not :content
           if slot_name == :content
             raise ArgumentError.new ":content is a reserved slot name. Please use another name, such as ':body'"
           end
 
-          # Generate a Slot class unless one is provided
-          unless class_name.present?
-            # Ensure slot names are generally in a friendly format.
-            # Characters outside A-z, 0-9, and _ could be a sign
-            # of nefarious input. We need to be careful for this
-            # input value as we are class_eval'ing it below.
-            unless slot_name.to_s.match?(/\A[a-zA-Z0-9_]*\z/)
-              raise ArgumentError.new(
-                "#{slot_name} is an invalid slot name. Slot names can only include letters, numbers, and _."
-              )
-            end
-
-            # with_slot(:header) => MyComponent::Header < ViewComponent::Slot
-            self.class_eval("class #{slot_name.to_s.capitalize} < ViewComponent::Slot; end")
-            class_name = "#{self}::#{slot_name.to_s.capitalize}"
-          end
-
+          # Set the name of the method used to access the Slot(s)
           accessor_name =
             if collection
+              # If Slot is a collection, set the accessor
+              # name to the pluralized form of the slot name
+              # For example: :tab => :tabs
               ActiveSupport::Inflector.pluralize(slot_name)
             else
               slot_name
@@ -388,6 +392,13 @@ module ViewComponent
             RUBY
           else
             attr_reader accessor_name
+          end
+
+          # Generate a Slot class unless one is provided.
+          # with_slot(:header) generates MyComponent::Header < ViewComponent::Slot
+          unless class_name.present?
+            self.const_set(slot_name.to_s.capitalize, Class.new(ViewComponent::Slot))
+            class_name = "#{self}::#{slot_name.to_s.capitalize}"
           end
 
           # Register the slot on the component
