@@ -188,6 +188,8 @@ To define a slot with a custom class, pass `class_name`:
 
 `with_slot :body, class_name: 'BodySlot`
 
+Slot classes should be subclasses of `ViewComponent::Slot`.
+
 ##### Example ViewComponent with Slots
 
 `# box_component.rb`
