@@ -1,5 +1,7 @@
 # master
 
+# 2.10.0
+
 * Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
 
     *Max Beizer*
