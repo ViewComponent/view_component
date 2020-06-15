@@ -16,8 +16,6 @@ module ViewComponent
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
-    mattr_accessor :render_monkey_patch_enabled, instance_writer: false
-
     # Entrypoint for rendering components.
     #
     # view_context: ActionView context from calling view
@@ -153,6 +151,14 @@ module ViewComponent
     # in the initialization process and should be set to a string.
     mattr_accessor :test_controller
     @@test_controller = "ApplicationController"
+
+    # Option to configure if render monkey patches should be inluded or not.
+    # If set to true and rails version < 6.1 render monkey patches will be included
+    # If set to false render moneky patches will not be included but instead the method
+    # render_component will be included in ActionView and ActionController which can be used
+    # for rendering components.
+    mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
+
 
     class << self
       attr_accessor :source_location
