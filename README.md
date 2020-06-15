@@ -172,6 +172,8 @@ Normal slots can be rendered once per component. They expose an accessor with th
 
 Collection slots can be rendered multiple times. They expose an accessor with the pluralized name of the slot (`#rows`), which is an Array of `BoxComponent::Row` instances.
 
+To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348.
+
 ##### Defining Slots
 
 Slots are defined by the `with_slot` macro:
