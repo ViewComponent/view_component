@@ -856,6 +856,7 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 ## Resources
 
 - [Encapsulating Views, RailsConf 2020](https://youtu.be/YVYRus_2KZM)
+- [Rethinking the View Layer with Components - Ruby Rogues Podcast](https://devchat.tv/ruby-rogues/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley/)
 - [ViewComponent at GitHub with Joel Hawksley](https://the-ruby-blend.fireside.fm/9)
 - [Components, HAML vs ERB, and Design Systems](https://the-ruby-blend.fireside.fm/4)
 - [Choosing the Right Tech Stack with Dave Paola](https://5by5.tv/rubyonrails/307)
@@ -908,10 +909,10 @@ ViewComponent is built by:
 |@simonrand|@fugufish|@cover|@franks921|@fsateler|
 |Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Chile|
 
-|<img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" />|<img src="https://avatars.githubusercontent.com/jensljungblad?s=256" alt="jensljungblad" width="128" />|<img src="https://avatars.githubusercontent.com/bbugh?s=256" alt="bbugh" width="128" />|
-|:---:|:---:|:---:|
-|@maxbeizer|@jensljungblad|@bbugh|
-|Nashville, TN|New York, NY|Austin, TX|
+|<img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" />|<img src="https://avatars.githubusercontent.com/franco?s=256" alt="franco" width="128" />|<img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=256" alt="tbroad-ramsey" width="128" />|<img src="https://avatars.githubusercontent.com/jensljungblad?s=256" alt="jensljungblad" width="128" />|<img src="https://avatars.githubusercontent.com/bbugh?s=256" alt="bbugh" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@maxbeizer|@franco|@tbroad-ramsey|@jensljungblad|@bbugh|
+|Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
 
 ## License
 

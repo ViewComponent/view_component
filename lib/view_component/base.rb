@@ -13,7 +13,7 @@ module ViewComponent
     include ViewComponent::Previewable
 
     # For CSRF authenticity tokens in forms
-    delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
+    delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
@@ -111,9 +111,9 @@ module ViewComponent
       @controller ||= view_context.controller
     end
 
-    # Provides a proxy to access helper methods
+    # Provides a proxy to access helper methods from the context of the current controller
     def helpers
-      @helpers ||= view_context
+      @helpers ||= controller.view_context
     end
 
     # Removes the first part of the path and the extension.

@@ -1,10 +1,20 @@
 # master
 
-# 2.10.0
-
 * Implement Slots as potential successor to Content Areas.
 
     *Jens Ljungblad, Brian Bugh, Jon Palmer, Joel Hawksley*
+
+# 2.11.0
+
+* Ensure Rails configuration is available within components.
+
+    *Trevor Broaddus*
+
+* Fix bug where global Rails helpers are inaccessible from nested components. Before, `helpers` was pointing to parent component.
+
+    *Franco Sebregondi*
+
+# 2.10.0
 
 * Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
 

@@ -323,6 +323,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("Hello helper method")
   end
 
+  def test_renders_helper_method_within_nested_component
+    render_inline(HelpersContainerComponent.new)
+
+    assert_text("Hello helper method")
+  end
+
   def test_renders_path_helper
     render_inline(PathComponent.new)
 
@@ -634,5 +640,11 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
+  end
+
+  def test_renders_component_using_rails_config
+    render_inline(RailsConfigComponent.new)
+
+    assert_text("http://assets.example.com")
   end
 end
