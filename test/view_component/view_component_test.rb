@@ -536,7 +536,7 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_renders_component_using_rails_config
     render_inline(RailsConfigComponent.new)
-  
+
     assert_text("http://assets.example.com")
   end
 end
