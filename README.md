@@ -784,11 +784,10 @@ ViewComponent is built by:
 |@simonrand|@fugufish|@cover|@franks921|@fsateler|
 |Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Chile|
 
-|<img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" />|<img src="https://avatars.githubusercontent.com/franco?s=256" alt="franco" width="128" />|
-|:---:|:---:|
-|@maxbeizer|@franco|
-|Nashville, TN| Switzerland |
-
+|<img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" />|<img src="https://avatars.githubusercontent.com/franco?s=256" alt="franco" width="128" />|<img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=256" alt="tbroad-ramsey" width="128" />|
+|:---:|:---:|:---:|
+|@maxbeizer|@franco|@tbroad-ramsey|
+|Nashville, TN|Switzerland|Spring Hill, TN|
 
 ## License
 
