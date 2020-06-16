@@ -1,10 +1,12 @@
 # master
 
-# 2.10.1
-
-* Ensure Rails configuration is available within components
+* Ensure Rails configuration is available within components.
 
     *Trevor Broaddus*
+
+* Fix bug where global Rails helpers are inaccessible from nested components. Before, `helpers` was pointing to parent component.
+
+    *Franco Sebregondi*
 
 # 2.10.0
 
