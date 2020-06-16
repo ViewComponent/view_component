@@ -1,6 +1,6 @@
 # master
 
-* Fix bug where global Rails helpers are inaccessible from nested components.
+* Fix bug where global Rails helpers are inaccessible from nested components. Before, `helpers` was pointing to parent component.
 
     *Franco Sebregondi*
 
