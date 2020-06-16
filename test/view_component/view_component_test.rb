@@ -222,7 +222,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_helper_method_within_nested_component
-    render_inline(ContainerComponent.new)
+    render_inline(HelpersContainerComponent.new)
 
     assert_text("Hello helper method")
   end
