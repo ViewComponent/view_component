@@ -1,5 +1,11 @@
 # master
 
+# 2.10.1
+
+* Ensure Rails configuration is available within components
+
+    *Trevor Broaddus*
+
 # 2.10.0
 
 * Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
