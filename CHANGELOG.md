@@ -1,5 +1,7 @@
 # master
 
+# 2.11.0
+
 * Ensure Rails configuration is available within components.
 
     *Trevor Broaddus*
