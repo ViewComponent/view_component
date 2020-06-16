@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-class ContainerComponent < ViewComponent::Base
-  def initialize(nested_component:)
-    @nested_component = nested_component
-  end
+class HelpersContainerComponent < ViewComponent::Base
 
   def call
-    render @nested_component
+    render HelpersProxyComponent.new
   end
 end

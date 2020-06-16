@@ -106,9 +106,9 @@ module ViewComponent
       @controller ||= view_context.controller
     end
 
-    # Provides a proxy to access helper methods
+    # Provides a proxy to access helper methods from the context of the current controller
     def helpers
-      @helpers ||= view_context.controller.view_context
+      @helpers ||= controller.view_context
     end
 
     # Removes the first part of the path and the extension.
