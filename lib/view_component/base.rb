@@ -12,7 +12,7 @@ module ViewComponent
     include ViewComponent::Previewable
 
     # For CSRF authenticity tokens in forms
-    delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
+    delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2

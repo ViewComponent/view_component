@@ -533,4 +533,10 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
+
+  def test_renders_component_using_rails_config
+    render_inline(RailsConfigComponent.new)
+  
+    assert_text("http://assets.example.com")
+  end
 end
