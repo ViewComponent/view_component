@@ -115,18 +115,6 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
-  def test_template_with_old_class_syntax_fails
-    assert_raises ArgumentError do
-      render_inline(ErbComponent, message: "bar") { "foo" }
-    end
-  end
-
-  def test_hash_render_syntax_fails
-    assert_raises ArgumentError do
-      render_inline(component: ErbComponent, locals: { message: "bar" }) { "foo" }
-    end
-  end
-
   def test_renders_erb_template
     render_inline(ErbComponent.new(message: "bar")) { "foo" }
 
