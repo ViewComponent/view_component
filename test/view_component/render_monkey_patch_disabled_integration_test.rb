@@ -10,9 +10,29 @@ class RenderMonkeyPatchDisabledIntegrationTest < ActionDispatch::IntegrationTest
       assert(defined?(ViewComponent::RenderToStringMonkeyPatch).nil?)
     end
 
-    test "renders component using the render_component helper" do
+    test "rendering component using the render_component helper" do
       get "/render_component"
       assert_includes response.body, "bar"
+    end
+
+    test "rendering component in a controller" do
+      get "/controller_inline_render_component"
+      assert_select("div", "bar")
+      assert_response :success
+
+      inline_response = response.body
+
+      assert_includes inline_response, "<div>bar</div>"
+    end
+
+    test "rendering component in a controller using #render_to_string" do
+      get "/controller_to_string_render_component"
+      assert_select("div", "bar")
+      assert_response :success
+
+      to_string_response = response.body
+
+      assert_includes to_string_response, "<div>bar</div>"
     end
   end
 end

@@ -2,7 +2,7 @@
 
 module ViewComponent
   module RenderingComponentHelper # :nodoc:
-    def render_component(component, &block)
+    def render_component(component)
       self.response_body = component.render_in(self.view_context)
     end
   end
