@@ -1,5 +1,11 @@
 # master
 
+# 2.11.1
+
+* Fix kwarg warnings in Ruby 2.7.
+
+    *Joel Hawksley*
+
 # 2.11.0
 
 * Ensure Rails configuration is available within components.
