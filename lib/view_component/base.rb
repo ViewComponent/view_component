@@ -159,7 +159,6 @@ module ViewComponent
     # for rendering components.
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
-
     class << self
       attr_accessor :source_location
 
