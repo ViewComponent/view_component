@@ -475,10 +475,10 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_render_collection_missing_collection_object
     exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.with_collection(notice: "On sale"))
+      render_inline(ProductComponent.with_collection("foo"))
     end
 
-    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: {:notice=>\"On sale\"}"
+    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: \"foo\""
   end
 
   def test_render_collection_missing_arg
