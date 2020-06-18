@@ -556,6 +556,22 @@ To use component previews:
 config.view_component.preview_path = "#{Rails.root}/spec/components/previews"
 ```
 
+### Disabling the render monkey patch on < Rails 6.1
+
+In order to [resolve conflicts](https://github.com/github/view_component/issues/288) on `< Rails 6.1` between ViewComponent other gems also monkey patching the `render` method it is possible to configure ViewComponent to not include the render monkey patch using the following config option:
+
+`config.view_component.render_monkey_patch_enabled = false # defaults to true`
+
+If the option is set to `false` ViewComponent will *NOT* monkey patch the render method and it is not possible to render view components using `render`. Instead the method `render_component` will be included in `ActionView` and `ActionController` in order to render view components:
+
+
+```
+<%= render_component Component.new(message: "bar") %>
+```
+
+The method `render_component_to_string` also get included in `ActionController`
+
+
 ### Sidecar assets (experimental)
 
 It’s possible to include Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
@@ -750,10 +766,10 @@ ViewComponent is built by:
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
 |Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
-|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|
-|:---:|:---:|:---:|:---:|
-|@simonrand|@fugufish|@cover|@franks921|
-|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|
+|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />
+|:---:|:---:|:---:|:---:|:---:|
+|@simonrand|@fugufish|@cover|@franks921|@johannesengl|
+|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Berlin, Germany|
 
 ## License
 
