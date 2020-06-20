@@ -537,11 +537,11 @@ class TestComponentPreview < ViewComponent::Preview
 end
 ```
 
-Preview classes live in `test/components/previews`, which can be configured using the `preview_path` option:
+Preview classes live in `test/components/previews`, which can be configured using the `preview_paths` option:
 
 `config/application.rb`
 ```ruby
-config.view_component.preview_path = "#{Rails.root}/lib/component_previews"
+config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
 ```
 
 Previews are served from <http://localhost:3000/rails/view_components> by default. To use a different endpoint, set the `preview_route` option:
@@ -581,7 +581,7 @@ To use component previews:
 
 `config/application.rb`
 ```ruby
-config.view_component.preview_path = "#{Rails.root}/spec/components/previews"
+config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 ```
 
 ### Sidecar assets (experimental)

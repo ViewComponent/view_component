@@ -6,6 +6,7 @@ require "view_component"
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
     config.view_component = ActiveSupport::OrderedOptions.new
+    config.view_component.preview_paths ||= []
 
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
@@ -14,7 +15,7 @@ module ViewComponent
       options.preview_route ||= ViewComponent::Base.preview_route
 
       if options.show_previews
-        options.preview_path ||= defined?(Rails.root) ? "#{Rails.root}/test/components/previews" : nil
+        options.preview_paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root)
       end
 
       ActiveSupport.on_load(:view_component) do

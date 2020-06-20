@@ -312,6 +312,11 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select "title", "Component Previews for preview_component"
   end
 
+  test "test preview from multiple preview_paths" do
+    get "/rails/view_components/my_component_lib/default"
+    assert_select("div", "hello,world!")
+  end
+
   test "renders collections" do
     get "/products"
 

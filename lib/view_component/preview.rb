@@ -65,13 +65,13 @@ module ViewComponent # :nodoc:
       private
 
       def load_previews
-        if preview_path
+        Array(preview_paths).each do |preview_path|
           Dir["#{preview_path}/**/*_preview.rb"].sort.each { |file| require_dependency file }
         end
       end
 
-      def preview_path
-        Base.preview_path
+      def preview_paths
+        Base.preview_paths
       end
 
       def show_previews
