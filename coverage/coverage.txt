@@ -2,4 +2,24 @@
 Incomplete test coverage
 --------------------------------------------------------------------------------
 
-100% test coverage. You're all set, friend!
+/app/controllers/view_components_controller.rb: 41.67% (missed: 17,18,22,23,24,26,27,28,29,30,31,38,42,43,44,46,47,49,54,55,60)
+/lib/view_component/base.rb: 84.0% (missed: 74,96,101,106,116,121,126,127,130,131,134,144,167,172,227,228,230,235,239,251,279,288,305,307,308,310,319,329)
+/lib/view_component/collection.rb: 30.43% (missed: 6,8,9,11,12,13,14,21,22,23,27,28,30,35,36,38)
+/lib/view_component/engine.rb: 84.0% (missed: 49,50,51,54,55,56,57,58)
+/test/dummy/app/components/cache_if_component.rb: 80.0% (missed: 8)
+/test/dummy/app/components/conditional_render_component.rb: 60.0% (missed: 5,9)
+/test/dummy/app/components/content_areas_component.rb: 60.0% (missed: 7,8)
+/test/dummy/app/components/haml_component.rb: 66.67% (missed: 5)
+/test/dummy/app/components/inline_component.rb: 66.67% (missed: 5)
+/test/dummy/app/components/inline_variant_component.rb: 75.0% (missed: 8)
+/test/dummy/app/components/issues/badge_component.rb: 85.71% (missed: 17)
+/test/dummy/app/components/photo_component.rb: 50.0% (missed: 7,8,9)
+/test/dummy/app/components/preview_component.rb: 66.67% (missed: 5,6)
+/test/dummy/app/components/product_component.rb: 40.0% (missed: 5,6,7)
+/test/dummy/app/components/product_coupon_component.rb: 75.0% (missed: 7)
+/test/dummy/app/components/render_check_component.rb: 66.67% (missed: 5)
+/test/dummy/app/components/slim_component.rb: 66.67% (missed: 5)
+/test/dummy/app/components/validations_component.rb: 80.0% (missed: 9)
+/test/dummy/app/controllers/integration_examples_controller.rb: 68.75% (missed: 7,11,15,19,31)
+/test/dummy/app/helpers/message_helper.rb: 66.67% (missed: 5)
+/test/dummy/app/lib/primer/state_component.rb: 83.33% (missed: 15)
