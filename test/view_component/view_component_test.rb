@@ -115,18 +115,6 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
-  def test_template_with_old_class_syntax_fails
-    assert_raises ArgumentError do
-      render_inline(ErbComponent, message: "bar") { "foo" }
-    end
-  end
-
-  def test_hash_render_syntax_fails
-    assert_raises ArgumentError do
-      render_inline(component: ErbComponent, locals: { message: "bar" }) { "foo" }
-    end
-  end
-
   def test_renders_erb_template
     render_inline(ErbComponent.new(message: "bar")) { "foo" }
 
@@ -221,6 +209,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("Hello helper method")
   end
 
+  def test_renders_helper_method_within_nested_component
+    render_inline(HelpersContainerComponent.new)
+
+    assert_text("Hello helper method")
+  end
+
   def test_renders_path_helper
     render_inline(PathComponent.new)
 
@@ -275,9 +269,7 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text(%r{http://assets.example.com/assets/application-\w+.css})
   end
 
-  def test_template_changes_are_not_reflected_in_production
-    old_value = ActionView::Base.cache_template_loading
-    ActionView::Base.cache_template_loading = true
+  def test_template_changes_are_not_reflected_if_cache_is_not_cleared
 
     render_inline(MyComponent.new)
 
@@ -290,29 +282,6 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     render_inline(MyComponent.new)
-
-    ActionView::Base.cache_template_loading = old_value
-  end
-
-  def test_template_changes_are_reflected_outside_production
-    old_value = ActionView::Base.cache_template_loading
-    ActionView::Base.cache_template_loading = false
-
-    render_inline(MyComponent.new)
-
-    assert_text("hello,world!")
-
-    modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
-      render_inline(MyComponent.new)
-
-      assert_text("Goodbye world!")
-    end
-
-    render_inline(MyComponent.new)
-
-    assert_text("hello,world!")
-
-    ActionView::Base.cache_template_loading = old_value
   end
 
   def test_that_it_has_a_version_number
@@ -373,12 +342,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div")
   end
 
-  def test_no_validations_component
-    render_inline(NoValidationsComponent.new)
-
-    assert_selector("div")
-  end
-
   def test_validations_component
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(ValidationsComponent.new)
@@ -387,7 +350,16 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal exception.message, "Validation failed: Content can't be blank"
   end
 
-  def test_compiles_unreferenced_component
+  # TODO: Remove in v3.0.0
+  def test_before_render_check
+    exception = assert_raises ActiveModel::ValidationError do
+      render_inline(OldValidationsComponent.new)
+    end
+
+    assert_equal exception.message, "Validation failed: Content can't be blank"
+  end
+
+  def test_compiles_unrendered_component
     assert UnreferencedComponent.compiled?
   end
 
@@ -501,10 +473,10 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_render_collection_missing_collection_object
     exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.with_collection(notice: "On sale"))
+      render_inline(ProductComponent.with_collection("foo"))
     end
 
-    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: {:notice=>\"On sale\"}"
+    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: \"foo\""
   end
 
   def test_render_collection_missing_arg
@@ -544,16 +516,19 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
   end
 
-  private
-
-  def modify_file(file, content)
-    filename = Rails.root.join(file)
-    old_content = File.read(filename)
-    begin
-      File.open(filename, "wb+") { |f| f.write(content) }
-      yield
-    ensure
-      File.open(filename, "wb+") { |f| f.write(old_content) }
+  def test_collection_component_with_trailing_comma_attr_reader
+    exception = assert_raises ArgumentError do
+      render_inline(
+        ProductReaderOopsComponent.with_collection(["foo"])
+      )
     end
+
+    assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
+  end
+
+  def test_renders_component_using_rails_config
+    render_inline(RailsConfigComponent.new)
+
+    assert_text("http://assets.example.com")
   end
 end

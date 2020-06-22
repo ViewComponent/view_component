@@ -6,6 +6,40 @@
 
     *Frank S*
 
+# 2.11.1
+
+* Fix kwarg warnings in Ruby 2.7.
+
+    *Joel Hawksley*
+
+# 2.11.0
+
+* Ensure Rails configuration is available within components.
+
+    *Trevor Broaddus*
+
+* Fix bug where global Rails helpers are inaccessible from nested components. Before, `helpers` was pointing to parent component.
+
+    *Franco Sebregondi*
+
+# 2.10.0
+
+* Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
+
+    *Max Beizer*
+
+# 2.9.0
+
+* Cache components per-request in development, preventing unnecessary recompilation during a single request.
+
+    *Felipe Sateler*
+
+# 2.8.0
+
+* Add `before_render`, deprecating `before_render_check`.
+
+    *Joel Hawksley*
+
 # 2.7.0
 
 * Add `rendered_component` method to `ViewComponent::TestHelpers` which exposes the raw output of the rendered component.

@@ -193,7 +193,7 @@ end
 
 ### Sidecar Assets
 
-ViewComponents supports two options for defining view files. 
+ViewComponents supports two options for defining view files.
 
 #### Sidecar view
 
@@ -273,6 +273,19 @@ end
 ```
 
 _To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`._
+
+### `before_render`
+
+Components can define a `before_render` method to be called before a component is rendered, when `helpers` is able to be used:
+
+`app/components/confirm_email_component.rb`
+```ruby
+class MyComponent < ViewComponent::Base
+  def before_render
+    @my_icon = helpers.star_icon
+  end
+end
+```
 
 ### Rendering collections
 
@@ -436,6 +449,21 @@ test "render component" do
   render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
 
   assert_includes rendered_component, "Hello, World!"
+end
+```
+
+To test components that use `with_content_areas`:
+
+```ruby
+test "renders content_areas template with content " do
+  render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
+    component.with(:title, "Hello!")
+    component.with(:body) { "Have a nice day." }
+  end
+
+  assert_selector(".title", text: "Hello!")
+  assert_selector(".body", text: "Have a nice day.")
+  assert_selector(".footer", text: "Bye!")
 end
 ```
 
@@ -703,6 +731,8 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 ## Resources
 
 - [Encapsulating Views, RailsConf 2020](https://youtu.be/YVYRus_2KZM)
+- [Rethinking the View Layer with Components, Ruby Rogues Podcast](https://devchat.tv/ruby-rogues/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley/)
+- [ViewComponents in Action with Andrew Mason, Ruby on Rails Podcast](https://5by5.tv/rubyonrails/320)
 - [ViewComponent at GitHub with Joel Hawksley](https://the-ruby-blend.fireside.fm/9)
 - [Components, HAML vs ERB, and Design Systems](https://the-ruby-blend.fireside.fm/4)
 - [Choosing the Right Tech Stack with Dave Paola](https://5by5.tv/rubyonrails/307)
@@ -750,10 +780,15 @@ ViewComponent is built by:
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
 |Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
-|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|
-|:---:|:---:|:---:|:---:|
-|@simonrand|@fugufish|@cover|@franks921|
-|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|
+|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|<img src="https://avatars.githubusercontent.com/fsateler?s=256" alt="fsateler" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@simonrand|@fugufish|@cover|@franks921|@fsateler|
+|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Chile|
+
+|<img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" />|<img src="https://avatars.githubusercontent.com/franco?s=256" alt="franco" width="128" />|<img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=256" alt="tbroad-ramsey" width="128" />|
+|:---:|:---:|:---:|
+|@maxbeizer|@franco|@tbroad-ramsey|
+|Nashville, TN|Switzerland|Spring Hill, TN|
 
 ## License
 
