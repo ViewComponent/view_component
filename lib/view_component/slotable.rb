@@ -52,12 +52,8 @@ module ViewComponent
             attr_reader accessor_name
           end
 
-          # Generate a Slot class unless one is provided.
-          # `with_slot(:header)` generates MyComponent::Header < ViewComponent::Slot
-          unless class_name.present?
-            self.const_set(slot_name.to_s.capitalize, Class.new(ViewComponent::Slot))
-            class_name = "#{self}::#{slot_name.to_s.capitalize}"
-          end
+          # Default class_name to ViewComponent::Slot
+          class_name = "ViewComponent::Slot" unless class_name.present?
 
           # Register the slot on the component
           self.slots[slot_name] = {
