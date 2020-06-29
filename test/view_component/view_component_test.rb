@@ -115,18 +115,6 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
-  def test_template_with_old_class_syntax_fails
-    assert_raises ArgumentError do
-      render_inline(ErbComponent, message: "bar") { "foo" }
-    end
-  end
-
-  def test_hash_render_syntax_fails
-    assert_raises ArgumentError do
-      render_inline(component: ErbComponent, locals: { message: "bar" }) { "foo" }
-    end
-  end
-
   def test_renders_erb_template
     render_inline(ErbComponent.new(message: "bar")) { "foo" }
 
@@ -599,10 +587,10 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_render_collection_missing_collection_object
     exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.with_collection(notice: "On sale"))
+      render_inline(ProductComponent.with_collection("foo"))
     end
 
-    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: {:notice=>\"On sale\"}"
+    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: \"foo\""
   end
 
   def test_render_collection_missing_arg

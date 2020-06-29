@@ -858,7 +858,8 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 ## Resources
 
 - [Encapsulating Views, RailsConf 2020](https://youtu.be/YVYRus_2KZM)
-- [Rethinking the View Layer with Components - Ruby Rogues Podcast](https://devchat.tv/ruby-rogues/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley/)
+- [Rethinking the View Layer with Components, Ruby Rogues Podcast](https://devchat.tv/ruby-rogues/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley/)
+- [ViewComponents in Action with Andrew Mason, Ruby on Rails Podcast](https://5by5.tv/rubyonrails/320)
 - [ViewComponent at GitHub with Joel Hawksley](https://the-ruby-blend.fireside.fm/9)
 - [Components, HAML vs ERB, and Design Systems](https://the-ruby-blend.fireside.fm/4)
 - [Choosing the Right Tech Stack with Dave Paola](https://5by5.tv/rubyonrails/307)
