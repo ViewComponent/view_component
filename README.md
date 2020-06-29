@@ -268,7 +268,7 @@ end
 
 `# index.html.erb`
 ```erb
-<%= render(BoxComponent.new) do |component|
+<%= render(BoxComponent.new) do |component| %>
   <% component.slot(:header, class_names: "my-class-name") do %>
     This is my header!
   <% end %>
