@@ -9,7 +9,7 @@ module ViewComponent
     extend ActiveSupport::Concern
 
     class_methods do
-      # support initalizing slots as:
+      # support initializing slots as:
       #
       # with_slot(
       #   :header,
