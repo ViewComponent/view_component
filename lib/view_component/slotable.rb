@@ -90,6 +90,10 @@ module ViewComponent
       # The class name of the Slot, such as Header
       slot_class = self.class.const_get(slot[:class_name])
 
+      unless slot_class <= ViewComponent::Slot
+        raise ArgumentError.new "#{slot[:class_name]} must inherit from ViewComponent::Slot"
+      end
+
       # Instantiate Slot class, accommodating Slots that don't accept arguments
       slot_instance = args.present? ? slot_class.new(args) : slot_class.new
 

@@ -263,6 +263,16 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector(".footer.text-blue", text: "This is the footer")
   end
 
+  def test_invalid_slot_class_raises_error
+    exception = assert_raises ArgumentError do
+      render_inline(BadSlotComponent.new) do |component|
+        component.slot(:title)
+      end
+    end
+
+    assert_includes exception.message, "Title must inherit from ViewComponent::Slot"
+  end
+
   def test_renders_slots_with_empty_collections
     render_inline(SlotsComponent.new) do |component|
       component.slot(:title) do
