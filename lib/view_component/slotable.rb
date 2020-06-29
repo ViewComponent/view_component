@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+require "active_support/concern"
+
 require "view_component/slot"
 
 module ViewComponent
   module Slotable
-    module ClassMethods
+    extend ActiveSupport::Concern
+
+    class_methods do
       # support initalizing slots as:
       #
       # with_slot(
@@ -63,10 +67,6 @@ module ViewComponent
           }
         end
       end
-    end
-
-    def self.included(receiver)
-      receiver.extend(ClassMethods)
     end
 
     # Build a Slot instance on a component,
