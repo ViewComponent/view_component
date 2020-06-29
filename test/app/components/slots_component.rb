@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SlotsComponent < ViewComponent::Base
+  include ViewComponent::Slotable
+
   with_slot :title, class_name: "Title"
   with_slot :subtitle
   with_slot :footer, class_name: "Footer"

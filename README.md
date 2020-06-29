@@ -195,6 +195,8 @@ Slot classes should be subclasses of `ViewComponent::Slot`.
 `# box_component.rb`
 ```ruby
 class BoxComponent < ViewComponent::Base
+  include ViewComponent::Slotable
+
   with_slot :body, :footer
   with_slot :header, class_name: "Header"
   with_slot :row, collection: true, class_name: "Row"
