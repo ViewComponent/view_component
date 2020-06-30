@@ -336,4 +336,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "title", "Component Previews for preview_component"
     end
   end
+
+  test "renders singular and collection slots with arguments" do
+    get "/slots"
+
+    assert_select(".card.mt-4")
+
+    assert_select(".title p", text: "This is my title!")
+
+    assert_select(".subtitle small", text: "This is my subtitle!")
+
+    assert_select(".tab", text: "Tab A")
+    assert_select(".tab", text: "Tab B")
+
+    assert_select(".item", count: 3)
+    assert_select(".item.highlighted", count: 1)
+    assert_select(".item.normal", count: 2)
+
+    assert_select(".footer.text-blue h3", text: "This is the footer")
+  end
 end

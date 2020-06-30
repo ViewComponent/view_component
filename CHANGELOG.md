@@ -1,5 +1,9 @@
 # master
 
+* Implement Slots as potential successor to Content Areas.
+
+    *Jens Ljungblad, Brian Bugh, Jon Palmer, Joel Hawksley*
+
 # 2.11.1
 
 * Fix kwarg warnings in Ruby 2.7.
