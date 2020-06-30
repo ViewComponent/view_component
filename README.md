@@ -168,9 +168,9 @@ Slots enable multiple blocks of content to be passed to a single ViewComponent.
 
 Slots exist in two forms: normal slots and collection slots.
 
-Normal slots can be rendered once per component. They expose an accessor with the name of the slot that returns an instance of `BoxComponent::Header`, etc.
+Normal slots can be rendered once per component. They expose an accessor with the name of the slot that returns an instance of `ViewComponent::Slot`, etc.
 
-Collection slots can be rendered multiple times. They expose an accessor with the pluralized name of the slot (`#rows`), which is an Array of `BoxComponent::Row` instances.
+Collection slots can be rendered multiple times. They expose an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
 
 To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348.
 
