@@ -1,5 +1,7 @@
 # master
 
+# 2.12.0
+
 * Implement Slots as potential successor to Content Areas.
 
     *Jens Ljungblad, Brian Bugh, Jon Palmer, Joel Hawksley*
