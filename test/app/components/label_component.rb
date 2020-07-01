@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 #
-class LabelComponent < ActionView::Component::Base
+class LabelComponent < ViewComponent::Base
   def initialize(form:)
     @form = form
   end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class FormComponent < ActionView::Component::Base
+class FormComponent < ViewComponent::Base
+  include ViewComponent::ActionViewCompatibility
+
   def initialize
   end
 end
