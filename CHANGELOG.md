@@ -2,7 +2,7 @@
 
 # 2.13.0
 
-* Add the ability to disable the render monkey patch on < Rails 6.1 and include the `render_component` method to `ActionView` and `ActionController` which can be used for rendering components instead of `render`. Furthermore the method `render_component_to_string` is included in `ActionController` for rendering a component as string.
+* Add the ability to disable the render monkey patch on < Rails 6.1 and include the `render_component` method in `ActionView` and `ActionController` which can be used for rendering components instead of `render`. Furthermore the method `render_component_to_string` is included in `ActionController` for rendering a component as string.
 
     *Johannes Engl*
 

@@ -163,10 +163,9 @@ module ViewComponent
     @@test_controller = "ApplicationController"
 
     # Option to configure if render monkey patches should be inluded or not.
-    # If set to true and rails version < 6.1 render monkey patches will be included
-    # If set to false render moneky patches will not be included but instead the method
-    # render_component will be included in ActionView and ActionController which can be used
-    # for rendering components.
+    # If set to true and rails version < 6.1 render monkey patches will be included.
+    # If set to false and rails version < 6.1 render moneky patches will not be included.
+    # In this case the method render_component can be used for rendering components.
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
     class << self

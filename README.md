@@ -724,7 +724,7 @@ If the option is set to `false` ViewComponent will *NOT* monkey patch the render
 <%= render_component Component.new(message: "bar") %>
 ```
 
-The method `render_component_to_string` also get included in `ActionController`
+The method `render_component_to_string` also gets included in `ActionController`
 
 
 ### Sidecar assets (experimental)
