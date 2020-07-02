@@ -160,6 +160,133 @@ Returning:
 </div>
 ```
 
+#### Slots (experimental)
+
+_Slots are currently under development as a successor to Content Areas. The Slot APIs should be considered unfinished and subject to breaking changes in non-major releases of ViewComponent._
+
+Slots enable multiple blocks of content to be passed to a single ViewComponent.
+
+Slots exist in two forms: normal slots and collection slots.
+
+Normal slots can be rendered once per component. They expose an accessor with the name of the slot that returns an instance of `ViewComponent::Slot`, etc.
+
+Collection slots can be rendered multiple times. They expose an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
+
+To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348.
+
+##### Defining Slots
+
+Slots are defined by the `with_slot` macro:
+
+`with_slot :header`
+
+To define a collection slot, add `collection: true`:
+
+`with_slot :row, collection: true`
+
+To define a slot with a custom class, pass `class_name`:
+
+`with_slot :body, class_name: 'BodySlot`
+
+Slot classes should be subclasses of `ViewComponent::Slot`.
+
+##### Example ViewComponent with Slots
+
+`# box_component.rb`
+```ruby
+class BoxComponent < ViewComponent::Base
+  include ViewComponent::Slotable
+
+  with_slot :body, :footer
+  with_slot :header, class_name: "Header"
+  with_slot :row, collection: true, class_name: "Row"
+
+  class Header < ViewComponent::Slot
+    def initialize(class_names: "")
+      @class_names = class_names
+    end
+
+    def class_names
+      "Box-header #{@class_names}"
+    end
+  end
+
+  class Row < ViewComponent::Slot
+    def initialize(theme: :gray)
+      @theme = theme
+    end
+
+    def theme_class_name
+      case @theme
+      when :gray
+        "Box-row--gray"
+      when :hover_gray
+        "Box-row--hover-gray"
+      when :yellow
+        "Box-row--yellow"
+      when :blue
+        "Box-row--blue"
+      when :hover_blue
+        "Box-row--hover-blue"
+      else
+        "Box-row--gray"
+      end
+    end
+  end
+end
+```
+
+`# box_component.html.erb`
+```erb
+<div class="Box">
+  <% if header %>
+    <div class="<%= header.class_names %>">
+      <%= header.content %>
+    </div>
+  <% end %>
+  <% if body %>
+    <div class="Box-body">
+      <%= body.content %>
+    </div>
+  <% end %>
+  <% if rows.any? %>
+    <ul>
+      <% rows.each do |row| %>
+        <li class="Box-row <%= row.theme_class_name %>">
+          <%= row.content %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if footer %>
+    <div class="Box-footer">
+      <%= footer %>
+    </div>
+  <% end %>
+</div>
+```
+
+`# index.html.erb`
+```erb
+<%= render(BoxComponent.new) do |component| %>
+  <% component.slot(:header, class_names: "my-class-name") do %>
+    This is my header!
+  <% end %>
+  <% component.slot(:body) do %>
+    This is the body.
+  <% end %>
+  <% component.slot(:row) do %>
+    Row one
+  <% end %>
+  <% component.slot(:row, theme: :yellow) do %>
+    Yellow row
+  <% end %>
+  <% component.slot(:footer) do %>
+    This is the footer.
+  <% end %>
+<% end %>
+```
+
 ### Inline Component
 
 ViewComponents can render without a template file, by defining a `call` method:
@@ -193,7 +320,7 @@ end
 
 ### Sidecar Assets
 
-ViewComponents supports two options for defining view files. 
+ViewComponents supports two options for defining view files.
 
 #### Sidecar view
 
@@ -273,6 +400,19 @@ end
 ```
 
 _To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`._
+
+### `before_render`
+
+Components can define a `before_render` method to be called before a component is rendered, when `helpers` is able to be used:
+
+`app/components/confirm_email_component.rb`
+```ruby
+class MyComponent < ViewComponent::Base
+  def before_render
+    @my_icon = helpers.star_icon
+  end
+end
+```
 
 ### Rendering collections
 
@@ -436,6 +576,21 @@ test "render component" do
   render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
 
   assert_includes rendered_component, "Hello, World!"
+end
+```
+
+To test components that use `with_content_areas`:
+
+```ruby
+test "renders content_areas template with content " do
+  render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
+    component.with(:title, "Hello!")
+    component.with(:body) { "Have a nice day." }
+  end
+
+  assert_selector(".title", text: "Hello!")
+  assert_selector(".body", text: "Have a nice day.")
+  assert_selector(".footer", text: "Bye!")
 end
 ```
 
@@ -719,6 +874,8 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 ## Resources
 
 - [Encapsulating Views, RailsConf 2020](https://youtu.be/YVYRus_2KZM)
+- [Rethinking the View Layer with Components, Ruby Rogues Podcast](https://devchat.tv/ruby-rogues/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley/)
+- [ViewComponents in Action with Andrew Mason, Ruby on Rails Podcast](https://5by5.tv/rubyonrails/320)
 - [ViewComponent at GitHub with Joel Hawksley](https://the-ruby-blend.fireside.fm/9)
 - [Components, HAML vs ERB, and Design Systems](https://the-ruby-blend.fireside.fm/4)
 - [Choosing the Right Tech Stack with Dave Paola](https://5by5.tv/rubyonrails/307)
@@ -766,10 +923,20 @@ ViewComponent is built by:
 |@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
 |Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
 
-|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />
+|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|<img src="https://avatars.githubusercontent.com/fsateler?s=256" alt="fsateler" width="128" />|
 |:---:|:---:|:---:|:---:|:---:|
-|@simonrand|@fugufish|@cover|@franks921|@johannesengl|
-|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Berlin, Germany|
+|@simonrand|@fugufish|@cover|@franks921|@fsateler|
+|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Chile|
+
+|<img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" />|<img src="https://avatars.githubusercontent.com/franco?s=256" alt="franco" width="128" />|<img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=256" alt="tbroad-ramsey" width="128" />|<img src="https://avatars.githubusercontent.com/jensljungblad?s=256" alt="jensljungblad" width="128" />|<img src="https://avatars.githubusercontent.com/bbugh?s=256" alt="bbugh" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@maxbeizer|@franco|@tbroad-ramsey|@jensljungblad|@bbugh|
+|Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
+
+|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|||||
+|:---:|:---:|:---:|:---:|:---:|
+|@johannesengl|||||
+|Berlin, Germany|||||
 
 ## License
 

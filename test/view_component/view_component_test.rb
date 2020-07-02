@@ -115,18 +115,6 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
-  def test_template_with_old_class_syntax_fails
-    assert_raises ArgumentError do
-      render_inline(ErbComponent, message: "bar") { "foo" }
-    end
-  end
-
-  def test_hash_render_syntax_fails
-    assert_raises ArgumentError do
-      render_inline(component: ErbComponent, locals: { message: "bar" }) { "foo" }
-    end
-  end
-
   def test_renders_erb_template
     render_inline(ErbComponent.new(message: "bar")) { "foo" }
 
@@ -215,8 +203,126 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_includes exception.message, ":content is a reserved content area name"
   end
 
+  def test_renders_slots
+    render_inline(SlotsComponent.new(class_names: "mt-4")) do |component|
+      component.slot(:title) do
+        "This is my title!"
+      end
+      component.slot(:subtitle) do
+        "This is my subtitle!"
+      end
+
+      component.slot(:tab) do
+        "Tab A"
+      end
+      component.slot(:tab) do
+        "Tab B"
+      end
+
+      component.slot(:item) do
+        "Item A"
+      end
+      component.slot(:item, highlighted: true) do
+        "Item B"
+      end
+      component.slot(:item) do
+        "Item C"
+      end
+
+      component.slot(:footer, class_names: "text-blue") do
+        "This is the footer"
+      end
+    end
+
+
+    assert_selector(".card.mt-4")
+
+    assert_selector(".title", text: "This is my title!")
+
+    assert_selector(".subtitle", text: "This is my subtitle!")
+
+    assert_selector(".tab", text: "Tab A")
+    assert_selector(".tab", text: "Tab B")
+
+    assert_selector(".item", count: 3)
+    assert_selector(".item.highlighted", count: 1)
+    assert_selector(".item.normal", count: 2)
+
+    assert_selector(".footer.text-blue", text: "This is the footer")
+  end
+
+  def test_invalid_slot_class_raises_error
+    exception = assert_raises ArgumentError do
+      render_inline(BadSlotComponent.new) do |component|
+        component.slot(:title)
+      end
+    end
+
+    assert_includes exception.message, "Title must inherit from ViewComponent::Slot"
+  end
+
+  def test_renders_slots_with_empty_collections
+    render_inline(SlotsComponent.new) do |component|
+      component.slot(:title) do
+        "This is my title!"
+      end
+
+      component.slot(:subtitle) do
+        "This is my subtitle!"
+      end
+
+      component.slot(:footer) do
+        "This is the footer"
+      end
+    end
+
+    assert_text "No tabs provided"
+    assert_text "No items provided"
+  end
+
+  def test_renders_slots_template_raise_with_unknown_content_areas
+    exception = assert_raises ArgumentError do
+      render_inline(SlotsComponent.new) do |component|
+        component.slot(:foo) { "Hello!" }
+      end
+    end
+
+    assert_includes exception.message, "Unknown slot 'foo' - expected one of '[:title, :subtitle, :footer, :tab, :item]'"
+  end
+
+  def test_with_slot_raise_with_duplicate_slot_name
+    exception = assert_raises ArgumentError do
+      SlotsComponent.with_slot :title
+    end
+
+    assert_includes exception.message, "title slot declared multiple times"
+  end
+
+  def test_with_slot_raise_with_content_keyword
+    exception = assert_raises ArgumentError do
+      SlotsComponent.with_slot :content
+    end
+
+    assert_includes exception.message, ":content is a reserved slot name"
+  end
+
+  # In a previous implementation of slots,
+  # the list of slots registered to a component
+  # was accidentally assigned to all components!
+  def test_slots_pollution
+    # this returned:
+    # [SlotsComponent::Subtitle, SlotsComponent::Tab...]
+    assert_empty WrapperComponent.slots
+  end
+
   def test_renders_helper_method_through_proxy
     render_inline(HelpersProxyComponent.new)
+
+    assert_text("Hello helper method")
+  end
+
+  def test_renders_helper_method_within_nested_component
+    render_inline(HelpersContainerComponent.new)
 
     assert_text("Hello helper method")
   end
@@ -275,9 +381,7 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text(%r{http://assets.example.com/assets/application-\w+.css})
   end
 
-  def test_template_changes_are_not_reflected_in_production
-    old_value = ActionView::Base.cache_template_loading
-    ActionView::Base.cache_template_loading = true
+  def test_template_changes_are_not_reflected_if_cache_is_not_cleared
 
     render_inline(MyComponent.new)
 
@@ -290,29 +394,6 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     render_inline(MyComponent.new)
-
-    ActionView::Base.cache_template_loading = old_value
-  end
-
-  def test_template_changes_are_reflected_outside_production
-    old_value = ActionView::Base.cache_template_loading
-    ActionView::Base.cache_template_loading = false
-
-    render_inline(MyComponent.new)
-
-    assert_text("hello,world!")
-
-    modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
-      render_inline(MyComponent.new)
-
-      assert_text("Goodbye world!")
-    end
-
-    render_inline(MyComponent.new)
-
-    assert_text("hello,world!")
-
-    ActionView::Base.cache_template_loading = old_value
   end
 
   def test_that_it_has_a_version_number
@@ -373,12 +454,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div")
   end
 
-  def test_no_validations_component
-    render_inline(NoValidationsComponent.new)
-
-    assert_selector("div")
-  end
-
   def test_validations_component
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(ValidationsComponent.new)
@@ -387,7 +462,16 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal exception.message, "Validation failed: Content can't be blank"
   end
 
-  def test_compiles_unreferenced_component
+  # TODO: Remove in v3.0.0
+  def test_before_render_check
+    exception = assert_raises ActiveModel::ValidationError do
+      render_inline(OldValidationsComponent.new)
+    end
+
+    assert_equal exception.message, "Validation failed: Content can't be blank"
+  end
+
+  def test_compiles_unrendered_component
     assert UnreferencedComponent.compiled?
   end
 
@@ -503,10 +587,10 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_render_collection_missing_collection_object
     exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.with_collection(notice: "On sale"))
+      render_inline(ProductComponent.with_collection("foo"))
     end
 
-    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: {:notice=>\"On sale\"}"
+    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: \"foo\""
   end
 
   def test_render_collection_missing_arg
@@ -546,16 +630,19 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
   end
 
-  private
-
-  def modify_file(file, content)
-    filename = Rails.root.join(file)
-    old_content = File.read(filename)
-    begin
-      File.open(filename, "wb+") { |f| f.write(content) }
-      yield
-    ensure
-      File.open(filename, "wb+") { |f| f.write(old_content) }
+  def test_collection_component_with_trailing_comma_attr_reader
+    exception = assert_raises ArgumentError do
+      render_inline(
+        ProductReaderOopsComponent.with_collection(["foo"])
+      )
     end
+
+    assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
+  end
+
+  def test_renders_component_using_rails_config
+    render_inline(RailsConfigComponent.new)
+
+    assert_text("http://assets.example.com")
   end
 end

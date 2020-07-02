@@ -3,7 +3,9 @@
 require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
+require "view_component/compile_cache"
 require "view_component/previewable"
+require "view_component/slotable"
 
 module ViewComponent
   class Base < ActionView::Base
@@ -11,10 +13,14 @@ module ViewComponent
     include ViewComponent::Previewable
 
     # For CSRF authenticity tokens in forms
-    delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
+    delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
+
+    # Hash of registered Slots
+    class_attribute :slots
+    self.slots = {}
 
     # Entrypoint for rendering components.
     #
@@ -66,7 +72,7 @@ module ViewComponent
       # Assign captured content passed to component as a block to @content
       @content = view_context.capture(self, &block) if block_given?
 
-      before_render_check
+      before_render
 
       if render?
         send(self.class.call_method_name(@variant))
@@ -75,6 +81,10 @@ module ViewComponent
       end
     ensure
       @current_template = old_current_template
+    end
+
+    def before_render
+      before_render_check
     end
 
     def before_render_check
@@ -101,9 +111,9 @@ module ViewComponent
       @controller ||= view_context.controller
     end
 
-    # Provides a proxy to access helper methods
+    # Provides a proxy to access helper methods from the context of the current controller
     def helpers
-      @helpers ||= view_context
+      @helpers ||= controller.view_context
     end
 
     # Removes the first part of the path and the extension.
@@ -163,8 +173,8 @@ module ViewComponent
       attr_accessor :source_location
 
       # Render a component collection.
-      def with_collection(*args)
-        Collection.new(self, *args)
+      def with_collection(collection, **args)
+        Collection.new(self, collection, **args)
       end
 
       # Provide identifier for ActionView template annotations
@@ -183,6 +193,10 @@ module ViewComponent
         # has been re-defined by the consuming application, likely in ApplicationComponent.
         child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].absolute_path
 
+        # Clone slot configuration into child class
+        # see #test_slots_pollution
+        child.slots = self.slots.clone
+
         super
       end
 
@@ -195,9 +209,7 @@ module ViewComponent
       end
 
       def compiled?
-        @compiled ||= false
-
-        @compiled && ActionView::Base.cache_template_loading
+        CompileCache.compiled?(self)
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
@@ -210,6 +222,12 @@ module ViewComponent
         if template_errors.present?
           raise ViewComponent::TemplateError.new(template_errors) if raise_errors
           return false
+        end
+
+        if instance_methods(false).include?(:before_render_check)
+          ActiveSupport::Deprecation.warn(
+            "`before_render_check` will be removed in v3.0.0. Use `before_render` instead."
+          )
         end
 
         # Remove any existing singleton methods,
@@ -267,7 +285,7 @@ module ViewComponent
           RUBY
         end
 
-        @compiled = true
+        CompileCache.register self
       end
 
       # we'll eventually want to update this to support other types
@@ -305,7 +323,16 @@ module ViewComponent
         parameter = validate_default ? collection_parameter : provided_collection_parameter
 
         return unless parameter
-        return if instance_method(:initialize).parameters.map(&:last).include?(parameter)
+        return if initialize_parameters.map(&:last).include?(parameter)
+
+        # If Ruby cannot parse the component class, then the initalize
+        # parameters will be empty and ViewComponent will not be able to render
+        # the component.
+        if initialize_parameters.empty?
+          raise ArgumentError.new(
+            "#{self} initializer is empty or invalid."
+          )
+        end
 
         raise ArgumentError.new(
           "#{self} initializer must accept " \
@@ -314,6 +341,10 @@ module ViewComponent
       end
 
       private
+
+      def initialize_parameters
+        instance_method(:initialize).parameters
+      end
 
       def provided_collection_parameter
         @provided_collection_parameter ||= nil

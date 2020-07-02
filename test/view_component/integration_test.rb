@@ -38,6 +38,49 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes inline_response, baseline_response
   end
 
+  test "template changes are not reflected on new request when cache_template_loading is true" do
+    # cache_template_loading is set to true on the initializer
+
+    get "/controller_inline"
+    assert_select("div", "bar")
+    assert_response :success
+
+    modify_file "app/components/controller_inline_component.html.erb", "<div>Goodbye world!</div>" do
+      get "/controller_inline"
+      assert_select("div", "bar")
+      assert_response :success
+    end
+
+    get "/controller_inline"
+    assert_select("div", "bar")
+    assert_response :success
+  end
+
+  test "template changes are reflected on new request when cache_template_loading is false" do
+    begin
+      old_cache = ViewComponent::CompileCache.cache
+      ViewComponent::CompileCache.cache = Set.new
+      ActionView::Base.cache_template_loading = false
+
+      get "/controller_inline"
+      assert_select("div", "bar")
+      assert_response :success
+
+      modify_file "app/components/controller_inline_component.html.erb", "<div>Goodbye world!</div>" do
+        get "/controller_inline"
+        assert_select("div", "Goodbye world!")
+        assert_response :success
+      end
+
+      get "/controller_inline"
+      assert_select("div", "bar")
+      assert_response :success
+    ensure
+      ActionView::Base.cache_template_loading = true
+      ViewComponent::CompileCache.cache = old_cache
+    end
+  end
+
   test "rendering component in a controller using #render_to_string" do
     get "/controller_inline_baseline"
 
@@ -292,6 +335,25 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       get "/previews/preview_component"
       assert_select "title", "Component Previews for preview_component"
     end
+  end
+
+  test "renders singular and collection slots with arguments" do
+    get "/slots"
+
+    assert_select(".card.mt-4")
+
+    assert_select(".title p", text: "This is my title!")
+
+    assert_select(".subtitle small", text: "This is my subtitle!")
+
+    assert_select(".tab", text: "Tab A")
+    assert_select(".tab", text: "Tab B")
+
+    assert_select(".item", count: 3)
+    assert_select(".item.highlighted", count: 1)
+    assert_select(".item.normal", count: 2)
+
+    assert_select(".footer.text-blue h3", text: "This is the footer")
   end
 
   if Rails.version.to_f >= 6.1

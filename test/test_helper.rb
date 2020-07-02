@@ -31,3 +31,14 @@ def with_preview_route(new_value)
   Rails.application.config.view_component.preview_route = old_value
   app.reloader.reload!
 end
+
+def modify_file(file, content)
+  filename = Rails.root.join(file)
+  old_content = File.read(filename)
+  begin
+    File.open(filename, "wb+") { |f| f.write(content) }
+    yield
+  ensure
+    File.open(filename, "wb+") { |f| f.write(old_content) }
+  end
+end
