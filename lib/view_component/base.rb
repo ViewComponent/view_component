@@ -162,6 +162,9 @@ module ViewComponent
     mattr_accessor :test_controller
     @@test_controller = "ApplicationController"
 
+    # Configure if render monkey patches should be included or not in Rails <6.1.
+    mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
+
     class << self
       attr_accessor :source_location
 

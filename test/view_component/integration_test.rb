@@ -355,4 +355,30 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_select(".footer.text-blue h3", text: "This is the footer")
   end
+
+  if Rails.version.to_f >= 6.1
+    test "rendering component using the render_component helper raises an error" do
+      error = assert_raises ActionView::Template::Error do
+        get "/render_component"
+      end
+      assert_match /undefined method `render_component'/, error.message
+    end
+  end
+
+  if Rails.version.to_f < 6.1
+    test "rendering component using #render_component" do
+      get "/render_component"
+      assert_includes response.body, "bar"
+    end
+
+    test "rendering component in a controller using #render_component" do
+      get "/controller_inline_render_component"
+      assert_includes response.body, "bar"
+    end
+
+    test "rendering component in a controller using #render_component_to_string" do
+      get "/controller_to_string_render_component"
+      assert_includes response.body, "bar"
+    end
+  end
 end

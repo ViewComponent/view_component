@@ -13,4 +13,7 @@ Dummy::Application.routes.draw do
   get :controller_inline, to: "integration_examples#controller_inline"
   get :controller_inline_baseline, to: "integration_examples#controller_inline_baseline"
   get :controller_to_string, to: "integration_examples#controller_to_string"
+  get :render_component, to: "integration_examples#render_component"
+  get :controller_inline_render_component, to: "integration_examples#controller_inline_render_component"
+  get :controller_to_string_render_component, to: "integration_examples#controller_to_string_render_component"
 end

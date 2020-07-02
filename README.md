@@ -711,6 +711,18 @@ To use component previews:
 config.view_component.preview_path = "#{Rails.root}/spec/components/previews"
 ```
 
+### Disabling the render monkey patch (Rails < 6.1)
+
+In order to [avoid conflicts](https://github.com/github/view_component/issues/288) between ViewComponent and other gems that also monkey patch the `render` method, it is possible to configure ViewComponent to not include the render monkey patch:
+
+`config.view_component.render_monkey_patch_enabled = false # defaults to true`
+
+With the monkey patch disabled, use `render_component` (or  `render_component_to_string`) instead:
+
+```
+<%= render_component Component.new(message: "bar") %>
+```
+
 ### Sidecar assets (experimental)
 
 It’s possible to include Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
@@ -916,6 +928,11 @@ ViewComponent is built by:
 |:---:|:---:|:---:|:---:|:---:|
 |@maxbeizer|@franco|@tbroad-ramsey|@jensljungblad|@bbugh|
 |Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
+
+|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|
+|:---:|
+|@johannesengl|
+|Berlin, Germany|
 
 ## License
 

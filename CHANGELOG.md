@@ -1,5 +1,11 @@
 # master
 
+# 2.13.0
+
+* Add the ability to disable the render monkey patch with `config.view_component.render_monkey_patch_enabled`. In versions of Rails < 6.1, add `render_component` and `render_component_to_string` methods which can be used for rendering components instead of `render`.
+
+    *Johannes Engl*
+
 # 2.12.0
 
 * Implement Slots as potential successor to Content Areas.
