@@ -296,8 +296,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   if Rails.version.to_f >= 6.1
     test "rendering component using the render_component helper raises an error" do
-      error = assert_raises ActionView::Template::Error do 
-        get "/render_component" 
+      error = assert_raises ActionView::Template::Error do
+        get "/render_component"
       end
       assert_match /undefined method `render_component'/, error.message
     end
