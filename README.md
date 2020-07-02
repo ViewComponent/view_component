@@ -711,20 +711,17 @@ To use component previews:
 config.view_component.preview_path = "#{Rails.root}/spec/components/previews"
 ```
 
-### Disabling the render monkey patch on < Rails 6.1
+### Disabling the render monkey patch (Rails < 6.1)
 
-In order to [resolve conflicts](https://github.com/github/view_component/issues/288) on `< Rails 6.1` between ViewComponent other gems also monkey patching the `render` method it is possible to configure ViewComponent to not include the render monkey patch using the following config option:
+In order to [resolve conflicts](https://github.com/github/view_component/issues/288) on `Rails < 6.1` between ViewComponent other gems also monkey patching the `render` method, it is possible to configure ViewComponent to not include the render monkey patch:
 
 `config.view_component.render_monkey_patch_enabled = false # defaults to true`
 
-If the option is set to `false` ViewComponent will *NOT* monkey patch the render method and it is not possible to render view components using `render`. Instead the method `render_component` will be included in `ActionView` and `ActionController` in order to render view components:
-
+If the option is set to `false` ViewComponent will *NOT* monkey patch the render method and it is not possible to render view components using `render`. Use `render_component` (or  `render_component_to_string`) instead:
 
 ```
 <%= render_component Component.new(message: "bar") %>
 ```
-
-The method `render_component_to_string` also gets included in `ActionController`
 
 
 ### Sidecar assets (experimental)
@@ -933,10 +930,10 @@ ViewComponent is built by:
 |@maxbeizer|@franco|@tbroad-ramsey|@jensljungblad|@bbugh|
 |Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
 
-|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|||||
-|:---:|:---:|:---:|:---:|:---:|
-|@johannesengl|||||
-|Berlin, Germany|||||
+|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|
+|:---:|
+|@johannesengl|
+|Berlin, Germany|
 
 ## License
 
