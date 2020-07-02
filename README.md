@@ -713,16 +713,15 @@ config.view_component.preview_path = "#{Rails.root}/spec/components/previews"
 
 ### Disabling the render monkey patch (Rails < 6.1)
 
-In order to [resolve conflicts](https://github.com/github/view_component/issues/288) on `Rails < 6.1` between ViewComponent other gems also monkey patching the `render` method, it is possible to configure ViewComponent to not include the render monkey patch:
+In order to [avoid conflicts](https://github.com/github/view_component/issues/288) between ViewComponent and other gems that also monkey patch the `render` method, it is possible to configure ViewComponent to not include the render monkey patch:
 
 `config.view_component.render_monkey_patch_enabled = false # defaults to true`
 
-If the option is set to `false` ViewComponent will *NOT* monkey patch the render method and it is not possible to render view components using `render`. Use `render_component` (or  `render_component_to_string`) instead:
+With the monkey patch disabled, use `render_component` (or  `render_component_to_string`) instead:
 
 ```
 <%= render_component Component.new(message: "bar") %>
 ```
-
 
 ### Sidecar assets (experimental)
 
