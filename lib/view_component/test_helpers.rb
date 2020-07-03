@@ -14,7 +14,7 @@ module ViewComponent
         assert_no_selector("body")
       end
     rescue LoadError
-      warn "WARNING in `ViewComponent::TestHelpers`: You must add `capybara` to your Gemfile to use Capybara assertions."
+      warn "WARNING in `ViewComponent::TestHelpers`: You must add `capybara` to your Gemfile to use Capybara assertions." if ENV["DEBUG"]
     end
 
     attr_reader :rendered_component
