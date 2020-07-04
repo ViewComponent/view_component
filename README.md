@@ -687,6 +687,7 @@ Given the preview component lives in `test/components/previews/cell_component_pr
 ```ruby
 class CellComponentPreview < ViewComponent::Preview
   def default
+    render_with_template
   end
 end
 ```
@@ -701,6 +702,34 @@ end
   </tbody>
 </div>
 ```
+
+If you'd rather use a different location for your custom preview templates, you can pass a path in the `template` argument
+(the path should be relative to your `config.view_component.preview_path`):
+
+`test/components/previews/cell_component_preview.rb`
+```ruby
+class CellComponentPreview < ViewComponent::Preview
+  def default
+    render_with_template(template: 'custom_cell_component_preview/my_preview_template')
+  end
+end
+```
+
+To use dynamic values from the params you can use the `locals` argument:
+
+`test/components/previews/cell_component_preview.rb`
+```ruby
+class CellComponentPreview < ViewComponent::Preview
+  def default(title: "Default title", subtitle: "A subtitle")
+    render_with_template(locals: {
+      title: title,
+      subtitle: subtitle
+    })
+  end
+end
+```
+
+Which enables passing in a value with <http://localhost:3000/rails/components/cell_component/default?title=Custom+title&subtitle=Another+subtitle>.
 
 #### Configuring TestController
 
