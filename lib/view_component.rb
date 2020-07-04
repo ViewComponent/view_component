@@ -7,6 +7,7 @@ module ViewComponent
 
   autoload :Base
   autoload :Preview
+  autoload :PreviewTemplateError
   autoload :TestHelpers
   autoload :TestCase
   autoload :TemplateError

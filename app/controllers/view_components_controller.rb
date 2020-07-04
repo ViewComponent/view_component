@@ -24,11 +24,15 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
       render "view_components/previews"
     else
       prepend_application_view_paths
+      prepend_preview_examples_view_path
       @example_name = File.basename(params[:path])
       @render_args = @preview.render_args(@example_name, params: params.permit!)
       layout = @render_args[:layout]
+      template = @render_args[:template]
+      locals = @render_args[:locals]
       opts = layout.nil? ? {} : { layout: layout }
-      render template_path, opts # rubocop:disable GitHub/RailsControllerRenderLiteral
+      opts[:locals] = locals
+      render template, opts # rubocop:disable GitHub/RailsControllerRenderLiteral
     end
   end
 
@@ -53,16 +57,6 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
   def set_locale
     I18n.with_locale(params[:locale] || I18n.default_locale) do
       yield
-    end
-  end
-
-  def template_path
-    path = @preview.preview_example_template_path(@example_name)
-    if path.present?
-      prepend_preview_examples_view_path
-      path
-    else
-      "view_components/preview"
     end
   end
 

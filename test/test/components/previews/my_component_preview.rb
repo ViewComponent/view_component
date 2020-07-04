@@ -8,5 +8,6 @@ class MyComponentPreview < ViewComponent::Preview
   end
 
   def inside_banner
+    render_with_template
   end
 end
