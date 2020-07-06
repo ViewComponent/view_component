@@ -5,6 +5,7 @@ require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/previewable"
+require "view_component/slotable"
 
 module ViewComponent
   class Base < ActionView::Base
@@ -16,6 +17,10 @@ module ViewComponent
 
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
+
+    # Hash of registered Slots
+    class_attribute :slots
+    self.slots = {}
 
     # Entrypoint for rendering components.
     #
@@ -157,6 +162,9 @@ module ViewComponent
     mattr_accessor :test_controller
     @@test_controller = "ApplicationController"
 
+    # Configure if render monkey patches should be included or not in Rails <6.1.
+    mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
+
     class << self
       attr_accessor :source_location
 
@@ -180,6 +188,10 @@ module ViewComponent
         # We need to ignore `inherited` frames here as they indicate that `inherited`
         # has been re-defined by the consuming application, likely in ApplicationComponent.
         child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].absolute_path
+
+        # Clone slot configuration into child class
+        # see #test_slots_pollution
+        child.slots = self.slots.clone
 
         super
       end

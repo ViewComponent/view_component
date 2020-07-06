@@ -11,6 +11,7 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
+      options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
       options.show_previews = Rails.env.development? if options.show_previews.nil?
       options.preview_route ||= ViewComponent::Base.preview_route
 
@@ -50,21 +51,35 @@ module ViewComponent
       end
     end
 
-    initializer "view_component.monkey_patch_render" do
+    initializer "view_component.monkey_patch_render" do |app|
+      next if Rails.version.to_f >= 6.1 || !app.config.view_component.render_monkey_patch_enabled
+
       ActiveSupport.on_load(:action_view) do
-        if Rails.version.to_f < 6.1
-          require "view_component/render_monkey_patch"
-          ActionView::Base.prepend ViewComponent::RenderMonkeyPatch
-        end
+        require "view_component/render_monkey_patch"
+        ActionView::Base.prepend ViewComponent::RenderMonkeyPatch
       end
 
       ActiveSupport.on_load(:action_controller) do
-        if Rails.version.to_f < 6.1
-          require "view_component/rendering_monkey_patch"
-          require "view_component/render_to_string_monkey_patch"
-          ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
-          ActionController::Base.prepend ViewComponent::RenderToStringMonkeyPatch
-        end
+        require "view_component/rendering_monkey_patch"
+        require "view_component/render_to_string_monkey_patch"
+        ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
+        ActionController::Base.prepend ViewComponent::RenderToStringMonkeyPatch
+      end
+    end
+
+    initializer "view_component.include_render_component" do |app|
+      next if Rails.version.to_f >= 6.1
+
+      ActiveSupport.on_load(:action_view) do
+        require "view_component/render_component_helper"
+        ActionView::Base.include ViewComponent::RenderComponentHelper
+      end
+
+      ActiveSupport.on_load(:action_controller) do
+        require "view_component/rendering_component_helper"
+        require "view_component/render_component_to_string_helper"
+        ActionController::Base.include ViewComponent::RenderingComponentHelper
+        ActionController::Base.include ViewComponent::RenderComponentToStringHelper
       end
     end
 

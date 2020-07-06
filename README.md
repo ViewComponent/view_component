@@ -160,6 +160,133 @@ Returning:
 </div>
 ```
 
+#### Slots (experimental)
+
+_Slots are currently under development as a successor to Content Areas. The Slot APIs should be considered unfinished and subject to breaking changes in non-major releases of ViewComponent._
+
+Slots enable multiple blocks of content to be passed to a single ViewComponent.
+
+Slots exist in two forms: normal slots and collection slots.
+
+Normal slots can be rendered once per component. They expose an accessor with the name of the slot that returns an instance of `ViewComponent::Slot`, etc.
+
+Collection slots can be rendered multiple times. They expose an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
+
+To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348.
+
+##### Defining Slots
+
+Slots are defined by the `with_slot` macro:
+
+`with_slot :header`
+
+To define a collection slot, add `collection: true`:
+
+`with_slot :row, collection: true`
+
+To define a slot with a custom class, pass `class_name`:
+
+`with_slot :body, class_name: 'BodySlot`
+
+Slot classes should be subclasses of `ViewComponent::Slot`.
+
+##### Example ViewComponent with Slots
+
+`# box_component.rb`
+```ruby
+class BoxComponent < ViewComponent::Base
+  include ViewComponent::Slotable
+
+  with_slot :body, :footer
+  with_slot :header, class_name: "Header"
+  with_slot :row, collection: true, class_name: "Row"
+
+  class Header < ViewComponent::Slot
+    def initialize(class_names: "")
+      @class_names = class_names
+    end
+
+    def class_names
+      "Box-header #{@class_names}"
+    end
+  end
+
+  class Row < ViewComponent::Slot
+    def initialize(theme: :gray)
+      @theme = theme
+    end
+
+    def theme_class_name
+      case @theme
+      when :gray
+        "Box-row--gray"
+      when :hover_gray
+        "Box-row--hover-gray"
+      when :yellow
+        "Box-row--yellow"
+      when :blue
+        "Box-row--blue"
+      when :hover_blue
+        "Box-row--hover-blue"
+      else
+        "Box-row--gray"
+      end
+    end
+  end
+end
+```
+
+`# box_component.html.erb`
+```erb
+<div class="Box">
+  <% if header %>
+    <div class="<%= header.class_names %>">
+      <%= header.content %>
+    </div>
+  <% end %>
+  <% if body %>
+    <div class="Box-body">
+      <%= body.content %>
+    </div>
+  <% end %>
+  <% if rows.any? %>
+    <ul>
+      <% rows.each do |row| %>
+        <li class="Box-row <%= row.theme_class_name %>">
+          <%= row.content %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if footer %>
+    <div class="Box-footer">
+      <%= footer %>
+    </div>
+  <% end %>
+</div>
+```
+
+`# index.html.erb`
+```erb
+<%= render(BoxComponent.new) do |component| %>
+  <% component.slot(:header, class_names: "my-class-name") do %>
+    This is my header!
+  <% end %>
+  <% component.slot(:body) do %>
+    This is the body.
+  <% end %>
+  <% component.slot(:row) do %>
+    Row one
+  <% end %>
+  <% component.slot(:row, theme: :yellow) do %>
+    Yellow row
+  <% end %>
+  <% component.slot(:footer) do %>
+    This is the footer.
+  <% end %>
+<% end %>
+```
+
 ### Inline Component
 
 ViewComponents can render without a template file, by defining a `call` method:
@@ -584,6 +711,18 @@ To use component previews:
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 ```
 
+### Disabling the render monkey patch (Rails < 6.1)
+
+In order to [avoid conflicts](https://github.com/github/view_component/issues/288) between ViewComponent and other gems that also monkey patch the `render` method, it is possible to configure ViewComponent to not include the render monkey patch:
+
+`config.view_component.render_monkey_patch_enabled = false # defaults to true`
+
+With the monkey patch disabled, use `render_component` (or  `render_component_to_string`) instead:
+
+```
+<%= render_component Component.new(message: "bar") %>
+```
+
 ### Sidecar assets (experimental)
 
 It’s possible to include Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
@@ -785,12 +924,15 @@ ViewComponent is built by:
 |@simonrand|@fugufish|@cover|@franks921|@fsateler|
 |Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Chile|
 
-|<img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" />|<img src="https://avatars.githubusercontent.com/franco?s=256" alt="franco" width="128" />|<img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=256" alt="tbroad-ramsey" width="128" />|<img src="https://avatars.githubusercontent.com/tomasc?s=256" alt="tomasc" width="128" />|
-|:---:|:---:|:---:|:---:|
-|@maxbeizer|@franco|@tbroad-ramsey|@tomasc|
-|Nashville, TN|Switzerland|Spring Hill, TN|Amsterdam, NL|
+|<img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" />|<img src="https://avatars.githubusercontent.com/franco?s=256" alt="franco" width="128" />|<img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=256" alt="tbroad-ramsey" width="128" />|<img src="https://avatars.githubusercontent.com/jensljungblad?s=256" alt="jensljungblad" width="128" />|<img src="https://avatars.githubusercontent.com/bbugh?s=256" alt="bbugh" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@maxbeizer|@franco|@tbroad-ramsey|@jensljungblad|@bbugh|
+|Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
 
-
+|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|
+|:---:|
+|@johannesengl|
+|Berlin, Germany|
 
 ## License
 
