@@ -13,6 +13,9 @@ module ViewComponent # :nodoc:
       #
       mattr_accessor :preview_paths, instance_writer: false
 
+      # TODO: deprecated, remove in v3.0.0
+      mattr_accessor :preview_path, instance_writer: false
+
       # Enable or disable component previews through app configuration:
       #
       #     config.view_component.show_previews = true

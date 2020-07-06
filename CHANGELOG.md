@@ -1,7 +1,5 @@
 # master
 
-# Unreleased
-
 * Change `config.preview_path` to `config.preview_paths` to support multiple locations of component preview files.
 
   *Tomas Celizna*
