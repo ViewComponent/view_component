@@ -1,5 +1,9 @@
 # master
 
+* Add `config.preview_paths` to support multiple locations of component preview files. Deprecate `config.preview_path`.
+
+    *Tomas Celizna*
+
 * Only print warning about a missing capybara dependency if the `DEBUG` environment variable is set.
 
     *Richard Macklin*

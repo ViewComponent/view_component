@@ -9,8 +9,11 @@ module ViewComponent # :nodoc:
     included do
       # Set the location of component previews through app configuration:
       #
-      #     config.view_component.preview_path = "#{Rails.root}/lib/component_previews"
+      #     config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
       #
+      mattr_accessor :preview_paths, instance_writer: false
+
+      # TODO: deprecated, remove in v3.0.0
       mattr_accessor :preview_path, instance_writer: false
 
       # Enable or disable component previews through app configuration:
