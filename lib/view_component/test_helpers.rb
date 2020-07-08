@@ -20,7 +20,7 @@ module ViewComponent
     attr_reader :rendered_component
 
     def render_inline(component, **args, &block)
-      @rendered_component = controller.view_context.render(component, args, &block)
+      @rendered_component = controller.view_context.render_component(component, &block)
 
       Nokogiri::HTML.fragment(@rendered_component)
     end
