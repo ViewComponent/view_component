@@ -95,7 +95,7 @@ module ViewComponent
       end
 
       # Instantiate Slot class, accommodating Slots that don't accept arguments
-      slot_instance = args.present? ? slot_class.new(args) : slot_class.new
+      slot_instance = args.present? ? slot_class.new(**args) : slot_class.new
 
       # Capture block and assign to slot_instance#content
       slot_instance.content = view_context.capture(&block) if block_given?
