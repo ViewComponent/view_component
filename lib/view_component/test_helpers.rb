@@ -20,7 +20,12 @@ module ViewComponent
     attr_reader :rendered_component
 
     def render_inline(component, **args, &block)
-      @rendered_component = controller.view_context.render_component(component, &block)
+      @rendered_component = 
+        if Rails.version.to_f >= 6.1
+          controller.view_context.render(component, &block)
+        else
+          controller.view_context.render_component(component, &block)
+        end
 
       Nokogiri::HTML.fragment(@rendered_component)
     end
