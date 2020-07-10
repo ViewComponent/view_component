@@ -1,5 +1,9 @@
 # master
 
+* Allow using `render_inline` in test when the render monkey patch is disabled with `config.view_component.render_monkey_patch_enabled = false` in versions of Rails < 6.1.
+
+    *Clément Joubert*
+
 # 2.14.0
 
 * Add `config.preview_paths` to support multiple locations of component preview files. Deprecate `config.preview_path`.
