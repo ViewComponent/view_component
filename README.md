@@ -930,7 +930,7 @@ ViewComponent is built by:
 |Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
 
 |<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|<img src="https://avatars.githubusercontent.com/czj?s=256" alt="czj" width="128" />|
-|:---:|
+|:---:|:---:|
 |@johannesengl|@czj|
 |Berlin, Germany|Paris, France|
 
