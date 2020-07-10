@@ -929,10 +929,10 @@ ViewComponent is built by:
 |@maxbeizer|@franco|@tbroad-ramsey|@jensljungblad|@bbugh|
 |Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
 
-|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|
+|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|<img src="https://avatars.githubusercontent.com/czj?s=256" alt="czj" width="128" />|
 |:---:|
-|@johannesengl|
-|Berlin, Germany|
+|@johannesengl|@czj|
+|Berlin, Germany|Paris, France|
 
 ## License
 
