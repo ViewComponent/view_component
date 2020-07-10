@@ -1,8 +1,21 @@
 # master
 
+# 2.14.1
+
 * Allow using `render_inline` in test when the render monkey patch is disabled with `config.view_component.render_monkey_patch_enabled = false` in versions of Rails < 6.1.
 
     *Clément Joubert*
+
+* Fix kwargs warnings in slotable.
+
+    Fixes:
+
+    ```
+    view_component/lib/view_component/slotable.rb:98: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
+    view_component/test/app/components/slots_component.rb:18: warning: The called method `initialize' is defined here
+    ```
+
+    *Eileen M. Uchitelle*
 
 # 2.14.0
 
