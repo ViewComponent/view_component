@@ -716,7 +716,7 @@ class CellComponentPreview < ViewComponent::Preview
 end
 ```
 
-To use dynamic values from the params you can use the `locals` argument:
+Values from `params` can be accessed through `locals`:
 
 `test/components/previews/cell_component_preview.rb`
 ```ruby
