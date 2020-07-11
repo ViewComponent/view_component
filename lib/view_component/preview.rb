@@ -79,9 +79,15 @@ module ViewComponent # :nodoc:
 
       # Returns the relative path (from preview_path) to the preview example template if the template exists
       def preview_example_template_path(example)
-        path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
-        raise PreviewTemplateError, "preview template for example #{example} does not exist" unless path
+        preview_path = Array(preview_paths).detect do |preview_path|
+          Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
+        end
 
+        if preview_path.nil?
+          raise PreviewTemplateError, "preview template for example #{example} does not exist"
+        end
+
+        path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
         Pathname.new(path).relative_path_from(Pathname.new(preview_path)).to_s
       end
 

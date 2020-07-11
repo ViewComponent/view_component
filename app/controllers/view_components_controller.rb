@@ -66,6 +66,6 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
   end
 
   def prepend_preview_examples_view_path
-    prepend_view_path(ViewComponent::Base.preview_path)
+    prepend_view_path(ViewComponent::Base.preview_paths)
   end
 end
