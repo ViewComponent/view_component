@@ -705,7 +705,7 @@ end
 ```
 
 To use a different location for preview templates, pass the `template` argument:
-(the path should be relative to your `config.view_component.preview_path`):
+(the path should be relative to `config.view_component.preview_path`):
 
 `test/components/previews/cell_component_preview.rb`
 ```ruby
