@@ -682,7 +682,7 @@ This example will make the previews available from <http://localhost:3000/previe
 
 #### Adding contextual HTML for previews
 
-Given the preview component lives in `test/components/previews/cell_component_preview.rb`, template files can be defined at `test/components/previews/cell_component_preview/`.
+Given a preview component`test/components/previews/cell_component_preview.rb`, template files can be defined at `test/components/previews/cell_component_preview/`:
 
 `test/components/previews/cell_component_preview.rb`
 ```ruby
