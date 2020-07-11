@@ -704,7 +704,7 @@ end
 </div>
 ```
 
-If you'd rather use a different location for your custom preview templates, you can pass a path in the `template` argument
+To use a different location for preview templates, pass the `template` argument:
 (the path should be relative to your `config.view_component.preview_path`):
 
 `test/components/previews/cell_component_preview.rb`
