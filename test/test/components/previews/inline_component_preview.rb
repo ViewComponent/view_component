@@ -6,11 +6,9 @@ class InlineComponentPreview < ViewComponent::Preview
   end
 
   def inside_form
-    render_with_template
   end
 
   def outside_form
-    render_with_template
   end
 
   def with_params(form_title: "Default Form Title")

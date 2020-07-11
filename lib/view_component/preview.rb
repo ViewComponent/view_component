@@ -36,6 +36,7 @@ module ViewComponent # :nodoc:
         example_params_names = instance_method(example).parameters.map(&:last)
         provided_params = params.slice(*example_params_names).to_h.symbolize_keys
         result = provided_params.empty? ? new.public_send(example) : new.public_send(example, **provided_params)
+        result ||= {}
         result[:template] = preview_example_template_path(example) if result[:template].nil?
         @layout = nil unless defined?(@layout)
         result.merge(layout: @layout)

@@ -688,7 +688,6 @@ Given a preview component`test/components/previews/cell_component_preview.rb`, t
 ```ruby
 class CellComponentPreview < ViewComponent::Preview
   def default
-    render_with_template
   end
 end
 ```

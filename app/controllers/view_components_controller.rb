@@ -30,8 +30,9 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
       layout = @render_args[:layout]
       template = @render_args[:template]
       locals = @render_args[:locals]
-      opts = layout.nil? ? {} : { layout: layout }
-      opts[:locals] = locals
+      opts = {}
+      opts[:layout] = layout if layout.present?
+      opts[:locals] = locals if locals.present?
       render template, opts # rubocop:disable GitHub/RailsControllerRenderLiteral
     end
   end
