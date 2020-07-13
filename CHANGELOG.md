@@ -1,5 +1,7 @@
 # master
 
+# 2.15.0
+
 * Add support for templates as ViewComponent::Preview examples.
 
     *Juan Manuel Ramallo
