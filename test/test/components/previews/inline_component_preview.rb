@@ -20,7 +20,6 @@ class InlineComponentPreview < ViewComponent::Preview
   end
 
   def with_haml
-    render_with_template
   end
 
   def without_template

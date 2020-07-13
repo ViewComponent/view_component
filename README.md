@@ -680,9 +680,9 @@ config.view_component.preview_route = "/previews"
 
 This example will make the previews available from <http://localhost:3000/previews>.
 
-#### Adding contextual HTML for previews
+#### Preview templates
 
-Given a preview component`test/components/previews/cell_component_preview.rb`, template files can be defined at `test/components/previews/cell_component_preview/`:
+Given a preview `test/components/previews/cell_component_preview.rb`, template files can be defined at `test/components/previews/cell_component_preview/`:
 
 `test/components/previews/cell_component_preview.rb`
 ```ruby
