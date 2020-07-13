@@ -8,7 +8,20 @@ module ViewComponent # :nodoc:
     extend ActiveSupport::DescendantsTracker
 
     def render(component, **args, &block)
-      { component: component, args: args, block: block }
+      {
+        args: args,
+        block: block,
+        component: component,
+        locals: {},
+        template: "view_components/preview",
+      }
+    end
+
+    def render_with_template(template: nil, locals: {})
+      {
+        template: template,
+        locals: locals
+      }
     end
 
     class << self
@@ -23,6 +36,8 @@ module ViewComponent # :nodoc:
         example_params_names = instance_method(example).parameters.map(&:last)
         provided_params = params.slice(*example_params_names).to_h.symbolize_keys
         result = provided_params.empty? ? new.public_send(example) : new.public_send(example, **provided_params)
+        result ||= {}
+        result[:template] = preview_example_template_path(example) if result[:template].nil?
         @layout = nil unless defined?(@layout)
         result.merge(layout: @layout)
       end
@@ -60,6 +75,20 @@ module ViewComponent # :nodoc:
       # Setter for layout name.
       def layout(layout_name)
         @layout = layout_name
+      end
+
+      # Returns the relative path (from preview_path) to the preview example template if the template exists
+      def preview_example_template_path(example)
+        preview_path = Array(preview_paths).detect do |preview_path|
+          Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
+        end
+
+        if preview_path.nil?
+          raise PreviewTemplateError, "preview template for example #{example} does not exist"
+        end
+
+        path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
+        Pathname.new(path).relative_path_from(Pathname.new(preview_path)).to_s
       end
 
       private

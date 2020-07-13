@@ -6,4 +6,8 @@ class MyComponentPreview < ViewComponent::Preview
   def default
     render(MyComponent.new)
   end
+
+  def inside_banner
+    render_with_template
+  end
 end

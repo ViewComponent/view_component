@@ -1,5 +1,9 @@
 # master
 
+* Add support for templates as ViewComponent::Preview examples.
+
+    *Juan Manuel Ramallo
+
 # 2.14.1
 
 * Allow using `render_inline` in test when the render monkey patch is disabled with `config.view_component.render_monkey_patch_enabled = false` in versions of Rails < 6.1.
