@@ -1,5 +1,9 @@
 # master
 
+* Add `--sidecar` option to the erb, haml and slim generators. Places the generated template in the sidecar directory.
+
+    *Michael van Rooijen*
+
 # 2.15.0
 
 * Add support for templates as ViewComponent::Preview examples.
