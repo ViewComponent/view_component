@@ -341,13 +341,23 @@ As an alternative, views and other assets can be placed in a sidecar directory w
 ```
 app/components
 ├── ...
-├── test_component.rb
-├── test_component
-|   ├── test_component.css
-|   ├── test_component.html.erb
-|   └── test_component.js
+├── example_component.rb
+├── example_component
+|   ├── example_component.css
+|   ├── example_component.html.erb
+|   └── example_component.js
 ├── ...
 
+```
+
+You can generate this directory structure for a component using the `--sidecar` flag:
+
+```
+bin/rails generate component Example title content --sidecar
+      invoke  test_unit
+      create  test/components/example_component_test.rb
+      create  app/components/example_component.rb
+      create  app/components/example_component/example_component.html.erb
 ```
 
 ### Conditional Rendering
@@ -980,10 +990,10 @@ ViewComponent is built by:
 |@maxbeizer|@franco|@tbroad-ramsey|@jensljungblad|@bbugh|
 |Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
 
-|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|<img src="https://avatars.githubusercontent.com/czj?s=256" alt="czj" width="128" />|
-|:---:|:---:|
-|@johannesengl|@czj|
-|Berlin, Germany|Paris, France|
+|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|<img src="https://avatars.githubusercontent.com/czj?s=256" alt="czj" width="128" />|<img src="https://avatars.githubusercontent.com/mrrooijen?s=256" alt="mrrooijen" width="128" />|
+|:---:|:---:|:---:|
+|@johannesengl|@czj|@mrrooijen|
+|Berlin, Germany|Paris, France|The Netherlands|
 
 ## License
 
