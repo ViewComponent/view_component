@@ -350,7 +350,7 @@ app/components
 
 ```
 
-To generate this directory structure for a component, use the `--sidecar` flag:
+To generate a component with this directory structure, use the `--sidecar` flag:
 
 ```
 bin/rails generate component Example title content --sidecar
