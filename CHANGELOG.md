@@ -1,5 +1,7 @@
 # master
 
+# 2.16.0
+
 * Add `--sidecar` option to the erb, haml and slim generators. Places the generated template in the sidecar directory.
 
     *Michael van Rooijen*
