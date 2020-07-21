@@ -645,4 +645,11 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_text("http://assets.example.com")
   end
+
+  def test_strips_whitespace_from_between_tags
+    html = render_inline(PreviewComponent.new(title: "Preview"))
+    expected_html = "<div class=\"preview-component\"><h1>Preview</h1></div>"
+
+    assert_equal expected_html, html
+  end
 end
