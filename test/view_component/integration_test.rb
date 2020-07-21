@@ -361,7 +361,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select(".footer.text-blue h3", text: "This is the footer")
 
     title_node = Nokogiri::HTML.fragment(response.body).css(".title").to_html
-    expected_title_html = "<div class=\"title\">\n    <p>This is my title!</p>\n  </div>"
+    expected_title_html = "<div class=\"title\"><p>This is my title!</p></div>"
 
     assert_equal(title_node, expected_title_html)
   end
