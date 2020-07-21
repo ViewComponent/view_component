@@ -647,7 +647,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_strips_whitespace_from_between_tags
-    html = render_inline(PreviewComponent.new(title: "Preview"))
+    html = render_inline(PreviewComponent.new(title: "Preview")).to_html
     expected_html = "<div class=\"preview-component\"><h1>Preview</h1></div>"
 
     assert_equal expected_html, html
