@@ -116,9 +116,9 @@ module ViewComponent
       @helpers ||= controller.view_context
     end
 
-    # Removes the first part of the path and the extension.
+    # Exposes .virutal_path as an instance method
     def virtual_path
-      self.class.source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
+      self.class.virtual_path
     end
 
     # For caching, such as #cache_if
@@ -166,7 +166,7 @@ module ViewComponent
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
     class << self
-      attr_accessor :source_location
+      attr_accessor :source_location, :virtual_path
 
       # Render a component collection.
       def with_collection(collection, **args)
@@ -188,6 +188,9 @@ module ViewComponent
         # We need to ignore `inherited` frames here as they indicate that `inherited`
         # has been re-defined by the consuming application, likely in ApplicationComponent.
         child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].absolute_path
+
+        # Removes the first part of the path and the extension.
+        child.virtual_path = child.source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
 
         # Clone slot configuration into child class
         # see #test_slots_pollution

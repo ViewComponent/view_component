@@ -3,7 +3,7 @@ Incomplete test coverage
 --------------------------------------------------------------------------------
 
 /app/controllers/view_components_controller.rb: 97.67% (missed: 54)
-/lib/view_component/base.rb: 97.86% (missed: 178,265,293,356)
+/lib/view_component/base.rb: 97.87% (missed: 178,268,296,359)
 /lib/view_component/engine.rb: 94.64% (missed: 22,25,38)
 /lib/view_component/preview.rb: 94.0% (missed: 47,57,107)
 /lib/view_component/render_to_string_monkey_patch.rb: 83.33% (missed: 9)
