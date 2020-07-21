@@ -75,7 +75,7 @@ module ViewComponent
       before_render
 
       if render?
-        send(self.class.call_method_name(@variant)).gsub(/>[\n\s]+</, "><")
+        send(self.class.call_method_name(@variant)).gsub(/>[\n\s]+</, "><").html_safe
       else
         ""
       end
