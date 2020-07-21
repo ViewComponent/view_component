@@ -1,5 +1,9 @@
 # master
 
+* Remove whitespace between rendered html tags.
+
+    *Jon Rohan*
+
 # 2.17.0
 
 * Slots return stripped HTML, removing leading and trailing whitespace.
