@@ -650,6 +650,6 @@ class ViewComponentTest < ViewComponent::TestCase
     html = render_inline(PreviewComponent.new(title: "Preview")).to_html
     expected_html = "<div class=\"preview-component\"><h1>Preview</h1></div>"
 
-    assert_equal expected_html, html
+    assert_includes html, expected_html
   end
 end

@@ -27,7 +27,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "bar")
     assert_response :success
 
-    baseline_response = response.body
+    baseline_response = response.body.gsub(/>[\s\n]+</, "><").strip
 
     get "/controller_inline"
     assert_select("div", "bar")
@@ -87,7 +87,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "bar")
     assert_response :success
 
-    baseline_response = response.body
+    baseline_response = response.body.gsub(/>[\s\n]+</, "><").strip
 
     get "/controller_to_string"
     assert_select("div", "bar")
