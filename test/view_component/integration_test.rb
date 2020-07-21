@@ -363,7 +363,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     title_node = Nokogiri::HTML.fragment(response.body).css(".title").to_html
     expected_title_html = "<div class=\"title\"><p>This is my title!</p></div>"
 
-    assert_equal(title_node, expected_title_html)
+    assert_equal(expected_title_html, title_node)
   end
 
   if Rails.version.to_f >= 6.1
