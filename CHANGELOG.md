@@ -1,5 +1,7 @@
 # master
 
+# 2.17.0
+
 * Slots return stripped HTML, removing leading and trailing whitespace.
 
     *Jason Long, Joel Hawksley*
