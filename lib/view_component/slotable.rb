@@ -98,7 +98,7 @@ module ViewComponent
       slot_instance = args.present? ? slot_class.new(**args) : slot_class.new
 
       # Capture block and assign to slot_instance#content
-      slot_instance.content = view_context.capture(&block).strip.html_safe if block_given?
+      slot_instance.content = view_context.capture(&block).to_s.strip.html_safe if block_given?
 
       if slot[:collection]
         # Initialize instance variable as an empty array

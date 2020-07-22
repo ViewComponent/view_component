@@ -1,5 +1,11 @@
 # master
 
+# 2.17.1
+
+* Fix bug where rendering Slot with empty block resulted in error.
+
+    *Joel Hawksley*
+
 # 2.17.0
 
 * Slots return stripped HTML, removing leading and trailing whitespace.
