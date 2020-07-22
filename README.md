@@ -991,7 +991,7 @@ ViewComponent is built by:
 |Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
 
 |<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|<img src="https://avatars.githubusercontent.com/czj?s=256" alt="czj" width="128" />|<img src="https://avatars.githubusercontent.com/mrrooijen?s=256" alt="mrrooijen" width="128" />|<img src="https://avatars.githubusercontent.com/jonrohan?s=256" alt="jonrohan" width="128" />|
-|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---:|
 |@johannesengl|@czj|@mrrooijen|@jonrohan|
 |Berlin, Germany|Paris, France|The Netherlands|San Francisco, CA|
 
