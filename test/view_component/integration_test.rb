@@ -366,6 +366,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_equal(title_node, expected_title_html)
   end
 
+  test "renders empty slot without error" do
+    get "/empty_slot"
+
+    assert_response :success
+  end
+
   if Rails.version.to_f >= 6.1
     test "rendering component using the render_component helper raises an error" do
       error = assert_raises ActionView::Template::Error do
