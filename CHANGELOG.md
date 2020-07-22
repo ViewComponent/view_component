@@ -1,6 +1,6 @@
 # master
 
-* Remove whitespace between rendered html tags.
+* Remove whitespace between rendered HTML tags.
 
     *Jon Rohan*
 
