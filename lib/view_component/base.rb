@@ -270,7 +270,20 @@ module ViewComponent
         templates.each do |template|
           # Remove existing compiled template methods,
           # as Ruby warns when redefining a method.
-          method_name = call_method_name(template[:variant])
+
+          pieces = File.basename(template[:path]).split(".")
+
+          method_name =
+            # If the template matches the name of the component,
+            # set the method name with call_method_name
+            if pieces.first == name.demodulize.underscore
+              call_method_name(template[:variant])
+            # Otherwise, append the name of the template to
+            # call_method_name
+            else
+              "#{call_method_name(template[:variant])}_#{pieces.first.to_sym}"
+            end
+
           undef_method(method_name.to_sym) if instance_methods.include?(method_name.to_sym)
 
           class_eval <<-RUBY, template[:path], line_number
@@ -385,10 +398,9 @@ module ViewComponent
 
         # view files in a directory named like the component
         directory = File.dirname(source_location)
-        filename = File.basename(source_location, ".rb")
         component_name = name.demodulize.underscore
 
-        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
+        sidecar_directory_files = Dir["#{directory}/#{component_name}/*.*{#{extensions}}"]
 
         (sidecar_files - [source_location] + sidecar_directory_files)
       end
@@ -398,9 +410,12 @@ module ViewComponent
           matching_views_in_source_location.each_with_object([]) do |path, memo|
             pieces = File.basename(path).split(".")
 
+            variant = pieces.second.split("+").second&.to_sym
+
             memo << {
               path: path,
-              variant: pieces.second.split("+").second&.to_sym,
+              base_name: path.split(File::SEPARATOR).last.split(".").first,
+              variant: variant,
               handler: pieces.last
             }
           end
@@ -415,7 +430,14 @@ module ViewComponent
               errors << "Could not find a template file or inline render method for #{self}."
             end
 
-            if templates.count { |template| template[:variant].nil? } > 1
+            # Ensure that template base names are unique
+            # for each variant
+            unique_templates =
+              templates.map do |template|
+                template[:base_name] + template[:variant].to_s
+              end
+
+            if unique_templates.length != unique_templates.uniq.length
               errors << "More than one template found for #{self}. There can only be one default template file per component."
             end
 
@@ -429,7 +451,14 @@ module ViewComponent
               errors << "More than one template found for #{'variant'.pluralize(invalid_variants.count)} #{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{self}. There can only be one template file per variant."
             end
 
-            if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
+            default_template_exists =
+              templates.find do |template|
+                pieces = File.basename(template[:path]).split(".")
+
+                template[:variant].nil? && pieces.first == name.demodulize.underscore
+              end
+
+            if default_template_exists && inline_calls_defined_on_self.include?(:call)
               errors << "Template file and inline render method found for #{self}. There can only be a template file or inline render method per component."
             end
 

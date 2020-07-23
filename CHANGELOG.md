@@ -1,5 +1,9 @@
 # master
 
+* Add support for multiple templates.
+
+    *Rob Sterner*, *Joel Hawksley*
+
 # 2.17.1
 
 * Fix bug where rendering Slot with empty block resulted in error.
