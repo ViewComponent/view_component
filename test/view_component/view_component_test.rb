@@ -776,6 +776,18 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
 
+  def test_render_multiple_templates
+    render_inline(MultipleTemplatesComponent.new(mode: :list))
+
+    assert_selector("li", text: "Apple")
+    assert_selector("li", text: "Banana")
+    assert_selector("li", text: "Pear")
+
+    render_inline(MultipleTemplatesComponent.new(mode: :summary))
+
+    assert_selector("div", text: "Apple, Banana, and Pear")
+  end
+
   def test_renders_component_using_rails_config
     render_inline(RailsConfigComponent.new)
 
@@ -887,5 +899,18 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")
+  end
+
+  private
+
+  def modify_file(file, content)
+    filename = Rails.root.join(file)
+    old_content = File.read(filename)
+    begin
+      File.open(filename, "wb+") { |f| f.write(content) }
+      yield
+    ensure
+      File.open(filename, "wb+") { |f| f.write(old_content) }
+    end
   end
 end
