@@ -7,6 +7,14 @@ module ViewComponent # :nodoc:
     extend ActiveSupport::Concern
 
     included do
+      # Set a custom default preview layout through app configuration:
+      #
+      #     config.view_component.default_preview_layout = "component_preview"
+      #
+      # This affects preview index pages as well as individual component previews
+      #
+      mattr_accessor :default_preview_layout, instance_writer: false
+
       # Set the location of component previews through app configuration:
       #
       #     config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"

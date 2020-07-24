@@ -674,6 +674,14 @@ class TestComponentPreview < ViewComponent::Preview
 end
 ```
 
+You can also set a custom layout to be used by default for previews as well as the preview index pages via the `default_preview_layout` configuration option:
+
+`config/application.rb`
+```ruby
+# Set the default layout to app/views/layouts/component_preview.html.erb
+config.default_preview_layout = "component_preview"
+```
+
 Preview classes live in `test/components/previews`, which can be configured using the `preview_paths` option:
 
 `config/application.rb`

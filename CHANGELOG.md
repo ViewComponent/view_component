@@ -1,14 +1,14 @@
 # master
 
+* Add `default_preview_layout` configuration option to load custom app/views/layouts.
+
+    *Jared White, Juan Manuel Ramallo*
+
 * Calculate virtual_path once for all instances of a component class to improve performance.
 
     *Brad Parker*
 
 # 2.17.1
-
-* Fix bug where rendering Slot with empty block resulted in error.
-
-    *Joel Hawksley*
 
 # 2.17.0
 

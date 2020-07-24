@@ -281,6 +281,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/rails/view_components/no_layout/default"
 
     assert_select("div", "hello,world!")
+    refute_includes response.body, "ViewComponent - Test"
   end
 
   test "test preview renders application's layout by default" do

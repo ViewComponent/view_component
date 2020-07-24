@@ -41,3 +41,10 @@ def modify_file(file, content)
     File.open(filename, "wb+") { |f| f.write(old_content) }
   end
 end
+
+def with_default_preview_layout(layout)
+  old_value = ViewComponent::Base.default_preview_layout
+  ViewComponent::Base.default_preview_layout = layout
+  yield
+  ViewComponent::Base.default_preview_layout = old_value
+end
