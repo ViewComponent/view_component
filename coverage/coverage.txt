@@ -9,3 +9,4 @@ Incomplete test coverage
 /lib/view_component/render_to_string_monkey_patch.rb: 83.33% (missed: 9)
 /lib/view_component/test_helpers.rb: 91.67% (missed: 17,25)
 /test/view_component/integration_test.rb: 96.74% (missed: 14,15,16,18,20,371,372,373,375)
+/test/view_component/integration_test.rb: 96.76% (missed: 14,15,16,18,20,376,377,378,380)

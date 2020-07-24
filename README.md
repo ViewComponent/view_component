@@ -998,10 +998,10 @@ ViewComponent is built by:
 |@maxbeizer|@franco|@tbroad-ramsey|@jensljungblad|@bbugh|
 |Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
 
-|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|<img src="https://avatars.githubusercontent.com/czj?s=256" alt="czj" width="128" />|<img src="https://avatars.githubusercontent.com/mrrooijen?s=256" alt="mrrooijen" width="128" />|
-|:---:|:---:|:---:|
-|@johannesengl|@czj|@mrrooijen|
-|Berlin, Germany|Paris, France|The Netherlands|
+|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|<img src="https://avatars.githubusercontent.com/czj?s=256" alt="czj" width="128" />|<img src="https://avatars.githubusercontent.com/mrrooijen?s=256" alt="mrrooijen" width="128" />|<img src="https://avatars.githubusercontent.com/bradparker?s=256" alt="bradparker" width="128" />|
+|:---:|:---:|:---:|:---:|
+|@johannesengl|@czj|@mrrooijen|@bradparker|
+|Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|
 
 ## License
 

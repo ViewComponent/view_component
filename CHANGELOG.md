@@ -4,6 +4,12 @@
 
     *Jared White, Juan Manuel Ramallo*
 
+* Calculate virtual_path once for all instances of a component class to improve performance.
+
+    *Brad Parker*
+
+# 2.17.1
+
 # 2.17.0
 
 * Slots return stripped HTML, removing leading and trailing whitespace.
