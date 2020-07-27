@@ -1,5 +1,7 @@
 # master
 
+# 2.18.0
+
 * Fix auto-loading of previews (changes no longer require a server restart)
 
     *Matt Brictson*
@@ -13,6 +15,10 @@
     *Brad Parker*
 
 # 2.17.1
+
+* Fix bug where rendering Slot with empty block resulted in error.
+
+    *Joel Hawksley*
 
 # 2.17.0
 
