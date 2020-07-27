@@ -6,7 +6,7 @@ SimpleCov.start do
   formatter SimpleCov::Formatter::Console
 end
 
-if ENV['RAILS_VERSION'] != "master"
+if ENV["RAILS_VERSION"] != "master"
   SimpleCov.minimum_coverage 100
 end
 
