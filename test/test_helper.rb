@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 require "simplecov"
-require "simplecov-erb"
+require "simplecov-console"
 
 SimpleCov.start do
-  formatter SimpleCov::Formatter::MultiFormatter.new([
-    SimpleCov::Formatter::ERBFormatter,
-    SimpleCov::Formatter::HTMLFormatter
-  ])
+  formatter SimpleCov::Formatter::Console
 end
 
 SimpleCov.minimum_coverage 100

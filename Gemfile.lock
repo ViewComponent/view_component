@@ -64,6 +64,7 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    ansi (1.5.0)
     ast (2.4.1)
     better_html (1.0.15)
       actionview (>= 4.0)
@@ -162,8 +163,10 @@ GEM
     simplecov (0.18.5)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
-    simplecov-erb (0.1.1)
+    simplecov-console (0.7.2)
+      ansi
       simplecov
+      terminal-table
     simplecov-html (0.12.2)
     slim (4.1.0)
       temple (>= 0.7.6, < 0.9)
@@ -177,6 +180,8 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     temple (0.8.2)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -204,7 +209,7 @@ DEPENDENCIES
   rubocop (= 0.74)
   rubocop-github (~> 0.13.0)
   simplecov (~> 0.18.0)
-  simplecov-erb (~> 0.1)
+  simplecov-console (~> 0.7.2)
   slim (~> 4.0)
   view_component!
 
