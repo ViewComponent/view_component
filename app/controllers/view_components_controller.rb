@@ -10,7 +10,9 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
   before_action :require_local!, unless: :show_previews?
 
   if respond_to?(:content_security_policy)
+    # :nocov:
     content_security_policy(false)
+    # :nocov:
   end
 
   def index

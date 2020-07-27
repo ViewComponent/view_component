@@ -128,7 +128,9 @@ module ViewComponent
 
     # For caching, such as #cache_if
     def format
+      # :nocov:
       @variant
+      # :nocov:
     end
 
     # Assign the provided content to the content area accessor
@@ -176,9 +178,9 @@ module ViewComponent
       # Provide identifier for ActionView template annotations
       def short_identifier
         # This is only called in 6.1, which we don't run coverage measurements against
-        #
+        # :nocov:
         @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
-        #
+        # :nocov:
       end
 
       def inherited(child)
