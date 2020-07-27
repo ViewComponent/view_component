@@ -6,6 +6,8 @@ require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
+require "view_component/sub_components"
+require "view_component/sub_component_wrapper"
 
 module ViewComponent
   class Base < ActionView::Base
@@ -19,10 +21,6 @@ module ViewComponent
 
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
-
-    # Hash of registered Slots
-    class_attribute :slots
-    self.slots = {}
 
     # Entrypoint for rendering components.
     #
@@ -212,10 +210,6 @@ module ViewComponent
 
         # Removes the first part of the path and the extension.
         child.virtual_path = child.source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
-
-        # Clone slot configuration into child class
-        # see #test_slots_pollution
-        child.slots = self.slots.clone
 
         super
       end

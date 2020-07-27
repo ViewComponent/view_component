@@ -1,0 +1,13 @@
+<header>
+  <%= render SubcomponentComponent::HeaderComponent.new(classes: header.classes) do %>
+    <%= header.content %>
+  <% end %>
+</header>
+
+<%= items.each do |item| %>
+  <div>
+    <%= render SubcomponentComponent::ItemComponent.new(classes: item.classes) do %>
+      <%= item.content %>
+    <% end %>
+  </div>
+<% end %>
