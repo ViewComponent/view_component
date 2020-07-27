@@ -16,6 +16,9 @@ class IntegrationExamplesController < ActionController::Base
   end
 
   def controller_to_string
+    # ensure render_to_string isn't broken by monkey patch
+    render_to_string("integration_examples/_controller_inline", locals: { message: "bar" })
+
     render(plain: render_to_string(ControllerInlineComponent.new(message: "bar")))
   end
 

@@ -2,4 +2,4 @@
 Incomplete test coverage
 --------------------------------------------------------------------------------
 
-/lib/view_component/render_to_string_monkey_patch.rb: 83.33% (missed: 9)
+100% test coverage. You're all set, friend!
