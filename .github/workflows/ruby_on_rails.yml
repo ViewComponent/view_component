@@ -35,7 +35,7 @@ jobs:
         RAILS_VERSION: ${{ matrix.rails_version }}
     - name: Upload coverage results
       uses: actions/upload-artifact@master
-      if: always()
+      if: ${{ always() }}
       with:
         name: coverage-report
         path: coverage
