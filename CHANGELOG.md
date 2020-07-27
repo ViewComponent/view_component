@@ -1,5 +1,9 @@
 # master
 
+* Fix auto-loading of previews (changes no longer require a server restart)
+
+    *Matt Brictson*
+
 * Add `default_preview_layout` configuration option to load custom app/views/layouts.
 
     *Jared White, Juan Manuel Ramallo*

@@ -34,8 +34,8 @@ module ViewComponent
     initializer "view_component.set_autoload_paths" do |app|
       options = app.config.view_component
 
-      if options.show_previews && options.preview_path
-        ActiveSupport::Dependencies.autoload_paths << options.preview_path
+      if options.show_previews && !options.preview_paths.empty?
+        ActiveSupport::Dependencies.autoload_paths.concat(options.preview_paths)
       end
     end
 
