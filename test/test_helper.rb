@@ -6,7 +6,7 @@ SimpleCov.start do
   formatter SimpleCov::Formatter::Console
 end
 
-if Rails.version.to_f < 6.1
+if ENV['RAILS_VERSION'] != "master"
   SimpleCov.minimum_coverage 100
 end
 
