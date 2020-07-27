@@ -6,7 +6,9 @@ SimpleCov.start do
   formatter SimpleCov::Formatter::Console
 end
 
-SimpleCov.minimum_coverage 100
+if Rails.version.to_f < 6.1
+  SimpleCov.minimum_coverage 100
+end
 
 require "bundler/setup"
 require "pp"
