@@ -42,19 +42,9 @@ module ViewComponent # :nodoc:
         result.merge(layout: @layout)
       end
 
-      # Returns the component object class associated to the preview.
-      def component
-        name.chomp("Preview").constantize
-      end
-
       # Returns all of the available examples for the component preview.
       def examples
         public_instance_methods(false).map(&:to_s).sort
-      end
-
-      # Returns +true+ if the example of the component preview exists.
-      def example_exists?(example)
-        examples.include?(example)
       end
 
       # Returns +true+ if the preview exists.
@@ -101,10 +91,6 @@ module ViewComponent # :nodoc:
 
       def preview_paths
         Base.preview_paths
-      end
-
-      def show_previews
-        Base.show_previews
       end
     end
   end
