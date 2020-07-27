@@ -22,7 +22,9 @@ module ViewComponent
     def render_inline(component, **args, &block)
       @rendered_component =
         if Rails.version.to_f >= 6.1
+          # :nocov:
           controller.view_context.render(component, args, &block)
+          # :nocov:
         else
           controller.view_context.render_component(component, &block)
         end

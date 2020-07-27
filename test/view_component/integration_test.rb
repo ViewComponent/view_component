@@ -11,6 +11,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   if Rails.version.to_f >= 6.1
+    # :nocov:
     test "rendering component with template annotations enabled" do
       get "/"
       assert_response :success
@@ -19,6 +20,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
       assert_select("div", "Foo\n  bar")
     end
+    # :nocov:
   end
 
   test "rendering component in a controller" do
@@ -374,12 +376,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   if Rails.version.to_f >= 6.1
+    # :nocov:
     test "rendering component using the render_component helper raises an error" do
       error = assert_raises ActionView::Template::Error do
         get "/render_component"
       end
       assert_match /undefined method `render_component'/, error.message
     end
+    # :nocov:
   end
 
   if Rails.version.to_f < 6.1
