@@ -175,7 +175,10 @@ module ViewComponent
 
       # Provide identifier for ActionView template annotations
       def short_identifier
+        # This is only called in 6.1, which we don't run coverage measurements against
+        # :nocov:
         @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
+        # :nocov:
       end
 
       def inherited(child)
@@ -263,9 +266,10 @@ module ViewComponent
         # starting line number so errors that are raised will point to the
         # correct line in the component template.
         line_number =
-          if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames) &&
-            ActionView::Base.annotate_rendered_view_with_filenames
+          if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames) && ActionView::Base.annotate_rendered_view_with_filenames
+            # :nocov:
             -2
+            # :nocov:
           else
             -1
           end
@@ -293,7 +297,9 @@ module ViewComponent
       end
 
       def format
+        # :nocov:
         :html
+        # :nocov:
       end
 
       def identifier
@@ -356,7 +362,10 @@ module ViewComponent
         if handler.method(:call).parameters.length > 1
           handler.call(self, template)
         else
+          # For older versions of Rails. Not covered by CI build that measures coverage.
+          # :nocov:
           handler.call(OpenStruct.new(source: template, identifier: identifier, type: type))
+          # :nocov:
         end
       end
 
