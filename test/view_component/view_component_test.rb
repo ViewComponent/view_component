@@ -61,6 +61,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("bar")
   end
 
+  def test_renders_haml_template_that_uses_a_block
+    render_inline(HamlComponent.new(message: "bar", url: "http://example.com")) { "foo" }
+
+    assert_selector("a[href='http://example.com']", "hello!")
+    assert_text("foo")
+    assert_text("bar")
+  end
+
   def test_renders_button_to_component
     old_value = ActionController::Base.allow_forgery_protection
     ActionController::Base.allow_forgery_protection = true

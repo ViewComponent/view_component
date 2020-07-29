@@ -1,3 +1,8 @@
 %div
   = content
   = @message
+
+- if @url
+  %div
+    = helpers.link_to(@url) do
+      hello!
