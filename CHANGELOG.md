@@ -2,6 +2,12 @@
 
 ## master
 
+## 2.22.0
+
+* Add #with_variant to enable inline component variant rendering without template files.
+
+    *Nathan Jones*
+
 ## 2.21.0
 
 * Only compile components at application initialization if eager loading is enabled.
