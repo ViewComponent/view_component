@@ -679,7 +679,7 @@ You can also set a custom layout to be used by default for previews as well as t
 `config/application.rb`
 ```ruby
 # Set the default layout to app/views/layouts/component_preview.html.erb
-config.default_preview_layout = "component_preview"
+config.view_component.default_preview_layout = "component_preview"
 ```
 
 Preview classes live in `test/components/previews`, which can be configured using the `preview_paths` option:
