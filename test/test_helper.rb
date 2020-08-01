@@ -48,3 +48,11 @@ def with_default_preview_layout(layout)
   yield
   ViewComponent::Base.default_preview_layout = old_value
 end
+
+def with_render_monkey_patch_config(enabled)
+  old_default = ViewComponent::Base.render_monkey_patch_enabled
+  ViewComponent::Base.render_monkey_patch_enabled = enabled
+  yield
+ensure
+  ViewComponent::Base.render_monkey_patch_enabled = old_default
+end

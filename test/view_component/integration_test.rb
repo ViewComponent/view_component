@@ -397,6 +397,13 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       get "/controller_to_string_render_component"
       assert_includes response.body, "bar"
     end
+
+    test "rendering component in preview using #render_component and monkey patch disabled" do
+      with_render_monkey_patch_config(false) do
+        get "/rails/view_components/monkey_patch_disabled_component/default"
+        assert_includes response.body, "<div>hello,world!</div>"
+      end
+    end
   end
 
   test "renders the inline component preview examples with default behaviour and with their own templates" do
