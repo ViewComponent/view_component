@@ -45,8 +45,8 @@ module ViewComponent
     def instrument(action, &block)
       instrument_payload = {
         virtual_path: @component.virtual_path,
-        component_name: @component.class.name,
-        identifier: @component.class.identifier
+        component_name: @component.name,
+        identifier: @component.identifier
       }
 
       ActiveSupport::Notifications.instrument("#{action}.view_component", instrument_payload, &block)
