@@ -4,6 +4,7 @@ require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
+require "view_component/log_subscriber"
 require "view_component/previewable"
 require "view_component/slotable"
 
@@ -74,12 +75,14 @@ module ViewComponent
       # Assign captured content passed to component as a block to @content
       @content = view_context.capture(self, &block) if block_given?
 
-      before_render
+      instrument("render_template") do
+        before_render
 
-      if render?
-        render_template_for(@variant)
-      else
-        ""
+        if render?
+          render_template_for(@variant)
+        else
+          ""
+        end
       end
     ensure
       @current_template = old_current_template
@@ -162,6 +165,14 @@ module ViewComponent
     # that inhibits encapsulation & reuse.
     def request
       @request ||= controller.request
+    end
+
+    def instrument(action, &block)
+      instrument_payload = {
+        virtual_path: virtual_path, component_name: self.class.name, identifier: self.class.identifier
+      }
+
+      ActiveSupport::Notifications.instrument("#{action}.view_component", instrument_payload, &block)
     end
 
     attr_reader :content, :view_context
