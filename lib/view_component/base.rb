@@ -168,11 +168,16 @@ module ViewComponent
     end
 
     def instrument(action, &block)
-      instrument_payload = {
-        virtual_path: virtual_path, component_name: self.class.name, identifier: self.class.identifier
-      }
+      # TODO: found a better way to achieve this
+      if self.class.respond_to?(:counter_argument_present?) && self.class.counter_argument_present?
+        return yield
+      else
+        instrument_payload = {
+          virtual_path: virtual_path, component_name: self.class.name, identifier: self.class.identifier
+        }
 
-      ActiveSupport::Notifications.instrument("#{action}.view_component", instrument_payload, &block)
+        ActiveSupport::Notifications.instrument("#{action}.view_component", instrument_payload, &block)
+      end
     end
 
     attr_reader :content, :view_context
