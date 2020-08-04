@@ -1,5 +1,9 @@
 # master
 
+* Fix bug where previews didn't work when monkey patch was disabled.
+
+    *Mixer Gutierrez*
+
 # 2.18.0
 
 * Fix auto-loading of previews (changes no longer require a server restart)
