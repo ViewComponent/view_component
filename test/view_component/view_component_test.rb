@@ -363,6 +363,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("hello, world!")
   end
 
+  def test_renders_component_inside_sidecar_directory
+    render_inline(InsideSidecarDirectoryComponent::Base.new)
+
+    assert_text("hello, world!")
+  end
+
   def test_renders_component_with_request_context
     render_inline(RequestComponent.new)
 

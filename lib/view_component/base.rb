@@ -391,7 +391,15 @@ module ViewComponent
         filename = File.basename(source_location, ".rb")
         component_name = name.demodulize.underscore
 
-        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extenstions}}"]
+        # If filename is called base, source file is in sidecar folder
+        # so component name should be equal to parent folder
+        sidecar_directory_files =
+          if filename == "base"
+            component_name = File.basename(directory)
+            Dir["#{directory}/#{component_name}.*{#{extenstions}}"]
+          else
+            Dir["#{directory}/#{component_name}/#{filename}.*{#{extenstions}}"]
+          end
 
         (sidecar_files - [source_location] + sidecar_directory_files)
       end
