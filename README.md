@@ -360,6 +360,32 @@ bin/rails generate component Example title content --sidecar
       create  app/components/example_component/example_component.html.erb
 ```
 
+#### Component inside Sidecar directory
+
+ViewComponents also support the possibility of placing the Ruby component class inside the sidecar directory, grouping all related files in the same folder.
+
+> **Avoid** giving your containing folder the same name as your `.rb` file or there will be a conflict between Module and Class definitions
+
+```
+app/components
+├── ...
+├── example
+|   ├── component.rb
+|   ├── component.css
+|   ├── component.html.erb
+|   └── component.js
+├── ...
+
+```
+
+Rendering is as simple as using the folder's name as a namespace:
+
+```erb
+<%= render(Example::Component.new(title: "my title")) do %>
+  Hello, World!
+<% end %>
+```
+
 ### Conditional Rendering
 
 Components can implement a `#render?` method to be called after initialization to determine if the component should render.
@@ -1002,6 +1028,11 @@ ViewComponent is built by:
 |:---:|:---:|:---:|:---:|:---:|
 |@johannesengl|@czj|@mrrooijen|@bradparker|@mattbrictson|
 |Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|San Francisco|
+
+|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|
+|:---:|
+|@mixergtz|
+|Medellin, Colombia|
 
 ## License
 
