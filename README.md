@@ -364,7 +364,7 @@ bin/rails generate component Example title content --sidecar
 
 ViewComponents also support the possibility of placing the Ruby component class inside the sidecar directory, grouping all related files in the same folder.
 
-> **Avoid** giving your containing folder the same name as your `.rb` file or there will be a conflict between Module and Class definitions
+_Note: Avoid giving your containing folder the same name as your `.rb` file or there will be a conflict between Module and Class definitions_
 
 ```
 app/components
@@ -378,7 +378,7 @@ app/components
 
 ```
 
-Rendering is as simple as using the folder's name as a namespace:
+The component can then be rendered using the folder name as a namespace:
 
 ```erb
 <%= render(Example::Component.new(title: "my title")) do %>
