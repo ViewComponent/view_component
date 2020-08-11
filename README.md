@@ -360,9 +360,9 @@ bin/rails generate component Example title content --sidecar
       create  app/components/example_component/example_component.html.erb
 ```
 
-#### Component inside Sidecar directory
+#### Component file inside Sidecar directory
 
-ViewComponents also support the possibility of placing the Ruby component class inside the sidecar directory, grouping all related files in the same folder.
+It's also possible to place the Ruby component file inside the sidecar directory, grouping all related files in the same folder:
 
 _Note: Avoid giving your containing folder the same name as your `.rb` file or there will be a conflict between Module and Class definitions_
 
