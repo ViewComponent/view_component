@@ -164,19 +164,17 @@ Returning:
 
 _Slots are currently under development as a successor to Content Areas. The Slot APIs should be considered unfinished and subject to breaking changes in non-major releases of ViewComponent._
 
-Slots enable multiple blocks of content to be passed to a single ViewComponent.
+Slots enable multiple blocks of content to be passed to a single ViewComponent, reducing the need for sub-components (e.g. ModalHeader, ModalBody).
 
-Slots exist in two forms: normal slots and collection slots.
+By default, slots can be rendered once per component. They provide an accessor with the name of the slot (`#header`) that returns an instance of `ViewComponent::Slot`, etc.
 
-Normal slots can be rendered once per component. They expose an accessor with the name of the slot that returns an instance of `ViewComponent::Slot`, etc.
+Slots declared with `collection: true` can be rendered multiple times. They provide an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
 
-Collection slots can be rendered multiple times. They expose an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
-
-To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348.
+To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348 and https://github.com/github/view_component/discussions/325.
 
 ##### Defining Slots
 
-Slots are defined by the `with_slot` macro:
+Slots are defined by `with_slot`:
 
 `with_slot :header`
 
@@ -184,11 +182,11 @@ To define a collection slot, add `collection: true`:
 
 `with_slot :row, collection: true`
 
-To define a slot with a custom class, pass `class_name`:
+To define a slot with a custom Ruby class, pass `class_name`:
 
 `with_slot :body, class_name: 'BodySlot`
 
-Slot classes should be subclasses of `ViewComponent::Slot`.
+_Note: Slot classes must be subclasses of `ViewComponent::Slot`._
 
 ##### Example ViewComponent with Slots
 
