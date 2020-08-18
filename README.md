@@ -258,7 +258,7 @@ end
   <% end %>
   <% if footer %>
     <div class="Box-footer">
-      <%= footer %>
+      <%= footer.content %>
     </div>
   <% end %>
 </div>
