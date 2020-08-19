@@ -200,12 +200,12 @@ class BoxComponent < ViewComponent::Base
   with_slot :row, collection: true, class_name: "Row"
 
   class Header < ViewComponent::Slot
-    def initialize(class_names: "")
-      @class_names = class_names
+    def initialize(classes: "")
+      @classes = classes
     end
 
-    def class_names
-      "Box-header #{@class_names}"
+    def classes
+      "Box-header #{@classes}"
     end
   end
 
@@ -238,7 +238,7 @@ end
 ```erb
 <div class="Box">
   <% if header %>
-    <div class="<%= header.class_names %>">
+    <div class="<%= header.classes %>">
       <%= header.content %>
     </div>
   <% end %>
@@ -267,7 +267,7 @@ end
 `# index.html.erb`
 ```erb
 <%= render(BoxComponent.new) do |component| %>
-  <% component.slot(:header, class_names: "my-class-name") do %>
+  <% component.slot(:header, classes: "my-class-name") do %>
     This is my header!
   <% end %>
   <% component.slot(:body) do %>
