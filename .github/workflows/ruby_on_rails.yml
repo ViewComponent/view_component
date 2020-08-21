@@ -37,7 +37,7 @@ jobs:
       uses: actions/upload-artifact@master
       if: always()
       with:
-        name: coverage-report
+        name: simplecov-resultset-rails{{matrix.rails_version}}-ruby{{matrix.ruby_version}}
         path: coverage
   coverage:
     needs: build
@@ -45,8 +45,6 @@ jobs:
     steps:
     - name: Download coverage results
       uses: actions/download-artifact@v2
-      with:
-        name: coverage-report
     - uses: actions/checkout@master
     - name: Setup Ruby
       uses: actions/setup-ruby@v1
