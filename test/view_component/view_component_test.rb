@@ -645,4 +645,9 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_text("http://assets.example.com")
   end
+
+  def test_renders_component_with_rich_text_area
+    # render_inline(ActionTextComponent.new(model: Post.new))
+
+  end
 end
