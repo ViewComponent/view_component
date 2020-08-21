@@ -38,7 +38,7 @@ jobs:
       if: always()
       with:
         name: coverage-report
-        path: coverage_results
+        path: coverage
   coverage:
     needs: build
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
     - name: Download coverage results
       uses: actions/download-artifact@v2
       with:
-        name: coverage_results
+        name: coverage-report
     - name: Collate simplecov
       run: |
         bundle exec rake coverage:report
