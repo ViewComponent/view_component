@@ -33,3 +33,21 @@ jobs:
         bundle exec rubocop
       env:
         RAILS_VERSION: ${{ matrix.rails_version }}
+    - name: Upload coverage results
+      uses: actions/upload-artifact@master
+      if: always()
+      with:
+        name: coverage-report
+        path: coverage_results
+  coverage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download coverage results
+      uses: actions/download-artifact@v2
+      with:
+        name: coverage_results
+    - name: Collate simplecov
+      run: |
+        bundle exec rake coverage:report
+
