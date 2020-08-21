@@ -27,6 +27,10 @@ class IntegrationExamplesController < ActionController::Base
     render(plain: render_component_to_string(ControllerInlineComponent.new(message: "bar")))
   end
 
+  def controller_active_text_render_component
+    render(ControllerActionTextComponent.new(model: Post.new))
+  end
+
   def products
     @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
   end
