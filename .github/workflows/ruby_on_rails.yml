@@ -47,6 +47,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: coverage-report
+    - uses: actions/checkout@master
     - name: Setup Ruby
       uses: actions/setup-ruby@v1
       with:
