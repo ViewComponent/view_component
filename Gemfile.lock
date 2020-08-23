@@ -65,6 +65,7 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.1)
+    benchmark-ips (2.8.2)
     better_html (1.0.15)
       actionview (>= 4.0)
       activesupport (>= 4.0)
@@ -194,6 +195,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  benchmark-ips (~> 2.8.2)
   better_html (~> 1)
   bundler (~> 1.14)
   capybara (~> 3)
