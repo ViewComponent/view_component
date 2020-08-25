@@ -128,9 +128,7 @@ module ViewComponent
 
     # For caching, such as #cache_if
     def format
-      # :nocov:
       @variant
-      # :nocov:
     end
 
     # Assign the provided content to the content area accessor
