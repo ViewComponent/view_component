@@ -181,7 +181,7 @@ module ViewComponent
       def inherited(child)
         # If Rails application is loaded, add application url_helpers to the component context
         # we need to check this to use this gem as a dependency
-        if Rails.application
+        if defined?(Rails) && Rails.application
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
         end
 
