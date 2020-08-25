@@ -1,5 +1,11 @@
 # master
 
+# 2.18.2
+
+* Check if `Rails.application` is loaded.
+
+    *Gleydson Tavares*
+
 # 2.18.1
 
 * Fix bug where previews didn't work when monkey patch was disabled.
