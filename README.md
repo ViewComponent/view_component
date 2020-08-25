@@ -164,19 +164,17 @@ Returning:
 
 _Slots are currently under development as a successor to Content Areas. The Slot APIs should be considered unfinished and subject to breaking changes in non-major releases of ViewComponent._
 
-Slots enable multiple blocks of content to be passed to a single ViewComponent.
+Slots enable multiple blocks of content to be passed to a single ViewComponent, reducing the need for sub-components (e.g. ModalHeader, ModalBody).
 
-Slots exist in two forms: normal slots and collection slots.
+By default, slots can be rendered once per component. They provide an accessor with the name of the slot (`#header`) that returns an instance of `ViewComponent::Slot`, etc.
 
-Normal slots can be rendered once per component. They expose an accessor with the name of the slot that returns an instance of `ViewComponent::Slot`, etc.
+Slots declared with `collection: true` can be rendered multiple times. They provide an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
 
-Collection slots can be rendered multiple times. They expose an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
-
-To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348.
+To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348 and https://github.com/github/view_component/discussions/325.
 
 ##### Defining Slots
 
-Slots are defined by the `with_slot` macro:
+Slots are defined by `with_slot`:
 
 `with_slot :header`
 
@@ -184,11 +182,11 @@ To define a collection slot, add `collection: true`:
 
 `with_slot :row, collection: true`
 
-To define a slot with a custom class, pass `class_name`:
+To define a slot with a custom Ruby class, pass `class_name`:
 
 `with_slot :body, class_name: 'BodySlot`
 
-Slot classes should be subclasses of `ViewComponent::Slot`.
+_Note: Slot classes must be subclasses of `ViewComponent::Slot`._
 
 ##### Example ViewComponent with Slots
 
@@ -202,12 +200,12 @@ class BoxComponent < ViewComponent::Base
   with_slot :row, collection: true, class_name: "Row"
 
   class Header < ViewComponent::Slot
-    def initialize(class_names: "")
-      @class_names = class_names
+    def initialize(classes: "")
+      @classes = classes
     end
 
-    def class_names
-      "Box-header #{@class_names}"
+    def classes
+      "Box-header #{@classes}"
     end
   end
 
@@ -240,7 +238,7 @@ end
 ```erb
 <div class="Box">
   <% if header %>
-    <div class="<%= header.class_names %>">
+    <div class="<%= header.classes %>">
       <%= header.content %>
     </div>
   <% end %>
@@ -260,7 +258,7 @@ end
   <% end %>
   <% if footer %>
     <div class="Box-footer">
-      <%= footer %>
+      <%= footer.content %>
     </div>
   <% end %>
 </div>
@@ -269,7 +267,7 @@ end
 `# index.html.erb`
 ```erb
 <%= render(BoxComponent.new) do |component| %>
-  <% component.slot(:header, class_names: "my-class-name") do %>
+  <% component.slot(:header, classes: "my-class-name") do %>
     This is my header!
   <% end %>
   <% component.slot(:body) do %>
@@ -358,6 +356,32 @@ bin/rails generate component Example title content --sidecar
       create  test/components/example_component_test.rb
       create  app/components/example_component.rb
       create  app/components/example_component/example_component.html.erb
+```
+
+#### Component file inside Sidecar directory
+
+It's also possible to place the Ruby component file inside the sidecar directory, grouping all related files in the same folder:
+
+_Note: Avoid giving your containing folder the same name as your `.rb` file or there will be a conflict between Module and Class definitions_
+
+```
+app/components
+├── ...
+├── example
+|   ├── component.rb
+|   ├── component.css
+|   ├── component.html.erb
+|   └── component.js
+├── ...
+
+```
+
+The component can then be rendered using the folder name as a namespace:
+
+```erb
+<%= render(Example::Component.new(title: "my title")) do %>
+  Hello, World!
+<% end %>
 ```
 
 ### Conditional Rendering
@@ -679,7 +703,7 @@ You can also set a custom layout to be used by default for previews as well as t
 `config/application.rb`
 ```ruby
 # Set the default layout to app/views/layouts/component_preview.html.erb
-config.default_preview_layout = "component_preview"
+config.view_component.default_preview_layout = "component_preview"
 ```
 
 Preview classes live in `test/components/previews`, which can be configured using the `preview_paths` option:
@@ -1002,6 +1026,11 @@ ViewComponent is built by:
 |:---:|:---:|:---:|:---:|:---:|
 |@johannesengl|@czj|@mrrooijen|@bradparker|@mattbrictson|
 |Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|San Francisco|
+
+|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|
+|:---:|
+|@mixergtz|
+|Medellin, Colombia|
 
 ## License
 
