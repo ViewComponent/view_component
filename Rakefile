@@ -12,6 +12,7 @@ end
 namespace :coverage do
   task :report do
     require "simplecov"
+    require "simplecov-console"
 
     SimpleCov.minimum_coverage 100
 
