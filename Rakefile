@@ -13,6 +13,8 @@ namespace :coverage do
   task :report do
     require "simplecov"
 
+    SimpleCov.minimum_coverage 100
+
     SimpleCov.collate Dir["simplecov-resultset-*/.resultset.json"], "rails" do
       formatter SimpleCov::Formatter::MultiFormatter.new([
         SimpleCov::Formatter::SimpleFormatter,

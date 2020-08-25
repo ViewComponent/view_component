@@ -8,10 +8,6 @@ SimpleCov.start do
   formatter SimpleCov::Formatter::Console
 end
 
-if ENV["RAILS_VERSION"] != "master"
-  SimpleCov.minimum_coverage 100
-end
-
 require "bundler/setup"
 require "pp"
 require "pathname"
