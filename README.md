@@ -1027,15 +1027,10 @@ ViewComponent is built by:
 |@johannesengl|@czj|@mrrooijen|@bradparker|@mattbrictson|
 |Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|San Francisco|
 
-|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|
-|:---:|
-|@mixergtz|
-|Medellin, Colombia|
-
-|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|
-|:---:|
-|@g13ydson|
-|João Pessoa, Brazil|
+|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|
+|:---:|:---:|
+|@mixergtz|@g13ydson|
+|Medellin, Colombia| João Pessoa, Brazil|
 
 ## License
 
