@@ -293,9 +293,7 @@ module ViewComponent
       end
 
       def format
-        # :nocov:
         :html
-        # :nocov:
       end
 
       def identifier
