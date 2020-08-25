@@ -47,6 +47,12 @@ Traditional Rails views have an implicit interface, making it hard to reason abo
 
 ViewComponents use a standard Ruby initializer that clearly defines what is needed to render, making them easier (and safer) to reuse than partials.
 
+#### Performance
+
+Based on our benchmarks, components are 10x faster than partials. You can find the benchmark script we used to get that number [here](performance/benchmark.rb). If you'd like to run the benchmarks locally, you can run `bundle exec rake benchmark`.
+
+The benchmark script is a work-in-progress, so improvements are welcome!
+
 #### Standards
 
 Views often fail basic Ruby code quality standards: long methods, deep conditional nesting, and mystery guests abound.
