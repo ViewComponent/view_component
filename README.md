@@ -1032,6 +1032,11 @@ ViewComponent is built by:
 |@mixergtz|
 |Medellin, Colombia|
 
+|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|
+|:---:|
+|@g13ydson|
+|João Pessoa, Brazil|
+
 ## License
 
 ViewComponent is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
