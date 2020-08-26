@@ -1,10 +1,15 @@
 # master
 
-# 2.18.2
+# 2.18.3
 
 * Check if `Rails.application` is loaded.
 
     *Gleydson Tavares*
+# 2.18.2
+
+* Collate test coverage across CI builds, ensuring 100% test coverage.
+
+    *Joel Hawksley*
 
 # 2.18.1
 
