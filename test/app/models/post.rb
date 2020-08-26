@@ -30,5 +30,7 @@ class Post
   end
 
     has_rich_text :content
+
 end
+
 
