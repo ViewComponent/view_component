@@ -648,6 +648,5 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_renders_component_with_rich_text_area
     # render_inline(ActionTextComponent.new(model: Post.new))
-
   end
 end
