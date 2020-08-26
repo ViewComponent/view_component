@@ -453,6 +453,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select "input[name=?]", "name"
   end
 
+  test "returns 404 when preview does not exist" do
+    assert_raises AbstractController::ActionNotFound do
+      get "/rails/view_components/missing_preview"
+    end
+  end
+
   test "raises an error if the template is not present and the render_with_template method is used in the example" do
     error = assert_raises ViewComponent::PreviewTemplateError do
       get "/rails/view_components/inline_component/without_template"
