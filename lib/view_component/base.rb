@@ -1,5 +1,8 @@
 # frozen_string_literal: true
-require "action_text/engine"
+if require('action_text')
+  require "action_text/engine"
+end
+
 require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
@@ -11,7 +14,9 @@ module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
-    include ActionText::Engine.helpers
+    if require("action_text/engine")
+     include ActionText::Engine.helpers
+    end
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -24,7 +29,7 @@ module ViewComponent
 
     #required for rich_text_area
     def main_app
-      Rails.application.class.routes.url_helpers
+      Rails.application.class.routes.url_helpers if require('action_text')
     end
 
     # Entrypoint for rendering components.
