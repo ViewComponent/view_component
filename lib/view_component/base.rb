@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-if require('action_text')
+if require("action_text")
   require "action_text/engine"
 end
 
@@ -29,7 +29,7 @@ module ViewComponent
 
     #required for rich_text_area
     def main_app
-      Rails.application.class.routes.url_helpers if require('action_text')
+      Rails.application.class.routes.url_helpers if require("action_text")
     end
 
     # Entrypoint for rendering components.

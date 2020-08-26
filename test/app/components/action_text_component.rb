@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ActionTextComponent < ViewComponent::Base
 
   attr_reader :model
