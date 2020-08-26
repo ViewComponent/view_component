@@ -28,7 +28,7 @@ class IntegrationExamplesController < ActionController::Base
   end
 
   def controller_active_text_render_component
-    render(ControllerActionTextComponent.new(model: Post.new))
+    render_component(ActionTextComponent.new(model: Post.new))
   end
 
   def products

@@ -1,22 +1,18 @@
 # frozen_string_literal: true
-if require("action_text")
-  require "action_text/engine"
-end
-
 require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
+require "view_component/action_textable"
 
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
-    if require("action_text/engine")
-     include ActionText::Engine.helpers
-    end
+    include ViewComponent::ActionTextable
+
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -26,11 +22,6 @@ module ViewComponent
     # Hash of registered Slots
     class_attribute :slots
     self.slots = {}
-
-    #required for rich_text_area
-    def main_app
-      Rails.application.class.routes.url_helpers if require("action_text")
-    end
 
     # Entrypoint for rendering components.
     #
