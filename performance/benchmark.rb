@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Run `bundle exec rake benchmark` to execute benchmark.
+# This is very much a work-in-progress. Please feel free to make/suggest improvements!
+
 require "benchmark/ips"
 
 # Configure Rails Envinronment
