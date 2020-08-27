@@ -9,6 +9,11 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList["test/**/*_test.rb"]
 end
 
+desc "Runs benchmarks against components"
+task :benchmark do
+  ruby "./performance/benchmark.rb"
+end
+
 namespace :coverage do
   task :report do
     require "simplecov"
