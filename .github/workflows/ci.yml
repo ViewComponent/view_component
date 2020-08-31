@@ -14,9 +14,9 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: ${{ runner.os }}-gems-railsmaster-ruby2.7.x-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-railsmaster-ruby2.7.x-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
-          ${{ runner.os }}-gems-
+          gems-
     - name: Lint with Rubocop
       run: |
         gem install bundler:1.17.3
@@ -49,9 +49,9 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: ${{ runner.os }}-gems-rails${{matrix.rails_version}}-ruby${{ matrix.ruby_version }}-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-rails${{ matrix.rails_version }}-ruby${{ matrix.ruby_version }}-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
-          ${{ runner.os }}-gems-
+          gems-
     - name: Build and test with Rake
       run: |
         gem install bundler:1.17.3
@@ -81,9 +81,9 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: ${{ runner.os }}-gems-railsmaster-ruby2.7.x-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-railsmaster-ruby2.7.x-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
-          ${{ runner.os }}-gems-
+          gems-
     - name: Collate simplecov
       run: |
         gem install bundler:1.17.3
