@@ -14,14 +14,14 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: ${{ runner.os }}-gems-ruby2.7.x-${{ hashFiles('**/Gemfile.lock') }}
+        key: ${{ runner.os }}-gems-railsmaster-ruby2.7.x-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
           ${{ runner.os }}-gems-
     - name: Lint with Rubocop
       run: |
         gem install bundler:1.17.3
-        bundle update
         bundle config path vendor/bundle
+        bundle update
         bundle install --jobs 4 --retry 3
         bundle exec rubocop
   test:
@@ -81,7 +81,7 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: ${{ runner.os }}-gems-ruby2.7.x-${{ hashFiles('**/Gemfile.lock') }}
+        key: ${{ runner.os }}-gems-railsmaster-ruby2.7.x-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
           ${{ runner.os }}-gems-
     - name: Collate simplecov
