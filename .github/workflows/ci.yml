@@ -49,7 +49,7 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: ${{ runner.os }}-gems-ruby${{ matrix.ruby_version }}-${{ hashFiles('**/Gemfile.lock') }}
+        key: ${{ runner.os }}-gems-rails${{matrix.rails_version}}-ruby${{ matrix.ruby_version }}-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
           ${{ runner.os }}-gems-
     - name: Build and test with Rake
