@@ -50,8 +50,6 @@ jobs:
       with:
         path: vendor/bundle
         key: gems-build-rails-${{ matrix.rails_version }}-ruby-${{ matrix.ruby_version }}-${{ hashFiles('**/Gemfile.lock') }}
-        restore-keys: |
-          gems-
     - name: Build and test with Rake
       run: |
         gem install bundler:1.17.3
