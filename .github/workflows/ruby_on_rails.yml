@@ -1,4 +1,4 @@
-name: Ruby on Rails
+name: CI
 
 on: [push, pull_request]
 
@@ -17,7 +17,7 @@ jobs:
         bundle update
         bundle install --jobs 4 --retry 3
         bundle exec rubocop
-  build:
+  test:
     needs: lint
     runs-on: ubuntu-latest
     strategy:
@@ -55,7 +55,7 @@ jobs:
         name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}
         path: coverage
   coverage:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
