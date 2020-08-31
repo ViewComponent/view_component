@@ -19,7 +19,6 @@ jobs:
       run: |
         gem install bundler:1.17.3
         bundle config path vendor/bundle
-        bundle update
         bundle install --jobs 4 --retry 3
         bundle exec rubocop
   test:
@@ -53,7 +52,6 @@ jobs:
         gem install bundler:1.17.3
         bundle config path vendor/bundle
         bundle update
-        bundle install --jobs 4 --retry 3
         bundle exec rake
       env:
         RAILS_VERSION: ${{ matrix.rails_version }}
@@ -82,6 +80,5 @@ jobs:
       run: |
         gem install bundler:1.17.3
         bundle config path vendor/bundle
-        bundle update
         bundle install --jobs 4 --retry 3
         bundle exec rake coverage:report
