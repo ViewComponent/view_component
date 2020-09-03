@@ -1,5 +1,9 @@
 # master
 
+* Raise an error if controller or view context is accessed during initialize as they are only available in render.
+
+    *Julian Nadeau*
+
 * Collate test coverage across CI builds, ensuring 100% test coverage.
 
     *Joel Hawksley*

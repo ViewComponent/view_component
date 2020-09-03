@@ -75,7 +75,6 @@ module ViewComponent
       @content = view_context.capture(self, &block) if block_given?
 
       before_render
-      @render_in_called = true
 
       if render?
         send(self.class.call_method_name(@variant))
@@ -111,13 +110,13 @@ module ViewComponent
     end
 
     def controller
-      raise ViewContextCalledBeforeRenderError, "Cannot call `controller` from initialize. Must be called during render" unless @render_in_called
+      raise ViewContextCalledBeforeRenderError, "`controller` can only be called at render time." if view_context.nil?
       @controller ||= view_context.controller
     end
 
     # Provides a proxy to access helper methods from the context of the current controller
     def helpers
-      raise ViewContextCalledBeforeRenderError, "Cannot call `helpers` from initialize. Must be called during render" unless @render_in_called
+      raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if controller.nil?
       @helpers ||= controller.view_context
     end
 
