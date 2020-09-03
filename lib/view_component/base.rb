@@ -12,6 +12,8 @@ module ViewComponent
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
 
+    ViewContextCalledBeforeRenderError = Class.new(StandardError)
+
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -73,6 +75,7 @@ module ViewComponent
       @content = view_context.capture(self, &block) if block_given?
 
       before_render
+      @render_in_called = true
 
       if render?
         send(self.class.call_method_name(@variant))
@@ -108,11 +111,13 @@ module ViewComponent
     end
 
     def controller
+      raise ViewContextCalledBeforeRenderError, "Cannot call `controller` from initialize. Must be called during render" unless @render_in_called
       @controller ||= view_context.controller
     end
 
     # Provides a proxy to access helper methods from the context of the current controller
     def helpers
+      raise ViewContextCalledBeforeRenderError, "Cannot call `helpers` from initialize. Must be called during render" unless @render_in_called
       @helpers ||= controller.view_context
     end
 

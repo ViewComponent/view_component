@@ -25,4 +25,20 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       end
     end
   end
+
+  def test_calling_helpers_outside_render_raises
+    component = ViewComponent::Base.new
+    err = assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+      component.helpers
+    end
+    assert_equal "Cannot call `helpers` from initialize. Must be called during render", err.message
+  end
+
+  def test_calling_controller_outside_render_raises
+    component = ViewComponent::Base.new
+    err = assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+      component.controller
+    end
+    assert_equal "Cannot call `controller` from initialize. Must be called during render", err.message
+  end
 end
