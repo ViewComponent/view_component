@@ -179,6 +179,10 @@ module ViewComponent
       end
 
       def inherited(child)
+        # Compile so child will inherit compiled `call_*` template methods that
+        # `compile` defines
+        compile
+
         # If we're in Rails, add application url_helpers to the component context
         if defined?(Rails)
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
