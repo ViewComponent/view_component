@@ -116,7 +116,7 @@ module ViewComponent
 
     # Provides a proxy to access helper methods from the context of the current controller
     def helpers
-      raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if controller.view_context.nil?
+      raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
       @helpers ||= controller.view_context
     end
 
