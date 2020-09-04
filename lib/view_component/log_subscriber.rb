@@ -5,14 +5,14 @@ module ViewComponent
     def render_template(event)
       debug do
         message = +"  Rendered #{event.payload[:component_name]}"
-        message << " (#{duration_and_allocations(event)})"
+        message << " #{allocations(event)}"
       end
     end
 
     def render_collection(event)
       debug do
         message = +"  Rendered collection of #{event.payload[:component_name]}"
-        message << " [#{event.payload[:count]} times] (#{duration_and_allocations(event)})"
+        message << " [#{event.payload[:count]} times] #{allocations(event)}"
         message
       end
     end
@@ -23,9 +23,8 @@ module ViewComponent
 
     private
 
-    def duration_and_allocations(event)
-      message = +"Duration: #{event.duration.round(1)}ms"
-      message << " | Allocations: #{event.allocations}" if event.respond_to?(:allocations)
+    def allocations(event)
+      message << "(Allocations: #{event.allocations})" if event.respond_to?(:allocations)
       message
     end
   end
