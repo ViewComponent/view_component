@@ -1,5 +1,7 @@
 # master
 
+# 2.18.2
+
 * Raise an error if controller or view context is accessed during initialize as they are only available in render.
 
     *Julian Nadeau*
