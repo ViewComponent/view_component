@@ -67,8 +67,6 @@ Component names end in -`Component`.
 
 Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
 
-Provide entire objects if passing more than two attributes from the same object.
-
 Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
 
 #### Quick start
