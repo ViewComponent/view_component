@@ -67,6 +67,8 @@ Component names end in -`Component`.
 
 Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
 
+Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
+
 #### Quick start
 
 Use the component generator to create a new ViewComponent.
