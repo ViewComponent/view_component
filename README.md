@@ -69,7 +69,7 @@ Component module names are plural, as for controllers and jobs: `Users::AvatarCo
 
 Provide entire objects if passing more than two attributes from the same object.
 
-Name components for what they render, not what they accept (`AvatarComponent` instead of `UserComponent`)
+Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
 
 #### Quick start
 
