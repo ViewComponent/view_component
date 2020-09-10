@@ -1,5 +1,9 @@
 # master
 
+* Subclassed components now inherit their parent's templates
+    
+    * Blake Williams*
+
 # 2.18.1
 
 * Fix bug where previews didn't work when monkey patch was disabled.
