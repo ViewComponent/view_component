@@ -475,4 +475,16 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "input[value=?]", "Send this form!"
     end
   end
+
+  test "Rails fragment cache gets flushed correctly when the component template changes" do
+    get "/fragment_cache"
+    assert_response :success
+    assert_select("div", "Foo\n  bar")
+    assert_select("div.changed", false)
+
+    modify_file "app/components/erb_component.html.erb", "<div class='changed'>Hello World</div>" do
+      get "/fragment_cache"
+      assert_select("div.changed", "Hello World")
+    end
+  end
 end

@@ -1,0 +1,5 @@
+<%- message = "bar" %>
+
+<% cache(message) do %>
+  <span><%= render ErbComponent.new(message: message) do %>Foo<% end %></span>
+<% end %>
