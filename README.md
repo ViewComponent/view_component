@@ -47,6 +47,10 @@ Traditional Rails views have an implicit interface, making it hard to reason abo
 
 ViewComponents use a standard Ruby initializer that clearly defines what is needed to render, making them easier (and safer) to reuse than partials.
 
+#### Performance
+
+Based on our [benchmarks](performance/benchmark.rb), ViewComponents are ~10x faster than partials.
+
 #### Standards
 
 Views often fail basic Ruby code quality standards: long methods, deep conditional nesting, and mystery guests abound.
@@ -62,6 +66,8 @@ Components are subclasses of `ViewComponent::Base` and live in `app/components`.
 Component names end in -`Component`.
 
 Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
+
+Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
 
 #### Quick start
 
@@ -1027,10 +1033,10 @@ ViewComponent is built by:
 |@johannesengl|@czj|@mrrooijen|@bradparker|@mattbrictson|
 |Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|San Francisco|
 
-|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|
-|:---:|
-|@mixergtz|
-|Medellin, Colombia|
+|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|
+|:---:|:---:|
+|@mixergtz|@jules2689|
+|Medellin, Colombia|Toronto, Canada|
 
 ## License
 

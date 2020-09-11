@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 require "simplecov"
-require "simplecov-erb"
+require "simplecov-console"
 
 SimpleCov.start do
-  formatter SimpleCov::Formatter::MultiFormatter.new([
-    SimpleCov::Formatter::ERBFormatter,
-    SimpleCov::Formatter::HTMLFormatter
-  ])
-end
+  command_name "rails#{ENV["RAILS_VERSION"]}-ruby#{ENV["RUBY_VERSION"]}" if ENV["RUBY_VERSION"]
 
-SimpleCov.minimum_coverage 97 # TODO: Get to 100!
+  formatter SimpleCov::Formatter::Console
+end
 
 require "bundler/setup"
 require "pp"
