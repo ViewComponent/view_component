@@ -341,7 +341,7 @@ ViewComponents supports two options for defining view files.
 
 The simplest option is to place the view next to the Ruby component:
 
-```
+```console
 app/components
 ├── ...
 ├── test_component.rb
@@ -353,7 +353,7 @@ app/components
 
 As an alternative, views and other assets can be placed in a sidecar directory with the same name as the component, which can be useful for organizing views alongside other assets like Javascript and CSS.
 
-```
+```console
 app/components
 ├── ...
 ├── example_component.rb
@@ -366,7 +366,7 @@ app/components
 
 To generate a component with a sidecar directory, use the `--sidecar` flag:
 
-```
+```console
 bin/rails generate component Example title content --sidecar
       invoke  test_unit
       create  test/components/example_component_test.rb
@@ -380,7 +380,7 @@ It's also possible to place the Ruby component file inside the sidecar directory
 
 _Note: Avoid giving your containing folder the same name as your `.rb` file or there will be a conflict between Module and Class definitions_
 
-```
+```console
 app/components
 ├── ...
 ├── example
@@ -408,7 +408,7 @@ Traditionally, the logic for whether to render a view could go in either the com
 
 `app/components/confirm_email_component.html.erb`
 
-```
+```erb
 <% if user.requires_confirmation? %>
   <div class="alert">Please confirm your email address.</div>
 <% end %>
@@ -442,7 +442,7 @@ end
 
 `app/components/confirm_email_component.html.erb`
 
-```
+```erb
 <div class="banner">
   Please confirm your email address.
 </div>
@@ -856,7 +856,7 @@ In order to [avoid conflicts](https://github.com/github/view_component/issues/28
 
 With the monkey patch disabled, use `render_component` (or  `render_component_to_string`) instead:
 
-```
+```erb
 <%= render_component Component.new(message: "bar") %>
 ```
 
