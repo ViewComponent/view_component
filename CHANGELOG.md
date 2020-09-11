@@ -229,13 +229,13 @@
 
 * Move to `ViewComponent` namespace, removing all references to `ActionView`.
 
-    * The gem name is now `view_component`.
-    * ViewComponent previews are now accessed at `/rails/view_components`.
-    * ViewComponents can _only_ be rendered with the instance syntax: `render(MyComponent.new)`. Support for all other syntaxes has been removed.
-    * ActiveModel::Validations have been removed. ViewComponent generators no longer include validations.
-    * In Rails 6.1, no monkey patching is used.
-    * `to_component_class` has been removed.
-    * All gem configuration is now in `config.view_component`.
+  * The gem name is now `view_component`.
+  * ViewComponent previews are now accessed at `/rails/view_components`.
+  * ViewComponents can _only_ be rendered with the instance syntax: `render(MyComponent.new)`. Support for all other syntaxes has been removed.
+  * ActiveModel::Validations have been removed. ViewComponent generators no longer include validations.
+  * In Rails 6.1, no monkey patching is used.
+  * `to_component_class` has been removed.
+  * All gem configuration is now in `config.view_component`.
 
 ## v1.17.0
 
