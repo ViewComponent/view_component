@@ -183,7 +183,7 @@ By default, slots can be rendered once per component. They provide an accessor w
 
 Slots declared with `collection: true` can be rendered multiple times. They provide an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
 
-To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348 and https://github.com/github/view_component/discussions/325.
+To learn more about the design of the Slots API, see [#348](https://github.com/github/view_component/pull/348) and [#325](https://github.com/github/view_component/discussions/325).
 
 ##### Defining Slots
 
@@ -1023,7 +1023,7 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/github/view_component. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct. We recommend reading the [contributing guide](./CONTRIBUTING.md) as well.
+This project is intended to be a safe, welcoming space for collaboration. Contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct. We recommend reading the [contributing guide](./CONTRIBUTING.md) as well.
 
 ## Contributors
 
