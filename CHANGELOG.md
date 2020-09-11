@@ -66,7 +66,7 @@
 
     Fixes:
 
-    ```
+    ```console
     view_component/lib/view_component/slotable.rb:98: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
     view_component/test/app/components/slots_component.rb:18: warning: The called method `initialize' is defined here
     ```
@@ -565,51 +565,51 @@ Note: `actionview-component` is now loaded by requiring `actionview/component`, 
 
 ## v1.3.3
 
-*   Do not raise error when sidecar files that are not templates exist.
+* Do not raise error when sidecar files that are not templates exist.
 
     *Joel Hawksley*
 
 ## v1.3.2
 
-*   Support rendering views from inside component templates.
+* Support rendering views from inside component templates.
 
     *Patrick Sinclair*
 
 ## v1.3.1
 
-*   Fix bug where rendering nested content caused an error.
+* Fix bug where rendering nested content caused an error.
 
     *Joel Hawksley, Aaron Patterson*
 
 ## v1.3.0
 
-*   Components are rendered with enough controller context to support rendering of partials and forms.
+* Components are rendered with enough controller context to support rendering of partials and forms.
 
     *Patrick Sinclair, Joel Hawksley, Aaron Patterson*
 
 ## v1.2.1
 
-*   `actionview-component` is now tested against Ruby 2.3/2.4 and Rails 5.0.0.
+* `actionview-component` is now tested against Ruby 2.3/2.4 and Rails 5.0.0.
 
 ## v1.2.0
 
-*   The `render_component` test helper has been renamed to `render_inline`. `render_component` has been deprecated and will be removed in v2.0.0.
+* The `render_component` test helper has been renamed to `render_inline`. `render_component` has been deprecated and will be removed in v2.0.0.
 
     *Joel Hawksley*
 
-*   Components are now rendered with `render MyComponent, foo: :bar` syntax. The existing `render MyComponent.new(foo: :bar)` syntax has been deprecated and will be removed in v2.0.0.
+* Components are now rendered with `render MyComponent, foo: :bar` syntax. The existing `render MyComponent.new(foo: :bar)` syntax has been deprecated and will be removed in v2.0.0.
 
     *Joel Hawksley*
 
 ## v1.1.0
 
-*   Components now inherit from ActionView::Component::Base
+* Components now inherit from ActionView::Component::Base
 
     *Joel Hawksley*
 
 ## v1.0.1
 
-*   Always recompile component templates outside production.
+* Always recompile component templates outside production.
 
     *Joel Hawksley, John Hawthorn*
 
