@@ -1,6 +1,6 @@
 # master
 
-* Fix uninitialized constant error from with_collection when eager_load is disabled
+* Fix uninitialized constant error from `with_collection` when `eager_load` is disabled.
 
     *Josh Gross*
 
