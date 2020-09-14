@@ -1,6 +1,6 @@
 # master
 
-* Subclassed components now inherit their parent's templates
+* Subclassed components inherit their parent's templates.
     
     * Blake Williams*
 
