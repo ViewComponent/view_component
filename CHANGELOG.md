@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.19.0
+
 * Extend documentation for using Stimulus within sidecar directories.
 
     *Ciprian Redinciuc*
