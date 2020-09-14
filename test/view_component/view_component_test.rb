@@ -645,4 +645,23 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_text("http://assets.example.com")
   end
+
+  def test_inherited_component_inherits_template
+    render_inline(InheritedTemplateComponent.new)
+
+    assert_selector("div", text: "hello,world!")
+  end
+
+  def test_inherited_component_overrides_inherits_template
+    render_inline(InheritedWithOwnTemplateComponent.new)
+
+    assert_selector("div", text: "hello, my own template")
+  end
+
+  def test_inherited_inline_component_inherits_inline_method
+    render_inline(InheritedInlineComponent.new)
+
+    assert_predicate InheritedInlineComponent, :compiled?
+    assert_selector("input[type='text'][name='name']")
+  end
 end
