@@ -2,6 +2,10 @@
 
 ## master
 
+* Extend documentation for using Stimulus within sidecar directories.
+
+    *Ciprian Redinciuc*
+
 * Subclassed components inherit templates from parent.
 
     *Blake Williams*

@@ -1004,6 +1004,29 @@ application.load(
 
 This enables the creation of files such as `app/components/widget_controller.js`, where the controller identifier matches the `data-controller` attribute in the component's HTML template.
 
+When placing a Stimulus controller inside a sidecar directory, be aware that when referencing the controller [each forward slash in a namespaced controller file’s path becomes two dashes in its identifier](
+https://stimulusjs.org/handbook/installing#controller-filenames-map-to-identifiers):
+
+```console
+app/components
+├── ...
+├── example
+|   ├── component.rb
+|   ├── component.css
+|   ├── component.html.erb
+|   └── component_controller.js
+├── ...
+```
+
+`component_controller.js`'s Stimulus identifier becomes: `example--component`:
+
+```erb
+<div data-controller="example--component">
+  <input type="text">
+  <button data-action="click->example--component#greet">Greet</button>
+</div>
+```
+
 ## Frequently Asked Questions
 
 ### Can I use other templating languages besides ERB?
