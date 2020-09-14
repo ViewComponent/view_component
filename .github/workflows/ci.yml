@@ -3,6 +3,14 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: avto-dev/markdown-lint@v1
+      with:
+        config: '.github/lint/markdown.json'
+        args: '**/*.md'
   lint:
     runs-on: ubuntu-latest
     steps:

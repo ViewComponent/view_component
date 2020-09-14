@@ -1,10 +1,13 @@
 # ViewComponent
+
 ViewComponent is a framework for building view components that are reusable, testable & encapsulated, in Ruby on Rails.
 
 ## Design philosophy
+
 ViewComponent is designed to integrate as seamlessly as possible [with Rails](https://rubyonrails.org/doctrine/), with the [least surprise](https://www.artima.com/intv/ruby4.html).
 
 ## Compatibility
+
 ViewComponent is [supported natively](https://edgeguides.rubyonrails.org/layouts_and_rendering.html#rendering-objects) in Rails 6.1, and compatible with Rails 5.0+ via an included [monkey patch](https://github.com/github/view_component/blob/master/lib/view_component/render_monkey_patch.rb).
 
 ViewComponent is tested for compatibility [with combinations of](https://github.com/github/view_component/blob/22e3d4ccce70d8f32c7375e5a5ccc3f70b22a703/.github/workflows/ruby_on_rails.yml#L10-L11) Ruby 2.4+ and Rails 5+.
@@ -96,6 +99,7 @@ bin/rails generate component Example title content --template-engine slim
 A ViewComponent is a Ruby file and corresponding template file with the same base name:
 
 `app/components/test_component.rb`:
+
 ```ruby
 class TestComponent < ViewComponent::Base
   def initialize(title:)
@@ -105,6 +109,7 @@ end
 ```
 
 `app/components/test_component.html.erb`:
+
 ```erb
 <span title="<%= @title %>"><%= content %></span>
 ```
@@ -130,6 +135,7 @@ Content passed to a ViewComponent as a block is captured and assigned to the `co
 ViewComponents can declare additional content areas. For example:
 
 `app/components/modal_component.rb`:
+
 ```ruby
 class ModalComponent < ViewComponent::Base
   with_content_areas :header, :body
@@ -137,6 +143,7 @@ end
 ```
 
 `app/components/modal_component.html.erb`:
+
 ```erb
 <div class="modal">
   <div class="header"><%= header %></div>
@@ -176,7 +183,7 @@ By default, slots can be rendered once per component. They provide an accessor w
 
 Slots declared with `collection: true` can be rendered multiple times. They provide an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
 
-To learn more about the design of the Slots API, see https://github.com/github/view_component/pull/348 and https://github.com/github/view_component/discussions/325.
+To learn more about the design of the Slots API, see [#348](https://github.com/github/view_component/pull/348) and [#325](https://github.com/github/view_component/discussions/325).
 
 ##### Defining Slots
 
@@ -197,6 +204,7 @@ _Note: Slot classes must be subclasses of `ViewComponent::Slot`._
 ##### Example ViewComponent with Slots
 
 `# box_component.rb`
+
 ```ruby
 class BoxComponent < ViewComponent::Base
   include ViewComponent::Slotable
@@ -241,6 +249,7 @@ end
 ```
 
 `# box_component.html.erb`
+
 ```erb
 <div class="Box">
   <% if header %>
@@ -271,6 +280,7 @@ end
 ```
 
 `# index.html.erb`
+
 ```erb
 <%= render(BoxComponent.new) do |component| %>
   <% component.slot(:header, classes: "my-class-name") do %>
@@ -296,6 +306,7 @@ end
 ViewComponents can render without a template file, by defining a `call` method:
 
 `app/components/inline_component.rb`:
+
 ```ruby
 class InlineComponent < ViewComponent::Base
   def call
@@ -330,7 +341,7 @@ ViewComponents supports two options for defining view files.
 
 The simplest option is to place the view next to the Ruby component:
 
-```
+```console
 app/components
 ├── ...
 ├── test_component.rb
@@ -342,7 +353,7 @@ app/components
 
 As an alternative, views and other assets can be placed in a sidecar directory with the same name as the component, which can be useful for organizing views alongside other assets like Javascript and CSS.
 
-```
+```console
 app/components
 ├── ...
 ├── example_component.rb
@@ -351,12 +362,11 @@ app/components
 |   ├── example_component.html.erb
 |   └── example_component.js
 ├── ...
-
 ```
 
 To generate a component with a sidecar directory, use the `--sidecar` flag:
 
-```
+```console
 bin/rails generate component Example title content --sidecar
       invoke  test_unit
       create  test/components/example_component_test.rb
@@ -370,7 +380,7 @@ It's also possible to place the Ruby component file inside the sidecar directory
 
 _Note: Avoid giving your containing folder the same name as your `.rb` file or there will be a conflict between Module and Class definitions_
 
-```
+```console
 app/components
 ├── ...
 ├── example
@@ -397,7 +407,8 @@ Components can implement a `#render?` method to be called after initialization t
 Traditionally, the logic for whether to render a view could go in either the component template:
 
 `app/components/confirm_email_component.html.erb`
-```
+
+```erb
 <% if user.requires_confirmation? %>
   <div class="alert">Please confirm your email address.</div>
 <% end %>
@@ -406,6 +417,7 @@ Traditionally, the logic for whether to render a view could go in either the com
 or the view that renders the component:
 
 `app/views/_banners.html.erb`
+
 ```erb
 <% if current_user.requires_confirmation? %>
   <%= render(ConfirmEmailComponent.new(user: current_user)) %>
@@ -415,6 +427,7 @@ or the view that renders the component:
 Using the `#render?` hook simplifies the view:
 
 `app/components/confirm_email_component.rb`
+
 ```ruby
 class ConfirmEmailComponent < ViewComponent::Base
   def initialize(user:)
@@ -428,13 +441,15 @@ end
 ```
 
 `app/components/confirm_email_component.html.erb`
-```
+
+```erb
 <div class="banner">
   Please confirm your email address.
 </div>
 ```
 
 `app/views/_banners.html.erb`
+
 ```erb
 <%= render(ConfirmEmailComponent.new(user: current_user)) %>
 ```
@@ -446,6 +461,7 @@ _To assert that a component has not been rendered, use `refute_component_rendere
 Components can define a `before_render` method to be called before a component is rendered, when `helpers` is able to be used:
 
 `app/components/confirm_email_component.rb`
+
 ```ruby
 class MyComponent < ViewComponent::Base
   def before_render
@@ -459,11 +475,13 @@ end
 Use `with_collection` to render a ViewComponent with a collection:
 
 `app/view/products/index.html.erb`
+
 ``` erb
 <%= render(ProductComponent.with_collection(@products)) %>
 ```
 
 `app/components/product_component.rb`
+
 ``` ruby
 class ProductComponent < ViewComponent::Base
   def initialize(product:)
@@ -479,6 +497,7 @@ end
 Use `with_collection_parameter` to change the name of the collection parameter:
 
 `app/components/product_component.rb`
+
 ``` ruby
 class ProductComponent < ViewComponent::Base
   with_collection_parameter :item
@@ -494,11 +513,13 @@ end
 Additional arguments besides the collection are passed to each component instance:
 
 `app/view/products/index.html.erb`
+
 ``` erb
 <%= render(ProductComponent.with_collection(@products, notice: "hi")) %>
 ```
 
 `app/components/product_component.rb`
+
 ``` ruby
 class ProductComponent < ViewComponent::Base
   with_collection_parameter :item
@@ -511,6 +532,7 @@ end
 ```
 
 `app/components/product_component.html.erb`
+
 ``` erb
 <li>
   <h2><%= @item.name %></h2>
@@ -523,6 +545,7 @@ end
 ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
 
 `app/components/product_component.rb`
+
 ``` ruby
 class ProductComponent < ViewComponent::Base
   def initialize(product:, product_counter:)
@@ -533,6 +556,7 @@ end
 ```
 
 `app/components/product_component.html.erb`
+
 ``` erb
 <li>
   <%= @counter %> <%= @product.name %>
@@ -581,7 +605,7 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
-### Testing
+### Writing tests
 
 Unit test components directly, using the `render_inline` test helper, asserting against the rendered output.
 
@@ -649,9 +673,11 @@ end
 ```
 
 ### Previewing Components
+
 `ViewComponent::Preview`, like `ActionMailer::Preview`, provides a way to preview components in isolation:
 
 `test/components/previews/test_component_preview.rb`
+
 ```ruby
 class TestComponentPreview < ViewComponent::Preview
   def with_default_title
@@ -679,6 +705,7 @@ and <http://localhost:3000/rails/view_components/test_component/with_content_blo
 It's also possible to set dynamic values from the params by setting them as arguments:
 
 `test/components/previews/test_component_preview.rb`
+
 ```ruby
 class TestComponentPreview < ViewComponent::Preview
   def with_dynamic_title(title: "Test component default")
@@ -696,6 +723,7 @@ and [`content_tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHe
 Previews use the application layout by default, but can use a specific layout with the `layout` option:
 
 `test/components/previews/test_component_preview.rb`
+
 ```ruby
 class TestComponentPreview < ViewComponent::Preview
   layout "admin"
@@ -707,6 +735,7 @@ end
 You can also set a custom layout to be used by default for previews as well as the preview index pages via the `default_preview_layout` configuration option:
 
 `config/application.rb`
+
 ```ruby
 # Set the default layout to app/views/layouts/component_preview.html.erb
 config.view_component.default_preview_layout = "component_preview"
@@ -715,6 +744,7 @@ config.view_component.default_preview_layout = "component_preview"
 Preview classes live in `test/components/previews`, which can be configured using the `preview_paths` option:
 
 `config/application.rb`
+
 ```ruby
 config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
 ```
@@ -722,6 +752,7 @@ config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
 Previews are served from <http://localhost:3000/rails/view_components> by default. To use a different endpoint, set the `preview_route` option:
 
 `config/application.rb`
+
 ```ruby
 config.view_component.preview_route = "/previews"
 ```
@@ -733,6 +764,7 @@ This example will make the previews available from <http://localhost:3000/previe
 Given a preview `test/components/previews/cell_component_preview.rb`, template files can be defined at `test/components/previews/cell_component_preview/`:
 
 `test/components/previews/cell_component_preview.rb`
+
 ```ruby
 class CellComponentPreview < ViewComponent::Preview
   def default
@@ -741,6 +773,7 @@ end
 ```
 
 `test/components/previews/cell_component_preview/default.html.erb`
+
 ```erb
 <table class="table">
   <tbody>
@@ -755,6 +788,7 @@ To use a different location for preview templates, pass the `template` argument:
 (the path should be relative to `config.view_component.preview_path`):
 
 `test/components/previews/cell_component_preview.rb`
+
 ```ruby
 class CellComponentPreview < ViewComponent::Preview
   def default
@@ -766,6 +800,7 @@ end
 Values from `params` can be accessed through `locals`:
 
 `test/components/previews/cell_component_preview.rb`
+
 ```ruby
 class CellComponentPreview < ViewComponent::Preview
   def default(title: "Default title", subtitle: "A subtitle")
@@ -784,6 +819,7 @@ Which enables passing in a value with <http://localhost:3000/rails/components/ce
 Component tests and previews assume the existence of an `ApplicationController` class, which be can be configured using the `test_controller` option:
 
 `config/application.rb`
+
 ```ruby
 config.view_component.test_controller = "BaseController"
 ```
@@ -793,6 +829,7 @@ config.view_component.test_controller = "BaseController"
 To use RSpec, add the following:
 
 `spec/rails_helper.rb`
+
 ```ruby
 require "view_component/test_helpers"
 
@@ -806,6 +843,7 @@ Specs created by the generator have access to test helpers like `render_inline`.
 To use component previews:
 
 `config/application.rb`
+
 ```ruby
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 ```
@@ -818,7 +856,7 @@ In order to [avoid conflicts](https://github.com/github/view_component/issues/28
 
 With the monkey patch disabled, use `render_component` (or  `render_component_to_string`) instead:
 
-```
+```erb
 <%= render_component Component.new(message: "bar") %>
 ```
 
@@ -856,6 +894,7 @@ One approach is to use Web Components, which contain all Javascript functionalit
 For example:
 
 `app/components/comment_component.rb`
+
 ```ruby
 class CommentComponent < ViewComponent::Base
   def initialize(comment:)
@@ -885,6 +924,7 @@ end
 ```
 
 `app/components/comment_component.html.erb`
+
 ```erb
 <my-comment comment-id="<%= comment.id %>">
   <time slot="posted" datetime="<%= comment.created_at.iso8601 %>"><%= comment.created_at.strftime("%b %-d") %></time>
@@ -898,6 +938,7 @@ end
 ```
 
 `app/components/comment_component.js`
+
 ```js
 class Comment extends HTMLElement {
   styles() {
@@ -982,7 +1023,7 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/github/view_component. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct. We recommend reading the [contributing guide](./CONTRIBUTING.md) as well.
+This project is intended to be a safe, welcoming space for collaboration. Contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct. We recommend reading the [contributing guide](./CONTRIBUTING.md) as well.
 
 ## Contributors
 
