@@ -3,7 +3,7 @@
 ## master
 
 * Subclassed components inherit their parent's templates.
-    
+
     * Blake Williams*
 
 * Fix uninitialized constant error from `with_collection` when `eager_load` is disabled.
