@@ -2,7 +2,7 @@
 
 ## master
 
-* Subclassed components inherit their parent's templates.
+* Subclassed components inherit templates from parent.
 
     *Blake Williams*
 
