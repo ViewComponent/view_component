@@ -2,6 +2,10 @@
 
 ## master
 
+* Extend documentation for using Stimulus within sidecar directories.
+
+    *Ciprian Redinciuc*
+
 * Fix uninitialized constant error from `with_collection` when `eager_load` is disabled.
 
     *Josh Gross*
