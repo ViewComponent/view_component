@@ -25,4 +25,20 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       end
     end
   end
+
+  def test_calling_helpers_outside_render_raises
+    component = ViewComponent::Base.new
+    err = assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+      component.helpers
+    end
+    assert_equal "`helpers` can only be called at render time.", err.message
+  end
+
+  def test_calling_controller_outside_render_raises
+    component = ViewComponent::Base.new
+    err = assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+      component.controller
+    end
+    assert_equal "`controller` can only be called at render time.", err.message
+  end
 end

@@ -12,6 +12,8 @@ module ViewComponent
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
 
+    ViewContextCalledBeforeRenderError = Class.new(StandardError)
+
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -108,11 +110,13 @@ module ViewComponent
     end
 
     def controller
+      raise ViewContextCalledBeforeRenderError, "`controller` can only be called at render time." if view_context.nil?
       @controller ||= view_context.controller
     end
 
     # Provides a proxy to access helper methods from the context of the current controller
     def helpers
+      raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
       @helpers ||= controller.view_context
     end
 
