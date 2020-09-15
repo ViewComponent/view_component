@@ -2,6 +2,12 @@
 
 ## master
 
+## 2.19.1
+
+* Check if `Rails.application` is loaded.
+
+    *Gleydson Tavares*
+
 ## 2.19.0
 
 * Extend documentation for using Stimulus within sidecar directories.
@@ -21,13 +27,6 @@
 * Raise an error if controller or view context is accessed during initialize as they are only available in render.
 
     *Julian Nadeau*
-
-# 2.18.3
-
-* Check if `Rails.application` is loaded.
-
-    *Gleydson Tavares*
-# 2.18.2
 
 * Collate test coverage across CI builds, ensuring 100% test coverage.
 
