@@ -1007,7 +1007,6 @@ This enables the creation of files such as `app/components/widget_controller.js`
 After configuring the webpack asset packager to automatically load Stimulus controller files from the `components` directory add its path to webpack's lookup paths.  This will allow webpack to compile the view components Stimulus controllers into browser-compatible JavaScript.
 To do this, add the `app/components` folder to `resolved_paths` in `config/webpacker.yml`:
 
-`config/webpacker.yml`
 ```yml
   # Additional paths webpack should lookup modules
   # ['app/assets', 'engine/foo/app/assets']
