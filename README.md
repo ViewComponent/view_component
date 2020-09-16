@@ -1004,6 +1004,19 @@ application.load(
 
 This enables the creation of files such as `app/components/widget_controller.js`, where the controller identifier matches the `data-controller` attribute in the component's HTML template.
 
+After configuring the webpack asset packager to automatically load Stimulus controller files from the `components` directory add it path to webpack's lookup paths. 
+
+Babel will then compile the view components Stimulus controllers into browser-compatible JavaScript.
+To do this, add the `app/components` folder to `resolved_paths` in `config/webpacker.yml`:
+
+`config/webpacker.yml`
+```yml
+  # Additional paths webpack should lookup modules
+  # ['app/assets', 'engine/foo/app/assets']
+  resolved_paths: ["app/components"]
+
+```
+
 When placing a Stimulus controller inside a sidecar directory, be aware that when referencing the controller [each forward slash in a namespaced controller file’s path becomes two dashes in its identifier](
 https://stimulusjs.org/handbook/installing#controller-filenames-map-to-identifiers):
 
