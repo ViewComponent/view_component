@@ -663,5 +663,10 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_predicate InheritedInlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
+
+  def test_renders_ivar_named_variant
+    render_inline(VariantIvarComponent.new(variant: "foo"))
+
+    assert_text("foo")
   end
 end
