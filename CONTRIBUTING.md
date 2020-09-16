@@ -35,8 +35,7 @@ If you are the current maintainer of this gem:
 1. Add version heading to `CHANGELOG.md`.
 1. Make a PR to github/view_component.
 1. Merge github/view_component PR
+1. Create a GitHub [release](https://github.com/github/view_component/releases/new) with the pushed tag and populate it with a list of the changes from `CHANGELOG.md`.
 1. Get latest changes from default branch: `git pull origin master`
 1. Build a local gem: `gem build view_component.gemspec`
-1. Tag and push: `git tag vx.xx.xx; git push --tags`
-1. Create a GitHub [release](https://github.com/github/view_component/releases/new) with the pushed tag and populate it with a list of the changes from `CHANGELOG.md`.
 1. Push to rubygems.org -- `gem push view_component-VERSION.gem`
