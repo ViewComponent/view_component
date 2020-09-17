@@ -1004,7 +1004,7 @@ application.load(
 
 This enables the creation of files such as `app/components/widget_controller.js`, where the controller identifier matches the `data-controller` attribute in the component's HTML template.
 
-After configuring Webpack to load Stimulus controller files from the `components` directory, add the path to to `resolved_paths` in `config/webpacker.yml`:
+After configuring Webpack to load Stimulus controller files from the `components` directory, add the path to `resolved_paths` in `config/webpacker.yml`:
 
 ```yml
   resolved_paths: ["app/components"]
