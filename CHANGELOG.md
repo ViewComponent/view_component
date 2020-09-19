@@ -2,6 +2,10 @@
 
 ## master
 
+* Check if `Rails.application` is loaded.
+
+    *Gleydson Tavares*
+
 * Add documentation for webpack configuration when using Stimulus controllers.
 
     *Ciprian Redinciuc*

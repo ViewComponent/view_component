@@ -187,8 +187,9 @@ module ViewComponent
         # `compile` defines
         compile
 
-        # If we're in Rails, add application url_helpers to the component context
-        if defined?(Rails)
+        # If Rails application is loaded, add application url_helpers to the component context
+        # we need to check this to use this gem as a dependency
+        if defined?(Rails) && Rails.application
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
         end
 
