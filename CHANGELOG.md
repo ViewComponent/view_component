@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.19.1
+
 * Check if `Rails.application` is loaded.
 
     *Gleydson Tavares*
