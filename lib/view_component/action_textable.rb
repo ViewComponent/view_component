@@ -2,7 +2,7 @@
 
 module ViewComponent
   module ActionTextable
-    if require("action_text")
+    if Object.const_defined?("ActionText") && Object.const_defined?("ActionText::Engine")
       require "action_text/engine"
       include ActionText::Engine.helpers
 
