@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'sqlite3'
 
 begin
@@ -15,5 +16,4 @@ rescue SQLite3::Exception => e
   puts e
 ensure
   db.close if db
-
 end
