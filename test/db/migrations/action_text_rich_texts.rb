@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'sqlite3'
+require "sqlite3"
 
 begin
   db = SQLite3::Database.open "../test.sqlite3"

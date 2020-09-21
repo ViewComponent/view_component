@@ -667,4 +667,3 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
 end
-
