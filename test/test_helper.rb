@@ -2,7 +2,7 @@
 require "simplecov"
 require "simplecov-console"
 
-if ENV["CI"]
+if ENV["MEASURE_COVERAGE"]
   SimpleCov.start do
     command_name "rails#{ENV["RAILS_VERSION"]}-ruby#{ENV["RUBY_VERSION"]}" if ENV["RUBY_VERSION"]
 
