@@ -184,8 +184,13 @@ module ViewComponent
       end
 
       def inherited(child)
-        # If we're in Rails, add application url_helpers to the component context
-        if defined?(Rails)
+        # Compile so child will inherit compiled `call_*` template methods that
+        # `compile` defines
+        compile
+
+        # If Rails application is loaded, add application url_helpers to the component context
+        # we need to check this to use this gem as a dependency
+        if defined?(Rails) && Rails.application
           child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
         end
 
