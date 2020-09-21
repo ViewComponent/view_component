@@ -62,6 +62,7 @@ jobs:
         bundle update
         bundle exec rake
       env:
+        CI: true
         RAILS_VERSION: ${{ matrix.rails_version }}
     - name: Upload coverage results
       uses: actions/upload-artifact@master
