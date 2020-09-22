@@ -3,21 +3,21 @@
 require "test_helper"
 
 class DefaultPreviewLayoutIntegrationTest < ActionDispatch::IntegrationTest
-  test "preview index renders custom application layout if configured" do
+  def test_preview_index_renders_custom_application_layout_if_configured
     with_default_preview_layout("admin") do
       get "/rails/view_components"
       assert_select "title", "ViewComponent - Admin - Test"
     end
   end
 
-  test "preview index of a component renders custom application layout if configured" do
+  def test_preview_index_of_a_component_renders_custom_application_layout_if_configured
     with_default_preview_layout("admin") do
       get "/rails/view_components/preview_component"
       assert_select "title", "ViewComponent - Admin - Test"
     end
   end
 
-  test "component preview renders custom application layout if configured" do
+  def test_component_preview_renders_custom_application_layout_if_configured
     with_default_preview_layout("admin") do
       get "/rails/view_components/preview_component/default"
       assert_select "title", "ViewComponent - Admin - Test"
@@ -25,7 +25,7 @@ class DefaultPreviewLayoutIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "component preview renders standard Rails layout if configured false" do
+  def test_component_preview_renders_standard_rails_layout_if_configured_false
     with_default_preview_layout(false) do
       get "/rails/view_components/preview_component/default"
 
@@ -34,7 +34,7 @@ class DefaultPreviewLayoutIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "preview renders without layout even if default layout is configured" do
+  def test_preview_renders_without_layout_even_if_default_layout_is_configured
     with_default_preview_layout("admin") do
       get "/rails/view_components/no_layout/default"
       assert_select("div", "hello,world!")
