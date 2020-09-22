@@ -627,7 +627,7 @@ Capybara matchers are available if the gem is installed:
 require "view_component/test_case"
 
 class MyComponentTest < ViewComponent::TestCase
-  test "render component" do
+  def test_render_component
     render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
 
     assert_selector("span[title='my title']", text: "Hello, World!")
@@ -638,7 +638,7 @@ end
 In the absence of `capybara`, assert against the return value of `render_inline`, which is an instance of `Nokogiri::HTML::DocumentFragment`:
 
 ```ruby
-test "render component" do
+def test_render_component
   result = render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
 
   assert_includes result.css("span[title='my title']").to_html, "Hello, World!"
@@ -648,7 +648,7 @@ end
 Alternatively, assert against the raw output of the component, which is exposed as `rendered_component`:
 
 ```ruby
-test "render component" do
+def test_render_component
   render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
 
   assert_includes rendered_component, "Hello, World!"
@@ -658,7 +658,7 @@ end
 To test components that use `with_content_areas`:
 
 ```ruby
-test "renders content_areas template with content " do
+def test_renders_content_areas_template_with_content
   render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
     component.with(:title, "Hello!")
     component.with(:body) { "Have a nice day." }
@@ -675,7 +675,7 @@ end
 Use the `with_variant` helper to test specific variants:
 
 ```ruby
-test "render component for tablet" do
+def test_render_component_for_tablet
   with_variant :tablet do
     render_inline(TestComponent.new(title: "my title")) { "Hello, tablets!" }
 
