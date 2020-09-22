@@ -1004,6 +1004,12 @@ application.load(
 
 This enables the creation of files such as `app/components/widget_controller.js`, where the controller identifier matches the `data-controller` attribute in the component's HTML template.
 
+After configuring Webpack to load Stimulus controller files from the `components` directory, add the path to `resolved_paths` in `config/webpacker.yml`:
+
+```yml
+  resolved_paths: ["app/components"]
+```
+
 When placing a Stimulus controller inside a sidecar directory, be aware that when referencing the controller [each forward slash in a namespaced controller file’s path becomes two dashes in its identifier](
 https://stimulusjs.org/handbook/installing#controller-filenames-map-to-identifiers):
 
@@ -1109,10 +1115,10 @@ ViewComponent is built by:
 |@johannesengl|@czj|@mrrooijen|@bradparker|@mattbrictson|
 |Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|San Francisco|
 
-|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|
-|:---:|:---:|
-|@mixergtz|@jules2689|
-|Medellin, Colombia|Toronto, Canada|
+|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|
+|:---:|:---:|:---:|
+|@mixergtz|@jules2689|@g13ydson|
+|Medellin, Colombia|Toronto, Canada|João Pessoa, Brazil|
 
 ## License
 

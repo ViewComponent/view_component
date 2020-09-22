@@ -2,6 +2,16 @@
 
 ## master
 
+## 2.19.1
+
+* Check if `Rails.application` is loaded.
+
+    *Gleydson Tavares*
+
+* Add documentation for webpack configuration when using Stimulus controllers.
+
+    *Ciprian Redinciuc*
+
 ## 2.19.0
 
 * Extend documentation for using Stimulus within sidecar directories.
