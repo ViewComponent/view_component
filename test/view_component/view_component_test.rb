@@ -664,4 +664,16 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_predicate InheritedInlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
+
+  def test_does_not_render_if_before_render_returns_false
+    render_inline(BeforeConditionalRenderComponent.new(should_render: false))
+
+    refute_component_rendered
+  end
+
+  def test_renders_if_before_render_returns_true
+    render_inline(BeforeConditionalRenderComponent.new(should_render: true))
+
+    assert_text("component was rendered")
+  end
 end

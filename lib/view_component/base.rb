@@ -11,8 +11,11 @@ module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
+    include ActiveSupport::Callbacks
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
+
+    define_callbacks :render
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -77,7 +80,11 @@ module ViewComponent
       before_render
 
       if render?
-        send(self.class.call_method_name(@variant))
+        content = run_callbacks :render do
+          send(self.class.call_method_name(@variant))
+        end
+
+        content || ""
       else
         ""
       end
@@ -171,6 +178,10 @@ module ViewComponent
 
     class << self
       attr_accessor :source_location, :virtual_path
+
+      def before_render(&block)
+        set_callback :render, :before, block
+      end
 
       # Render a component collection.
       def with_collection(collection, **args)
