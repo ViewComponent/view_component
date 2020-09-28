@@ -179,8 +179,16 @@ module ViewComponent
     class << self
       attr_accessor :source_location, :virtual_path
 
-      def before_render(&block)
-        set_callback :render, :before, block
+      def before_render(method_name = nil, &block)
+        if block_given?
+          set_callback :render, :before, block
+        else
+          set_callback :render, :before, method_name
+        end
+      end
+
+      def skip_before_render(method_name)
+        skip_callback :render, method_name
       end
 
       # Render a component collection.
