@@ -4,7 +4,7 @@ class MyPreviewController < ViewComponentsController
     if user_has_access?
       super
     else
-      raise ActionController::Forbidden
+      head 403
     end
   end
 
