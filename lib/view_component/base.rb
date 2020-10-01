@@ -160,12 +160,6 @@ module ViewComponent
 
     attr_reader :content, :view_context
 
-    # The parent controller used for previewing components.
-    # Defaults to Rails::ApplicationController. This should be set early
-    # in the initialization process and should be set to a string.
-    mattr_accessor :preview_base_controller
-    @@preview_base_controller = "Rails::ApplicationController"
-
     # The controller used for testing components.
     # Defaults to ApplicationController. This should be set early
     # in the initialization process and should be set to a string.

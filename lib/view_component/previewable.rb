@@ -41,6 +41,16 @@ module ViewComponent # :nodoc:
       mattr_accessor :preview_route, instance_writer: false do
         "/rails/view_components"
       end
+
+      # Set the parent controller used for previewing components through app configuration:
+      #
+      #     config.view_component.preview_base_controller = "MyPreviewController"
+      #
+      # Defaults to +Rails::ApplicationController+
+      #
+      mattr_accessor :preview_base_controller, instance_writer: false do
+        "Rails::ApplicationController"
+      end
     end
   end
 end
