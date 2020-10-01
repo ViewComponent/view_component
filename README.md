@@ -833,7 +833,7 @@ Previews can be extended to allow users to add authentication, authorization, be
 `config/application.rb`
 
 ```ruby
-config.view_component.test_controller = "MyPreviewController"
+config.view_component.preview_base_controller = "MyPreviewController"
 ```
 
 #### Configuring TestController
