@@ -30,12 +30,12 @@ def with_preview_route(new_value)
   app.reloader.reload!
 end
 
-def with_preview_base_controller(new_value)
-  old_value = Rails.application.config.view_component.preview_base_controller
-  Rails.application.config.view_component.preview_base_controller = new_value
+def with_preview_controller(new_value)
+  old_value = Rails.application.config.view_component.preview_controller
+  Rails.application.config.view_component.preview_controller = new_value
   app.reloader.reload!
   yield
-  Rails.application.config.view_component.preview_base_controller = old_value
+  Rails.application.config.view_component.preview_controller = old_value
   app.reloader.reload!
 end
 

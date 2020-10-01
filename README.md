@@ -828,12 +828,12 @@ Which enables passing in a value with <http://localhost:3000/rails/components/ce
 
 #### Configuring preview controller
 
-Previews can be extended to allow users to add authentication, authorization, before actions, or anything that the end user would need to meet their needs using the `preview_base_controller` option:
+Previews can be extended to allow users to add authentication, authorization, before actions, or anything that the end user would need to meet their needs using the `preview_controller` option:
 
 `config/application.rb`
 
 ```ruby
-config.view_component.preview_base_controller = "MyPreviewController"
+config.view_component.preview_controller = "MyPreviewController"
 ```
 
 #### Configuring TestController

@@ -14,6 +14,7 @@ module ViewComponent
       options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
       options.show_previews = Rails.env.development? if options.show_previews.nil?
       options.preview_route ||= ViewComponent::Base.preview_route
+      options.preview_controller ||= ViewComponent::Base.preview_controller
 
       if options.show_previews
         options.preview_paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root)
@@ -87,9 +88,11 @@ module ViewComponent
       options = app.config.view_component
 
       if options.show_previews
+        preview_controller = options.preview_controller.sub(/Controller$/, "").underscore
+
         app.routes.prepend do
-          get options.preview_route, to: "view_components#index", as: :preview_view_components, internal: true
-          get "#{options.preview_route}/*path", to: "view_components#previews", as: :preview_view_component, internal: true
+          get options.preview_route, to: "#{preview_controller}#index", as: :preview_view_components, internal: true
+          get "#{options.preview_route}/*path", to: "#{preview_controller}#previews", as: :preview_view_component, internal: true
         end
       end
 
