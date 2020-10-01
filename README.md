@@ -488,13 +488,13 @@ Use `with_collection` to render a ViewComponent with a collection:
 
 `app/view/products/index.html.erb`
 
-``` erb
+```erb
 <%= render(ProductComponent.with_collection(@products)) %>
 ```
 
 `app/components/product_component.rb`
 
-``` ruby
+```ruby
 class ProductComponent < ViewComponent::Base
   def initialize(product:)
     @product = product
@@ -510,7 +510,7 @@ Use `with_collection_parameter` to change the name of the collection parameter:
 
 `app/components/product_component.rb`
 
-``` ruby
+```ruby
 class ProductComponent < ViewComponent::Base
   with_collection_parameter :item
 
@@ -526,13 +526,13 @@ Additional arguments besides the collection are passed to each component instanc
 
 `app/view/products/index.html.erb`
 
-``` erb
+```erb
 <%= render(ProductComponent.with_collection(@products, notice: "hi")) %>
 ```
 
 `app/components/product_component.rb`
 
-``` ruby
+```ruby
 class ProductComponent < ViewComponent::Base
   with_collection_parameter :item
 
@@ -545,7 +545,7 @@ end
 
 `app/components/product_component.html.erb`
 
-``` erb
+```erb
 <li>
   <h2><%= @item.name %></h2>
   <span><%= @notice %></span>
@@ -558,7 +558,7 @@ ViewComponent defines a counter variable matching the parameter name above, foll
 
 `app/components/product_component.rb`
 
-``` ruby
+```ruby
 class ProductComponent < ViewComponent::Base
   def initialize(product:, product_counter:)
     @product = product
@@ -569,7 +569,7 @@ end
 
 `app/components/product_component.html.erb`
 
-``` erb
+```erb
 <li>
   <%= @counter %> <%= @product.name %>
 </li>
@@ -826,6 +826,16 @@ end
 
 Which enables passing in a value with <http://localhost:3000/rails/components/cell_component/default?title=Custom+title&subtitle=Another+subtitle>.
 
+#### Configuring preview controller
+
+Previews can be extended to allow users to add authentication, authorization, before actions, or anything that the end user would need to meet their needs using the `preview_base_controller` option:
+
+`config/application.rb`
+
+```ruby
+config.view_component.test_controller = "MyPreviewController"
+```
+
 #### Configuring TestController
 
 Component tests and previews assume the existence of an `ApplicationController` class, which be can be configured using the `test_controller` option:
@@ -866,7 +876,7 @@ In order to [avoid conflicts](https://github.com/github/view_component/issues/28
 
 `config.view_component.render_monkey_patch_enabled = false # defaults to true`
 
-With the monkey patch disabled, use `render_component` (or  `render_component_to_string`) instead:
+With the monkey patch disabled, use `render_component` (or `render_component_to_string`) instead:
 
 ```erb
 <%= render_component Component.new(message: "bar") %>
@@ -882,17 +892,17 @@ To use the Webpacker gem to compile sidecar assets located in `app/components`:
 2. In the Webpack entry file (often `app/javascript/packs/application.js`), add an import statement to a helper file, and in the helper file, import the components' Javascript:
 
 ```js
-import "../components"
+import "../components";
 ```
 
 Then, in `app/javascript/components.js`, add:
 
 ```js
 function importAll(r) {
-  r.keys().forEach(r)
+  r.keys().forEach(r);
 }
 
-importAll(require.context("../components", true, /_component.js$/))
+importAll(require.context("../components", true, /_component.js$/));
 ```
 
 Any file with the `_component.js` suffix (such as `app/components/widget_component.js`) will be compiled into the Webpack bundle. If that file itself imports another file, for example `app/components/widget_component.css`, it will also be compiled and bundled into Webpack's output stylesheet if Webpack is being used for styles.
@@ -964,12 +974,12 @@ class Comment extends HTMLElement {
       }
       .commenter { font-weight: bold; }
       .body { … }
-    `
+    `;
   }
 
   constructor() {
-    super()
-    const shadow = this.attachShadow({mode: 'open'});
+    super();
+    const shadow = this.attachShadow({ mode: "open" });
     shadow.innerHTML = `
       <style>
         ${this.styles()}
@@ -981,10 +991,10 @@ class Comment extends HTMLElement {
       <div class="body">
         <slot name="body"></slot>
       </div>
-    `
+    `;
   }
 }
-customElements.define('my-comment', Comment)
+customElements.define("my-comment", Comment);
 ```
 
 ##### Stimulus
@@ -992,14 +1002,18 @@ customElements.define('my-comment', Comment)
 In Stimulus, create a 1:1 mapping between a Stimulus controller and a component. In order to load in Stimulus controllers from the `app/components` tree, amend the Stimulus boot code in `app/javascript/packs/application.js`:
 
 ```js
-const application = Application.start()
-const context = require.context("controllers", true, /.js$/)
-const context_components = require.context("../../components", true, /_controller.js$/)
+const application = Application.start();
+const context = require.context("controllers", true, /.js$/);
+const context_components = require.context(
+  "../../components",
+  true,
+  /_controller.js$/
+);
 application.load(
   definitionsFromContext(context).concat(
     definitionsFromContext(context_components)
   )
-)
+);
 ```
 
 This enables the creation of files such as `app/components/widget_controller.js`, where the controller identifier matches the `data-controller` attribute in the component's HTML template.
@@ -1007,11 +1021,10 @@ This enables the creation of files such as `app/components/widget_controller.js`
 After configuring Webpack to load Stimulus controller files from the `components` directory, add the path to `resolved_paths` in `config/webpacker.yml`:
 
 ```yml
-  resolved_paths: ["app/components"]
+resolved_paths: ["app/components"]
 ```
 
-When placing a Stimulus controller inside a sidecar directory, be aware that when referencing the controller [each forward slash in a namespaced controller file’s path becomes two dashes in its identifier](
-https://stimulusjs.org/handbook/installing#controller-filenames-map-to-identifiers):
+When placing a Stimulus controller inside a sidecar directory, be aware that when referencing the controller [each forward slash in a namespaced controller file’s path becomes two dashes in its identifier](https://stimulusjs.org/handbook/installing#controller-filenames-map-to-identifiers):
 
 ```console
 app/components
@@ -1070,55 +1083,55 @@ This project is intended to be a safe, welcoming space for collaboration. Contri
 
 ViewComponent is built by:
 
-|<img src="https://avatars.githubusercontent.com/joelhawksley?s=256" alt="joelhawksley" width="128" />|<img src="https://avatars.githubusercontent.com/tenderlove?s=256" alt="tenderlove" width="128" />|<img src="https://avatars.githubusercontent.com/jonspalmer?s=256" alt="jonspalmer" width="128" />|<img src="https://avatars.githubusercontent.com/juanmanuelramallo?s=256" alt="juanmanuelramallo" width="128" />|<img src="https://avatars.githubusercontent.com/vinistock?s=256" alt="vinistock" width="128" />|
-|:---:|:---:|:---:|:---:|:---:|
-|@joelhawksley|@tenderlove|@jonspalmer|@juanmanuelramallo|@vinistock|
-|Denver|Seattle|Boston||Toronto|
+| <img src="https://avatars.githubusercontent.com/joelhawksley?s=256" alt="joelhawksley" width="128" /> | <img src="https://avatars.githubusercontent.com/tenderlove?s=256" alt="tenderlove" width="128" /> | <img src="https://avatars.githubusercontent.com/jonspalmer?s=256" alt="jonspalmer" width="128" /> | <img src="https://avatars.githubusercontent.com/juanmanuelramallo?s=256" alt="juanmanuelramallo" width="128" /> | <img src="https://avatars.githubusercontent.com/vinistock?s=256" alt="vinistock" width="128" /> |
+| :---------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: |
+|                                             @joelhawksley                                             |                                            @tenderlove                                            |                                            @jonspalmer                                            |                                               @juanmanuelramallo                                                |                                           @vinistock                                            |
+|                                                Denver                                                 |                                              Seattle                                              |                                              Boston                                               |                                                                                                                 |                                             Toronto                                             |
 
-|<img src="https://avatars.githubusercontent.com/metade?s=256" alt="metade" width="128" />|<img src="https://avatars.githubusercontent.com/asgerb?s=256" alt="asgerb" width="128" />|<img src="https://avatars.githubusercontent.com/xronos-i-am?s=256" alt="xronos-i-am" width="128" />|<img src="https://avatars.githubusercontent.com/dylnclrk?s=256" alt="dylnclrk" width="128" />|<img src="https://avatars.githubusercontent.com/kaspermeyer?s=256" alt="kaspermeyer" width="128" />|
-|:---:|:---:|:---:|:---:|:---:|
-|@metade|@asgerb|@xronos-i-am|@dylnclrk|@kaspermeyer|
-|London|Copenhagen|Russia, Kirov|Berkeley, CA|Denmark|
+| <img src="https://avatars.githubusercontent.com/metade?s=256" alt="metade" width="128" /> | <img src="https://avatars.githubusercontent.com/asgerb?s=256" alt="asgerb" width="128" /> | <img src="https://avatars.githubusercontent.com/xronos-i-am?s=256" alt="xronos-i-am" width="128" /> | <img src="https://avatars.githubusercontent.com/dylnclrk?s=256" alt="dylnclrk" width="128" /> | <img src="https://avatars.githubusercontent.com/kaspermeyer?s=256" alt="kaspermeyer" width="128" /> |
+| :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
+|                                          @metade                                          |                                          @asgerb                                          |                                            @xronos-i-am                                             |                                           @dylnclrk                                           |                                            @kaspermeyer                                             |
+|                                          London                                           |                                        Copenhagen                                         |                                            Russia, Kirov                                            |                                         Berkeley, CA                                          |                                               Denmark                                               |
 
-|<img src="https://avatars.githubusercontent.com/rdavid1099?s=256" alt="rdavid1099" width="128" />|<img src="https://avatars.githubusercontent.com/kylefox?s=256" alt="kylefox" width="128" />|<img src="https://avatars.githubusercontent.com/traels?s=256" alt="traels" width="128" />|<img src="https://avatars.githubusercontent.com/rainerborene?s=256" alt="rainerborene" width="128" />|<img src="https://avatars.githubusercontent.com/jcoyne?s=256" alt="jcoyne" width="128" />|
-|:---:|:---:|:---:|:---:|:---:|
-|@rdavid1099|@kylefox|@traels|@rainerborene|@jcoyne|
-|Los Angeles|Edmonton|Odense, Denmark|Brazil|Minneapolis|
+| <img src="https://avatars.githubusercontent.com/rdavid1099?s=256" alt="rdavid1099" width="128" /> | <img src="https://avatars.githubusercontent.com/kylefox?s=256" alt="kylefox" width="128" /> | <img src="https://avatars.githubusercontent.com/traels?s=256" alt="traels" width="128" /> | <img src="https://avatars.githubusercontent.com/rainerborene?s=256" alt="rainerborene" width="128" /> | <img src="https://avatars.githubusercontent.com/jcoyne?s=256" alt="jcoyne" width="128" /> |
+| :-----------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
+|                                            @rdavid1099                                            |                                          @kylefox                                           |                                          @traels                                          |                                             @rainerborene                                             |                                          @jcoyne                                          |
+|                                            Los Angeles                                            |                                          Edmonton                                           |                                      Odense, Denmark                                      |                                                Brazil                                                 |                                        Minneapolis                                        |
 
-|<img src="https://avatars.githubusercontent.com/elia?s=256" alt="elia" width="128" />|<img src="https://avatars.githubusercontent.com/cesariouy?s=256" alt="cesariouy" width="128" />|<img src="https://avatars.githubusercontent.com/spdawson?s=256" alt="spdawson" width="128" />|<img src="https://avatars.githubusercontent.com/rmacklin?s=256" alt="rmacklin" width="128" />|<img src="https://avatars.githubusercontent.com/michaelem?s=256" alt="michaelem" width="128" />|
-|:---:|:---:|:---:|:---:|:---:|
-|@elia|@cesariouy|@spdawson|@rmacklin|@michaelem|
-|Milan||United Kingdom||Berlin|
+| <img src="https://avatars.githubusercontent.com/elia?s=256" alt="elia" width="128" /> | <img src="https://avatars.githubusercontent.com/cesariouy?s=256" alt="cesariouy" width="128" /> | <img src="https://avatars.githubusercontent.com/spdawson?s=256" alt="spdawson" width="128" /> | <img src="https://avatars.githubusercontent.com/rmacklin?s=256" alt="rmacklin" width="128" /> | <img src="https://avatars.githubusercontent.com/michaelem?s=256" alt="michaelem" width="128" /> |
+| :-----------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: |
+|                                         @elia                                         |                                           @cesariouy                                            |                                           @spdawson                                           |                                           @rmacklin                                           |                                           @michaelem                                            |
+|                                         Milan                                         |                                                                                                 |                                        United Kingdom                                         |                                                                                               |                                             Berlin                                              |
 
-|<img src="https://avatars.githubusercontent.com/mellowfish?s=256" alt="mellowfish" width="128" />|<img src="https://avatars.githubusercontent.com/horacio?s=256" alt="horacio" width="128" />|<img src="https://avatars.githubusercontent.com/dukex?s=256" alt="dukex" width="128" />|<img src="https://avatars.githubusercontent.com/dark-panda?s=256" alt="dark-panda" width="128" />|<img src="https://avatars.githubusercontent.com/smashwilson?s=256" alt="smashwilson" width="128" />|
-|:---:|:---:|:---:|:---:|:---:|
-|@mellowfish|@horacio|@dukex|@dark-panda|@smashwilson|
-|Spring Hill, TN|Buenos Aires|São Paulo||Gambrills, MD|
+| <img src="https://avatars.githubusercontent.com/mellowfish?s=256" alt="mellowfish" width="128" /> | <img src="https://avatars.githubusercontent.com/horacio?s=256" alt="horacio" width="128" /> | <img src="https://avatars.githubusercontent.com/dukex?s=256" alt="dukex" width="128" /> | <img src="https://avatars.githubusercontent.com/dark-panda?s=256" alt="dark-panda" width="128" /> | <img src="https://avatars.githubusercontent.com/smashwilson?s=256" alt="smashwilson" width="128" /> |
+| :-----------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
+|                                            @mellowfish                                            |                                          @horacio                                           |                                         @dukex                                          |                                            @dark-panda                                            |                                            @smashwilson                                             |
+|                                          Spring Hill, TN                                          |                                        Buenos Aires                                         |                                        São Paulo                                        |                                                                                                   |                                            Gambrills, MD                                            |
 
-|<img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" />|<img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" />|<img src="https://avatars.githubusercontent.com/tclem?s=256" alt="tclem" width="128" />|<img src="https://avatars.githubusercontent.com/nashby?s=256" alt="nashby" width="128" />|<img src="https://avatars.githubusercontent.com/jaredcwhite?s=256" alt="jaredcwhite" width="128" />|
-|:---:|:---:|:---:|:---:|:---:|
-|@blakewilliams|@seanpdoyle|@tclem|@nashby|@jaredcwhite|
-|Boston, MA|New York, NY|San Francisco, CA|Minsk|Portland, OR|
+| <img src="https://avatars.githubusercontent.com/blakewilliams?s=256" alt="blakewilliams" width="128" /> | <img src="https://avatars.githubusercontent.com/seanpdoyle?s=256" alt="seanpdoyle" width="128" /> | <img src="https://avatars.githubusercontent.com/tclem?s=256" alt="tclem" width="128" /> | <img src="https://avatars.githubusercontent.com/nashby?s=256" alt="nashby" width="128" /> | <img src="https://avatars.githubusercontent.com/jaredcwhite?s=256" alt="jaredcwhite" width="128" /> |
+| :-----------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
+|                                             @blakewilliams                                              |                                            @seanpdoyle                                            |                                         @tclem                                          |                                          @nashby                                          |                                            @jaredcwhite                                             |
+|                                               Boston, MA                                                |                                           New York, NY                                            |                                    San Francisco, CA                                    |                                           Minsk                                           |                                            Portland, OR                                             |
 
-|<img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" />|<img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" />|<img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" />|<img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" />|<img src="https://avatars.githubusercontent.com/fsateler?s=256" alt="fsateler" width="128" />|
-|:---:|:---:|:---:|:---:|:---:|
-|@simonrand|@fugufish|@cover|@franks921|@fsateler|
-|Dublin, Ireland|Salt Lake City, Utah|Barcelona|South Africa|Chile|
+| <img src="https://avatars.githubusercontent.com/simonrand?s=256" alt="simonrand" width="128" /> | <img src="https://avatars.githubusercontent.com/fugufish?s=256" alt="fugufish" width="128" /> | <img src="https://avatars.githubusercontent.com/cover?s=256" alt="cover" width="128" /> | <img src="https://avatars.githubusercontent.com/franks921?s=256" alt="franks921" width="128" /> | <img src="https://avatars.githubusercontent.com/fsateler?s=256" alt="fsateler" width="128" /> |
+| :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: |
+|                                           @simonrand                                            |                                           @fugufish                                           |                                         @cover                                          |                                           @franks921                                            |                                           @fsateler                                           |
+|                                         Dublin, Ireland                                         |                                     Salt Lake City, Utah                                      |                                        Barcelona                                        |                                          South Africa                                           |                                             Chile                                             |
 
-|<img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" />|<img src="https://avatars.githubusercontent.com/franco?s=256" alt="franco" width="128" />|<img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=256" alt="tbroad-ramsey" width="128" />|<img src="https://avatars.githubusercontent.com/jensljungblad?s=256" alt="jensljungblad" width="128" />|<img src="https://avatars.githubusercontent.com/bbugh?s=256" alt="bbugh" width="128" />|
-|:---:|:---:|:---:|:---:|:---:|
-|@maxbeizer|@franco|@tbroad-ramsey|@jensljungblad|@bbugh|
-|Nashville, TN|Switzerland|Spring Hill, TN|New York, NY|Austin, TX|
+| <img src="https://avatars.githubusercontent.com/maxbeizer?s=256" alt="maxbeizer" width="128" /> | <img src="https://avatars.githubusercontent.com/franco?s=256" alt="franco" width="128" /> | <img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=256" alt="tbroad-ramsey" width="128" /> | <img src="https://avatars.githubusercontent.com/jensljungblad?s=256" alt="jensljungblad" width="128" /> | <img src="https://avatars.githubusercontent.com/bbugh?s=256" alt="bbugh" width="128" /> |
+| :---------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: |
+|                                           @maxbeizer                                            |                                          @franco                                          |                                             @tbroad-ramsey                                              |                                             @jensljungblad                                              |                                         @bbugh                                          |
+|                                          Nashville, TN                                          |                                        Switzerland                                        |                                             Spring Hill, TN                                             |                                              New York, NY                                               |                                       Austin, TX                                        |
 
-|<img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" />|<img src="https://avatars.githubusercontent.com/czj?s=256" alt="czj" width="128" />|<img src="https://avatars.githubusercontent.com/mrrooijen?s=256" alt="mrrooijen" width="128" />|<img src="https://avatars.githubusercontent.com/bradparker?s=256" alt="bradparker" width="128" />|<img src="https://avatars.githubusercontent.com/mattbrictson?s=256" alt="mattbrictson" width="128" />|
-|:---:|:---:|:---:|:---:|:---:|
-|@johannesengl|@czj|@mrrooijen|@bradparker|@mattbrictson|
-|Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|San Francisco|
+| <img src="https://avatars.githubusercontent.com/johannesengl?s=256" alt="johannesengl" width="128" /> | <img src="https://avatars.githubusercontent.com/czj?s=256" alt="czj" width="128" /> | <img src="https://avatars.githubusercontent.com/mrrooijen?s=256" alt="mrrooijen" width="128" /> | <img src="https://avatars.githubusercontent.com/bradparker?s=256" alt="bradparker" width="128" /> | <img src="https://avatars.githubusercontent.com/mattbrictson?s=256" alt="mattbrictson" width="128" /> |
+| :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------: |
+|                                             @johannesengl                                             |                                        @czj                                         |                                           @mrrooijen                                            |                                            @bradparker                                            |                                             @mattbrictson                                             |
+|                                            Berlin, Germany                                            |                                    Paris, France                                    |                                         The Netherlands                                         |                                        Brisbane, Australia                                        |                                             San Francisco                                             |
 
-|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|
-|:---:|:---:|:---:|
-|@mixergtz|@jules2689|@g13ydson|
-|Medellin, Colombia|Toronto, Canada|João Pessoa, Brazil|
+| <img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" /> | <img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" /> | <img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" /> |
+| :-------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: |
+|                                           @mixergtz                                           |                                           @jules2689                                            |                                           @g13ydson                                           |
+|                                      Medellin, Colombia                                       |                                         Toronto, Canada                                         |                                      João Pessoa, Brazil                                      |
 
 ## License
 

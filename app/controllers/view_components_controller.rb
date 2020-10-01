@@ -2,7 +2,7 @@
 
 require "rails/application_controller"
 
-class ViewComponentsController < Rails::ApplicationController # :nodoc:
+class ViewComponentsController < ViewComponent::Base.preview_base_controller.constantize # :nodoc:
   prepend_view_path File.expand_path("../views", __dir__)
 
   around_action :set_locale, only: :previews
