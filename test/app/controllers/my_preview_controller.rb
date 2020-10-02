@@ -1,16 +1,10 @@
 class MyPreviewController < ViewComponentsController
 
   def index
-    if user_has_access?
-      super
+    if params[:custom_controller].present?
+      render plain: "Custom controller"
     else
-      head 403
+      super
     end
-  end
-
-  private
-
-  def user_has_access?
-    false
   end
 end
