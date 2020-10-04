@@ -83,7 +83,7 @@ module ViewComponent # :nodoc:
         Pathname.new(path)
                 .relative_path_from(Pathname.new(preview_path))
                 .to_s
-                .sub(/\..*$/, '')
+                .sub(/\..*$/, "")
       end
 
       private
