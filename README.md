@@ -17,13 +17,7 @@ ViewComponent is tested for compatibility [with combinations of](https://github.
 In `Gemfile`, add:
 
 ```ruby
-gem "view_component"
-```
-
-In `config/application.rb`, add:
-
-```bash
-require "view_component/engine"
+gem "view_component", require: "view_component/engine"
 ```
 
 ## Guide
