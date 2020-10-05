@@ -2,7 +2,7 @@
 
 ## master
 
-* Add `preview_controller` option to overriding the controller used for previewing components
+* Add `preview_controller` option to override the controller used for component previews.
 
     *Matt Swanson, Blake Williams, Juan Manuel Ramallo*
 
