@@ -820,6 +820,16 @@ end
 
 Which enables passing in a value with <http://localhost:3000/rails/components/cell_component/default?title=Custom+title&subtitle=Another+subtitle>.
 
+#### Configuring preview controller
+
+Previews can be extended to allow users to add authentication, authorization, before actions, or anything that the end user would need to meet their needs using the `preview_controller` option:
+
+`config/application.rb`
+
+```ruby
+config.view_component.preview_controller = "MyPreviewController"
+```
+
 #### Configuring TestController
 
 Component tests and previews assume the existence of an `ApplicationController` class, which be can be configured using the `test_controller` option:
@@ -1109,10 +1119,10 @@ ViewComponent is built by:
 |@johannesengl|@czj|@mrrooijen|@bradparker|@mattbrictson|
 |Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|San Francisco|
 
-|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|
-|:---:|:---:|:---:|
-|@mixergtz|@jules2689|@g13ydson|
-|Medellin, Colombia|Toronto, Canada|João Pessoa, Brazil|
+|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|<img src="https://avatars.githubusercontent.com/swanson?s=256" alt="swanson" width="128" />|
+|:---:|:---:|:---:|:---:|
+|@mixergtz|@jules2689|@g13ydson|@swanson|
+|Medellin, Colombia|Toronto, Canada|João Pessoa, Brazil|Indianapolis, IN|
 
 ## License
 

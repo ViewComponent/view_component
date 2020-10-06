@@ -2,6 +2,10 @@
 
 ## master
 
+* Add `preview_controller` option to override the controller used for component previews.
+
+    *Matt Swanson, Blake Williams, Juan Manuel Ramallo*
+
 ## 2.19.1
 
 * Check if `Rails.application` is loaded.
