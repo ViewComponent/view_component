@@ -832,7 +832,7 @@ config.view_component.preview_controller = "MyPreviewController"
 
 #### Configuring TestController
 
-Component tests and previews assume the existence of an `ApplicationController` class, which be can be configured using the `test_controller` option:
+Component tests assume the existence of an `ApplicationController` class, which be can be configured using the `test_controller` option:
 
 `config/application.rb`
 
