@@ -2,6 +2,10 @@
 
 ## master
 
+* Don't add `/test/components/previews` to preview_paths if directory doesn't exist.
+
+    *Andy Holland*
+
 * Add `preview_controller` option to override the controller used for component previews.
 
     *Matt Swanson, Blake Williams, Juan Manuel Ramallo*
