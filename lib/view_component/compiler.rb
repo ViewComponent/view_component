@@ -197,7 +197,7 @@ module ViewComponent
       if handler.method(:call).parameters.length > 1
         handler.call(component_class, template)
       else
-        handler.call(OpenStruct.new(source: template, identifier: source_location, type: component_class.type))
+        handler.call(OpenStruct.new(source: template, identifier: component_class.identifier, type: component_class.type))
       end
     end
 
