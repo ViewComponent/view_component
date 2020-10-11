@@ -72,7 +72,7 @@ module ViewComponent
     attr_reader :component_class
 
     def define_render_template_for
-      component_class.undef_method(:render_template_for) if component_class.instance_methods.include?(:render_template_for)
+      component_class.send(:undef_method, :render_template_for) if component_class.instance_methods.include?(:render_template_for)
 
       variant_elsifs = variants.compact.uniq.map do |variant|
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
