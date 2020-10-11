@@ -52,7 +52,7 @@ module ViewComponent
         # Remove existing compiled template methods,
         # as Ruby warns when redefining a method.
         method_name = call_method_name(template[:variant])
-        component_class.undef_method(method_name.to_sym) if component_class.instance_methods.include?(method_name.to_sym)
+        component_class.send(:undef_method, method_name.to_sym) if component_class.instance_methods.include?(method_name.to_sym)
 
         component_class.class_eval <<-RUBY, template[:path], -1
           def #{method_name}
