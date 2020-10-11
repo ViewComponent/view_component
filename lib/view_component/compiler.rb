@@ -11,6 +11,8 @@ module ViewComponent
     end
 
     def compile(raise_errors: false)
+      return if compiled?
+
       if template_errors.present?
         raise ViewComponent::TemplateError.new(template_errors) if raise_errors
         return false
