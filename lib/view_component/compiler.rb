@@ -6,6 +6,10 @@ module ViewComponent
       @component_class = component_class
     end
 
+    def compiled?
+      CompileCache.compiled?(component_class)
+    end
+
     def compile(raise_errors: false)
       if template_errors.present?
         raise ViewComponent::TemplateError.new(template_errors) if raise_errors

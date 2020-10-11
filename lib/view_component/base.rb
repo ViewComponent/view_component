@@ -217,7 +217,7 @@ module ViewComponent
       end
 
       def compiled?
-        CompileCache.compiled?(self)
+        template_compiler.compiled?
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
