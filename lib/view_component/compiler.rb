@@ -26,16 +26,9 @@ module ViewComponent
 
       # Remove any existing singleton methods,
       # as Ruby warns when redefining a method.
-      component_class.remove_possible_singleton_method(:variants)
       component_class.remove_possible_singleton_method(:collection_parameter)
       component_class.remove_possible_singleton_method(:collection_counter_parameter)
       component_class.remove_possible_singleton_method(:counter_argument_present?)
-
-
-      template_variants = templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
-      component_class.define_singleton_method(:variants) do
-        template_variants
-      end
 
       component_class.define_singleton_method(:collection_parameter) do
         if provided_collection_parameter
@@ -58,7 +51,7 @@ module ViewComponent
       templates.each do |template|
         # Remove existing compiled template methods,
         # as Ruby warns when redefining a method.
-        method_name = component_class.call_method_name(template[:variant])
+        method_name = call_method_name(template[:variant])
         component_class.undef_method(method_name.to_sym) if component_class.instance_methods.include?(method_name.to_sym)
 
         component_class.class_eval <<-RUBY, template[:path], -1
@@ -69,12 +62,34 @@ module ViewComponent
         RUBY
       end
 
+      define_render_template_for
+
       CompileCache.register(component_class)
     end
 
     private
 
     attr_reader :component_class
+
+    def define_render_template_for
+      component_class.undef_method(:render_template_for) if component_class.instance_methods.include?(:render_template_for)
+
+      variant_elsifs = variants.compact.uniq.map do |variant|
+        "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
+      end.join("\n")
+
+      component_class.class_eval <<-RUBY
+        def render_template_for(variant = nil)
+          if variant.nil?
+            call
+          #{variant_elsifs}
+          else
+            call
+          end
+        end
+      RUBY
+
+    end
 
     def template_errors
       @_template_errors ||= begin
@@ -163,6 +178,12 @@ module ViewComponent
       @inline_calls_defined_on_self ||= component_class.instance_methods(false).grep(/^call/)
     end
 
+    def variants
+      @_variants = (
+        templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
+      ).compact.uniq
+    end
+
     def variants_from_inline_calls(calls)
       calls.reject { |call| call == :call }.map do |variant_call|
         variant_call.to_s.sub("call_", "").to_sym
@@ -177,6 +198,14 @@ module ViewComponent
         handler.call(component_class, template)
       else
         handler.call(OpenStruct.new(source: template, identifier: identifier, type: component_class.type))
+      end
+    end
+
+    def call_method_name(variant)
+      if variant.present? && variants.include?(variant)
+        "call_#{variant}"
+      else
+        "call"
       end
     end
   end

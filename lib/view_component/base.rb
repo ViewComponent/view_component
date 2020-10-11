@@ -77,7 +77,7 @@ module ViewComponent
       before_render
 
       if render?
-        send(self.class.call_method_name(@variant))
+        render_template_for(@variant)
       else
         ""
       end
@@ -206,14 +206,6 @@ module ViewComponent
         child.slots = self.slots.clone
 
         super
-      end
-
-      def call_method_name(variant)
-        if variant.present? && variants.include?(variant)
-          "call_#{variant}"
-        else
-          "call"
-        end
       end
 
       def compiled?
