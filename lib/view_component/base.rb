@@ -267,25 +267,13 @@ module ViewComponent
 
         validate_collection_parameter! if raise_errors
 
-        # If template name annotations are turned on, a line is dynamically
-        # added with a comment. In this case, we want to return a different
-        # starting line number so errors that are raised will point to the
-        # correct line in the component template.
-        line_number =
-          if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames) &&
-            ActionView::Base.annotate_rendered_view_with_filenames
-            -2
-          else
-            -1
-          end
-
         templates.each do |template|
           # Remove existing compiled template methods,
           # as Ruby warns when redefining a method.
           method_name = call_method_name(template[:variant])
           undef_method(method_name.to_sym) if instance_methods.include?(method_name.to_sym)
 
-          class_eval <<-RUBY, template[:path], line_number
+          class_eval <<-RUBY, template[:path], -1
             def #{method_name}
               @output_buffer = ActionView::OutputBuffer.new
               #{compiled_template(template[:path])}
