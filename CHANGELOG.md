@@ -2,6 +2,10 @@
 
 ## master
 
+* Only compile components at application initialization if eager loading is enabled.
+
+    *Joel Hawksley*
+
 ## 2.20.0
 
 * Don't add `/test/components/previews` to preview_paths if directory doesn't exist.
