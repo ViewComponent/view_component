@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.21.0
+
 * Only compile components at application initialization if eager loading is enabled.
 
     *Joel Hawksley*
