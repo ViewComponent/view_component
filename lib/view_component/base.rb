@@ -224,6 +224,11 @@ module ViewComponent
         @_template_compiler ||= Compiler.new(self)
       end
 
+      # Returns a new instance of the string buffer used by the template compiler
+      def template_buffer_instance
+        ActionView::OutputBuffer.new
+      end
+
       # we'll eventually want to update this to support other types
       def type
         "text/html"

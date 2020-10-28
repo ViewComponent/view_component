@@ -56,7 +56,7 @@ module ViewComponent
 
         component_class.class_eval <<-RUBY, template[:path], -1
           def #{method_name}
-            @output_buffer = ActionView::OutputBuffer.new
+            @output_buffer = self.class.template_buffer_instance
             #{compiled_template(template[:path])}
           end
         RUBY
@@ -160,7 +160,7 @@ module ViewComponent
 
       sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
-      (sidecar_files - [source_location] + sidecar_directory_files)
+      (sidecar_files - [source_location] + sidecar_directory_files).uniq
     end
 
     def inline_calls
