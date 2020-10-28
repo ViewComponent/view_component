@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "pry"
 
 class ViewComponentTest < ViewComponent::TestCase
   def test_render_inline
@@ -553,6 +554,13 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("p", text: "On sale", count: 2)
     assert_selector("p", text: "Radio clock counter: 1")
     assert_selector("p", text: "Mints counter: 2")
+  end
+
+  def test_render_collection_with_spacer
+    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints"), OpenStruct.new(name: "Toys")]
+    render_inline(ProductComponent.with_collection(products, notice: "On sale", collection_spacer: CollectionSpacerComponent))
+    assert_selector("#spacer-1", text: "Sample spacer...", count: 1)
+    assert_selector("#spacer-2", text: "Sample spacer...", count: 1)
   end
 
   def test_render_collection_custom_collection_parameter_name

@@ -173,8 +173,8 @@ module ViewComponent
       attr_accessor :source_location, :virtual_path
 
       # Render a component collection.
-      def with_collection(collection, **args)
-        Collection.new(self, collection, **args)
+      def with_collection(collection, collection_spacer: nil, **args)
+        Collection.new(self, collection, collection_spacer, **args)
       end
 
       # Provide identifier for ActionView template annotations
