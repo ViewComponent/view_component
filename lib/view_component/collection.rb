@@ -10,8 +10,8 @@ module ViewComponent
       @component.compile(raise_errors: true)
       @component.validate_collection_parameter!(validate_default: true)
 
-      @collection.each_with_index.map do |item, index|
-        if index > 0 && @collection_spacer != nil
+      @collection.map do |item|
+        if !iterator.first? && @collection_spacer != nil
           pre_content = @collection_spacer.new(item: item, index: index).render_in(view_context, &block)
         end
         content = @component.new(**component_options(item, iterator)).render_in(view_context, &block)

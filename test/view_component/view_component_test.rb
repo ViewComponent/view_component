@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "pry"
 
 class ViewComponentTest < ViewComponent::TestCase
   def test_render_inline
