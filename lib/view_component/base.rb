@@ -64,7 +64,7 @@ module ViewComponent
       @virtual_path ||= virtual_path
 
       # For template variants (+phone, +desktop, etc.)
-      @variant = @lookup_context.variants.first
+      @variant ||= @lookup_context.variants.first
 
       # For caching, such as #cache_if
       @current_template = nil unless defined?(@current_template)
@@ -147,6 +147,12 @@ module ViewComponent
 
       instance_variable_set("@#{area}".to_sym, content)
       nil
+    end
+
+    def with_variant(variant)
+      @variant = variant
+
+      self
     end
 
     private

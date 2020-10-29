@@ -40,6 +40,13 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
+  def test_render_without_template_variant
+    render_inline(InlineComponent.new.with_variant(:email))
+
+    assert_predicate InlineComponent, :compiled?
+    assert_selector("input[type='text'][name='email']")
+  end
+
   def test_render_child_without_template
     render_inline(InlineChildComponent.new)
 

@@ -325,6 +325,14 @@ class InlineVariantComponent < ViewComponent::Base
 end
 ```
 
+And render them `with_variant`:
+
+```ruby
+<%= render InlineVariantComponent.new.with_variant(:phone) %>
+
+# output: <%= link_to "Phone", phone_path %>
+```
+
 ### Template Inheritance
 
 Components that subclass another component inherit the parent component's
