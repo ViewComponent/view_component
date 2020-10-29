@@ -325,7 +325,7 @@ class InlineVariantComponent < ViewComponent::Base
 end
 ```
 
-And render them #with_variant:
+And render them `with_variant`:
 
 ```ruby
 <%= render InlineVariantComponent.new.with_variant(:phone) %>
