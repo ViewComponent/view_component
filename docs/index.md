@@ -1049,7 +1049,7 @@ app/components
 
 ### form_for compatiblilty
 
-ViewComponent is not currently compatible with `form_for`.
+ViewComponent is not currently compatible with `form_for` helpers.
 
 ### Inconsistent controller rendering behavior between Rails versions
 
