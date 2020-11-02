@@ -1045,6 +1045,16 @@ app/components
 </div>
 ```
 
+## Known issues
+
+### form_for compatiblilty
+
+ViewComponent is not currently compatible with `form_for`.
+
+### Inconsistent controller rendering behavior between Rails versions
+
+In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout.
+
 ## Frequently Asked Questions
 
 ### Can I use other templating languages besides ERB?
