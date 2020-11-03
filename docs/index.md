@@ -24,6 +24,8 @@ gem "view_component", require: "view_component/engine"
 
 ViewComponents are Ruby objects that output HTML. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
 
+### When should I use components?
+
 Components are most effective in cases where view code is reused or benefits from being tested directly.
 
 ### Why should I use components?
@@ -1042,6 +1044,16 @@ app/components
   <button data-action="click->example--component#greet">Greet</button>
 </div>
 ```
+
+## Known issues
+
+### form_for compatiblilty
+
+ViewComponent is [not currently compatible](https://github.com/github/view_component/issues/241) with `form_for` helpers.
+
+### Inconsistent controller rendering behavior between Rails versions
+
+In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout.
 
 ## Frequently Asked Questions
 
