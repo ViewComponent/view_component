@@ -150,8 +150,8 @@ Rendered in a view as:
 ```erb
 <%= render(ModalComponent.new) do |component| %>
   <% component.with(:header) do %>
-      Hello Jane
-    <% end %>
+    Hello Jane
+  <% end %>
   <% component.with(:body) do %>
     <p>Have a great day.</p>
   <% end %>
