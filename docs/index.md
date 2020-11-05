@@ -329,7 +329,7 @@ end
 
 And render them `with_variant`:
 
-```ruby
+```erb
 <%= render InlineVariantComponent.new.with_variant(:phone) %>
 
 # output: <%= link_to "Phone", phone_path %>
