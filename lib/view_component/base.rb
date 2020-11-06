@@ -102,11 +102,7 @@ module ViewComponent
     # If trying to render a partial or template inside a component,
     # pass the render call to the parent view_context.
     def render(options = {}, args = {}, &block)
-      if options.is_a?(String) || (options.is_a?(Hash) && options.has_key?(:partial))
-        view_context.render(options, args, &block)
-      else
-        super
-      end
+      view_context.render(options, args, &block)
     end
 
     def controller
@@ -117,7 +113,7 @@ module ViewComponent
     # Provides a proxy to access helper methods from the context of the current controller
     def helpers
       raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
-      @helpers ||= controller.view_context
+      @helpers ||= view_context
     end
 
     # Exposes .virutal_path as an instance method
