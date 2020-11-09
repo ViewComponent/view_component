@@ -557,7 +557,7 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_render_collection_with_spacer
     products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints"), OpenStruct.new(name: "Toys")]
-    render_inline(ProductComponent.with_collection(products, notice: "On sale", collection_spacer: CollectionSpacerComponent))
+    render_inline(ProductComponent.with_collection(products, notice: "On sale", spacer_component: CollectionSpacerComponent))
     assert_selector("#spacer-1", text: "Sample spacer", count: 1)
     assert_selector("#spacer-2", text: "Sample spacer", count: 1)
   end
