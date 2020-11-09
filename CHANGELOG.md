@@ -2,6 +2,18 @@
 
 ## master
 
+## 2.22.0
+
+* Add #with_variant to enable inline component variant rendering without template files.
+
+    *Nathan Jones*
+
+## 2.21.0
+
+* Only compile components at application initialization if eager loading is enabled.
+
+    *Joel Hawksley*
+
 ## 2.20.0
 
 * Don't add `/test/components/previews` to preview_paths if directory doesn't exist.
