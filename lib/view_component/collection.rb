@@ -11,22 +11,22 @@ module ViewComponent
       @component.validate_collection_parameter!(validate_default: true)
 
       @collection.map do |item|
-        if !iterator.first? && @collection_spacer != nil
-          pre_content = @collection_spacer.new(item: item, index: iterator.index).render_in(view_context, &block)
+        if !iterator.first? && @spacer_component
+          spacer_content = @spacer_component.new(item: item, index: index).render_in(view_context, &block)
         end
         content = @component.new(**component_options(item, iterator)).render_in(view_context, &block)
         iterator.iterate!
-        pre_content != nil ? pre_content + content : content
+        spacer_content != nil ? spacer_content + content : content
       end.join.html_safe
     end
 
     private
 
-    def initialize(component, object, collection_spacer, **options)
+    def initialize(component, object, spacer_component, **options)
       @component = component
       @collection = collection_variable(object || [])
       @options = options
-      @collection_spacer = collection_spacer
+      @spacer_component = spacer_component
     end
 
     def collection_variable(object)
