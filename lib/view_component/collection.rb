@@ -12,7 +12,7 @@ module ViewComponent
 
       @collection.map do |item|
         if !iterator.first? && @spacer_component
-          spacer_content = @spacer_component.new(item: item, index: index).render_in(view_context, &block)
+          spacer_content = @spacer_component.new(item: item, index: iterator.index).render_in(view_context, &block)
         end
         content = @component.new(**component_options(item, iterator)).render_in(view_context, &block)
         iterator.iterate!
