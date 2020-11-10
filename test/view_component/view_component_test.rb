@@ -683,4 +683,28 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_text("Something bad happened")
   end
+
+  def test_errors_can_be_handled_nested
+    render_inline(RescuedExceptionComponent.new.with_variant(:nested)) do
+      10 / 0
+    end
+
+    assert_text("Something bad happened")
+  end
+
+  def test_errors_can_be_handled_areas
+    render_inline(RescuedExceptionComponent.new.with_variant(:areas))  do |component|
+      component.with(:head) { 10 / 0 }
+    end
+
+    assert_text("Something bad happened")
+  end
+
+  def test_errors_can_be_handled_slots
+    render_inline(RescuedExceptionComponent.new.with_variant(:slot))  do |component|
+      component.slot(:body) { 10 / 0 }
+    end
+
+    assert_text("Something bad happened")
+  end
 end

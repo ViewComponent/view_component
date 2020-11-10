@@ -121,7 +121,6 @@ module ViewComponent
           call
       rescue Exception => exception
         rescue_with_handler(exception) || raise
-        end
       RUBY
 
       if development?
