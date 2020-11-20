@@ -4,7 +4,7 @@ title: Implementation
 nav_order: 5
 ---
 
-# Implementation
+## Implementation
 
 A ViewComponent is a Ruby file and corresponding template file with the same base name:
 
@@ -37,4 +37,3 @@ Returning:
 ```markup
 <span title="my title">Hello, World!</span>
 ```
-

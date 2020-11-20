@@ -6,7 +6,7 @@ has_children: true
 permalink: /docs/previewing-components
 ---
 
-# Previewing Components
+## Previewing Components
 
 `ViewComponent::Preview`, like `ActionMailer::Preview`, provides a way to preview components in isolation:
 
@@ -88,4 +88,3 @@ config.view_component.preview_route = "/previews"
 ```
 
 This example will make the previews available from [http://localhost:3000/previews](http://localhost:3000/previews).
-

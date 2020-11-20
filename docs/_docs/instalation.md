@@ -5,7 +5,7 @@ description: How to prepare your app to use ViewComponent
 nav_order: 2
 ---
 
-# Instalation
+## Instalation
 
 In `Gemfile`, add:
 

@@ -5,7 +5,7 @@ nav_order: 2
 parent: Sidecar Assets
 ---
 
-# Sidecar directory
+## Sidecar directory
 
 As an alternative, views and other assets can be placed in a sidecar directory with the same name as the component, which can be useful for organizing views alongside other assets like Javascript and CSS.
 
@@ -30,7 +30,7 @@ bin/rails generate component Example title content --sidecar
       create  app/components/example_component/example_component.html.erb
 ```
 
-# Component file inside Sidecar directory
+## Component file inside Sidecar directory
 
 It's also possible to place the Ruby component file inside the sidecar directory, grouping all related files in the same folder:
 

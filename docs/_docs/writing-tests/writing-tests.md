@@ -6,7 +6,7 @@ has_children: true
 permalink: /docs/writing-tests
 ---
 
-# Writing tests
+## Writing tests
 
 Unit test components directly, using the `render_inline` test helper, asserting against the rendered output.
 
@@ -58,4 +58,3 @@ def test_renders_content_areas_template_with_content
   assert_selector(".footer", text: "Bye!")
 end
 ```
-

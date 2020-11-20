@@ -5,7 +5,7 @@ parent: Rendering collections
 nav_order: 1
 ---
 
-# with_collection_parameter
+## with_collection_parameter
 
 Use `with_collection_parameter` to change the name of the collection parameter:
 
@@ -20,4 +20,3 @@ class ProductComponent < ViewComponent::Base
   end
 end
 ```
-

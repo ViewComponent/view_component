@@ -4,7 +4,7 @@ title: Content areas
 nav_order: 6
 ---
 
-# Content Areas
+## Content Areas
 
 Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor.
 
@@ -48,4 +48,3 @@ Returning:
   <div class="body"><p>Have a great day.</p></div>
 </div>
 ```
-

@@ -5,7 +5,7 @@ parent: Rendering collections
 nav_order: 3
 ---
 
-# Collection counter
+## Collection counter
 
 ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
 

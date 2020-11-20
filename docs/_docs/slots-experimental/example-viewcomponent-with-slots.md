@@ -5,7 +5,7 @@ parent: Slots (experimental)
 nav_order: 3
 ---
 
-# Example ViewComponent with Slots
+## Example ViewComponent with Slots
 
 `# box_component.rb`
 
@@ -104,4 +104,3 @@ end
   <% end %>
 <% end %>
 ```
-

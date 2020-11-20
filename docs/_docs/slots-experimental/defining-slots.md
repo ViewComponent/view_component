@@ -5,7 +5,7 @@ parent: Slots (experimental)
 nav_order: 2
 ---
 
-# Defining Slots
+## Defining Slots
 
 Slots are defined by `with_slot`:
 
@@ -20,4 +20,3 @@ To define a slot with a custom Ruby class, pass `class_name`:
 `with_slot :body, class_name: 'BodySlot'`
 
 _Note: Slot classes must be subclasses of `ViewComponent::Slot`._
-

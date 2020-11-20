@@ -11,5 +11,5 @@ For information about contributing, see the [Contributing page](https://viewcomp
 You can preview your contributions before opening a pull request by running from within the directory:
 
 1. `cd view_component/docs`
-1. `bundle install`
-2. `bundle exec jekyll serve`
+2. `bundle install`
+3. `bundle exec jekyll serve`

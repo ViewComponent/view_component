@@ -4,7 +4,7 @@ title: Known issues
 nav_order: 21
 ---
 
-# Known issues
+## Known issues
 
 ## form_for compatiblilty
 

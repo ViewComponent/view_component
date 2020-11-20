@@ -6,6 +6,6 @@ has_children: true
 permalink: /docs/sidecar-assets
 ---
 
-# Sidecar Assets
+## Sidecar Assets
 
 ViewComponents supports two options for defining view files, Sidecar view and Sidecar Directory.

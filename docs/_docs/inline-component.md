@@ -4,7 +4,7 @@ title: Inline Component
 nav_order: 8
 ---
 
-# Inline Component
+## Inline Component
 
 ViewComponents can render without a template file, by defining a `call` method:
 
@@ -43,4 +43,3 @@ And render them `with_variant`:
 
 # output: <%= link_to "Phone", phone_path %>
 ```
-

@@ -4,7 +4,7 @@ title: Contributors
 nav_order: 25
 ---
 
-# Contributors
+## Contributors
 
 ViewComponent is built by:
 
@@ -57,4 +57,3 @@ ViewComponent is built by:
 | :---: | :---: | :---: | :---: |
 | @mixergtz | @jules2689 | @g13ydson | @swanson |
 | Medellin, Colombia | Toronto, Canada | João Pessoa, Brazil | Indianapolis, IN |
-

@@ -6,7 +6,7 @@ has_children: true
 permalink: /docs/slots-experimental
 ---
 
-# Slots \(experimental\)
+## Slots (experimental)
 
 _Slots are currently under development as a successor to Content Areas. The Slot APIs should be considered unfinished and subject to breaking changes in non-major releases of ViewComponent._
 

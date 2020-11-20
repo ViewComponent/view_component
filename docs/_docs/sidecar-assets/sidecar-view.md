@@ -5,7 +5,7 @@ parent: Sidecar Assets
 nav_order: 1
 ---
 
-# Sidecar view
+## Sidecar view
 
 The simplest option is to place the view next to the Ruby component:
 
@@ -16,4 +16,3 @@ app/components
 ├── test_component.html.erb
 ├── ...
 ```
-

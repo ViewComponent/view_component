@@ -5,7 +5,7 @@ parent: Previewing Components
 nav_order: 3
 ---
 
-# Preview templates
+## Preview templates
 
 Given a preview `test/components/previews/cell_component_preview.rb`, template files can be defined at `test/components/previews/cell_component_preview/`:
 

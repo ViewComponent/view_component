@@ -4,7 +4,7 @@ title: Setting up RSpec
 nav_order: 17
 ---
 
-# Setting up RSpec
+## Setting up RSpec
 
 To use RSpec, add the following:
 

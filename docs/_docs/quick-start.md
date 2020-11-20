@@ -4,7 +4,7 @@ title: Quick start
 nav_order: 4
 ---
 
-# Quick start
+## Quick start
 
 Use the component generator to create a new ViewComponent.
 
@@ -25,4 +25,3 @@ The template engine can also be passed as an option to the generator:
 ```bash
 bin/rails generate component Example title content --template-engine slim
 ```
-

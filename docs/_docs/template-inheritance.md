@@ -4,7 +4,7 @@ title: Template Inheritance
 nav_order: 9
 ---
 
-# Template Inheritance
+## Template Inheritance
 
 Components that subclass another component inherit the parent component's template if they don't define their own template.
 
@@ -14,4 +14,3 @@ Components that subclass another component inherit the parent component's templa
 class MyLinkComponent < LinkComponent
 end
 ```
-

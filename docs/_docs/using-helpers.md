@@ -4,7 +4,7 @@ title: Using helpers
 nav_order: 14
 ---
 
-# Using helpers
+## Using helpers
 
 Helper methods can be used through the `helpers` proxy:
 
@@ -45,4 +45,3 @@ class UserComponent < ViewComponent::Base
   end
 end
 ```
-

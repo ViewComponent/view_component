@@ -6,7 +6,7 @@ has_children: true
 permalink: /docs/sidecar-assets-experimental
 ---
 
-# Sidecar assets \(experimental\)
+## Sidecar assets (experimental)
 
 It’s possible to include Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
 
@@ -30,4 +30,3 @@ importAll(require.context("../components", true, /_component.js$/))
 ```
 
 Any file with the `_component.js` suffix \(such as `app/components/widget_component.js`\) will be compiled into the Webpack bundle. If that file itself imports another file, for example `app/components/widget_component.css`, it will also be compiled and bundled into Webpack's output stylesheet if Webpack is being used for styles.
-

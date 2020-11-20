@@ -5,7 +5,7 @@ parent: Rendering collections
 nav_order: 2
 ---
 
-# Additional arguments
+## Additional arguments
 
 Additional arguments besides the collection are passed to each component instance:
 
@@ -36,4 +36,3 @@ end
   <span><%= @notice %></span>
 </li>
 ```
-

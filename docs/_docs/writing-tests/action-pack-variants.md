@@ -5,7 +5,7 @@ parent: Writing tests
 nav_order: 1
 ---
 
-# Action Pack Variants
+## Action Pack Variants
 
 Use the `with_variant` helper to test specific variants:
 
@@ -18,4 +18,3 @@ def test_render_component_for_tablet
   end
 end
 ```
-

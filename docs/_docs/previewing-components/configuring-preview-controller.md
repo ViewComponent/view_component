@@ -5,7 +5,7 @@ parent: Previewing Components
 nav_order: 2
 ---
 
-# Configuring preview controller
+## Configuring preview controller
 
 Previews can be extended to allow users to add authentication, authorization, before actions, or anything that the end user would need to meet their needs using the `preview_controller` option:
 

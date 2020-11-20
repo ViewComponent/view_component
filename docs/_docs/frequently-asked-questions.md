@@ -4,7 +4,7 @@ title: Frequently Asked Questions
 nav_order: 22
 ---
 
-# Frequently Asked Questions
+## Frequently Asked Questions
 
 ## Can I use other templating languages besides ERB?
 
@@ -18,4 +18,3 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 * [dry-rb/dry-view](https://github.com/dry-rb/dry-view)
 * [komposable/komponent](https://github.com/komposable/komponent)
 * [activeadmin/arbre](https://github.com/activeadmin/arbre)
-

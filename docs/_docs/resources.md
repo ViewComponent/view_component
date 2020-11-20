@@ -4,7 +4,7 @@ title: Resources
 nav_order: 23
 ---
 
-# Resources
+## Resources
 
 * [Encapsulating Views, RailsConf 2020](https://youtu.be/YVYRus_2KZM)
 * [Rethinking the View Layer with Components, Ruby Rogues Podcast](https://devchat.tv/ruby-rogues/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley/)
@@ -17,4 +17,3 @@ nav_order: 23
 * [Rails to Introduce View Components, Dev.to](https://dev.to/andy/rails-to-introduce-view-components-3ome)
 * [ActionView::Components in Rails 6.1, Drifting Ruby](https://www.driftingruby.com/episodes/actionview-components-in-rails-6-1)
 * [Demo repository, view-component-demo](https://github.com/joelhawksley/view-component-demo)
-

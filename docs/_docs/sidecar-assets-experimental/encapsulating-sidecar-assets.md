@@ -5,7 +5,7 @@ nav_order: 2
 parent: Sidecar assets (experimental)
 ---
 
-# Encapsulating sidecar assets
+## Encapsulating sidecar assets
 
 Ideally, sidecar Javascript/CSS should not "leak" out of the context of its associated component.
 
@@ -94,4 +94,3 @@ class Comment extends HTMLElement {
 }
 customElements.define('my-comment', Comment)
 ```
-
