@@ -168,7 +168,6 @@ module ViewComponent
     end
 
     def instrument(action, &block)
-      # TODO: found a better way to achieve this
       if self.class.respond_to?(:counter_argument_present?) && self.class.counter_argument_present?
         return yield
       else

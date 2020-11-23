@@ -24,6 +24,7 @@ module ViewComponent
     private
 
     def allocations(event)
+      message = +""
       message << "(Allocations: #{event.allocations})" if event.respond_to?(:allocations)
       message
     end
