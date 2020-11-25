@@ -2,6 +2,10 @@
 
 ## master
 
+* Add #with_content to allow setting content without a block.
+
+    *Jordan Raine*
+
 * Add `frozen_string_literal: true` to generated component template.
 
     *Max Beizer*

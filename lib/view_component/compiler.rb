@@ -13,15 +13,20 @@ module ViewComponent
     def compile(raise_errors: false)
       return if compiled?
 
-      if template_errors.present?
-        raise ViewComponent::TemplateError.new(template_errors) if raise_errors
-        return false
-      end
-
-      if component_class.instance_methods(false).include?(:before_render_check)
+      subclass_instance_methods = component_class.instance_methods(false)
+      if subclass_instance_methods.include?(:before_render_check)
         ActiveSupport::Deprecation.warn(
           "`before_render_check` will be removed in v3.0.0. Use `before_render` instead."
         )
+      end
+
+      if subclass_instance_methods.include?(:with_content) && raise_errors
+        raise ViewComponent::ComponentError.new("#{component_class} implements a reserved method, `with_content`.")
+      end
+
+      if template_errors.present?
+        raise ViewComponent::TemplateError.new(template_errors) if raise_errors
+        return false
       end
 
       # Remove any existing singleton methods,

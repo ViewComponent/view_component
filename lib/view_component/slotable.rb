@@ -114,8 +114,7 @@ module ViewComponent
         instance_variable_set(slot[:instance_variable_name], slot_instance)
       end
 
-      # Return nil, as this method should not output anything to the view itself.
-      nil
+      slot_instance
     end
   end
 end

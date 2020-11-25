@@ -72,7 +72,13 @@ module ViewComponent
       @current_template = self
 
       # Assign captured content passed to component as a block to @content
-      @content = view_context.capture(self, &block) if block_given?
+      if block_given?
+        if @content.nil?
+          @content = view_context.capture(self, &block)
+        else
+          raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.")
+        end
+      end
 
       before_render
 
@@ -161,6 +167,12 @@ module ViewComponent
       self
     end
 
+    def with_content(content)
+      @content = content
+
+      self
+    end
+
     private
 
     # Exposes the current request to the component.
@@ -221,7 +233,7 @@ module ViewComponent
       end
 
       def compiled?
-        template_compiler.compiled?
+        compiler.compiled?
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
@@ -229,11 +241,11 @@ module ViewComponent
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
       def compile(raise_errors: false)
-        template_compiler.compile(raise_errors: raise_errors)
+        compiler.compile(raise_errors: raise_errors)
       end
 
-      def template_compiler
-        @_template_compiler ||= Compiler.new(self)
+      def compiler
+        @_compiler ||= Compiler.new(self)
       end
 
       # we'll eventually want to update this to support other types

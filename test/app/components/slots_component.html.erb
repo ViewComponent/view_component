@@ -3,7 +3,7 @@
     <%= title.content %>
   </div>
   <div class="subtitle">
-    <%= subtitle.content %>
+    <%= subtitle.content if subtitle %>
   </div>
   <div class="nav">
     <% if tabs.any? %>
@@ -27,7 +27,9 @@
       No items provided
     <% end %>
   </div>
-  <div class="footer <%= footer.class_names %>">
-    <%= footer.content %>
-  </div>
+  <% if footer %>
+    <div class="footer <%= footer.class_names %>">
+      <%= footer.content %>
+    </div>
+  <% end %>
 </div>

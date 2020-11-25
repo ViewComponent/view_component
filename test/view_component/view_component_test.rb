@@ -33,6 +33,30 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("span", text: "content")
   end
 
+  def test_raise_error_when_content_already_set
+    error = assert_raises ArgumentError do
+      render_inline(WrapperComponent.new.with_content("setter content")) do
+        "block content"
+      end
+    end
+
+    assert_includes error.message, "Block provided after calling `with_content`"
+  end
+
+  def test_raise_error_when_subclass_implements_with_content
+    exception = assert_raises ViewComponent::ComponentError do
+      render_inline(InvalidWithRenderComponent.new)
+    end
+
+    assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `with_content`."
+  end
+
+  def test_renders_content_from_setter
+    render_inline(WrapperComponent.new.with_content("content"))
+
+    assert_selector("span", text: "content")
+  end
+
   def test_render_without_template
     render_inline(InlineComponent.new)
 
@@ -284,6 +308,18 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_text "No tabs provided"
     assert_text "No items provided"
+  end
+
+  def test_renders_slots_with_content
+    render_inline(SlotsComponent.new) do |component|
+      component.slot(:title).with_content("This is my title!")
+      component.slot(:subtitle).with_content("This is my subtitle!")
+      component.slot(:footer).with_content("This is the footer")
+    end
+
+    assert_text "This is my title!"
+    assert_text "This is my subtitle!"
+    assert_text "This is the footer"
   end
 
   def test_renders_slots_template_raise_with_unknown_content_areas

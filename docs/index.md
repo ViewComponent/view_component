@@ -122,9 +122,19 @@ Returning:
 <span title="my title">Hello, World!</span>
 ```
 
-#### Content Areas
+#### Passing content to components
 
 Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor.
+
+##### `#with_content`
+
+Content can also be passed to a ViewComponent by calling `#with_content`:
+
+```erb
+<%= render(TestComponent.new.with_content("Hello, World!")) %>
+```
+
+##### Content Areas
 
 ViewComponents can declare additional content areas. For example:
 
@@ -167,11 +177,11 @@ Returning:
 </div>
 ```
 
-#### Slots (experimental)
+##### Slots (experimental)
 
 _Slots are currently under development as a successor to Content Areas. The Slot APIs should be considered unfinished and subject to breaking changes in non-major releases of ViewComponent._
 
-Slots enable multiple blocks of content to be passed to a single ViewComponent, reducing the need for sub-components (e.g. ModalHeader, ModalBody).
+Slots enable more than one section to be passed to a single ViewComponent using a block or `#with_content`, reducing the need for sub-components (e.g. ModalHeader, ModalBody).
 
 By default, slots can be rendered once per component. They provide an accessor with the name of the slot (`#header`) that returns an instance of `ViewComponent::Slot`, etc.
 
@@ -179,7 +189,7 @@ Slots declared with `collection: true` can be rendered multiple times. They prov
 
 To learn more about the design of the Slots API, see [#348](https://github.com/github/view_component/pull/348) and [#325](https://github.com/github/view_component/discussions/325).
 
-##### Defining Slots
+###### Defining Slots
 
 Slots are defined by `with_slot`:
 
@@ -195,7 +205,7 @@ To define a slot with a custom Ruby class, pass `class_name`:
 
 _Note: Slot classes must be subclasses of `ViewComponent::Slot`._
 
-##### Example ViewComponent with Slots
+###### Example ViewComponent with Slots
 
 `# box_component.rb`
 
@@ -283,9 +293,7 @@ end
   <% component.slot(:body) do %>
     This is the body.
   <% end %>
-  <% component.slot(:row) do %>
-    Row one
-  <% end %>
+  <% component.slot(:row).with_content("Row one") %>
   <% component.slot(:row, theme: :yellow) do %>
     Yellow row
   <% end %>
