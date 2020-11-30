@@ -56,5 +56,9 @@ module ViewComponent
     def method_missing(symbol, *args, &block)
       @_component_instance.public_send(symbol, *args, &block)
     end
+
+    def respond_to_missing?(symbol, include_all = false)
+      @_component_instance.respond_to?(symbol, include_all)
+    end
   end
 end
