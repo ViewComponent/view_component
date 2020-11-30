@@ -153,7 +153,17 @@ module ViewComponent
       filename = File.basename(source_location, ".rb")
       component_name = component_class.name.demodulize.underscore
 
-      sub_component_files = if component_class.name.include?("::")
+      # This adds support for nested components defined in the same file.
+      #
+      # e.g.
+      #
+      # class MyComponent < ViewComponent::Base
+      #   class MyOtherComponent < ViewComponent::Base
+      #   end
+      # end
+      #
+      # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
+      nested_component_files = if component_class.name.include?("::")
         subcomponent_path = component_class.name.deconstantize.underscore
         Dir["#{directory}/#{subcomponent_path}/#{component_name}.*{#{extensions}}"]
       else
@@ -165,7 +175,7 @@ module ViewComponent
 
       sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
-      (sidecar_files - [source_location] + sidecar_directory_files + sub_component_files)
+      (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files)
     end
 
     def inline_calls
