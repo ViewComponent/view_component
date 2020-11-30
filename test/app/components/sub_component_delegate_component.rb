@@ -3,7 +3,7 @@
 class SubComponentDelegateComponent < ViewComponent::Base
   include ViewComponent::SubComponents
 
-  renders_many :items, MyHighlightComponent
+  renders_many :items, SubComponentComponent::MyHighlightComponent
 
   def initialize
   end

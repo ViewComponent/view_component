@@ -20,4 +20,14 @@ class SubComponentComponent < ViewComponent::Base
   def initialize(classes: "")
     @classes = classes
   end
+
+  class MyHighlightComponent < ViewComponent::Base
+    def initialize(highlighted: false)
+      @highlighted = highlighted
+    end
+
+    def classes
+      @highlighted ? "highlighted" : "normal"
+    end
+  end
 end
