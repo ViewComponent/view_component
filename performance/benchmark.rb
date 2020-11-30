@@ -9,11 +9,9 @@ require "benchmark/ips"
 ENV["RAILS_ENV"] = "production"
 require File.expand_path("../test/config/environment.rb", __dir__)
 
-require_relative "components/name_component.rb"
 require_relative "components/slot_component.rb"
 require_relative "components/subcomponent_component.rb"
 require_relative "components/content_areas_component.rb"
-require_relative "components/content_areas_wrapper_component.rb"
 
 class BenchmarksController < ActionController::Base
 end
