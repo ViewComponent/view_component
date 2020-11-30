@@ -160,6 +160,18 @@ class SubComponentsTest < ViewComponent::TestCase
     assert_selector(".item.normal", count: 2)
   end
 
+  def test_slot_with_respond_to
+    component = SubComponentDelegateComponent.new
+
+    render_inline component do |c|
+      c.item do
+        "Item A"
+      end
+    end
+
+    assert component.items.first.respond_to?(:classes)
+  end
+
   # In a previous implementation of slots,
   # the list of slots registered to a component
   # was accidentally assigned to all components!
