@@ -101,7 +101,7 @@ module ViewComponent
 
     # use original view_context if we're not rendering a component
     def render(options = {}, args = {}, &block)
-      if options.is_a? self.class
+      if options.is_a? ViewComponent::Base
         super
       else
         view_context.render(options, args, &block)
