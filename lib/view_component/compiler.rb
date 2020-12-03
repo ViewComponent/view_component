@@ -153,7 +153,7 @@ module ViewComponent
       filename = File.basename(source_location, ".rb")
       component_name = component_class.name.demodulize.underscore
 
-      # This adds support for nested components defined in the same file.
+      # Add support for nested components defined in the same file.
       #
       # e.g.
       #

@@ -4,8 +4,7 @@ require "test_helper"
 
 class SlotsV2sTest < ViewComponent::TestCase
   def test_renders_slots
-    c = SlotsV2Component.new(classes: "mt-4")
-    render_inline(c) do |component|
+    render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
       component.title do
         "This is my title!"
       end

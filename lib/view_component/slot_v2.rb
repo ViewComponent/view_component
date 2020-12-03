@@ -4,8 +4,7 @@ module ViewComponent
   class SlotV2
     attr_writer :_component_instance, :_content_block, :_content
 
-    # Parent must be `nil` for v1
-    def initialize(parent = nil)
+    def initialize(parent)
       @parent = parent
     end
 
@@ -21,7 +20,7 @@ module ViewComponent
     # set as `@_content` and is returned directly.
     #
     # If there is no slot renderable, we evaluate the block passed to
-    # the slot and return it (content area style)
+    # the slot and return it.
     def to_s
       if defined?(@_component_instance)
         # render_in is faster than `parent.render`
@@ -36,20 +35,22 @@ module ViewComponent
       end
     end
 
-    # This allows access to public component methods via the wrapper
+    # Allow access to public component methods via the wrapper
     #
     # e.g.
     #
     # calling `header.name` (where `header` is a slot) will call `name`
-    # on the `HeaderComponent` instance
+    # on the `HeaderComponent` instance.
     #
-    # Where the component may includes:
+    # Where the component may look like:
     #
-    # has_one :header, HeaderComponent
+    # class MyComponent < ViewComponent::Base
+    #   has_one :header, HeaderComponent
     #
-    # class HeaderComponent < ViewComponent::Base
-    #   def name
-    #     @name
+    #   class HeaderComponent < ViewComponent::Base
+    #     def name
+    #       @name
+    #     end
     #   end
     # end
     #
