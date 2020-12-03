@@ -219,7 +219,7 @@ end
 
 `# blog_component.html.erb`
 
-```html
+```erb
 <div>
   <h1><%= header %></h1> <!-- render the header component -->
 
@@ -233,7 +233,7 @@ end
 
 `# index.html.erb`
 
-```html
+```erb
 <%= render BlogComponent.new do |c| %>
   <% c.header do %>
     <%= link_to "My Site", root_path %>
