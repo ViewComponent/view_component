@@ -185,11 +185,10 @@ per-component. e.g. `renders_many :blog_posts`
 
 #### Defining Slots
 
-
-* [Delegate Slots](#delegate_slots) - Used to render other components.
-* [Lambda Slots](#lambda_slots) - Used to return strings or components to
+* [Delegate Slots](#delegate-slots) - Used to render other components.
+* [Lambda Slots](#lambda-slots) - Used to return strings or components to
     render.
-* [Pass through Slots](#pass_through_slots) - Used to pass content directly to a
+* [Pass through Slots](#pass-through-slots) - Used to pass content directly to a
     component.
 
 ##### Delegate Slots
