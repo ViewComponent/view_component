@@ -2,6 +2,10 @@
 
 ## master
 
+* Add `frozen_string_literal: true` to generated component template.
+
+    *Max Beizer*
+
 ## 2.22.1
 
 * Revert refactor that broke rendering for some users.
