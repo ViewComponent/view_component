@@ -184,9 +184,11 @@ per-component. e.g. `renders_many :blog_posts`
 
 #### Defining Slots
 
+There's three logical varieties of slots:
+
 - [Delegate Slots](#delegate-slots) - Used to render other components.
-- [Lambda Slots](#lambda-slots) - Used to return strings or components to
-    render.
+- [Lambda Slots](#lambda-slots) - Used to render strings or initialized
+- components.
 - [Pass through Slots](#pass-through-slots) - Used to pass content directly to a
     component.
 
