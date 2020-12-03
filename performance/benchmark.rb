@@ -10,7 +10,7 @@ ENV["RAILS_ENV"] = "production"
 require File.expand_path("../test/config/environment.rb", __dir__)
 
 require_relative "components/slot_component.rb"
-require_relative "components/subcomponent_component.rb"
+require_relative "components/slots_v2_component.rb"
 require_relative "components/content_areas_component.rb"
 
 class BenchmarksController < ActionController::Base
@@ -28,14 +28,14 @@ Benchmark.ips do |x|
 
     controller_view.render(component) do |c|
       c.with(:header) do
-        c.render SubcomponentComponent::HeaderComponent.new(classes: "header") do
+        c.render SlotsV2Component::HeaderComponent.new(classes: "header") do
           "Header"
         end
       end
 
       c.with(:items) do
         ["a", "b", "c"].each do |item|
-          c.render SubcomponentComponent::ItemComponent.new(classes: "header") do
+          c.render SlotsV2Component::ItemComponent.new(classes: "header") do
             item
           end
         end
@@ -61,7 +61,7 @@ Benchmark.ips do |x|
     end
   end
   x.report("subcomponent:") do
-    component = SubcomponentComponent.new(name: "Fox Mulder")
+    component = SlotsV2Component.new(name: "Fox Mulder")
 
     controller_view.render(component) do |c|
       c.header(classes: "my-header") do

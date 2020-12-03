@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-class InheritedSubComponentComponent < SubComponentComponent
+class InheritedSlotsV2Component < SlotsV2Component
 end

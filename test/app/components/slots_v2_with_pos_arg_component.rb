@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class SubComponentWithPosArgComponent < ViewComponent::Base
-  include ViewComponent::SubComponents
+class SlotsV2WithPosArgComponent < ViewComponent::Base
+  include ViewComponent::SlotableV2
 
   renders_many :items, "Item"
 

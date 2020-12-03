@@ -2,17 +2,17 @@
 
 require "active_support/concern"
 
-require "view_component/slot"
+require "view_component/slot_v2"
 
 module ViewComponent
-  module SubComponents
+  module SlotableV2
     extend ActiveSupport::Concern
 
     # Setup component slot state
     included do
       # Hash of registered Slots
-      class_attribute :registered_sub_components
-      self.registered_sub_components = {}
+      class_attribute :registered_slots
+      self.registered_slots = {}
     end
 
     class_methods do
@@ -57,25 +57,25 @@ module ViewComponent
       # = Setting sub-component content
       #
       # Consumers of the component can render a sub-component by calling a
-      # helper method with the same name as the sub_component.
+      # helper method with the same name as the slot.
       #
       #   <%= render_inline(MyComponent.new) do |component| %>
       #     <%= component.header(classes: "Foo") do %>
       #       <p>Bar</p>
       #     <% end %>
       #   <% end %>
-      def renders_one(sub_component_name, callable = nil)
-        validate_sub_component_name(sub_component_name)
+      def renders_one(slot_name, callable = nil)
+        validate_slot_name(slot_name)
 
-        define_method sub_component_name do |*args, **kwargs, &block|
+        define_method slot_name do |*args, **kwargs, &block|
           if args.empty? && kwargs.empty? && block.nil?
-            get_sub_component(sub_component_name)
+            get_slot(slot_name)
           else
-            set_sub_component(sub_component_name, *args, **kwargs, &block)
+            set_slot(slot_name, *args, **kwargs, &block)
           end
         end
 
-        register_slot(sub_component_name, collection: false, callable: callable)
+        register_slot(slot_name, collection: false, callable: callable)
       end
 
       ##
@@ -115,39 +115,39 @@ module ViewComponent
       #       <p>two</p>
       #     <% end %>
       #   <% end %>
-      def renders_many(sub_component_name, callable = nil)
-        validate_sub_component_name(sub_component_name)
+      def renders_many(slot_name, callable = nil)
+        validate_slot_name(slot_name)
 
-        singular_name = ActiveSupport::Inflector.singularize(sub_component_name)
+        singular_name = ActiveSupport::Inflector.singularize(slot_name)
 
         # Define setter for singular names
         # e.g. `renders_many :items` allows fetching all tabs with
         # `component.tabs` and setting a tab with `component.tab`
         define_method singular_name do |*args, **kwargs, &block|
-          set_sub_component(sub_component_name, *args, **kwargs, &block)
+          set_slot(slot_name, *args, **kwargs, &block)
         end
 
         # Instantiates and and adds multiple slots forwarding the first
         # argument to each slot constructor
-        define_method sub_component_name do |*args, **kwargs, &block|
+        define_method slot_name do |*args, **kwargs, &block|
           if args.empty? && kwargs.empty? && block.nil?
-            get_sub_component(sub_component_name)
+            get_slot(slot_name)
           end
         end
 
-        register_slot(sub_component_name, collection: true, callable: callable)
+        register_slot(slot_name, collection: true, callable: callable)
       end
 
       # Clone slot configuration into child class
       # see #test_slots_pollution
       def inherited(child)
-        child.registered_sub_components = self.registered_sub_components.clone
+        child.registered_slots = self.registered_slots.clone
         super
       end
 
       private
 
-      def register_slot(sub_component_name, collection:, callable:)
+      def register_slot(slot_name, collection:, callable:)
         # Setup basic slot data
         slot = {
           collection: collection,
@@ -161,29 +161,29 @@ module ViewComponent
         elsif callable
           # If slot does not respond to `render_in`, we assume it's a proc,
           # define a method, and save a reference to it to call when setting
-          method_name = :"_call_#{sub_component_name}"
+          method_name = :"_call_#{slot_name}"
           define_method method_name, &callable
           slot[:renderable_function] = instance_method(method_name)
         end
 
         # Register the slot on the component
-        self.registered_sub_components[sub_component_name] = slot
+        self.registered_slots[slot_name] = slot
       end
 
-      def validate_sub_component_name(sub_component_name)
-        if self.registered_sub_components.key?(sub_component_name)
+      def validate_slot_name(slot_name)
+        if self.registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
-          raise ArgumentError.new("#{sub_component_name} slot declared multiple times")
+          raise ArgumentError.new("#{slot_name} slot declared multiple times")
         end
       end
     end
 
-    def get_sub_component(sub_component_name)
-      slot = self.class.registered_sub_components[sub_component_name]
-      @_set_sub_components ||= {}
+    def get_slot(slot_name)
+      slot = self.class.registered_slots[slot_name]
+      @_set_slots ||= {}
 
-      if @_set_sub_components[sub_component_name]
-        return @_set_sub_components[sub_component_name]
+      if @_set_slots[slot_name]
+        return @_set_slots[slot_name]
       end
 
       if slot[:collection]
@@ -193,47 +193,47 @@ module ViewComponent
       end
     end
 
-    def set_sub_component(sub_component_name, *args, **kwargs, &block)
-      slot = self.class.registered_sub_components[sub_component_name]
+    def set_slot(slot_name, *args, **kwargs, &block)
+      slot_definition = self.class.registered_slots[slot_name]
 
-      sub_component = SubComponentWrapper.new(self)
+      slot = SlotV2.new(self)
 
       # Passing the block to the sub-component wrapper like this has two
       # benefits:
       #
       # 1. If this is a `content_area` style sub-component, we will render the
-      # block via the `sub_component`
+      # block via the `slot`
       #
       # 2. Since we have to pass block content to components when calling
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
-      sub_component._content_block = block if block_given?
+      slot._content_block = block if block_given?
 
       # If class
-      if slot[:renderable]
-        sub_component._component_instance = slot[:renderable].new(*args, **kwargs)
+      if slot_definition[:renderable]
+        slot._component_instance = slot_definition[:renderable].new(*args, **kwargs)
       # If class name as a string
-      elsif slot[:renderable_class_name]
-        sub_component._component_instance = self.class.const_get(slot[:renderable_class_name]).new(*args, **kwargs)
+      elsif slot_definition[:renderable_class_name]
+        slot._component_instance = self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
       # If passed a lambda
-      elsif slot[:renderable_function]
-        renderable_value = slot[:renderable_function].bind(self).call(*args, **kwargs, &block)
+      elsif slot_definition[:renderable_function]
+        renderable_value = slot_definition[:renderable_function].bind(self).call(*args, **kwargs, &block)
 
         # Function calls can return components, so if it's a component handle it specially
         if renderable_value.respond_to?(:render_in)
-          sub_component._component_instance = renderable_value
+          slot._component_instance = renderable_value
         else
-          sub_component._content = renderable_value
+          slot._content = renderable_value
         end
       end
 
-      @_set_sub_components ||= {}
+      @_set_slots ||= {}
 
-      if slot[:collection]
-        @_set_sub_components[sub_component_name] ||= []
-        @_set_sub_components[sub_component_name].push(sub_component)
+      if slot_definition[:collection]
+        @_set_slots[slot_name] ||= []
+        @_set_slots[slot_name].push(slot)
       else
-        @_set_sub_components[sub_component_name] = sub_component
+        @_set_slots[slot_name] = slot
       end
 
       nil

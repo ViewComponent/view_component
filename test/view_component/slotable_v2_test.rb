@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class SubComponentsTest < ViewComponent::TestCase
+class SlotsV2sTest < ViewComponent::TestCase
   def test_renders_slots
-    c = SubComponentComponent.new(classes: "mt-4")
+    c = SlotsV2Component.new(classes: "mt-4")
     render_inline(c) do |component|
       component.title do
         "This is my title!"
@@ -52,7 +52,7 @@ class SubComponentsTest < ViewComponent::TestCase
   end
 
   def test_renders_slots_in_inherited_components
-    render_inline(InheritedSubComponentComponent.new(classes: "mt-4")) do |component|
+    render_inline(InheritedSlotsV2Component.new(classes: "mt-4")) do |component|
       component.title do
         "This is my title!"
       end
@@ -99,7 +99,7 @@ class SubComponentsTest < ViewComponent::TestCase
   end
 
   def test_renders_slots_with_empty_collections
-    render_inline(SubComponentComponent.new) do |component|
+    render_inline(SlotsV2Component.new) do |component|
       component.title do
         "This is my title!"
       end
@@ -119,7 +119,7 @@ class SubComponentsTest < ViewComponent::TestCase
 
   def test_renders_slots_template_raise_with_unknown_content_areas
     assert_raises NoMethodError do
-      render_inline(SubComponentComponent.new) do |component|
+      render_inline(SlotsV2Component.new) do |component|
         component.foo { "Hello!" }
       end
     end
@@ -127,14 +127,14 @@ class SubComponentsTest < ViewComponent::TestCase
 
   def test_sub_component_raise_with_duplicate_slot_name
     exception = assert_raises ArgumentError do
-      SubComponentComponent.renders_one :title
+      SlotsV2Component.renders_one :title
     end
 
     assert_includes exception.message, "title slot declared multiple times"
   end
 
   def test_sub_component_with_positional_args
-    render_inline(SubComponentWithPosArgComponent.new(classes: "mt-4")) do |component|
+    render_inline(SlotsV2WithPosArgComponent.new(classes: "mt-4")) do |component|
       component.item("my item", classes: "hello") { "My rad item" }
     end
 
@@ -143,7 +143,7 @@ class SubComponentsTest < ViewComponent::TestCase
   end
 
   def test_slot_with_component_delegate
-    render_inline SubComponentDelegateComponent.new do |component|
+    render_inline SlotsV2DelegateComponent.new do |component|
       component.item do
         "Item A"
       end
@@ -161,7 +161,7 @@ class SubComponentsTest < ViewComponent::TestCase
   end
 
   def test_slot_with_respond_to
-    component = SubComponentDelegateComponent.new
+    component = SlotsV2DelegateComponent.new
 
     render_inline component do |c|
       c.item do
@@ -177,9 +177,9 @@ class SubComponentsTest < ViewComponent::TestCase
   # was accidentally assigned to all components!
   def test_sub_components_pollution
     new_component_class = Class.new(ViewComponent::Base)
-    new_component_class.include(ViewComponent::SubComponents)
+    new_component_class.include(ViewComponent::SlotableV2)
     # this returned:
-    # [SubComponentComponent::Subtitle, SubComponentComponent::Tab...]
-    assert_empty new_component_class.registered_sub_components
+    # [SlotsV2Component::Subtitle, SlotsV2Component::Tab...]
+    assert_empty new_component_class.registered_slots
   end
 end

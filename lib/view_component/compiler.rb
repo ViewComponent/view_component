@@ -164,8 +164,8 @@ module ViewComponent
       #
       # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
       nested_component_files = if component_class.name.include?("::")
-        subcomponent_path = component_class.name.deconstantize.underscore
-        Dir["#{directory}/#{subcomponent_path}/#{component_name}.*{#{extensions}}"]
+        nested_component_path = component_class.name.deconstantize.underscore
+        Dir["#{directory}/#{nested_component_path}/#{component_name}.*{#{extensions}}"]
       else
         []
       end
