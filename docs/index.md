@@ -167,9 +167,141 @@ Returning:
 </div>
 ```
 
-#### Slots (experimental)
 
-_Slots are currently under development as a successor to Content Areas. The Slot APIs should be considered unfinished and subject to breaking changes in non-major releases of ViewComponent._
+#### Slots
+
+_Slots now refer to V2 of the slot implementation, which is the successor to Slots V1 and Content Areas._
+
+Slots enable multiple blocks of content to be passed to a single ViewComponent.
+
+Slots expose two helper methods for defining slots, `renders_one` and
+`renders_many`.
+
+`renders_one` allows you to define a slot that will be rendered at most once
+per-page. e.g. `renders_one :header`
+
+`renders_many` allows you to define a slot that can be rendered multiple times
+per-component. e.g. `renders_many :blog_posts`
+
+#### Defining Slots
+
+
+* [Delegate Slots](#delegate_slots) - Used to render other components.
+* [Lambda Slots](#lambda_slots) - Used to return strings or components to
+    render.
+* [Pass through Slots](#pass_through_slots) - Used to pass content directly to a
+    component.
+
+##### Delegate Slots
+
+Delegate slots are simple slot definitions that delegate to another component.
+
+`# blog_component.rb`
+
+```ruby
+class BlogComponent < ViewComponent::Base
+  # `HeaderComponent` is nested inside of this component, we have to
+  # define it as a string instead of a class name.
+  renders_one :header, "HeaderComponent"
+
+  # `PostComponent` is defined in another file, so we can refer to it by class
+  # name without using a string.
+  renders_many :post, PostComponent
+
+  class HeaderComponent < ViewComponent::Base
+    attr_reader :title
+
+    def initialize(title:)
+    end
+  end
+end
+```
+
+`# blog_component.html.erb`
+
+```html
+<div>
+  <h1><%= header %></h1> <!-- render the header component -->
+
+  <% posts.each do |post| %>
+    <div class="blog-post-wrapper">
+      <%= post %> <!-- render an individual post -->
+    </div>
+  <% end %>
+</div>
+```
+
+`# index.html.erb`
+
+```html
+<%= render BlogComponent.new do |c| %>
+  <% c.header do %>
+    <%= link_to "My Site", root_path %>
+  <% end %>
+
+  <%= c.post(title: "My blog post") do %>
+    Really interesting stuff.
+  <% end %>
+
+  <%= c.post(title: "Another post!") do %>
+    Blog every day.
+  <% end %>
+<% end %>
+```
+
+##### Labmda Slots
+
+Lambda slots render their return value on the page. This is useful for creating
+small slots via helpers like `content_tag` or using returning components with
+parent-component specific default values.
+
+```ruby
+class Blogcomponent < ViewComponent::Base
+  # Renders the returned string
+  renders_one :header, -> (title:) do
+    content_tag :h1 do
+      link_to "My Blog", root_path
+    end
+  end
+
+  # Returns a component that will be rendered in that slot with a default
+  # argument.
+  renders_many :posts, -> (title:, classes:) do
+    PostComponent.new(title: title, classes: "my-default-class " + classes)
+  end
+end
+```
+
+##### Pass Through Slots
+
+Pass through slots simply render the content given the block.
+
+Pass through slots can be defined by omitting the second argument to
+`renders_one` and `renders_many`.
+
+`# blog_component.rb`
+
+```ruby
+class BlogComponnt < ViewComponent::Base
+  renders_one :header
+end
+```
+
+` # blog_component.html.erb`
+
+```ruby
+<div>
+  <%= render BlogComponent.new do |c| %>
+    <%= c.title do %>
+      <%= link_to "My blog", root_path %>
+    <% end %>
+  <% end %>
+</div>
+```
+
+#### Slots V1 (deprecated)
+
+_Slots V1 are now deprecated and will be removed in 3.0. Please migrate to [Slots V2](#slots)_
 
 Slots enable multiple blocks of content to be passed to a single ViewComponent, reducing the need for sub-components (e.g. ModalHeader, ModalBody).
 
