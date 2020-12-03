@@ -99,7 +99,11 @@ module ViewComponent
 
     def initialize(*); end
 
-    # use original view_context if we're not rendering a component
+    # Re-use original view_context if we're not rendering a component.
+    #
+    # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
+    # of the component. This is due to the partials compiled template method existing in the parent `view_context`,
+    #  and not the component's `view_context`.
     def render(options = {}, args = {}, &block)
       if options.is_a? ViewComponent::Base
         super
