@@ -132,7 +132,10 @@ module ViewComponent
 
     # For caching, such as #cache_if
     def format
-      @variant
+      # Ruby 2.6 throws a warning without checking `defined?`, 2.7 does not
+      if defined?(@variant)
+        @variant
+      end
     end
 
     # Assign the provided content to the content area accessor
