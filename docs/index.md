@@ -286,7 +286,7 @@ class BlogComponnt < ViewComponent::Base
 end
 ```
 
-`# blog_component.html.erb`
+`# index.html.erb`
 
 ```ruby
 <div>
