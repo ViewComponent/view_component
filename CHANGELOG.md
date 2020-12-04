@@ -2,10 +2,6 @@
 
 ## master
 
-* Add `ViewComponent::LogSubscriber` to log rendered components.
-
-    *Nicolas Brousse*
-
 ## 2.22.1
 
 * Revert refactor that broke rendering for some users.

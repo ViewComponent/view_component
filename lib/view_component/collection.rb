@@ -7,16 +7,14 @@ module ViewComponent
     def render_in(view_context, &block)
       iterator = ActionView::PartialIteration.new(@collection.size)
 
-      instrument("render_collection") do
-        @component.compile(raise_errors: true)
-        @component.validate_collection_parameter!(validate_default: true)
+      @component.compile(raise_errors: true)
+      @component.validate_collection_parameter!(validate_default: true)
 
-        @collection.map do |item|
-          content = @component.new(**component_options(item, iterator)).render_in(view_context, &block)
-          iterator.iterate!
-          content
-        end.join.html_safe
-      end
+      @collection.map do |item|
+        content = @component.new(**component_options(item, iterator)).render_in(view_context, &block)
+        iterator.iterate!
+        content
+      end.join.html_safe
     end
 
     private
@@ -40,17 +38,6 @@ module ViewComponent
       item_options[@component.collection_counter_parameter] = iterator.index + 1 if @component.counter_argument_present?
 
       @options.merge(item_options)
-    end
-
-    def instrument(action, &block)
-      instrument_payload = {
-        virtual_path: @component.virtual_path,
-        component_name: @component.name,
-        identifier: @component.identifier,
-        count: @collection.size
-      }
-
-      ActiveSupport::Notifications.instrument("#{action}.view_component", instrument_payload, &block)
     end
   end
 end
