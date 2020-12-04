@@ -291,7 +291,7 @@ end
 ```ruby
 <div>
   <%= render BlogComponent.new do |c| %>
-    <%= c.title do %>
+    <%= c.header do %>
       <%= link_to "My blog", root_path %>
     <% end %>
   <% end %>
