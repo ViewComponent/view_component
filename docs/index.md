@@ -177,7 +177,7 @@ Slots expose two helper methods for defining slots, `renders_one` and
 `renders_many`.
 
 `renders_one` allows you to define a slot that will be rendered at most once
-per-page. e.g. `renders_one :header`
+per component. e.g. `renders_one :header`
 
 `renders_many` allows you to define a slot that can be rendered multiple times
 per-component. e.g. `renders_many :blog_posts`
