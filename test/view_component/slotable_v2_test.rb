@@ -171,6 +171,18 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert component.items.first.respond_to?(:classes)
   end
 
+  def test_slot_with_collection
+    render_inline SlotsV2DelegateComponent.new do |component|
+      component.items([{ highlighted: false }, { highlighted: true }, { highlighted: false }]) do
+        "My Item"
+      end
+    end
+
+    assert_selector(".item", count: 3, text: "My Item")
+    assert_selector(".item.highlighted", count: 1)
+    assert_selector(".item.normal", count: 2)
+  end
+
   # In a previous implementation of slots,
   # the list of slots registered to a component
   # was accidentally assigned to all components!

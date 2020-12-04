@@ -129,9 +129,13 @@ module ViewComponent
 
         # Instantiates and and adds multiple slots forwarding the first
         # argument to each slot constructor
-        define_method slot_name do |*args, **kwargs, &block|
-          if args.empty? && kwargs.empty? && block.nil?
+        define_method slot_name do |collection_args = nil, &block|
+          if collection_args.nil? && block.nil?
             get_slot(slot_name)
+          else
+            collection_args.each do |args|
+              set_slot(slot_name, **args, &block)
+            end
           end
         end
 
