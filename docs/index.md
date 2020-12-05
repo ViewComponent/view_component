@@ -338,6 +338,49 @@ And render them `with_variant`:
 # output: <%= link_to "Phone", phone_path %>
 ```
 
+##### Rendering Collections
+
+Slots defined with `renders_many` can be used to render a collection.
+
+e.g.
+
+`# navigation_component.rb`
+
+```ruby
+class NavigationComponent < ViewComponent::Base
+  renders_many :links, "LinkComponent"
+
+  class LinkComponent < ViewComponent::Base
+    def initialize(name:, href:)
+      @name = name
+      @href = href
+    end
+  end
+end
+```
+
+`# navigation_component.html.erb`
+
+```erb
+<div>
+  <% links.each do |link| %>
+    <%= link %>
+  <% end %>
+</div>
+```
+
+` # index.html.erb`
+
+```
+<%= render(NavigationComponent.new) do |c| %>
+  <%= c.links([
+    { name: "Home", href: "/" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Sign Up", href: "/sign-up" },
+  ]) %>
+<% end %>
+```
+
 ### Template Inheritance
 
 Components that subclass another component inherit the parent component's
