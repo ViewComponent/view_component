@@ -329,9 +329,9 @@ end
 </div>
 ```
 
-` # index.html.erb`
+`# index.html.erb`
 
-```
+```erb
 <%= render(NavigationComponent.new) do |c| %>
   <%= c.links([
     { name: "Home", href: "/" },
