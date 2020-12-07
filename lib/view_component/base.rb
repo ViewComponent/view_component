@@ -99,13 +99,16 @@ module ViewComponent
 
     def initialize(*); end
 
-    # If trying to render a partial or template inside a component,
-    # pass the render call to the parent view_context.
+    # Re-use original view_context if we're not rendering a component.
+    #
+    # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
+    # of the component. This is due to the partials compiled template method existing in the parent `view_context`,
+    #  and not the component's `view_context`.
     def render(options = {}, args = {}, &block)
-      if options.is_a?(String) || (options.is_a?(Hash) && options.has_key?(:partial))
-        view_context.render(options, args, &block)
-      else
+      if options.is_a? ViewComponent::Base
         super
+      else
+        view_context.render(options, args, &block)
       end
     end
 
@@ -294,7 +297,6 @@ module ViewComponent
       def provided_collection_parameter
         @provided_collection_parameter ||= nil
       end
-
     end
 
     ActiveSupport.run_load_hooks(:view_component, self)

@@ -132,7 +132,7 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_renders_partial_template
     render_inline(PartialComponent.new)
 
-    assert_text("hello,partial world!", count: 2)
+    assert_text("hello,partial world!", count: 3)
   end
 
   def test_renders_content_for_template
@@ -240,7 +240,6 @@ class ViewComponentTest < ViewComponent::TestCase
         "This is the footer"
       end
     end
-
 
     assert_selector(".card.mt-4")
 
@@ -389,7 +388,6 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_template_changes_are_not_reflected_if_cache_is_not_cleared
-
     render_inline(MyComponent.new)
 
     assert_text("hello,world!")
