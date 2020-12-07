@@ -171,7 +171,7 @@ Returning:
 
 _Slots now refer to V2 of the slot implementation, which is the successor to Slots V1 and Content Areas._
 
-Slots enable multiple blocks of content to be passed to a single ViewComponent.
+Slots enable multiple blocks of content to be passed to a single ViewComponent, improving the ergonomics of complex components.
 
 Slots expose two helper methods for defining slots, `renders_one` and `renders_many`.
 
