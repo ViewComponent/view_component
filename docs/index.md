@@ -200,7 +200,7 @@ class BlogComponent < ViewComponent::Base
   renders_one :header, "HeaderComponent"
 
   # `PostComponent` is defined in another file, so we can refer to it by class name.
-  renders_many :post, PostComponent
+  renders_many :posts, PostComponent
 
   class HeaderComponent < ViewComponent::Base
     attr_reader :title
