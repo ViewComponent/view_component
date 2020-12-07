@@ -167,7 +167,7 @@ Returning:
 </div>
 ```
 
-#### Slots
+#### Slots (experimental)
 
 _Slots now refer to V2 of the slot implementation, which is the successor to Slots V1 and Content Areas._
 
