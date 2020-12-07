@@ -173,25 +173,21 @@ _Slots now refer to V2 of the slot implementation, which is the successor to Slo
 
 Slots enable multiple blocks of content to be passed to a single ViewComponent.
 
-Slots expose two helper methods for defining slots, `renders_one` and
-`renders_many`.
+Slots expose two helper methods for defining slots, `renders_one` and `renders_many`.
 
-`renders_one` allows you to define a slot that will be rendered at most once
-per component. e.g. `renders_one :header`
+`renders_one` allows you to define a slot that will be rendered at most once per component. e.g. `renders_one :header`
 
-`renders_many` allows you to define a slot that can be rendered multiple times
-per-component. e.g. `renders_many :blog_posts`
+`renders_many` allows you to define a slot that can be rendered multiple times per-component. e.g. `renders_many :blog_posts`
 
-#### Defining Slots
+#### Defining slots
 
-There's three logical varieties of slots:
+Slots come in three forms:
 
-- [Delegate Slots](#delegate-slots) - Used to render other components.
-- [Lambda Slots](#lambda-slots) - Used to render strings or initialized components.
-- [Pass through Slots](#pass-through-slots) - Used to pass content directly to a
-    component.
+- [Delegate slots](#delegate-slots) render other components.
+- [Lambda slots](#lambda-slots) render strings or initialized components.
+- [Pass through slots](#pass-through-slots)  pass content directly to another component.
 
-##### Delegate Slots
+##### Delegate slots
 
 Delegate slots are simple slot definitions that delegate to another component.
 
@@ -199,12 +195,11 @@ Delegate slots are simple slot definitions that delegate to another component.
 
 ```ruby
 class BlogComponent < ViewComponent::Base
-  # `HeaderComponent` is nested inside of this component, we have to
-  # define it as a string instead of a class name.
+  # Since `HeaderComponent` is nested inside of this component, we have to
+  # reference it as a string instead of a class name.
   renders_one :header, "HeaderComponent"
 
-  # `PostComponent` is defined in another file, so we can refer to it by class
-  # name without using a string.
+  # `PostComponent` is defined in another file, so we can refer to it by class name.
   renders_many :post, PostComponent
 
   class HeaderComponent < ViewComponent::Base
