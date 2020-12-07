@@ -254,7 +254,7 @@ class Blogcomponent < ViewComponent::Base
   # Renders the returned string
   renders_one :header, -> (title:) do
     content_tag :h1 do
-      link_to "My Blog", root_path
+      link_to title, root_path
     end
   end
 
