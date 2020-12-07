@@ -245,8 +245,8 @@ end
 
 ##### Labmda Slots
 
-Lambda slots render their return value on the page. This is useful for creating
-small slots via helpers like `content_tag` or using returning components with
+Lambda slots render their return value on the page. Lambda slots are useful for creating
+small slots via helpers like `content_tag` or using components with
 parent-component specific default values.
 
 ```ruby
@@ -258,24 +258,21 @@ class Blogcomponent < ViewComponent::Base
     end
   end
 
-  # Returns a component that will be rendered in that slot with a default
-  # argument.
+  # Returns a component that will be rendered in that slot with a default argument.
   renders_many :posts, -> (title:, classes:) do
     PostComponent.new(title: title, classes: "my-default-class " + classes)
   end
 end
 ```
 
-##### Pass Through Slots
+##### Pass through slots
 
-Pass through slots simply render the content given the block.
+Pass through slots capture content passed with a block.
 
-Pass through slots can be defined by omitting the second argument to
-`renders_one` and `renders_many`.
-
-`# blog_component.rb`
+Define a pass through slot by omitting the second argument to `renders_one` and `renders_many`:
 
 ```ruby
+# blog_component.rb
 class BlogComponnt < ViewComponent::Base
   renders_one :header
 end
@@ -295,7 +292,7 @@ end
 
 ##### Rendering Collections
 
-Slots defined with `renders_many` can be used to render a collection.
+Collection slots (declared with `renders_many`) can also be passed a collection.
 
 e.g.
 
