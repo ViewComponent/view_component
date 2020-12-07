@@ -273,7 +273,7 @@ Define a pass through slot by omitting the second argument to `renders_one` and 
 
 ```ruby
 # blog_component.rb
-class BlogComponnt < ViewComponent::Base
+class BlogComponent < ViewComponent::Base
   renders_one :header
 end
 ```
