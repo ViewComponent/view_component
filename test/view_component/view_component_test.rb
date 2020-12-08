@@ -43,7 +43,7 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_includes error.message, "Block provided after calling `with_content`"
   end
 
-  def test_raise_error_when_subclass_implements_with_content
+  def test_raise_error_when_component_implements_with_content
     exception = assert_raises ViewComponent::ComponentError do
       render_inline(InvalidWithRenderComponent.new)
     end
@@ -51,10 +51,56 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `with_content`."
   end
 
-  def test_renders_content_from_setter
-    render_inline(WrapperComponent.new.with_content("content"))
+  def test_renders_content_given_as_argument
+    render_inline(WrapperComponent.new.with_content("from arg"))
 
-    assert_selector("span", text: "content")
+    assert_selector("span", text: "from arg")
+  end
+
+  def test_renders_content_given_as_block
+    component = WrapperComponent.new.with_content do
+      "from block"
+    end
+
+    render_inline(component)
+
+    assert_selector("span", text: "from block")
+  end
+
+  def test_renders_component_given_as_content_as_argument
+    render_inline(WrapperComponent.new.with_content(MyComponent.new))
+
+    assert_selector("div", text: "hello,world")
+  end
+
+  def test_renders_component_given_as_content_as_block
+    component = WrapperComponent.new.with_content do
+      MyComponent.new
+    end
+
+    render_inline(component)
+
+    assert_selector("div", text: "hello,world")
+  end
+
+  def test_same_component_can_be_rendered_with_different_render_content_blocks
+    component = WrapperComponent.new
+
+    render_inline(component) { "from block 1" }
+    assert_selector("span", text: "from block 1")
+
+    render_inline(component) { "from block 2" }
+    assert_selector("span", text: "from block 2")
+  end
+
+  def test_raises_error_when_content_given_as_argument_and_block
+    exception = assert_raises ArgumentError do
+      WrapperComponent.new.with_content("from arg") do
+        "from block"
+      end
+    end
+
+    assert_equal "Content provided in two ways, using both an argument and a block. Use one or the other.", exception.message
   end
 
   def test_render_without_template

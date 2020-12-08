@@ -73,7 +73,7 @@ module ViewComponent
 
       # Assign captured content passed to component as a block to @content
       if block_given?
-        if @content.nil?
+        if !defined?(@with_content_value)
           @content = view_context.capture(self, &block)
         else
           raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.")
@@ -167,13 +167,45 @@ module ViewComponent
       self
     end
 
-    def with_content(content)
-      @content = content
+    def with_content(value = nil, &block)
+      if value && block
+        raise ArgumentError.new("Content provided in two ways, using both an argument and a block. Use one or the other.")
+      elsif value.nil? && block.nil?
+        raise ArgumentError.new("No content provided. Provide as an argument or a block.")
+      elsif block
+        @with_content_block = block
+      else
+        @with_content_value = value
+      end
 
       self
     end
 
+    def content
+      return @content if defined?(@content)
+      return unless defined?(@with_content_block) || defined?(@with_content_value)
+
+      with_content_value =
+        if @with_content_block
+          @with_content_block.call(self)
+        else
+          @with_content_value
+        end
+
+      @content = render_or_return(with_content_value)
+    end
+
     private
+
+    # Renders the given object and returns the result, if object can be rendered.
+    # Otherwise, returns object.
+    def render_or_return(object)
+      if object.respond_to?(:render_in)
+        render(object)
+      else
+        object
+      end
+    end
 
     # Exposes the current request to the component.
     # Use sparingly as doing so introduces coupling
@@ -182,7 +214,7 @@ module ViewComponent
       @request ||= controller.request
     end
 
-    attr_reader :content, :view_context
+    attr_reader :view_context
 
     # The controller used for testing components.
     # Defaults to ApplicationController. This should be set early
