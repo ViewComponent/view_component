@@ -356,11 +356,23 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text "No items provided"
   end
 
-  def test_renders_slots_with_content
+  def test_renders_slots_with_content_given_as_arg
     render_inline(SlotsComponent.new) do |component|
       component.slot(:title).with_content("This is my title!")
       component.slot(:subtitle).with_content("This is my subtitle!")
       component.slot(:footer).with_content("This is the footer")
+    end
+
+    assert_text "This is my title!"
+    assert_text "This is my subtitle!"
+    assert_text "This is the footer"
+  end
+
+  def test_renders_slots_with_content_given_as_block
+    render_inline(SlotsComponent.new) do |component|
+      component.slot(:title).with_content { "This is my title!" }
+      component.slot(:subtitle).with_content { "This is my subtitle!" }
+      component.slot(:footer).with_content { "This is the footer" }
     end
 
     assert_text "This is my title!"
