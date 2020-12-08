@@ -10,9 +10,9 @@ module ViewComponent
       elsif value.nil? && block.nil?
         raise ArgumentError.new("No content provided. Provide as an argument or a block.")
       elsif block
-        @with_content_block = block
+        @content_set_by_with_content = block
       else
-        @with_content_value = value
+        @content_set_by_with_content = -> (_slot) { value }
       end
 
       self
@@ -20,14 +20,9 @@ module ViewComponent
 
     def content
       return @content if defined?(@content)
-      return unless defined?(@with_content_block) || defined?(@with_content_value)
+      return unless defined?(@content_set_by_with_content)
 
-      @content =
-        if @with_content_block
-          @with_content_block.call(self)
-        else
-          @with_content_value
-        end
+      @content = @content_set_by_with_content.call(self)
     end
   end
 end

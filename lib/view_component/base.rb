@@ -73,7 +73,7 @@ module ViewComponent
 
       # Assign captured content passed to component as a block to @content
       if block_given?
-        if !defined?(@with_content_value)
+        if !defined?(@content_set_by_with_content)
           @content = view_context.capture(self, &block)
         else
           raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.")
@@ -173,9 +173,9 @@ module ViewComponent
       elsif value.nil? && block.nil?
         raise ArgumentError.new("No content provided. Provide as an argument or a block.")
       elsif block
-        @with_content_block = block
+        @content_set_by_with_content = block
       else
-        @with_content_value = value
+        @content_set_by_with_content = -> (_component) { value }
       end
 
       self
@@ -183,16 +183,9 @@ module ViewComponent
 
     def content
       return @content if defined?(@content)
-      return unless defined?(@with_content_block) || defined?(@with_content_value)
+      return unless defined?(@content_set_by_with_content)
 
-      with_content_value =
-        if @with_content_block
-          @with_content_block.call(self)
-        else
-          @with_content_value
-        end
-
-      @content = render_or_return(with_content_value)
+      @content = render_or_return(@content_set_by_with_content.call(self))
     end
 
     private
