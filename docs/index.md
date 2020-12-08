@@ -275,16 +275,31 @@ Define a pass through slot by omitting the second argument to `renders_one` and 
 # blog_component.rb
 class BlogComponent < ViewComponent::Base
   renders_one :header
+  renders_many :posts
 end
+```
+
+`# blog_component.html.erb`
+
+```erb
+<div>
+  <h1><%= header %></h1>
+
+  <%= posts %>
+</div>
 ```
 
 `# index.html.erb`
 
-```ruby
+```erb
 <div>
   <%= render BlogComponent.new do |c| %>
     <%= c.header do %>
       <%= link_to "My blog", root_path %>
+    <% end %>
+
+    <% @posts.each do |post| %>
+      <%= c.post(post: post) %>
     <% end %>
   <% end %>
 </div>
