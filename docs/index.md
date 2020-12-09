@@ -173,11 +173,11 @@ _Slots are currently under development as the successor to Content Areas. The Sl
 
 Slots enable multiple blocks of content to be passed to a single ViewComponent, improving the ergonomics of complex components.
 
-Slots expose two helper methods for defining slots, `renders_one` and `renders_many`.
+Slots are defined with with `renders_one` and `renders_many`:
 
-`renders_one` allows you to define a slot that will be rendered at most once per component. e.g. `renders_one :header`
+`renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
 
-`renders_many` allows you to define a slot that can be rendered multiple times per-component. e.g. `renders_many :blog_posts`
+`renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :blog_posts`
 
 #### Defining slots
 
@@ -189,7 +189,7 @@ Slots come in three forms:
 
 ##### Delegate slots
 
-Delegate slots are simple slot definitions that delegate to another component.
+Delegate slots delegate to another component:
 
 `# blog_component.rb`
 
@@ -245,9 +245,7 @@ end
 
 ##### Labmda Slots
 
-Lambda slots render their return value on the page. Lambda slots are useful for creating
-small slots via helpers like `content_tag` or using components with
-parent-component specific default values.
+Lambda slots render their return value. Lambda slots are useful for working with helpers like `content_tag` or as wrappers for another component with specific default values.
 
 ```ruby
 class Blogcomponent < ViewComponent::Base
