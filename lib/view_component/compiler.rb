@@ -146,21 +146,36 @@ module ViewComponent
       source_location = component_class.source_location
       return [] unless source_location
 
-      location_without_extension = source_location.chomp(File.extname(source_location))
-
       extensions = ActionView::Template.template_handler_extensions.join(",")
-
-      # view files in the same directory as the component
-      sidecar_files = Dir["#{location_without_extension}.*{#{extensions}}"]
 
       # view files in a directory named like the component
       directory = File.dirname(source_location)
       filename = File.basename(source_location, ".rb")
       component_name = component_class.name.demodulize.underscore
 
+      # Add support for nested components defined in the same file.
+      #
+      # e.g.
+      #
+      # class MyComponent < ViewComponent::Base
+      #   class MyOtherComponent < ViewComponent::Base
+      #   end
+      # end
+      #
+      # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
+      nested_component_files = if component_class.name.include?("::")
+        nested_component_path = component_class.name.deconstantize.underscore
+        Dir["#{directory}/#{nested_component_path}/#{component_name}.*{#{extensions}}"]
+      else
+        []
+      end
+
+      # view files in the same directory as the component
+      sidecar_files = Dir["#{directory}/#{component_name}.*{#{extensions}}"]
+
       sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
-      (sidecar_files - [source_location] + sidecar_directory_files)
+      (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files)
     end
 
     def inline_calls

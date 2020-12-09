@@ -2,6 +2,16 @@
 
 ## master
 
+* Add `ActionView::SlotableV2`
+  * `with_slot` becomes `renders_one`.
+  * `with_slot collection: true` becomes `renders_many`.
+  * Slot definitions now accept either a component class, component class name, or a lambda instead of a `class_name:` keyword argument.
+  * Slots now support positional arguments.
+  * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. e.g. `<%= my_slot %>`.
+  * Slot values are no longer set via the `slot` method, and instead use the name of the slot.
+
+    *Blake Williams*
+
 * Add `frozen_string_literal: true` to generated component template.
 
     *Max Beizer*
