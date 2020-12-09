@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.23.0
+
 * Add `ActionView::SlotableV2`
   * `with_slot` becomes `renders_one`.
   * `with_slot collection: true` becomes `renders_many`.
