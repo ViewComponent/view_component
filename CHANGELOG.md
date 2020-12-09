@@ -10,7 +10,7 @@
   * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. e.g. `<%= my_slot %>`.
   * Slot values are no longer set via the `slot` method, and instead use the name of the slot.
 
-  * Blake Williams
+  *Blake Williams*
 
 * Add `frozen_string_literal: true` to generated component template.
 
