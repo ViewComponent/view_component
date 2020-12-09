@@ -245,7 +245,7 @@ end
 <% end %>
 ```
 
-##### Labmda Slots
+##### Lambda Slots
 
 Lambda slots render their return value. Lambda slots are useful for working with helpers like `content_tag` or as wrappers for another component with specific default values.
 
