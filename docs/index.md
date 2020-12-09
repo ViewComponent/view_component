@@ -195,6 +195,8 @@ Delegate slots delegate to another component:
 
 ```ruby
 class BlogComponent < ViewComponent::Base
+  include ViewComponent::SlotableV2
+
   # Since `HeaderComponent` is nested inside of this component, we have to
   # reference it as a string instead of a class name.
   renders_one :header, "HeaderComponent"
@@ -249,6 +251,8 @@ Lambda slots render their return value. Lambda slots are useful for working with
 
 ```ruby
 class Blogcomponent < ViewComponent::Base
+  include ViewComponent::SlotableV2
+
   # Renders the returned string
   renders_one :header, -> (title:) do
     content_tag :h1 do
@@ -272,6 +276,8 @@ Define a pass through slot by omitting the second argument to `renders_one` and 
 ```ruby
 # blog_component.rb
 class BlogComponent < ViewComponent::Base
+  include ViewComponent::SlotableV2
+
   renders_one :header
   renders_many :posts
 end
@@ -313,6 +319,8 @@ e.g.
 
 ```ruby
 class NavigationComponent < ViewComponent::Base
+  include ViewComponent::SlotableV2
+
   renders_many :links, "LinkComponent"
 
   class LinkComponent < ViewComponent::Base
