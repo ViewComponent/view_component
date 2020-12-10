@@ -183,6 +183,13 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector(".item.normal", count: 2)
   end
 
+  def test_renders_nested_content_in_order
+    render_inline TitleWrapperComponent.new(content: "Hello world!")
+
+    assert_selector("h1", text: /Hello world/)
+    assert_text(/Hello world/, count: 1)
+  end
+
   # In a previous implementation of slots,
   # the list of slots registered to a component
   # was accidentally assigned to all components!
