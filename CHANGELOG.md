@@ -2,6 +2,10 @@
 
 ## master
 
+* Fixed out-of-order rendering bug in `ActionView::SlotableV2`
+
+    *Blake Williams*
+
 ## 2.23.0
 
 * Add `ActionView::SlotableV2`
