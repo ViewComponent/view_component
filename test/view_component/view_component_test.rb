@@ -348,6 +348,7 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_selector("h1", text: I18n.t("translations_component.title"))
     assert_selector("h2", text: I18n.t("translations_component.subtitle"))
+    assert_selector("p", text: I18n.t("translations_component.body"))
   end
 
   def test_renders_component_with_rb_in_its_name

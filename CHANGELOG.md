@@ -2,6 +2,10 @@
 
 ## main
 
+* Add `ViewComponent::I18n` for sidecar translations
+
+    *Elia Schito*
+
 * Allow customization of the controller used in component tests.
 
     *Alex Robbin*

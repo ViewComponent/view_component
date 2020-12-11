@@ -1179,6 +1179,51 @@ app/components
 </div>
 ```
 
+##### Translations
+
+In order to support `I18n` translations scoped to the component you can add a dynamic translations loader:
+
+`config/locale/components.rb`
+
+```ruby
+require "view_component/i18n"
+ViewComponent::I18n.load
+```
+
+and setup reloading support for development:
+
+`config/application.rb`
+
+```ruby
+config.after_initialize do |app|
+  require "view_component/i18n"
+  ViewComponent::I18n.initialize_i18n(app)
+end
+
+config.before_eager_load do |app|
+  require "view_component/i18n"
+  ViewComponent::I18n.initialize_i18n(app)
+end
+```
+
+This allows for adding a "sidecar" YAML file that will define translations scoped to the component:
+
+`app/components/example_component.yml`
+
+```yml
+en:
+  # This key will be expanded to `en.example_component.hello`
+  hello: "Hello world!"
+```
+
+The translations will then be available with a leading "dot":
+
+`app/components/example_component.html.erb`
+
+```erb
+<p><%= t(".hello") %></p>
+```
+
 ## Known issues
 
 ### form_for compatibility

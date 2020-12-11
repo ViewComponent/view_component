@@ -14,6 +14,11 @@ require "slim"
 module Dummy
   class Application < Rails::Application
     config.action_controller.asset_host = "http://assets.example.com"
+
+    config.after_initialize do |app|
+      require "view_component/i18n"
+      ViewComponent::I18n.initialize_i18n(app)
+    end
   end
 end
 
