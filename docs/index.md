@@ -1145,7 +1145,7 @@ app/components
 
 ## Known issues
 
-### form_for compatiblilty
+### form_for compatibility
 
 ViewComponent is [not currently compatible](https://github.com/github/view_component/issues/241) with `form_for` helpers.
 
