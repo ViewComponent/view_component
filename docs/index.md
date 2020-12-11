@@ -75,7 +75,7 @@ Use the component generator to create a new ViewComponent.
 The generator accepts a component name and a list of arguments:
 
 ```bash
-bin/rails generate component Example title 
+bin/rails generate component Example title
 
       invoke  test_unit
       create  test/components/example_component_test.rb
@@ -219,7 +219,7 @@ class BlogComponent < ViewComponent::Base
     def initialize(classes:)
       @classes = classes
     end
-    
+
     def call
       content_tag :h1, content, { class: classes }
     end
@@ -1002,7 +1002,7 @@ function importAll(r) {
   r.keys().forEach(r)
 }
 
-importAll(require.context("../components", true, /_component\.js$/))
+importAll(require.context("../components", true, /[_\/]component\.js$/))
 ```
 
 Any file with the `_component.js` suffix (such as `app/components/widget_component.js`) will be compiled into the Webpack bundle. If that file itself imports another file, for example `app/components/widget_component.css`, it will also be compiled and bundled into Webpack's output stylesheet if Webpack is being used for styles.
