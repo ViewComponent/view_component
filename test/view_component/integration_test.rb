@@ -330,7 +330,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("p", text: "Mints counter: 2")
   end
 
-  def test_renders_collections
+  def test_renders_inline_collections
     get "/inline_products"
 
     assert_select("h1", text: "Product", count: 2)
