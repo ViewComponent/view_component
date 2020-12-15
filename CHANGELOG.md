@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.23.2
+
 * Fix bug where rendering a component `with_collection` from a controller raised an error.
 
     *Joel Hawksley*
