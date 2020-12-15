@@ -2,6 +2,10 @@
 
 ## master
 
+* Fix bug where rendering a component `with_collection` from a controller raised an error.
+
+    *Joel Hawksley*
+
 ## 2.23.1
 
 * Fixed out-of-order rendering bug in `ActionView::SlotableV2`
