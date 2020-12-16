@@ -558,4 +558,10 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_predicate InheritedInlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
+
+  def test_does_not_capture_block_if_render_is_false
+    render_inline(ConditionalRenderComponent.new(should_render: false)) do
+      raise
+    end
+  end
 end

@@ -2,6 +2,10 @@
 
 ## master
 
+* Do not capture the block of a component if `render?` is false
+
+    *Vincent Rolea*
+
 ## 2.23.2
 
 * Fix bug where rendering a component `with_collection` from a controller raised an error.

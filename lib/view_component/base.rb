@@ -68,12 +68,13 @@ module ViewComponent
       old_current_template = @current_template
       @current_template = self
 
-      # Assign captured content passed to component as a block to @content
-      @content = view_context.capture(self, &block) if block_given?
 
       before_render
 
       if render?
+        # Assign captured content passed to component as a block to @content
+        @content = view_context.capture(self, &block) if block_given?
+
         render_template_for(@variant)
       else
         ""
