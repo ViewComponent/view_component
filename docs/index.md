@@ -1,4 +1,4 @@
-A framework for building reusable, testable & encapsulated view components in Ruby on Rails. 
+A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
 
 [View on GitHub →](https://github.com/github/view_component)
 
