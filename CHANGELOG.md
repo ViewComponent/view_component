@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## master
+## main
+
+## 2.23.3
+
+* Rename `master` branch to `main`.
+
+    *Joel Hawksley*
 
 ## 2.23.2
 
