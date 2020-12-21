@@ -329,6 +329,18 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_no_text("component was rendered")
   end
 
+  def test_conditional_rendering_if_content_provided
+    render_inline(ConditionalContentComponent.new)
+
+    refute_component_rendered
+
+    render_inline(ConditionalContentComponent.new) do
+      "Content"
+    end
+
+    assert_text("Content")
+  end
+
   def test_render_check
     render_inline(RenderCheckComponent.new)
 
