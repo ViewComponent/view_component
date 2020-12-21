@@ -2,7 +2,6 @@
 
 ## main
 
-
 * Add test case for checking presence of `content` in `#render?`.
 
     *Joel Hawksley*
