@@ -2,7 +2,9 @@
 
 ## main
 
-## 2.23.3
+* Add test case for checking presence of `content` in `#render?`.
+
+    *Joel Hawksley*
 
 * Rename `master` branch to `main`.
 
