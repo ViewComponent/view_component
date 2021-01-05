@@ -37,6 +37,12 @@ jobs:
         rails_version: [5.0.0, 5.2.3, 6.0.0, 6.1.0, master]
         ruby_version: [2.4.10, 2.5.8, 2.6.6, 2.7.2, 3.0.0]
         exclude:
+          - rails_version: 5.0.0
+            ruby_version: 3.0.0
+          - rails_version: 5.2.3
+            ruby_version: 3.0.0
+          - rails_version: 6.0.0
+            ruby_version: 3.0.0
           - rails_version: 6.0.0
             ruby_version: 2.4.10
           - rails_version: 6.1.0
