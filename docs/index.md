@@ -1134,6 +1134,15 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 - [komposable/komponent](https://github.com/komposable/komponent)
 - [activeadmin/arbre](https://github.com/activeadmin/arbre)
 
+## ViewComponent libraries
+
+- [Primer ViewComponents](https://primer.style/view-components/)
+
+## Frameworks using ViewComponent
+
+- [Motion](https://github.com/unabridged/motion)
+- [StimulusReflex](https://docs.stimulusreflex.com/)
+
 ## Resources
 
 - [Encapsulating Views, RailsConf 2020](https://youtu.be/YVYRus_2KZM)
