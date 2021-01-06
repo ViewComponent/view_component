@@ -397,7 +397,7 @@ And render them `with_variant`:
 # output: <%= link_to "Phone", phone_path %>
 ```
 
-_*Note*: `call_*` methods must be public._
+_**Note**: `call_*` methods must be public._
 
 ### Template Inheritance
 
