@@ -397,6 +397,8 @@ And render them `with_variant`:
 # output: <%= link_to "Phone", phone_path %>
 ```
 
+_*Note*: These `call_*` methods must be public._
+
 ### Template Inheritance
 
 Components that subclass another component inherit the parent component's
