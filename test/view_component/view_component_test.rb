@@ -635,4 +635,16 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_text "Hello, World!"
   end
+
+  def test_does_not_render_passed_in_content_if_render_is_false
+    start_time = Time.now
+
+    render_inline ConditionalRenderComponent.new(should_render: false) do |c|
+      c.render SleepComponent.new(seconds: 5)
+    end
+
+    total = Time.now - start_time
+
+    assert total < 1
+  end
 end
