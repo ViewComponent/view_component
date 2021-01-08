@@ -48,7 +48,7 @@ ViewComponents use a standard Ruby initializer that clearly defines what is need
 
 #### Performance
 
-Based on our [benchmarks](../performance/benchmark.rb), ViewComponents are ~10x faster than partials.
+Based on our [benchmarks](https://github.com/github/view_component/blob/main/performance/benchmark.rb), ViewComponents are ~10x faster than partials.
 
 #### Standards
 
