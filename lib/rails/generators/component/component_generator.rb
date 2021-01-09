@@ -10,7 +10,6 @@ module Rails
 
       def create_component_file
         template "component.rb", File.join("app/components", class_path, "#{file_name}_component.rb")
-        
       end
 
       hook_for :test_framework

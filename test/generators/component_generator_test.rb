@@ -60,5 +60,4 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     
     assert_no_file "app/components/user_component.html.erb"
   end
-
 end
