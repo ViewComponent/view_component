@@ -57,7 +57,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
 
   def test_inline_erb
     run_generator %w[user --inline]
-    
+
     assert_no_file "app/components/user_component.html.erb"
   end
 end
