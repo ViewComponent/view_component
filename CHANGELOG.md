@@ -4,6 +4,10 @@
 
 ## 2.24.0
 
+* Add `--inline` option to the erb generator. Prevents default erb template from being created.
+
+    *Nachiket Pusalkar*
+
 * Add test case for checking presence of `content` in `#render?`.
 
     *Joel Hawksley*
