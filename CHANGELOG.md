@@ -4,708 +4,709 @@
 
 ## 2.24.0
 
-* Add `--inline` option to the erb generator. Prevents default erb template from being created.
+- Add `--inline` option to the erb generator. Prevents default erb template from being created.
 
-    *Nachiket Pusalkar*
+  _Nachiket Pusalkar_
 
-* Add test case for checking presence of `content` in `#render?`.
+- Add test case for checking presence of `content` in `#render?`.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Rename `master` branch to `main`.
+- Rename `master` branch to `main`.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## 2.23.2
 
-* Fix bug where rendering a component `with_collection` from a controller raised an error.
+- Fix bug where rendering a component `with_collection` from a controller raised an error.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## 2.23.1
 
-* Fixed out-of-order rendering bug in `ActionView::SlotableV2`
+- Fixed out-of-order rendering bug in `ActionView::SlotableV2`
 
-    *Blake Williams*
+  _Blake Williams_
 
 ## 2.23.0
 
-* Add `ActionView::SlotableV2`
-  * `with_slot` becomes `renders_one`.
-  * `with_slot collection: true` becomes `renders_many`.
-  * Slot definitions now accept either a component class, component class name, or a lambda instead of a `class_name:` keyword argument.
-  * Slots now support positional arguments.
-  * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. e.g. `<%= my_slot %>`.
-  * Slot values are no longer set via the `slot` method, and instead use the name of the slot.
+- Add `ActionView::SlotableV2`
 
-    *Blake Williams*
+  - `with_slot` becomes `renders_one`.
+  - `with_slot collection: true` becomes `renders_many`.
+  - Slot definitions now accept either a component class, component class name, or a lambda instead of a `class_name:` keyword argument.
+  - Slots now support positional arguments.
+  - Slots no longer use the `content` attribute to render content, instead relying on `to_s`. e.g. `<%= my_slot %>`.
+  - Slot values are no longer set via the `slot` method, and instead use the name of the slot.
 
-* Add `frozen_string_literal: true` to generated component template.
+    _Blake Williams_
 
-    *Max Beizer*
+- Add `frozen_string_literal: true` to generated component template.
+
+  _Max Beizer_
 
 ## 2.22.1
 
-* Revert refactor that broke rendering for some users.
+- Revert refactor that broke rendering for some users.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## 2.22.0
 
-* Add #with_variant to enable inline component variant rendering without template files.
+- Add #with_variant to enable inline component variant rendering without template files.
 
-    *Nathan Jones*
+  _Nathan Jones_
 
 ## 2.21.0
 
-* Only compile components at application initialization if eager loading is enabled.
+- Only compile components at application initialization if eager loading is enabled.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## 2.20.0
 
-* Don't add `/test/components/previews` to preview_paths if directory doesn't exist.
+- Don't add `/test/components/previews` to preview_paths if directory doesn't exist.
 
-    *Andy Holland*
+  _Andy Holland_
 
-* Add `preview_controller` option to override the controller used for component previews.
+- Add `preview_controller` option to override the controller used for component previews.
 
-    *Matt Swanson, Blake Williams, Juan Manuel Ramallo*
+  _Matt Swanson, Blake Williams, Juan Manuel Ramallo_
 
 ## 2.19.1
 
-* Check if `Rails.application` is loaded.
+- Check if `Rails.application` is loaded.
 
-    *Gleydson Tavares*
+  _Gleydson Tavares_
 
-* Add documentation for webpack configuration when using Stimulus controllers.
+- Add documentation for webpack configuration when using Stimulus controllers.
 
-    *Ciprian Redinciuc*
+  _Ciprian Redinciuc_
 
 ## 2.19.0
 
-* Extend documentation for using Stimulus within sidecar directories.
+- Extend documentation for using Stimulus within sidecar directories.
 
-    *Ciprian Redinciuc*
+  _Ciprian Redinciuc_
 
-* Subclassed components inherit templates from parent.
+- Subclassed components inherit templates from parent.
 
-    *Blake Williams*
+  _Blake Williams_
 
-* Fix uninitialized constant error from `with_collection` when `eager_load` is disabled.
+- Fix uninitialized constant error from `with_collection` when `eager_load` is disabled.
 
-    *Josh Gross*
+  _Josh Gross_
 
 ## 2.18.2
 
-* Raise an error if controller or view context is accessed during initialize as they are only available in render.
+- Raise an error if controller or view context is accessed during initialize as they are only available in render.
 
-    *Julian Nadeau*
+  _Julian Nadeau_
 
-* Collate test coverage across CI builds, ensuring 100% test coverage.
+- Collate test coverage across CI builds, ensuring 100% test coverage.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## 2.18.1
 
-* Fix bug where previews didn't work when monkey patch was disabled.
+- Fix bug where previews didn't work when monkey patch was disabled.
 
-    *Mixer Gutierrez*
+  _Mixer Gutierrez_
 
 ## 2.18.0
 
-* Fix auto-loading of previews (changes no longer require a server restart)
+- Fix auto-loading of previews (changes no longer require a server restart)
 
-    *Matt Brictson*
+  _Matt Brictson_
 
-* Add `default_preview_layout` configuration option to load custom app/views/layouts.
+- Add `default_preview_layout` configuration option to load custom app/views/layouts.
 
-    *Jared White, Juan Manuel Ramallo*
+  _Jared White, Juan Manuel Ramallo_
 
-* Calculate virtual_path once for all instances of a component class to improve performance.
+- Calculate virtual_path once for all instances of a component class to improve performance.
 
-    *Brad Parker*
+  _Brad Parker_
 
 ## 2.17.1
 
-* Fix bug where rendering Slot with empty block resulted in error.
+- Fix bug where rendering Slot with empty block resulted in error.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## 2.17.0
 
-* Slots return stripped HTML, removing leading and trailing whitespace.
+- Slots return stripped HTML, removing leading and trailing whitespace.
 
-    *Jason Long, Joel Hawksley*
+  _Jason Long, Joel Hawksley_
 
 ## 2.16.0
 
-* Add `--sidecar` option to the erb, haml and slim generators. Places the generated template in the sidecar directory.
+- Add `--sidecar` option to the erb, haml and slim generators. Places the generated template in the sidecar directory.
 
-    *Michael van Rooijen*
+  _Michael van Rooijen_
 
 ## 2.15.0
 
-* Add support for templates as ViewComponent::Preview examples.
+- Add support for templates as ViewComponent::Preview examples.
 
-    *Juan Manuel Ramallo
+  \*Juan Manuel Ramallo
 
 ## 2.14.1
 
-* Allow using `render_inline` in test when the render monkey patch is disabled with `config.view_component.render_monkey_patch_enabled = false` in versions of Rails < 6.1.
+- Allow using `render_inline` in test when the render monkey patch is disabled with `config.view_component.render_monkey_patch_enabled = false` in versions of Rails < 6.1.
 
-    *Clément Joubert*
+  _Clément Joubert_
 
-* Fix kwargs warnings in slotable.
+- Fix kwargs warnings in slotable.
 
-    Fixes:
+  Fixes:
 
-    ```console
-    view_component/lib/view_component/slotable.rb:98: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
-    view_component/test/app/components/slots_component.rb:18: warning: The called method `initialize' is defined here
-    ```
+  ```console
+  view_component/lib/view_component/slotable.rb:98: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
+  view_component/test/app/components/slots_component.rb:18: warning: The called method `initialize' is defined here
+  ```
 
-    *Eileen M. Uchitelle*
+  _Eileen M. Uchitelle_
 
 ## 2.14.0
 
-* Add `config.preview_paths` to support multiple locations of component preview files. Deprecate `config.preview_path`.
+- Add `config.preview_paths` to support multiple locations of component preview files. Deprecate `config.preview_path`.
 
-    *Tomas Celizna*
+  _Tomas Celizna_
 
-* Only print warning about a missing capybara dependency if the `DEBUG` environment variable is set.
+- Only print warning about a missing capybara dependency if the `DEBUG` environment variable is set.
 
-    *Richard Macklin*
+  _Richard Macklin_
 
 ## 2.13.0
 
-* Add the ability to disable the render monkey patch with `config.view_component.render_monkey_patch_enabled`. In versions of Rails < 6.1, add `render_component` and `render_component_to_string` methods which can be used for rendering components instead of `render`.
+- Add the ability to disable the render monkey patch with `config.view_component.render_monkey_patch_enabled`. In versions of Rails < 6.1, add `render_component` and `render_component_to_string` methods which can be used for rendering components instead of `render`.
 
-    *Johannes Engl*
+  _Johannes Engl_
 
 ## 2.12.0
 
-* Implement Slots as potential successor to Content Areas.
+- Implement Slots as potential successor to Content Areas.
 
-    *Jens Ljungblad, Brian Bugh, Jon Palmer, Joel Hawksley*
+  _Jens Ljungblad, Brian Bugh, Jon Palmer, Joel Hawksley_
 
 ## 2.11.1
 
-* Fix kwarg warnings in Ruby 2.7.
+- Fix kwarg warnings in Ruby 2.7.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## 2.11.0
 
-* Ensure Rails configuration is available within components.
+- Ensure Rails configuration is available within components.
 
-    *Trevor Broaddus*
+  _Trevor Broaddus_
 
-* Fix bug where global Rails helpers are inaccessible from nested components. Before, `helpers` was pointing to parent component.
+- Fix bug where global Rails helpers are inaccessible from nested components. Before, `helpers` was pointing to parent component.
 
-    *Franco Sebregondi*
+  _Franco Sebregondi_
 
 ## 2.10.0
 
-* Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
+- Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
 
-    *Max Beizer*
+  _Max Beizer_
 
 ## 2.9.0
 
-* Cache components per-request in development, preventing unnecessary recompilation during a single request.
+- Cache components per-request in development, preventing unnecessary recompilation during a single request.
 
-    *Felipe Sateler*
+  _Felipe Sateler_
 
 ## 2.8.0
 
-* Add `before_render`, deprecating `before_render_check`.
+- Add `before_render`, deprecating `before_render_check`.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## 2.7.0
 
-* Add `rendered_component` method to `ViewComponent::TestHelpers` which exposes the raw output of the rendered component.
+- Add `rendered_component` method to `ViewComponent::TestHelpers` which exposes the raw output of the rendered component.
 
-    *Richard Macklin*
+  _Richard Macklin_
 
-* Support sidecar directories for views and other assets.
+- Support sidecar directories for views and other assets.
 
-    *Jon Palmer*
+  _Jon Palmer_
 
 ## 2.6.0
 
-* Add `config.view_component.preview_route` to set the endpoint for component previews. By default `/rails/view_components` is used.
+- Add `config.view_component.preview_route` to set the endpoint for component previews. By default `/rails/view_components` is used.
 
-    *Juan Manuel Ramallo*
+  _Juan Manuel Ramallo_
 
-* Raise error when initializer omits with_collection_parameter.
+- Raise error when initializer omits with_collection_parameter.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## 2.5.1
 
-* Compile component before rendering collection.
+- Compile component before rendering collection.
 
-    *Rainer Borene*
+  _Rainer Borene_
 
 ## v2.5.0
 
-* Add counter variables when rendering collections.
+- Add counter variables when rendering collections.
 
-    *Frank S*
+  _Frank S_
 
-* Add the ability to access params from preview examples.
+- Add the ability to access params from preview examples.
 
-    *Fabio Cantoni*
+  _Fabio Cantoni_
 
 ## v2.4.0
 
-* Add `#render_to_string` support.
+- Add `#render_to_string` support.
 
-   *Jarod Reid*
+  _Jarod Reid_
 
-* Declare explicit dependency on `activesupport`.
+- Declare explicit dependency on `activesupport`.
 
-    *Richard Macklin*
+  _Richard Macklin_
 
-* Remove `autoload`s of internal modules (`Previewable`, `RenderMonkeyPatch`, `RenderingMonkeyPatch`).
+- Remove `autoload`s of internal modules (`Previewable`, `RenderMonkeyPatch`, `RenderingMonkeyPatch`).
 
-    *Richard Macklin*
+  _Richard Macklin_
 
-* Remove `capybara` dependency.
+- Remove `capybara` dependency.
 
-    *Richard Macklin*
+  _Richard Macklin_
 
 ## v2.3.0
 
-* Allow using inline render method(s) defined on a parent.
+- Allow using inline render method(s) defined on a parent.
 
-    *Simon Rand*
+  _Simon Rand_
 
-* Fix bug where inline variant render methods would never be called.
+- Fix bug where inline variant render methods would never be called.
 
-    *Simon Rand*
+  _Simon Rand_
 
-* ViewComponent preview index views use Rails internal layout instead of application's layout
+- ViewComponent preview index views use Rails internal layout instead of application's layout
 
-    *Juan Manuel Ramallo*
+  _Juan Manuel Ramallo_
 
 ## v2.2.2
 
-* Add `Base.format` for better compatibility with `ActionView::Template`.
+- Add `Base.format` for better compatibility with `ActionView::Template`.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v2.2.1
 
-* Fix bug where template could not be found if `inherited` was redefined.
+- Fix bug where template could not be found if `inherited` was redefined.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v2.2.0
 
-* Add support for `config.action_view.annotate_template_file_names` (coming in Rails 6.1).
+- Add support for `config.action_view.annotate_template_file_names` (coming in Rails 6.1).
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Remove initializer requirement from the component.
+- Remove initializer requirement from the component.
 
-    *Vasiliy Ermolovich*
+  _Vasiliy Ermolovich_
 
 ## v2.1.0
 
-* Support rendering collections (e.g., `render(MyComponent.with_collection(@items))`).
+- Support rendering collections (e.g., `render(MyComponent.with_collection(@items))`).
 
-    *Tim Clem*
+  _Tim Clem_
 
 ## v2.0.0
 
-* Move to `ViewComponent` namespace, removing all references to `ActionView`.
+- Move to `ViewComponent` namespace, removing all references to `ActionView`.
 
-  * The gem name is now `view_component`.
-  * ViewComponent previews are now accessed at `/rails/view_components`.
-  * ViewComponents can _only_ be rendered with the instance syntax: `render(MyComponent.new)`. Support for all other syntaxes has been removed.
-  * ActiveModel::Validations have been removed. ViewComponent generators no longer include validations.
-  * In Rails 6.1, no monkey patching is used.
-  * `to_component_class` has been removed.
-  * All gem configuration is now in `config.view_component`.
+  - The gem name is now `view_component`.
+  - ViewComponent previews are now accessed at `/rails/view_components`.
+  - ViewComponents can _only_ be rendered with the instance syntax: `render(MyComponent.new)`. Support for all other syntaxes has been removed.
+  - ActiveModel::Validations have been removed. ViewComponent generators no longer include validations.
+  - In Rails 6.1, no monkey patching is used.
+  - `to_component_class` has been removed.
+  - All gem configuration is now in `config.view_component`.
 
 ## v1.17.0
 
-* Support Ruby 2.4 in CI.
+- Support Ruby 2.4 in CI.
 
-    *Andrew Mason*
+  _Andrew Mason_
 
-* ViewComponent generators do not not prompt for content requirement.
+- ViewComponent generators do not not prompt for content requirement.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Add post-install message that gem has been renamed to `view_component`.
+- Add post-install message that gem has been renamed to `view_component`.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.16.0
 
-* Add `refute_component_rendered` test helper.
+- Add `refute_component_rendered` test helper.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Check for Rails before invocation.
+- Check for Rails before invocation.
 
-    *Dave Paola*
+  _Dave Paola_
 
-* Allow components to be rendered without a template file (aka inline component).
+- Allow components to be rendered without a template file (aka inline component).
 
-    *Rainer Borene*
+  _Rainer Borene_
 
 ## v1.15.0
 
-* Re-introduce ActionView::Component::TestHelpers.
+- Re-introduce ActionView::Component::TestHelpers.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Bypass monkey patch on Rails 6.1 builds.
+- Bypass monkey patch on Rails 6.1 builds.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Make `ActionView::Helpers::TagHelper` available in Previews.
+- Make `ActionView::Helpers::TagHelper` available in Previews.
 
-    ```ruby
-    def with_html_content
-      render(MyComponent.new) do
-        tag.div do
-          content_tag(:span, "Hello")
-        end
+  ```ruby
+  def with_html_content
+    render(MyComponent.new) do
+      tag.div do
+        content_tag(:span, "Hello")
       end
     end
-    ```
+  end
+  ```
 
-    *Sean Doyle*
+  _Sean Doyle_
 
 ## v1.14.1
 
-* Fix bug where generator created invalid test code.
+- Fix bug where generator created invalid test code.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.14.0
 
-* Rename ActionView::Component::Base to ViewComponent::Base
+- Rename ActionView::Component::Base to ViewComponent::Base
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.13.0
 
-* Allow components to be rendered inside controllers.
+- Allow components to be rendered inside controllers.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Improve backtraces from exceptions raised in templates.
+- Improve backtraces from exceptions raised in templates.
 
-    *Blake Williams*
+  _Blake Williams_
 
 ## v1.12.0
 
-* Revert: Remove initializer requirement for Ruby 2.7+
+- Revert: Remove initializer requirement for Ruby 2.7+
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Restructure Railtie into Engine
+- Restructure Railtie into Engine
 
-    *Sean Doyle*
+  _Sean Doyle_
 
-* Allow components to override before_render_check
+- Allow components to override before_render_check
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.11.1
 
-* Relax Capybara requirement.
+- Relax Capybara requirement.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.11.0
 
-* Add support for Capybara matchers.
+- Add support for Capybara matchers.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Add erb, haml, & slim template generators
+- Add erb, haml, & slim template generators
 
-    *Asger Behncke Jacobsen*
+  _Asger Behncke Jacobsen_
 
 ## v1.10.0
 
-* Deprecate all `render` syntaxes except for `render(MyComponent.new(foo: :bar))`
+- Deprecate all `render` syntaxes except for `render(MyComponent.new(foo: :bar))`
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.9.0
 
-* Remove initializer requirement for Ruby 2.7+
+- Remove initializer requirement for Ruby 2.7+
 
-    *Dylan Clark*
+  _Dylan Clark_
 
 ## v1.8.1
 
-* Run validation checks before calling `#render?`.
+- Run validation checks before calling `#render?`.
 
-    *Ash Wilson*
+  _Ash Wilson_
 
 ## v1.8.0
 
-* Remove the unneeded ComponentExamplesController and simplify preview rendering.
+- Remove the unneeded ComponentExamplesController and simplify preview rendering.
 
-    *Jon Palmer*
+  _Jon Palmer_
 
-* Add `#render?` hook to easily allow components to be no-ops.
+- Add `#render?` hook to easily allow components to be no-ops.
 
-    *Kyle Fox*
+  _Kyle Fox_
 
-* Don't assume ApplicationController exists.
+- Don't assume ApplicationController exists.
 
-    *Jon Palmer*
+  _Jon Palmer_
 
-* Allow some additional checks to overrided render?
+- Allow some additional checks to overrided render?
 
-    *Sergey Malykh*
+  _Sergey Malykh_
 
-* Fix generator placing namespaced components in the root directory.
+- Fix generator placing namespaced components in the root directory.
 
-    *Asger Behncke Jacobsen*
+  _Asger Behncke Jacobsen_
 
-* Fix cache test.
+- Fix cache test.
 
-    *Sergey Malykh*
+  _Sergey Malykh_
 
 ## v1.7.0
 
-* Simplify validation of templates and compilation.
+- Simplify validation of templates and compilation.
 
-    *Jon Palmer*
+  _Jon Palmer_
 
-* Add support for multiple content areas.
+- Add support for multiple content areas.
 
-    *Jon Palmer*
+  _Jon Palmer_
 
 ## v1.6.2
 
-* Fix Uninitialized Constant error.
+- Fix Uninitialized Constant error.
 
-    *Jon Palmer*
+  _Jon Palmer_
 
-* Add basic github issue and PR templates.
+- Add basic github issue and PR templates.
 
-    *Dylan Clark*
+  _Dylan Clark_
 
-* Update readme phrasing around previews.
+- Update readme phrasing around previews.
 
-    *Justin Coyne*
+  _Justin Coyne_
 
 ## v1.6.1
 
-* Allow Previews to have no layout.
+- Allow Previews to have no layout.
 
-    *Jon Palmer*
+  _Jon Palmer_
 
-* Bump rack from 2.0.7 to 2.0.8.
+- Bump rack from 2.0.7 to 2.0.8.
 
-    *Dependabot*
+  _Dependabot_
 
-* Compile components on application boot when eager loading is enabled.
+- Compile components on application boot when eager loading is enabled.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Previews support content blocks.
+- Previews support content blocks.
 
-    *Cesario Uy*
+  _Cesario Uy_
 
-* Follow Rails conventions. (refactor)
+- Follow Rails conventions. (refactor)
 
-    *Rainer Borene*
+  _Rainer Borene_
 
-* Fix edge case issue with extracting variants from less conventional source_locations.
+- Fix edge case issue with extracting variants from less conventional source_locations.
 
-    *Ryan Workman*
+  _Ryan Workman_
 
 ## v1.6.0
 
-* Avoid dropping elements in the render_inline test helper.
+- Avoid dropping elements in the render_inline test helper.
 
-    *@dark-panda*
+  _@dark-panda_
 
-* Add test for helpers.asset_url.
+- Add test for helpers.asset_url.
 
-    *Christopher Coleman*
+  _Christopher Coleman_
 
-* Add rudimentary compatibility with better_html.
+- Add rudimentary compatibility with better_html.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Template-less variants fall back to default template.
+- Template-less variants fall back to default template.
 
-    *Asger Behncke Jacobsen*, *Cesario Uy*
+  _Asger Behncke Jacobsen_, _Cesario Uy_
 
-* Generated tests use new naming convention.
+- Generated tests use new naming convention.
 
-    *Simon Træls Ravn*
+  _Simon Træls Ravn_
 
-* Eliminate sqlite dependency.
+- Eliminate sqlite dependency.
 
-    *Simon Dawson*
+  _Simon Dawson_
 
-* Add support for rendering components via #to_component_class
+- Add support for rendering components via #to_component_class
 
-    *Vinicius Stock*
+  _Vinicius Stock_
 
 ## v1.5.3
 
-* Add support for RSpec to generators.
+- Add support for RSpec to generators.
 
-    *Dylan Clark, Ryan Workman*
+  _Dylan Clark, Ryan Workman_
 
-* Require controllers as part of setting autoload paths.
+- Require controllers as part of setting autoload paths.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.5.2
 
-* Disable eager loading initializer.
+- Disable eager loading initializer.
 
-    *Kasper Meyer*
+  _Kasper Meyer_
 
 ## v1.5.1
 
-* Update railties class to work with Rails 6.
+- Update railties class to work with Rails 6.
 
-    *Juan Manuel Ramallo*
+  _Juan Manuel Ramallo_
 
 ## v1.5.0
 
 Note: `actionview-component` is now loaded by requiring `actionview/component`, not `actionview/component/base`.
 
-* Fix issue with generating component method signatures.
+- Fix issue with generating component method signatures.
 
-    *Ryan Workman, Dylan Clark*
+  _Ryan Workman, Dylan Clark_
 
-* Create component generator.
+- Create component generator.
 
-    *Vinicius Stock*
+  _Vinicius Stock_
 
-* Add helpers proxy.
+- Add helpers proxy.
 
-    *Kasper Meyer*
+  _Kasper Meyer_
 
-* Introduce ActionView::Component::Previews.
+- Introduce ActionView::Component::Previews.
 
-    *Juan Manuel Ramallo*
+  _Juan Manuel Ramallo_
 
 ## v1.4.0
 
-* Fix bug where components broke in application paths with periods.
+- Fix bug where components broke in application paths with periods.
 
-    *Anton, Joel Hawksley*
+  _Anton, Joel Hawksley_
 
-* Add support for `cache_if` in component templates.
+- Add support for `cache_if` in component templates.
 
-    *Aaron Patterson, Joel Hawksley*
+  _Aaron Patterson, Joel Hawksley_
 
-* Add support for variants.
+- Add support for variants.
 
-    *Juan Manuel Ramallo*
+  _Juan Manuel Ramallo_
 
-* Fix bug in virtual path lookup.
+- Fix bug in virtual path lookup.
 
-    *Juan Manuel Ramallo*
+  _Juan Manuel Ramallo_
 
-* Preselect the rendered component in render_inline.
+- Preselect the rendered component in render_inline.
 
-    *Elia Schito*
+  _Elia Schito_
 
 ## v1.3.6
 
-* Allow template file names without format.
+- Allow template file names without format.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Add support for translations.
+- Add support for translations.
 
-    *Juan Manuel Ramallo*
+  _Juan Manuel Ramallo_
 
 ## v1.3.5
 
-* Re-expose `controller` method.
+- Re-expose `controller` method.
 
-    *Michael Emhofer, Joel Hawksley*
+  _Michael Emhofer, Joel Hawksley_
 
-* Gem version numbers are now accessible through `ActionView::Component::VERSION`
+- Gem version numbers are now accessible through `ActionView::Component::VERSION`
 
-    *Richard Macklin*
+  _Richard Macklin_
 
-* Fix typo in README
+- Fix typo in README
 
-    *ars moriendi*
+  _ars moriendi_
 
 ## v1.3.4
 
-* Template errors surface correct file and line number.
+- Template errors surface correct file and line number.
 
-    *Justin Coyne*
+  _Justin Coyne_
 
-* Allow access to `request` inside components.
+- Allow access to `request` inside components.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.3.3
 
-* Do not raise error when sidecar files that are not templates exist.
+- Do not raise error when sidecar files that are not templates exist.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.3.2
 
-* Support rendering views from inside component templates.
+- Support rendering views from inside component templates.
 
-    *Patrick Sinclair*
+  _Patrick Sinclair_
 
 ## v1.3.1
 
-* Fix bug where rendering nested content caused an error.
+- Fix bug where rendering nested content caused an error.
 
-    *Joel Hawksley, Aaron Patterson*
+  _Joel Hawksley, Aaron Patterson_
 
 ## v1.3.0
 
-* Components are rendered with enough controller context to support rendering of partials and forms.
+- Components are rendered with enough controller context to support rendering of partials and forms.
 
-    *Patrick Sinclair, Joel Hawksley, Aaron Patterson*
+  _Patrick Sinclair, Joel Hawksley, Aaron Patterson_
 
 ## v1.2.1
 
-* `actionview-component` is now tested against Ruby 2.3/2.4 and Rails 5.0.0.
+- `actionview-component` is now tested against Ruby 2.3/2.4 and Rails 5.0.0.
 
 ## v1.2.0
 
-* The `render_component` test helper has been renamed to `render_inline`. `render_component` has been deprecated and will be removed in v2.0.0.
+- The `render_component` test helper has been renamed to `render_inline`. `render_component` has been deprecated and will be removed in v2.0.0.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
-* Components are now rendered with `render MyComponent, foo: :bar` syntax. The existing `render MyComponent.new(foo: :bar)` syntax has been deprecated and will be removed in v2.0.0.
+- Components are now rendered with `render MyComponent, foo: :bar` syntax. The existing `render MyComponent.new(foo: :bar)` syntax has been deprecated and will be removed in v2.0.0.
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.1.0
 
-* Components now inherit from ActionView::Component::Base
+- Components now inherit from ActionView::Component::Base
 
-    *Joel Hawksley*
+  _Joel Hawksley_
 
 ## v1.0.1
 
-* Always recompile component templates outside production.
+- Always recompile component templates outside production.
 
-    *Joel Hawksley, John Hawthorn*
+  _Joel Hawksley, John Hawthorn_
 
 ## v1.0.0
 
