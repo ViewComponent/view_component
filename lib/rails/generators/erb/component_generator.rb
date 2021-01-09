@@ -16,7 +16,7 @@ module Erb
       private
 
       def destination
-        unless options["inline"] 
+        unless options["inline"]
           if options["sidecar"]
             File.join("app/components", class_path, "#{file_name}_component", "#{file_name}_component.html.erb")
           else
