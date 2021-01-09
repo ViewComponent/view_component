@@ -31,6 +31,17 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_component_with_inline
+    run_generator %w[user name --inline]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/class UserComponent < /, component)
+      assert_match(/def initialize\(name:\)/, component)
+      assert_match(/def call/, component)
+    end
+
+  end
+
   def test_component_with_namespace
     run_generator %w[admins/user]
 
