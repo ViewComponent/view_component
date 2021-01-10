@@ -39,7 +39,7 @@ module Rails
         attributes.map { |attr| "@#{attr.name} = #{attr.name}" }.join("\n    ")
       end
 
-      def initialize_call_method_for_inline
+      def initialize_call_method_for_inline?
         options["inline"]
       end
     end

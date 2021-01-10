@@ -4,7 +4,7 @@
 
 ## 2.24.0
 
-* Add `--inline` option to the erb generator. Prevents default erb template from being created.
+* Add `--inline` option to the erb generator. Prevents default erb template from being created and creates a component with a call method.
 
     *Nachiket Pusalkar*
 
