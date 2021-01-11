@@ -20,7 +20,6 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
       assert_match(/class UserComponent < /, component)
       assert_no_match(/def initialize/, component)
     end
-
   end
 
   def test_component_with_arguments
@@ -36,13 +35,10 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator %w[user name --inline]
 
     assert_file "app/components/user_component.rb" do |component|
-      assert_match(/class UserComponent < /, component)
-      assert_match(/def initialize\(name:\)/, component)
       assert_match(/def call/, component)
     end
 
     assert_no_file "app/components/user_component.html.erb"
-
   end
 
   def test_component_with_namespace
