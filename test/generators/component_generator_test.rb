@@ -31,6 +31,16 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_component_with_inline
+    run_generator %w[user name --inline]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/def call/, component)
+    end
+
+    assert_no_file "app/components/user_component.html.erb"
+  end
+
   def test_component_with_namespace
     run_generator %w[admins/user]
 
@@ -53,5 +63,11 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator %w[user --template-engine haml]
 
     assert_file "app/components/user_component.html.haml"
+  end
+
+  def test_inline_erb
+    run_generator %w[user --inline]
+
+    assert_no_file "app/components/user_component.html.erb"
   end
 end

@@ -7,6 +7,7 @@ module Rails
 
       argument :attributes, type: :array, default: [], banner: "attribute"
       check_class_collision suffix: "Component"
+      class_option :inline, type: :boolean, default: false
 
       def create_component_file
         template "component.rb", File.join("app/components", class_path, "#{file_name}_component.rb")
@@ -36,6 +37,10 @@ module Rails
 
       def initialize_body
         attributes.map { |attr| "@#{attr.name} = #{attr.name}" }.join("\n    ")
+      end
+
+      def initialize_call_method_for_inline?
+        options["inline"]
       end
     end
   end
