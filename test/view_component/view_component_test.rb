@@ -559,17 +559,17 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
-  def capture_block_in_render_content_only_if_component_is_rendering
+  def test_block_passed_to_content_evaluated_only_if_parent_component_is_rendering
     render_inline(ConditionalRenderComponent.new(should_render: true)) do |c|
-      c.render_content do
-        render ErbComponent.new(message: "Hello World")
+      c.content do
+        "Hello World"
       end
     end
 
-    assert_selector("div", text: "Hello World")
+    assert_text("Hello World")
 
     render_inline(ConditionalRenderComponent.new(should_render: false)) do |c|
-      c.render_content do
+      c.content do
         raise
       end
     end

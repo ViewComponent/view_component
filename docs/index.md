@@ -167,6 +167,30 @@ Returning:
 </div>
 ```
 
+In the case when you need the block passed to a `ViewComponent` to be evaluated only if the parent component is rendering, you can do as follows:
+
+```ruby
+class MyComponent < ViewComponent::Base
+  def initialize(should_render: true)
+    @should_render = should_render
+  end
+
+  def render?
+    @should_render
+  end
+end
+```
+
+```erb
+<%= render MyComponent(should_render: current_user.present?) do |component| %>
+  <%= component.content do %>
+    <%= current_user.name %>
+  <% end >
+<% end >
+```
+
+In the code above, `current_user.name` will be evaluated only if `current_user` is present on the parent component.
+
 #### Slots (experimental)
 
 _Slots are currently under development as the successor to Content Areas. The Slot APIs should be considered unfinished (it's already in its second iteration, [see the original API](/slots-v1).) and subject to breaking changes in non-major releases of ViewComponent._
@@ -1198,7 +1222,7 @@ ViewComponent is built by:
 |@johannesengl|@czj|@mrrooijen|@bradparker|@mattbrictson|
 |Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|San Francisco|
 
-|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|<img src="https://avatars.githubusercontent.com/swanson?s=256" alt="swanson" width="128" />|<img src="https://avatars.githubusercontent.com/virolea?s=256" alt="virolea" width="128" />|
+|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|<img src="https://avatars.githubusercontent.com/swanson?s=256" alt="swanson" width="128" />|<img src="https://avatars.githubusercontent.com/virolea?s=256" alt="viroleaA" width="128" />|
 |:---:|:---:|:---:|:---:|:---:|
 |@mixergtz|@jules2689|@g13ydson|@swanson|@virolea
 |Medellin, Colombia|Toronto, Canada|João Pessoa, Brazil|Indianapolis, IN|Nantes, France|
