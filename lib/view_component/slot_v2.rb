@@ -2,7 +2,8 @@
 
 module ViewComponent
   class SlotV2
-    attr_writer :_component_instance, :_content_block, :_content
+    attr_writer :_component_instance, :_content_block, :_content,
+                :_renderable_function, :_args, :_kwargs
 
     def initialize(parent)
       @parent = parent
@@ -60,6 +61,28 @@ module ViewComponent
 
     def respond_to_missing?(symbol, include_all = false)
       defined?(@_component_instance) && @_component_instance.respond_to?(symbol, include_all)
+    end
+
+    # Instantiate a concrete slot from a generic one, passing extra component parameters
+    def with(*args, **kwargs)
+      return self if args.empty? && kwargs.empty?
+
+      slot = self.class.new(@parent)
+
+      slot._args = args = [*args, *@_args]
+      slot._kwargs = kwargs = {**kwargs, **@_kwargs}
+
+      slot._component_instance =
+        if @_renderable_function
+          @_renderable_function.bind(@parent).call(*args, **kwargs, &@_content_block)
+        else
+          @_component_instance.class.new(*args, **kwargs)
+        end
+
+      slot._content_block = @_content_block
+      slot._renderable_function = @_renderable_function
+
+      slot
     end
   end
 end

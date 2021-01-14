@@ -1,0 +1,11 @@
+<ul role="pagination">
+  <% 1.upto(@max).each do |page_number| %>
+    <li data-page="<%= page_number %>">
+      <% if page_number == @current %>
+        <%= current_page.with(number: page_number) %>
+      <% else %>
+        <%= page.with(number: page_number) %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

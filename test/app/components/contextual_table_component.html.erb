@@ -1,0 +1,22 @@
+<table>
+  <thead>
+    <tr>
+      <% columns.each do |column| %>
+        <th data-field="<%= column.path.join(' ') %>">
+          <%= column.label %>
+        </th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% data.each do |item| %>
+      <tr data-id="<%= item[:id] %>">
+        <% columns.each do |column| %>
+          <td data-field="<%= column.path.join(' ') %>">
+            <%= column.with(item: item) %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

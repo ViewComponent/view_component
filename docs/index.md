@@ -309,6 +309,125 @@ end
 </div>
 ```
 
+##### Passing variable data to slots
+
+Usually the slot components are set once for all. If you need to render a
+slot several times, with different data, you can use `with` on the slot itself.
+
+```erb
+<footer>
+  <%= render PaginationComponent.new(current: params[:page], max: 10) do |c| %>
+    <% c.current_page do |page| %>
+      <!-- this will be rendered for the current page -->
+      <span class="current-page"><%= page.number %></span>
+    <% end %>
+    <% c.page do |page| %>
+      <!-- this will be rendered many times, for each non-current page -->
+      <a class="page" href="<%= url_for(page: page.number) %>"><%= page.number %></a>
+    <% end %>
+  <% end %>
+</footer>
+```
+
+To achieve it, your `PaginationComponent` will be similar to
+
+```ruby
+class PaginationComponent < ViewComponent::Base
+  include ViewComponent::SlotableV2
+
+  renders_one :page, "PageComponent"
+  renders_one :current_page, "PageComponent"
+
+  def initialize(current:, max:)
+    @current, @max = current, max
+  end
+
+  class PageComponent < ViewComponent::Base
+    attr_reader :number
+
+    def initalize(number: nil)
+      # must be optional, because the component is instantiated once without extra args
+      @number = number
+    end
+
+    def call
+      tag.li content, data: {page: number}
+    end
+  end
+end
+```
+
+and its template
+
+```erb
+<ul role="pagination">
+  <% 1.upto(@max).each do |n| %>
+    <% if n == @current %>
+      <%= current_page.with(number: n) %>
+    <% else %>
+      <%= page.with(number: n) %>
+    <% end %>
+  <% end %>
+</ul>
+```
+
+Similarly, a table could `render_many :columns` and with the same pattern a
+column can be rendered for each item:
+
+```erb
+<%= render TableComponent.new(data: data) do |t| %>
+  <% t.column do |c| %>
+    <%= c.item.some_field %>
+  <% end %>
+  <% t.column do |c| %>
+    <%= c.item.some_other_field %>
+  <% end %>
+<% end %>
+```
+
+This also works with lambda slots that return component instances. The lambda is
+run again prepeding positional and named args of the `with` call to the corresponding
+ones of the slot call. Again for this to be possible, positional and named args that
+will be passed contextually need to be optional:
+
+```ruby
+class TenComponent < ViewComponent::Base
+  include ViewComponent::SlotableV2
+
+  renders_one :foo, ->(name = nil, **kw) { FooComponent.new(name: name, **kw) }
+end
+```
+
+```erb
+<!-- component template -->
+<ul>
+  <% 1.upto(10) do |n| %>
+    <!-- injects n as positional arg to the lambda -->
+    <li><%= foo.with(n) %></li>
+  <% end %>
+</ul>
+```
+
+```erb
+<!-- using it -->
+<%= render TenComponent.new do |ten| %>
+  <% ten.foo do |foo| %>
+    <!-- it can access `name` from foo -->
+    <b><%= foo.name %></b>
+  <% end %>
+<% end %>
+```
+
+```html
+<!-- rendered -->
+<ul>
+  <li><b>1</b></li>
+  <li><b>2</b></li>
+  ...
+  <li><b>10</b></li>
+</ul>
+```
+
 ##### Rendering Collections
 
 Collection slots (declared with `renders_many`) can also be passed a collection.

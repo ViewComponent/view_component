@@ -213,6 +213,11 @@ module ViewComponent
       # `view_context.capture` twice, which is slower
       slot._content_block = block if block_given?
 
+      # Store args and kwargs for late re-instantiation
+      slot._args = args
+      slot._kwargs = kwargs
+      slot._renderable_function = slot_definition[:renderable_function]
+
       # If class
       if slot_definition[:renderable]
         slot._component_instance = slot_definition[:renderable].new(*args, **kwargs)
