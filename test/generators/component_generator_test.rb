@@ -22,6 +22,15 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_component_tests
+    run_generator %w[user --test-framework test_unit]
+
+    assert_file "test/components/user_component_test.rb" do |component|
+      assert_match(/class UserComponentTest < /, component)
+      assert_match(/def test_component_renders_something_useful/, component)
+    end
+  end
+
   def test_component_preview
     run_generator %w[user --preview]
 
@@ -63,6 +72,15 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator %w[admins/user]
 
     assert_file "app/components/admins/user_component.rb", /class Admins::UserComponent < /
+  end
+
+  def test_component_tests_with_namespace
+    run_generator %w[admins/user --test-framework test_unit]
+
+    assert_file "test/components/admins/user_component_test.rb" do |component|
+      assert_match(/class Admins::UserComponentTest < /, component)
+      assert_match(/def test_component_renders_something_useful/, component)
+    end
   end
 
   def test_component_preview_with_namespace
