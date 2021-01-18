@@ -22,12 +22,30 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_component_preview
+    run_generator %w[user --preview]
+
+    assert_file "test/components/previews/user_component_preview.rb" do |component|
+      assert_match(/class UserComponentPreview < /, component)
+      assert_match(/render\(UserComponent.new\)/, component)
+    end
+  end
+
   def test_component_with_arguments
     run_generator %w[user name]
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/class UserComponent < /, component)
       assert_match(/def initialize\(name:\)/, component)
+    end
+  end
+
+  def test_component_preview_with_arguments
+    run_generator %w[user name --preview]
+
+    assert_file "test/components/previews/user_component_preview.rb" do |component|
+      assert_match(/class UserComponentPreview < /, component)
+      assert_match(/render\(UserComponent.new\(name: "name"\)\)/, component)
     end
   end
 
@@ -45,6 +63,15 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator %w[admins/user]
 
     assert_file "app/components/admins/user_component.rb", /class Admins::UserComponent < /
+  end
+
+  def test_component_preview_with_namespace
+    run_generator %w[admins/user --preview]
+
+    assert_file "test/components/previews/admins/user_component_preview.rb" do |component|
+      assert_match(/class Admins::UserComponentPreview < /, component)
+      assert_match(/render\(Admins::UserComponent.new\)/, component)
+    end
   end
 
   def test_invoking_erb_template_engine

@@ -15,6 +15,10 @@ module Rails
 
       hook_for :test_framework
 
+      hook_for :preview, type: :boolean do |instance, preview|
+        instance.invoke preview, [instance.name, instance.attributes.map(&:name)]
+      end
+
       hook_for :template_engine do |instance, template_engine|
         instance.invoke template_engine, [instance.name]
       end
