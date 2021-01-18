@@ -1216,4 +1216,3 @@ ViewComponent is built by:
 |:---:|:---:|:---:|:---:|:---:|
 |@mixergtz|@jules2689|@g13ydson|@swanson|@bobmaerten|
 |Medellin, Colombia|Toronto, Canada|João Pessoa, Brazil|Indianapolis, IN|Valenciennes, France|
-
