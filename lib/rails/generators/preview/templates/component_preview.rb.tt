@@ -1,11 +1,5 @@
-require "test_helper"
-
 class <%= class_name %>ComponentPreview < ViewComponent::Preview
-  def with_useful_content
-  <%- if initialize_signature -%>
-    render(<%= class_name %>Component.new(<%= initialize_signature %>))
-  <%- else -%>
+  def default
     render(<%= class_name %>Component.new)
-  <%- end -%>
   end
 end

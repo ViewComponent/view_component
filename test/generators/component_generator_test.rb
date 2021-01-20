@@ -49,15 +49,6 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_component_preview_with_arguments
-    run_generator %w[user name --preview]
-
-    assert_file "test/components/previews/user_component_preview.rb" do |component|
-      assert_match(/class UserComponentPreview < /, component)
-      assert_match(/render\(UserComponent.new\(name: "name"\)\)/, component)
-    end
-  end
-
   def test_component_with_inline
     run_generator %w[user name --inline]
 
