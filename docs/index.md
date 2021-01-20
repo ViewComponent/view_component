@@ -90,6 +90,12 @@ The template engine can also be passed as an option to the generator:
 bin/rails generate component Example title content --template-engine slim
 ```
 
+Rails preview can also be generated with the `--preview` option:
+
+```bash
+bin/rails generate component Example title content --preview
+```
+
 #### Implementation
 
 A ViewComponent is a Ruby file and corresponding template file with the same base name:
