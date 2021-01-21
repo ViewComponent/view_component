@@ -15,6 +15,8 @@ module ViewComponent
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
+    BLACKLISTED_PARAMETERS = %i[content].freeze
+
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -264,7 +266,7 @@ module ViewComponent
         parameter = validate_default ? collection_parameter : provided_collection_parameter
 
         return unless parameter
-        return if initialize_parameters.map(&:last).include?(parameter)
+        return if initialize_parameter_names.include?(parameter)
 
         # If Ruby cannot parse the component class, then the initalize
         # parameters will be empty and ViewComponent will not be able to render
@@ -281,7 +283,25 @@ module ViewComponent
         )
       end
 
+      # Ensure the component initializer does not define
+      # invalid parameters that could override the framework's
+      # methods.
+      def validate_initialization_parameters!
+        invalid_parameters = initialize_parameter_names & BLACKLISTED_PARAMETERS
+
+        return unless invalid_parameters.any?
+
+        raise ArgumentError.new(
+          "#{self} initializer must not have " \
+          "`#{invalid_parameters.join(", ")}` as parameters."
+        )
+      end
+
       private
+
+      def initialize_parameter_names
+        initialize_parameters.map(&:last)
+      end
 
       def initialize_parameters
         instance_method(:initialize).parameters
