@@ -90,6 +90,12 @@ The template engine can also be passed as an option to the generator:
 bin/rails generate component Example title content --template-engine slim
 ```
 
+To generate a [preview](#previewing-components), pass the `--preview` option:
+
+```bash
+bin/rails generate component Example title content --preview
+```
+
 #### Implementation
 
 A ViewComponent is a Ruby file and corresponding template file with the same base name:
@@ -1212,7 +1218,7 @@ ViewComponent is built by:
 |@johannesengl|@czj|@mrrooijen|@bradparker|@mattbrictson|
 |Berlin, Germany|Paris, France|The Netherlands|Brisbane, Australia|San Francisco|
 
-|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|<img src="https://avatars.githubusercontent.com/swanson?s=256" alt="swanson" width="128" />|
-|:---:|:---:|:---:|:---:|
-|@mixergtz|@jules2689|@g13ydson|@swanson|
-|Medellin, Colombia|Toronto, Canada|João Pessoa, Brazil|Indianapolis, IN|
+|<img src="https://avatars.githubusercontent.com/mixergtz?s=256" alt="mixergtz" width="128" />|<img src="https://avatars.githubusercontent.com/jules2689?s=256" alt="jules2689" width="128" />|<img src="https://avatars.githubusercontent.com/g13ydson?s=256" alt="g13ydson" width="128" />|<img src="https://avatars.githubusercontent.com/swanson?s=256" alt="swanson" width="128" />|<img src="https://avatars.githubusercontent.com/bobmaerten?s=256" alt="bobmaerten" width="128" />|
+|:---:|:---:|:---:|:---:|:---:|
+|@mixergtz|@jules2689|@g13ydson|@swanson|@bobmaerten|
+|Medellin, Colombia|Toronto, Canada|João Pessoa, Brazil|Indianapolis, IN|Valenciennes, France|
