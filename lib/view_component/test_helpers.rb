@@ -25,7 +25,7 @@ module ViewComponent
 
     def render_inline(component, **args, &block)
       @rendered_component =
-        if Rails.version.to_f >= 6.1
+        if Base.render_monkey_patch_enabled || Rails.version.to_f >= 6.1
           controller.view_context.render(component, args, &block)
         else
           controller.view_context.render_component(component, &block)

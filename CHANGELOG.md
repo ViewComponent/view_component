@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix bug where render_inline helper didn't work when monkey patch was enabled.
+
+    *Josiah Campbell*
+
 * Add `--preview` generator option to create an associated preview file.
 
   *Bob Maerten*

@@ -570,4 +570,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_predicate InheritedInlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
+
+  def test_render_inline_with_public_render_api
+    with_render_monkey_patch_config(true) do
+      render_inline(MyComponent.new)
+
+      assert_selector("div", text: "hello,world!")
+    end
+  end
 end

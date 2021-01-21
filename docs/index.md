@@ -1222,3 +1222,8 @@ ViewComponent is built by:
 |:---:|:---:|:---:|:---:|:---:|
 |@mixergtz|@jules2689|@g13ydson|@swanson|@bobmaerten|
 |Medellin, Colombia|Toronto, Canada|João Pessoa, Brazil|Indianapolis, IN|Valenciennes, France|
+
+|<img src="https://avatars.githubusercontent.com/jocmp?s=256" alt="jocmp" width="128" />|
+|:---:|
+|@jocmp|
+| Grand Rapids, MI |
