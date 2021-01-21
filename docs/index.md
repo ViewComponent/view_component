@@ -177,7 +177,7 @@ Returning:
 
 #### Slots (experimental)
 
-_Slots are currently under development as the successor to Content Areas. The Slot APIs should be considered unfinished (it's already in its second iteration, [see the original API](/slots-v1).) and subject to breaking changes in non-major releases of ViewComponent._
+_Slots are currently under development as the successor to Content Areas. The Slot APIs should be considered unfinished (it's already in its second iteration, [see the original API](/slots_v1).) and subject to breaking changes in non-major releases of ViewComponent._
 
 Slots enable multiple blocks of content to be passed to a single ViewComponent, improving the ergonomics of complex components.
 
