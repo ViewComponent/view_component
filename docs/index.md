@@ -90,7 +90,7 @@ The template engine can also be passed as an option to the generator:
 bin/rails generate component Example title content --template-engine slim
 ```
 
-Rails preview can also be generated with the `--preview` option:
+To generate a [preview](#previewing-components), pass the `--preview` option:
 
 ```bash
 bin/rails generate component Example title content --preview

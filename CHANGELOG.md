@@ -2,7 +2,7 @@
 
 ## main
 
-* Add `--preview` option to the generator. Generates associated preview file.
+* Add `--preview` generator option to create an associated preview file.
 
   *Bob Maerten*
 
