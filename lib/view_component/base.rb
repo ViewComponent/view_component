@@ -292,8 +292,9 @@ module ViewComponent
         return unless invalid_parameters.any?
 
         raise ArgumentError.new(
-          "#{self} initializer must not have " \
-          "`#{invalid_parameters.join(", ")}` as parameters."
+          "#{self} initializer cannot contain " \
+          "`#{invalid_parameters.join(", ")}` since it will override " \
+          "public ViewComponent methods."
         )
       end
 
