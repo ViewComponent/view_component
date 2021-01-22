@@ -6,7 +6,7 @@
 
   *Bob Maerten*
 
-* Add argument validation to avoid `content` override
+* Add argument validation to avoid `content` override.
 
     *Manuel Puyol*
 

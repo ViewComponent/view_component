@@ -15,7 +15,7 @@ module ViewComponent
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
-    BLACKLISTED_PARAMETERS = %i[content].freeze
+    DENYLISTED_PARAMETERS = %i[content].freeze
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -287,7 +287,7 @@ module ViewComponent
       # invalid parameters that could override the framework's
       # methods.
       def validate_initialization_parameters!
-        invalid_parameters = initialize_parameter_names & BLACKLISTED_PARAMETERS
+        invalid_parameters = initialize_parameter_names & DENYLISTED_PARAMETERS
 
         return unless invalid_parameters.any?
 
