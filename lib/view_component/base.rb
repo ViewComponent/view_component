@@ -291,10 +291,21 @@ module ViewComponent
 
         return unless invalid_parameters.any?
 
-        raise ArgumentError.new(
+        multiple_parameters = invalid_parameters.size > 1
+        parameter_list = invalid_parameters.join(", ")
+
+        message = if multiple_parameters
           "#{self} initializer cannot contain " \
-          "`#{invalid_parameters.join(", ")}` since it will override " \
+          "`#{parameter_list}` since they will override " \
           "public ViewComponent methods."
+        else
+          "#{self} initializer cannot contain " \
+          "`#{parameter_list}` since it will override a " \
+          "public ViewComponent method."
+        end
+
+        raise ArgumentError.new(
+
         )
       end
 
