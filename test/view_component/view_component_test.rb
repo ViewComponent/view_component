@@ -551,6 +551,21 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_component_with_invalid_named_parameter_names
+    begin
+      old_cache = ViewComponent::CompileCache.cache
+      ViewComponent::CompileCache.cache = Set.new
+
+      exception = assert_raises ArgumentError do
+        InvalidNamedParametersComponent.compile(raise_errors: true)
+      end
+
+      assert_match(/InvalidNamedParametersComponent initializer cannot contain `content` since it will override public ViewComponent methods/, exception.message)
+    ensure
+      ViewComponent::CompileCache.cache = old_cache
+    end
+  end
+
   def test_collection_component_with_trailing_comma_attr_reader
     exception = assert_raises ArgumentError do
       render_inline(
