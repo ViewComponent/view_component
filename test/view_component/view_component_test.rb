@@ -61,6 +61,20 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("bar")
   end
 
+  def test_renders_slim_with_many_slots
+    render_inline(SlimRendersManyComponent.new) do |c|
+      c.component(message: "Bar A") do
+        "Foo A "
+      end
+      c.component(message: "Bar B") do
+        "Foo B "
+      end
+    end
+
+    assert_selector(".slim-div", text: "Foo A Bar A")
+    assert_selector(".slim-div", text: "Foo B Bar B")
+  end
+
   def test_renders_haml_template
     render_inline(HamlComponent.new(message: "bar")) { "foo" }
 
