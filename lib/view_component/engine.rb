@@ -22,9 +22,9 @@ module ViewComponent
         )
 
         if options.preview_path.present?
-          ActiveSupport::Deprecation.warn(
+          ViewComponent::Deprecation.warn(
             "`preview_path` will be removed in v3.0.0. Use `preview_paths` instead."
-          ) unless ENV["VIEW_COMPONENT_ENV"] == "test"
+          )
           options.preview_paths << options.preview_path
         end
       end

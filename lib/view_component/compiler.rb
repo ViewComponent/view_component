@@ -19,9 +19,9 @@ module ViewComponent
       end
 
       if component_class.instance_methods(false).include?(:before_render_check)
-        ActiveSupport::Deprecation.warn(
+        ViewComponent::Deprecation.warn(
           "`before_render_check` will be removed in v3.0.0. Use `before_render` instead."
-        ) unless ENV["VIEW_COMPONENT_ENV"] == "test"
+        )
       end
 
       # Remove any existing singleton methods,
