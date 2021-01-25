@@ -34,7 +34,7 @@ module ViewComponent
         elsif defined?(@_content_block)
           @_content_block.call
         end
-      end
+      end.html_safe
 
       @content
     end
@@ -63,7 +63,7 @@ module ViewComponent
     end
 
     def html_safe?
-      to_s.html_safe
+      to_s.html_safe?
     end
 
     def respond_to_missing?(symbol, include_all = false)
