@@ -23,6 +23,9 @@ module ViewComponent
     # the slot and return it.
     def to_s
       view_context = @parent.send(:view_context)
+
+      before_render
+
       view_context.capture do
         if defined?(@_component_instance)
           # render_in is faster than `parent.render`
@@ -56,6 +59,10 @@ module ViewComponent
     #
     def method_missing(symbol, *args, &block)
       @_component_instance.public_send(symbol, *args, &block)
+    end
+
+    def before_render
+      # noop
     end
 
     def respond_to_missing?(symbol, include_all = false)
