@@ -12,6 +12,10 @@
 
     *Manuel Puyol*
 
+* Fix bug where SlotV2 was rendered as an HTML string when using Slim.
+
+  *Manuel Puyol*
+
 ## 2.24.0
 
 * Add `--inline` option to the erb generator. Prevents default erb template from being created and creates a component with a call method.
