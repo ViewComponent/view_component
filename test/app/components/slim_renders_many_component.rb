@@ -3,5 +3,5 @@
 class SlimRendersManyComponent < ViewComponent::Base
   include ViewComponent::SlotableV2
 
-  renders_many :components, SlimComponent
+  renders_many :slim_components, SlimComponent
 end

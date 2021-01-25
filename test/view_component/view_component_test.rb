@@ -63,10 +63,10 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_renders_slim_with_many_slots
     render_inline(SlimRendersManyComponent.new) do |c|
-      c.component(message: "Bar A") do
+      c.slim_component(message: "Bar A") do
         "Foo A "
       end
-      c.component(message: "Bar B") do
+      c.slim_component(message: "Bar B") do
         "Foo B "
       end
     end
