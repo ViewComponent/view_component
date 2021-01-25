@@ -36,7 +36,6 @@ If you are the current maintainer of this gem:
 1. Add version heading to `CHANGELOG.md` leaving a header for `main`.
 1. Run `bundle` to update the `Gemfile.lock`.
 1. Make a PR to github/view_component and merge it into `main`.
-1. Create a GitHub [release](https://github.com/github/view_component/releases/new) and populate it with the list of changes from `CHANGELOG.md`.
 1. Get latest changes from default branch: `git pull origin main`.
-1. Build the gem locally: `gem build view_component.gemspec`.
-1. Push to rubygems.org -- `gem push view_component-VERSION.gem`.
+1. Build and release the gem: `bundle exec rake release`.
+1. Create a GitHub [release](https://github.com/github/view_component/releases/new) and populate it with the list of changes from `CHANGELOG.md`.

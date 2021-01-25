@@ -6,7 +6,7 @@
 
 * Add `--preview` generator option to create an associated preview file.
 
-  *Bob Maerten*
+    *Bob Maerten*
 
 * Add argument validation to avoid `content` override.
 
