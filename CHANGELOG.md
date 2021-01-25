@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.25.0
+
 * Add `--preview` generator option to create an associated preview file.
 
   *Bob Maerten*
