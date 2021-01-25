@@ -304,9 +304,7 @@ module ViewComponent
           "public ViewComponent method."
         end
 
-        raise ArgumentError.new(
-
-        )
+        raise ArgumentError.new message
       end
 
       private
