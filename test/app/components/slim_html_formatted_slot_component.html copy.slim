@@ -1,0 +1,5 @@
+= render SlimRendersManyComponent.new do |c|
+  - c.slim_component(message: "Foo") do
+    p HTML Formatted
+    div
+      = unsafe_html

@@ -34,7 +34,7 @@ module ViewComponent
         elsif defined?(@_content_block)
           @_content_block.call
         end
-      end.html_safe
+      end
 
       @content
     end
