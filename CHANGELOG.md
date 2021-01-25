@@ -6,6 +6,10 @@
 
   *Bob Maerten*
 
+* Add argument validation to avoid `content` override.
+
+    *Manuel Puyol*
+
 ## 2.24.0
 
 * Add `--inline` option to the erb generator. Prevents default erb template from being created and creates a component with a call method.
