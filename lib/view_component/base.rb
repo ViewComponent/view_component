@@ -15,7 +15,7 @@ module ViewComponent
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
-    DENYLISTED_PARAMETERS = %i[content].freeze
+    RESERVED_PARAMETER = :content
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -287,24 +287,13 @@ module ViewComponent
       # invalid parameters that could override the framework's
       # methods.
       def validate_initialization_parameters!
-        invalid_parameters = initialize_parameter_names & DENYLISTED_PARAMETERS
+        return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
-        return unless invalid_parameters.any?
-
-        multiple_parameters = invalid_parameters.size > 1
-        parameter_list = invalid_parameters.join(", ")
-
-        message = if multiple_parameters
+        raise ArgumentError.new(
           "#{self} initializer cannot contain " \
-          "`#{parameter_list}` since they will override " \
-          "public ViewComponent methods."
-        else
-          "#{self} initializer cannot contain " \
-          "`#{parameter_list}` since it will override a " \
+          "`#{RESERVED_PARAMETER}` since it will override a " \
           "public ViewComponent method."
-        end
-
-        raise ArgumentError.new message
+        )
       end
 
       private
