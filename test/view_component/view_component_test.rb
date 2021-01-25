@@ -75,11 +75,17 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector(".slim-div", text: "Foo B Bar B")
   end
 
-  def test_renders_slim_with_formatted_slot_escaping_unsafe_html
+  def test_renders_slim_with_html_formatted_slot
     render_inline(SlimHTMLFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted")
+  end
+
+  def test_renders_slim_escaping_dangerous_html_assign
+    render_inline(SlimWithUnsafeHTMLComponent.new)
+
     refute_selector("script")
+    assert_selector(".slim-div", text: "<script>alert('xss')</script>")
   end
 
   def test_renders_haml_template
