@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix bug where SlotV2 was rendered as an HTML string when using Slim.
+
+  *Manuel Puyol*
+
 ## 2.25.0
 
 * Add `--preview` generator option to create an associated preview file.
@@ -11,10 +15,6 @@
 * Add argument validation to avoid `content` override.
 
     *Manuel Puyol*
-
-* Fix bug where SlotV2 was rendered as an HTML string when using Slim.
-
-  *Manuel Puyol*
 
 ## 2.24.0
 
