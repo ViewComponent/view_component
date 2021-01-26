@@ -2,6 +2,10 @@
 
 ## main
 
+* Add test case for `before_render` hook on SlotsV2.
+
+    *Manuel Puyol*
+
 ## 2.25.0
 
 * Add `--preview` generator option to create an associated preview file.
@@ -9,10 +13,6 @@
     *Bob Maerten*
 
 * Add argument validation to avoid `content` override.
-
-    *Manuel Puyol*
-
-* Add `before_render` hook to SlotV2.
 
     *Manuel Puyol*
 
