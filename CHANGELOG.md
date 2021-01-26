@@ -2,10 +2,6 @@
 
 ## main
 
-* Add test case for `before_render` hook on SlotsV2.
-
-    *Manuel Puyol*
-
 * Fix bug where SlotV2 was rendered as an HTML string when using Slim.
 
     *Manuel Puyol*
