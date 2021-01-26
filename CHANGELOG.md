@@ -4,7 +4,7 @@
 
 * Fix bug where SlotV2 was rendered as an HTML string when using Slim.
 
-  *Manuel Puyol*
+    *Manuel Puyol*
 
 ## 2.25.0
 

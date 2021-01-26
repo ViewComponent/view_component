@@ -212,4 +212,23 @@ class SlotsV2sTest < ViewComponent::TestCase
     # [SlotsV2Component::Subtitle, SlotsV2Component::Tab...]
     assert_empty new_component_class.registered_slots
   end
+
+  def test_renders_slots_with_before_render_hook
+    render_inline(SlotsV2BeforeRenderComponent.new) do |component|
+      component.title do
+        "This is my title!"
+      end
+
+      component.greeting do
+        "John Doe"
+      end
+      component.greeting do
+        "Jane Doe"
+      end
+    end
+
+    assert_selector("h1", text: "Testing - This is my title!")
+    assert_selector(".greeting", text: "Hello, John Doe")
+    assert_selector(".greeting", text: "Hello, Jane Doe")
+  end
 end
