@@ -540,9 +540,9 @@ end
 
 _To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`._
 
-### `before_render`
+### `#before_render`
 
-Components can define a `before_render` method to be called before a component is rendered, when `helpers` is able to be used:
+ViewComponents can define a `before_render` method to be called before a component is rendered, when `helpers` is able to be used:
 
 `app/components/example_component.rb`
 
