@@ -67,6 +67,8 @@ module ViewComponent
 
       define_render_template_for
 
+      component_class.after_compile
+
       CompileCache.register(component_class)
     end
 

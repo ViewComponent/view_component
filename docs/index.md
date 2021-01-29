@@ -554,6 +554,12 @@ class ExampleComponent < ViewComponent::Base
 end
 ```
 
+### `.after_compile`
+
+ViewComponents can define an `after_compile` class method that will be called after the component is compiled.
+
+`.after_compile` is called at request time if `Rails.application.config.eager_load` is `false`, or at application boot if it set to `true`.
+
 ### Rendering collections
 
 Use `with_collection` to render a ViewComponent with a collection:

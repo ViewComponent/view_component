@@ -4,7 +4,7 @@ class AfterCompileComponent < ViewComponent::Base
   @@compiled_value = ""
 
   def self.after_compile
-    @@compiled_value = "Hello World!"
+    @@compiled_value = "Hello, World!"
   end
 
   def self.compiled_value
