@@ -100,17 +100,17 @@ bin/rails generate component Example title content --preview
 
 A ViewComponent is a Ruby file and corresponding template file with the same base name:
 
-`app/components/test_component.rb`:
+`app/components/example_component.rb`:
 
 ```ruby
-class TestComponent < ViewComponent::Base
+class ExampleComponent < ViewComponent::Base
   def initialize(title:)
     @title = title
   end
 end
 ```
 
-`app/components/test_component.html.erb`:
+`app/components/example_component.html.erb`:
 
 ```erb
 <span title="<%= @title %>"><%= content %></span>
@@ -119,7 +119,7 @@ end
 Rendered in a view as:
 
 ```erb
-<%= render(TestComponent.new(title: "my title")) do %>
+<%= render(ExampleComponent.new(title: "my title")) do %>
   Hello, World!
 <% end %>
 ```
@@ -428,8 +428,8 @@ The simplest option is to place the view next to the Ruby component:
 ```console
 app/components
 ├── ...
-├── test_component.rb
-├── test_component.html.erb
+├── example_component.rb
+├── example_component.html.erb
 ├── ...
 ```
 
@@ -544,10 +544,10 @@ _To assert that a component has not been rendered, use `refute_component_rendere
 
 Components can define a `before_render` method to be called before a component is rendered, when `helpers` is able to be used:
 
-`app/components/confirm_email_component.rb`
+`app/components/example_component.rb`
 
 ```ruby
-class MyComponent < ViewComponent::Base
+class ExampleComponent < ViewComponent::Base
   def before_render
     @my_icon = helpers.star_icon
   end
@@ -698,9 +698,9 @@ Capybara matchers are available if the gem is installed:
 ```ruby
 require "view_component/test_case"
 
-class MyComponentTest < ViewComponent::TestCase
+class ExampleComponentTest < ViewComponent::TestCase
   def test_render_component
-    render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
+    render_inline(ExampleComponent.new(title: "my title")) { "Hello, World!" }
 
     assert_selector("span[title='my title']", text: "Hello, World!")
     # or, to just assert against the text:
@@ -713,7 +713,7 @@ In the absence of `capybara`, assert against the return value of `render_inline`
 
 ```ruby
 def test_render_component
-  result = render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
+  result = render_inline(ExampleComponent.new(title: "my title")) { "Hello, World!" }
 
   assert_includes result.css("span[title='my title']").to_html, "Hello, World!"
 end
@@ -723,7 +723,7 @@ Alternatively, assert against the raw output of the component, which is exposed 
 
 ```ruby
 def test_render_component
-  render_inline(TestComponent.new(title: "my title")) { "Hello, World!" }
+  render_inline(ExampleComponent.new(title: "my title")) { "Hello, World!" }
 
   assert_includes rendered_component, "Hello, World!"
 end
@@ -751,7 +751,7 @@ Use the `with_variant` helper to test specific variants:
 ```ruby
 def test_render_component_for_tablet
   with_variant :tablet do
-    render_inline(TestComponent.new(title: "my title")) { "Hello, tablets!" }
+    render_inline(ExampleComponent.new(title: "my title")) { "Hello, tablets!" }
 
     assert_selector("span[title='my title']", text: "Hello, tablets!")
   end
@@ -762,20 +762,20 @@ end
 
 `ViewComponent::Preview`, like `ActionMailer::Preview`, provides a way to preview components in isolation:
 
-`test/components/previews/test_component_preview.rb`
+`test/components/previews/example_component_preview.rb`
 
 ```ruby
-class TestComponentPreview < ViewComponent::Preview
+class ExampleComponentPreview < ViewComponent::Preview
   def with_default_title
-    render(TestComponent.new(title: "Test component default"))
+    render(ExampleComponent.new(title: "Example component default"))
   end
 
   def with_long_title
-    render(TestComponent.new(title: "This is a really long title to see how the component renders this"))
+    render(ExampleComponent.new(title: "This is a really long title to see how the component renders this"))
   end
 
   def with_content_block
-    render(TestComponent.new(title: "This component accepts a block of content")) do
+    render(ExampleComponent.new(title: "This component accepts a block of content")) do
       tag.div do
         content_tag(:span, "Hello")
       end
@@ -784,23 +784,23 @@ class TestComponentPreview < ViewComponent::Preview
 end
 ```
 
-Which generates <http://localhost:3000/rails/view_components/test_component/with_default_title>,
-<http://localhost:3000/rails/view_components/test_component/with_long_title>,
-and <http://localhost:3000/rails/view_components/test_component/with_content_block>.
+Which generates <http://localhost:3000/rails/view_components/example_component/with_default_title>,
+<http://localhost:3000/rails/view_components/example_component/with_long_title>,
+and <http://localhost:3000/rails/view_components/example_component/with_content_block>.
 
 It's also possible to set dynamic values from the params by setting them as arguments:
 
-`test/components/previews/test_component_preview.rb`
+`test/components/previews/example_component_preview.rb`
 
 ```ruby
-class TestComponentPreview < ViewComponent::Preview
-  def with_dynamic_title(title: "Test component default")
-    render(TestComponent.new(title: title))
+class ExampleComponentPreview < ViewComponent::Preview
+  def with_dynamic_title(title: "Example component default")
+    render(ExampleComponent.new(title: title))
   end
 end
 ```
 
-Which enables passing in a value with <http://localhost:3000/rails/components/test_component/with_dynamic_title?title=Custom+title>.
+Which enables passing in a value with <http://localhost:3000/rails/components/example_component/with_dynamic_title?title=Custom+title>.
 
 The `ViewComponent::Preview` base class includes
 [`ActionView::Helpers::TagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html), which provides the [`tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-tag)
@@ -808,10 +808,10 @@ and [`content_tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHe
 
 Previews use the application layout by default, but can use a specific layout with the `layout` option:
 
-`test/components/previews/test_component_preview.rb`
+`test/components/previews/example_component_preview.rb`
 
 ```ruby
-class TestComponentPreview < ViewComponent::Preview
+class ExampleComponentPreview < ViewComponent::Preview
   layout "admin"
 
   ...
