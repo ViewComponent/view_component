@@ -12,10 +12,10 @@ module ViewComponent
 
     def initialize
       @deprecation_class = if local_test_env?
-                             NoopDeprecation
-                           else
-                             ActiveSupport::Deprecation
-                           end
+        NoopDeprecation
+      else
+        ActiveSupport::Deprecation
+      end
     end
 
     def warn(message)
