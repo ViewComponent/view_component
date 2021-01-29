@@ -558,7 +558,7 @@ end
 
 ViewComponents can define an `after_compile` class method that will be called after the component is compiled.
 
-`.after_compile` is called at request time if `Rails.application.config.eager_load` is `false`, or at application boot if it set to `true`.
+`.after_compile` is called at request time if `Rails.application.config.eager_load` is `false`, or at application boot if set to `true`.
 
 ### Rendering collections
 
