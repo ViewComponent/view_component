@@ -627,4 +627,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_predicate InheritedInlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
+
+  def test_after_compile
+    assert_equal AfterCompileComponent.compiled_value, "Hello, World!"
+
+    render_inline(AfterCompileComponent.new)
+
+    assert_text "Hello, World!"
+  end
 end
