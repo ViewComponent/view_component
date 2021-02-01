@@ -2,7 +2,7 @@
 
 ## main
 
-* Call `.after_compile` class method after a component is compiled.
+* Experimental: call `._after_compile` class method after a component is compiled.
 
     *Joel Hawksley*
 

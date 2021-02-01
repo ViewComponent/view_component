@@ -23,10 +23,11 @@ module ViewComponent
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
+    # EXPERIMENTAL: This API is experimental and may be removed at any time.
     # Hook for allowing components to do work as part of the compilation process.
     #
     # For example, one might compile component-specific assets at this point.
-    def self.after_compile
+    def self._after_compile
       # noop
     end
 
