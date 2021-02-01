@@ -976,7 +976,7 @@ function importAll(r) {
   r.keys().forEach(r)
 }
 
-importAll(require.context("../components", true, /_component.js$/))
+importAll(require.context("../components", true, /_component\.js$/))
 ```
 
 Any file with the `_component.js` suffix (such as `app/components/widget_component.js`) will be compiled into the Webpack bundle. If that file itself imports another file, for example `app/components/widget_component.css`, it will also be compiled and bundled into Webpack's output stylesheet if Webpack is being used for styles.
@@ -1077,11 +1077,11 @@ In Stimulus, create a 1:1 mapping between a Stimulus controller and a component.
 
 ```js
 const application = Application.start()
-const context = require.context("controllers", true, /.js$/)
-const context_components = require.context("../../components", true, /_controller.js$/)
+const context = require.context("controllers", true, /\.js$/)
+const contextComponents = require.context("../../components", true, /_controller\.js$/)
 application.load(
   definitionsFromContext(context).concat(
-    definitionsFromContext(context_components)
+    definitionsFromContext(contextComponents)
   )
 )
 ```
