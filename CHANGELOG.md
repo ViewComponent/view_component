@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.25.1
+
 * Fix bug where SlotV2 was rendered as an HTML string when using Slim.
 
     *Manuel Puyol*
