@@ -31,10 +31,7 @@ Here are a few things you can do that will increase the likelihood of your pull 
 If you are the current maintainer of this gem:
 
 1. Pick a new version number. Try to adhere to [SemVer](https://semver.org).
-1. Create a branch for the release: `git checkout -b release-vxx.xx.xx`.
-1. Bump gem version in `lib/view_component/version.rb`.
-1. Add version heading to `CHANGELOG.md` leaving a header for `main`.
-1. Run `bundle` to update the `Gemfile.lock`.
+1. Run `script/release-branch`, using the version chosen
 1. Make a PR to github/view_component and merge it into `main`.
 1. Get latest changes from default branch: `git pull origin main`.
 1. Build and release the gem: `bundle exec rake release`.
