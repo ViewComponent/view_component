@@ -2,6 +2,10 @@
 
 ## main
 
+* Experimental: call `._after_compile` class method after a component is compiled.
+
+    *Joel Hawksley*
+
 * Fix bug where SlotV2 was rendered as an HTML string when using Slim.
 
     *Manuel Puyol*
