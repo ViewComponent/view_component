@@ -802,7 +802,7 @@ class ExampleComponentPreview < ViewComponent::Preview
 end
 ```
 
-Which enables passing in a value with <http://localhost:3000/rails/components/example_component/with_dynamic_title?title=Custom+title>.
+Which enables passing in a value with <http://localhost:3000/rails/view_components/example_component/with_dynamic_title?title=Custom+title>.
 
 The `ViewComponent::Preview` base class includes
 [`ActionView::Helpers::TagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html), which provides the [`tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-tag)
@@ -900,7 +900,7 @@ class CellComponentPreview < ViewComponent::Preview
 end
 ```
 
-Which enables passing in a value with <http://localhost:3000/rails/components/cell_component/default?title=Custom+title&subtitle=Another+subtitle>.
+Which enables passing in a value with <http://localhost:3000/rails/view_components/cell_component/default?title=Custom+title&subtitle=Another+subtitle>.
 
 #### Configuring preview controller
 
