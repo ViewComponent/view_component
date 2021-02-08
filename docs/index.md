@@ -405,6 +405,24 @@ And render them `with_variant`:
 
 _**Note**: `call_*` methods must be public._
 
+### Validations
+
+ViewComponent does not include built-in validation capabilities. However, this functionality
+can be easily added by using `ActiveModel::Validations`:
+
+```ruby
+class ExampleComponent < ViewComponent::Base
+  include ActiveModel::Validations
+
+  # Requires that a content block be passed to the component
+  validate :content, presence: true
+
+  def before_render
+    validate!
+  end
+end
+```
+
 ### Template Inheritance
 
 Components that subclass another component inherit the parent component's
