@@ -421,6 +421,7 @@ class ExampleComponent < ViewComponent::Base
   end
 end
 ```
+
 _Note: Using validations in this manner can lead to runtime exceptions. Use them wisely._
 
 ### Template Inheritance
