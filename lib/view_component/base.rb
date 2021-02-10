@@ -78,12 +78,12 @@ module ViewComponent
       old_current_template = @current_template
       @current_template = self
 
-      # Assign captured content passed to component as a block to @content
-      @content = view_context.capture(self, &block) if block_given?
+      @_render_in_block = block
 
       before_render
 
       if render?
+        content # eager load content to preload things like slots
         render_template_for(@variant)
       else
         ""
@@ -177,7 +177,15 @@ module ViewComponent
       @request ||= controller.request
     end
 
-    attr_reader :content, :view_context
+    attr_reader :view_context
+
+    def content
+      return @_content if defined?(@_content)
+
+      if @view_context && @_render_in_block
+        @_content = view_context.capture(self, &@_render_in_block)
+      end
+    end
 
     # The controller used for testing components.
     # Defaults to ApplicationController. This should be set early
