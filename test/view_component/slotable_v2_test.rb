@@ -231,4 +231,14 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector(".greeting", text: "Hello, John Doe")
     assert_selector(".greeting", text: "Hello, Jane Doe")
   end
+
+  def test_slots_accessible_in_render_predicate
+    render_inline(SlotsV2RenderPredicateComponent.new) do |component|
+      component.title do
+        "This is my title!"
+      end
+    end
+
+    assert_selector("h1", text: "This is my title!")
+  end
 end

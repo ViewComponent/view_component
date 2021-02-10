@@ -69,6 +69,7 @@ module ViewComponent
 
         define_method slot_name do |*args, **kwargs, &block|
           if args.empty? && kwargs.empty? && block.nil?
+            content unless content_evaluated? # ensure content is loaded so slots will be defined
             get_slot(slot_name)
           else
             set_slot(slot_name, *args, **kwargs, &block)
@@ -131,6 +132,7 @@ module ViewComponent
         # argument to each slot constructor
         define_method slot_name do |collection_args = nil, &block|
           if collection_args.nil? && block.nil?
+            content unless content_evaluated? # ensure content is loaded so slots will be defined
             get_slot(slot_name)
           else
             collection_args.each do |args|

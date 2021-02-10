@@ -78,6 +78,7 @@ module ViewComponent
       old_current_template = @current_template
       @current_template = self
 
+      @_content_evaluated = false
       @_render_in_block = block
 
       before_render
@@ -181,10 +182,15 @@ module ViewComponent
 
     def content
       return @_content if defined?(@_content)
+      @_content_evaluated = true
 
       if @view_context && @_render_in_block
         @_content = view_context.capture(self, &@_render_in_block)
       end
+    end
+
+    def content_evaluated?
+      @_content_evaluated
     end
 
     # The controller used for testing components.
