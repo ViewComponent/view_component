@@ -196,7 +196,7 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_renders_nested_content_in_order
-    render_inline TitleWrapperComponent.new(content: "Hello world!")
+    render_inline TitleWrapperComponent.new(title: "Hello world!")
 
     assert_selector("h1", text: /Hello world/)
     assert_text(/Hello world/, count: 1)
