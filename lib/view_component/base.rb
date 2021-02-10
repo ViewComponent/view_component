@@ -184,8 +184,8 @@ module ViewComponent
       return @_content if defined?(@_content)
       @_content_evaluated = true
 
-      if @view_context && @_render_in_block
-        @_content = view_context.capture(self, &@_render_in_block)
+      @_content = if @view_context && @_render_in_block
+        view_context.capture(self, &@_render_in_block)
       end
     end
 
