@@ -85,6 +85,7 @@ jobs:
   pvc:
     needs: lint
     runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@master
       with:
         repository: 'primer/view_components'
