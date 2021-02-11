@@ -89,6 +89,10 @@ jobs:
     - uses: actions/checkout@master
       with:
         repository: 'primer/view_components'
+        path: 'primer_view_components'
+    - uses: actions/checkout@master
+      with:
+        path: 'view_component'
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -99,12 +103,12 @@ jobs:
         key: gems-build-pvc-${{ hashFiles('**/Gemfile.lock') }}
     - name: Build and test with Rake
       run: |
+        cd primer_view_components
+        bundle config set --local local.view_component ../view_component
         gem install bundler:2.2.9
         bundle config path vendor/bundle
         bundle update
         bundle exec rake
-      env:
-        VIEW_COMPONENT_VERSION: ${{ github.sha }}
   coverage:
     needs: test
     runs-on: ubuntu-latest
