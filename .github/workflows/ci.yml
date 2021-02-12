@@ -105,10 +105,11 @@ jobs:
       run: |
         cd primer_view_components
         gem install bundler:2.2.9
-        bundle config set --local local.view_component ../view_component
         bundle config path vendor/bundle
         bundle update
         bundle exec rake
+      env:
+        VIEW_COMPONENT_PATH: ../view_component
   coverage:
     needs: test
     runs-on: ubuntu-latest
