@@ -220,7 +220,7 @@ class BlogComponent < ViewComponent::Base
     end
     
     def call
-      content_tag :h1, content, {class: classes}
+      content_tag :h1, content, { class: classes }
     end
   end
 end
@@ -269,7 +269,7 @@ class BlogComponent < ViewComponent::Base
   # Renders the returned string
   renders_one :header, -> (classes:) do
     content_tag :h1 do
-      link_to title, root_path, {class: classes}
+      link_to title, root_path, { class: classes }
     end
   end
 
