@@ -213,10 +213,14 @@ class BlogComponent < ViewComponent::Base
   renders_many :posts, PostComponent
 
   class HeaderComponent < ViewComponent::Base
-    attr_reader :title
+    attr_reader :classes
 
-    def initialize(title:)
-      @title = title
+    def initialize(classes:)
+      @classes = classes
+    end
+    
+    def call
+      content_tag :h1, content, {class: classes}
     end
   end
 end
@@ -226,7 +230,7 @@ end
 
 ```erb
 <div>
-  <h1><%= header %></h1> <!-- render the header component -->
+  <%= header %> <!-- render the header component -->
 
   <% posts.each do |post| %>
     <div class="blog-post-wrapper">
@@ -240,7 +244,7 @@ end
 
 ```erb
 <%= render BlogComponent.new do |c| %>
-  <% c.header do %>
+  <% c.header(classes: "") do %>
     <%= link_to "My Site", root_path %>
   <% end %>
 
@@ -263,9 +267,9 @@ class BlogComponent < ViewComponent::Base
   include ViewComponent::SlotableV2
 
   # Renders the returned string
-  renders_one :header, -> (title:) do
+  renders_one :header, -> (classes:) do
     content_tag :h1 do
-      link_to title, root_path
+      link_to title, root_path, {class: classes}
     end
   end
 
@@ -307,7 +311,7 @@ end
 ```erb
 <div>
   <%= render BlogComponent.new do |c| %>
-    <%= c.header do %>
+    <%= c.header(classes: '') do %>
       <%= link_to "My blog", root_path %>
     <% end %>
 
