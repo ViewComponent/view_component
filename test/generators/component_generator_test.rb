@@ -57,6 +57,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
 
     assert_no_file "app/components/user_component.html.erb"
+    assert_no_file "component.html.erb"
   end
 
   def test_component_with_namespace
