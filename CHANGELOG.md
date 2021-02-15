@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix template generated at the project root when generating an ERB component with the `--inline` flag
+
+    *Hans Lemuet*
+
 ## 2.25.1
 
 * Experimental: call `._after_compile` class method after a component is compiled.
