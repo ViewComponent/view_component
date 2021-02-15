@@ -5,6 +5,10 @@
 * Do not generate template when using `--inline` flag.
 
     *Hans Lemuet*
+    
+* Add `--inline` option to the Haml and Slim generators
+
+    *Hans Lemuet*
 
 ## 2.25.1
 
