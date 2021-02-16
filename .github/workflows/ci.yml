@@ -82,6 +82,34 @@ jobs:
       with:
         name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}
         path: coverage
+  pvc:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        repository: 'primer/view_components'
+        path: 'primer_view_components'
+    - uses: actions/checkout@master
+      with:
+        path: 'view_component'
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7.2
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: gems-build-pvc-${{ hashFiles('**/Gemfile.lock') }}
+    - name: Build and test with Rake
+      run: |
+        cd primer_view_components
+        gem install bundler:2.2.9
+        bundle config path vendor/bundle
+        bundle update
+        bundle exec rake
+      env:
+        VIEW_COMPONENT_PATH: ../view_component
   coverage:
     needs: test
     runs-on: ubuntu-latest
