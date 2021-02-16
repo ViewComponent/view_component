@@ -2,7 +2,7 @@
 
 ## main
 
-* Fix template generated at the project root when generating an ERB component with the `--inline` flag
+* Do not generate template when using `--inline` flag.
 
     *Hans Lemuet*
 
