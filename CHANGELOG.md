@@ -4,6 +4,12 @@
 
 * Lazily evaluate component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
 
+    *Blake Williams*
+
+* Do not generate template when using `--inline` flag.
+
+    *Hans Lemuet*
+
 ## 2.25.1
 
 * Experimental: call `._after_compile` class method after a component is compiled.
