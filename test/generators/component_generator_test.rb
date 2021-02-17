@@ -40,6 +40,28 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_component_preview_with_one_overridden_preview_path
+    with_preview_paths(%w[spec/components/previews]) do
+      run_generator %w[user --preview]
+
+      assert_file "spec/components/previews/user_component_preview.rb" do |component|
+        assert_match(/class UserComponentPreview < /, component)
+        assert_match(/render\(UserComponent.new\)/, component)
+      end
+    end
+  end
+
+  def test_component_preview_with_two_overridden_preview_paths
+    with_preview_paths(%w[spec/components/previews some/other/directory]) do
+      run_generator %w[user --preview]
+
+      assert_file "test/components/previews/user_component_preview.rb" do |component|
+        assert_match(/class UserComponentPreview < /, component)
+        assert_match(/render\(UserComponent.new\)/, component)
+      end
+    end
+  end
+
   def test_component_with_arguments
     run_generator %w[user name]
 
