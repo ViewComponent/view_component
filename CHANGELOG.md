@@ -2,6 +2,10 @@
 
 ## main
 
+* Generate preview at overridden path if one exists when using `--preview` flag.
+
+    *Nishiki Liu*
+
 * Do not generate template when using `--inline` flag.
 
     *Hans Lemuet*
