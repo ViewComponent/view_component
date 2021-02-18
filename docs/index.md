@@ -75,7 +75,8 @@ Use the component generator to create a new ViewComponent.
 The generator accepts a component name and a list of arguments:
 
 ```bash
-bin/rails generate component Example title content
+bin/rails generate component Example title 
+
       invoke  test_unit
       create  test/components/example_component_test.rb
       create  app/components/example_component.rb
@@ -87,13 +88,13 @@ ViewComponent includes template generators for the `erb`, `haml`, and `slim` tem
 The template engine can also be passed as an option to the generator:
 
 ```bash
-bin/rails generate component Example title content --template-engine slim
+bin/rails generate component Example title --template-engine slim
 ```
 
 To generate a [preview](#previewing-components), pass the `--preview` option:
 
 ```bash
-bin/rails generate component Example title content --preview
+bin/rails generate component Example title --preview
 ```
 
 #### Implementation
@@ -474,7 +475,7 @@ app/components
 To generate a component with a sidecar directory, use the `--sidecar` flag:
 
 ```console
-bin/rails generate component Example title content --sidecar
+bin/rails generate component Example title --sidecar
       invoke  test_unit
       create  test/components/example_component_test.rb
       create  app/components/example_component.rb
