@@ -84,7 +84,6 @@ module ViewComponent
       before_render
 
       if render?
-        content # eager load content to preload things like slots
         render_template_for(@variant)
       else
         ""
@@ -270,7 +269,14 @@ module ViewComponent
         if areas.include?(:content)
           raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
         end
-        attr_reader(*areas)
+
+        areas.each do |area|
+          define_method area.to_sym do
+            content unless content_evaluated? # ensure content is loaded so content_areas will be defined
+            instance_variable_get(:"@#{area}") if instance_variable_defined?(:"@#{area}")
+          end
+        end
+
         self.content_areas = areas
       end
 

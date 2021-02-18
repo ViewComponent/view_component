@@ -237,6 +237,16 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_includes exception.message, ":content is a reserved content area name"
   end
 
+  def test_with_content_areas_render_predicate
+    render_inline(ContentAreasPredicateComponent.new) do |c|
+      c.with :title do
+        "hello world"
+      end
+    end
+
+    assert_selector("h1", text: "hello world")
+  end
+
   def test_renders_helper_method_through_proxy
     render_inline(HelpersProxyComponent.new)
 
