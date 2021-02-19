@@ -241,4 +241,14 @@ class SlotsV2sTest < ViewComponent::TestCase
       assert_selector("img")
     end
   end
+
+  def test_renders_slots_when_passing_args
+    render_inline(SlotsV2WithDefaultArgsComponent.new) do |component|
+      component.icon(icon: "other-icon")
+    end
+
+    assert_selector(".container") do
+      assert_selector("img")
+    end
+  end
 end
