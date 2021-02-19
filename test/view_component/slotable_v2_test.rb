@@ -231,4 +231,14 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector(".greeting", text: "Hello, John Doe")
     assert_selector(".greeting", text: "Hello, Jane Doe")
   end
+
+  def test_renders_slots_with_default_args
+    render_inline(SlotsV2WithDefaultArgsComponent.new) do |component|
+      component.icon
+    end
+
+    assert_selector(".container") do
+      assert_selector("img")
+    end
+  end
 end
