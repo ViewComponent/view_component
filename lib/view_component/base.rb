@@ -193,8 +193,9 @@ module ViewComponent
     end
 
     # The controller used for testing components.
-    # Defaults to ApplicationController. This should be set early
-    # in the initialization process and should be set to a string.
+    # Defaults to ApplicationController, but can be configured
+    # on a per-test basis using `with_controller_class`.
+    # This should be set early in the initialization process and should be a string.
     mattr_accessor :test_controller
     @@test_controller = "ApplicationController"
 
