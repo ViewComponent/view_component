@@ -51,11 +51,17 @@ module ViewComponent
           if collection
             class_eval <<-RUBY
               def #{accessor_name}
+                content unless content_evaluated? # ensure content is loaded so slots will be defined
                 #{instance_variable_name} ||= []
               end
             RUBY
           else
-            attr_reader accessor_name
+            class_eval <<-RUBY
+              def #{accessor_name}
+                content unless content_evaluated? # ensure content is loaded so slots will be defined
+                #{instance_variable_name} if defined?(#{instance_variable_name})
+              end
+            RUBY
           end
 
           # Default class_name to ViewComponent::Slot

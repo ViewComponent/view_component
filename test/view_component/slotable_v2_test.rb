@@ -196,7 +196,7 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_renders_nested_content_in_order
-    render_inline TitleWrapperComponent.new(content: "Hello world!")
+    render_inline TitleWrapperComponent.new(title: "Hello world!")
 
     assert_selector("h1", text: /Hello world/)
     assert_text(/Hello world/, count: 1)
@@ -230,5 +230,15 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector("h1", text: "Testing - This is my title!")
     assert_selector(".greeting", text: "Hello, John Doe")
     assert_selector(".greeting", text: "Hello, Jane Doe")
+  end
+
+  def test_slots_accessible_in_render_predicate
+    render_inline(SlotsV2RenderPredicateComponent.new) do |component|
+      component.title do
+        "This is my title!"
+      end
+    end
+
+    assert_selector("h1", text: "This is my title!")
   end
 end

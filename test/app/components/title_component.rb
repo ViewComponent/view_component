@@ -3,5 +3,5 @@
 class TitleComponent < ViewComponent::Base
   include ViewComponent::SlotableV2
 
-  renders_one :content
+  renders_one :body
 end

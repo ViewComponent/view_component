@@ -237,6 +237,16 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_includes exception.message, ":content is a reserved content area name"
   end
 
+  def test_with_content_areas_render_predicate
+    render_inline(ContentAreasPredicateComponent.new) do |c|
+      c.with :title do
+        "hello world"
+      end
+    end
+
+    assert_selector("h1", text: "hello world")
+  end
+
   def test_renders_helper_method_through_proxy
     render_inline(HelpersProxyComponent.new)
 
@@ -634,5 +644,17 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(AfterCompileComponent.new)
 
     assert_text "Hello, World!"
+  end
+
+  def test_does_not_render_passed_in_content_if_render_is_false
+    start_time = Time.now
+
+    render_inline ConditionalRenderComponent.new(should_render: false) do |c|
+      c.render SleepComponent.new(seconds: 5)
+    end
+
+    total = Time.now - start_time
+
+    assert total < 1
   end
 end

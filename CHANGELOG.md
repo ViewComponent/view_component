@@ -2,6 +2,10 @@
 
 ## main
 
+* Lazily evaluate component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
+
+    *Blake Williams*
+
 * Do not generate template when using `--inline` flag.
 
     *Hans Lemuet*
