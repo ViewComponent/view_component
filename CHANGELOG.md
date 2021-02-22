@@ -10,6 +10,10 @@
 
     *Hans Lemuet*
 
+* Add `--inline` option to the Haml and Slim generators
+
+    *Hans Lemuet*
+
 ## 2.25.1
 
 * Experimental: call `._after_compile` class method after a component is compiled.
