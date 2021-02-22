@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.26.0
+
 * Lazily evaluate component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
 
     *Blake Williams*
