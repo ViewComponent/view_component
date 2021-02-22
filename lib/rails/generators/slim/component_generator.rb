@@ -7,10 +7,9 @@ module Slim
     class ComponentGenerator < Erb::Generators::ComponentGenerator
       source_root File.expand_path("templates", __dir__)
       class_option :sidecar, type: :boolean, default: false
-      # class_option :inline, type: :boolean, default: false
 
       def copy_view_file
-        unless options["inline"]
+        if !options["inline"]
           template "component.html.slim", destination
         end
       end
