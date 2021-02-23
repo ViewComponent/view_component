@@ -241,4 +241,12 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_selector("h1", text: "This is my title!")
   end
+
+  def test_slots_without_render_block
+    render_inline(SlotsV2WithoutContentBlockComponent.new) do |component|
+      component.title(title: "This is my title!")
+    end
+
+    assert_selector("h1", text: "This is my title!")
+  end
 end
