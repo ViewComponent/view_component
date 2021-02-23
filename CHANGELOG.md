@@ -2,6 +2,46 @@
 
 ## main
 
+## 2.26.1
+
+* Fix bug that raises when trying to use a collection before the component has been compiled.
+
+    *Blake Williams*
+
+## 2.26.0
+
+* Lazily evaluate component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
+
+    *Blake Williams*
+
+* Do not generate template when using `--inline` flag.
+
+    *Hans Lemuet*
+
+* Add `--inline` option to the Haml and Slim generators
+
+    *Hans Lemuet*
+
+## 2.25.1
+
+* Experimental: call `._after_compile` class method after a component is compiled.
+
+    *Joel Hawksley*
+
+* Fix bug where SlotV2 was rendered as an HTML string when using Slim.
+
+    *Manuel Puyol*
+
+## 2.25.0
+
+* Add `--preview` generator option to create an associated preview file.
+
+    *Bob Maerten*
+
+* Add argument validation to avoid `content` override.
+
+    *Manuel Puyol*
+
 ## 2.24.0
 
 * Add `--inline` option to the erb generator. Prevents default erb template from being created and creates a component with a call method.
