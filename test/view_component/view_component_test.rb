@@ -657,4 +657,30 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert total < 1
   end
+
+  def test_collection_parameter_does_not_require_compile
+    dynamic_component = Class.new(ViewComponent::Base) do
+      with_collection_parameter :greeting
+
+      def initialize(greeting = "hello world")
+        @greeting = greeting
+      end
+
+      def call
+        content_tag :h1, @greeting
+      end
+    end
+
+    # Necessary because anonymous classes don't have a `name` property
+    Object.const_set("MY_COMPONENT", dynamic_component)
+
+    render_inline MY_COMPONENT.new
+    assert_selector "h1", text: "hello world"
+
+    render_inline MY_COMPONENT.with_collection(["hello world", "hello view component"])
+    assert_selector "h1", text: "hello world"
+    assert_selector "h1", text: "hello view component"
+  ensure
+    Object.send(:remove_const, "MY_COMPONENT")
+  end
 end
