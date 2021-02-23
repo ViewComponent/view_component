@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix bug that raises when trying to use a collection before the component has been compiled.
+
+    *Blake Williams*
+
 ## 2.26.0
 
 * Lazily evaluate component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.

@@ -24,28 +24,6 @@ module ViewComponent
         )
       end
 
-      # Remove any existing singleton methods,
-      # as Ruby warns when redefining a method.
-      component_class.remove_possible_singleton_method(:collection_parameter)
-      component_class.remove_possible_singleton_method(:collection_counter_parameter)
-      component_class.remove_possible_singleton_method(:counter_argument_present?)
-
-      component_class.define_singleton_method(:collection_parameter) do
-        if provided_collection_parameter
-          provided_collection_parameter
-        else
-          name.demodulize.underscore.chomp("_component").to_sym
-        end
-      end
-
-      component_class.define_singleton_method(:collection_counter_parameter) do
-        "#{collection_parameter}_counter".to_sym
-      end
-
-      component_class.define_singleton_method(:counter_argument_present?) do
-        instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter)
-      end
-
       if raise_errors
         component_class.validate_initialization_parameters!
         component_class.validate_collection_parameter!
