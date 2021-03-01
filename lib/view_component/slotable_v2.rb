@@ -183,6 +183,8 @@ module ViewComponent
     end
 
     def get_slot(slot_name)
+      content unless content_evaluated? # ensure content is loaded so slots will be defined
+
       slot = self.class.registered_slots[slot_name]
       @_set_slots ||= {}
 

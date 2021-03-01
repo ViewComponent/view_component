@@ -237,6 +237,16 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_includes exception.message, ":content is a reserved content area name"
   end
 
+  def test_with_content_areas_render_predicate
+    render_inline(ContentAreasPredicateComponent.new) do |c|
+      c.with :title do
+        "hello world"
+      end
+    end
+
+    assert_selector("h1", text: "hello world")
+  end
+
   def test_renders_helper_method_through_proxy
     render_inline(HelpersProxyComponent.new)
 
@@ -634,5 +644,43 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(AfterCompileComponent.new)
 
     assert_text "Hello, World!"
+  end
+
+  def test_does_not_render_passed_in_content_if_render_is_false
+    start_time = Time.now
+
+    render_inline ConditionalRenderComponent.new(should_render: false) do |c|
+      c.render SleepComponent.new(seconds: 5)
+    end
+
+    total = Time.now - start_time
+
+    assert total < 1
+  end
+
+  def test_collection_parameter_does_not_require_compile
+    dynamic_component = Class.new(ViewComponent::Base) do
+      with_collection_parameter :greeting
+
+      def initialize(greeting = "hello world")
+        @greeting = greeting
+      end
+
+      def call
+        content_tag :h1, @greeting
+      end
+    end
+
+    # Necessary because anonymous classes don't have a `name` property
+    Object.const_set("MY_COMPONENT", dynamic_component)
+
+    render_inline MY_COMPONENT.new
+    assert_selector "h1", text: "hello world"
+
+    render_inline MY_COMPONENT.with_collection(["hello world", "hello view component"])
+    assert_selector "h1", text: "hello world"
+    assert_selector "h1", text: "hello view component"
+  ensure
+    Object.send(:remove_const, "MY_COMPONENT")
   end
 end
