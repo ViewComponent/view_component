@@ -2,6 +2,10 @@
 
 ## main
 
+* Generate preview at overridden path if one exists when using `--preview` flag.
+
+    *Nishiki Liu*
+
 ## 2.26.1
 
 * Fix bug that raises when trying to use a collection before the component has been compiled.
