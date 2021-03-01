@@ -936,14 +936,34 @@ Previews can be extended to allow users to add authentication, authorization, be
 config.view_component.preview_controller = "MyPreviewController"
 ```
 
-#### Configuring TestController
+### Configuring the controller used in tests
 
-Component tests assume the existence of an `ApplicationController` class, which be can be configured using the `test_controller` option:
-
-`config/application.rb`
+Component tests assume the existence of an `ApplicationController` class, which can be configured globally using the `test_controller` option:
 
 ```ruby
 config.view_component.test_controller = "BaseController"
+```
+
+To configure the controller used for a test case, use `with_controller_class` from `ViewComponent::TestHelpers`.
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_component_in_public_controller
+    with_controller_class PublicController do
+      render_inline ExampleComponent.new
+
+      assert_text "foo"
+    end
+  end
+
+  def test_component_in_authenticated_controller
+    with_controller_class AuthenticatedController do
+      render_inline ExampleComponent.new
+
+      assert_text "bar"
+    end
+  end
+end
 ```
 
 ### Setting up RSpec

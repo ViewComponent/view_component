@@ -478,6 +478,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_includes error.message, "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
   end
 
+  def test_with_custom_test_controller
+    with_controller_class CustomTestControllerController do
+      render_inline(CustomTestControllerComponent.new)
+
+      assert_text("foo")
+    end
+  end
+
   def test_backtrace_returns_correct_file_and_line_number
     error = assert_raises NameError do
       render_inline(ExceptionInTemplateComponent.new)

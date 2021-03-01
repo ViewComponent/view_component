@@ -2,6 +2,10 @@
 
 ## main
 
+* Allow customization of the controller used in component tests.
+
+    *Alex Robbin*
+
 * Generate preview at overridden path if one exists when using `--preview` flag.
 
     *Nishiki Liu*
