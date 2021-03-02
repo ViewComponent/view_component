@@ -786,7 +786,11 @@ end
 
 ### Previewing Components
 
-`ViewComponent::Preview`, like `ActionMailer::Preview`, provides a way to preview components in isolation:
+`ViewComponent::Preview`, like `ActionMailer::Preview`, provides a quick way to preview components in isolation.
+
+_For a more interactive experience, consider using [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)._
+
+`ViewComponent::Preview`s are defined as:
 
 `test/components/previews/example_component_preview.rb`
 
