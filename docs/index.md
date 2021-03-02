@@ -713,6 +713,18 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
+#### Using nested URL helpers
+
+Rails nested URL helpers implicitly depend on the current `request` in certain cases. Since ViewComponent is built to enable reusing components in different contexts, nested URL helpers should be passed their options explicitly:
+
+```ruby
+# bad
+edit_user_path # implicitly depends on current request to provide `user`
+
+# good
+edit_user_path(user: current_user)
+```
+
 ### Writing tests
 
 Unit test components directly, using the `render_inline` test helper, asserting against the rendered output.
