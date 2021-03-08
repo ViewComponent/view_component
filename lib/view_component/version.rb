@@ -10,4 +10,4 @@ module ViewComponent
   end
 end
 
-puts ViewComponent::VERSION::STRING if __FILE__ == $PROGRAM_NAME # rubocop:disable Rails/Output
+puts ViewComponent::VERSION::STRING if __FILE__ == $PROGRAM_NAME
