@@ -82,7 +82,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_slim_escaping_dangerous_html_assign
-    render_inline(SlimWithUnsafeHTMLComponent.new)
+    render_inline(SlimWithUnsafeHtmlComponent.new)
 
     refute_selector("script")
     assert_selector(".slim-div", text: "<script>alert('xss')</script>")
