@@ -76,7 +76,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_slim_with_html_formatted_slot
-    render_inline(SlimHTMLFormattedSlotComponent.new)
+    render_inline(SlimHtmlFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted")
   end
