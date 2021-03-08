@@ -640,9 +640,9 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_inherited_inline_component_inherits_inline_method
-    render_inline(InheritedInlineComponent.new)
+    render_inline(InlineInheritedComponent.new)
 
-    assert_predicate InheritedInlineComponent, :compiled?
+    assert_predicate InlineInheritedComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
