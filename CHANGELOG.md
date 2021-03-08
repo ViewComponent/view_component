@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.27.0
+
 * Allow customization of the controller used in component tests.
 
     *Alex Robbin*

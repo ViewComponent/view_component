@@ -76,13 +76,13 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_slim_with_html_formatted_slot
-    render_inline(SlimHTMLFormattedSlotComponent.new)
+    render_inline(SlimHtmlFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted")
   end
 
   def test_renders_slim_escaping_dangerous_html_assign
-    render_inline(SlimWithUnsafeHTMLComponent.new)
+    render_inline(SlimWithUnsafeHtmlComponent.new)
 
     refute_selector("script")
     assert_selector(".slim-div", text: "<script>alert('xss')</script>")
@@ -254,7 +254,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_helper_method_within_nested_component
-    render_inline(HelpersContainerComponent.new)
+    render_inline(ContainerComponent.new)
 
     assert_text("Hello helper method")
   end
@@ -640,9 +640,9 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_inherited_inline_component_inherits_inline_method
-    render_inline(InheritedInlineComponent.new)
+    render_inline(InlineInheritedComponent.new)
 
-    assert_predicate InheritedInlineComponent, :compiled?
+    assert_predicate InlineInheritedComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
