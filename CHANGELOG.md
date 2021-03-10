@@ -2,6 +2,13 @@
 
 ## main
 
+* Experimental: Add `ViewComponent::SidecarI18n`
+  * `t` and `translate` now will look first into the sidecar YAML translations file.
+  * `helpers.t` and `I18n.t` still reference the global Rails translation files.
+  * `l` and `localize` will still reference the global Rails translation files.
+
+    *Elia Schito*
+
 * Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
 
     *Elia Schito*
