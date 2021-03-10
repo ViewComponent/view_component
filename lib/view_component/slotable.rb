@@ -49,14 +49,14 @@ module ViewComponent
 
           # If the slot is a collection, define an accesor that defaults to an empty array
           if collection
-            class_eval <<-RUBY
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{accessor_name}
                 content unless content_evaluated? # ensure content is loaded so slots will be defined
                 #{instance_variable_name} ||= []
               end
             RUBY
           else
-            class_eval <<-RUBY
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{accessor_name}
                 content unless content_evaluated? # ensure content is loaded so slots will be defined
                 #{instance_variable_name} if defined?(#{instance_variable_name})
