@@ -19,6 +19,10 @@ task :slotable_benchmark do
   ruby "./performance/slotable_benchmark.rb"
 end
 
+task :sidecar_i18n_benchmark do
+  ruby "./performance/sidecar_i18n_benchmark.rb"
+end
+
 namespace :coverage do
   task :report do
     require "simplecov"
