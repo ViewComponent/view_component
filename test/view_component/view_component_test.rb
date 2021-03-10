@@ -402,7 +402,7 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(ValidationsComponent.new)
     end
 
-    assert_equal exception.message, "Validation failed: Content can't be blank"
+    assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
   # TODO: Remove in v3.0.0
@@ -411,7 +411,7 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(OldValidationsComponent.new)
     end
 
-    assert_equal exception.message, "Validation failed: Content can't be blank"
+    assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
   def test_compiles_unrendered_component
