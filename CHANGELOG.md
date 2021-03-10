@@ -2,6 +2,10 @@
 
 ## main
 
+* Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
+
+    *Elia Schito*
+
 * Fix bug where a single `jbuilder` template matched multiple template handlers.
 
     *Niels Slot*
