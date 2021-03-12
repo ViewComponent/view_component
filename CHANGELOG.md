@@ -2,6 +2,10 @@
 
 ## main
 
+* Prepend Preview routes instead of appending, accounting for cases where host application has catchall route.
+
+    *Joel Hawksley*
+
 ## 2.27.0
 
 * Allow customization of the controller used in component tests.
