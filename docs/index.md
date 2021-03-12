@@ -131,64 +131,21 @@ Returning:
 <span title="my title">Hello, World!</span>
 ```
 
-#### Content Areas
+#### Passing content to ViewComponents
 
 Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor.
 
-ViewComponents can declare additional content areas. For example:
+ViewComponents also accept content through Slots, enabling multiple blocks of content to be passed to a single ViewComponent.
 
-`app/components/modal_component.rb`:
-
-```ruby
-class ModalComponent < ViewComponent::Base
-  with_content_areas :header, :body
-end
-```
-
-`app/components/modal_component.html.erb`:
-
-```erb
-<div class="modal">
-  <div class="header"><%= header %></div>
-  <div class="body"><%= body %></div>
-</div>
-```
-
-Rendered in a view as:
-
-```erb
-<%= render(ModalComponent.new) do |component| %>
-  <% component.with(:header) do %>
-    Hello Jane
-  <% end %>
-  <% component.with(:body) do %>
-    <p>Have a great day.</p>
-  <% end %>
-<% end %>
-```
-
-Returning:
-
-```html
-<div class="modal">
-  <div class="header">Hello Jane</div>
-  <div class="body"><p>Have a great day.</p></div>
-</div>
-```
-
-#### Slots (experimental)
-
-_Slots are currently under development as the successor to Content Areas. The Slot APIs should be considered unfinished (it's already in its second iteration, [see the original API](/slots_v1).) and subject to breaking changes in non-major releases of ViewComponent._
-
-Slots enable multiple blocks of content to be passed to a single ViewComponent, improving the ergonomics of complex components.
-
-Slots are defined with with `renders_one` and `renders_many`:
+Slots are defined with `renders_one` and `renders_many`:
 
 `renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
 
 `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :blog_posts`
 
-#### Defining slots
+_To view documentation for content_areas (soon to be deprecated) and the original implementation of Slots, see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
+
+##### Defining slots
 
 Slots come in three forms:
 
