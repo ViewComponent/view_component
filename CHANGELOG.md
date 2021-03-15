@@ -10,6 +10,10 @@
 
     *Joel Hawksley*
 
+* Fix bug where blocks passed to lambda slots will render incorrectly in certain situations.
+
+    *Blake Williams*
+
 ## 2.27.0
 
 * Allow customization of the controller used in component tests.

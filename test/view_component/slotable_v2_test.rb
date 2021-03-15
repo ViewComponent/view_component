@@ -248,4 +248,17 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_selector("h1", text: "This is my title!")
   end
+
+  def test_slot_with_block_content
+    render_inline(SlotsV2BlockComponent.new)
+
+    assert_selector("p", text: "Footer part 1")
+    assert_selector("p", text: "Footer part 2")
+  end
+
+  def test_lambda_slot_with_missing_block
+    render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
+      component.footer(classes: "text-blue")
+    end
+  end
 end
