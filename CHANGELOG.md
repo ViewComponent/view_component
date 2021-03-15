@@ -2,6 +2,10 @@
 
 ## main
 
+* Include SlotableV2 by default in Base. **Note:** It's no longer necessary to include `ViewComponent::SlotableV2` to use Slots.
+
+    *Joel Hawksley*
+
 * Prepend Preview routes instead of appending, accounting for cases where host application has catchall route.
 
     *Joel Hawksley*
