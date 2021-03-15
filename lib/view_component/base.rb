@@ -12,6 +12,7 @@ module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
+    include ViewComponent::SlotableV2
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
