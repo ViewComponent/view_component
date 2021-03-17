@@ -86,6 +86,14 @@ module ViewComponent # :nodoc:
                 .sub(/\..*$/, "")
       end
 
+      # Returns the method body for the example from the preview file.
+      def preview_example_source(example)
+        path, line = self.instance_method(example.to_sym).source_location
+        # TODO: Figgure out regex to parse entire method body.
+        # Currently this only parses one line.
+        IO.readlines(path)[line, line - 1].join
+      end
+
       private
 
       def load_previews
