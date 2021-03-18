@@ -95,6 +95,13 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("bar")
   end
 
+  def test_render_jbuilder_template
+    render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
+
+    assert_text("foo")
+    assert_text("bar")
+  end
+
   def test_renders_button_to_component
     old_value = ActionController::Base.allow_forgery_protection
     ActionController::Base.allow_forgery_protection = true
