@@ -131,7 +131,7 @@ module ViewComponent
       @helpers ||= controller.view_context
     end
 
-    # Exposes .virutal_path as an instance method
+    # Exposes .virtual_path as an instance method
     def virtual_path
       self.class.virtual_path
     end
