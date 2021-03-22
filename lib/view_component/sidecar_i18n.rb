@@ -12,7 +12,10 @@ module ViewComponent
     end
 
     class I18nBackend < ::I18n::Backend::Simple
-      def initialize(load_paths)
+      EMPTY_HASH = {}.freeze
+
+      def initialize(i18n_scope:, load_paths:)
+        @i18n_scope = i18n_scope.split(".")
         @load_paths = load_paths
       end
 
@@ -20,32 +23,55 @@ module ViewComponent
       def load_translations
         super(@load_paths)
       end
+
+      def scope_data(data)
+        @i18n_scope.reverse_each do |part|
+          data = { part => data}
+        end
+        data
+      end
+
+      def store_translations(locale, data, options = EMPTY_HASH)
+        super(locale, scope_data(data), options)
+      end
     end
 
     def translate(key = nil, locale: nil, **options)
       locale ||= ::I18n.locale
 
+      key = "#{i18n_scope}#{key}" if key.start_with?(".")
+
       result = catch(:exception) do
-        if key.is_a?(Array)
-          key.map { |k| i18n_backend.translate(locale, k, options) }
-        else
-          i18n_backend.translate(locale, key, options)
-        end
+        i18n_backend.translate(locale, key, options)
       end
 
       # Fallback to the global translations
-      result = helpers.t(key, locale: locale, **options) if result.is_a? ::I18n::MissingTranslation
+      if result.is_a? ::I18n::MissingTranslation
+        result = helpers.t(key, locale: locale, **options)
+      end
 
       result
     end
     alias :t :translate
 
+    # Exposes .i18n_scope as an instance method
+    def i18n_scope
+      self.class.i18n_scope
+    end
+
     module ClassMethods
+      def i18n_scope
+        @i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
+      end
+
       def _after_compile
         super
 
         unless CompileCache.compiled? self
-          self.i18n_backend = I18nBackend.new(_sidecar_files(%w[yml yaml]))
+          self.i18n_backend = I18nBackend.new(
+            i18n_scope: i18n_scope,
+            load_paths: _sidecar_files(%w[yml yaml]),
+          )
         end
       end
     end

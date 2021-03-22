@@ -9,7 +9,6 @@ class SidecarI18nTest < ViewComponent::TestCase
     assert_selector("p.sidecar.shared-key", text: "Hello from sidecar translations!")
     assert_selector("p.sidecar.nested", text: "This is coming from the sidecar")
     assert_selector("p.sidecar.missing", text: "This is coming from Rails")
-    assert_selector("p.sidecar.multi", text: "Hello from sidecar translations!/This is coming from the sidecar")
 
     assert_selector("p.helpers.shared-key", text: "Hello from Rails translations!")
     assert_selector("p.helpers.nested", text: "This is coming from Rails")
