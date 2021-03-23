@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix bug where a single `jbuilder` template matched multiple template handlers.
+
+    *Niels Slot*
+
 ## 2.28.0
 
 * Include SlotableV2 by default in Base. **Note:** It's no longer necessary to include `ViewComponent::SlotableV2` to use Slots.

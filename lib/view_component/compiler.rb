@@ -157,7 +157,7 @@ module ViewComponent
 
       sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
-      (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files)
+      (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files).uniq
     end
 
     def inline_calls
