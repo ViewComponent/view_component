@@ -1175,6 +1175,7 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 - [Rails to Introduce View Components, Dev.to](https://dev.to/andy/rails-to-introduce-view-components-3ome)
 - [ActionView::Components in Rails 6.1, Drifting Ruby](https://www.driftingruby.com/episodes/actionview-components-in-rails-6-1)
 - [Demo repository, view-component-demo](https://github.com/joelhawksley/view-component-demo)
+- [Introducing ViewComponet - The Next Level In Rails Views](https://teamhq.app/blog/tech/15-introducing-viewcomponent-the-next-level-in-rails-views)
 
 ## Contributing
 
