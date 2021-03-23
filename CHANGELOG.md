@@ -2,7 +2,7 @@
 
 ## main
 
-* Fix handling of Jbuilder and other template engines with certain names.
+* Fix bug where a single `jbuilder` template matched multiple template handlers.
 
     *Niels Slot*
 
