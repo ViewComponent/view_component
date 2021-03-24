@@ -1130,13 +1130,13 @@ app/components
 
 ##### Translations (experimental)
 
-To use experimental support for `I18n` translations, include `ViewComponent::SidecarI18n`:
+To use experimental support for `I18n` translations, include `ViewComponent::Translatable`:
 
 `app/components/example_component.rb`
 
 ```ruby
 module ExampleComponent < ApplicationComponent
-  include ViewComponent::SidecarI18n
+  include ViewComponent::Translatable
 end
 ```
 

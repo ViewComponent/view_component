@@ -2,7 +2,7 @@
 
 ## main
 
-* Experimental: Add `ViewComponent::SidecarI18n`
+* Experimental: Add `ViewComponent::Translatable`
   * `t` and `translate` now will look first into the sidecar YAML translations file.
   * `helpers.t` and `I18n.t` still reference the global Rails translation files.
   * `l` and `localize` will still reference the global Rails translation files.

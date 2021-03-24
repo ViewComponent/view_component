@@ -12,5 +12,5 @@ module ViewComponent
   autoload :TestHelpers
   autoload :TestCase
   autoload :TemplateError
-  autoload :SidecarI18n
+  autoload :Translatable
 end

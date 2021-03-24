@@ -69,8 +69,8 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     )
 
     assert_equal(
-      ["#{root}/test/app/components/sidecar_i18n_component.yml"],
-      SidecarI18nComponent._sidecar_files(["yml"])
+      ["#{root}/test/app/components/translatable_component.yml"],
+      TranslatableComponent._sidecar_files(["yml"])
     )
   end
 end

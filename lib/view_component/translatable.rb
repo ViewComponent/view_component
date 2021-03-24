@@ -5,7 +5,7 @@ require "i18n"
 require "action_view/helpers/translation_helper"
 
 module ViewComponent
-  module SidecarI18n
+  module Translatable
     def self.included(base)
       base.class_attribute :i18n_backend, instance_writer: false, instance_predicate: false
       base.extend ClassMethods

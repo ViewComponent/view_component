@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class SidecarI18nTest < ViewComponent::TestCase
+class TranslatableTest < ViewComponent::TestCase
   def test_isolated_translations
-    render_inline(SidecarI18nComponent.new)
+    render_inline(TranslatableComponent.new)
 
     assert_selector("p.sidecar.shared-key", text: "Hello from sidecar translations!")
     assert_selector("p.sidecar.nested", text: "This is coming from the sidecar")

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class SidecarI18nComponent < ViewComponent::Base
-  include ViewComponent::SidecarI18n
+class TranslatableComponent < ViewComponent::Base
+  include ViewComponent::Translatable
 
   def initialize(key)
     @key = key
