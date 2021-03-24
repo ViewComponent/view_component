@@ -698,4 +698,14 @@ class ViewComponentTest < ViewComponent::TestCase
   ensure
     Object.send(:remove_const, "MY_COMPONENT")
   end
+
+  def test_renders_style_tag_once_for_multiple_components_with_css
+    @rendered_component = controller.view_context.render(
+      inline:
+        "<%= render(CssComponent.new) %>" \
+        "<%= render(CssComponent.new) %>"
+    )
+
+    assert_selector("style", visible: false, count: 1)
+  end
 end

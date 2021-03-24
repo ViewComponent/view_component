@@ -7,6 +7,7 @@ require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
+require "view_component/styleable"
 
 module ViewComponent
   class Base < ActionView::Base
@@ -85,7 +86,7 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@variant)
+        render_template_for(@variant) + _after_render
       else
         ""
       end
@@ -99,6 +100,12 @@ module ViewComponent
 
     def before_render_check
       # noop
+    end
+
+    # Hook used for experimental implementation of CSS encapsulation.
+    # May be removed or modified at any time, without warning.
+    def _after_render
+      ""
     end
 
     def render?
