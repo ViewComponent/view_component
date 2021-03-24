@@ -261,4 +261,66 @@ class SlotsV2sTest < ViewComponent::TestCase
       component.footer(classes: "text-blue")
     end
   end
+
+  def test_slot_with_nested_blocks_content_selectable_true
+    render_inline(NestedSharedState::TableComponent.new(selectable: true)) do |table_card|
+      table_card.header do |header|
+        header.cell { 'Cell1' }
+        header.cell(class_names: '-has-sort') { 'Cell2' }
+      end
+      table_card.row(id: 1) do |header|
+        header.cell { 'Row 1 Cell1' }
+        header.cell { 'Row 1 Cell2' }
+      end
+      table_card.row(id: 2) do |header|
+        header.cell { 'Row 2 Cell1' }
+        header.cell { 'Row 2 Cell2' }
+      end      
+    end
+
+    # Header
+    assert_selector('div.table div.table__header div.table__cell', text: 'Cell1')
+    assert_selector('div.table div.table__header div.table__cell.-has-sort', text: 'Cell2')
+    assert_selector('div.table div.table__header div.table__cell input#checkbox_for_select_all')
+
+    # Rows
+    assert_selector('div.table div.table__body div.table__cell input#checkbox_for_1')
+    assert_selector('div.table div.table__body div.table__cell', text: 'Row 1 Cell1')
+    assert_selector('div.table div.table__body div.table__cell', text: 'Row 1 Cell2')
+
+    assert_selector('div.table div.table__body div.table__cell input#checkbox_for_2')
+    assert_selector('div.table div.table__body div.table__cell', text: 'Row 2 Cell1')
+    assert_selector('div.table div.table__body div.table__cell', text: 'Row 2 Cell2')    
+  end
+
+  def test_slot_with_nested_blocks_content_selectable_false
+    render_inline(NestedSharedState::TableComponent.new(selectable: false)) do |table_card|
+      table_card.header do |header|
+        header.cell { 'Cell1' }
+        header.cell(class_names: '-has-sort') { 'Cell2' }
+      end
+      table_card.row(id: 1) do |header|
+        header.cell { 'Row 1 Cell1' }
+        header.cell { 'Row 1 Cell2' }
+      end
+      table_card.row(id: 2) do |header|
+        header.cell { 'Row 2 Cell1' }
+        header.cell { 'Row 2 Cell2' }
+      end      
+    end
+
+    # Header
+    assert_selector('div.table div.table__header div.table__cell', text: 'Cell1')
+    assert_selector('div.table div.table__header div.table__cell.-has-sort', text: 'Cell2')
+    refute_selector('div.table div.table__header div.table__cell input#checkbox_for_select_all')
+
+    # Rows
+    refute_selector('div.table div.table__body div.table__cell input#checkbox_for_1')
+    assert_selector('div.table div.table__body div.table__cell', text: 'Row 1 Cell1')
+    assert_selector('div.table div.table__body div.table__cell', text: 'Row 1 Cell2')
+
+    refute_selector('div.table div.table__body div.table__cell input#checkbox_for_2')
+    assert_selector('div.table div.table__body div.table__cell', text: 'Row 2 Cell1')
+    assert_selector('div.table div.table__body div.table__cell', text: 'Row 2 Cell2')    
+  end  
 end

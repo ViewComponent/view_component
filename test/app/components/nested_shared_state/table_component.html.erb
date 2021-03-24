@@ -1,0 +1,10 @@
+<%= content_tag(:div, class: @class_names) do %>
+  <% if header %><%= header %><% end %>
+  <% if rows.any? %>
+    <div class='table__body'>
+      <% rows.each do |row| %>
+        <%= row %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

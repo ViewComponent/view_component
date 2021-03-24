@@ -1,0 +1,15 @@
+<%= content_tag(:div, class: @class_names) do %>
+  <% if @selectable %>
+    <%= render(NestedSharedState::CellComponent.new) do %>
+      <%= content_tag(:div, class: 'input input--boolean') do %>
+        <%= content_tag(:input, '', id: 'checkbox_for_select_all', class: 'input__checkbox', type: 'checkbox') %>
+        <%= label_tag('checkbox_for_select_all', '') %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% if cells.any? %>
+    <% cells.each do |cell| %>
+      <%= cell %>
+    <% end %>
+  <% end %>
+<% end %>
