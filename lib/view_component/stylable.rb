@@ -6,7 +6,7 @@ require "view_component/css_module"
 module ViewComponent
   # EXPERIMENTAL
   # Support for CSS Modules. Use at your own peril!
-  module Styleable
+  module Stylable
     extend ActiveSupport::Concern
 
     included do

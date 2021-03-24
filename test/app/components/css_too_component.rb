@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CssComponent < ViewComponent::Base
+class CssTooComponent < ViewComponent::Base
   include ViewComponent::Stylable
 
   def call
