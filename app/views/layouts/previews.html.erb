@@ -8,13 +8,15 @@
 
 <h2>Source:</h2>
 <pre class="source">
-  <code class="language-markup">
-    <% if @render_args[:component] %>
-      <%= @preview.preview_example_source(@example_name) %>
-    <% else %>
-      <%= File.read(@view_renderer.lookup_context.find_template(@render_args[:template]).identifier) %>
-    <% end %>
-  </code>
+  <% if @render_args[:component] %>
+    <code class="language-ruby">
+      <%=h @preview.preview_example_source(@example_name) %>
+    </code>
+  <% else %>
+    <code class="language-erb">
+      <%=h File.read(@view_renderer.lookup_context.find_template(@render_args[:template]).identifier) %>
+    </code>
+  <% end %>
 </pre>
 
 <%= javascript_include_tag "view_component/prism.min.js" %> 
