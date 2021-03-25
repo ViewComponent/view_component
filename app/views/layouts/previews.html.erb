@@ -1,3 +1,5 @@
+<%= stylesheet_link_tag "view_component/prism.css" %>
+
 <% if @host_application_layout == false %>
   <%= yield %>
 <% else %>
@@ -14,3 +16,5 @@
     <% end %>
   </code>
 </pre>
+
+<%= javascript_include_tag "view_component/prism.min.js" %> 

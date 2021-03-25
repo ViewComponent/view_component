@@ -86,6 +86,11 @@ module ViewComponent
       end
     end
 
+    initializer "view_component.assets.precompile" do |app|
+      app.config.assets.precompile << "view_component/prism.css"
+      app.config.assets.precompile << "view_component/prism.min.js"
+    end
+
     config.after_initialize do |app|
       options = app.config.view_component
 
