@@ -40,7 +40,7 @@ At least for now, the proposed design eschews the concept of shipping CSS in bun
 
 ### No global syntax
 
-In keeping with the existing ViewComponent encapsulation mental modal, all styles are locally scoped by default, with no global escape hatch.
+In keeping with the existing ViewComponent encapsulation mental model, all styles are locally scoped by default, with no global escape hatch.
 
 ### No SCSS
 
