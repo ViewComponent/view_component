@@ -268,29 +268,11 @@ class SlotsV2sTest < ViewComponent::TestCase
         header.cell { 'Cell1' }
         header.cell(class_names: '-has-sort') { 'Cell2' }
       end
-      table_card.row(id: 1) do |header|
-        header.cell { 'Row 1 Cell1' }
-        header.cell { 'Row 1 Cell2' }
-      end
-      table_card.row(id: 2) do |header|
-        header.cell { 'Row 2 Cell1' }
-        header.cell { 'Row 2 Cell2' }
-      end      
     end
 
-    # Header
     assert_selector('div.table div.table__header div.table__cell', text: 'Cell1')
     assert_selector('div.table div.table__header div.table__cell.-has-sort', text: 'Cell2')
-    assert_selector('div.table div.table__header div.table__cell input#checkbox_for_select_all')
-
-    # Rows
-    assert_selector('div.table div.table__body div.table__cell input#checkbox_for_1')
-    assert_selector('div.table div.table__body div.table__cell', text: 'Row 1 Cell1')
-    assert_selector('div.table div.table__body div.table__cell', text: 'Row 1 Cell2')
-
-    assert_selector('div.table div.table__body div.table__cell input#checkbox_for_2')
-    assert_selector('div.table div.table__body div.table__cell', text: 'Row 2 Cell1')
-    assert_selector('div.table div.table__body div.table__cell', text: 'Row 2 Cell2')    
+    assert_selector('div.table div.table__header span', text: 'Selectable')
   end
 
   def test_slot_with_nested_blocks_content_selectable_false
@@ -299,28 +281,10 @@ class SlotsV2sTest < ViewComponent::TestCase
         header.cell { 'Cell1' }
         header.cell(class_names: '-has-sort') { 'Cell2' }
       end
-      table_card.row(id: 1) do |header|
-        header.cell { 'Row 1 Cell1' }
-        header.cell { 'Row 1 Cell2' }
-      end
-      table_card.row(id: 2) do |header|
-        header.cell { 'Row 2 Cell1' }
-        header.cell { 'Row 2 Cell2' }
-      end      
     end
 
-    # Header
     assert_selector('div.table div.table__header div.table__cell', text: 'Cell1')
     assert_selector('div.table div.table__header div.table__cell.-has-sort', text: 'Cell2')
-    refute_selector('div.table div.table__header div.table__cell input#checkbox_for_select_all')
-
-    # Rows
-    refute_selector('div.table div.table__body div.table__cell input#checkbox_for_1')
-    assert_selector('div.table div.table__body div.table__cell', text: 'Row 1 Cell1')
-    assert_selector('div.table div.table__body div.table__cell', text: 'Row 1 Cell2')
-
-    refute_selector('div.table div.table__body div.table__cell input#checkbox_for_2')
-    assert_selector('div.table div.table__body div.table__cell', text: 'Row 2 Cell1')
-    assert_selector('div.table div.table__body div.table__cell', text: 'Row 2 Cell2')    
-  end  
+    refute_selector('div.table div.table__header span', text: 'Selectable')
+  end
 end
