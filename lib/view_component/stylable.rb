@@ -23,13 +23,13 @@ module ViewComponent
       end
 
       def css
-        compile
+        ensure_compiled
 
         @css
       end
 
       def styles
-        compile
+        ensure_compiled
 
         @styles
       end

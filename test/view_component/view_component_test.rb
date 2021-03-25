@@ -594,7 +594,7 @@ class ViewComponentTest < ViewComponent::TestCase
       ViewComponent::CompileCache.cache = Set.new
 
       exception = assert_raises ArgumentError do
-        InvalidParametersComponent.compile(raise_errors: true)
+        InvalidParametersComponent.ensure_compiled(raise_errors: true)
       end
 
       assert_match(/InvalidParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
@@ -609,7 +609,7 @@ class ViewComponentTest < ViewComponent::TestCase
       ViewComponent::CompileCache.cache = Set.new
 
       exception = assert_raises ArgumentError do
-        InvalidNamedParametersComponent.compile(raise_errors: true)
+        InvalidNamedParametersComponent.ensure_compiled(raise_errors: true)
       end
 
       assert_match(/InvalidNamedParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
