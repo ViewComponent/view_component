@@ -3,20 +3,19 @@
 require "sass"
 
 module ViewComponent
-  # Take CSS module code as input, and rewrite it as
-  # browser-friendly CSS code. Apply opaque transformations
-  # so that selectors can only be accessed programatically,
-  # not by class name literals.
   class CSSModule < Sass::Tree::Visitors::Base
     def initialize(module_name, raw_css)
       @module_name, @mappings = module_name, {}
 
-      # Parse incoming CSS into an AST
       @css_root = Sass::SCSS::CssParser.new(raw_css, "(CSSModules)", 1).parse
 
       @module_hash = compute_hash
     end
 
+    # Given a `module_name` and `raw_css`, rewrite `raw_css`
+    # apply opaque transformations to `raw_css` so that
+    # selectors can only be accessed programatically,
+    # not by class name literals.
     def self.rewrite(*args)
       new(*args).rewrite
     end
@@ -114,17 +113,6 @@ module ViewComponent
         seq.class.new(new_members, seq.subject?)
       else
         raise("Unknown sequence to clone: #{seq.class}")
-      end
-    end
-
-    # Debug print-out of a sequence:
-    def deep_print(seq, indent = "")
-      case seq
-      when Sass::Selector::AbstractSequence
-        puts indent + seq.class.name + " => "
-        seq.members.map { |m| deep_print(m, indent + "  ") }
-      else
-        puts indent + seq.class.name + " (#{seq})"
       end
     end
   end
