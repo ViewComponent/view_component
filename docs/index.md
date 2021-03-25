@@ -968,6 +968,8 @@ With the monkey patch disabled, use `render_component` (or  `render_component_to
 
 ### Sidecar CSS (experimental)
 
+_Note: This feature is experimental. Breaking changes should be expected without warning._
+
 ViewComponent includes experimental support for encapsulated sidecar CSS, locally scoping CSS selectors using CSS Modules.
 
 To use the experimental feature, include `ViewComponent::Stylable`:
