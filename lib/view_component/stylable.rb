@@ -17,8 +17,7 @@ module ViewComponent
 
     class_methods do
       def _after_compile
-        css_file_path = source_location.gsub(".rb", ".css")
-        return unless File.exist?(css_file_path)
+        return unless css_file_path = _sidecar_files(["css"]).first
 
         rewrite = ViewComponent::CSSModule.new(
           self.name.demodulize.gsub("Component", ""),
