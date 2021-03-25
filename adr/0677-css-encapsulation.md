@@ -8,8 +8,6 @@ Proposed
 
 ## Context
 
-_Note: Our motivation is generally in line with https://styled-components.com/docs/basics#motivation_
-
 At GitHub, we have a large amount of custom CSS that has become difficult to manage. More generally, writing CSS at scale is often fraught with pitfalls: it's all too easy to introduce visual regressions due to the global nature of the language.
 
 We've seen success in using [CSS-in-JS](https://www.youtube.com/watch?v=ull9iCMTGDE) with [Primer React](https://primer.style/components/), which is built with [Styled Components](https://styled-components.com).
