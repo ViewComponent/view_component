@@ -1044,8 +1044,6 @@ importAll(require.context("../components", true, /[_\/]component\.js$/))
 
 Any file with the `_component.js` suffix (such as `app/components/widget_component.js`) will be compiled into the Webpack bundle.
 
-
-
 #### Stimulus
 
 In Stimulus, create a 1:1 mapping between a Stimulus controller and a component. In order to load in Stimulus controllers from the `app/components` tree, amend the Stimulus boot code in `app/javascript/packs/application.js`:
