@@ -708,4 +708,10 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_selector("style", visible: false, count: 1)
   end
+
+  def test_renders_stylable_component_selector
+    render_inline(CssComponent.new)
+
+    assert_selector(".#{CssComponent.styles['foo']}")
+  end
 end
