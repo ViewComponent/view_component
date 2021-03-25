@@ -28,7 +28,7 @@ ViewComponents are Ruby objects that output HTML. Think of them as an evolution 
 
 ### When should I use components?
 
-Components are most effective in cases where view code is reused or benefits from being tested directly.
+Components are most effective in cases where view code is reused or benefits from being tested directly. Heavily reused partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
 
 ### Why should I use components?
 
