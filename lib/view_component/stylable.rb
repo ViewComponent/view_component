@@ -9,12 +9,6 @@ module ViewComponent
   module Stylable
     extend ActiveSupport::Concern
 
-    included do
-      # Hash of registered Slots
-      class_attribute :slots
-      self.slots = {}
-    end
-
     class_methods do
       def _after_compile
         return unless css_file_path = _sidecar_files(["css"]).first
