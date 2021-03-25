@@ -17,6 +17,10 @@ module ViewComponent
       @module_hash = compute_hash
     end
 
+    def self.rewrite(*args)
+      new(*args).rewrite
+    end
+
     def rewrite
       Sass::Tree::Visitors::SetOptions.visit(@css_root, {})
 

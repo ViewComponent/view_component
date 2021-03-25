@@ -20,10 +20,10 @@ module ViewComponent
       def _after_compile
         return unless css_file_path = _sidecar_files(["css"]).first
 
-        rewrite = ViewComponent::CSSModule.new(
+        rewrite = ViewComponent::CSSModule.rewrite(
           self.name.demodulize.gsub("Component", ""),
           File.read(css_file_path)
-        ).rewrite
+        )
 
         @css = rewrite[:css]
         @styles = rewrite[:mappings]

@@ -6,10 +6,10 @@ require "view_component/css_module"
 class CSSModuleTest < Minitest::Test
   def test_it_returns_mappings
     mappings =
-      ViewComponent::CSSModule.new(
+      ViewComponent::CSSModule.rewrite(
         "item",
         ".title { color: red; }"
-      ).rewrite[:mappings]
+      )[:mappings]
 
     assert_equal mappings, { "title" => "item_447b7_title" }
   end
@@ -76,7 +76,7 @@ class CSSModuleTest < Minitest::Test
   def assert_rewrite(module_name, original_css, expected_rewritten_css)
     assert_equal(
       expected_rewritten_css,
-      ViewComponent::CSSModule.new(module_name, original_css).rewrite[:css]
+      ViewComponent::CSSModule.rewrite(module_name, original_css)[:css]
     )
   end
 end
