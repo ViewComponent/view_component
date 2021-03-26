@@ -36,7 +36,7 @@ The proposed design avoids Webpacker and other build tools. Instead, it uses a R
 
 ### No bundles
 
-At least for now, the proposed design eschews the concept of shipping CSS in bundles.
+The proposed design eschews the concept of shipping CSS in bundles, with the goal of encouraging the delivery of only the CSS needed to render a give page.
 
 ### No global syntax
 
@@ -54,7 +54,7 @@ Much like our issue with [inlining ERB inside ViewComponent Ruby files](https://
 
 ### Ruby-in-CSS
 
-We considered allowing for evaluation of Ruby inside CSS files (at compile, runtime, or both) but instead decided to lean on [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) for injecting dynamic values.
+We considered allowing for evaluation of Ruby inside CSS files (at compile, runtime, or both) but instead decided to lean on [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) for injecting dynamic values. The recent Dark Mode feature heavily depended on CSS variables.
 
 ### Bundle splitting
 
@@ -62,4 +62,4 @@ We attempted to split our CSS into multiple smaller bundles without significant 
 
 ## Consequences
 
-ViewComponent authors will write encapsulated CSS, avoiding several common errors and resulting in more resilient user interfaces.
+o, avoiding several common errors and resulting in more resilient user interfaces.
