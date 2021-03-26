@@ -2,17 +2,12 @@
 
 module NestedSharedState
   class HeaderComponent < ViewComponent::Base
-    include ViewComponent::SlotableV2
+    renders_many :cells, NestedSharedState::CellComponent
 
-    renders_many :cells, ->(*args, **kwargs, &block) do
-      render(NestedSharedState::CellComponent.new(*args, **kwargs)) do
-        block.call
-      end
-    end
-
-    def initialize(selectable: false, class_names: 'table__header', **kwargs)
+    def initialize(selectable: false, class_names: "table__header", **kwargs)
       @selectable = selectable
-      @class_names = class_names
+      @tag_arguments = kwargs
+      @tag_arguments[:class] = class_names
     end
   end
 end

@@ -227,7 +227,9 @@ module ViewComponent
         # current component. This is necessary to allow the lambda to access helper
         # methods like `content_tag` as well as parent component state.
         renderable_value = if block_given?
-          slot_definition[:renderable_function].bind(self).call(*args, **kwargs) { view_context.capture(&block) }
+          slot_definition[:renderable_function].bind(self).call(*args, **kwargs) do |*args, **kwargs|
+            view_context.capture { block.call(*args, **kwargs) }
+          end
         else
           slot_definition[:renderable_function].bind(self).call(*args, **kwargs)
         end

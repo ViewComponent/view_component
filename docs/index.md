@@ -234,6 +234,58 @@ class BlogComponent < ViewComponent::Base
 end
 ```
 
+Since Lambda slots are able to wrap other components, you are able share data from the parent component and chain upon the returned component.
+
+```ruby
+class TableComponent < ViewComponent::Base
+  renders_one :header, -> (**kwargs) do
+    HeaderComponent.new(selectable: @selectable, **kwargs)
+  end
+
+  def initialize(selectable: false)
+    @selectable = selectable
+  end
+end
+
+class HeaderComponent < ViewComponent::Base
+  renders_many :cells, CellComponent
+
+  def initialize(selectable: false, **kwargs)
+    @selectable = selectable
+    @tag_arguments = kwargs
+    @tag_arguments[:class] = 'table__header'
+  end
+end
+```
+
+`# table_component.html.erb`
+
+```erb
+<div class="table">
+  <%= header %>
+</div>
+```
+
+`# header_component.html.erb`
+
+```erb
+<%= content_tag(:div, **@tag_arguments) do %>
+  <% if @selectable %><span>Selectable</span><% end %>
+  <% cells.each do |cell| %><%= cell %><% end %>
+<% end %>
+```
+
+Usage:
+
+```erb
+<%= render(TableComponent.new(selectable: true)) do |table| %>
+  <% table.header(data: { controller: 'table-sort' }) do |header| %>
+    <% header.cell { 'Cell 1' } %>
+    <% header.cell { 'Cell 2' } %>
+  <% end %>
+<% end %>
+```
+
 ##### Pass through slots
 
 Pass through slots capture content passed with a block.

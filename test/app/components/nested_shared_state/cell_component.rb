@@ -2,7 +2,7 @@
 
 module NestedSharedState
   class CellComponent < ViewComponent::Base
-    def initialize(class_names: '')
+    def initialize(class_names: "")
       @class_names = "table__cell #{class_names}"
     end
 

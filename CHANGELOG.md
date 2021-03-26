@@ -2,6 +2,10 @@
 
 ## main
 
+* Allow Slotable V2 Lambda's to share data from the parent component and allow chaining on the returned component.
+
+    *Sjors Baltus, Blake Williams*
+
 * Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
 
     *Elia Schito*
