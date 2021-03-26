@@ -69,7 +69,7 @@ module ViewComponent
       if !rendered_components.include?(rendered_components_identifier)
         request.params["___rendered_view_components"] << rendered_components_identifier
 
-        content_tag(:style, self.class._css.html_safe) # rubocop:disable Rails/OutputSafety
+        content_tag(:style, self.class._css.html_safe)
       end
     end
 

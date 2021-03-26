@@ -33,7 +33,7 @@ module ViewComponent
 
     # Generate a short, random-ish token to prevent CSS selector collisions.
     def compute_hash
-      Digest::MD5.hexdigest(@module_name).first(5) # rubocop:disable GitHub/InsecureHashAlgorithm
+      Digest::MD5.hexdigest(@module_name).first(5)
     end
 
     def visit_rule(node)
