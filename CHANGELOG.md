@@ -2,7 +2,7 @@
 
 ## main
 
-* Experimental: add `ViewComponent::Stylable` for encapsulated CSS.
+* Experimental: add `ViewComponent::Styleable` for encapsulated CSS.
 
     *Joel Hawksley*
 

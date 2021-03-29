@@ -9,7 +9,7 @@ module ViewComponent
   #
   # Adds support for sidecar CSS modules.
   # See docs/index.md for directions for use.
-  module Stylable
+  module Styleable
     extend ActiveSupport::Concern
 
     class_methods do

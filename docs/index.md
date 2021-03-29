@@ -972,19 +972,19 @@ _Note: This feature is experimental. Breaking changes should be expected without
 
 ViewComponent includes experimental support for encapsulated sidecar CSS, locally scoping CSS selectors using CSS Modules.
 
-To use the experimental feature, include `ViewComponent::Stylable`:
+To use the experimental feature, include `ViewComponent::Styleable`:
 
-`app/components/stylable_component.rb`:
+`app/components/styleable_component.rb`:
 
 ```ruby
-class StylableComponent < ViewComponent::Base
-  include ViewComponent::Stylable
+class StyleableComponent < ViewComponent::Base
+  include ViewComponent::Styleable
 end
 ```
 
 Add a sidecar stylesheet for the component:
 
-`app/components/stylable_component.css`:
+`app/components/styleable_component.css`:
 
 ```css
 .foo {
@@ -994,11 +994,11 @@ Add a sidecar stylesheet for the component:
 
 Use `styles` to retrieve the scoped selector:
 
-`app/components/stylable_component.rb`:
+`app/components/styleable_component.rb`:
 
 ```ruby
-class StylableComponent < ViewComponent::Base
-  include ViewComponent::Stylable
+class StyleableComponent < ViewComponent::Base
+  include ViewComponent::Styleable
 
   def call
     content_tag(:div, "Hello, World!", class: styles['foo'])
@@ -1009,7 +1009,7 @@ end
 Render the component in a view:
 
 ```erb
-<%= render(StylableComponent.new) %>
+<%= render(StyleableComponent.new) %>
 ```
 
 Returning:
