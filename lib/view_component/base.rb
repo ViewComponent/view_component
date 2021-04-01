@@ -224,9 +224,6 @@ module ViewComponent
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
       def compile(raise_errors: false)
-        template_compiler.compile(raise_errors: raise_errors)
-      end
-
       def template_compiler
         @_template_compiler ||= Compiler.new(self)
       end
@@ -295,15 +292,6 @@ module ViewComponent
           "public ViewComponent method."
         )
       end
-
-      private
-
-      def initialize_parameter_names
-        initialize_parameters.map(&:last)
-      end
-
-      def initialize_parameters
-        instance_method(:initialize).parameters
       end
 
       def provided_collection_parameter
