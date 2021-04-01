@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Conditional Rendering
+title: Conditional rendering
 parent: Building ViewComponents
 ---
 
-# Conditional Rendering
+# Conditional rendering
 
 Components can implement a `#render?` method to be called after initialization to determine if the component should render.
 
