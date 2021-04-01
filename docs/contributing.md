@@ -5,6 +5,8 @@ title: Contributing
 
 # Contributing
 
+_This project is intended to be a safe, welcoming space for collaboration. Contributors are expected to adhere to the Contributor Covenant code of conduct._
+
 Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great.
 
 If you have any substantial changes that you would like to make, please [open an issue](http://github.com/github/view_component/issues/new) first to discuss them with us.
