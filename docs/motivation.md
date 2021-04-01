@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Introduction
+title: Motivation
 nav_order: 2
 ---
 
 
-# Introduction
+# Motivation
 
 ## What are ViewComponents?
 
