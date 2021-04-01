@@ -26,6 +26,13 @@ Here are a few things you can do that will increase the likelihood of your pull 
 - Keep your change as focused as possible. If there are multiple changes you would like to make that are not dependent upon each other, consider submitting them as separate pull requests.
 - Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 
+## Documentation
+
+1. Navigate to `/docs`.
+1. Configure and install the dependencies: `bundle`.
+1. Run Jekyll: `bundle exec jekyll serve`.
+1. Open the docs site at `http://127.0.0.1:4000/`.
+
 ## Releasing
 
 If you are the current maintainer of this gem:

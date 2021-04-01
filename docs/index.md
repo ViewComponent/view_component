@@ -1,6 +1,11 @@
-A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
+---
+layout: default
+title: Homepage
+---
 
-[View on GitHub →](https://github.com/github/view_component)
+# ViewComponent
+
+A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
 
 ## Design philosophy
 
