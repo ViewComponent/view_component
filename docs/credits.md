@@ -3,6 +3,8 @@ layout: default
 title: Credits
 ---
 
+# Credits
+
 ViewComponent is built by:
 
 |        | Name | Location |
