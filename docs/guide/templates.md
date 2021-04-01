@@ -29,9 +29,7 @@ app/components
 ├── ...
 ├── example_component.rb
 ├── example_component
-|   ├── example_component.css
 |   ├── example_component.html.erb
-|   └── example_component.js
 ├── ...
 ```
 
