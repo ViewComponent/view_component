@@ -5,5 +5,5 @@
   "no-trailing-punctuation": false,
   "no-inline-html": false,
   "first-line-heading": false,
-  "single-title/single-h1": false,
+  "single-title/single-h1": false
 }
