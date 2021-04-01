@@ -195,33 +195,6 @@ bin/rails generate component Example title --sidecar
       create  app/components/example_component.rb
       create  app/components/example_component/example_component.html.erb
 ```
-
-## Component file inside Sidecar directory
-
-It's also possible to place the Ruby component file inside the sidecar directory, grouping all related files in the same folder:
-
-_Note: Avoid giving your containing folder the same name as your `.rb` file or there will be a conflict between Module and Class definitions_
-
-```console
-app/components
-├── ...
-├── example
-|   ├── component.rb
-|   ├── component.css
-|   ├── component.html.erb
-|   └── component.js
-├── ...
-
-```
-
-The component can then be rendered using the folder name as a namespace:
-
-```erb
-<%= render(Example::Component.new(title: "my title")) do %>
-  Hello, World!
-<% end %>
-```
-
 # Conditional Rendering
 
 Components can implement a `#render?` method to be called after initialization to determine if the component should render.
