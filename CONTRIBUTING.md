@@ -1,8 +1,3 @@
----
-layout: default
-title: Contributing
----
-
 # Contributing
 
 _This project is intended to be a safe, welcoming space for collaboration. Contributors are expected to adhere to the Contributor Covenant code of conduct._
