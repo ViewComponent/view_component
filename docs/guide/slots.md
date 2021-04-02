@@ -105,6 +105,20 @@ class BlogComponent < ViewComponent::Base
 end
 ```
 
+Lambda are able to access state from the parent component:
+
+```ruby
+class TableComponent < ViewComponent::Base
+  renders_one :header, -> do
+    HeaderComponent.new(selectable: @selectable)
+  end
+
+  def initialize(selectable: false)
+    @selectable = selectable
+  end
+end
+```
+
 ## Pass through slots
 
 Pass through slots capture content passed with a block.

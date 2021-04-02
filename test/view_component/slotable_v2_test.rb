@@ -261,4 +261,43 @@ class SlotsV2sTest < ViewComponent::TestCase
       component.footer(classes: "text-blue")
     end
   end
+
+  def test_slot_with_nested_blocks_content_selectable_true
+    render_inline(NestedSharedState::TableComponent.new(selectable: true)) do |table_card|
+      table_card.header("regular_argument", class_names: "table__header extracted_kwarg", data: { splatted_kwarg: "splatted_keyword_argument"}) do |header|
+        header.cell { "Cell1" }
+        header.cell(class_names: "-has-sort") { "Cell2" }
+      end
+    end
+
+    assert_selector("div.table div.table__header div.table__cell", text: "Cell1")
+    assert_selector("div.table div.table__header div.table__cell.-has-sort", text: "Cell2")
+
+    # Check shared data through Proc
+    assert_selector("div.table div.table__header span", text: "Selectable")
+
+    # Check regular arguments
+    assert_selector('div.table div.table__header[data-argument="regular_argument"]')
+
+    # Check extracted keyword argument
+    assert_selector("div.table div.table__header.extracted_kwarg")
+
+    # Check splatted keyword arguments
+    assert_selector('div.table div.table__header[data-splatted-kwarg="splatted_keyword_argument"]')
+  end
+
+  def test_slot_with_nested_blocks_content_selectable_false
+    render_inline(NestedSharedState::TableComponent.new(selectable: false)) do |table_card|
+      table_card.header do |header|
+        header.cell { "Cell1" }
+        header.cell(class_names: "-has-sort") { "Cell2" }
+      end
+    end
+
+    assert_selector("div.table div.table__header div.table__cell", text: "Cell1")
+    assert_selector("div.table div.table__header div.table__cell.-has-sort", text: "Cell2")
+
+    # Check shared data through Proc
+    refute_selector("div.table div.table__header span", text: "Selectable")
+  end
 end

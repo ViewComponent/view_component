@@ -2,6 +2,10 @@
 
 ## main
 
+* Allow Slot lambdas to share data from the parent component and allow chaining on the returned component.
+
+    *Sjors Baltus, Blake Williams*
+
 * Experimental: Add `ViewComponent::Translatable`
   * `t` and `translate` now will look first into the sidecar YAML translations file.
   * `helpers.t` and `I18n.t` still reference the global Rails translation files.
