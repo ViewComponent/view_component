@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.30.0
+
 * Deprecate `with_content_areas` in favor of [slots](https://viewcomponent.org/guide/slots.html).
 
     *Joel Hawksley*
