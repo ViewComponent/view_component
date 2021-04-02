@@ -4,7 +4,7 @@ title: Translations
 parent: Building ViewComponents
 ---
 
-##### Translations (experimental)
+# Translations (experimental)
 
 To use experimental support for `I18n` translations, include `ViewComponent::Translatable`:
 
