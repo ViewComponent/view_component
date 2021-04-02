@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.29.0
+
 * Allow Slot lambdas to share data from the parent component and allow chaining on the returned component.
 
     *Sjors Baltus, Blake Williams*
