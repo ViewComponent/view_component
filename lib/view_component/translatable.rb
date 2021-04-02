@@ -3,12 +3,31 @@
 require "set"
 require "i18n"
 require "action_view/helpers/translation_helper"
+require "active_support/concern"
 
 module ViewComponent
   module Translatable
-    def self.included(base)
-      base.class_attribute :i18n_backend, instance_writer: false, instance_predicate: false
-      base.extend ClassMethods
+    extend ActiveSupport::Concern
+
+    included do
+      class_attribute :i18n_backend, instance_writer: false, instance_predicate: false
+    end
+
+    class_methods do
+      def i18n_scope
+        @i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
+      end
+
+      def _after_compile
+        super
+
+        unless CompileCache.compiled? self
+          self.i18n_backend = I18nBackend.new(
+            i18n_scope: i18n_scope,
+            load_paths: _sidecar_files(%w[yml yaml]),
+          )
+        end
+      end
     end
 
     class I18nBackend < ::I18n::Backend::Simple
@@ -57,23 +76,6 @@ module ViewComponent
     # Exposes .i18n_scope as an instance method
     def i18n_scope
       self.class.i18n_scope
-    end
-
-    module ClassMethods
-      def i18n_scope
-        @i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
-      end
-
-      def _after_compile
-        super
-
-        unless CompileCache.compiled? self
-          self.i18n_backend = I18nBackend.new(
-            i18n_scope: i18n_scope,
-            load_paths: _sidecar_files(%w[yml yaml]),
-          )
-        end
-      end
     end
   end
 end
