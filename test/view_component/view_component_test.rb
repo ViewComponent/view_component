@@ -594,7 +594,7 @@ class ViewComponentTest < ViewComponent::TestCase
       ViewComponent::CompileCache.cache = Set.new
 
       exception = assert_raises ArgumentError do
-        InvalidParametersComponent.compile(raise_errors: true)
+        InvalidParametersComponent.ensure_compiled(raise_errors: true)
       end
 
       assert_match(/InvalidParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
@@ -609,7 +609,7 @@ class ViewComponentTest < ViewComponent::TestCase
       ViewComponent::CompileCache.cache = Set.new
 
       exception = assert_raises ArgumentError do
-        InvalidNamedParametersComponent.compile(raise_errors: true)
+        InvalidNamedParametersComponent.ensure_compiled(raise_errors: true)
       end
 
       assert_match(/InvalidNamedParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
@@ -722,5 +722,21 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector "h1", text: "hello view component"
   ensure
     Object.send(:remove_const, "MY_COMPONENT")
+  end
+
+  def test_renders_style_tag_once_for_multiple_components_with_css
+    @rendered_component = controller.view_context.render(
+      inline:
+        "<%= render(CssComponent.new) %>" \
+        "<%= render(CssComponent.new) %>"
+    )
+
+    assert_selector("style", visible: false, count: 1)
+  end
+
+  def test_renders_styleable_component_selector
+    render_inline(CssComponent.new)
+
+    assert_selector(".#{CssComponent.styles['foo']}")
   end
 end
