@@ -2,7 +2,7 @@
 
 ## main
 
-* Allow Slotable V2 Lambda's to share data from the parent component and allow chaining on the returned component.
+* Allow Slot lambdas to share data from the parent component and allow chaining on the returned component.
 
     *Sjors Baltus, Blake Williams*
 

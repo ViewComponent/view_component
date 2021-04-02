@@ -2,7 +2,6 @@
 
 module NestedSharedState
   class TableComponent < ViewComponent::Base
-
     renders_one :header, -> (arg = nil, **system_arguments, &block) do
       header_system_arguments = system_arguments
       header_system_arguments[:selectable] = @selectable
@@ -13,7 +12,6 @@ module NestedSharedState
       NestedSharedState::HeaderComponent.new(**header_system_arguments)
     end
 
-    # @param selectable [Boolean] When enabled it allows the user to select rows using checkboxes
     def initialize(selectable: false)
       @selectable = selectable
     end
