@@ -46,18 +46,17 @@ def test_render_component
 end
 ```
 
-To test components that use `with_content_areas`:
+To test components that use Slots:
 
 ```ruby
-def test_renders_content_areas_template_with_content
-  render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
-    component.with(:title, "Hello!")
-    component.with(:body) { "Have a nice day." }
+def test_renders_slots_with_content
+  render_inline(SlotsComponent.new(footer: "Bye!")) do |component|
+    component.title { "Hello!" }
+    component.body { "Have a nice day." }
   end
 
   assert_selector(".title", text: "Hello!")
   assert_selector(".body", text: "Have a nice day.")
-  assert_selector(".footer", text: "Bye!")
 end
 ```
 
