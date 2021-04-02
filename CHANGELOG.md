@@ -6,6 +6,17 @@
 
     *Sjors Baltus, Blake Williams*
 
+* Experimental: Add `ViewComponent::Translatable`
+  * `t` and `translate` now will look first into the sidecar YAML translations file.
+  * `helpers.t` and `I18n.t` still reference the global Rails translation files.
+  * `l` and `localize` will still reference the global Rails translation files.
+
+    *Elia Schito*
+
+* Fix rendering output of pass through slots when using HAML.
+
+    *Alex Robbin, Blake Williams*
+
 * Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
 
     *Elia Schito*
