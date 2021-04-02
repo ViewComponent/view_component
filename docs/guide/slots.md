@@ -14,7 +14,7 @@ Slots are defined with `renders_one` and `renders_many`:
 
 `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :blog_posts`
 
-_To view documentation for content_areas (soon to be deprecated) and the original implementation of Slots, see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
+_To view documentation for content_areas (deprecated) and the original implementation of Slots (soon to be deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
 
 ## Defining slots
 
