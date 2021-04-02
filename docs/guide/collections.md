@@ -6,7 +6,7 @@ parent: Building ViewComponents
 
 # Collections
 
-Use `with_collection` to render a ViewComponent with a collection:
+Like [Rails partials](https://guides.rubyonrails.org/layouts_and_rendering.html#rendering-collections), it's possible to render a collection with ViewComponents, using `with_collection`:
 
 `app/view/products/index.html.erb`
 
