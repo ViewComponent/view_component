@@ -87,7 +87,7 @@ GIT
 PATH
   remote: .
   specs:
-    view_component (2.29.0)
+    view_component (2.30.0)
       activesupport (>= 5.0.0, < 7.0)
 
 GEM
