@@ -228,7 +228,7 @@ module ViewComponent
         # methods like `content_tag` as well as parent component state.
         renderable_value = if block_given?
           slot_definition[:renderable_function].bind(self).call(*args, **kwargs) do |*args, **kwargs|
-            view_context.capture { block.call(*args, **kwargs) }
+            view_context.capture(*args, **kwargs, &block)
           end
         else
           slot_definition[:renderable_function].bind(self).call(*args, **kwargs)
