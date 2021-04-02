@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix rendering output of pass through slots when using HAML.
+
+    *Alex Robbin, Blake Williams*
+
 * Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
 
     *Elia Schito*
