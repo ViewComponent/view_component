@@ -2,6 +2,10 @@
 
 ## main
 
+* Deprecate `with_content_areas` in favor of [slots](https://viewcomponent.org/guide/slots.html).
+
+    *Joel Hawksley*
+
 ## 2.29.0
 
 * Allow Slot lambdas to share data from the parent component and allow chaining on the returned component.
