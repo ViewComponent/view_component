@@ -4,7 +4,7 @@ title: Translations
 parent: Building ViewComponents
 ---
 
-##### Translations (experimental)
+# Translations (experimental)
 
 To use experimental support for `I18n` translations, include `ViewComponent::Translatable`:
 
@@ -30,7 +30,7 @@ Access component-local translations with a leading dot:
 `app/components/example_component.html.erb`
 
 ```erb
-<p><%= t(".hello") %></p>
+<%= t(".hello") %>
 ```
 
 Global Rails translations are available as well:
