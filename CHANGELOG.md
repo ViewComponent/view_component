@@ -1,11 +1,6 @@
 # CHANGELOG
 
 ## main
-
-* Experimental: add `ViewComponent::Styleable` for encapsulated CSS.
-
-    *Joel Hawksley*
-
 * Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
 
     *Elia Schito*
