@@ -12,15 +12,19 @@ module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
-    include ActiveSupport::Callbacks
-
-    ViewContextCalledBeforeRenderError = Class.new(StandardError)
-
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
+
+    # EXPERIMENTAL: This API is experimental and may be removed at any time.
+    # Hook for allowing components to do work as part of the compilation process.
+    #
+    # For example, one might compile component-specific assets at this point.
+    def self._after_compile
+      # noop
+    end
 
     # Entrypoint for rendering components.
     #
@@ -69,8 +73,8 @@ module ViewComponent
       old_current_template = @current_template
       @current_template = self
 
-      # Assign captured content passed to component as a block to @content
-      @content = view_context.capture(self, &block) if block_given?
+      @_content_evaluated = false
+      @_render_in_block = block
 
       before_render
 
@@ -120,7 +124,7 @@ module ViewComponent
       @helpers ||= controller.view_context
     end
 
-    # Exposes .virutal_path as an instance method
+    # Exposes .virtual_path as an instance method
     def virtual_path
       self.class.virtual_path
     end
@@ -167,11 +171,25 @@ module ViewComponent
       @request ||= controller.request
     end
 
-    attr_reader :content, :view_context
+    attr_reader :view_context
+
+    def content
+      return @_content if defined?(@_content)
+      @_content_evaluated = true
+
+      @_content = if @view_context && @_render_in_block
+        view_context.capture(self, &@_render_in_block)
+      end
+    end
+
+    def content_evaluated?
+      @_content_evaluated
+    end
 
     # The controller used for testing components.
-    # Defaults to ApplicationController. This should be set early
-    # in the initialization process and should be set to a string.
+    # Defaults to ApplicationController, but can be configured
+    # on a per-test basis using `with_controller_class`.
+    # This should be set early in the initialization process and should be a string.
     mattr_accessor :test_controller
     @@test_controller = "ApplicationController"
 
@@ -181,16 +199,6 @@ module ViewComponent
     class << self
       attr_accessor :source_location, :virtual_path
 
-      def before_render(method_name = nil, &block)
-        if block_given?
-          set_callback :render, :before, block
-        else
-          set_callback :render, :before, method_name
-        end
-      end
-
-      def skip_before_render(method_name)
-        skip_callback :render, method_name
       end
 
       # Render a component collection.
@@ -255,7 +263,14 @@ module ViewComponent
         if areas.include?(:content)
           raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
         end
-        attr_reader(*areas)
+
+        areas.each do |area|
+          define_method area.to_sym do
+            content unless content_evaluated? # ensure content is loaded so content_areas will be defined
+            instance_variable_get(:"@#{area}") if instance_variable_defined?(:"@#{area}")
+          end
+        end
+
         self.content_areas = areas
       end
 

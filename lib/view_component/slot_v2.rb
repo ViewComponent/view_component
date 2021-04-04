@@ -25,15 +25,22 @@ module ViewComponent
       return @content if defined?(@content)
 
       view_context = @parent.send(:view_context)
-      @content = view_context.capture do
-        if defined?(@_component_instance)
-          # render_in is faster than `parent.render`
-          @_component_instance.render_in(view_context, &@_content_block)
-        elsif defined?(@_content)
-          @_content
-        elsif defined?(@_content_block)
-          @_content_block.call
+
+      @content = if defined?(@_component_instance)
+        # render_in is faster than `parent.render`
+        if defined?(@_content_block)
+          view_context.capture do
+            @_component_instance.render_in(view_context, &@_content_block)
+          end
+        else
+          view_context.capture do
+            @_component_instance.render_in(view_context)
+          end
         end
+      elsif defined?(@_content)
+        @_content
+      elsif defined?(@_content_block)
+        view_context.capture(&@_content_block)
       end
 
       @content
