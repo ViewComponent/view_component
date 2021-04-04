@@ -61,6 +61,17 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("bar")
   end
 
+  def test_renders_haml_with_html_formatted_slot
+    render_inline(HamlHtmlFormattedSlotComponent.new)
+
+    assert_selector("p", text: "HTML Formatted one")
+    assert_selector("p", text: "HTML Formatted many", count: 2)
+
+    # ensure the content isn't rendered twice (once escaped, once not)
+    assert_no_text "<p>HTML Formatted one</p>"
+    assert_no_text "<p>HTML Formatted many</p>"
+  end
+
   def test_renders_slim_with_many_slots
     render_inline(SlimRendersManyComponent.new) do |c|
       c.slim_component(message: "Bar A") do
