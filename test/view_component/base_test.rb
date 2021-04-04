@@ -67,5 +67,10 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       ["#{root}/test/app/components/css_sidecar_file_component.css"],
       CssSidecarFileComponent._sidecar_files(["css"])
     )
+
+    assert_equal(
+      ["#{root}/test/app/components/translatable_component.yml"],
+      TranslatableComponent._sidecar_files(["yml"])
+    )
   end
 end
