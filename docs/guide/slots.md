@@ -141,7 +141,9 @@ end
 <div>
   <h1><%= header %></h1>
 
-  <%= posts %>
+  <% posts.each do |post| %>
+    <%= post %>
+  <% end %>
 </div>
 ```
 
