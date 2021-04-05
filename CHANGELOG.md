@@ -1,4 +1,5 @@
 # CHANGELOG
+
 * Fix bug where rendering Slot with empty block resulted in error.
 
     *Joel Hawksley*
