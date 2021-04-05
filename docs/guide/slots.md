@@ -18,6 +18,8 @@ _To view documentation for content_areas (deprecated) and the original implement
 
 ## Defining slots
 
+**Note**: Versions of ViewComponent `< 2.28.0` need to `include ViewComponent::SlotableV2` in each component. Versions `>= 2.28.0` do not have to include the slotable module as it is now included by default.
+
 Slots come in three forms:
 
 - [Delegate slots](#delegate-slots) render other components.
@@ -32,8 +34,6 @@ Delegate slots delegate to another component:
 
 ```ruby
 class BlogComponent < ViewComponent::Base
-  include ViewComponent::SlotableV2
-
   # Since `HeaderComponent` is nested inside of this component, we have to
   # reference it as a string instead of a class name.
   renders_one :header, "HeaderComponent"
@@ -93,8 +93,6 @@ Lambda slots render their return value. Lambda slots are useful for working with
 
 ```ruby
 class BlogComponent < ViewComponent::Base
-  include ViewComponent::SlotableV2
-
   # Renders the returned string
   renders_one :header, -> (classes:) do
     content_tag :h1 do
@@ -113,8 +111,6 @@ Lambda are able to access state from the parent component:
 
 ```ruby
 class TableComponent < ViewComponent::Base
-  include ViewComponent::SlotableV2
-
   renders_one :header, -> do
     HeaderComponent.new(selectable: @selectable)
   end
@@ -134,8 +130,6 @@ Define a pass through slot by omitting the second argument to `renders_one` and 
 ```ruby
 # blog_component.rb
 class BlogComponent < ViewComponent::Base
-  include ViewComponent::SlotableV2
-  
   renders_one :header
   renders_many :posts
 end
@@ -177,8 +171,6 @@ e.g.
 
 ```ruby
 class NavigationComponent < ViewComponent::Base
-  include ViewComponent::SlotableV2
-
   renders_many :links, "LinkComponent"
 
   class LinkComponent < ViewComponent::Base
