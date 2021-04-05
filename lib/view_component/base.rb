@@ -7,7 +7,6 @@ require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
-require "view_component/styleable"
 
 module ViewComponent
   class Base < ActionView::Base
