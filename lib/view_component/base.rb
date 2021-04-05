@@ -260,6 +260,11 @@ module ViewComponent
       end
 
       def with_content_areas(*areas)
+        ActiveSupport::Deprecation.warn(
+          "`with_content_areas` is deprecated and will be removed in ViewComponent v3.0.0.\n" \
+          "Use slots (https://viewcomponent.org/guide/slots.html) instead."
+        )
+
         if areas.include?(:content)
           raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
         end

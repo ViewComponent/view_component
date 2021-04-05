@@ -14,9 +14,11 @@ Slots are defined with `renders_one` and `renders_many`:
 
 `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :blog_posts`
 
-_To view documentation for content_areas (soon to be deprecated) and the original implementation of Slots, see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
+_To view documentation for content_areas (deprecated) and the original implementation of Slots (soon to be deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
 
 ## Defining slots
+
+**Note**: In versions `< 2.28.0`, `include ViewComponent::SlotableV2` to use slots.
 
 Slots come in three forms:
 
@@ -139,7 +141,9 @@ end
 <div>
   <h1><%= header %></h1>
 
-  <%= posts %>
+  <% posts.each do |post| %>
+    <%= post %>
+  <% end %>
 </div>
 ```
 
