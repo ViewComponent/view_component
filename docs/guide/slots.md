@@ -18,7 +18,7 @@ _To view documentation for content_areas (deprecated) and the original implement
 
 ## Defining slots
 
-**Note**: Versions of ViewComponent `< 2.28.0` need to `include ViewComponent::SlotableV2` in each component. Versions `>= 2.28.0` do not have to include the slotable module as it is now included by default.
+**Note**: In versions `< 2.28.0`, `include ViewComponent::SlotableV2` to use slots.
 
 Slots come in three forms:
 
