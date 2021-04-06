@@ -423,8 +423,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
-  # TODO: Remove in v3.0.0
-  def test_before_render_check
+  def test_renders_labels_with_block_correctly
+    render_inline(FormComponent.new)
+
+    assert_selector("form > div > label > input")
+    refute_selector("form > div > input")
+  end
+
+  def test_validations_component
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(OldValidationsComponent.new)
     end
@@ -605,7 +611,7 @@ class ViewComponentTest < ViewComponent::TestCase
       ViewComponent::CompileCache.cache = Set.new
 
       exception = assert_raises ArgumentError do
-        InvalidParametersComponent.compile(raise_errors: true)
+        InvalidParametersComponent.ensure_compiled(raise_errors: true)
       end
 
       assert_match(/InvalidParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
@@ -620,7 +626,7 @@ class ViewComponentTest < ViewComponent::TestCase
       ViewComponent::CompileCache.cache = Set.new
 
       exception = assert_raises ArgumentError do
-        InvalidNamedParametersComponent.compile(raise_errors: true)
+        InvalidNamedParametersComponent.ensure_compiled(raise_errors: true)
       end
 
       assert_match(/InvalidNamedParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
@@ -688,7 +694,5 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_predicate InlineInheritedComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
-
-
   end
 end
