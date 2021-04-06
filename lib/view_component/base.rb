@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
@@ -22,15 +21,6 @@ module ViewComponent
 
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
-
-    # EXPERIMENTAL: This API is experimental and may be removed at any time.
-    # Hook for allowing components to do work as part of the compilation process.
-    #
-    # For example, one might compile component-specific assets at this point.
-    def self._after_compile
-      # noop
-    end
-
     # Entrypoint for rendering components.
     #
     # view_context: ActionView context from calling view
@@ -82,8 +72,6 @@ module ViewComponent
       @_render_in_block = block
 
       before_render
-
-      if render?
 
       else
         ""
@@ -253,6 +241,7 @@ module ViewComponent
       #
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
+
       def template_compiler
         @_template_compiler ||= Compiler.new(self)
       end
@@ -333,7 +322,6 @@ module ViewComponent
           "public ViewComponent method."
         )
       end
-
 
       end
 
