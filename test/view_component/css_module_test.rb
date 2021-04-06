@@ -15,6 +15,7 @@ class CSSModuleTest < Minitest::Test
   end
 
 
+
   def test_it_rewrites_class_selectors
     before_css = ".title { color: red; }"
     after_css = ".item_447b7_title {\n  color: red; }\n"

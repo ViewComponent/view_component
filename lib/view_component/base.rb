@@ -10,6 +10,7 @@ require "view_component/slotable_v2"
 <<
 
 
+
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
@@ -83,6 +84,7 @@ module ViewComponent
       before_render
 
       if render?
+
       else
         ""
       end
@@ -331,6 +333,7 @@ module ViewComponent
           "public ViewComponent method."
         )
       end
+
 
       end
 
