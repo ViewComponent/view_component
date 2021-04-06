@@ -22,6 +22,7 @@ module ViewComponent
 
     def rewrite
       Sass::Tree::Visitors::SetOptions.visit(@css_root, {})
+
       {
         mappings: mappings,
         css: @css_root.render
