@@ -84,7 +84,6 @@ module ViewComponent
 
       if render?
         before_render
-
         render_template_for(@variant)
       else
         ""

@@ -432,6 +432,15 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
+  def test_before_render_order
+    component = ConditionalRenderComponent.new(should_render: false)
+    def component.before_render
+      raise "did not expect `before_render` to be called when `render?` returns false"
+    end
+
+    render_inline(component)
+  end
+
   def test_compiles_unrendered_component
     assert UnreferencedComponent.compiled?
   end
