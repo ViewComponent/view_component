@@ -2,4 +2,5 @@
 
 class Post
 
+
 end
