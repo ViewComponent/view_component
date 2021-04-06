@@ -6,15 +6,13 @@ require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
-<<
-
+require "view_component/action_view_compatibility"
 
 
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
-
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -172,7 +170,6 @@ module ViewComponent
     end
 
     attr_reader :view_context
-
     def content
       return @_content if defined?(@_content)
       @_content_evaluated = true
@@ -198,7 +195,6 @@ module ViewComponent
 
     class << self
       attr_accessor :source_location, :virtual_path
-
       end
 
       # Render a component collection.
