@@ -2,5 +2,4 @@
 
 class Post
   include ActiveModel::Model
-  include ActiveModel::Conversion
 end

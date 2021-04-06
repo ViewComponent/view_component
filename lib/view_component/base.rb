@@ -7,13 +7,15 @@ require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
+<<
+
 
 
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
-  
+
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -209,7 +211,6 @@ module ViewComponent
     class << self
       attr_accessor :source_location, :virtual_path
 
-
       end
 
       # Render a component collection.
@@ -333,20 +334,6 @@ module ViewComponent
         )
       end
 
-      def collection_parameter
-        if provided_collection_parameter
-          provided_collection_parameter
-        else
-          name && name.demodulize.underscore.chomp("_component").to_sym
-        end
-      end
-
-      def collection_counter_parameter
-        "#{collection_parameter}_counter".to_sym
-      end
-      end
-
-      private
 
       end
 

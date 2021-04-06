@@ -1,4 +1,4 @@
-# ViewComponent
+
 
 A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
 

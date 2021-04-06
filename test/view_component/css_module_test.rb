@@ -14,11 +14,7 @@ class CSSModuleTest < Minitest::Test
     assert_equal mappings, { "title" => "item_447b7_title" }
   end
 
-  def test_it_autoprefixes
-    before_css = ".title { display: flex; }"
-    after_css = ".item_447b7_title {\n display: -webkit-box;\n display: -webkit-flex;\n display: -ms-flexbox;\n display: flex }\n"
-    assert_rewrite("item", before_css, after_css)
-  end
+
 
   def test_it_rewrites_class_selectors
     before_css = ".title { color: red; }"

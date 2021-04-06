@@ -22,11 +22,6 @@ module ViewComponent
 
     def rewrite
       Sass::Tree::Visitors::SetOptions.visit(@css_root, {})
-
-      css = @css_root.render
-
-      binding.irb if css.include?("flex")
-
       {
         mappings: mappings,
         css: @css_root.render
