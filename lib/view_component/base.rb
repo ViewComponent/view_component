@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
@@ -9,26 +8,17 @@ require "view_component/slotable"
 require "view_component/slotable_v2"
 require "view_component/action_view_compatibility"
 
+
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
-
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
-
-    # EXPERIMENTAL: This API is experimental and may be removed at any time.
-    # Hook for allowing components to do work as part of the compilation process.
-    #
-    # For example, one might compile component-specific assets at this point.
-    def self._after_compile
-      # noop
-    end
-
     # Entrypoint for rendering components.
     #
     # view_context: ActionView context from calling view
@@ -54,7 +44,7 @@ module ViewComponent
     # <span title="greeting">Hello, world!</span>
     #
     def render_in(view_context, &block)
-      self.class.compile(raise_errors: true)
+      self.class.ensure_compiled(raise_errors: true)
 
       @view_context = view_context
       @lookup_context ||= view_context.lookup_context
@@ -81,7 +71,6 @@ module ViewComponent
 
       before_render
 
-      if render?
       else
         ""
       end
@@ -95,6 +84,12 @@ module ViewComponent
 
     def before_render_check
       # noop
+    end
+
+    # Hook used for experimental implementation of CSS encapsulation.
+    # May be removed or modified at any time, without warning.
+    def _after_render
+      ""
     end
 
     def render?
@@ -175,7 +170,6 @@ module ViewComponent
     end
 
     attr_reader :view_context
-
     def content
       return @_content if defined?(@_content)
       @_content_evaluated = true
@@ -216,7 +210,7 @@ module ViewComponent
       def inherited(child)
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
-        compile
+        ensure_compiled
 
         # If Rails application is loaded, add application url_helpers to the component context
         # we need to check this to use this gem as a dependency
@@ -243,7 +237,7 @@ module ViewComponent
       #
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
-      def compile(raise_errors: false)
+
       def template_compiler
         @_template_compiler ||= Compiler.new(self)
       end
@@ -325,30 +319,6 @@ module ViewComponent
         )
       end
 
-      def collection_parameter
-        if provided_collection_parameter
-          provided_collection_parameter
-        else
-          name && name.demodulize.underscore.chomp("_component").to_sym
-        end
-      end
-
-      def collection_counter_parameter
-        "#{collection_parameter}_counter".to_sym
-      end
-
-      def counter_argument_present?
-        instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter)
-      end
-
-      private
-
-      def initialize_parameter_names
-        initialize_parameters.map(&:last)
-      end
-
-      def initialize_parameters
-        instance_method(:initialize).parameters
       end
 
       def provided_collection_parameter
