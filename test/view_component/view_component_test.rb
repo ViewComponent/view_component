@@ -423,8 +423,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
-  # TODO: Remove in v3.0.0
-  def test_before_render_check
+  def test_renders_labels_with_block_correctly
+    render_inline(FormComponent.new)
+
+    assert_selector("form > div > label > input")
+    refute_selector("form > div > input")
+  end
+
+  def test_validations_component
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(OldValidationsComponent.new)
     end
