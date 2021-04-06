@@ -15,6 +15,7 @@ module ViewComponent
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
 
+
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -330,7 +331,7 @@ module ViewComponent
           "public ViewComponent method."
         )
       end
-p
+
       end
 
       def provided_collection_parameter
