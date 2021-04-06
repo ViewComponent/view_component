@@ -91,6 +91,8 @@ PATH
       activesupport (>= 5.0.0, < 7.0)
       sass (~> 3)
 
+      sass (~> 3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -98,6 +100,8 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     ansi (1.5.0)
     ast (2.4.1)
+    autoprefixer-rails (10.2.4.0)
+      execjs
     benchmark-ips (2.8.4)
     better_html (1.0.15)
       actionview (>= 4.0)
@@ -121,7 +125,7 @@ GEM
     crass (1.0.6)
     docile (1.3.4)
     erubi (1.10.0)
-    ffi (1.14.2)
+
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     haml (5.2.1)

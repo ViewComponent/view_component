@@ -694,6 +694,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_predicate InlineInheritedComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
   end
-  
+ng
   end
 end
