@@ -6,6 +6,7 @@ require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
+require "view_component/action_view_compatibility"
 
 
 module ViewComponent
@@ -69,7 +70,6 @@ module ViewComponent
       @_render_in_block = block
 
       before_render
-
 
       else
         ""
@@ -195,7 +195,6 @@ module ViewComponent
 
     class << self
       attr_accessor :source_location, :virtual_path
-
       end
 
       # Render a component collection.
