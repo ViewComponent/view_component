@@ -300,4 +300,14 @@ class SlotsV2sTest < ViewComponent::TestCase
     # Check shared data through Proc
     refute_selector("div.table div.table__header span", text: "Selectable")
   end
+
+  def test_renders_integers
+    render_inline(SlotsV2Component.new) do |component|
+      component.title { 1 }
+      component.subtitle { '2' }
+    end
+
+    assert_selector(".title", text: "1")
+    assert_selector(".subtitle", text: "2")
+  end
 end
