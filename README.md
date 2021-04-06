@@ -4,7 +4,6 @@ A framework for building reusable, testable & encapsulated view components in Ru
 
 ## Documentation
 
-See [viewcomponent.org](https://viewcomponent.org/) for documentation.
 
 ## Contributing
 
