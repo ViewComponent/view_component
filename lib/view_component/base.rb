@@ -9,11 +9,11 @@ require "view_component/slotable"
 require "view_component/slotable_v2"
 <<
 
+
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
-
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -82,7 +82,6 @@ module ViewComponent
       before_render
 
       if render?
-
       else
         ""
       end
@@ -209,7 +208,6 @@ module ViewComponent
     class << self
       attr_accessor :source_location, :virtual_path
 
-
       end
 
       # Render a component collection.
@@ -332,25 +330,7 @@ module ViewComponent
           "public ViewComponent method."
         )
       end
-
-      def collection_parameter
-        if provided_collection_parameter
-          provided_collection_parameter
-        else
-          name && name.demodulize.underscore.chomp("_component").to_sym
-        end
-      end
-
-      def collection_counter_parameter
-        "#{collection_parameter}_counter".to_sym
-      end
-
-      def counter_argument_present?
-        instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter)
-      end
-      def initialize_parameter_names
-        initialize_parameters.map(&:last)
-      end
+p
       end
 
       def provided_collection_parameter
