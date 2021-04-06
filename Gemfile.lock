@@ -92,6 +92,8 @@ PATH
       autoprefixer-rails (= 10.2.4.0)
       sass (~> 3)
 
+      sass (~> 3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -124,8 +126,7 @@ GEM
     crass (1.0.6)
     docile (1.3.4)
     erubi (1.10.0)
-    execjs (2.7.0)
-    ffi (1.15.0)
+
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     haml (5.2.1)
