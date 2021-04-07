@@ -2,6 +2,10 @@
 
 ## main
 
+* Deprecate `with_slot` in favor of the new [slots API](https://viewcomponent.org/guide/slots.html).
+
+    *Manuel Puyol*
+
 ## 2.30.0
 
 * Deprecate `with_content_areas` in favor of [slots](https://viewcomponent.org/guide/slots.html).
