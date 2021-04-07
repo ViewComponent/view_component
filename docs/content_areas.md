@@ -4,7 +4,7 @@ nav_exclude: true
 
 # Content areas
 
-_Note: The content_areas API is soft-deprecated, and will soon be deprecated in favor of [Slots](/slots)._
+_Note: The content_areas API is soft-deprecated, and will soon be deprecated in favor of [Slots](/guide/slots.html)._
 
 ViewComponents can declare additional content areas. For example:
 
