@@ -304,7 +304,7 @@ class SlotsV2sTest < ViewComponent::TestCase
   def test_renders_integers
     render_inline(SlotsV2Component.new) do |component|
       component.title { 1 }
-      component.subtitle { '2' }
+      component.subtitle { "2" }
     end
 
     assert_selector(".title", text: "1")

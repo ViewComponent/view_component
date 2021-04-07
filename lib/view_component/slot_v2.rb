@@ -40,7 +40,7 @@ module ViewComponent
       elsif defined?(@_content)
         @_content
       elsif defined?(@_content_block)
-        view_context.capture(&@_content_block)
+        view_context.capture { @_content_block.call.to_s }
       end
 
       @content
