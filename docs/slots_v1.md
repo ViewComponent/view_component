@@ -4,7 +4,7 @@ nav_exclude: true
 
 # Slots V1 (deprecated)
 
-_Slots V1 is now deprecated and will be removed in 3.0. Please migrate to [Slots V2](/index.md#slots)_
+_Slots V1 is now deprecated and will be removed in 3.0. Please migrate to [Slots V2](/guide/slots.html)_
 
 Slots enable multiple blocks of content to be passed to a single ViewComponent, reducing the need for sub-components (e.g. ModalHeader, ModalBody).
 
