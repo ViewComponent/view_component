@@ -1,10 +1,9 @@
-# ViewComponent
+
 
 A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
 
 ## Documentation
 
-See [viewcomponent.org](https://viewcomponent.org/) for documentation.
 
 ## Contributing
 

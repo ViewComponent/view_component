@@ -423,8 +423,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
-  # TODO: Remove in v3.0.0
-  def test_before_render_check
+  def test_renders_labels_with_block_correctly
+    render_inline(FormComponent.new)
+
+    assert_selector("form > div > label > input")
+    refute_selector("form > div > input")
+  end
+
+  def test_validations_component
     exception = assert_raises ActiveModel::ValidationError do
       render_inline(OldValidationsComponent.new)
     end
@@ -605,7 +611,7 @@ class ViewComponentTest < ViewComponent::TestCase
       ViewComponent::CompileCache.cache = Set.new
 
       exception = assert_raises ArgumentError do
-        InvalidParametersComponent.compile(raise_errors: true)
+        InvalidParametersComponent.ensure_compiled(raise_errors: true)
       end
 
       assert_match(/InvalidParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
@@ -620,7 +626,7 @@ class ViewComponentTest < ViewComponent::TestCase
       ViewComponent::CompileCache.cache = Set.new
 
       exception = assert_raises ArgumentError do
-        InvalidNamedParametersComponent.compile(raise_errors: true)
+        InvalidNamedParametersComponent.ensure_compiled(raise_errors: true)
       end
 
       assert_match(/InvalidNamedParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
@@ -634,6 +640,31 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(
         ProductReaderOopsComponent.with_collection(["foo"])
       )
+    end
+  end
+
+  def test_render_multiple_templates
+    render_inline(MultipleTemplatesComponent.new(mode: :list))
+
+    assert_selector("li", text: "Apple")
+    assert_selector("li", text: "Banana")
+    assert_selector("li", text: "Pear")
+
+    render_inline(MultipleTemplatesComponent.new(mode: :summary))
+
+    assert_selector("div", text: "Apple, Banana, and Pear")
+  end
+
+  private
+
+  def modify_file(file, content)
+    filename = Rails.root.join(file)
+    old_content = File.read(filename)
+    begin
+      File.open(filename, "wb+") { |f| f.write(content) }
+      yield
+    ensure
+      File.open(filename, "wb+") { |f| f.write(old_content) }
     end
 
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
@@ -664,49 +695,5 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
-  def test_after_compile
-    assert_equal AfterCompileComponent.compiled_value, "Hello, World!"
-
-    render_inline(AfterCompileComponent.new)
-
-    assert_text "Hello, World!"
-  end
-
-  def test_does_not_render_passed_in_content_if_render_is_false
-    start_time = Time.now
-
-    render_inline ConditionalRenderComponent.new(should_render: false) do |c|
-      c.render SleepComponent.new(seconds: 5)
-    end
-
-    total = Time.now - start_time
-
-    assert total < 1
-  end
-
-  def test_collection_parameter_does_not_require_compile
-    dynamic_component = Class.new(ViewComponent::Base) do
-      with_collection_parameter :greeting
-
-      def initialize(greeting = "hello world")
-        @greeting = greeting
-      end
-
-      def call
-        content_tag :h1, @greeting
-      end
-    end
-
-    # Necessary because anonymous classes don't have a `name` property
-    Object.const_set("MY_COMPONENT", dynamic_component)
-
-    render_inline MY_COMPONENT.new
-    assert_selector "h1", text: "hello world"
-
-    render_inline MY_COMPONENT.with_collection(["hello world", "hello view component"])
-    assert_selector "h1", text: "hello world"
-    assert_selector "h1", text: "hello view component"
-  ensure
-    Object.send(:remove_const, "MY_COMPONENT")
   end
 end
