@@ -22,8 +22,13 @@ class AttributesTest < ViewComponent::TestCase
     end
   end
 
+  class MyInheritedAttributeComponent < MyAttributeComponent
+  end
+
   def test_basic_attributes
     render_inline MyAttributeComponent.new(title: "foo")
+
+    assert_selector('h1', text: 'foo')
   end
 
   def test_required_attribute_raises_if_missing
@@ -47,5 +52,11 @@ class AttributesTest < ViewComponent::TestCase
   def test_explicit_nil_overrides_default_values
     component = MyAttributeComponent.new(title: "foo", posted_at: nil)
     assert_nil component.posted_at
+  end
+
+  def test_inheritance_works
+    render_inline MyInheritedAttributeComponent.new(title: "foo")
+
+    assert_selector('h1', text: 'foo')
   end
 end
