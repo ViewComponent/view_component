@@ -26,6 +26,10 @@ module ViewComponent
     class_methods do
       def accepts(parameter, required: false, default: nil)
         if required
+          if !default.nil?
+            raise ArgumentError.new("Required arguments can't have defaults: :#{parameter}")
+          end
+
           _required_attributes[parameter] = default
         else
           _optional_attributes[parameter] = default
@@ -44,7 +48,7 @@ module ViewComponent
     def _construct_attributes(args)
       _required_attributes.each do |attr, _default|
         if !args.has_key?(attr)
-          raise ArgumentError.new("Missing keyword: #{attr}") # Simulate required kwargs
+          raise ArgumentError.new("Missing keyword: :#{attr}") # Simulate required kwargs
         end
 
         instance_variable_set("@#{attr}", args[attr])

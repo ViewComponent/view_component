@@ -71,4 +71,12 @@ class AttributesTest < ViewComponent::TestCase
     assert_selector("p", text: "hello world!")
     assert_selector("date", text: posted_at.to_s)
   end
+
+  def test_required_params_can_not_have_defaults
+    assert_raises ArgumentError do
+      MyAttributeComponent.instance_exec do
+        accepts :foo, required: true, default: "bar"
+      end
+    end
+  end
 end
