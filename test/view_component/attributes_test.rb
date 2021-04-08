@@ -31,6 +31,15 @@ class AttributesTest < ViewComponent::TestCase
     assert_selector('h1', text: 'foo')
   end
 
+  def test_all_attributes_provided
+    posted_at = Date.yesterday
+    render_inline MyAttributeComponent.new(title: "foo", body: "hello world!", posted_at: posted_at)
+
+    assert_selector('h1', text: 'foo')
+    assert_selector('p', text: 'hello world!')
+    assert_selector('date', text: posted_at.to_s)
+  end
+
   def test_required_attribute_raises_if_missing
     assert_raises ArgumentError do
       render_inline MyAttributeComponent.new
@@ -55,8 +64,11 @@ class AttributesTest < ViewComponent::TestCase
   end
 
   def test_inheritance_works
-    render_inline MyInheritedAttributeComponent.new(title: "foo")
+    posted_at = Date.yesterday
+    render_inline MyInheritedAttributeComponent.new(title: "foo", body: "hello world!", posted_at: posted_at)
 
     assert_selector('h1', text: 'foo')
+    assert_selector('p', text: 'hello world!')
+    assert_selector('date', text: posted_at.to_s)
   end
 end
