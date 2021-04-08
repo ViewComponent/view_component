@@ -29,6 +29,12 @@ class TranslatableTest < ViewComponent::TestCase
     ])
   end
 
+  def test_converts_key_to_string_as_necessary
+    key = Struct.new(:to_s).new(".hello")
+    assert_equal "Hello from sidecar translations!", translate(key)
+    assert_equal key, translate(:"translations.missing", default: key)
+  end
+
   private
 
   def translate(key, **options)
