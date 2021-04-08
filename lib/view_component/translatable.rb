@@ -23,11 +23,16 @@ module ViewComponent
       def _after_compile
         super
 
-        unless CompileCache.compiled? self
+        return if CompileCache.compiled? self
+
+        if (translation_files = _sidecar_files(%w[yml yaml])).any?
           self.i18n_backend = I18nBackend.new(
             i18n_scope: i18n_scope,
-            load_paths: _sidecar_files(%w[yml yaml]),
+            load_paths: translation_files,
           )
+        else
+          # Cleanup if translations file has been removed since the last compilation
+          self.i18n_backend = nil
         end
       end
     end
@@ -58,6 +63,7 @@ module ViewComponent
     end
 
     def translate(key = nil, **options)
+      return super unless i18n_backend
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
       locale = options.delete(:locale) || ::I18n.locale

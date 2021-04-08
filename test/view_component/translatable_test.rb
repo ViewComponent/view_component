@@ -49,6 +49,23 @@ class TranslatableTest < ViewComponent::TestCase
     assert_predicate translate(".hello_html"), :html_safe?
   end
 
+  def test_translate_uses_the_helper_when_no_sidecar_file_is_provided
+    # The cache needs to be kept clean for TranslatableComponent, otherwise it will rely on the
+    # already created i18n_backend.
+    ViewComponent::CompileCache.cache.delete(TranslatableComponent)
+
+    ViewComponent::Base.stub(
+      :_sidecar_files,
+      ->(exts) { exts.include?("yml") ? [] : TranslatableComponent.__minitest_stub___sidecar_files(exts) }
+    ) do
+      assert_equal "MISSING", translate(".hello", default: "MISSING")
+      assert_equal "Hello from Rails translations!", translate("hello")
+      assert_nil TranslatableComponent.i18n_backend
+    end
+  ensure
+    ViewComponent::CompileCache.cache.delete(TranslatableComponent)
+  end
+
   private
 
   def translate(key, **options)
