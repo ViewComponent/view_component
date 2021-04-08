@@ -16,6 +16,10 @@ title: Resources
 - [StimulusReflex](https://docs.stimulusreflex.com/)
 - [ViewComponentReflex](https://github.com/joshleblanc/view_component_reflex)
 
+## ViewComponent extensions
+
+- [ViewComponent Contrib](https://github.com/palkan/view_component-contrib)
+
 ## Publicity
 
 - [Encapsulating Views, RailsConf 2020](https://youtu.be/YVYRus_2KZM)
