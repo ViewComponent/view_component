@@ -36,12 +36,12 @@ module ViewComponent
     end
 
     def initialize(**args)
-      construct_params(args)
+      _construct_attributes(args)
     end
 
     private
 
-    def construct_params(args)
+    def _construct_attributes(args)
       _required_attributes.each do |attr, _default|
         if !args.has_key?(attr)
           raise ArgumentError.new("Missing keyword: #{attr}") # Simulate required kwargs
