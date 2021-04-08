@@ -7,8 +7,8 @@ require "active_support/concern"
 #   class PostComponent
 #     include ViewComponent::Attributes
 #
-#     accepts :title, required: true
-#     accepts :posted_at, required: true
+#     requires :title
+#     requires :posted_at
 #
 #     accepts :author, default: NullUser.new
 #   end
@@ -20,20 +20,16 @@ module ViewComponent
 
     included do
       cattr_accessor :_optional_attributes, default: {}
-      cattr_accessor :_required_attributes, default: {}
+      cattr_accessor :_required_attributes, default: Set.new
     end
 
     class_methods do
-      def accepts(parameter, required: false, default: nil)
-        if required
-          if !default.nil?
-            raise ArgumentError.new("Required arguments can't have defaults: :#{parameter}")
-          end
+      def requires(parameter)
+        _required_attributes << parameter
+      end
 
-          _required_attributes[parameter] = default
-        else
-          _optional_attributes[parameter] = default
-        end
+      def accepts(parameter, default: nil)
+        _optional_attributes[parameter] = default
 
         attr_accessor parameter
       end
@@ -46,7 +42,7 @@ module ViewComponent
     private
 
     def _construct_attributes(args)
-      _required_attributes.each do |attr, _default|
+      _required_attributes.each do |attr|
         if !args.has_key?(attr)
           raise ArgumentError.new("Missing keyword: :#{attr}") # Simulate required kwargs
         end
