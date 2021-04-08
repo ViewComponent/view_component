@@ -6,7 +6,7 @@ parent: Building ViewComponents
 
 # Testing
 
-Unit test components directly, using the `render_inline` test helper, asserting against the rendered output.
+Unit test components using the `render_inline` test helper, asserting against the rendered output. Avoid testing instance methods directly.
 
 Capybara matchers are available if the gem is installed:
 

@@ -9,7 +9,7 @@ nav_order: 2
 
 ## What are ViewComponents?
 
-ViewComponents are Ruby objects that output HTML. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
+ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
 
 ## When should I use ViewComponents?
 
