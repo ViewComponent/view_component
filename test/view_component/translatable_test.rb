@@ -16,4 +16,24 @@ class TranslatableTest < ViewComponent::TestCase
     assert_selector("p.global.shared-key", text: "Hello from Rails translations!")
     assert_selector("p.global.nested", text: "This is coming from Rails")
   end
+
+  def test_multi_key_support
+    assert_equal [
+      "Hello from sidecar translations!",
+      "This is coming from the sidecar",
+      "This is coming from Rails",
+    ], translate([
+      ".hello",
+      ".from.sidecar",
+      "from.rails",
+    ])
+  end
+
+  private
+
+  def translate(key, **options)
+    component = TranslatableComponent.new
+    render_inline(component)
+    component.translate(key, **options)
+  end
 end
