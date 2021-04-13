@@ -6,9 +6,7 @@ parent: Building ViewComponents
 
 # Testing
 
-Unit test components using the `render_inline` test helper, asserting against the rendered output. Avoid testing instance methods directly.
-
-Capybara matchers are available if the gem is installed:
+Unit test components using the `render_inline` test helper, asserting against the rendered output:
 
 ```ruby
 require "view_component/test_case"
@@ -24,7 +22,23 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+(Capybara matchers are available if the gem is installed)
+
 _Note: `assert_selector` only matches on visible elements by default. To match on hidden elements, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
+
+## Antipatterns
+
+Avoid testing ViewComponent instance methods directly. Test the rendered output to ensure the correct behavior for the consumer of the ViewComponent:
+
+```ruby
+# Good
+assert_selector(".Label", text: "My label")
+
+# Bad
+assert_equal MyComponent.new.label, "My label"
+```
+
+## Without `capybara`
 
 In the absence of `capybara`, assert against the return value of `render_inline`, which is an instance of `Nokogiri::HTML::DocumentFragment`:
 
@@ -45,6 +59,8 @@ def test_render_component
   assert_includes rendered_component, "Hello, World!"
 end
 ```
+
+## Slots
 
 To test components that use Slots:
 
