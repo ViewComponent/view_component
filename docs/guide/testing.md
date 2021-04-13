@@ -28,7 +28,7 @@ _Note: `assert_selector` only matches on visible elements by default. To match o
 
 ## Antipatterns
 
-Avoid testing ViewComponent instance methods directly. Test the rendered output to ensure the correct behavior for the consumer of the ViewComponent.
+Avoid testing ViewComponent instance methods directly. Test the rendered output to ensure the correct behavior for the consumer of the ViewComponent:
 
 ```ruby
 # Good
