@@ -18,6 +18,7 @@ title: Resources
 
 ## ViewComponent extensions
 
+- [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)
 - [ViewComponent Contrib](https://github.com/palkan/view_component-contrib)
 
 ## Publicity
