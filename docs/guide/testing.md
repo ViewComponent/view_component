@@ -32,7 +32,7 @@ Avoid testing ViewComponent instance methods directly. Test the rendered output 
 
 ```ruby
 # Good
-assert_selector(".counter", text: 1)
+assert_selector(".Label", text: "My label")
 
 # Bad
 assert_equal MyComponent.new.label, "My label"
