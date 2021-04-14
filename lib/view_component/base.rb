@@ -169,14 +169,14 @@ module ViewComponent
       self
     end
 
-    private
-
     # Exposes the current request to the component.
     # Use sparingly as doing so introduces coupling
     # that inhibits encapsulation & reuse.
     def request
       @request ||= controller.request
     end
+
+    private
 
     attr_reader :view_context
 

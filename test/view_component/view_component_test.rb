@@ -326,9 +326,17 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_component_with_asset_url
-    render_inline(AssetComponent.new)
+    component = AssetComponent.new
+    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
 
-    assert_text(%r{http://assets.example.com/assets/application-\w+.css})
+    component.config.asset_host = nil
+    assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
+
+    component.config.asset_host = "http://assets.example.com"
+    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+
+    component.config.asset_host = "assets.example.com"
+    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
   end
 
   def test_template_changes_are_not_reflected_if_cache_is_not_cleared

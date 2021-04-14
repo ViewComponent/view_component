@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix errors on `asset_url` helpers when `asset_host` has no protocol.
+
+    *Elia Schito*
+
 * Deprecate `with_slot` in favor of the new [slots API](https://viewcomponent.org/guide/slots.html).
 
     *Manuel Puyol*
