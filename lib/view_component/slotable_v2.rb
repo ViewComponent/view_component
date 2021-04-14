@@ -175,6 +175,10 @@ module ViewComponent
       end
 
       def validate_slot_name(slot_name)
+        if slot_name.to_sym == :content
+          raise ArgumentError.new("#{slot_name} is not a valid slot name.")
+        end
+
         if self.registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
           raise ArgumentError.new("#{slot_name} slot declared multiple times")
