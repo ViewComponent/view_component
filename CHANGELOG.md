@@ -2,6 +2,10 @@
 
 ## main
 
+* Prevent slots from overriding the `#content` method when registering a slot with that name.
+
+    *Blake Williams*
+
 * Deprecate `with_slot` in favor of the new [slots API](https://viewcomponent.org/guide/slots.html).
 
     *Manuel Puyol*
