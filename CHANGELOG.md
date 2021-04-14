@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix errors on `asset_url` helpers when `asset_host` has no protocol.
+
+    *Elia Schito*
+
 * Prevent slots from overriding the `#content` method when registering a slot with that name.
 
     *Blake Williams*
