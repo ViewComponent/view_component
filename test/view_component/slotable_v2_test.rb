@@ -300,4 +300,14 @@ class SlotsV2sTest < ViewComponent::TestCase
     # Check shared data through Proc
     refute_selector("div.table div.table__header span", text: "Selectable")
   end
+
+  def test_component_raises_when_given_invalid_slot_name
+    exception = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_one :content
+      end
+    end
+
+    assert_includes exception.message, "content is not a valid slot name"
+  end
 end
