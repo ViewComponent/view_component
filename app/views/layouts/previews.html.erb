@@ -13,8 +13,9 @@
       <%=h @preview.preview_example_source(@example_name) %>
     </code>
   <% else %>
-    <code class="language-erb">
-      <%=h File.read(@view_renderer.lookup_context.find_template(@render_args[:template]).identifier) %>
+    <% template = @view_renderer.lookup_context.find_template(@render_args[:template]) %>
+    <code class="language-<%= prism_language_name(template: template) %>">
+      <%=h template.source %>
     </code>
   <% end %>
 </pre>
