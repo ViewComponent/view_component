@@ -175,6 +175,10 @@ module ViewComponent
       end
 
       def validate_slot_name(slot_name)
+        if slot_name.to_sym == :content
+          raise ArgumentError.new("#{slot_name} is not a valid slot name.")
+        end
+
         if self.registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
           raise ArgumentError.new("#{slot_name} slot declared multiple times")
@@ -226,7 +230,13 @@ module ViewComponent
         # Use `bind(self)` to ensure lambda is executed in the context of the
         # current component. This is necessary to allow the lambda to access helper
         # methods like `content_tag` as well as parent component state.
-        renderable_value = slot_definition[:renderable_function].bind(self).call(*args, **kwargs, &block)
+        renderable_value = if block_given?
+          slot_definition[:renderable_function].bind(self).call(*args, **kwargs) do |*args, **kwargs|
+            view_context.capture(*args, **kwargs, &block)
+          end
+        else
+          slot_definition[:renderable_function].bind(self).call(*args, **kwargs)
+        end
 
         # Function calls can return components, so if it's a component handle it specially
         if renderable_value.respond_to?(:render_in)

@@ -207,7 +207,6 @@ class SlotsV2sTest < ViewComponent::TestCase
   # was accidentally assigned to all components!
   def test_sub_components_pollution
     new_component_class = Class.new(ViewComponent::Base)
-    new_component_class.include(ViewComponent::SlotableV2)
     # this returned:
     # [SlotsV2Component::Subtitle, SlotsV2Component::Tab...]
     assert_empty new_component_class.registered_slots
@@ -248,5 +247,67 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
 
     assert_selector("h1", text: "This is my title!")
+  end
+
+  def test_slot_with_block_content
+    render_inline(SlotsV2BlockComponent.new)
+
+    assert_selector("p", text: "Footer part 1")
+    assert_selector("p", text: "Footer part 2")
+  end
+
+  def test_lambda_slot_with_missing_block
+    render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
+      component.footer(classes: "text-blue")
+    end
+  end
+
+  def test_slot_with_nested_blocks_content_selectable_true
+    render_inline(NestedSharedState::TableComponent.new(selectable: true)) do |table_card|
+      table_card.header("regular_argument", class_names: "table__header extracted_kwarg", data: { splatted_kwarg: "splatted_keyword_argument"}) do |header|
+        header.cell { "Cell1" }
+        header.cell(class_names: "-has-sort") { "Cell2" }
+      end
+    end
+
+    assert_selector("div.table div.table__header div.table__cell", text: "Cell1")
+    assert_selector("div.table div.table__header div.table__cell.-has-sort", text: "Cell2")
+
+    # Check shared data through Proc
+    assert_selector("div.table div.table__header span", text: "Selectable")
+
+    # Check regular arguments
+    assert_selector('div.table div.table__header[data-argument="regular_argument"]')
+
+    # Check extracted keyword argument
+    assert_selector("div.table div.table__header.extracted_kwarg")
+
+    # Check splatted keyword arguments
+    assert_selector('div.table div.table__header[data-splatted-kwarg="splatted_keyword_argument"]')
+  end
+
+  def test_slot_with_nested_blocks_content_selectable_false
+    render_inline(NestedSharedState::TableComponent.new(selectable: false)) do |table_card|
+      table_card.header do |header|
+        header.cell { "Cell1" }
+        header.cell(class_names: "-has-sort") { "Cell2" }
+      end
+    end
+
+    assert_selector("div.table div.table__header div.table__cell", text: "Cell1")
+    assert_selector("div.table div.table__header div.table__cell.-has-sort", text: "Cell2")
+
+    # Check shared data through Proc
+    refute_selector("div.table div.table__header span", text: "Selectable")
+  end
+
+  def test_component_raises_when_given_invalid_slot_name
+    exception = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_one :content
+      end
+    end
+
+    assert_includes exception.message, "content is not a valid slot name"
   end
 end
