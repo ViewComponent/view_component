@@ -142,8 +142,6 @@ Specs created by the generator have access to test helpers like `render_inline`.
 require "rails_helper"
 
 RSpec.describe ExampleComponent, type: :component do
-  subject { rendered_component }
-
   it "renders component" do
     render_inline(described_class.new(title: "my title")) { "Hello, World!" }
 
