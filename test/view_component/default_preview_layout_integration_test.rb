@@ -41,4 +41,30 @@ class DefaultPreviewLayoutIntegrationTest < ActionDispatch::IntegrationTest
       refute_includes response.body, "ViewComponent - Admin - Test"
     end
   end
+
+  def test_component_preview_renders_source_preview
+    get "/rails/view_components/preview_component/default"
+
+    assert_select ".view-component-source-example h2", "Source:"
+    assert_select ".view-component-source-example pre.source code"
+  end
+
+  def test_component_preview_renders_source_preview_if_layout_configured_false
+    with_default_preview_layout(false) do
+      get "/rails/view_components/preview_component/default"
+
+      assert_select ".view-component-source-example h2", "Source:"
+      assert_select ".view-component-source-example pre.source code"
+    end
+  end
+
+  def test_component_preview_renders_source_preview_if_default_layout_is_configured
+    with_default_preview_layout("preview") do
+      get "/rails/view_components/no_layout/default"
+
+      refute_includes response.body, "ViewComponent - Preview - Test"
+      assert_select ".view-component-source-example h2", "Source:"
+      assert_select ".view-component-source-example pre.source code"
+    end
+  end
 end
