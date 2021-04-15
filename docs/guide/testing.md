@@ -147,9 +147,9 @@ RSpec.describe ExampleComponent, type: :component do
   it "renders component" do
     render_inline(described_class.new(title: "my title")) { "Hello, World!" }
 
-    is_expected.to have_css "span[title='my title']", text: "Hello, World!"
+    expect(rendered_component).to have_css "span[title='my title']", text: "Hello, World!"
     # or, to just assert against the text
-    is_expected.to have_text "Hello, World!"
+    expect(rendered_component).to have_text "Hello, World!"
   end
 end
 ```
