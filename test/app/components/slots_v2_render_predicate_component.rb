@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class SlotsV2RenderPredicateComponent < ViewComponent::Base
-  include ViewComponent::SlotableV2
-
   renders_one :title, "PredicateTitleComponent"
 
   def render?

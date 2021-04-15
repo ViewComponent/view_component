@@ -12,6 +12,7 @@ module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
+    include ViewComponent::SlotableV2
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
@@ -130,7 +131,7 @@ module ViewComponent
       @helpers ||= controller.view_context
     end
 
-    # Exposes .virutal_path as an instance method
+    # Exposes .virtual_path as an instance method
     def virtual_path
       self.class.virtual_path
     end
@@ -168,14 +169,14 @@ module ViewComponent
       self
     end
 
-    private
-
     # Exposes the current request to the component.
     # Use sparingly as doing so introduces coupling
     # that inhibits encapsulation & reuse.
     def request
       @request ||= controller.request
     end
+
+    private
 
     attr_reader :view_context
 
@@ -204,6 +205,47 @@ module ViewComponent
 
     class << self
       attr_accessor :source_location, :virtual_path
+
+      # EXPERIMENTAL: This API is experimental and may be removed at any time.
+      # Find sidecar files for the given extensions.
+      #
+      # The provided array of extensions is expected to contain
+      # strings starting without the "dot", example: `["erb", "haml"]`.
+      #
+      # For example, one might collect sidecar CSS files that need to be compiled.
+      def _sidecar_files(extensions)
+        return [] unless source_location
+
+        extensions = extensions.join(",")
+
+        # view files in a directory named like the component
+        directory = File.dirname(source_location)
+        filename = File.basename(source_location, ".rb")
+        component_name = name.demodulize.underscore
+
+        # Add support for nested components defined in the same file.
+        #
+        # e.g.
+        #
+        # class MyComponent < ViewComponent::Base
+        #   class MyOtherComponent < ViewComponent::Base
+        #   end
+        # end
+        #
+        # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
+        nested_component_files = if name.include?("::") && component_name != filename
+          Dir["#{directory}/#{filename}/#{component_name}.*{#{extensions}}"]
+        else
+          []
+        end
+
+        # view files in the same directory as the component
+        sidecar_files = Dir["#{directory}/#{component_name}.*{#{extensions}}"]
+
+        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
+
+        (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files).uniq
+      end
 
       # Render a component collection.
       def with_collection(collection, **args)
@@ -267,6 +309,11 @@ module ViewComponent
       end
 
       def with_content_areas(*areas)
+        ActiveSupport::Deprecation.warn(
+          "`with_content_areas` is deprecated and will be removed in ViewComponent v3.0.0.\n" \
+          "Use slots (https://viewcomponent.org/guide/slots.html) instead."
+        )
+
         if areas.include?(:content)
           raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
         end

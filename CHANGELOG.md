@@ -2,6 +2,65 @@
 
 ## main
 
+* Fix errors on `asset_url` helpers when `asset_host` has no protocol.
+
+    *Elia Schito*
+
+* Prevent slots from overriding the `#content` method when registering a slot with that name.
+
+    *Blake Williams*
+
+* Deprecate `with_slot` in favor of the new [slots API](https://viewcomponent.org/guide/slots.html).
+
+    *Manuel Puyol*
+
+## 2.30.0
+
+* Deprecate `with_content_areas` in favor of [slots](https://viewcomponent.org/guide/slots.html).
+
+    *Joel Hawksley*
+
+## 2.29.0
+
+* Allow Slot lambdas to share data from the parent component and allow chaining on the returned component.
+
+    *Sjors Baltus, Blake Williams*
+
+* Experimental: Add `ViewComponent::Translatable`
+  * `t` and `translate` now will look first into the sidecar YAML translations file.
+  * `helpers.t` and `I18n.t` still reference the global Rails translation files.
+  * `l` and `localize` will still reference the global Rails translation files.
+
+    *Elia Schito*
+
+* Fix rendering output of pass through slots when using HAML.
+
+    *Alex Robbin, Blake Williams*
+
+* Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
+
+    *Elia Schito*
+
+* Fix bug where a single `jbuilder` template matched multiple template handlers.
+
+    *Niels Slot*
+
+## 2.28.0
+
+* Include SlotableV2 by default in Base. **Note:** It's no longer necessary to include `ViewComponent::SlotableV2` to use Slots.
+
+    *Joel Hawksley*
+
+* Prepend Preview routes instead of appending, accounting for cases where host application has catchall route.
+
+    *Joel Hawksley*
+
+* Fix bug where blocks passed to lambda slots will render incorrectly in certain situations.
+
+    *Blake Williams*
+
+## 2.27.0
+
 * Allow customization of the controller used in component tests.
 
     *Alex Robbin*
