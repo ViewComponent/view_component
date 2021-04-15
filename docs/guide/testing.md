@@ -128,13 +128,29 @@ To use RSpec, add the following:
 
 ```ruby
 require "view_component/test_helpers"
+require "capybara/rspec"
 
 RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
+  config.include Capybara::RSpecMatchers, type: :component
 end
 ```
 
-Specs created by the generator have access to test helpers like `render_inline`.
+Specs created by the generator have access to test helpers like `render_inline`. For example:
+
+```ruby
+require "rails_helper"
+
+RSpec.describe ExampleComponent, type: :component do
+  it "renders component" do
+    render_inline(described_class.new(title: "my title")) { "Hello, World!" }
+
+    expect(rendered_component).to have_css "span[title='my title']", text: "Hello, World!"
+    # or, to just assert against the text
+    expect(rendered_component).to have_text "Hello, World!"
+  end
+end
+```
 
 To use component previews:
 
