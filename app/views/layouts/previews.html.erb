@@ -1,23 +1,26 @@
-<%= stylesheet_link_tag "view_component/prism.css" %>
+<% content_for :view_component_preview_source_code_example do %>
+  <div class="view-component-source-example">
+    <h2>Source:</h2>
+    <pre class="source">
+      <% if @render_args[:component] %>
+        <code class="language-ruby">
+          <%=h @preview.preview_example_source(@example_name) %>
+        </code>
+      <% else %>
+        <% template = @view_renderer.lookup_context.find_template(@render_args[:template]) %>
+        <code class="language-<%= prism_language_name(template: template) %>">
+          <%=h template.source %>
+        </code>
+      <% end %>
+    </pre>
+  </div>
+  
+  <%= javascript_include_tag "view_component/prism.min.js" %>
+<% end %>
 
 <% if @host_application_layout == false %>
   <%= yield %>
+  <%= yield(:view_component_preview_source_code_example) %>
 <% else %>
   <%= render template: "layouts/#{@host_application_layout || 'application'}" %>
-<% end %>
-
-<h2>Source:</h2>
-<pre class="source">
-  <% if @render_args[:component] %>
-    <code class="language-ruby">
-      <%=h @preview.preview_example_source(@example_name) %>
-    </code>
-  <% else %>
-    <% template = @view_renderer.lookup_context.find_template(@render_args[:template]) %>
-    <code class="language-<%= prism_language_name(template: template) %>">
-      <%=h template.source %>
-    </code>
-  <% end %>
-</pre>
-
-<%= javascript_include_tag "view_component/prism.min.js" %> 
+<% end %> 
