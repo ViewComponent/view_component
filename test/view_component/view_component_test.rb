@@ -83,16 +83,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world")
   end
 
-  def test_same_component_can_be_rendered_with_different_render_content_blocks
-    component = WrapperComponent.new
-
-    render_inline(component) { "from block 1" }
-    assert_selector("span", text: "from block 1")
-
-    render_inline(component) { "from block 2" }
-    assert_selector("span", text: "from block 2")
-  end
-
   def test_raises_error_when_content_given_as_argument_and_block
     exception = assert_raises ArgumentError do
       WrapperComponent.new.with_content("from arg") do
