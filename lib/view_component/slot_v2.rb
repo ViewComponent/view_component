@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require "view_component/with_content_helper"
+
 module ViewComponent
   class SlotV2
+    include ViewComponent::WithContentHelper
+
     attr_writer :_component_instance, :_content_block, :_content
 
     def initialize(parent)
@@ -22,11 +26,13 @@ module ViewComponent
     # If there is no slot renderable, we evaluate the block passed to
     # the slot and return it.
     def to_s
-      return @content if defined?(@content)
+      return @_content if defined?(@_content)
 
       view_context = @parent.send(:view_context)
 
-      @content = if defined?(@_component_instance)
+      @_content = if defined?(@_content_set_by_with_content)
+        render_or_return(@_content_set_by_with_content.call(self))
+      elsif defined?(@_component_instance)
         # render_in is faster than `parent.render`
         if defined?(@_content_block)
           view_context.capture do
@@ -43,7 +49,7 @@ module ViewComponent
         view_context.capture(&@_content_block)
       end
 
-      @content
+      @_content
     end
 
     # Allow access to public component methods via the wrapper
@@ -75,6 +81,18 @@ module ViewComponent
 
     def respond_to_missing?(symbol, include_all = false)
       defined?(@_component_instance) && @_component_instance.respond_to?(symbol, include_all)
+    end
+
+    private
+
+    def render(object)
+      view_context = if defined?(@_component_instance)
+        @_component_instance.send(:view_context)
+      else
+        @parent.send(:view_context)
+      end
+
+      object.render_in(view_context)
     end
   end
 end

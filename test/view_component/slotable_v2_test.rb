@@ -310,4 +310,30 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_includes exception.message, "content is not a valid slot name"
   end
+
+  def test_renders_slot_using_with_content
+    component = SlotsV2Component.new
+    component.title("some_argument").with_content("This is my title!")
+
+    render_inline(component)
+    assert_selector(".title", text: "This is my title!")
+  end
+
+  def test_renders_slot_using_with_content_block
+    component = SlotsV2Component.new
+    component.title("some_argument").with_content { "This is my title!" }
+
+    render_inline(component)
+    assert_selector(".title", text: "This is my title!")
+  end
+
+  def test_renders_slot_using_with_content_passing_another_component
+    component = SlotsV2Component.new
+    component.title("some_argument").with_content(MyComponent.new)
+
+    render_inline(component)
+    assert_selector(".title") do
+      assert_selector("div", text: "hello,world")
+    end
+  end
 end
