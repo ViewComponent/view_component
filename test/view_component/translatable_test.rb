@@ -29,6 +29,10 @@ class TranslatableTest < ViewComponent::TestCase
     ])
   end
 
+  def test_relative_keys_missing_from_component_translations
+    assert_equal "Relative key from Rails", translate(".relative_rails_key")
+  end
+
   def test_converts_key_to_string_as_necessary
     key = Struct.new(:to_s).new(".hello")
     assert_equal "Hello from sidecar translations!", translate(key)

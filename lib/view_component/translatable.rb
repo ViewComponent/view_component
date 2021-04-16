@@ -62,16 +62,16 @@ module ViewComponent
       key = key&.to_s unless key.is_a?(Symbol)
       key = "#{i18n_scope}#{key}" if key.start_with?(".")
 
-      result = catch(:exception) do
+      translated = catch(:exception) do
         i18n_backend.translate(locale, key, options)
       end
 
       # Fallback to the global translations
-      if result.is_a? ::I18n::MissingTranslation
-        result = helpers.t(key, locale: locale, **options)
+      if translated.is_a? ::I18n::MissingTranslation
+        return super(key, locale: locale, **options)
       end
 
-      result
+      translated
     end
     alias :t :translate
 
