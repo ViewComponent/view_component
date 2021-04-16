@@ -79,7 +79,7 @@ module ViewComponent
       old_current_template = @current_template
       @current_template = self
 
-      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if block && defined?(@content_set_by_with_content)
+      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if block && defined?(@_content_set_by_with_content)
 
       @_content_evaluated = false
       @_render_in_block = block
@@ -177,9 +177,9 @@ module ViewComponent
       elsif value.nil? && block.nil?
         raise ArgumentError.new("No content provided. Provide as an argument or a block.")
       elsif block
-        @content_set_by_with_content = block
+        @_content_set_by_with_content = block
       else
-        @content_set_by_with_content = -> (_component) { value }
+        @_content_set_by_with_content = -> (_component) { value }
       end
 
       self
@@ -212,8 +212,8 @@ module ViewComponent
 
       @_content = if @view_context && @_render_in_block
         view_context.capture(self, &@_render_in_block)
-      elsif defined?(@content_set_by_with_content)
-        @content_set_by_with_content.call(self)
+      elsif defined?(@_content_set_by_with_content)
+        render_or_return(@_content_set_by_with_content.call(self))
       end
     end
 
