@@ -1,4 +1,9 @@
 en:
   hello: "Hello from sidecar translations!"
+
+  hello_html: "Hello from <strong>sidecar translations</strong>!"
+
+  html: "hello <em>world</em>!"
+
   from:
     sidecar: This is coming from the sidecar

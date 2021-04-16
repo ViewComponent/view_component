@@ -9,6 +9,8 @@ module ViewComponent
   module Translatable
     extend ActiveSupport::Concern
 
+    HTML_SAFE_TRANSLATION_KEY = /(?:_|\b)html\z/.freeze
+
     included do
       class_attribute :i18n_backend, instance_writer: false, instance_predicate: false
     end
@@ -69,6 +71,10 @@ module ViewComponent
       # Fallback to the global translations
       if translated.is_a? ::I18n::MissingTranslation
         return super(key, locale: locale, **options)
+      end
+
+      if HTML_SAFE_TRANSLATION_KEY.match?(key)
+        translated = translated.html_safe
       end
 
       translated

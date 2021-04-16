@@ -39,6 +39,16 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal key, translate(:"translations.missing", default: key)
   end
 
+  def test_translate_marks_translations_named_html_as_safe_html
+    assert_equal "hello <em>world</em>!", translate(".html")
+    assert_predicate translate(".html"), :html_safe?
+  end
+
+  def test_translate_marks_translations_with_a_html_suffix_as_safe_html
+    assert_equal "Hello from <strong>sidecar translations</strong>!", translate(".hello_html")
+    assert_predicate translate(".hello_html"), :html_safe?
+  end
+
   private
 
   def translate(key, **options)
