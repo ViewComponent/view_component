@@ -2,6 +2,10 @@
 
 ## main
 
+* Add #with_content to allow setting content without a block.
+
+    *Jordan Raine, Manuel Puyol*
+
 * Fix errors on `asset_url` helpers when `asset_host` has no protocol.
 
     *Elia Schito*
@@ -146,10 +150,6 @@
   * Slot values are no longer set via the `slot` method, and instead use the name of the slot.
 
     *Blake Williams*
-
-* Add #with_content to allow setting content without a block.
-
-    *Jordan Raine*
 
 * Add `frozen_string_literal: true` to generated component template.
 
