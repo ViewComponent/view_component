@@ -717,4 +717,9 @@ class ViewComponentTest < ViewComponent::TestCase
   ensure
     Object.send(:remove_const, "MY_COMPONENT")
   end
+
+  def test_url_for
+    render_inline(UrlForComponent.new)
+    assert_link "Home", href: "/?key=value"
+  end
 end
