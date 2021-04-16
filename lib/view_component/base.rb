@@ -7,12 +7,14 @@ require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
+require "view_component/with_content_helper"
 
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
     include ViewComponent::SlotableV2
+    include ViewComponent::WithContentHelper
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
@@ -171,20 +173,6 @@ module ViewComponent
       self
     end
 
-    def with_content(value = nil, &block)
-      if value && block
-        raise ArgumentError.new("Content provided in two ways, using both an argument and a block. Use one or the other.")
-      elsif value.nil? && block.nil?
-        raise ArgumentError.new("No content provided. Provide as an argument or a block.")
-      elsif block
-        @_content_set_by_with_content = block
-      else
-        @_content_set_by_with_content = -> (_component) { value }
-      end
-
-      self
-    end
-
     # Exposes the current request to the component.
     # Use sparingly as doing so introduces coupling
     # that inhibits encapsulation & reuse.
@@ -195,16 +183,6 @@ module ViewComponent
     private
 
     attr_reader :view_context
-
-    # Renders the given object and returns the result, if object can be rendered.
-    # Otherwise, returns object.
-    def render_or_return(object)
-      if object.respond_to?(:render_in)
-        render(object)
-      else
-        object
-      end
-    end
 
     def content
       return @_content if defined?(@_content)
