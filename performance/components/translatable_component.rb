@@ -8,6 +8,6 @@ class TranslatableComponent < ViewComponent::Base
   end
 
   def self.virtual_path
-    "/sidecar_i18n_component"
+    "/translatable_component"
   end
 end

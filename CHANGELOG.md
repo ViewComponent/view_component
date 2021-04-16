@@ -2,6 +2,14 @@
 
 ## main
 
+* Improve feature parity with Rails translations
+  * Don't create a translation backend if the component has no translation file
+  * Mark translation keys ending with `html` as HTML-safe
+  * Always convert keys to String
+  * Support multiple keys
+
+    *Elia Schito*
+
 * Fix errors on `asset_url` helpers when `asset_host` has no protocol.
 
     *Elia Schito*
