@@ -8,6 +8,12 @@ module ViewComponent
   module Slotable
     extend ActiveSupport::Concern
 
+    included do
+      # Hash of registered Slots
+      class_attribute :slots
+      self.slots = {}
+    end
+
     class_methods do
       # support initializing slots as:
       #
@@ -17,6 +23,11 @@ module ViewComponent
       #   class_name: "Header" # class name string, used to instantiate Slot
       # )
       def with_slot(*slot_names, collection: false, class_name: nil)
+        ActiveSupport::Deprecation.warn(
+          "`with_slot` is deprecated and will be removed in ViewComponent v3.0.0.\n" \
+          "Use the new slots API (https://viewcomponent.org/guide/slots.html) instead."
+        )
+
         slot_names.each do |slot_name|
           # Ensure slot_name is not already declared
           if self.slots.key?(slot_name)
@@ -43,13 +54,19 @@ module ViewComponent
 
           # If the slot is a collection, define an accesor that defaults to an empty array
           if collection
-            class_eval <<-RUBY
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{accessor_name}
+                content unless content_evaluated? # ensure content is loaded so slots will be defined
                 #{instance_variable_name} ||= []
               end
             RUBY
           else
-            attr_reader accessor_name
+            class_eval <<-RUBY, __FILE__, __LINE__ + 1
+              def #{accessor_name}
+                content unless content_evaluated? # ensure content is loaded so slots will be defined
+                #{instance_variable_name} if defined?(#{instance_variable_name})
+              end
+            RUBY
           end
 
           # Default class_name to ViewComponent::Slot
@@ -62,6 +79,14 @@ module ViewComponent
             collection: collection
           }
         end
+      end
+
+      def inherited(child)
+        # Clone slot configuration into child class
+        # see #test_slots_pollution
+        child.slots = self.slots.clone
+
+        super
       end
     end
 

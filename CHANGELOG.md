@@ -1,6 +1,151 @@
 # CHANGELOG
 
-## master
+## main
+
+* Fix errors on `asset_url` helpers when `asset_host` has no protocol.
+
+    *Elia Schito*
+
+* Prevent slots from overriding the `#content` method when registering a slot with that name.
+
+    *Blake Williams*
+
+* Deprecate `with_slot` in favor of the new [slots API](https://viewcomponent.org/guide/slots.html).
+
+    *Manuel Puyol*
+
+## 2.30.0
+
+* Deprecate `with_content_areas` in favor of [slots](https://viewcomponent.org/guide/slots.html).
+
+    *Joel Hawksley*
+
+## 2.29.0
+
+* Allow Slot lambdas to share data from the parent component and allow chaining on the returned component.
+
+    *Sjors Baltus, Blake Williams*
+
+* Experimental: Add `ViewComponent::Translatable`
+  * `t` and `translate` now will look first into the sidecar YAML translations file.
+  * `helpers.t` and `I18n.t` still reference the global Rails translation files.
+  * `l` and `localize` will still reference the global Rails translation files.
+
+    *Elia Schito*
+
+* Fix rendering output of pass through slots when using HAML.
+
+    *Alex Robbin, Blake Williams*
+
+* Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
+
+    *Elia Schito*
+
+* Fix bug where a single `jbuilder` template matched multiple template handlers.
+
+    *Niels Slot*
+
+## 2.28.0
+
+* Include SlotableV2 by default in Base. **Note:** It's no longer necessary to include `ViewComponent::SlotableV2` to use Slots.
+
+    *Joel Hawksley*
+
+* Prepend Preview routes instead of appending, accounting for cases where host application has catchall route.
+
+    *Joel Hawksley*
+
+* Fix bug where blocks passed to lambda slots will render incorrectly in certain situations.
+
+    *Blake Williams*
+
+## 2.27.0
+
+* Allow customization of the controller used in component tests.
+
+    *Alex Robbin*
+
+* Generate preview at overridden path if one exists when using `--preview` flag.
+
+    *Nishiki Liu*
+
+## 2.26.1
+
+* Fix bug that raises when trying to use a collection before the component has been compiled.
+
+    *Blake Williams*
+
+## 2.26.0
+
+* Lazily evaluate component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
+
+    *Blake Williams*
+
+* Do not generate template when using `--inline` flag.
+
+    *Hans Lemuet*
+
+* Add `--inline` option to the Haml and Slim generators
+
+    *Hans Lemuet*
+
+## 2.25.1
+
+* Experimental: call `._after_compile` class method after a component is compiled.
+
+    *Joel Hawksley*
+
+* Fix bug where SlotV2 was rendered as an HTML string when using Slim.
+
+    *Manuel Puyol*
+
+## 2.25.0
+
+* Add `--preview` generator option to create an associated preview file.
+
+    *Bob Maerten*
+
+* Add argument validation to avoid `content` override.
+
+    *Manuel Puyol*
+
+## 2.24.0
+
+* Add `--inline` option to the erb generator. Prevents default erb template from being created and creates a component with a call method.
+
+    *Nachiket Pusalkar*
+
+* Add test case for checking presence of `content` in `#render?`.
+
+    *Joel Hawksley*
+
+* Rename `master` branch to `main`.
+
+    *Joel Hawksley*
+
+## 2.23.2
+
+* Fix bug where rendering a component `with_collection` from a controller raised an error.
+
+    *Joel Hawksley*
+
+## 2.23.1
+
+* Fixed out-of-order rendering bug in `ActionView::SlotableV2`
+
+    *Blake Williams*
+
+## 2.23.0
+
+* Add `ActionView::SlotableV2`
+  * `with_slot` becomes `renders_one`.
+  * `with_slot collection: true` becomes `renders_many`.
+  * Slot definitions now accept either a component class, component class name, or a lambda instead of a `class_name:` keyword argument.
+  * Slots now support positional arguments.
+  * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. e.g. `<%= my_slot %>`.
+  * Slot values are no longer set via the `slot` method, and instead use the name of the slot.
+
+    *Blake Williams*
 
 * Add #with_content to allow setting content without a block.
 
