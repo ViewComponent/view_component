@@ -9,6 +9,8 @@ module ViewComponent
   module Translatable
     extend ActiveSupport::Concern
 
+    HTML_SAFE_TRANSLATION_KEY = /(?:_|\b)html\z/.freeze
+
     included do
       class_attribute :i18n_backend, instance_writer: false, instance_predicate: false
     end
@@ -21,11 +23,16 @@ module ViewComponent
       def _after_compile
         super
 
-        unless CompileCache.compiled? self
+        return if CompileCache.compiled? self
+
+        if (translation_files = _sidecar_files(%w[yml yaml])).any?
           self.i18n_backend = I18nBackend.new(
             i18n_scope: i18n_scope,
-            load_paths: _sidecar_files(%w[yml yaml]),
+            load_paths: translation_files,
           )
+        else
+          # Cleanup if translations file has been removed since the last compilation
+          self.i18n_backend = nil
         end
       end
     end
@@ -55,21 +62,28 @@ module ViewComponent
       end
     end
 
-    def translate(key = nil, locale: nil, **options)
-      locale ||= ::I18n.locale
+    def translate(key = nil, **options)
+      return super unless i18n_backend
+      return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
+      locale = options.delete(:locale) || ::I18n.locale
+      key = key&.to_s unless key.is_a?(String)
       key = "#{i18n_scope}#{key}" if key.start_with?(".")
 
-      result = catch(:exception) do
+      translated = catch(:exception) do
         i18n_backend.translate(locale, key, options)
       end
 
       # Fallback to the global translations
-      if result.is_a? ::I18n::MissingTranslation
-        result = helpers.t(key, locale: locale, **options)
+      if translated.is_a? ::I18n::MissingTranslation
+        return super(key, locale: locale, **options)
       end
 
-      result
+      if HTML_SAFE_TRANSLATION_KEY.match?(key)
+        translated = translated.html_safe
+      end
+
+      translated
     end
     alias :t :translate
 
