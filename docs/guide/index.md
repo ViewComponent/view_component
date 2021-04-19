@@ -81,3 +81,15 @@ Returning:
 ```html
 <span title="my title">Hello, World!</span>
 ```
+
+## Rendering from controllers
+
+It's also possible to render ViewComponents in controllers:
+
+```ruby
+def show
+  render(ExampleComponent.new(title: "My Title")) { "Hello, World!" }
+end
+```
+
+_Note: In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout._
