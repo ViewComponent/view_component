@@ -25,7 +25,7 @@ url: "https://viewcomponent.org"
 
 # Theme settings
 remote_theme: pmarsceill/just-the-docs
-search_enabled: false
+search_enabled: true
 color_scheme: custom
 
 # Exclude from processing.
