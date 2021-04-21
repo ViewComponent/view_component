@@ -120,32 +120,21 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
-## Setting request.path_parameters
+## Setting `request.path_parameters`
 
-Some Rails helpers won't work unless `request.path_parameters` are set correctly. In this case, you may see this error:
+Some Rails helpers won't work unless `request.path_parameters` are set correctly, resulting in an `ActionController::UrlGenerationError`.
 
-```
-ActionController::UrlGenerationError: No route matches {...}
-```
-
-To set `request.path_parameters` for a test case, you can use `with_request_url` from `ViewComponent::TestHelpers`.
+To set `request.path_parameters` for a test case, use `with_request_url` from `ViewComponent::TestHelpers`:
 
 ```ruby
 class ExampleComponentTest < ViewComponent::TestCase
   def test_with_request_url
-    with_request_url "/" do
-      render_inline ExampleComponent.new # contains i.e. `link_to "French", url_for(locale: "fr")`
-      assert_link "French", href: "/?locale=fr"
-    end
-
     with_request_url "/products/42" do
       render_inline ExampleComponent.new # contains i.e. `link_to "French", url_for(locale: "fr")`
       assert_link "French", href: "/products/42?locale=fr"
     end
   end
 end
-```
-
 ## RSpec configuration
 
 To use RSpec, add the following:
