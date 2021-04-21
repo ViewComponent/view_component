@@ -135,6 +135,8 @@ class ExampleComponentTest < ViewComponent::TestCase
     end
   end
 end
+```
+
 ## RSpec configuration
 
 To use RSpec, add the following:
