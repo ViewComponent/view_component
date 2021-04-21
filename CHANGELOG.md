@@ -2,6 +2,10 @@
 
 ## main
 
+* Add `with_request_url` test helper.
+
+    *Mario Schüttel*
+
 * Improve feature parity with Rails translations
   * Don't create a translation backend if the component has no translation file
   * Mark translation keys ending with `html` as HTML-safe
