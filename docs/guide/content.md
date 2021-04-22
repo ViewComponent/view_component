@@ -17,7 +17,7 @@ Content passed to a ViewComponent as a block is captured and assigned to the `co
 
 ## `#with_content`
 
-Content can also be passed to a ViewComponent by calling `#with_content`, which is especially useful when rendering components outside of views (such as in a controller, background job, script, etc):
+String content can also be passed to a ViewComponent by calling `#with_content`, which is especially useful when rendering components outside of views (such as in a controller, background job, script, etc).
 
 ```rb
 class MyController < ApplicationController
@@ -41,14 +41,6 @@ class MyComponentBuilder
 end
 ```
 
-`#with_content` also accepts passing another component as content:
-
-```rb
-component = MyComponent.new.with_content(SomeComponent.new)
-...
-render(component)
-```
-
 ### Slots
 
 `#with_content` is also available for slots:
@@ -70,7 +62,7 @@ class MySlotComponentBuilder
       component.another_slot(args).with_content("This is another slot content")
     end
 
-    component.yet_another_slot(args).with_content(SomeComponent.new)
+    component.yet_another_slot(args).with_content("More content here")
 
     component
   end

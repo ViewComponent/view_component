@@ -52,7 +52,7 @@ module ViewComponent
       elsif defined?(@_content_block)
         view_context.capture(&@_content_block)
       elsif defined?(@_content_set_by_with_content)
-        render_or_return(@_content_set_by_with_content.call(self))
+        @_content_set_by_with_content.call(self)
       end
 
       @content

@@ -67,22 +67,6 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("span", text: "from block")
   end
 
-  def test_renders_component_given_as_content_as_argument
-    render_inline(WrapperComponent.new.with_content(MyComponent.new))
-
-    assert_selector("div", text: "hello,world")
-  end
-
-  def test_renders_component_given_as_content_as_block
-    component = WrapperComponent.new.with_content do
-      MyComponent.new
-    end
-
-    render_inline(component)
-
-    assert_selector("div", text: "hello,world")
-  end
-
   def test_raises_error_when_content_given_as_argument_and_block
     exception = assert_raises ArgumentError do
       WrapperComponent.new.with_content("from arg") do

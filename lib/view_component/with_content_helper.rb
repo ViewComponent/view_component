@@ -15,15 +15,5 @@ module ViewComponent
 
       self
     end
-
-    # Renders the given object and returns the result, if object can be rendered.
-    # Otherwise, returns object.
-    def render_or_return(object)
-      if object.respond_to?(:render_in)
-        render(object)
-      else
-        object
-      end
-    end
   end
 end
