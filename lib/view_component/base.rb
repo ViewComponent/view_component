@@ -371,7 +371,7 @@ module ViewComponent
       def validate_initialization_parameters!
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
-        raise ArgumentError.new(
+        raise ViewComponent::ComponentError.new(
           "#{self} initializer cannot contain " \
           "`#{RESERVED_PARAMETER}` since it will override a " \
           "public ViewComponent method."

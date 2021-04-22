@@ -664,7 +664,7 @@ class ViewComponentTest < ViewComponent::TestCase
       old_cache = ViewComponent::CompileCache.cache
       ViewComponent::CompileCache.cache = Set.new
 
-      exception = assert_raises ArgumentError do
+      exception = assert_raises ViewComponent::ComponentError do
         InvalidParametersComponent.compile(raise_errors: true)
       end
 
@@ -679,7 +679,7 @@ class ViewComponentTest < ViewComponent::TestCase
       old_cache = ViewComponent::CompileCache.cache
       ViewComponent::CompileCache.cache = Set.new
 
-      exception = assert_raises ArgumentError do
+      exception = assert_raises ViewComponent::ComponentError do
         InvalidNamedParametersComponent.compile(raise_errors: true)
       end
 
