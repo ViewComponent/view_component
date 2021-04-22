@@ -337,6 +337,16 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
   end
 
+  def test_renders_pass_through_slot_passing_another_component_as_block
+    component = SlotsV2Component.new
+    component.title("some_argument").with_content { MyComponent.new }
+
+    render_inline(component)
+    assert_selector(".title") do
+      assert_selector("div", text: "hello,world")
+    end
+  end
+
   def test_renders_lambda_slot_using_with_content
     component = SlotsV2Component.new
     component.item(highlighted: false).with_content("This is my item!")
@@ -356,6 +366,16 @@ class SlotsV2sTest < ViewComponent::TestCase
   def test_renders_lambda_slot_passing_another_component
     component = SlotsV2Component.new
     component.item(highlighted: false).with_content(MyComponent.new)
+
+    render_inline(component)
+    assert_selector(".item.normal") do
+      assert_selector("div", text: "hello,world")
+    end
+  end
+
+  def test_renders_lambda_slot_passing_another_component_as_block
+    component = SlotsV2Component.new
+    component.item(highlighted: false).with_content { MyComponent.new }
 
     render_inline(component)
     assert_selector(".item.normal") do
@@ -388,6 +408,19 @@ class SlotsV2sTest < ViewComponent::TestCase
   def test_renders_component_slot_passing_another_component
     component = SlotsV2Component.new
     component.extra(message: "My message").with_content(MyComponent.new)
+
+    render_inline(component)
+    assert_selector(".extra") do
+      assert_selector("div") do
+        assert_selector("div", text: "hello,world")
+        assert_text("My message")
+      end
+    end
+  end
+
+  def test_renders_component_slot_passing_another_component_as_block
+    component = SlotsV2Component.new
+    component.extra(message: "My message").with_content { MyComponent.new }
 
     render_inline(component)
     assert_selector(".extra") do
