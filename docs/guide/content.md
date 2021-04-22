@@ -15,9 +15,9 @@ Content passed to a ViewComponent as a block is captured and assigned to the `co
 <% end %>
 ```
 
-## `#with_content` (Experimental)
+## `#with_content`
 
-Content can also be passed to a ViewComponent by calling `#with_content`. This is especially useful to build UI when you don't have a `view_context` available and render it at a later moment.
+Content can also be passed to a ViewComponent by calling `#with_content`, which is especially useful when rendering components outside of views (such as in a controller, background job, script, etc):
 
 ```rb
 component = MyComponent.new.with_content("This is my content")
