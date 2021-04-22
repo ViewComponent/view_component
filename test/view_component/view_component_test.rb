@@ -93,6 +93,14 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_equal "Content provided in two ways, using both an argument and a block. Use one or the other.", exception.message
   end
 
+  def test_raises_error_when_with_content_is_called_withot_any_values
+    exception = assert_raises ArgumentError do
+      WrapperComponent.new.with_content
+    end
+
+    assert_equal "No content provided. Provide as an argument or a block.", exception.message
+  end
+
   def test_render_without_template
     render_inline(InlineComponent.new)
 
