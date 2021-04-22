@@ -319,13 +319,6 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector(".title", text: "This is my title!")
   end
 
-  def test_renders_pass_through_slot_using_with_content_block
-    component = SlotsV2Component.new
-    component.title("some_argument").with_content { "This is my title!" }
-
-    render_inline(component)
-    assert_selector(".title", text: "This is my title!")
-  end
   def test_renders_lambda_slot_using_with_content
     component = SlotsV2Component.new
     component.item(highlighted: false).with_content("This is my item!")
@@ -334,28 +327,9 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector(".item.normal", text: "This is my item!")
   end
 
-  def test_renders_lambda_slot_using_with_content_block
-    component = SlotsV2Component.new
-    component.item(highlighted: false).with_content { "This is my item!" }
-
-    render_inline(component)
-    assert_selector(".item.normal", text: "This is my item!")
-  end
-
   def test_renders_component_slot_using_with_content
     component = SlotsV2Component.new
     component.extra(message: "My message").with_content("This is my content!")
-
-    render_inline(component)
-    assert_selector(".extra") do
-      assert_text("This is my content!")
-      assert_text("My message")
-    end
-  end
-
-  def test_renders_component_slot_using_with_content_block
-    component = SlotsV2Component.new
-    component.extra(message: "My message").with_content { "This is my content!" }
 
     render_inline(component)
     assert_selector(".extra") do

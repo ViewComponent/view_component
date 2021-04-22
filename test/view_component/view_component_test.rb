@@ -57,32 +57,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("span", text: "from arg")
   end
 
-  def test_renders_content_given_as_block
-    component = WrapperComponent.new.with_content do
-      "from block"
-    end
-
-    render_inline(component)
-
-    assert_selector("span", text: "from block")
-  end
-
-  def test_raises_error_when_content_given_as_argument_and_block
-    exception = assert_raises ArgumentError do
-      WrapperComponent.new.with_content("from arg") do
-        "from block"
-      end
-    end
-
-    assert_equal "Content provided in two ways, using both an argument and a block. Use one or the other.", exception.message
-  end
-
   def test_raises_error_when_with_content_is_called_withot_any_values
     exception = assert_raises ArgumentError do
       WrapperComponent.new.with_content
     end
 
-    assert_equal "No content provided. Provide as an argument or a block.", exception.message
+    assert_equal "No content provided.", exception.message
   end
 
   def test_render_without_template
