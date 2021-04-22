@@ -369,7 +369,8 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     render_inline(component)
     assert_selector(".extra") do
-      assert_selector("div", text: "This is my content!\nMy message")
+      assert_text("This is my content!")
+      assert_text("My message")
     end
   end
 
@@ -379,7 +380,8 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     render_inline(component)
     assert_selector(".extra") do
-      assert_selector("div", text: "This is my content!\nMy message")
+      assert_text("This is my content!")
+      assert_text("My message")
     end
   end
 
@@ -388,7 +390,6 @@ class SlotsV2sTest < ViewComponent::TestCase
     component.extra(message: "My message").with_content(MyComponent.new)
 
     render_inline(component)
-    binding.irb
     assert_selector(".extra") do
       assert_selector("div") do
         assert_selector("div", text: "hello,world")
