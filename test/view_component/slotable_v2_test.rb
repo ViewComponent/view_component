@@ -319,6 +319,14 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector(".title", text: "This is my title!")
   end
 
+  def test_renders_lambda_slot_using_with_content
+    component = SlotsV2Component.new
+    component.footer(classes: "my-class").with_content("This is my footer!")
+
+    render_inline(component)
+    assert_selector("footer.footer", text: "This is my title!")
+  end
+
   def test_renders_slot_using_with_content_block
     component = SlotsV2Component.new
     component.title("some_argument").with_content { "This is my title!" }
