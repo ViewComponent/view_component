@@ -88,12 +88,5 @@ module ViewComponent
     def respond_to_missing?(symbol, include_all = false)
       defined?(@_component_instance) && @_component_instance.respond_to?(symbol, include_all)
     end
-
-    private
-
-    # Pass through slots will render a component passed by #with_content in the parent view_context.
-    def render(object)
-      object.render_in(@parent.send(:view_context))
-    end
   end
 end
