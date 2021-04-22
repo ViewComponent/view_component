@@ -30,6 +30,8 @@ module ViewComponent
 
       view_context = @parent.send(:view_context)
 
+      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if defined?(@_content_block) && defined?(@_content_set_by_with_content)
+
       @content = if defined?(@_component_instance)
         if defined?(@_content_set_by_with_content)
           @_component_instance.with_content(@_content_set_by_with_content.call(self))

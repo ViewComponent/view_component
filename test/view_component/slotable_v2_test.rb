@@ -337,4 +337,17 @@ class SlotsV2sTest < ViewComponent::TestCase
       assert_text("My message")
     end
   end
+
+  def test_raises_if_using_both_block_content_and_with_content
+    error = assert_raises ArgumentError do
+      component = SlotsV2Component.new
+      slot = component.title("some_argument")
+      slot.with_content("This is my title!")
+      slot._content_block = "some block"
+
+      render_inline(component)
+    end
+
+    assert_equal "Block provided after calling `with_content`. Use one or the other.", error.message
+  end
 end
