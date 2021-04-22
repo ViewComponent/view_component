@@ -60,6 +60,17 @@ module ViewComponent
       @controller = old_controller
     end
 
+    def with_request_url(path)
+      old_request_path_parameters = request.path_parameters
+      old_controller = defined?(@controller) && @controller
+
+      request.path_parameters = Rails.application.routes.recognize_path(path)
+      yield
+    ensure
+      request.path_parameters = old_request_path_parameters
+      @controller = old_controller
+    end
+
     def build_controller(klass)
       klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)
     end

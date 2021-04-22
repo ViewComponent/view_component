@@ -777,4 +777,16 @@ class ViewComponentTest < ViewComponent::TestCase
   ensure
     Object.send(:remove_const, "MY_COMPONENT")
   end
+
+  def test_with_request_url
+    with_request_url "/" do
+      render_inline UrlForComponent.new
+      assert_text "/?key=value"
+    end
+
+    with_request_url "/products" do
+      render_inline UrlForComponent.new
+      assert_text "/products?key=value"
+    end
+  end
 end

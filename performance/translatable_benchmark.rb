@@ -10,7 +10,7 @@ ENV["RAILS_ENV"] = "production"
 require File.expand_path("../test/config/environment.rb", __dir__)
 
 require_relative "components/global_i18n_component.rb"
-require_relative "components/sidecar_i18n_component.rb"
+require_relative "components/translatable_component.rb"
 
 class BenchmarksController < ActionController::Base
 end
@@ -20,13 +20,21 @@ controller_view = BenchmarksController.new.view_context
 I18n.load_path = Dir[File.expand_path("../test/config/locales/*.{rb,yml,yaml}", __dir__)]
 I18n.backend.load_translations
 
+global_i18n_component = GlobalI18nComponent.new("hello")
+translatable_component = TranslatableComponent.new(".hello")
+
+controller_view.render(global_i18n_component)
+controller_view.render(translatable_component)
+
 Benchmark.ips do |x|
-  x.report(:global) { controller_view.render(GlobalI18nComponent.new("hello")) }
-  x.report(:global_missing) { controller_view.render(GlobalI18nComponent.new("missing")) }
-  x.report(:sidecar_absolute) { controller_view.render(TranslatableComponent.new("sidecar_i18n_component.hello")) }
-  x.report(:sidecar) { controller_view.render(TranslatableComponent.new(".hello")) }
-  x.report(:sidecar_missing) { controller_view.render(TranslatableComponent.new("missing")) }
-  x.report(:sidecar_fallback) { controller_view.render(TranslatableComponent.new("from.rails")) }
+  x.report(:global) { global_i18n_component.t("hello") }
+  x.report(:sidecar) { translatable_component.t(".hello") }
+
+  x.report(:global_missing) { global_i18n_component.t("missing") }
+  x.report(:sidecar_missing) { translatable_component.t("missing") }
+
+  x.report(:sidecar_absolute) { translatable_component.t("translatable_component.hello") }
+  x.report(:sidecar_fallback) { translatable_component.t("from.rails") }
 
   x.compare!
 end

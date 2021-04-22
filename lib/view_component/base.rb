@@ -391,7 +391,7 @@ module ViewComponent
       end
 
       def counter_argument_present?
-        instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter)
+        initialize_parameter_names.include?(collection_counter_parameter)
       end
 
       private
