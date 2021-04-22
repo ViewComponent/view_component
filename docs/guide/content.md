@@ -22,11 +22,21 @@ Content can also be passed to a ViewComponent by calling `#with_content`, which 
 ```rb
 class MyController < ApplicationController
   def show
-    render(component)
+    render(MyComponentBuilder.build)
   end
+end
 
-  def component
-    MyComponent.new.with_content("This is my content")
+class MyComponentBuilder
+  def self.build(condition = true)
+    component = MyComponent.new
+
+    if condition
+      component.with_content("This is my content")
+    else
+      component.with_content("This is another content")
+    end
+
+    component
   end
 end
 ```
@@ -44,10 +54,25 @@ render(component)
 `#with_content` is also available for slots:
 
 ```rb
-component = MyComponent.new
-component.some_slot(args).with_content("This is my slot content")
-component.another_slot(args).with_content("This is Nother slot content")
-component.yet_another_slot(args).with_content(SomeComponent.new)
-...
-render(component)
+class MyController < ApplicationController
+  def show
+    render(MySlotComponentBuilder.build)
+  end
+end
+
+class MySlotComponentBuilder
+  def self.build(condition = true)
+    component = MyComponent.new
+
+    if condition
+      component.some_slot(args).with_content("This is my slot content")
+    else
+      component.another_slot(args).with_content("This is another slot content")
+    end
+
+    component.yet_another_slot(args).with_content(SomeComponent.new)
+
+    component
+  end
+end
 ```
