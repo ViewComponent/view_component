@@ -34,7 +34,7 @@ module ViewComponent
 
       @content = if defined?(@_component_instance)
         if defined?(@_content_set_by_with_content)
-          @_component_instance.with_content(@_content_set_by_with_content.call(self))
+          @_component_instance.with_content(@_content_set_by_with_content)
 
           view_context.capture do
             @_component_instance.render_in(view_context)
@@ -54,7 +54,7 @@ module ViewComponent
       elsif defined?(@_content_block)
         view_context.capture(&@_content_block)
       elsif defined?(@_content_set_by_with_content)
-        @_content_set_by_with_content.call(self)
+        @_content_set_by_with_content
       end
 
       @content

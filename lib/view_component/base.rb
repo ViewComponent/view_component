@@ -191,7 +191,7 @@ module ViewComponent
       @_content = if @view_context && @_render_in_block
         view_context.capture(self, &@_render_in_block)
       elsif defined?(@_content_set_by_with_content)
-        @_content_set_by_with_content.call(self)
+        @_content_set_by_with_content
       end
     end
 
