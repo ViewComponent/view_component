@@ -2,7 +2,7 @@
 
 module ViewComponent
   module WithContentHelper
-    def with_content(value = nil)
+    def with_content(value)
       if value.nil?
         raise ArgumentError.new("No content provided.")
       else

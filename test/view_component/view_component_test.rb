@@ -59,7 +59,7 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_raises_error_when_with_content_is_called_withot_any_values
     exception = assert_raises ArgumentError do
-      WrapperComponent.new.with_content
+      WrapperComponent.new.with_content(nil)
     end
 
     assert_equal "No content provided.", exception.message
