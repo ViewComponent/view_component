@@ -40,7 +40,7 @@ The template engine can also be passed as an option to the generator:
 bin/rails generate component Example title --template-engine slim
 ```
 
-To generate a [preview](#previewing-components), pass the `--preview` option:
+To generate a [preview](/guide/previews.html), pass the `--preview` option:
 
 ```console
 bin/rails generate component Example title --preview
