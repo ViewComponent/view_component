@@ -52,6 +52,7 @@ ViewComponent is built by:
 <img src="https://avatars.githubusercontent.com/jules2689?s=128" alt="jules2689" width="64" />
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=128" alt="kaspermeyer" width="64" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=128" alt="kylefox" width="64" />
+<img src="https://avatars.githubusercontent.com/manuelpuyol?s=128" alt="manuelpuyol" width="64" />
 <img src="https://avatars.githubusercontent.com/mattbrictson?s=128" alt="mattbrictson" width="64" />
 <img src="https://avatars.githubusercontent.com/maxbeizer?s=128" alt="maxbeizer" width="64" />
 <img src="https://avatars.githubusercontent.com/mellowfish?s=128" alt="mellowfish" width="64" />
