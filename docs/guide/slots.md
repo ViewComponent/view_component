@@ -10,21 +10,20 @@ In addition to the `content` accessor, ViewComponents accept content through Slo
 
 Slots are defined with `renders_one` and `renders_many`:
 
-`renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
-
-`renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :blog_posts`
+- `renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
+- `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :blog_posts`
 
 _To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
 
 ## Defining slots
 
-**Note**: In versions `< 2.28.0`, `include ViewComponent::SlotableV2` to use slots.
+_In versions `< 2.28.0`, `include ViewComponent::SlotableV2` to use slots._
 
 Slots come in three forms:
 
 - [Delegate slots](#delegate-slots) render other components.
 - [Lambda slots](#lambda-slots) render strings or initialized components.
-- [Pass through slots](#pass-through-slots)  pass content directly to another component.
+- [Pass through slots](#pass-through-slots) pass content directly to another component.
 
 ## Delegate slots
 
@@ -193,5 +192,15 @@ end
     { name: "Pricing", href: "/pricing" },
     { name: "Sign Up", href: "/sign-up" },
   ]) %>
+<% end %>
+```
+
+## `#with_content`
+
+Slot content can also be set using `#with_content`:
+
+```erb
+<%= render BlogComponent.new do |c| %>
+  <%= c.header.with_content("My blog") %>
 <% end %>
 ```

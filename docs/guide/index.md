@@ -61,7 +61,7 @@ end
 <span title="<%= @title %>"><%= content %></span>
 ```
 
-_Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor._
+Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor.
 
 Rendered in a view as:
 
@@ -78,6 +78,14 @@ Returning:
 <span title="my title">Hello, World!</span>
 ```
 
+## `#with_content`
+
+String content can also be passed to a ViewComponent by calling `#with_content`:
+
+```erb
+<%# app/views/home/index.html.erb %>
+<%= render(ExampleComponent.new(title: "my title").with_content("Hello, World!")) %>
+```
 ## Rendering from controllers
 
 It's also possible to render ViewComponents in controllers:
@@ -89,4 +97,4 @@ def show
 end
 ```
 
-_Note: In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout._
+_In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout._
