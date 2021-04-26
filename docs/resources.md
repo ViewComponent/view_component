@@ -39,6 +39,7 @@ title: Resources
 
 ## Articles
 
+- [Building a Component Library in Rails With Storybook](https://orbit.love/blog/building-a-component-library-in-rails-with-storybook)
 - [Introducing ViewComponent - The Next Level In Rails Views](https://teamhq.app/blog/tech/15-introducing-viewcomponent-the-next-level-in-rails-views)
 - [Rails to Introduce View Components, Dev.to](https://dev.to/andy/rails-to-introduce-view-components-3ome)
 - [ActionView::Components in Rails 6.1, Drifting Ruby](https://www.driftingruby.com/episodes/actionview-components-in-rails-6-1)
