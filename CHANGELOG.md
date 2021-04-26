@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.31.0
+
 * Add `#with_content` to allow setting content without a block.
 
     *Jordan Raine, Manuel Puyol*
