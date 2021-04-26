@@ -2,6 +2,10 @@
 
 ## main
 
+* Add `#with_content` to allow setting content without a block.
+
+    *Jordan Raine, Manuel Puyol*
+
 * Add `with_request_url` test helper.
 
     *Mario Schüttel*

@@ -255,7 +255,7 @@ module ViewComponent
         @_set_slots[slot_name] = slot
       end
 
-      nil
+      slot
     end
   end
 end

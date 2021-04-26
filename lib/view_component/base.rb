@@ -7,12 +7,14 @@ require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
+require "view_component/with_content_helper"
 
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
     include ViewComponent::SlotableV2
+    include ViewComponent::WithContentHelper
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
@@ -78,6 +80,8 @@ module ViewComponent
       @current_template = nil unless defined?(@current_template)
       old_current_template = @current_template
       @current_template = self
+
+      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if block && defined?(@_content_set_by_with_content)
 
       @_content_evaluated = false
       @_render_in_block = block
@@ -186,6 +190,8 @@ module ViewComponent
 
       @_content = if @view_context && @_render_in_block
         view_context.capture(self, &@_render_in_block)
+      elsif defined?(@_content_set_by_with_content)
+        @_content_set_by_with_content
       end
     end
 
@@ -280,7 +286,7 @@ module ViewComponent
       end
 
       def compiled?
-        template_compiler.compiled?
+        compiler.compiled?
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
@@ -288,11 +294,11 @@ module ViewComponent
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
       def compile(raise_errors: false)
-        template_compiler.compile(raise_errors: raise_errors)
+        compiler.compile(raise_errors: raise_errors)
       end
 
-      def template_compiler
-        @_template_compiler ||= Compiler.new(self)
+      def compiler
+        @_compiler ||= Compiler.new(self)
       end
 
       # we'll eventually want to update this to support other types
@@ -365,7 +371,7 @@ module ViewComponent
       def validate_initialization_parameters!
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
-        raise ArgumentError.new(
+        raise ViewComponent::ComponentError.new(
           "#{self} initializer cannot contain " \
           "`#{RESERVED_PARAMETER}` since it will override a " \
           "public ViewComponent method."
