@@ -86,6 +86,7 @@ String content can also be passed to a ViewComponent by calling `#with_content`:
 <%# app/views/home/index.html.erb %>
 <%= render(ExampleComponent.new(title: "my title").with_content("Hello, World!")) %>
 ```
+
 ## Rendering from controllers
 
 It's also possible to render ViewComponents in controllers:
