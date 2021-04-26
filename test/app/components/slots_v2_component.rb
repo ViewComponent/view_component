@@ -14,6 +14,7 @@ class SlotsV2Component < ViewComponent::Base
   renders_many :items, -> (highlighted: false) do
     MyHighlightComponent.new(highlighted: highlighted)
   end
+  renders_one :extra, "ExtraComponent"
 
   def initialize(classes: "")
     @classes = classes
@@ -26,6 +27,16 @@ class SlotsV2Component < ViewComponent::Base
 
     def classes
       @highlighted ? "highlighted" : "normal"
+    end
+  end
+
+  class ExtraComponent < ViewComponent::Base
+    def initialize(message:)
+      @message = message
+    end
+
+    def call
+      render(ErbComponent.new(message: @message)) { content }
     end
   end
 end
