@@ -8,7 +8,7 @@ parent: Building ViewComponents
 
 Like [Rails partials](https://guides.rubyonrails.org/layouts_and_rendering.html#rendering-collections), it's possible to render a collection with ViewComponents, using `with_collection`:
 
-``` erb
+```erb
 <%# app/view/products/index.html.erb %>
 <%= render(ProductComponent.with_collection(@products)) %>
 ```
@@ -43,7 +43,7 @@ end
 
 Additional arguments besides the collection are passed to each component instance:
 
-``` erb
+```erb
 <%# app/view/products/index.html.erb %>
 <%= render(ProductComponent.with_collection(@products, notice: "hi")) %>
 ```
@@ -82,7 +82,7 @@ class ProductComponent < ViewComponent::Base
 end
 ```
 
-``` erb
+```erb
 <%# app/components/product_component.html.erb %>
 <li>
   <%= @counter %> <%= @product.name %>
