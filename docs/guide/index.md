@@ -9,13 +9,10 @@ has_children: true
 
 ## Conventions
 
-Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's common practice to create and inherit from an `ApplicationComponent` that is a subclass of `ViewComponent::Base`.
-
-Component names end in -`Component`.
-
-Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
-
-Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
+- Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's common practice to create and inherit from an `ApplicationComponent` that is a subclass of `ViewComponent::Base`.
+- Component names end in -`Component`.
+- Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
+- Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
 
 ## Quick start
 
