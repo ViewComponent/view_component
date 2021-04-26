@@ -10,7 +10,7 @@ It’s possible to include Javascript and CSS alongside components, sometimes ca
 
 To use the Webpacker gem to compile sidecar assets located in `app/components`:
 
-1. In `config/webpacker.yml`, add `"app/components"` to the `resolved_paths` array (e.g. `resolved_paths: ["app/components"]`).
+1. In `config/webpacker.yml`, add `"app/components"` to the `additional_paths` array (e.g. `additional_paths: ["app/components"]`).
 2. In the Webpack entry file (often `app/javascript/packs/application.js`), add an import statement to a helper file, and in the helper file, import the components' Javascript:
 
 ```js
@@ -136,10 +136,10 @@ application.load(
 
 This enables the creation of files such as `app/components/widget_controller.js`, where the controller identifier matches the `data-controller` attribute in the component's HTML template.
 
-After configuring Webpack to load Stimulus controller files from the `components` directory, add the path to `resolved_paths` in `config/webpacker.yml`:
+After configuring Webpack to load Stimulus controller files from the `components` directory, add the path to `additional_paths` in `config/webpacker.yml`:
 
 ```yml
-  resolved_paths: ["app/components"]
+  additional_paths: ["app/components"]
 ```
 
 When placing a Stimulus controller inside a sidecar directory, be aware that when referencing the controller [each forward slash in a namespaced controller file’s path becomes two dashes in its identifier](
