@@ -8,9 +8,8 @@ parent: Building ViewComponents
 
 To use experimental support for `I18n` translations, include `ViewComponent::Translatable`:
 
-`app/components/example_component.rb`
-
 ```ruby
+# app/components/example_component.rb
 module ExampleComponent < ApplicationComponent
   include ViewComponent::Translatable
 end
@@ -18,32 +17,30 @@ end
 
 Add a sidecar YAML file with translations for the component:
 
-`app/components/example_component.yml`
-
 ```yml
+# app/components/example_component.yml
 en:
   hello: "Hello world!"
 ```
 
 Access component-local translations with a leading dot:
 
-`app/components/example_component.html.erb`
-
 ```erb
+<%# app/components/example_component.html.erb %>
 <%= t(".hello") %>
 ```
 
 Global Rails translations are available as well:
 
 ```erb
+<%# app/components/example_component.html.erb %>
 <%= t("my.global.translation") %>
 ```
 
 Global translations shadowed by sidecar translations can be accessed with `helpers` or `I18n`:
 
-`app/components/example_component.html.erb`
-
 ```erb
+<%# app/components/example_component.html.erb %>
 <%= helpers.t("hello") %>
 <%= I18n.t("hello") %>
 ```

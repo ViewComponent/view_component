@@ -30,9 +30,8 @@ Slots come in three forms:
 
 Delegate slots delegate to another component:
 
-`# blog_component.rb`
-
 ```ruby
+# blog_component.rb
 class BlogComponent < ViewComponent::Base
   # Since `HeaderComponent` is nested inside of this component, we have to
   # reference it as a string instead of a class name.
@@ -55,9 +54,8 @@ class BlogComponent < ViewComponent::Base
 end
 ```
 
-`# blog_component.html.erb`
-
 ```erb
+<%# blog_component.html.erb %>
 <div>
   <%= header %> <!-- render the header component -->
 
@@ -69,9 +67,8 @@ end
 </div>
 ```
 
-`# index.html.erb`
-
 ```erb
+<%# index.html.erb %>
 <%= render BlogComponent.new do |c| %>
   <% c.header(classes: "") do %>
     <%= link_to "My Site", root_path %>
@@ -135,9 +132,8 @@ class BlogComponent < ViewComponent::Base
 end
 ```
 
-`# blog_component.html.erb`
-
 ```erb
+<%# blog_component.html.erb %>
 <div>
   <h1><%= header %></h1>
 
@@ -147,9 +143,8 @@ end
 </div>
 ```
 
-`# index.html.erb`
-
 ```erb
+<%# index.html.erb %>
 <div>
   <%= render BlogComponent.new do |c| %>
     <%= c.header(classes: '') do %>
@@ -165,13 +160,10 @@ end
 
 ## Rendering Collections
 
-Collection slots (declared with `renders_many`) can also be passed a collection.
-
-e.g.
-
-`# navigation_component.rb`
+Collection slots (declared with `renders_many`) can also be passed a collection:
 
 ```ruby
+# navigation_component.rb
 class NavigationComponent < ViewComponent::Base
   renders_many :links, "LinkComponent"
 
@@ -184,9 +176,8 @@ class NavigationComponent < ViewComponent::Base
 end
 ```
 
-`# navigation_component.html.erb`
-
 ```erb
+<%# navigation_component.html.erb %>
 <div>
   <% links.each do |link| %>
     <%= link %>
@@ -194,9 +185,8 @@ end
 </div>
 ```
 
-`# index.html.erb`
-
 ```erb
+<%# index.html.erb %>
 <%= render(NavigationComponent.new) do |c| %>
   <%= c.links([
     { name: "Home", href: "/" },

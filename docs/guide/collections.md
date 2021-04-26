@@ -8,15 +8,13 @@ parent: Building ViewComponents
 
 Like [Rails partials](https://guides.rubyonrails.org/layouts_and_rendering.html#rendering-collections), it's possible to render a collection with ViewComponents, using `with_collection`:
 
-`app/view/products/index.html.erb`
-
 ``` erb
+<%# app/view/products/index.html.erb %>
 <%= render(ProductComponent.with_collection(@products)) %>
 ```
 
-`app/components/product_component.rb`
-
-``` ruby
+```ruby
+# app/components/product_component.rb
 class ProductComponent < ViewComponent::Base
   def initialize(product:)
     @product = product
@@ -30,9 +28,8 @@ end
 
 Use `with_collection_parameter` to change the name of the collection parameter:
 
-`app/components/product_component.rb`
-
-``` ruby
+```ruby
+# app/components/product_component.rb
 class ProductComponent < ViewComponent::Base
   with_collection_parameter :item
 
@@ -46,15 +43,13 @@ end
 
 Additional arguments besides the collection are passed to each component instance:
 
-`app/view/products/index.html.erb`
-
 ``` erb
+<%# app/view/products/index.html.erb %>
 <%= render(ProductComponent.with_collection(@products, notice: "hi")) %>
 ```
 
-`app/components/product_component.rb`
-
-``` ruby
+```ruby
+# app/components/product_component.rb
 class ProductComponent < ViewComponent::Base
   with_collection_parameter :item
 
@@ -65,9 +60,8 @@ class ProductComponent < ViewComponent::Base
 end
 ```
 
-`app/components/product_component.html.erb`
-
-``` erb
+```erb
+<%# app/components/product_component.html.erb %>
 <li>
   <h2><%= @item.name %></h2>
   <span><%= @notice %></span>
@@ -78,9 +72,8 @@ end
 
 ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
 
-`app/components/product_component.rb`
-
-``` ruby
+```ruby
+# app/components/product_component.rb
 class ProductComponent < ViewComponent::Base
   def initialize(product:, product_counter:)
     @product = product
@@ -89,9 +82,8 @@ class ProductComponent < ViewComponent::Base
 end
 ```
 
-`app/components/product_component.html.erb`
-
 ``` erb
+<%# app/components/product_component.html.erb %>
 <li>
   <%= @counter %> <%= @product.name %>
 </li>

@@ -50,9 +50,8 @@ bin/rails generate component Example title --preview
 
 A ViewComponent is a Ruby file and corresponding template file with the same base name:
 
-`app/components/example_component.rb`:
-
 ```ruby
+# app/components/example_component.rb
 class ExampleComponent < ViewComponent::Base
   def initialize(title:)
     @title = title
@@ -60,9 +59,8 @@ class ExampleComponent < ViewComponent::Base
 end
 ```
 
-`app/components/example_component.html.erb`:
-
 ```erb
+<%# app/components/example_component.html.erb %>
 <span title="<%= @title %>"><%= content %></span>
 ```
 
@@ -71,6 +69,7 @@ _Content passed to a ViewComponent as a block is captured and assigned to the `c
 Rendered in a view as:
 
 ```erb
+<%# app/views/home/index.html.erb %>
 <%= render(ExampleComponent.new(title: "my title")) do %>
   Hello, World!
 <% end %>
@@ -87,6 +86,7 @@ Returning:
 It's also possible to render ViewComponents in controllers:
 
 ```ruby
+# app/controllers/home_controller.rb
 def show
   render(ExampleComponent.new(title: "My Title")) { "Hello, World!" }
 end
