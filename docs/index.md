@@ -33,6 +33,7 @@ ViewComponent is built by:
 <img src="https://avatars.githubusercontent.com/cover?s=128" alt="cover" width="64" />
 <img src="https://avatars.githubusercontent.com/czj?s=128" alt="czj" width="64" />
 <img src="https://avatars.githubusercontent.com/dark-panda?s=128" alt="dark-panda" width="64" />
+<img src="https://avatars.githubusercontent.com/davekaro?s=128" alt="davekaro" width="64" />
 <img src="https://avatars.githubusercontent.com/dukex?s=128" alt="dukex" width="64" />
 <img src="https://avatars.githubusercontent.com/dylnclrk?s=128" alt="dylnclrk" width="64" />
 <img src="https://avatars.githubusercontent.com/elia?s=128" alt="elia" width="64" />

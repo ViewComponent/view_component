@@ -15,12 +15,6 @@ module ViewComponent
 
       subclass_instance_methods = component_class.instance_methods(false)
 
-      if subclass_instance_methods.include?(:before_render_check)
-        ActiveSupport::Deprecation.warn(
-          "`before_render_check` will be removed in v3.0.0. Use `before_render` instead."
-        )
-      end
-
       if subclass_instance_methods.include?(:with_content) && raise_errors
         raise ViewComponent::ComponentError.new("#{component_class} implements a reserved method, `with_content`.")
       end
@@ -28,6 +22,12 @@ module ViewComponent
       if template_errors.present?
         raise ViewComponent::TemplateError.new(template_errors) if raise_errors
         return false
+      end
+
+      if subclass_instance_methods.include?(:before_render_check)
+        ActiveSupport::Deprecation.warn(
+          "`before_render_check` will be removed in v3.0.0. Use `before_render` instead."
+        )
       end
 
       if raise_errors
