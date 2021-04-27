@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.31.1
+
 * Fix `DEPRECATION WARNING: before_render_check` when compiling `ViewComponent::Base`
 
     *Dave Kroondyk*
