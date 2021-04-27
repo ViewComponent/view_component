@@ -97,14 +97,24 @@ module ViewComponent
       @current_template = old_current_template
     end
 
+    # Called before rendering the component.
+    #
+    # @return [void]
     def before_render
       before_render_check
     end
 
+    # Called after rendering the component.
+    #
+    # @deprecated Use `before_render` instead. Will be removed in v3.0.0.
+    # @return [void]
     def before_render_check
       # noop
     end
 
+    # Whether the ViewComponent should render.
+    #
+    # @return [Boolean]
     def render?
       true
     end
