@@ -16,6 +16,8 @@
 /test/log/*
 /test/app/tmp/*
 /test/tmp/*
+/.yardoc
+/_yardoc/
 
 # Used by dotenv library to load environment variables.
 # .env
