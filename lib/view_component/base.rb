@@ -30,6 +30,7 @@ module ViewComponent
     # Hook for allowing components to do work as part of the compilation process.
     #
     # For example, one might compile component-specific assets at this point.
+    # @private TODO: add documentation
     def self._after_compile
       # noop
     end
@@ -58,6 +59,7 @@ module ViewComponent
     # returns:
     # <span title="greeting">Hello, world!</span>
     #
+    # @private
     def render_in(view_context, &block)
       self.class.compile(raise_errors: true)
 
@@ -119,6 +121,7 @@ module ViewComponent
       true
     end
 
+    # @private
     def initialize(*); end
 
     # Re-use original view_context if we're not rendering a component.
@@ -126,6 +129,7 @@ module ViewComponent
     # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
     # of the component. This is due to the partials compiled template method existing in the parent `view_context`,
     #  and not the component's `view_context`.
+    # @private
     def render(options = {}, args = {}, &block)
       if options.is_a? ViewComponent::Base
         super
@@ -134,28 +138,36 @@ module ViewComponent
       end
     end
 
+    # The current controller. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
+    #
+    # @return [ActionController::Base]
     def controller
       raise ViewContextCalledBeforeRenderError, "`controller` can only be called at render time." if view_context.nil?
       @controller ||= view_context.controller
     end
 
-    # Provides a proxy to access helper methods from the context of the current controller
+    # A proxy through which to access helpers. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
+    #
+    # @return [ActionView::Base]
     def helpers
       raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
       @helpers ||= controller.view_context
     end
 
     # Exposes .virtual_path as an instance method
+    # @private
     def virtual_path
       self.class.virtual_path
     end
 
     # For caching, such as #cache_if
+    # @private
     def view_cache_dependencies
       []
     end
 
     # For caching, such as #cache_if
+    # @private
     def format
       # Ruby 2.6 throws a warning without checking `defined?`, 2.7 does not
       if defined?(@variant)
@@ -164,6 +176,7 @@ module ViewComponent
     end
 
     # Assign the provided content to the content area accessor
+    # @private
     def with(area, content = nil, &block)
       unless content_areas.include?(area)
         raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
@@ -177,15 +190,16 @@ module ViewComponent
       nil
     end
 
+    # @private TODO: add documentation
     def with_variant(variant)
       @variant = variant
 
       self
     end
 
-    # Exposes the current request to the component.
-    # Use sparingly as doing so introduces coupling
-    # that inhibits encapsulation & reuse.
+    # The current request. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
+    #
+    # @return [ActionDispatch::Request]
     def request
       @request ||= controller.request
     end

@@ -50,14 +50,13 @@ namespace :docs do
     registry = YARD::RegistryStore.new
     registry.load!(".yardoc")
 
-    INSTANCE_METHODS_TO_DOCUMENT = [
-      :render?,
-      :before_render,
-      :before_render_check
-    ]
-
     instance_methods = registry.get("ViewComponent::Base").meths.select { |method| method.scope != :class }
-    instance_methods_to_document = instance_methods.select { |method| INSTANCE_METHODS_TO_DOCUMENT.include?(method.name) }
+    instance_methods_to_document =
+      instance_methods.select do |method|
+        !method.tag(:private) &&
+        method.path.include?("ViewComponent::Base") &&
+        method.visibility == :public
+      end
 
     File.open("docs/api.md", "w") do |f|
       f.puts("---")
@@ -78,7 +77,11 @@ namespace :docs do
             " (Deprecated)"
           end
 
-        f.puts("### #{method.signature.gsub('def ', '')} → [#{method.tag(:return).types.join(',')}]#{suffix}")
+        types = if method.tag(:return)&.types
+          " → [#{method.tag(:return).types.join(',')}]"
+        end
+
+        f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
         f.puts
         f.puts(method.docstring)
         f.puts
