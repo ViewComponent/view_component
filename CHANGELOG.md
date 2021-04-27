@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix `DEPRECATION WARNING: before_render_check` when compiling `ViewComponent::Base`
+
+    *Dave Kroondyk*
+
 ## 2.31.0
 
 * Add `#with_content` to allow setting content without a block.
