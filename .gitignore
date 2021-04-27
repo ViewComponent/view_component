@@ -1,5 +1,6 @@
 *.gem
 *.rbc
+.ruby-version
 /.config
 /coverage/assets
 /coverage/index.html
