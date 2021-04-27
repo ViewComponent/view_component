@@ -69,7 +69,6 @@ namespace :docs do
       f.puts("# API")
       f.puts
       f.puts("## Instance methods")
-      f.puts
 
       instance_methods_to_document.each do |method|
         suffix =
@@ -81,14 +80,14 @@ namespace :docs do
           " → [#{method.tag(:return).types.join(',')}]"
         end
 
+        f.puts
         f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
         f.puts
         f.puts(method.docstring)
-        f.puts
 
         if method.tag(:deprecated)
-          f.puts("_#{method.tag(:deprecated).text}_")
           f.puts
+          f.puts("_#{method.tag(:deprecated).text}_")
         end
       end
     end

@@ -34,4 +34,3 @@ A proxy through which to access helpers. Use sparingly as doing so introduces co
 ### #request → [ActionDispatch::Request]
 
 The current request. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
-
