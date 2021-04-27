@@ -37,9 +37,8 @@ One approach is to use Web Components, which contain all Javascript functionalit
 
 For example:
 
-`app/components/comment_component.rb`
-
 ```ruby
+# app/components/comment_component.rb
 class CommentComponent < ViewComponent::Base
   def initialize(comment:)
     @comment = comment
@@ -67,9 +66,8 @@ class CommentComponent < ViewComponent::Base
 end
 ```
 
-`app/components/comment_component.html.erb`
-
 ```erb
+<%# app/components/comment_component.html.erb %>
 <my-comment comment-id="<%= comment.id %>">
   <time slot="posted" datetime="<%= comment.created_at.iso8601 %>"><%= comment.created_at.strftime("%b %-d") %></time>
 
@@ -81,9 +79,8 @@ end
 </my-comment>
 ```
 
-`app/components/comment_component.js`
-
 ```js
+// app/components/comment_component.js
 class Comment extends HTMLElement {
   styles() {
     return `

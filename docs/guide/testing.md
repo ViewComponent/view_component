@@ -141,9 +141,8 @@ end
 
 To use RSpec, add the following:
 
-`spec/rails_helper.rb`
-
 ```ruby
+# spec/rails_helper.rb
 require "view_component/test_helpers"
 require "capybara/rspec"
 
@@ -171,8 +170,7 @@ end
 
 To use component previews:
 
-`config/application.rb`
-
 ```ruby
+# config/application.rb
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 ```

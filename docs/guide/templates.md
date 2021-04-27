@@ -37,19 +37,18 @@ To generate a component with a sidecar directory, use the `--sidecar` flag:
 
 ```console
 bin/rails generate component Example title --sidecar
-      invoke  test_unit
-      create  test/components/example_component_test.rb
-      create  app/components/example_component.rb
-      create  app/components/example_component/example_component.html.erb
+  invoke  test_unit
+  create  test/components/example_component_test.rb
+  create  app/components/example_component.rb
+  create  app/components/example_component/example_component.html.erb
 ```
 
 ## Inline
 
 ViewComponents can render without a template file, by defining a `call` method:
 
-`app/components/inline_component.rb`:
-
 ```ruby
+# app/components/inline_component.rb
 class InlineComponent < ViewComponent::Base
   def call
     if active?
