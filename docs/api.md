@@ -11,7 +11,7 @@ title: API
 
 ### #before_render → [void]
 
-Called before rendering the component.
+Called before rendering the component. Override to perform operations that depend on having access to the view context, such as helpers.
 
 ### #before_render_check → [void] (Deprecated)
 
@@ -21,7 +21,7 @@ _Use `before_render` instead. Will be removed in v3.0.0._
 
 ### #render? → [Boolean]
 
-Whether the ViewComponent should render.
+Override to determine whether the ViewComponent should render.
 
 ### #controller → [ActionController::Base]
 

@@ -99,7 +99,7 @@ module ViewComponent
       @current_template = old_current_template
     end
 
-    # Called before rendering the component.
+    # Called before rendering the component. Override to perform operations that depend on having access to the view context, such as helpers.
     #
     # @return [void]
     def before_render
@@ -114,7 +114,7 @@ module ViewComponent
       # noop
     end
 
-    # Whether the ViewComponent should render.
+    # Override to determine whether the ViewComponent should render.
     #
     # @return [Boolean]
     def render?
