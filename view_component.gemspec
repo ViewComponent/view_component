@@ -43,4 +43,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov", "~> 0.18.0"
   spec.add_development_dependency "simplecov-console", "~> 0.7.2"
   spec.add_development_dependency "pry", "~> 0.13"
+  spec.add_development_dependency "yard", "~> 0.9.25"
 end

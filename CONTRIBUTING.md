@@ -34,6 +34,7 @@ Here are a few things you can do that will increase the likelihood of your pull 
 1. Configure and install the dependencies: `bundle`.
 1. Run Jekyll: `bundle exec jekyll serve`.
 1. Open the docs site at `http://127.0.0.1:4000/`.
+1. If making changes to the API, run `bundle exec rake docs:build` to generate `docs/api.md` from YARD comments.
 
 ## Releasing
 

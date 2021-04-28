@@ -209,6 +209,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yard (0.9.26)
     zeitwerk (2.4.2)
 
 PLATFORMS
@@ -231,6 +232,7 @@ DEPENDENCIES
   simplecov-console (~> 0.7.2)
   slim (~> 4.0)
   view_component!
+  yard (~> 0.9.25)
 
 BUNDLED WITH
    1.17.3
