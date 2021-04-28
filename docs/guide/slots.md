@@ -73,11 +73,11 @@ end
     <%= link_to "My Site", root_path %>
   <% end %>
 
-  <%= c.post(title: "My blog post") do %>
+  <% c.post(title: "My blog post") do %>
     Really interesting stuff.
   <% end %>
 
-  <%= c.post(title: "Another post!") do %>
+  <% c.post(title: "Another post!") do %>
     Blog every day.
   <% end %>
 <% end %>
@@ -146,7 +146,7 @@ end
 <%# index.html.erb %>
 <div>
   <%= render BlogComponent.new do |c| %>
-    <%= c.header(classes: '') do %>
+    <% c.header(classes: '') do %>
       <%= link_to "My blog", root_path %>
     <% end %>
 
@@ -187,7 +187,7 @@ end
 ```erb
 <%# index.html.erb %>
 <%= render(NavigationComponent.new) do |c| %>
-  <%= c.links([
+  <% c.links([
     { name: "Home", href: "/" },
     { name: "Pricing", href: "/pricing" },
     { name: "Sign Up", href: "/sign-up" },
@@ -201,6 +201,6 @@ Slot content can also be set using `#with_content`:
 
 ```erb
 <%= render BlogComponent.new do |c| %>
-  <%= c.header.with_content("My blog") %>
+  <% c.header.with_content("My blog") %>
 <% end %>
 ```

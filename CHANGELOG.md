@@ -10,6 +10,8 @@
 
 ## 2.31.0
 
+_Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot should not be returned. (`<%`)_
+
 * Add `#with_content` to allow setting content without a block.
 
     *Jordan Raine, Manuel Puyol*
