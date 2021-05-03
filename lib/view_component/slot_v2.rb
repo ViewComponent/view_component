@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require "view_component/with_content_helper"
+
 module ViewComponent
   class SlotV2
+    include ViewComponent::WithContentHelper
+
     attr_writer :_component_instance, :_content_block, :_content
 
     def initialize(parent)
@@ -26,10 +30,18 @@ module ViewComponent
 
       view_context = @parent.send(:view_context)
 
+      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if defined?(@_content_block) && defined?(@_content_set_by_with_content)
+
       @content = if defined?(@_component_instance)
-        # render_in is faster than `parent.render`
-        if defined?(@_content_block)
+        if defined?(@_content_set_by_with_content)
+          @_component_instance.with_content(@_content_set_by_with_content)
+
           view_context.capture do
+            @_component_instance.render_in(view_context)
+          end
+        elsif defined?(@_content_block)
+          view_context.capture do
+            # render_in is faster than `parent.render`
             @_component_instance.render_in(view_context, &@_content_block)
           end
         else
@@ -41,6 +53,8 @@ module ViewComponent
         @_content
       elsif defined?(@_content_block)
         view_context.capture(&@_content_block)
+      elsif defined?(@_content_set_by_with_content)
+        @_content_set_by_with_content
       end
 
       @content

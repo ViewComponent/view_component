@@ -120,13 +120,29 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+## Setting `request.path_parameters`
+
+Some Rails helpers won't work unless `request.path_parameters` are set correctly, resulting in an `ActionController::UrlGenerationError`.
+
+To set `request.path_parameters` for a test case, use `with_request_url` from `ViewComponent::TestHelpers`:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_with_request_url
+    with_request_url "/products/42" do
+      render_inline ExampleComponent.new # contains i.e. `link_to "French", url_for(locale: "fr")`
+      assert_link "French", href: "/products/42?locale=fr"
+    end
+  end
+end
+```
+
 ## RSpec configuration
 
 To use RSpec, add the following:
 
-`spec/rails_helper.rb`
-
 ```ruby
+# spec/rails_helper.rb
 require "view_component/test_helpers"
 require "capybara/rspec"
 
@@ -154,8 +170,7 @@ end
 
 To use component previews:
 
-`config/application.rb`
-
 ```ruby
+# config/application.rb
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 ```

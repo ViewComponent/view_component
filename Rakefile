@@ -2,6 +2,7 @@
 
 require "bundler/gem_tasks"
 require "rake/testtask"
+require "yard"
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
@@ -32,6 +33,63 @@ namespace :coverage do
 
     SimpleCov.collate Dir["simplecov-resultset-*/.resultset.json"], "rails" do
       formatter SimpleCov::Formatter::Console
+    end
+  end
+end
+
+namespace :docs do
+  # Build api.md documentation page from YARD comments.
+  task :build do
+    YARD::Rake::YardocTask.new
+    puts "Building YARD documentation."
+
+    Rake::Task["yard"].execute
+
+    puts "Converting YARD documentation to Markdown files."
+
+    registry = YARD::RegistryStore.new
+    registry.load!(".yardoc")
+
+    instance_methods = registry.get("ViewComponent::Base").meths.select { |method| method.scope != :class }
+    instance_methods_to_document =
+      instance_methods.select do |method|
+        !method.tag(:private) &&
+        method.path.include?("ViewComponent::Base") &&
+        method.visibility == :public
+      end
+
+    File.open("docs/api.md", "w") do |f|
+      f.puts("---")
+      f.puts("layout: default")
+      f.puts("title: API")
+      f.puts("---")
+      f.puts
+      f.puts("<!-- Warning: AUTO-GENERATED file, do not edit. Add code comments to your Ruby instead <3 -->")
+      f.puts
+      f.puts("# API")
+      f.puts
+      f.puts("## Instance methods")
+
+      instance_methods_to_document.each do |method|
+        suffix =
+          if method.tag(:deprecated)
+            " (Deprecated)"
+          end
+
+        types = if method.tag(:return)&.types
+          " → [#{method.tag(:return).types.join(',')}]"
+        end
+
+        f.puts
+        f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
+        f.puts
+        f.puts(method.docstring)
+
+        if method.tag(:deprecated)
+          f.puts
+          f.puts("_#{method.tag(:deprecated).text}_")
+        end
+      end
     end
   end
 end

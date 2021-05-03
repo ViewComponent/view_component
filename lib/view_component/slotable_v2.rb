@@ -60,7 +60,7 @@ module ViewComponent
       # helper method with the same name as the slot.
       #
       #   <%= render_inline(MyComponent.new) do |component| %>
-      #     <%= component.header(classes: "Foo") do %>
+      #     <% component.header(classes: "Foo") do %>
       #       <p>Bar</p>
       #     <% end %>
       #   <% end %>
@@ -95,7 +95,7 @@ module ViewComponent
       # helper method with the same name as the slot.
       #
       #   <h1>
-      #     <%= items.each do |item| %>
+      #     <% items.each do |item| %>
       #       <%= item %>
       #     <% end %>
       #   </h1>
@@ -107,11 +107,11 @@ module ViewComponent
       # called multiple times to append to the slot.
       #
       #   <%= render_inline(MyComponent.new) do |component| %>
-      #     <%= component.item(name: "Foo") do %>
+      #     <% component.item(name: "Foo") do %>
       #       <p>One</p>
       #     <% end %>
       #
-      #     <%= component.item(name: "Bar") do %>
+      #     <% component.item(name: "Bar") do %>
       #       <p>two</p>
       #     <% end %>
       #   <% end %>
@@ -255,7 +255,7 @@ module ViewComponent
         @_set_slots[slot_name] = slot
       end
 
-      nil
+      slot
     end
   end
 end

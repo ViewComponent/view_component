@@ -7,12 +7,14 @@ require "view_component/compile_cache"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
+require "view_component/with_content_helper"
 
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::Previewable
     include ViewComponent::SlotableV2
+    include ViewComponent::WithContentHelper
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
@@ -28,6 +30,7 @@ module ViewComponent
     # Hook for allowing components to do work as part of the compilation process.
     #
     # For example, one might compile component-specific assets at this point.
+    # @private TODO: add documentation
     def self._after_compile
       # noop
     end
@@ -56,6 +59,7 @@ module ViewComponent
     # returns:
     # <span title="greeting">Hello, world!</span>
     #
+    # @private
     def render_in(view_context, &block)
       self.class.compile(raise_errors: true)
 
@@ -79,6 +83,8 @@ module ViewComponent
       old_current_template = @current_template
       @current_template = self
 
+      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if block && defined?(@_content_set_by_with_content)
+
       @_content_evaluated = false
       @_render_in_block = block
 
@@ -93,18 +99,29 @@ module ViewComponent
       @current_template = old_current_template
     end
 
+    # Called before rendering the component. Override to perform operations that depend on having access to the view context, such as helpers.
+    #
+    # @return [void]
     def before_render
       before_render_check
     end
 
+    # Called after rendering the component.
+    #
+    # @deprecated Use `before_render` instead. Will be removed in v3.0.0.
+    # @return [void]
     def before_render_check
       # noop
     end
 
+    # Override to determine whether the ViewComponent should render.
+    #
+    # @return [Boolean]
     def render?
       true
     end
 
+    # @private
     def initialize(*); end
 
     # Re-use original view_context if we're not rendering a component.
@@ -112,6 +129,7 @@ module ViewComponent
     # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
     # of the component. This is due to the partials compiled template method existing in the parent `view_context`,
     #  and not the component's `view_context`.
+    # @private
     def render(options = {}, args = {}, &block)
       if options.is_a? ViewComponent::Base
         super
@@ -120,28 +138,36 @@ module ViewComponent
       end
     end
 
+    # The current controller. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
+    #
+    # @return [ActionController::Base]
     def controller
       raise ViewContextCalledBeforeRenderError, "`controller` can only be called at render time." if view_context.nil?
       @controller ||= view_context.controller
     end
 
-    # Provides a proxy to access helper methods from the context of the current controller
+    # A proxy through which to access helpers. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
+    #
+    # @return [ActionView::Base]
     def helpers
       raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
       @helpers ||= controller.view_context
     end
 
     # Exposes .virtual_path as an instance method
+    # @private
     def virtual_path
       self.class.virtual_path
     end
 
     # For caching, such as #cache_if
+    # @private
     def view_cache_dependencies
       []
     end
 
     # For caching, such as #cache_if
+    # @private
     def format
       # Ruby 2.6 throws a warning without checking `defined?`, 2.7 does not
       if defined?(@variant)
@@ -150,6 +176,7 @@ module ViewComponent
     end
 
     # Assign the provided content to the content area accessor
+    # @private
     def with(area, content = nil, &block)
       unless content_areas.include?(area)
         raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
@@ -163,15 +190,16 @@ module ViewComponent
       nil
     end
 
+    # @private TODO: add documentation
     def with_variant(variant)
       @variant = variant
 
       self
     end
 
-    # Exposes the current request to the component.
-    # Use sparingly as doing so introduces coupling
-    # that inhibits encapsulation & reuse.
+    # The current request. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
+    #
+    # @return [ActionDispatch::Request]
     def request
       @request ||= controller.request
     end
@@ -186,6 +214,8 @@ module ViewComponent
 
       @_content = if @view_context && @_render_in_block
         view_context.capture(self, &@_render_in_block)
+      elsif defined?(@_content_set_by_with_content)
+        @_content_set_by_with_content
       end
     end
 
@@ -280,7 +310,7 @@ module ViewComponent
       end
 
       def compiled?
-        template_compiler.compiled?
+        compiler.compiled?
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
@@ -288,11 +318,11 @@ module ViewComponent
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
       def compile(raise_errors: false)
-        template_compiler.compile(raise_errors: raise_errors)
+        compiler.compile(raise_errors: raise_errors)
       end
 
-      def template_compiler
-        @_template_compiler ||= Compiler.new(self)
+      def compiler
+        @_compiler ||= Compiler.new(self)
       end
 
       # we'll eventually want to update this to support other types
@@ -365,7 +395,7 @@ module ViewComponent
       def validate_initialization_parameters!
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
-        raise ArgumentError.new(
+        raise ViewComponent::ComponentError.new(
           "#{self} initializer cannot contain " \
           "`#{RESERVED_PARAMETER}` since it will override a " \
           "public ViewComponent method."
@@ -385,7 +415,7 @@ module ViewComponent
       end
 
       def counter_argument_present?
-        instance_method(:initialize).parameters.map(&:second).include?(collection_counter_parameter)
+        initialize_parameter_names.include?(collection_counter_parameter)
       end
 
       private

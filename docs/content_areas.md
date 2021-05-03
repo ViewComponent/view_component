@@ -8,17 +8,15 @@ _Note: The content_areas API is soft-deprecated, and will soon be deprecated in 
 
 ViewComponents can declare additional content areas. For example:
 
-`app/components/modal_component.rb`:
-
 ```ruby
+# app/components/modal_component.rb
 class ModalComponent < ViewComponent::Base
   with_content_areas :header, :body
 end
 ```
 
-`app/components/modal_component.html.erb`:
-
 ```erb
+<%# app/components/modal_component.html.erb %>
 <div class="modal">
   <div class="header"><%= header %></div>
   <div class="body"><%= body %></div>

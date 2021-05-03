@@ -310,4 +310,44 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_includes exception.message, "content is not a valid slot name"
   end
+
+  def test_renders_pass_through_slot_using_with_content
+    component = SlotsV2Component.new
+    component.title("some_argument").with_content("This is my title!")
+
+    render_inline(component)
+    assert_selector(".title", text: "This is my title!")
+  end
+
+  def test_renders_lambda_slot_using_with_content
+    component = SlotsV2Component.new
+    component.item(highlighted: false).with_content("This is my item!")
+
+    render_inline(component)
+    assert_selector(".item.normal", text: "This is my item!")
+  end
+
+  def test_renders_component_slot_using_with_content
+    component = SlotsV2Component.new
+    component.extra(message: "My message").with_content("This is my content!")
+
+    render_inline(component)
+    assert_selector(".extra") do
+      assert_text("This is my content!")
+      assert_text("My message")
+    end
+  end
+
+  def test_raises_if_using_both_block_content_and_with_content
+    error = assert_raises ArgumentError do
+      component = SlotsV2Component.new
+      slot = component.title("some_argument")
+      slot.with_content("This is my title!")
+      slot._content_block = "some block"
+
+      render_inline(component)
+    end
+
+    assert_equal "Block provided after calling `with_content`. Use one or the other.", error.message
+  end
 end

@@ -33,6 +33,38 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("span", text: "content")
   end
 
+  def test_raise_error_when_content_already_set
+    error = assert_raises ArgumentError do
+      render_inline(WrapperComponent.new.with_content("setter content")) do
+        "block content"
+      end
+    end
+
+    assert_includes error.message, "Block provided after calling `with_content`"
+  end
+
+  def test_raise_error_when_component_implements_with_content
+    exception = assert_raises ViewComponent::ComponentError do
+      render_inline(InvalidWithRenderComponent.new)
+    end
+
+    assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `with_content`."
+  end
+
+  def test_renders_content_given_as_argument
+    render_inline(WrapperComponent.new.with_content("from arg"))
+
+    assert_selector("span", text: "from arg")
+  end
+
+  def test_raises_error_when_with_content_is_called_withot_any_values
+    exception = assert_raises ArgumentError do
+      WrapperComponent.new.with_content(nil)
+    end
+
+    assert_equal "No content provided.", exception.message
+  end
+
   def test_render_without_template
     render_inline(InlineComponent.new)
 
@@ -612,7 +644,7 @@ class ViewComponentTest < ViewComponent::TestCase
       old_cache = ViewComponent::CompileCache.cache
       ViewComponent::CompileCache.cache = Set.new
 
-      exception = assert_raises ArgumentError do
+      exception = assert_raises ViewComponent::ComponentError do
         InvalidParametersComponent.compile(raise_errors: true)
       end
 
@@ -627,7 +659,7 @@ class ViewComponentTest < ViewComponent::TestCase
       old_cache = ViewComponent::CompileCache.cache
       ViewComponent::CompileCache.cache = Set.new
 
-      exception = assert_raises ArgumentError do
+      exception = assert_raises ViewComponent::ComponentError do
         InvalidNamedParametersComponent.compile(raise_errors: true)
       end
 
@@ -716,5 +748,17 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector "h1", text: "hello view component"
   ensure
     Object.send(:remove_const, "MY_COMPONENT")
+  end
+
+  def test_with_request_url
+    with_request_url "/" do
+      render_inline UrlForComponent.new
+      assert_text "/?key=value"
+    end
+
+    with_request_url "/products" do
+      render_inline UrlForComponent.new
+      assert_text "/products?key=value"
+    end
   end
 end

@@ -32,9 +32,8 @@ _Note: Slot classes must be subclasses of `ViewComponent::Slot`._
 
 ## Example ViewComponent with Slots
 
-`# box_component.rb`
-
 ```ruby
+# box_component.rb
 class BoxComponent < ViewComponent::Base
   include ViewComponent::Slotable
 
@@ -77,9 +76,8 @@ class BoxComponent < ViewComponent::Base
 end
 ```
 
-`# box_component.html.erb`
-
 ```erb
+<%# box_component.html.erb %>
 <div class="Box">
   <% if header %>
     <div class="<%= header.classes %>">

@@ -2,6 +2,24 @@
 
 ## main
 
+## 2.31.1
+
+* Fix `DEPRECATION WARNING: before_render_check` when compiling `ViewComponent::Base`
+
+    *Dave Kroondyk*
+
+## 2.31.0
+
+_Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot should not be returned. (`<%`)_
+
+* Add `#with_content` to allow setting content without a block.
+
+    *Jordan Raine, Manuel Puyol*
+
+* Add `with_request_url` test helper.
+
+    *Mario Schüttel*
+
 * Improve feature parity with Rails translations
   * Don't create a translation backend if the component has no translation file
   * Mark translation keys ending with `html` as HTML-safe

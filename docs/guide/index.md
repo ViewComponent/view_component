@@ -9,13 +9,10 @@ has_children: true
 
 ## Conventions
 
-Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's common practice to create and inherit from an `ApplicationComponent` that is a subclass of `ViewComponent::Base`.
-
-Component names end in -`Component`.
-
-Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
-
-Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
+- Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's common practice to create and inherit from an `ApplicationComponent` that is a subclass of `ViewComponent::Base`.
+- Component names end in -`Component`.
+- Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
+- Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
 
 ## Quick start
 
@@ -40,7 +37,7 @@ The template engine can also be passed as an option to the generator:
 bin/rails generate component Example title --template-engine slim
 ```
 
-To generate a [preview](#previewing-components), pass the `--preview` option:
+To generate a [preview](/guide/previews.html), pass the `--preview` option:
 
 ```console
 bin/rails generate component Example title --preview
@@ -50,9 +47,8 @@ bin/rails generate component Example title --preview
 
 A ViewComponent is a Ruby file and corresponding template file with the same base name:
 
-`app/components/example_component.rb`:
-
 ```ruby
+# app/components/example_component.rb
 class ExampleComponent < ViewComponent::Base
   def initialize(title:)
     @title = title
@@ -60,17 +56,17 @@ class ExampleComponent < ViewComponent::Base
 end
 ```
 
-`app/components/example_component.html.erb`:
-
 ```erb
+<%# app/components/example_component.html.erb %>
 <span title="<%= @title %>"><%= content %></span>
 ```
 
-_Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor._
+Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor.
 
 Rendered in a view as:
 
 ```erb
+<%# app/views/home/index.html.erb %>
 <%= render(ExampleComponent.new(title: "my title")) do %>
   Hello, World!
 <% end %>
@@ -82,14 +78,24 @@ Returning:
 <span title="my title">Hello, World!</span>
 ```
 
+## `#with_content`
+
+String content can also be passed to a ViewComponent by calling `#with_content`:
+
+```erb
+<%# app/views/home/index.html.erb %>
+<%= render(ExampleComponent.new(title: "my title").with_content("Hello, World!")) %>
+```
+
 ## Rendering from controllers
 
 It's also possible to render ViewComponents in controllers:
 
 ```ruby
+# app/controllers/home_controller.rb
 def show
   render(ExampleComponent.new(title: "My Title")) { "Hello, World!" }
 end
 ```
 
-_Note: In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout._
+_In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout._

@@ -10,8 +10,6 @@ Components can implement a `#render?` method to be called after initialization t
 
 Traditionally, the logic for whether to render a view could go in either the component template:
 
-`app/components/confirm_email_component.html.erb`
-
 ```erb
 <% if user.requires_confirmation? %>
   <div class="alert">Please confirm your email address.</div>
@@ -19,8 +17,6 @@ Traditionally, the logic for whether to render a view could go in either the com
 ```
 
 or the view that renders the component:
-
-`app/views/_banners.html.erb`
 
 ```erb
 <% if current_user.requires_confirmation? %>
@@ -30,9 +26,8 @@ or the view that renders the component:
 
 Using the `#render?` hook simplifies the view:
 
-`app/components/confirm_email_component.rb`
-
 ```ruby
+# app/components/confirm_email_component.rb
 class ConfirmEmailComponent < ViewComponent::Base
   def initialize(user:)
     @user = user
@@ -44,15 +39,12 @@ class ConfirmEmailComponent < ViewComponent::Base
 end
 ```
 
-`app/components/confirm_email_component.html.erb`
-
 ```erb
+<%# app/components/confirm_email_component.html.erb %>
 <div class="banner">
   Please confirm your email address.
 </div>
 ```
-
-`app/views/_banners.html.erb`
 
 ```erb
 <%= render(ConfirmEmailComponent.new(user: current_user)) %>
