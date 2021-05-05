@@ -2,6 +2,10 @@
 
 ## main
 
+* Add the ability to enable ActiveSupport notifications (`!render.view_component` event) with `config.view_component.instrumentation_enabled`.
+
+  *Svyatoslav Kryukov*
+
 ## 2.32.0
 
 * Enable previews by default in test environment.
