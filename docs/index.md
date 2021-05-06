@@ -78,3 +78,4 @@ ViewComponent is built by:
 <img src="https://avatars.githubusercontent.com/traels?s=64" alt="traels" width="32" />
 <img src="https://avatars.githubusercontent.com/vinistock?s=64" alt="vinistock" width="32" />
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
+<img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
