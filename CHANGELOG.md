@@ -2,6 +2,10 @@
 
 ## main
 
+* Add compatibility notes on FAQ.
+
+    *Matheus Richard*
+
 * Add Bridgetown on Compatibility documentation.
 
     *Matheus Richard*
