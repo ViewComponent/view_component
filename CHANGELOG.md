@@ -2,6 +2,14 @@
 
 ## main
 
+* Add compatibility notes on FAQ.
+
+    *Matheus Richard*
+
+* Add Bridgetown on Compatibility documentation.
+
+    *Matheus Richard*
+
 ## 2.31.1
 
 * Fix `DEPRECATION WARNING: before_render_check` when compiling `ViewComponent::Base`
