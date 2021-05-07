@@ -23,6 +23,4 @@ With the monkey patch disabled, use `render_component` (or  `render_component_to
 
 ## Bridgetown
 
-[Bridgetown](https://www.bridgetownrb.com/) added ViewComponent support as an **experimental**
-feature. It works via the [bridgetown-view-component gem](https://github.com/bridgetownrb/bridgetown-view-component).
-More information available [here](https://beta.bridgetownrb.com/docs/components/ruby#need-compatibility-with-rails-try-viewcomponent-experimental).
+[Bridgetown](https://www.bridgetownrb.com/) has **experimental** support for ViewComponent, via the [bridgetown-view-component gem](https://github.com/bridgetownrb/bridgetown-view-component). More information available [here](https://beta.bridgetownrb.com/docs/components/ruby#need-compatibility-with-rails-try-viewcomponent-experimental).
