@@ -57,11 +57,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_template_changes_are_reflected_on_new_request_when_cache_template_loading_is_false
-    begin
-      old_cache = ViewComponent::CompileCache.cache
-      ViewComponent::CompileCache.cache = Set.new
-      ActionView::Base.cache_template_loading = false
-
+    with_new_cache do
       get "/controller_inline"
       assert_select("div", "bar")
       assert_response :success
@@ -75,9 +71,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       get "/controller_inline"
       assert_select("div", "bar")
       assert_response :success
-    ensure
-      ActionView::Base.cache_template_loading = true
-      ViewComponent::CompileCache.cache = old_cache
     end
   end
 
@@ -444,8 +437,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_does_not_render_additional_newline
-    get "/rails/view_components/display_inline_component/with_newline"
-    assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
+    without_template_annotations do
+      with_new_cache do
+        get "/rails/view_components/display_inline_component/with_newline"
+        assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
+      end
+    end
   end
 
   def test_renders_the_preview_example_with_its_own_template_and_a_layout
