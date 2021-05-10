@@ -55,11 +55,12 @@ def with_new_cache
   begin
     old_cache = ViewComponent::CompileCache.cache
     ViewComponent::CompileCache.cache = Set.new
+    old_cache_template_loading = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = false
 
     yield
   ensure
-    ActionView::Base.cache_template_loading = true
+    ActionView::Base.cache_template_loading = old_cache_template_loading
     ViewComponent::CompileCache.cache = old_cache
   end
 end
