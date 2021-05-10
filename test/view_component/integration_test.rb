@@ -438,10 +438,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   def test_does_not_render_additional_newline
     without_template_annotations do
-      with_new_cache do
-        get "/rails/view_components/display_inline_component/with_newline"
-        assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
-      end
+      get "/rails/view_components/display_inline_component/with_newline"
+      assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   end
 

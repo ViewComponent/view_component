@@ -65,12 +65,20 @@ def with_new_cache
 end
 
 def without_template_annotations
-  old_value = ActionView::Base.annotate_rendered_view_with_filenames
-  ActionView::Base.annotate_rendered_view_with_filenames = false
-  app.reloader.reload!
-  yield
-  ActionView::Base.annotate_rendered_view_with_filenames = old_value
-  app.reloader.reload!
+  if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
+    old_value = ActionView::Base.annotate_rendered_view_with_filenames
+    ActionView::Base.annotate_rendered_view_with_filenames = false
+    app.reloader.reload!
+
+    with_new_cache do
+      yield
+    end
+
+    ActionView::Base.annotate_rendered_view_with_filenames = old_value
+    app.reloader.reload!
+  else
+    yield
+  end
 end
 
 def modify_file(file, content)
