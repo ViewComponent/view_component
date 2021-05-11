@@ -2,6 +2,10 @@
 
 ## main
 
+* Add experimental `_after_render` lifecyle method.
+
+    *Joel Hawksley*
+
 * Add compatibility notes on FAQ.
 
     *Matheus Richard*
