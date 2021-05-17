@@ -71,7 +71,7 @@ class ExampleComponentPreview < ViewComponent::Preview
 end
 ```
 
-You can also set a custom layout to be used by default for previews as well as preview the index pages via the `default_preview_layout` configuration option:
+To set a custom layout for previews and the previews index page, set: `default_preview_layout`:
 
 ```ruby
 # config/application.rb
