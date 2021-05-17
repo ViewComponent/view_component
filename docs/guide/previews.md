@@ -33,9 +33,11 @@ class ExampleComponentPreview < ViewComponent::Preview
 end
 ```
 
-Which generates <http://localhost:3000/rails/view_components/example_component/with_default_title>,
-<http://localhost:3000/rails/view_components/example_component/with_long_title>,
-and <http://localhost:3000/rails/view_components/example_component/with_content_block>.
+Then access the resulting previews at:
+
+* <http://localhost:3000/rails/view_components/example_component/with_default_title>
+* <http://localhost:3000/rails/view_components/example_component/with_long_title>
+* <http://localhost:3000/rails/view_components/example_component/with_content_block>
 
 It's also possible to set dynamic values from the params by setting them as arguments:
 
@@ -65,7 +67,7 @@ class ExampleComponentPreview < ViewComponent::Preview
 end
 ```
 
-You can also set a custom layout to be used by default for previews as well as the preview index pages via the `default_preview_layout` configuration option:
+To set a custom layout for previews and the previews index page, set: `default_preview_layout`:
 
 ```ruby
 # config/application.rb
