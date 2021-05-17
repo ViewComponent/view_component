@@ -33,12 +33,8 @@ class ExampleComponentPreview < ViewComponent::Preview
 end
 ```
 
-Generate the preview using:
-```console
-bin/rails generate component Example title --preview
-```
+Then access the resulting previews at:
 
-Which generates: 
 * <http://localhost:3000/rails/view_components/example_component/with_default_title>
 * <http://localhost:3000/rails/view_components/example_component/with_long_title>
 * <http://localhost:3000/rails/view_components/example_component/with_content_block>
