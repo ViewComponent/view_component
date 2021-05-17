@@ -761,4 +761,10 @@ class ViewComponentTest < ViewComponent::TestCase
       assert_text "/products?key=value"
     end
   end
+
+  def test_output_postamble
+    render_inline(AfterRenderComponent.new)
+
+    assert_text("Hello, World!")
+  end
 end

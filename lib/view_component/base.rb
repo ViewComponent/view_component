@@ -91,12 +91,19 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@variant)
+        render_template_for(@variant) + _output_postamble
       else
         ""
       end
     ensure
       @current_template = old_current_template
+    end
+
+    # EXPERIMENTAL: Optional content to be returned after the rendered template.
+    #
+    # @return [String]
+    def _output_postamble
+      ""
     end
 
     # Called before rendering the component. Override to perform operations that depend on having access to the view context, such as helpers.

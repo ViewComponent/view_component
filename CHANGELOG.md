@@ -2,6 +2,10 @@
 
 ## main
 
+* Add experimental `_output_postamble` lifecyle method.
+
+    *Joel Hawksley*
+
 * Add compatibility notes on FAQ.
 
     *Matheus Richard*
