@@ -5,7 +5,7 @@ class AfterRenderComponent < ViewComponent::Base
     "Hello, "
   end
 
-  def _after_render
+  def _output_postamble
     "World!"
   end
 end

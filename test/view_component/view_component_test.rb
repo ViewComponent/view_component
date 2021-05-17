@@ -762,7 +762,7 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
-  def test_after_render
+  def test_output_postamble
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")

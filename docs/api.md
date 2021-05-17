@@ -9,7 +9,7 @@ title: API
 
 ## Instance methods
 
-### #_after_render → [String]
+### #_output_postamble → [String]
 
 EXPERIMENTAL: Optional content to be returned after the rendered template.
 

@@ -91,7 +91,7 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@variant) + _after_render
+        render_template_for(@variant) + _output_postamble
       else
         ""
       end
@@ -102,7 +102,7 @@ module ViewComponent
     # EXPERIMENTAL: Optional content to be returned after the rendered template.
     #
     # @return [String]
-    def _after_render
+    def _output_postamble
       ""
     end
 

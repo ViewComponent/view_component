@@ -2,7 +2,7 @@
 
 ## main
 
-* Add experimental `_after_render` lifecyle method.
+* Add experimental `_output_postamble` lifecyle method.
 
     *Joel Hawksley*
 
