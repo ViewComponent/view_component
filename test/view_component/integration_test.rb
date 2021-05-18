@@ -108,6 +108,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select(".footer h3", "Bye!")
   end
 
+  def test_renders_helper_method_within_nested_component
+    get "/member_var_in_controller"
+    assert_response :success
+    assert_select("div", text: "Hello helper method")
+  end
+
   def test_rendering_component_with_a_partial
     get "/partial"
     assert_response :success
