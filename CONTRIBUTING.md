@@ -15,6 +15,8 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
 1. Configure and install the dependencies: `bundle`.
 1. Make sure the tests pass on your machine: `bundle exec rake`.
+    - Use `bundle exec ruby -I test test/view_component/some_test_file.rb` to run all tests in a single file.
+    - Use `bundle exec ruby -I test test/view_component/some_test_file.rb -n test_some_particular_test` to run a single test.
 1. Create a new branch: `git checkout -b my-branch-name`.
 1. Make your change, add tests, and make sure the tests still pass.
 1. Add an entry to the top of `CHANGELOG.md` for your changes.
