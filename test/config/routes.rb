@@ -7,6 +7,8 @@ Dummy::Application.routes.draw do
   get :empty_slot, to: "integration_examples#empty_slot"
   get :partial, to: "integration_examples#partial"
   get :content, to: "integration_examples#content"
+  get :member_var_in_controller, to: "integration_examples#member_var_in_controller"
+  get :member_var_in_view, to: "integration_examples#member_var_in_view"
   get :variants, to: "integration_examples#variants"
   get :products, to: "integration_examples#products"
   get :inline_products, to: "integration_examples#inline_products"

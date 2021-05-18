@@ -115,6 +115,18 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "hello,partial world!", count: 2)
   end
 
+  def test_rendering_component_using_a_helper_with_member_var_set_in_controller
+    get "/member_var_in_controller"
+    assert_response :success
+    assert_select("p", text: "Hello I was set in the controller action")
+  end
+
+  def test_rendering_component_using_a_helper_with_member_var_set_in_view
+    get "/member_var_in_view"
+    assert_response :success
+    assert_select("p", text: "Hello I was set in the view")
+  end
+
   def test_rendering_component_without_variant
     get "/variants"
     assert_response :success

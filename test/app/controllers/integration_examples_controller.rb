@@ -3,6 +3,13 @@
 class IntegrationExamplesController < ActionController::Base
   layout false
 
+  def member_var_in_controller
+    @user_name = "I was set in the controller action"
+  end
+
+  def member_var_in_view
+  end
+
   def variants
     request.variant = params[:variant].to_sym if params[:variant]
   end
