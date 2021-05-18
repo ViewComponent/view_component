@@ -158,7 +158,7 @@ module ViewComponent
     # @return [ActionView::Base]
     def helpers
       raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
-      @helpers ||= controller.view_context
+      @helpers ||= view_context
     end
 
     # Exposes .virtual_path as an instance method
