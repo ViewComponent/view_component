@@ -14,6 +14,9 @@ class IntegrationExamplesController < ActionController::Base
     request.variant = params[:variant].to_sym if params[:variant]
   end
 
+  def button_to_component
+  end
+
   def controller_inline
     render(ControllerInlineComponent.new(message: "bar"))
   end

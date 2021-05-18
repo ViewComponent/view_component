@@ -11,6 +11,7 @@ Dummy::Application.routes.draw do
   get :member_var_in_view, to: "integration_examples#member_var_in_view"
   get :variants, to: "integration_examples#variants"
   get :products, to: "integration_examples#products"
+  get :button_to_component, to: "integration_examples#button_to_component"
   get :inline_products, to: "integration_examples#inline_products"
   get :cached, to: "integration_examples#cached"
   get :render_check, to: "integration_examples#render_check"

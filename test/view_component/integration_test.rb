@@ -108,6 +108,20 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select(".footer h3", "Bye!")
   end
 
+  def test_renders_button_to_component
+    old_value = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+
+    get "/button_to_component"
+
+    assert_response :success
+    assert_select("form[class='button_to'][action='/'][method='post']")
+    assert_select("input[type='hidden'][name='authenticity_token']", visible: false)
+    assert_select("input[type='submit'][value='foo']")
+
+    ActionController::Base.allow_forgery_protection = old_value
+  end
+
   def test_renders_helper_method_within_nested_component
     get "/member_var_in_controller"
     assert_response :success
