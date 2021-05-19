@@ -122,6 +122,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     ActionController::Base.allow_forgery_protection = old_value
   end
 
+  def test_renders_container_component_that_uses_helpers
+    get "/container_component"
+    assert_response :success
+    assert_select("div", text: "Hello helper method")
+  end
+
   def test_renders_helper_method_within_nested_component
     get "/member_var_in_controller"
     assert_response :success

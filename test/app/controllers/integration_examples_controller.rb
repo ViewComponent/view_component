@@ -17,6 +17,9 @@ class IntegrationExamplesController < ActionController::Base
   def button_to_component
   end
 
+  def container_component
+  end
+
   def controller_inline
     render(ControllerInlineComponent.new(message: "bar"))
   end
