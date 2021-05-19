@@ -95,13 +95,19 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7.2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
     - uses: actions/cache@v2
       with:
-        path: vendor/bundle
-        key: gems-build-pvc-${{ hashFiles('**/Gemfile.lock') }}
+        path: |
+          node_modules
+          vendor/bundle
+        key: gems-build-pvc-${{ hashFiles('**/Gemfile.lock') }}-${{ hashFiles('**/yarn.lock') }}
     - name: Build and test with Rake
       run: |
         cd primer_view_components
+        yarn install
         gem install bundler:2.2.9
         bundle config path vendor/bundle
         bundle update
