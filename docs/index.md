@@ -26,6 +26,7 @@ ViewComponent is built by:
 
 <img src="https://avatars.githubusercontent.com/asgerb?s=64" alt="asgerb" width="32" />
 <img src="https://avatars.githubusercontent.com/bbugh?s=64" alt="bbugh" width="32" />
+<img src="https://avatars.githubusercontent.com/bigbigdoudou?s=64" alt="bigbigdoudou" width="32" />
 <img src="https://avatars.githubusercontent.com/blakewilliams?s=64" alt="blakewilliams" width="32" />
 <img src="https://avatars.githubusercontent.com/bobmaerten?s=64" alt="bobmaerten" width="32" />
 <img src="https://avatars.githubusercontent.com/bradparker?s=64" alt="bradparker" width="32" />
