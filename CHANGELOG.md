@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix test helper compatibility with Rails 7.0, TestRequest, and TestSession.
+
+    *Leo Correa*
+
 * Add experimental `_output_postamble` lifecyle method.
 
     *Joel Hawksley*
