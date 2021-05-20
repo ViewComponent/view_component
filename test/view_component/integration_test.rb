@@ -10,6 +10,26 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "Foo\n  bar")
   end
 
+  def test_rendering_component_with_helper
+    get "/with_helper"
+    assert_response :success
+
+    # component with arguments
+    assert_select("p", "arg1")
+    assert_select("p", "arg2")
+
+    # component with keywords
+    assert_select("p", "kwd1")
+    assert_select("p", "kwd2")
+
+    # component with arguments, keywords and block
+    assert_select("p", "arg3")
+    assert_select("p", "arg4")
+    assert_select("p", "kwd3")
+    assert_select("p", "kwd4")
+    assert_select("p", "block")
+  end
+
   if Rails.version.to_f >= 6.1
     def test_rendering_component_with_template_annotations_enabled
       get "/"

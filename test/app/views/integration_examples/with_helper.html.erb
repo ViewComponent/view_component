@@ -1,0 +1,7 @@
+<%= helper_with_arguments_component("arg1", "arg2") %>
+
+<%= helper_with_keywords_component(kwd1: "kwd1", kwd2: "kwd2") %>
+
+<%= helper_with_arguments_keywords_and_block_component("arg3", "arg4", kwd1: "kwd3", kwd2: "kwd4") do %>
+  <p>block</p>
+<% end %>

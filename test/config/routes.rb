@@ -2,6 +2,7 @@
 
 Dummy::Application.routes.draw do
   root to: "integration_examples#index"
+  get :with_helper, to: "integration_examples#with_helper"
   get :content_areas, to: "integration_examples#content_areas"
   get :slots, to: "integration_examples#slots"
   get :empty_slot, to: "integration_examples#empty_slot"
