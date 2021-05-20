@@ -51,6 +51,37 @@ def with_preview_controller(new_value)
   app.reloader.reload!
 end
 
+def with_new_cache
+  begin
+    old_cache = ViewComponent::CompileCache.cache
+    ViewComponent::CompileCache.cache = Set.new
+    old_cache_template_loading = ActionView::Base.cache_template_loading
+    ActionView::Base.cache_template_loading = false
+
+    yield
+  ensure
+    ActionView::Base.cache_template_loading = old_cache_template_loading
+    ViewComponent::CompileCache.cache = old_cache
+  end
+end
+
+def without_template_annotations
+  if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
+    old_value = ActionView::Base.annotate_rendered_view_with_filenames
+    ActionView::Base.annotate_rendered_view_with_filenames = false
+    app.reloader.reload!
+
+    with_new_cache do
+      yield
+    end
+
+    ActionView::Base.annotate_rendered_view_with_filenames = old_value
+    app.reloader.reload!
+  else
+    yield
+  end
+end
+
 def modify_file(file, content)
   filename = Rails.root.join(file)
   old_content = File.read(filename)

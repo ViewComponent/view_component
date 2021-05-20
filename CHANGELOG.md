@@ -2,6 +2,22 @@
 
 ## main
 
+* Fix test helper compatibility with Rails 7.0, TestRequest, and TestSession.
+
+    *Leo Correa*
+
+* Add experimental `_output_postamble` lifecyle method.
+
+    *Joel Hawksley*
+
+* Add compatibility notes on FAQ.
+
+    *Matheus Richard*
+
+* Add Bridgetown on Compatibility documentation.
+
+    *Matheus Richard*
+
 ## 2.31.1
 
 * Fix `DEPRECATION WARNING: before_render_check` when compiling `ViewComponent::Base`

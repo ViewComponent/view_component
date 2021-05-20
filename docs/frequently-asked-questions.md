@@ -36,3 +36,7 @@ end
 ```
 
 _Note: Using validations in this manner can lead to runtime exceptions. Use them wisely._
+
+## Can I use ViewComponent with `X library`?
+
+ViewComponent is currently only available for Rails. Read more: [compatibility section](./compatibility).

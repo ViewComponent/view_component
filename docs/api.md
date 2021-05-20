@@ -9,6 +9,10 @@ title: API
 
 ## Instance methods
 
+### #_output_postamble → [String]
+
+EXPERIMENTAL: Optional content to be returned after the rendered template.
+
 ### #before_render → [void]
 
 Called before rendering the component. Override to perform operations that depend on having access to the view context, such as helpers.

@@ -201,6 +201,6 @@ Slot content can also be set using `#with_content`:
 
 ```erb
 <%= render BlogComponent.new do |c| %>
-  <% c.header.with_content("My blog") %>
+  <% c.header(classes: "title").with_content("My blog") %>
 <% end %>
 ```
