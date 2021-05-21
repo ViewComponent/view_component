@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.32.0
+
 * Enable previews by default in test environment.
 
     *Edouard Piron*
@@ -21,6 +23,10 @@
 * Add Bridgetown on Compatibility documentation.
 
     *Matheus Richard*
+
+* Are you interested in building the future of ViewComponent? GitHub is looking to hire a Senior Engineer to work on Primer ViewComponents and ViewComponent. Apply here: [US/Canada](https://github.com/careers) / [Europe](https://boards.greenhouse.io/github/jobs/3132294). Feel free to reach out to joelhawksley@github.com with any questions.
+
+    *Joel Hawksley*
 
 ## 2.31.1
 
