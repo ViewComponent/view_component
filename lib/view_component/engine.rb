@@ -12,7 +12,7 @@ module ViewComponent
       options = app.config.view_component
 
       options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
-      options.show_previews = Rails.env.development? if options.show_previews.nil?
+      options.show_previews = Rails.env.development? || Rails.env.test? if options.show_previews.nil?
       options.preview_route ||= ViewComponent::Base.preview_route
       options.preview_controller ||= ViewComponent::Base.preview_controller
 

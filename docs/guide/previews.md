@@ -150,3 +150,12 @@ Previews can be extended to allow users to add authentication, authorization, be
 # config/application.rb
 config.view_component.preview_controller = "MyPreviewController"
 ```
+
+## Enabling previews
+
+Previews are enabled by default in test and development environments. To enable or disable previews, use the `show_previews` option:
+
+```ruby
+# config/environments/test.rb
+config.view_component.show_previews = false
+```

@@ -2,6 +2,10 @@
 
 ## main
 
+* Enable previews by default in test environment.
+
+    *Edouard Piron*
+
 * Fix test helper compatibility with Rails 7.0, TestRequest, and TestSession.
 
     *Leo Correa*
