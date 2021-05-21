@@ -3,8 +3,9 @@ module ViewComponentHelper
   # Forward arguments, keywords and block
   ViewComponent::Base.subclasses.each do |component|
     method_name = component.name.underscore.tr('/', '_')
-    define_method(method_name) do |*args, **keywords, &block|
-      render(component.new(*args, **keywords), &block)
+    define_method(method_name) do |*args, &block|
+      render(component.new(*args), &block)
     end
+    ruby2_keywords(method_name) if respond_to?(:ruby2_keywords, true)
   end
 end
