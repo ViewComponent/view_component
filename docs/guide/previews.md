@@ -151,7 +151,7 @@ Previews can be extended to allow users to add authentication, authorization, be
 config.view_component.preview_controller = "MyPreviewController"
 ```
 
-## Enabling and disabling previews
+## Enabling previews
 
 Previews are enabled by default in test and development environments. To enable or disable previews, use the `show_previews` option:
 
