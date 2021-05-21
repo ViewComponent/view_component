@@ -116,7 +116,7 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_text "No items provided"
   end
 
-  def test_renderS_slots_without_keywords
+  def test_renders_slots_without_keywords
     render_inline(SlotsV2WithoutKeywordsComponent.new) do |c|
       c.title("Hello")
       c.item("World")
