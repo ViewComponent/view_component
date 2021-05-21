@@ -39,7 +39,12 @@ module ViewComponent
     end
 
     def request
-      @request ||= ActionDispatch::TestRequest.create
+      @request ||=
+        begin
+          request = ActionDispatch::TestRequest.create
+          request.session = ActionController::TestSession.new
+          request
+        end
     end
 
     def with_variant(variant)
