@@ -221,10 +221,18 @@ module ViewComponent
 
       # If class
       if slot_definition[:renderable]
-        slot._component_instance = slot_definition[:renderable].new(*args, **kwargs)
+        slot._component_instance = if kwargs.any?
+                                     slot_definition[:renderable].new(*args, **kwargs)
+                                   else
+                                     slot_definition[:renderable].new(*args)
+                                   end
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
-        slot._component_instance = self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
+        slot._component_instance = if kwargs.any?
+                                     self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
+                                   else
+                                     self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
+                                   end
       # If passed a lambda
       elsif slot_definition[:renderable_function]
         # Use `bind(self)` to ensure lambda is executed in the context of the
