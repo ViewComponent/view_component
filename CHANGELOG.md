@@ -2,7 +2,7 @@
 
 ## main
 
-* Set previews enabled by default in test environment
+* Enable previews by default in test environment.
 
     *Edouard Piron*
 
