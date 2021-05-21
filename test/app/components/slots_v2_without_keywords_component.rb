@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SlotsV2WithoutKeywordsComponent < ViewComponent::Base
   renders_one :title, "MyTitleComponent"
   renders_many :items, "MyItemComponent"
