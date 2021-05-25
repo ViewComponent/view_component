@@ -7,7 +7,7 @@
 
 <body>
   <%= yield %>
-  <%= content_for?(:view_component_preview_source) ? yield(:view_component_preview_source) : yield %>
+  <%= yield(:view_component_preview_source) if content_for?(:view_component_preview_source) %>
 </body>
 
 </html>
