@@ -472,4 +472,11 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_includes error.message, "invalid slot definition"
   end
+
+  def test_slot_v2_inherits_from_basic_object
+    component = BasicObjectSlotV2Component.new
+    render_inline(component) do |component|
+      component.link method: :patch
+    end
+  end
 end

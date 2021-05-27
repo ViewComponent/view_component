@@ -3,13 +3,20 @@
 require "view_component/with_content_helper"
 
 module ViewComponent
-  class SlotV2
-    include ViewComponent::WithContentHelper
+  class SlotV2 < BasicObject
+    include ::ViewComponent::WithContentHelper
 
     attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content
 
     def initialize(parent)
       @parent = parent
+    end
+
+    # An instance of SlotV2 is not nil, even if @_component_instance might be
+    #
+    # Also, ActionView::OutputBuffer will not call #to_s if #nil? is true
+    def nil?
+      false
     end
 
     # Used to render the slot content in the template
@@ -31,7 +38,7 @@ module ViewComponent
       view_context = @parent.send(:view_context)
 
       if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content)
-        raise ArgumentError.new(
+        ::Kernel.raise ::ArgumentError.new(
           "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
           "which means that ViewComponent doesn't know which content to use.\n\n" \
           "To fix this issue, use either `with_content` or a block."
@@ -87,7 +94,11 @@ module ViewComponent
     # end
     #
     def method_missing(symbol, *args, &block)
-      @__vc_component_instance.public_send(symbol, *args, &block)
+      if defined?(@__vc_component_instance)
+        @__vc_component_instance.public_send(symbol, *args, &block)
+      else
+        nil.public_send(symbol, *args, &block)
+      end
     end
     ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
 

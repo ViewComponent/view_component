@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Change SlotV2 to inherit from BasicObject to reduce method name collisions
+
+    *Will Cosgrove*
+
 ## 2.45.0
 
 * Remove internal APIs from API documentation, fix link to license.
