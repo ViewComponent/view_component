@@ -13,25 +13,33 @@ require "active_support/concern"
 #     accepts :author, default: NullUser.new
 #   end
 #
-#   <%= render PostComponent.new(title: "foo", posted_at: Date.yesterday %>
+#   <%= render PostComponent.new(title: "foo", posted_at: Date.yesterday) %>
 module ViewComponent
   module Attributes
     extend ActiveSupport::Concern
 
     included do
-      cattr_accessor :_optional_attributes, default: {}
-      cattr_accessor :_required_attributes, default: Set.new
+      class_attribute :_optional_attributes, default: {}
+      class_attribute :_required_attributes, default: Set.new
     end
 
     class_methods do
       def requires(parameter)
         _required_attributes << parameter
+
+        attr_reader parameter
       end
 
       def accepts(parameter, default: nil)
         _optional_attributes[parameter] = default
 
         attr_accessor parameter
+      end
+
+      def inherited(subclass)
+        subclass._optional_attributes = _optional_attributes.dup
+        subclass._required_attributes = _required_attributes.dup
+        super
       end
     end
 

@@ -31,6 +31,30 @@ class AttributesTest < ViewComponent::TestCase
     assert_selector("h1", text: "foo")
   end
 
+  def test_exposes_attributes
+    component = MyAttributeComponent.new(title: "foo", body: "hello world!")
+
+    assert_equal "foo", component.title
+    assert_equal "hello world!", component.body
+  end
+
+  def test_inherits_attributes
+    new_component_class = Class.new(MyAttributeComponent) do
+    end
+
+    assert new_component_class.public_instance_methods.include?(:title)
+  end
+
+  def test_does_not_pollute_attribute_cache
+    Class.new(ViewComponent::Base) do
+      include ViewComponent::Attributes
+
+      requires :fake_field
+    end
+
+    refute MyAttributeComponent.public_instance_methods.include?(:fake_field)
+  end
+
   def test_all_attributes_provided
     posted_at = Date.yesterday
     render_inline MyAttributeComponent.new(title: "foo", body: "hello world!", posted_at: posted_at)
