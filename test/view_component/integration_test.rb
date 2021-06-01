@@ -311,6 +311,20 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "hello,world!")
   end
 
+  def test_renders_preview_source
+      get "/rails/view_components/preview_component/default"
+
+      assert_select ".view-component-source-example h2", "Source:"
+      assert_select ".view-component-source-example pre.source code"
+  end
+
+  def test_renders_preview_source_with_template_from_layout
+    get "/rails/view_components/preview_source_from_layout_component/default_with_template"
+
+    assert_select ".view-component-source-example h2", "Source:"
+    assert_select ".view-component-source-example pre.source code"
+  end
+
   def test_renders_collections
     get "/products"
 
