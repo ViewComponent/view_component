@@ -240,6 +240,9 @@ module ViewComponent
     # Configure if render monkey patches should be included or not in Rails <6.1.
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
+    # Configure if previews should include example source or not.
+    mattr_accessor :show_previews_source, instance_writer: false, default: false
+
     class << self
       attr_accessor :source_location, :virtual_path
 
