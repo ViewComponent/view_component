@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PreviewTemplateHelper
+module PreviewHelper
   AVAILABLE_PRISM_LANGUAGES = ["ruby", "erb", "haml"]
   FALLBACK_LANGUAGE = "ruby"
 

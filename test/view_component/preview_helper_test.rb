@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 require "test_helper"
-include PreviewTemplateHelper
+include PreviewHelper
 
-class PreviewTemplateHelperTest < ActiveSupport::TestCase
+class PreviewHelperTest < ActiveSupport::TestCase
   def test_returns_the_language_from_the_file_extention
     template = Minitest::Mock.new
     template.expect :identifier, "template.html.erb"
 
-    assert_equal(PreviewTemplateHelper.prism_language_name(template: template), "erb")
+    assert_equal(PreviewHelper.prism_language_name(template: template), "erb")
   end
 
   def test_returns_fallback_language_if_file_extention_unknown
     template = Minitest::Mock.new
     template.expect :identifier, "template.html.slim"
 
-    assert_equal(PreviewTemplateHelper.prism_language_name(template: template), "ruby")
+    assert_equal(PreviewHelper.prism_language_name(template: template), "ruby")
   end
 end
