@@ -2,6 +2,10 @@
 
 ## main
 
+* Don't raise an error when rendering empty components.
+
+    *Alex Robbin*
+
 ## 2.32.0
 
 * Enable previews by default in test environment.

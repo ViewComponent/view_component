@@ -86,6 +86,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
+  def test_render_empty_component
+    assert_nothing_raised do
+      render_inline(EmptyComponent.new)
+    end
+  end
+
   def test_renders_slim_template
     render_inline(SlimComponent.new(message: "bar")) { "foo" }
 
