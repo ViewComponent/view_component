@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.33.0
+
+* Add view helper `preview_source` for rendering a source code preview below previews.
+* Add config option `config.view_component.show_previews_source` for enabling the soure preview. 
+
+    *Johannes Engl*
+
 ## main
 
 * Don't raise an error when rendering empty components.
