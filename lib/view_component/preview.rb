@@ -87,7 +87,7 @@ module ViewComponent # :nodoc:
       end
 
       # Returns the method body for the example from the preview file.
-      def preview_example_source(example)
+      def preview_source(example)
         source = self.instance_method(example.to_sym).source.split("\n")
         source[1...(source.size - 1)].join("\n")
       end

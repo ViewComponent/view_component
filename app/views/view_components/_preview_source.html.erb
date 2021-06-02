@@ -4,7 +4,7 @@
   <pre class="source">
     <% if @render_args[:component] %>
       <code class="language-ruby">
-        <%=h @preview.preview_example_source(@example_name) %>
+        <%=h @preview.preview_source(@example_name) %>
       </code>
     <% else %>
       <% template = @view_renderer.lookup_context.find_template(@render_args[:template]) %>
