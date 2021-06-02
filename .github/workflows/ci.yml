@@ -111,6 +111,7 @@ jobs:
         gem install bundler:2.2.9
         bundle config path vendor/bundle
         bundle update
+        bundle exec rake docs:preview
         bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
