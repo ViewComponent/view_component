@@ -425,6 +425,14 @@ module ViewComponent
         initialize_parameter_names.include?(collection_counter_parameter)
       end
 
+      def collection_iteration_parameter
+        "#{collection_parameter}_iteration".to_sym
+      end
+
+      def iteration_argument_present?
+        initialize_parameter_names.include?(collection_iteration_parameter)
+      end
+
       private
 
       def initialize_parameter_names

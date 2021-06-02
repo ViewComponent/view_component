@@ -563,8 +563,8 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(ProductComponent.with_collection(products, notice: "On sale"))
 
     assert_selector("h1", text: "Product", count: 2)
-    assert_selector("h2", text: "Radio clock")
-    assert_selector("h2", text: "Mints")
+    assert_selector("h2.first", text: "Radio clock")
+    assert_selector("h2:not(.first)", text: "Mints")
     assert_selector("p", text: "On sale", count: 2)
     assert_selector("p", text: "Radio clock counter: 1")
     assert_selector("p", text: "Mints counter: 2")
@@ -589,6 +589,20 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
     assert_selector("figure[data-index=1]", { count: 1 })
+    assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
+  end
+
+  def test_render_collection_custom_collection_parameter_name_iteration
+    photos = [
+      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+    ]
+    render_inline(CollectionIterationComponent.with_collection(photos))
+
+    assert_selector("figure.first[data-index=0]", { count: 1 })
+    assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
+
+    assert_selector("figure[data-index=1]:not(.first)", { count: 1 })
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 

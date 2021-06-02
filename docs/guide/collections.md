@@ -88,3 +88,24 @@ end
   <%= @counter %> <%= @product.name %>
 </li>
 ```
+
+## Collection iteration
+
+ViewComponent defines a counter variable matching the parameter name above, followed by `_iteration`. To access the variable, add it to `initialize` as an argument:
+
+```ruby
+# app/components/product_component.rb
+class ProductComponent < ViewComponent::Base
+  def initialize(product:, product_iteration:)
+    @product = product
+    @iteration = product_iteration
+  end
+end
+```
+
+```erb
+<%# app/components/product_component.html.erb %>
+<li class="<%= "featured" if @iteration.first? %>">
+  <%= @product.name %>
+</li>
+```
