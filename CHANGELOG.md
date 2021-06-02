@@ -2,6 +2,8 @@
 
 ## main
 
+## 2.33.0
+
 * Add support for `_iteration` parameter when rendering in a collection
 
     *Will Cosgrove*
