@@ -91,7 +91,7 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@variant) + _output_postamble
+        render_template_for(@variant).to_s + _output_postamble
       else
         ""
       end
