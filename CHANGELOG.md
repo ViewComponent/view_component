@@ -2,6 +2,10 @@
 
 ## main
 
+* Add support for `_iteration` parameter when rendering in a collection
+
+    *Will Cosgrove*
+
 * Don't raise an error when rendering empty components.
 
     *Alex Robbin*
