@@ -14,6 +14,6 @@ module PreviewHelper
   def preview_source
     return if @render_args.nil?
 
-    render partial: "preview_source"
+    render "preview_source" # rubocop:disable GitHub/RailsViewRenderPathsExist
   end
 end
