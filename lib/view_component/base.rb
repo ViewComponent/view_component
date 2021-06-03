@@ -201,7 +201,10 @@ module ViewComponent
       nil
     end
 
-    # @private TODO: add documentation
+    # Use the provided variant instead of the one determined by the current request.
+    #
+    # @param variant [Symbol] The variant to be used by the component.
+    # @return [self]
     def with_variant(variant)
       @variant = variant
 
