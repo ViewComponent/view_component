@@ -8,7 +8,7 @@ Rails.application.load_generators
 
 class ErbGeneratorTest < Rails::Generators::TestCase
   tests Erb::Generators::ComponentGenerator
-  destination File.expand_path("../tmp", __dir__)
+  destination File.expand_path("../../tmp", __dir__)
   setup :prepare_destination
 
   arguments %w[user]
