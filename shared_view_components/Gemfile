@@ -10,4 +10,6 @@ gem "activemodel", rails_version
 gem "activesupport", rails_version
 gem "railties", rails_version
 
+gem "pry"
+
 gem "view_component", path: ENV["VIEW_COMPONENT_PATH"] if ENV["VIEW_COMPONENT_PATH"]

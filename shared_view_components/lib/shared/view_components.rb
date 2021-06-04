@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 require "view_component"
-require "shared/view_components/engine"
-require "shared/view_components/version"
+require_relative "view_components/engine"
+require_relative "view_components/version"

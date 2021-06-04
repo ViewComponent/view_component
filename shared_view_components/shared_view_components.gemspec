@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "shared/view_components/version"
@@ -30,13 +32,14 @@ Gem::Specification.new do |spec|
   end
   spec.require_paths = ["lib"]
 
+  spec.add_dependency             "actionpack", ">= 5.0.0"
   spec.add_dependency             "actionview", ">= 5.0.0"
   spec.add_dependency             "activesupport", ">= 5.0.0"
   spec.add_dependency             "view_component", [">= 2.0.0", "< 3.0"]
 
   spec.add_development_dependency "bundler", "~> 1.17"
   spec.add_development_dependency "capybara", "~> 3"
-  spec.add_development_dependency "rails", ">= 6"
+  spec.add_development_dependency "rails", ">= 5.0.0"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.0"
 end
