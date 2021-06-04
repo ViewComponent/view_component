@@ -2,6 +2,10 @@
 
 ## main
 
+* Check for `#request` on the controller before attempting to call it
+
+    *dark-panda*
+
 ## 2.33.0
 
 * Add support for `_iteration` parameter when rendering in a collection
