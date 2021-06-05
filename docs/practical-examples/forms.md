@@ -19,7 +19,7 @@ It's important to understand the building blocks of forms in Ruby on Rails befor
 
 Please refer to the official documentation and Rails Guides to get up to speed.
 
-- `ActionView` form helpers [visit](https://guides.rubyonrails.org/form_helpers.html)
+- `ActionView` form helpers [visit](https://guides.rubyonrails.org/form_helpers.html){:target="_blank"}
 - `ActionView::Helpers::FormBuilder` [visit](https://edgeapi.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html){:target="_blank"}
 
 After reading these, you should have a good understanding of:
@@ -53,23 +53,25 @@ end
 
 ## Creating your own input elements
 
-Let's imagine you want to abstract the `label` and `text_area` into a single reusable class or method. Rails has done forms for quite a while now and they have a very stable API. Because of this, it's better to leverage the framework's conventions for extending the dsl available to create forms.
+As your application grows, you might want to create more complex input types comprised of labels, inputs, wrapping
+divs, error messages, hints etc. To do this, Rails allows you to overwrite or create new form helpers to do this.
 
-### ⛔️ Bad: Passing the `FormBuilder` instance to a component
+We'll use the simple example presented above to demonstrate how to create an abstraction for a field with input and
+label.
 
-```erb
-<!-- app/components/comment_form_component.html.erb -->
-<%= form_with(model: comment) do |form| %>
-  <%= render TextAreaWithLabelComponent.new(form: form) %>
-<% end %>
-```
+### Using `FormBuilder` methods
 
+The first level of abstraction you can use is to create a new `FormBuilder` for your application and create your new
+helper method called `text_area_with_label`. Note that this form builder inherits from
+`ActionView::Helpers::FormBuilder` which provides all default form builder methods for you.
 
-### ✅ Good: Use `FormBuilder` methods
-
-💡 To understand how `FormBuilder` works, it's a good idea to see how the [default class](https://github.com/rails/rails/blob/main/actionview/lib/action_view/helpers/form_helper.rb){:target="_blank"} in Rails defines helper
+💡 To understand how `FormBuilder` works, it's a good idea to see how the [default class](https://github.com/rails/rails/blob/main/actionview/lib/action_view/helpers/form_helper.rb){:target="_blank"} in Rails defines helpers
 
 ```ruby
+# app/form_builders/your_custom_form_builder.rb
+# The name of the folder doesn't really matter as long as it's inside
+# your app folder for rails to autoload it.
+
 class YourCustomFormBuilder < ActionView::Helpers::FormBuilder
   def text_area_with_label(attribute, **options)
     @template.capture do
@@ -79,7 +81,8 @@ class YourCustomFormBuilder < ActionView::Helpers::FormBuilder
   end
 end
 ```
-👀 Note that you need to define the `builder` that `form_with` should use
+
+To use `YourCustomFormBuilder` you can either define it in your controllers or directly as an argument to `form_with`. In this example, we'll pass it as an argument to `form_with`
 
 ```erb
 <!-- app/components/comment_form_component.html.erb -->
@@ -88,9 +91,31 @@ end
 <% end %>
 ```
 
-### ✅ Best: Abstract the markup into a `ViewComponent`
+### Using View Components
 
-In order to clean up your `FormBuilder` and be able to test the markup in isolation, you can extract the code inside the form builder method into a `ViewComponent`. This is very similar to what [Rails' internals](https://github.com/rails/rails/blob/d3f4db9e95a475822c02b29241a5d07cbcff6fd5/actionview/lib/action_view/helpers/form_helper.rb#L1151){:target="_blank"} do to create it's default form helpers.
+For simple markup the example above might be just fine. However, writing a lot of markup using `capture`,
+`content_tag`, etc. and concatenating using `concat` or `+` might not be too easy. For this purpose you can abstract
+the markup to a ViewComponent.
+
+#### ⛔️ Discouraged: Passing the FormBuilder instance to a ViewComponent
+
+```erb
+<!-- app/components/comment_form_component.html.erb -->
+<%= form_with(model: comment) do |form| %>
+  <%= render TextAreaWithLabelComponent.new(form: form) %>
+<% end %>
+```
+
+Even though this is technically possible*, it's not very idiomatic within the context of Rails forms to do so. Rails
+already provides a stable api to interact with forms.
+
+\* _There is a [known issue](#gotchas-and-known-issues) in `ViewComponent` when doing this but passing a
+`FormBuilder` instance is a common enough pattern to grant showing it here._
+
+
+#### ✅ Encouraged: Abstract the markup into a ViewComponent
+
+In order to clean up your `FormBuilder` and be able to test the markup in isolation, you can extract the code inside the form builder method into a `ViewComponent`. This is very similar to what [Rails' internals](https://github.com/rails/rails/blob/d3f4db9e95a475822c02b29241a5d07cbcff6fd5/actionview/lib/action_view/helpers/form_helper.rb#L1151){:target="_blank"} do to create their default form helpers.
 
 Let's extract the code from the previous example into a `ViewComponent`
 
@@ -117,8 +142,8 @@ end
 ```erb
 <!-- app/components/text_area_with_label_component.html.erb -->
 <div class='maybe-some-wrapper-class'>
-  label_tag attribute, class: 'your-label-css-classes'
-  text_area_tag attribute, class: 'your-text-area-classes'
+  <%= label_tag attribute, class: 'your-label-css-classes' %>
+  <%= text_area_tag attribute, class: 'your-text-area-classes' %>
 </div>
 ```
 
@@ -131,16 +156,11 @@ end
 
 #### Writing input elements in vanilla HTML
 
-Nothing is really stopping you from using regular `<input>` tags instead of Rails' helper methods. However, is important for your own implementations to follow the conventions set by other form helpers. If you plan to do so, please read the [Understanding Parameter Naming Conventions](https://guides.rubyonrails.org/form_helpers.html#understanding-parameter-naming-conventions){:target="_blank"} section of the `form_helpers` Rails guide.
+Nothing is really stopping you from using regular `<input>` tags instead of Rails' helper methods. However, it is important for your own implementations to follow the conventions set by other form helpers. If you plan to do so, please read the [Understanding Parameter Naming Conventions](https://guides.rubyonrails.org/form_helpers.html#understanding-parameter-naming-conventions){:target="_blank"} section of the `form_helpers` Rails guide.
 
 ## Gotchas and Known Issues
-
-### Using multiple `FormBuilder`s in your application
-In a typical Rails application, all views renderred by controllers that intherit from your `ApplicationController` will use the default `FormBuilder` provided by the framework. However you are able to override the which `FormBuilder` a section of your application uses. We previously saw that you can do so using the `builder` argument in `form_with` but you can also configure it at a [`controller` level](https://edgeapi.rubyonrails.org/classes/ActionController/FormBuilder.html){:target="_blank"}.
-
-This is currently *not supported* by `ViewComponent`. To overcome this, apply the correct form builder each time to the `form_with` method.
 ### Passing the form builder object to a `ViewComponent`
-In the previous section we discouraged passing an instance of a `FormBuilder` to a `ViewComponent` to create new input types. However, there are legitimate cases to do this. For example, is common in some Rails applications to extract the fields of a form into their own patial:
+In the previous section we discouraged passing an instance of a `FormBuilder` to a `ViewComponent` to create new input types. However, there are legitimate cases to do this. For example, it is common in some Rails applications to extract the fields of a form into their own partial:
 ```console
 /app
   /views
@@ -153,8 +173,8 @@ In the previous section we discouraged passing an instance of a `FormBuilder` to
 
 ```erb
 # form.html.erb
-<%= form_with(model: comment) do |form| =>
-  <%= render 'fields', form: form%>
+<%= form_with(model: comment) do |form| %>
+  <%= render 'fields', form: form %>
 <% end %>
 ```
 
@@ -165,4 +185,3 @@ In the previous section we discouraged passing an instance of a `FormBuilder` to
 ```
 
 This is currently *not supported* by `ViewComponent`. Please refer to the following [issue](https://github.com/github/view_component/issues/241){:target="_blank"} to track support for this.
-
