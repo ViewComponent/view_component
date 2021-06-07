@@ -78,6 +78,7 @@ ViewComponent is built by:
 <img src="https://avatars.githubusercontent.com/tenderlove?s=64" alt="tenderlove" width="32" />
 <img src="https://avatars.githubusercontent.com/tonkpils?s=64" alt="tonkpils" width="32" />
 <img src="https://avatars.githubusercontent.com/traels?s=64" alt="traels" width="32" />
+<img src="https://avatars.githubusercontent.com/vikks?s=64" alt="Vikas Raveendran" width="32" />
 <img src="https://avatars.githubusercontent.com/vinistock?s=64" alt="vinistock" width="32" />
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />

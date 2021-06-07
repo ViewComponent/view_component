@@ -13,6 +13,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_includes render_inline(MyComponent.new).css("div").to_html, "hello,world!"
   end
 
+  def test_custom_template
+    render_inline(CustomTemplate.new)
+
+    assert_includes rendered_component, "Custom HTML Template"
+  end
+
   def test_render_inline_sets_rendered_component
     render_inline(MyComponent.new)
 

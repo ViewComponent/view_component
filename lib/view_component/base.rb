@@ -243,6 +243,13 @@ module ViewComponent
     class << self
       attr_accessor :source_location, :virtual_path
 
+      # Explicitly set the template name when components are defined with
+      # sidecar flag
+      # @return [String]
+      def template(str)
+        @template ||= str
+      end
+
       # EXPERIMENTAL: This API is experimental and may be removed at any time.
       # Find sidecar files for the given extensions.
       #
@@ -259,6 +266,7 @@ module ViewComponent
         directory = File.dirname(source_location)
         filename = File.basename(source_location, ".rb")
         component_name = name.demodulize.underscore
+        template_name = @template || component_name
 
         # Add support for nested components defined in the same file.
         #
@@ -271,13 +279,13 @@ module ViewComponent
         #
         # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
         nested_component_files = if name.include?("::") && component_name != filename
-          Dir["#{directory}/#{filename}/#{component_name}.*{#{extensions}}"]
+          Dir["#{directory}/#{filename}/#{template_name}.*{#{extensions}}"]
         else
           []
         end
 
         # view files in the same directory as the component
-        sidecar_files = Dir["#{directory}/#{component_name}.*{#{extensions}}"]
+        sidecar_files = Dir["#{directory}/#{template_name}.*{#{extensions}}"]
 
         sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
