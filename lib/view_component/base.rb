@@ -215,7 +215,7 @@ module ViewComponent
     #
     # @return [ActionDispatch::Request]
     def request
-      @request ||= controller.request
+      @request ||= controller.request if controller.respond_to?(:request)
     end
 
     private
