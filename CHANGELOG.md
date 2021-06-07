@@ -2,11 +2,11 @@
 
 ## main
 
-## 2.33.0
-
 * Add support for custom `template` option
 
     *Vikas Raveendran*
+
+## 2.33.0
 
 * Add support for `_iteration` parameter when rendering in a collection
 
