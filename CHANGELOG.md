@@ -2,6 +2,10 @@
 
 ## main
 
+* Fix bug where ViewComponents did not work in ActionMailers.
+
+    *dark-panda*
+
 ## 2.33.0
 
 * Add support for `_iteration` parameter when rendering in a collection
