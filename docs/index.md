@@ -72,6 +72,7 @@ ViewComponent is built by:
 <img src="https://avatars.githubusercontent.com/simonrand?s=64" alt="simonrand" width="32" />
 <img src="https://avatars.githubusercontent.com/smashwilson?s=64" alt="smashwilson" width="32" />
 <img src="https://avatars.githubusercontent.com/spdawson?s=64" alt="spdawson" width="32" />
+<img src="https://avatars.githubusercontent.com/Spone?s=64" alt="Spone" width="32" />
 <img src="https://avatars.githubusercontent.com/swanson?s=64" alt="swanson" width="32" />
 <img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=64" alt="tbroad-ramsey" width="32" />
 <img src="https://avatars.githubusercontent.com/tclem?s=64" alt="tclem" width="32" />

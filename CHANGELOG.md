@@ -2,6 +2,10 @@
 
 ## main
 
+* Add [Generators](https://viewcomponent.org/guide/generators.html) page to documentation
+
+    *Hans Lemuet*
+
 * Fix bug where ViewComponents did not work in ActionMailers.
 
     *dark-panda*
