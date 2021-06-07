@@ -21,6 +21,6 @@ With the monkey patch disabled, use `render_component` (or  `render_component_to
 <%= render_component Component.new(message: "bar") %>
 ```
 
-## Bridgetown
+## Bridgetown (Static Site Generator)
 
-[Bridgetown](https://www.bridgetownrb.com/) has **experimental** support for ViewComponent, via the [bridgetown-view-component gem](https://github.com/bridgetownrb/bridgetown-view-component). More information available [here](https://beta.bridgetownrb.com/docs/components/ruby#need-compatibility-with-rails-try-viewcomponent-experimental).
+[Bridgetown](https://www.bridgetownrb.com/) supports ViewComponent via an experimental shim provided by the [bridgetown-view-component gem](https://github.com/bridgetownrb/bridgetown-view-component). More information available [here](https://www.bridgetownrb.com/docs/components/ruby#need-compatibility-with-rails-try-viewcomponent-experimental).
