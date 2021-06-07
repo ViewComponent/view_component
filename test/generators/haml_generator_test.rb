@@ -8,7 +8,7 @@ Rails.application.load_generators
 
 class HamlGeneratorTest < Rails::Generators::TestCase
   tests Haml::Generators::ComponentGenerator
-  destination File.expand_path("../../tmp", __dir__)
+  destination Dir.mktmpdir
   setup :prepare_destination
 
   arguments %w[user]
