@@ -30,7 +30,7 @@ After reading these, you should have a good understanding of:
 
 ## Using form helpers inside a `ViewComponent`
 
-If your component needs to render a form, you can use the `form_with` helpers just as you would in a Rails template or patial
+If your component needs to render a form, you can use the `form_with` helpers just as you would in a Rails template or partial
 
 ```ruby
 # app/components/comment_form_component.rb
@@ -54,7 +54,7 @@ end
 ## Creating your own input elements
 
 As your application grows, you might want to create more complex input types comprised of labels, inputs, wrapping
-divs, error messages, hints etc. To do this, Rails allows you to overwrite or create new form helpers to do this.
+divs, error messages, hints etc. To do this, Rails allows you to overwrite or create new form helpers.
 
 We'll use the simple example presented above to demonstrate how to create an abstraction for a field with input and
 label.
