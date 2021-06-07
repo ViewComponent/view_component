@@ -2,7 +2,7 @@
 
 ## main
 
-* Check for `#request` on the controller before attempting to call it
+* Fix bug where ViewComponents did not work in ActionMailers.
 
     *dark-panda*
 
