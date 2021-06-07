@@ -15,6 +15,7 @@ parent: Practical Examples
 4. [Gotchas and known issues](#gotchas-and-known-issues)
 
 ## Before you start
+
 It's important to understand the building blocks of forms in Ruby on Rails before attempting to use `ViewComponent` to enhance them.
 
 Please refer to the official documentation and Rails Guides to get up to speed.
@@ -23,6 +24,7 @@ Please refer to the official documentation and Rails Guides to get up to speed.
 - `ActionView::Helpers::FormBuilder` [visit](https://edgeapi.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html){:target="_blank"}
 
 After reading these, you should have a good understanding of:
+
 - The `form_with` helper used to create an HTML `<form>`
 - `FormBuilder` and the instance yielded to the `form_with` block
 - The different helper methods you can call on the `FormBuilder` instance to create input fields (e.g. `form.text_field`)
@@ -41,7 +43,6 @@ class CommentFormComponent < ApplicationComponent
   attr_reader :comment
 end
 ```
-
 
 ```erb
 <!-- app/components/comment_form_component.html.erb -->
@@ -112,7 +113,6 @@ already provides a stable api to interact with forms.
 \* _There is a [known issue](#gotchas-and-known-issues) in `ViewComponent` when doing this but passing a
 `FormBuilder` instance is a common enough pattern to grant showing it here._
 
-
 #### ✅ Encouraged: Abstract the markup into a ViewComponent
 
 In order to clean up your `FormBuilder` and be able to test the markup in isolation, you can extract the code inside the form builder method into a `ViewComponent`. This is very similar to what [Rails' internals](https://github.com/rails/rails/blob/d3f4db9e95a475822c02b29241a5d07cbcff6fd5/actionview/lib/action_view/helpers/form_helper.rb#L1151){:target="_blank"} do to create their default form helpers.
@@ -159,8 +159,11 @@ end
 Nothing is really stopping you from using regular `<input>` tags instead of Rails' helper methods. However, it is important for your own implementations to follow the conventions set by other form helpers. If you plan to do so, please read the [Understanding Parameter Naming Conventions](https://guides.rubyonrails.org/form_helpers.html#understanding-parameter-naming-conventions){:target="_blank"} section of the `form_helpers` Rails guide.
 
 ## Gotchas and Known Issues
+
 ### Passing the form builder object to a `ViewComponent`
+
 In the previous section we discouraged passing an instance of a `FormBuilder` to a `ViewComponent` to create new input types. However, there are legitimate cases to do this. For example, it is common in some Rails applications to extract the fields of a form into their own partial:
+
 ```console
 /app
   /views
