@@ -2,6 +2,10 @@
 
 ## main
 
+* Add the ability to enable ActiveSupport notifications (`!render.view_component` event) with `config.view_component.instrumentation_enabled`.
+
+  *Svyatoslav Kryukov*
+
 * Add [Generators](https://viewcomponent.org/guide/generators.html) page to documentation.
 
     *Hans Lemuet*
