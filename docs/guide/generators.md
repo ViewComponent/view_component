@@ -90,9 +90,3 @@ bin/rails generate component Example title --inline
 ### Skip collision check
 
 The generator prevents naming collisions with existing components. To skip this check and force the generator to run, use the `--skip-collision-check` or `--force` option.
-
-## Customizing the generator
-
-The best way to tailor the component generator to your project needs, is to create your own.
-
-See [view_component-contrib](https://github.com/palkan/view_component-contrib#installation-and-generating-generators) for a possible approach.
