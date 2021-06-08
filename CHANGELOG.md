@@ -6,6 +6,24 @@
 
   *Svyatoslav Kryukov*
 
+* Add [Generators](https://viewcomponent.org/guide/generators.html) page to documentation.
+
+    *Hans Lemuet*
+
+* Fix bug where ViewComponents did not work in ActionMailers.
+
+    *dark-panda*
+
+## 2.33.0
+
+* Add support for `_iteration` parameter when rendering in a collection
+
+    *Will Cosgrove*
+
+* Don't raise an error when rendering empty components.
+
+    *Alex Robbin*
+
 ## 2.32.0
 
 * Enable previews by default in test environment.

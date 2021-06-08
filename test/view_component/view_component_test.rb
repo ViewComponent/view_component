@@ -86,6 +86,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
+  def test_render_empty_component
+    assert_nothing_raised do
+      render_inline(EmptyComponent.new)
+    end
+  end
+
   def test_renders_slim_template
     render_inline(SlimComponent.new(message: "bar")) { "foo" }
 
@@ -155,6 +161,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='hidden'][name='authenticity_token']", visible: false)
 
     ActionController::Base.allow_forgery_protection = old_value
+  end
+
+  def test_renders_component_with_variant_method
+    render_inline(VariantsComponent.new.with_variant(:phone))
+
+    assert_text("Phone")
   end
 
   def test_renders_component_with_variant
@@ -557,8 +569,8 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(ProductComponent.with_collection(products, notice: "On sale"))
 
     assert_selector("h1", text: "Product", count: 2)
-    assert_selector("h2", text: "Radio clock")
-    assert_selector("h2", text: "Mints")
+    assert_selector("h2.first", text: "Radio clock")
+    assert_selector("h2:not(.first)", text: "Mints")
     assert_selector("p", text: "On sale", count: 2)
     assert_selector("p", text: "Radio clock counter: 1")
     assert_selector("p", text: "Mints counter: 2")
@@ -583,6 +595,20 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
     assert_selector("figure[data-index=1]", { count: 1 })
+    assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
+  end
+
+  def test_render_collection_custom_collection_parameter_name_iteration
+    photos = [
+      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+    ]
+    render_inline(CollectionIterationComponent.with_collection(photos))
+
+    assert_selector("figure.first[data-index=0]", { count: 1 })
+    assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
+
+    assert_selector("figure[data-index=1]:not(.first)", { count: 1 })
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 

@@ -91,7 +91,7 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@variant) + _output_postamble
+        render_template_for(@variant).to_s + _output_postamble
       else
         ""
       end
@@ -136,6 +136,7 @@ module ViewComponent
     # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
     # of the component. This is due to the partials compiled template method existing in the parent `view_context`,
     #  and not the component's `view_context`.
+    #
     # @private
     def render(options = {}, args = {}, &block)
       if options.is_a? ViewComponent::Base
@@ -162,6 +163,7 @@ module ViewComponent
     end
 
     # Exposes .virtual_path as an instance method
+    #
     # @private
     def virtual_path
       self.class.virtual_path
@@ -174,6 +176,7 @@ module ViewComponent
     end
 
     # For caching, such as #cache_if
+    #
     # @private
     def format
       # Ruby 2.6 throws a warning without checking `defined?`, 2.7 does not
@@ -183,6 +186,7 @@ module ViewComponent
     end
 
     # Assign the provided content to the content area accessor
+    #
     # @private
     def with(area, content = nil, &block)
       unless content_areas.include?(area)
@@ -197,7 +201,10 @@ module ViewComponent
       nil
     end
 
-    # @private TODO: add documentation
+    # Use the provided variant instead of the one determined by the current request.
+    #
+    # @param variant [Symbol] The variant to be used by the component.
+    # @return [self]
     def with_variant(variant)
       @variant = variant
 
@@ -208,7 +215,7 @@ module ViewComponent
     #
     # @return [ActionDispatch::Request]
     def request
-      @request ||= controller.request
+      @request ||= controller.request if controller.respond_to?(:request)
     end
 
     private
@@ -423,6 +430,14 @@ module ViewComponent
 
       def counter_argument_present?
         initialize_parameter_names.include?(collection_counter_parameter)
+      end
+
+      def collection_iteration_parameter
+        "#{collection_parameter}_iteration".to_sym
+      end
+
+      def iteration_argument_present?
+        initialize_parameter_names.include?(collection_iteration_parameter)
       end
 
       private
