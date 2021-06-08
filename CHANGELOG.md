@@ -5,6 +5,18 @@
 * Add support for custom `template` option
 
     *Vikas Raveendran*
+    
+* Add the ability to enable ActiveSupport notifications (`!render.view_component` event) with `config.view_component.instrumentation_enabled`.
+
+  *Svyatoslav Kryukov*
+
+* Add [Generators](https://viewcomponent.org/guide/generators.html) page to documentation.
+
+    *Hans Lemuet*
+
+* Fix bug where ViewComponents did not work in ActionMailers.
+
+    *dark-panda*
 
 ## 2.33.0
 

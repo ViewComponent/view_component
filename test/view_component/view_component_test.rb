@@ -169,6 +169,12 @@ class ViewComponentTest < ViewComponent::TestCase
     ActionController::Base.allow_forgery_protection = old_value
   end
 
+  def test_renders_component_with_variant_method
+    render_inline(VariantsComponent.new.with_variant(:phone))
+
+    assert_text("Phone")
+  end
+
   def test_renders_component_with_variant
     with_variant :phone do
       render_inline(VariantsComponent.new)

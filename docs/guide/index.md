@@ -29,19 +29,7 @@ bin/rails generate component Example title
       create  app/components/example_component.html.erb
 ```
 
-ViewComponent includes template generators for the `erb`, `haml`, and `slim` template engines and will default to the template engine specified in `config.generators.template_engine`.
-
-The template engine can also be passed as an option to the generator:
-
-```console
-bin/rails generate component Example title --template-engine slim
-```
-
-To generate a [preview](/guide/previews.html), pass the `--preview` option:
-
-```console
-bin/rails generate component Example title --preview
-```
+Available options to customize the generator are documented on the [Generators](/guide/generators.html) page.
 
 ## Implementation
 

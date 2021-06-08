@@ -35,6 +35,10 @@ The current controller. Use sparingly as doing so introduces coupling that inhib
 
 A proxy through which to access helpers. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
 
+### #with_variant(variant) → [self]
+
+Use the provided variant instead of the one determined by the current request.
+
 ### #request → [ActionDispatch::Request]
 
 The current request. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
