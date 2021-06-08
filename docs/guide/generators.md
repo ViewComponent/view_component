@@ -8,7 +8,7 @@ parent: Building ViewComponents
 
 The generator accepts a component name and a list of arguments.
 
-This creates an `ExampleComponent` with `title` and `content` attributes:
+To create an `ExampleComponent` with `title` and `content` attributes:
 
 ```console
 bin/rails generate component Example title content
@@ -22,9 +22,7 @@ bin/rails generate component Example title content
 
 ## Options
 
-The component generator accepts several options to customize its behavior.
-
-### Override the default template engine
+### Override template engine
 
 ViewComponent includes template generators for the `erb`, `haml`, and `slim` template engines and will default to the template engine specified in `config.generators.template_engine`.
 
@@ -38,9 +36,9 @@ bin/rails generate component Example title --template-engine slim
       create    app/components/example_component.html.slim
 ```
 
-### Override the default test framework
+### Override test framework
 
-By default, the `config.generators.test_framework` is used.
+By default, `config.generators.test_framework` is used.
 
 ```console
 bin/rails generate component Example title --test-framework rspec
@@ -66,7 +64,7 @@ bin/rails generate component Example title --preview
       create    app/components/example_component.html.erb
 ```
 
-### Place the view and assets in a [sidecar directory](/guide/sidecar_assets.html)
+### Place the view in a [sidecar directory](/guide/sidecar_assets.html)
 
 ```console
 bin/rails generate component Example title --sidecar

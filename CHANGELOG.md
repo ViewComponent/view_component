@@ -2,7 +2,7 @@
 
 ## main
 
-* Add [Generators](https://viewcomponent.org/guide/generators.html) page to documentation
+* Add [Generators](https://viewcomponent.org/guide/generators.html) page to documentation.
 
     *Hans Lemuet*
 
