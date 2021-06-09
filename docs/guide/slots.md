@@ -105,7 +105,7 @@ end
 
 ## Lambda slots
 
-It's also possible to define a slot as a lambda that returns content to be rendered (either a string or a ViewComponent instance). Lambda slots are useful for working with helpers like `content_tag` or as wrappers for another component with specific default values:
+It's also possible to define a slot as a lambda that returns content to be rendered (either a string or a ViewComponent instance). Lambda slots are useful for working with helpers like `content_tag` or as wrappers for another ViewComponent with specific default values:
 
 ```ruby
 class BlogComponent < ViewComponent::Base
@@ -116,14 +116,14 @@ class BlogComponent < ViewComponent::Base
     end
   end
 
-  # Returns a component that will be rendered in that slot with a default argument.
+  # Returns a ViewComponent that will be rendered in that slot with a default argument.
   renders_many :posts, -> (title:, classes:) do
     PostComponent.new(title: title, classes: "my-default-class " + classes)
   end
 end
 ```
 
-Lambda slots are able to access state from the parent component:
+Lambda slots are able to access state from the parent ViewComponent:
 
 ```ruby
 class TableComponent < ViewComponent::Base
