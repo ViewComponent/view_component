@@ -51,7 +51,7 @@ To render a `renders_many` slot, iterate over the name of the slot:
 
 ## Component slots
 
-It's also possible to have a slot be a ViewComponent itself, by passing in a second argument to `renders_one` and `renders_many`:
+It's also possible to have a slot be a ViewComponent itself by passing in a second argument to `renders_one` and `renders_many`:
 
 ```ruby
 # blog_component.rb
