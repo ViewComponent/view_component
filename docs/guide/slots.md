@@ -6,28 +6,54 @@ parent: Building ViewComponents
 
 # Slots
 
-In addition to the `content` accessor, ViewComponents accept content through Slots, enabling multiple blocks of content to be passed to a single ViewComponent.
+In addition to the `content` accessor, ViewComponents accept content through slots, enabling multiple blocks of content to be passed to a single ViewComponent.
 
 Slots are defined with `renders_one` and `renders_many`:
 
 - `renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
-- `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :blog_posts`
+- `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :items`
 
-_To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
+For example:
 
-## Defining slots
+```ruby
+# blog_component.rb
+class BlogComponent < ViewComponent::Base
+  renders_one :header
+  renders_many :posts
+end
+```
 
-_In versions `< 2.28.0`, `include ViewComponent::SlotableV2` to use slots._
+To render a `renders_one` slot, call the name of the slot.
 
-Slots come in three forms:
+To render a `renders_many` slot, iterate over the name of the slot:
 
-- [Delegate slots](#delegate-slots) render other components.
-- [Lambda slots](#lambda-slots) render strings or initialized components.
-- [Pass through slots](#pass-through-slots) pass content directly to another component.
+```erb
+<%# blog_component.html.erb %>
+<h1><%= header %></h1>
 
-## Delegate slots
+<% posts.each do |post| %>
+  <%= post %>
+<% end %>
+```
 
-Delegate slots delegate to another component:
+```erb
+<%# index.html.erb %>
+<div>
+  <%= render BlogComponent.new do |c| %>
+    <% c.header(classes: '') do %>
+      <%= link_to "My blog", root_path %>
+    <% end %>
+
+    <% @posts.each do |post| %>
+      <%= c.post(post: post) %>
+    <% end %>
+  <% end %>
+</div>
+```
+
+## Component slots
+
+It's also possible to have a slot be a ViewComponent itself, by passing in a second argument to `renders_one` and `renders_many`:
 
 ```ruby
 # blog_component.rb
@@ -55,15 +81,11 @@ end
 
 ```erb
 <%# blog_component.html.erb %>
-<div>
-  <%= header %> <!-- render the header component -->
+<%= header %>
 
-  <% posts.each do |post| %>
-    <div class="blog-post-wrapper">
-      <%= post %> <!-- render an individual post -->
-    </div>
-  <% end %>
-</div>
+<% posts.each do |post| %>
+  <%= post %>
+<% end %>
 ```
 
 ```erb
@@ -83,9 +105,9 @@ end
 <% end %>
 ```
 
-## Lambda Slots
+## Lambda slots
 
-Lambda slots render their return value. Lambda slots are useful for working with helpers like `content_tag` or as wrappers for another component with specific default values.
+It's also possible to define a slot as a lambda that returns content to be rendered (either a string or a ViewComponent instance). Lambda slots are useful for working with helpers like `content_tag` or as wrappers for another component with specific default values:
 
 ```ruby
 class BlogComponent < ViewComponent::Base
@@ -103,7 +125,7 @@ class BlogComponent < ViewComponent::Base
 end
 ```
 
-Lambda are able to access state from the parent component:
+Lambda slots are able to access state from the parent component:
 
 ```ruby
 class TableComponent < ViewComponent::Base
@@ -117,47 +139,7 @@ class TableComponent < ViewComponent::Base
 end
 ```
 
-## Pass through slots
-
-Pass through slots capture content passed with a block.
-
-Define a pass through slot by omitting the second argument to `renders_one` and `renders_many`:
-
-```ruby
-# blog_component.rb
-class BlogComponent < ViewComponent::Base
-  renders_one :header
-  renders_many :posts
-end
-```
-
-```erb
-<%# blog_component.html.erb %>
-<div>
-  <h1><%= header %></h1>
-
-  <% posts.each do |post| %>
-    <%= post %>
-  <% end %>
-</div>
-```
-
-```erb
-<%# index.html.erb %>
-<div>
-  <%= render BlogComponent.new do |c| %>
-    <% c.header(classes: '') do %>
-      <%= link_to "My blog", root_path %>
-    <% end %>
-
-    <% @posts.each do |post| %>
-      <%= c.post(post: post) %>
-    <% end %>
-  <% end %>
-</div>
-```
-
-## Rendering Collections
+## Rendering collections
 
 Collection slots (declared with `renders_many`) can also be passed a collection:
 
@@ -177,11 +159,9 @@ end
 
 ```erb
 <%# navigation_component.html.erb %>
-<div>
-  <% links.each do |link| %>
-    <%= link %>
-  <% end %>
-</div>
+<% links.each do |link| %>
+  <%= link %>
+<% end %>
 ```
 
 ```erb
@@ -204,3 +184,5 @@ Slot content can also be set using `#with_content`:
   <% c.header(classes: "title").with_content("My blog") %>
 <% end %>
 ```
+
+_To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
