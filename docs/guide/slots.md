@@ -11,7 +11,7 @@ In addition to the `content` accessor, ViewComponents accept content through slo
 Slots are defined with `renders_one` and `renders_many`:
 
 - `renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
-- `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :items`
+- `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :posts`
 
 For example:
 
@@ -38,17 +38,15 @@ To render a `renders_many` slot, iterate over the name of the slot:
 
 ```erb
 <%# index.html.erb %>
-<div>
-  <%= render BlogComponent.new do |c| %>
-    <% c.header(classes: '') do %>
-      <%= link_to "My blog", root_path %>
-    <% end %>
-
-    <% @posts.each do |post| %>
-      <%= c.post(post: post) %>
-    <% end %>
+<%= render BlogComponent.new do |c| %>
+  <% c.header(classes: '') do %>
+    <%= link_to "My blog", root_path %>
   <% end %>
-</div>
+
+  <% @posts.each do |post| %>
+    <%= c.post(post: post) %>
+  <% end %>
+<% end %>
 ```
 
 ## Component slots
