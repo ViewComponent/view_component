@@ -1,33 +1,25 @@
 # frozen_string_literal: true
 
 require "rails/generators/erb"
+require "rails/generators/abstract_generator"
 
 module Erb
   module Generators
     class ComponentGenerator < Base
+      include ViewComponent::AbstractGenerator
+
       source_root File.expand_path("templates", __dir__)
       class_option :sidecar, type: :boolean, default: false
       class_option :inline, type: :boolean, default: false
 
+      def engine_name
+        "erb"
+      end
+
       def copy_view_file
-        unless options["inline"]
-          template "component.html.erb", destination
-        end
+        super
       end
 
-      private
-
-      def destination
-        if options["sidecar"]
-          File.join("app/components", class_path, "#{file_name}_component", "#{file_name}_component.html.erb")
-        else
-          File.join("app/components", class_path, "#{file_name}_component.html.erb")
-        end
-      end
-
-      def file_name
-        @_file_name ||= super.sub(/_component\z/i, "")
-      end
     end
   end
 end

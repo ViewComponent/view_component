@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Adds support to change default components path (app/components) with `config.view_component.view_component_path`.
+
+  *lfalcao*
+
 * Rename private instance variables (such as @variant) to reduce potential conflicts with subclasses.
 
     *Joel Hawksley*
