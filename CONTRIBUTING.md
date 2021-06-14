@@ -12,7 +12,7 @@ Contributions to this project are [released](https://help.github.com/articles/gi
 
 ### Triager
 
-ViewComponent triagers are able to manage issues and pull requests.
+ViewComponent triagers are able to manage issues and pull requests (such as assigning owners and labels, closing issues and marking duplicates)
 
 After showing interest in helping with the project by participating in issues, pull requests, and/or discussions, members of the community are welcome to request Triage access by opening an issue on the repository. Committers and Maintainers may also nominate Triagers through opening an issue on the repository.
 
