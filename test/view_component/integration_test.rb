@@ -444,7 +444,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   ensure
-    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false  unless Rails::VERSION::MAJOR >= 7
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
   end
 
   def test_renders_the_preview_example_with_its_own_template_and_a_layout
