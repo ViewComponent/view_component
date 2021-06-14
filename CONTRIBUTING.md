@@ -10,13 +10,13 @@ Contributions to this project are [released](https://help.github.com/articles/gi
 
 ## Roles
 
-**Triager**
+### Triager
 
 ViewComponent triagers are able to manage issues and pull requests.
 
 After showing interest in helping with the project by participating in issues, pull requests, and/or discussions, members of the community are welcome to request Triage access by opening an issue on the repository. Committers and Maintainers may also nominate Triagers through opening an issue on the repository.
 
-**Committer**
+### Committer
 
 ViewComponent committers have `write` access, enabling them to push directly to the repository and approve/merge pull requests.
 
@@ -24,7 +24,7 @@ Triagers are invited to become Committers by having an existing Committer or Mai
 
 The committers team is @jonspalmer, @elia, @juanmanuelramallo, @rmacklin, and @spone.
 
-**Maintainer**
+### Maintainer
 
 ViewComponent maintainers have `admin` access, enabling them to manage repository settings including access levels. They also have ownership of `view_component` on RubyGems and are required to have 2FA enabled for their accounts to minimize the risk of supply chain security issues.
 
