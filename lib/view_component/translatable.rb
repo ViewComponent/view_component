@@ -80,7 +80,7 @@ module ViewComponent
       end
 
       if HTML_SAFE_TRANSLATION_KEY.match?(key)
-        translated = translated.html_safe
+        translated = translated.html_safe # rubocop:disable Rails/OutputSafety
       end
 
       translated
