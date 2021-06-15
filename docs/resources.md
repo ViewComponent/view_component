@@ -33,7 +33,8 @@ title: Resources
 - [Ruby on Rails Podcast - Choosing the Right Tech Stack with Dave Paola](https://5by5.tv/rubyonrails/307)
 
 ## Conference talks
-- [Frontendless Rails frontend, RailsConf 2021](https://youtu.be/sIxvxp7E0xg)
+- [Frontendless Rails frontend, RailsConf 2021](https://www.youtube.com/watch?v=sIxvxp7E0xg)
+- [ViewComponents in the Real World, RailsConf 2021](https://www.youtube.com/watch?v=QoetqsBCsbE)
 - [Encapsulating Views, RailsConf 2020](https://youtu.be/YVYRus_2KZM)
 - [Rethinking the View Layer with Components, RailsConf 2019](https://www.youtube.com/watch?v=y5Z5a6QdA-M)
 
