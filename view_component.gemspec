@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.files         = Dir["CHANGELOG.md", "LICENSE.txt", "README.md", "app/**/*", "lib/**/*"]
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = ">= 2.3.0"
+  spec.required_ruby_version = ">= 2.4.0"
 
   spec.add_runtime_dependency     "activesupport", [">= 5.0.0", "< 7.0"]
   spec.add_development_dependency "benchmark-ips", "~> 2.8.2"
@@ -38,8 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "slim", "~> 4.0"
   spec.add_development_dependency "better_html", "~> 1"
   spec.add_development_dependency "jbuilder", "~> 2"
-  spec.add_development_dependency "rubocop", "= 0.74"
-  spec.add_development_dependency "rubocop-github", "~> 0.13.0"
+  spec.add_development_dependency "rubocop-github", "~> 0.16.1"
   spec.add_development_dependency "simplecov", "~> 0.18.0"
   spec.add_development_dependency "simplecov-console", "~> 0.7.2"
   spec.add_development_dependency "pry", "~> 0.13"

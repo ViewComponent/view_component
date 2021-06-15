@@ -1,9 +1,10 @@
 inherit_gem:
   rubocop-github:
     - config/default.yml
-    - config/rails.yml
+    - config/rails_edge.yml
 
 AllCops:
+  SuggestExtensions: false
   Exclude:
     - test/tmp/**/*
     - vendor/bundle/**/*

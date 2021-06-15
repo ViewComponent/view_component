@@ -16,7 +16,7 @@ module ViewComponent
         content = component.new(**component_options(item, iterator)).render_in(view_context, &block)
         iterator.iterate!
         content
-      end.join.html_safe
+      end.join.html_safe # rubocop:disable Rails/OutputSafety
     end
 
     private
