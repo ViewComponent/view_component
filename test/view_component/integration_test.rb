@@ -437,10 +437,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_does_not_render_additional_newline
+    skip unless Rails::VERSION::MAJOR >= 7
     without_template_annotations do
+      ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
       get "/rails/view_components/display_inline_component/with_newline"
       assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
+  ensure
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
   end
 
   def test_renders_the_preview_example_with_its_own_template_and_a_layout
