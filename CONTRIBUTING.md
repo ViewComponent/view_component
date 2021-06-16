@@ -40,7 +40,7 @@ The maintainers team is @blakewilliams, @joelhawksley, @jonrohan, and @manuelpuy
 
 1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
 1. Configure and install the dependencies: `bundle`.
-1. Make sure the tests pass on your machine: `bundle exec rake`.
+1. Make sure the tests pass on your machine: `bundle exec rake`. (Run a subset of tests by supplying a file glob to the test command: `TESTS="test/components/YOUR_COMPONENT_test.rb" bundle exec rake`)
 1. Create a new branch: `git checkout -b my-branch-name`.
 1. Make your change, add tests, and make sure the tests still pass.
 1. Add an entry to the top of `CHANGELOG.md` for your changes.
