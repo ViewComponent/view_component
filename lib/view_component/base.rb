@@ -85,7 +85,7 @@ module ViewComponent
 
       raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if block && defined?(@_content_set_by_with_content)
 
-      @_content_evaluated = false
+      @__vc_content_evaluated = false
       @_render_in_block = block
 
       before_render
@@ -224,7 +224,7 @@ module ViewComponent
 
     def content
       return @_content if defined?(@_content)
-      @_content_evaluated = true
+      @__vc_content_evaluated = true
 
       @_content = if @view_context && @_render_in_block
         view_context.capture(self, &@_render_in_block)
@@ -234,7 +234,7 @@ module ViewComponent
     end
 
     def content_evaluated?
-      @_content_evaluated
+      @__vc_content_evaluated
     end
 
     # The controller used for testing components.
