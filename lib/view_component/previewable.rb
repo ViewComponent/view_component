@@ -34,7 +34,7 @@ module ViewComponent
       #
       #     config.view_component.preview_route = "/previews"
       #
-      # Defaults to `/rails/view_components` when `show_previews' is enabled.
+      # Defaults to `/rails/view_components` when `show_previews` is enabled.
       #
       mattr_accessor :preview_route, instance_writer: false do
         "/rails/view_components"
