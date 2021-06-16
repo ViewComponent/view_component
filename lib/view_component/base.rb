@@ -4,6 +4,7 @@ require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
+require "view_component/content_areas"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
@@ -12,6 +13,7 @@ require "view_component/with_content_helper"
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
+    include ViewComponent::ContentAreas
     include ViewComponent::Previewable
     include ViewComponent::SlotableV2
     include ViewComponent::WithContentHelper
@@ -76,22 +78,24 @@ module ViewComponent
       @virtual_path ||= virtual_path
 
       # For template variants (+phone, +desktop, etc.)
-      @variant ||= @lookup_context.variants.first
+      @__vc_variant ||= @lookup_context.variants.first
 
       # For caching, such as #cache_if
       @current_template = nil unless defined?(@current_template)
       old_current_template = @current_template
       @current_template = self
 
-      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if block && defined?(@_content_set_by_with_content)
+      if block && defined?(@__vc_content_set_by_with_content)
+        raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.")
+      end
 
-      @_content_evaluated = false
-      @_render_in_block = block
+      @__vc_content_evaluated = false
+      @__vc_render_in_block = block
 
       before_render
 
       if render?
-        render_template_for(@variant).to_s + _output_postamble
+        render_template_for(@__vc_variant).to_s + _output_postamble
       else
         ""
       end
@@ -151,7 +155,7 @@ module ViewComponent
     # @return [ActionController::Base]
     def controller
       raise ViewContextCalledBeforeRenderError, "`controller` can only be called at render time." if view_context.nil?
-      @controller ||= view_context.controller
+      @__vc_controller ||= view_context.controller
     end
 
     # A proxy through which to access helpers. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
@@ -159,7 +163,7 @@ module ViewComponent
     # @return [ActionView::Base]
     def helpers
       raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
-      @helpers ||= controller.view_context
+      @__vc_helpers ||= controller.view_context
     end
 
     # Exposes .virtual_path as an instance method
@@ -180,25 +184,9 @@ module ViewComponent
     # @private
     def format
       # Ruby 2.6 throws a warning without checking `defined?`, 2.7 does not
-      if defined?(@variant)
-        @variant
+      if defined?(@__vc_variant)
+        @__vc_variant
       end
-    end
-
-    # Assign the provided content to the content area accessor
-    #
-    # @private
-    def with(area, content = nil, &block)
-      unless content_areas.include?(area)
-        raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
-      end
-
-      if block_given?
-        content = view_context.capture(&block)
-      end
-
-      instance_variable_set("@#{area}".to_sym, content)
-      nil
     end
 
     # Use the provided variant instead of the one determined by the current request.
@@ -206,7 +194,7 @@ module ViewComponent
     # @param variant [Symbol] The variant to be used by the component.
     # @return [self]
     def with_variant(variant)
-      @variant = variant
+      @__vc_variant = variant
 
       self
     end
@@ -223,18 +211,18 @@ module ViewComponent
     attr_reader :view_context
 
     def content
-      return @_content if defined?(@_content)
-      @_content_evaluated = true
+      @__vc_content_evaluated = true
+      return @__vc_content if defined?(@__vc_content)
 
-      @_content = if @view_context && @_render_in_block
-        view_context.capture(self, &@_render_in_block)
-      elsif defined?(@_content_set_by_with_content)
-        @_content_set_by_with_content
+      @__vc_content = if @view_context && @__vc_render_in_block
+        view_context.capture(self, &@__vc_render_in_block)
+      elsif defined?(@__vc_content_set_by_with_content)
+        @__vc_content_set_by_with_content
       end
     end
 
     def content_evaluated?
-      @_content_evaluated
+      @__vc_content_evaluated
     end
 
     # The controller used for testing components.
@@ -336,7 +324,7 @@ module ViewComponent
       end
 
       def compiler
-        @_compiler ||= Compiler.new(self)
+        @__vc_compiler ||= Compiler.new(self)
       end
 
       # we'll eventually want to update this to support other types
@@ -350,26 +338,6 @@ module ViewComponent
 
       def identifier
         source_location
-      end
-
-      def with_content_areas(*areas)
-        ActiveSupport::Deprecation.warn(
-          "`with_content_areas` is deprecated and will be removed in ViewComponent v3.0.0.\n" \
-          "Use slots (https://viewcomponent.org/guide/slots.html) instead."
-        )
-
-        if areas.include?(:content)
-          raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
-        end
-
-        areas.each do |area|
-          define_method area.to_sym do
-            content unless content_evaluated? # ensure content is loaded so content_areas will be defined
-            instance_variable_get(:"@#{area}") if instance_variable_defined?(:"@#{area}")
-          end
-        end
-
-        self.content_areas = areas
       end
 
       # Support overriding collection parameter name

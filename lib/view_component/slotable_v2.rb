@@ -190,10 +190,10 @@ module ViewComponent
       content unless content_evaluated? # ensure content is loaded so slots will be defined
 
       slot = self.class.registered_slots[slot_name]
-      @_set_slots ||= {}
+      @__vc_set_slots ||= {}
 
-      if @_set_slots[slot_name]
-        return @_set_slots[slot_name]
+      if @__vc_set_slots[slot_name]
+        return @__vc_set_slots[slot_name]
       end
 
       if slot[:collection]
@@ -217,14 +217,14 @@ module ViewComponent
       # 2. Since we have to pass block content to components when calling
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
-      slot._content_block = block if block_given?
+      slot.__vc_content_block = block if block_given?
 
       # If class
       if slot_definition[:renderable]
-        slot._component_instance = slot_definition[:renderable].new(*args, **kwargs)
+        slot.__vc_component_instance = slot_definition[:renderable].new(*args, **kwargs)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
-        slot._component_instance = self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
+        slot.__vc_component_instance = self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
       # If passed a lambda
       elsif slot_definition[:renderable_function]
         # Use `bind(self)` to ensure lambda is executed in the context of the
@@ -240,19 +240,19 @@ module ViewComponent
 
         # Function calls can return components, so if it's a component handle it specially
         if renderable_value.respond_to?(:render_in)
-          slot._component_instance = renderable_value
+          slot.__vc_component_instance = renderable_value
         else
-          slot._content = renderable_value
+          slot.__vc_content = renderable_value
         end
       end
 
-      @_set_slots ||= {}
+      @__vc_set_slots ||= {}
 
       if slot_definition[:collection]
-        @_set_slots[slot_name] ||= []
-        @_set_slots[slot_name].push(slot)
+        @__vc_set_slots[slot_name] ||= []
+        @__vc_set_slots[slot_name].push(slot)
       else
-        @_set_slots[slot_name] = slot
+        @__vc_set_slots[slot_name] = slot
       end
 
       slot
