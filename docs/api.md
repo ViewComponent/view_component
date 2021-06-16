@@ -7,6 +7,20 @@ title: API
 
 # API
 
+## Class methods
+
+### `.with_collection(collection, **args)`
+
+Render a component for each element in a collection ([documentation](/guide/collections)):
+
+    render(ProductsComponent.with_collection(@products, foo: :bar))
+
+### `.with_collection_parameter(parameter)`
+
+Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
+
+    with_collection_parameter :item
+
 ## Instance methods
 
 ### `#_output_postamble` → [String]
