@@ -82,7 +82,7 @@ namespace :docs do
         end
 
         f.puts
-        f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
+        f.puts("### `#{method.sep}#{method.signature.gsub('def ', '')}`#{types}#{suffix}")
         f.puts
         f.puts(method.docstring)
 
