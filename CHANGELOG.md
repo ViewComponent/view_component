@@ -6,6 +6,10 @@
 
     *Joel Hawksley*
 
+* Add documentation for configuration options.
+
+    *Joel Hawksley*
+
 ## 2.34.0
 
 * Add the ability to enable ActiveSupport notifications (`!render.view_component` event) with `config.view_component.instrumentation_enabled`.
