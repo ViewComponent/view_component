@@ -237,14 +237,20 @@ module ViewComponent
       @_content_evaluated
     end
 
-    # The controller used for testing components.
-    # Defaults to ApplicationController, but can be configured
-    # on a per-test basis using `with_controller_class`.
-    # This should be set early in the initialization process and should be a string.
+    # Set the controller used for testing components:
+    #
+    #     config.view_component.test_controller = "MyTestController"
+    #
+    # Defaults to ApplicationController. Can also be configured on a per-test
+    # basis using `with_controller_class`.
+    #
     mattr_accessor :test_controller
     @@test_controller = "ApplicationController"
 
-    # Configure if render monkey patches should be included or not in Rails <6.1.
+    # Set if render monkey patches should be included or not in Rails <6.1:
+    #
+    #     config.view_component.render_monkey_patch_enabled = false
+    #
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
     class << self

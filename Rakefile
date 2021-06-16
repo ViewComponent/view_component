@@ -3,6 +3,7 @@
 require "bundler/gem_tasks"
 require "rake/testtask"
 require "yard"
+require "yard/mattr_accessor_handler"
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
@@ -84,6 +85,35 @@ namespace :docs do
         f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
         f.puts
         f.puts(method.docstring)
+
+        if method.tag(:deprecated)
+          f.puts
+          f.puts("_#{method.tag(:deprecated).text}_")
+        end
+      end
+
+      f.puts
+      f.puts("## Configuration")
+
+      registry.
+        get("ViewComponent::Base").
+        meths.
+        select { |method| method[:mattr_accessor] }.
+        sort_by { |method| method[:name] }.
+        each do |method|
+
+        suffix =
+          if method.tag(:deprecated)
+            " (Deprecated)"
+          end
+
+        f.puts
+        f.puts("### #{method.sep}#{method.name}#{suffix}")
+
+        if method.docstring.length > 0
+          f.puts
+          f.puts(method.docstring)
+        end
 
         if method.tag(:deprecated)
           f.puts
