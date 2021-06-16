@@ -2,11 +2,15 @@
 
 ## main
 
+* Rename private instance variables (such as @variant) to reduce potential conflicts with subclasses.
+
+    *Joel Hawksley*
+
 ## 2.34.0
 
 * Add the ability to enable ActiveSupport notifications (`!render.view_component` event) with `config.view_component.instrumentation_enabled`.
 
-  *Svyatoslav Kryukov*
+    *Svyatoslav Kryukov*
 
 * Add [Generators](https://viewcomponent.org/guide/generators.html) page to documentation.
 
