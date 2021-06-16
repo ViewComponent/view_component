@@ -57,7 +57,7 @@ namespace :docs do
         !method.tag(:private) &&
         method.path.include?("ViewComponent::Base") &&
         method.visibility == :public
-      end
+      end.sort_by { |method| method[:name] }
 
     File.open("docs/api.md", "w") do |f|
       f.puts("---")
