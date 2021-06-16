@@ -21,7 +21,7 @@ Called before rendering the component. Override to perform operations that depen
 
 Called after rendering the component.
 
-_Use `before_render` instead. Will be removed in v3.0.0._
+_Use `#before_render` instead. Will be removed in v3.0.0._
 
 ### `#controller` → [ActionController::Base]
 
