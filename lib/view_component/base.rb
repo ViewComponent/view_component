@@ -151,7 +151,7 @@ module ViewComponent
     # @return [ActionController::Base]
     def controller
       raise ViewContextCalledBeforeRenderError, "`controller` can only be called at render time." if view_context.nil?
-      @controller ||= view_context.controller
+      @__vc_controller ||= view_context.controller
     end
 
     # A proxy through which to access helpers. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
@@ -159,7 +159,7 @@ module ViewComponent
     # @return [ActionView::Base]
     def helpers
       raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
-      @helpers ||= controller.view_context
+      @__vc_helpers ||= controller.view_context
     end
 
     # Exposes .virtual_path as an instance method
