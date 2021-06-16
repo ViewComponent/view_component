@@ -7,7 +7,7 @@ require "yard"
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
-  t.test_files = FileList[ENV["TESTS"] || "test/**/*_test.rb"]
+  t.test_files = FileList["test/**/*_test.rb"]
 end
 
 desc "Runs benchmarks against components"
