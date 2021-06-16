@@ -4,6 +4,7 @@ require "active_support/concern"
 
 require "view_component/slot"
 
+# DEPRECATED - ContentAreas is deprecated and will be removed in v3.0.0
 module ViewComponent
   module ContentAreas
     extend ActiveSupport::Concern
