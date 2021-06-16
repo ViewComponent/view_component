@@ -343,7 +343,7 @@ class SlotsV2sTest < ViewComponent::TestCase
       component = SlotsV2Component.new
       slot = component.title("some_argument")
       slot.with_content("This is my title!")
-      slot._content_block = "some block"
+      slot.__vc_content_block = "some block"
 
       render_inline(component)
     end

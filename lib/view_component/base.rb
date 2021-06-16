@@ -85,10 +85,12 @@ module ViewComponent
       old_current_template = @current_template
       @current_template = self
 
-      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if block && defined?(@_content_set_by_with_content)
+      if block && defined?(@__vc_content_set_by_with_content)
+        raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.")
+      end
 
       @__vc_content_evaluated = false
-      @_render_in_block = block
+      @__vc_render_in_block = block
 
       before_render
 
@@ -209,13 +211,13 @@ module ViewComponent
     attr_reader :view_context
 
     def content
-      return @_content if defined?(@_content)
       @__vc_content_evaluated = true
+      return @__vc_content if defined?(@__vc_content)
 
-      @_content = if @view_context && @_render_in_block
-        view_context.capture(self, &@_render_in_block)
-      elsif defined?(@_content_set_by_with_content)
-        @_content_set_by_with_content
+      @__vc_content = if @view_context && @__vc_render_in_block
+        view_context.capture(self, &@__vc_render_in_block)
+      elsif defined?(@__vc_content_set_by_with_content)
+        @__vc_content_set_by_with_content
       end
     end
 
@@ -322,7 +324,7 @@ module ViewComponent
       end
 
       def compiler
-        @_compiler ||= Compiler.new(self)
+        @__vc_compiler ||= Compiler.new(self)
       end
 
       # we'll eventually want to update this to support other types
