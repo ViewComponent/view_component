@@ -76,7 +76,7 @@ module ViewComponent
       @virtual_path ||= virtual_path
 
       # For template variants (+phone, +desktop, etc.)
-      @variant ||= @lookup_context.variants.first
+      @__vc_variant ||= @lookup_context.variants.first
 
       # For caching, such as #cache_if
       @current_template = nil unless defined?(@current_template)
@@ -91,7 +91,7 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@variant).to_s + _output_postamble
+        render_template_for(@__vc_variant).to_s + _output_postamble
       else
         ""
       end
@@ -180,8 +180,8 @@ module ViewComponent
     # @private
     def format
       # Ruby 2.6 throws a warning without checking `defined?`, 2.7 does not
-      if defined?(@variant)
-        @variant
+      if defined?(@__vc_variant)
+        @__vc_variant
       end
     end
 
@@ -206,7 +206,7 @@ module ViewComponent
     # @param variant [Symbol] The variant to be used by the component.
     # @return [self]
     def with_variant(variant)
-      @variant = variant
+      @__vc_variant = variant
 
       self
     end
