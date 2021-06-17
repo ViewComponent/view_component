@@ -14,6 +14,14 @@ nav_order: 1
 - Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
 - Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
 
+## Installation
+
+In `Gemfile`, add:
+
+```ruby
+gem "view_component", require: "view_component/engine"
+```
+
 ## Quick start
 
 Use the component generator to create a new ViewComponent.

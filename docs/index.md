@@ -8,17 +8,41 @@ nav_order: 1
 
 A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
 
+## What are ViewComponents?
+
+ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
+
+## When should I use ViewComponents?
+
+ViewComponents are most effective when view code is reused or would benefit from being tested directly. Heavily reused partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
+
+## Why should I use ViewComponents?
+
+### Testing
+
+Unlike traditional Rails views, ViewComponents can be unit tested. In the GitHub codebase, ViewComponent unit tests are over 100x faster than similar controller tests.
+
+With ViewComponent, integration tests can be reserved for end-to-end assertions, with permutations covered at the unit level.
+
+### Data Flow
+
+Traditional Rails views have an implicit interface, making it hard to reason about their dependencies. This can lead to subtle bugs when rendering the same view in different contexts.
+
+ViewComponents use a standard Ruby initializer that clearly defines what is needed to render, making reuse easier (and safer) than with partials.
+
+### Performance
+
+Based on our [benchmarks](https://github.com/github/view_component/blob/main/performance/benchmark.rb), ViewComponents are ~10x faster than partials.
+
+### Standards
+
+Views often fail basic Ruby code quality standards: long methods, deep conditional nesting, and mystery guests abound.
+
+ViewComponents are Ruby objects, making it easy to follow (and enforce) code quality standards.
+
 ## Design philosophy
 
 ViewComponent is designed to integrate as seamlessly as possible [with Rails](https://rubyonrails.org/doctrine/), with the [least surprise](https://www.artima.com/intv/ruby4.html).
-
-## Installation
-
-In `Gemfile`, add:
-
-```ruby
-gem "view_component", require: "view_component/engine"
-```
 
 ## Contributors
 
