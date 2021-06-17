@@ -738,6 +738,24 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match(/MissingDefaultCollectionParameterComponent doesn't accept the parameter/, exception.message)
   end
 
+  def test_collection_component_missing_custom_parameter_name_with_activemodel
+    exception = assert_raises ArgumentError do
+      render_inline(
+        MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
+
+    assert_match(/MissingCollectionParameterWithActiveModelComponent initializer must accept `name` collection parameter/, exception.message)
+  end
+
+  def test_collection_component_present_custom_parameter_name_with_activemodel
+    assert_nothing_raised do
+      render_inline(
+        CollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
+  end
+
   def test_component_with_invalid_parameter_names
     begin
       old_cache = ViewComponent::CompileCache.cache
