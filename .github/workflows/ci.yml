@@ -10,7 +10,7 @@ jobs:
     - uses: avto-dev/markdown-lint@v1
       with:
         config: '.github/lint/markdown.json'
-        args: '**/*.md'
+        args: 'docs/**/*.md'
   lint:
     runs-on: ubuntu-latest
     steps:
