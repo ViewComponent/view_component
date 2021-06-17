@@ -8,15 +8,15 @@ nav_order: 1
 
 A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
 
-## What are ViewComponents?
+## What is a ViewComponent?
 
 ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
 
 ## When should I use ViewComponents?
 
-ViewComponents are most effective when view code is reused or would benefit from being tested directly. Heavily reused partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
+ViewComponents best for templates that are reused or benefit from being tested directly. Heavily reused partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
 
-## Why should I use ViewComponents?
+## Benefits
 
 ### Testing
 
@@ -42,11 +42,11 @@ ViewComponents are Ruby objects, making it easy to follow (and enforce) code qua
 
 ## Design philosophy
 
-ViewComponent is designed to integrate as seamlessly as possible [with Rails](https://rubyonrails.org/doctrine/), with the [least surprise](https://www.artima.com/intv/ruby4.html).
+ViewComponent is designed to integrate with Rails as seamlessly as possible, with the [least surprise](https://www.artima.com/intv/ruby4.html).
 
 ## Contributors
 
-ViewComponent is built by:
+ViewComponent is built by over a hundred members of the community, including:
 
 <img src="https://avatars.githubusercontent.com/asgerb?s=64" alt="asgerb" width="32" />
 <img src="https://avatars.githubusercontent.com/bbugh?s=64" alt="bbugh" width="32" />
@@ -107,3 +107,7 @@ ViewComponent is built by:
 <img src="https://avatars.githubusercontent.com/vinistock?s=64" alt="vinistock" width="32" />
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
+
+<hr />
+
+[Getting started →](/guide/getting-started.html)
