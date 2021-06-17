@@ -219,6 +219,8 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.26)
+    yard-activesupport-concern (0.0.1)
+      yard (>= 0.8)
     zeitwerk (2.4.2)
 
 PLATFORMS
@@ -241,6 +243,7 @@ DEPENDENCIES
   slim (~> 4.0)
   view_component!
   yard (~> 0.9.25)
+  yard-activesupport-concern
 
 BUNDLED WITH
    2.2.20
