@@ -33,11 +33,22 @@ Here are a few things you can do that will increase the likelihood of your pull 
 
 ## Documentation
 
+### Previewing changes locally
+
 1. Navigate to `/docs`.
 1. Configure and install the dependencies: `bundle`.
 1. Run Jekyll: `bundle exec jekyll serve`.
 1. Open the docs site at `http://127.0.0.1:4000/`.
 1. If making changes to the API, run `bundle exec rake docs:build` to generate `docs/api.md` from YARD comments.
+
+### Style guidelines
+
+- Keep it short.
+- Avoid unclear antecedents. Use `the method name is too long` instead of `it is too long`.
+- Avoid `you`, `we`, `your`, `our`.
+- Write in the [active voice](https://writing.wisc.edu/handbook/style/ccs_activevoice/). Avoid the passive voice.
+
+Don't be afraid to ask for help! We recognize that English is not the first language of many folks who contribute to ViewComponent.
 
 ## Releasing
 
