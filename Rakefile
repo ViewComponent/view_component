@@ -88,7 +88,7 @@ namespace :docs do
         end
 
         f.puts
-        f.puts("### `#{method.sep}#{method.signature.gsub('def ', '')}`#{types}#{suffix}")
+        f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
         f.puts
         f.puts(method.docstring)
 
@@ -112,7 +112,7 @@ namespace :docs do
         end
 
         f.puts
-        f.puts("### `#{method.sep}#{method.signature.gsub('def ', '')}`#{types}#{suffix}")
+        f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
         f.puts
         f.puts(method.docstring)
 
@@ -138,7 +138,7 @@ namespace :docs do
           end
 
         f.puts
-        f.puts("### `#{method.sep}#{method.name}`#{suffix}")
+        f.puts("### #{method.sep}#{method.name}#{suffix}")
 
         if method.docstring.length > 0
           f.puts

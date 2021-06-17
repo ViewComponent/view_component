@@ -11,7 +11,7 @@ module ViewComponent
       #
       #     config.view_component.show_previews = true
       #
-      # Defaults to `true` for development environment.
+      # Defaults to `true` in development.
       #
       mattr_accessor :show_previews, instance_writer: false
 
