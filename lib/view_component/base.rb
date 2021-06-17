@@ -119,7 +119,7 @@ module ViewComponent
 
     # Called after rendering the component.
     #
-    # @deprecated Use `before_render` instead. Will be removed in v3.0.0.
+    # @deprecated Use `#before_render` instead. Will be removed in v3.0.0.
     # @return [void]
     def before_render_check
       # noop
@@ -225,17 +225,24 @@ module ViewComponent
       @__vc_content_evaluated
     end
 
-    # The controller used for testing components.
-    # Defaults to ApplicationController, but can be configured
-    # on a per-test basis using `with_controller_class`.
-    # This should be set early in the initialization process and should be a string.
+    # Set the controller used for testing components:
+    #
+    #     config.view_component.test_controller = "MyTestController"
+    #
+    # Defaults to ApplicationController. Can also be configured on a per-test
+    # basis using `with_controller_class`.
+    #
     mattr_accessor :test_controller
     @@test_controller = "ApplicationController"
 
-    # Configure if render monkey patches should be included or not in Rails <6.1.
+    # Set if render monkey patches should be included or not in Rails <6.1:
+    #
+    #     config.view_component.render_monkey_patch_enabled = false
+    #
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
     class << self
+      # @private
       attr_accessor :source_location, :virtual_path
 
       # EXPERIMENTAL: This API is experimental and may be removed at any time.
@@ -245,6 +252,7 @@ module ViewComponent
       # strings starting without the "dot", example: `["erb", "haml"]`.
       #
       # For example, one might collect sidecar CSS files that need to be compiled.
+      # @private TODO: add documentation
       def _sidecar_files(extensions)
         return [] unless source_location
 
@@ -279,16 +287,24 @@ module ViewComponent
         (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files).uniq
       end
 
-      # Render a component collection.
+      # Render a component for each element in a collection ([documentation](/guide/collections)):
+      #
+      #     render(ProductsComponent.with_collection(@products, foo: :bar))
+      #
+      # @param collection [Enumerable] A list of items to pass the ViewComponent one at a time.
+      # @param args [Arguments] Arguments to pass to the ViewComponent every time.
       def with_collection(collection, **args)
         Collection.new(self, collection, **args)
       end
 
       # Provide identifier for ActionView template annotations
+      #
+      # @private
       def short_identifier
         @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
       end
 
+      # @private
       def inherited(child)
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
@@ -311,6 +327,7 @@ module ViewComponent
         super
       end
 
+      # @private
       def compiled?
         compiler.compiled?
       end
@@ -319,30 +336,39 @@ module ViewComponent
       #
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
+      # @private
       def compile(raise_errors: false)
         compiler.compile(raise_errors: raise_errors)
       end
 
+      # @private
       def compiler
         @__vc_compiler ||= Compiler.new(self)
       end
 
       # we'll eventually want to update this to support other types
+      # @private
       def type
         "text/html"
       end
 
+      # @private
       def format
         :html
       end
 
+      # @private
       def identifier
         source_location
       end
 
-      # Support overriding collection parameter name
-      def with_collection_parameter(param)
-        @provided_collection_parameter = param
+      # Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
+      #
+      #     with_collection_parameter :item
+      #
+      # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
+      def with_collection_parameter(parameter)
+        @provided_collection_parameter = parameter
       end
 
       # Ensure the component initializer accepts the
@@ -350,6 +376,7 @@ module ViewComponent
       # validate that the default parameter name
       # is accepted, as support for collection
       # rendering is optional.
+      # @private TODO: add documentation
       def validate_collection_parameter!(validate_default: false)
         parameter = validate_default ? collection_parameter : provided_collection_parameter
 
@@ -374,6 +401,7 @@ module ViewComponent
       # Ensure the component initializer does not define
       # invalid parameters that could override the framework's
       # methods.
+      # @private TODO: add documentation
       def validate_initialization_parameters!
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
@@ -384,6 +412,7 @@ module ViewComponent
         )
       end
 
+      # @private
       def collection_parameter
         if provided_collection_parameter
           provided_collection_parameter
@@ -392,18 +421,22 @@ module ViewComponent
         end
       end
 
+      # @private
       def collection_counter_parameter
         "#{collection_parameter}_counter".to_sym
       end
 
+      # @private
       def counter_argument_present?
         initialize_parameter_names.include?(collection_counter_parameter)
       end
 
+      # @private
       def collection_iteration_parameter
         "#{collection_parameter}_iteration".to_sym
       end
 
+      # @private
       def iteration_argument_present?
         initialize_parameter_names.include?(collection_iteration_parameter)
       end
