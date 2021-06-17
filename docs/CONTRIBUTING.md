@@ -13,34 +13,6 @@ If you have any substantial changes that you would like to make, please [open an
 
 Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE.txt).
 
-## Roles
-
-### Triager
-
-ViewComponent triagers are able to manage issues and pull request by assigning owners and labels, closing issues and marking duplicates.
-
-After helping with the project by participating in issues, pull requests, and/or discussions, members of the community are welcome to request triage access by opening a pull request to update this list:
-
-The triagers team is @andrewmcodes, @bbugh, @cesariouy, @dark-panda, @dylnclrk, @g13ydson, @horacio, @jcoyne, @johannesengl, @kaspermeyer, @mellowfish, @metade, @nashby, @rainerborene, @rdavid1099, @spdawson, and @vinistock.
-
-Committers and maintainers may also nominate triagers by opening a pull request to update this list.
-
-### Committer
-
-ViewComponent committers have `write` access, enabling them to push directly to the repository and approve/merge pull requests. Committers often have implicit ownership over a particular area of the project, such as previews, generators, or translations.
-
-Triagers are invited to become committers by having an existing committer or maintainer open a pull request on the repository to update this list of committers:
-
-The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, and @spone.
-
-### Maintainer
-
-ViewComponent maintainers have `admin` access, enabling them to manage repository settings including access levels. They also have ownership of `view_component` on RubyGems and are required to have 2FA enabled for their GitHub and RubyGems accounts.
-
-Maintainership is open by invitation only at this time.
-
-The maintainers team is @blakewilliams, @joelhawksley, @jonrohan, and @manuelpuyol.
-
 ## Submitting a pull request
 
 1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
@@ -72,3 +44,33 @@ Here are a few things you can do that will increase the likelihood of your pull 
 If you are the current maintainer of this gem:
 
 1. Run `./script/release` and follow the instructions.
+
+## Governance
+
+ViewComponent is built by over a hundred members of the community. Project membership has three levels:
+
+### Triage
+
+ViewComponent triagers are able to manage issues and pull request by assigning owners and labels, closing issues and marking duplicates.
+
+After helping with the project by participating in issues, pull requests, and/or discussions, members of the community are welcome to request triage access by opening a pull request to update this list:
+
+The triagers team is @andrewmcodes, @bbugh, @cesariouy, @dark-panda, @dylnclrk, @g13ydson, @horacio, @jcoyne, @johannesengl, @kaspermeyer, @mellowfish, @metade, @nashby, @rainerborene, @rdavid1099, @spdawson, and @vinistock.
+
+Committers and maintainers may also nominate triagers by opening a pull request to update this list.
+
+### Commit
+
+ViewComponent committers have `write` access, enabling them to push directly to the repository and approve/merge pull requests. Committers often have implicit ownership over a particular area of the project, such as previews, generators, or translations.
+
+Triagers are invited to become committers by having an existing committer or maintainer open a pull request on the repository to update this list of committers:
+
+The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, and @spone.
+
+### Maintain
+
+ViewComponent maintainers have `admin` access, enabling them to manage repository settings including access levels. They also have ownership of `view_component` on RubyGems and are required to have 2FA enabled for their GitHub and RubyGems accounts.
+
+Maintainership is open by invitation only at this time.
+
+The maintainers team is @blakewilliams, @joelhawksley, @jonrohan, and @manuelpuyol.
