@@ -51,6 +51,13 @@ def with_preview_controller(new_value)
   app.reloader.reload!
 end
 
+def with_custom_component_path(new_value)
+  old_value = Rails.application.config.view_component.view_component_path
+  Rails.application.config.view_component.view_component_path = new_value
+  yield
+  Rails.application.config.view_component.view_component_path = old_value
+end
+
 def with_new_cache
   begin
     old_cache = ViewComponent::CompileCache.cache

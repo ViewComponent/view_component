@@ -22,6 +22,8 @@ bin/rails generate component Example title content
 
 ## Options
 
+Generated ViewComponents are added to `app/components` by default. Set `config.view_component.view_component_path` to use a different path.
+
 ### Override template engine
 
 ViewComponent includes template generators for the `erb`, `haml`, and `slim` template engines and will default to the template engine specified in `config.generators.template_engine`.

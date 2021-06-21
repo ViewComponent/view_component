@@ -10,7 +10,7 @@ module Rails
       class_option :inline, type: :boolean, default: false
 
       def create_component_file
-        template "component.rb", File.join("app/components", class_path, "#{file_name}_component.rb")
+        template "component.rb", File.join(component_path, class_path, "#{file_name}_component.rb")
       end
 
       hook_for :test_framework
@@ -43,6 +43,10 @@ module Rails
 
       def initialize_call_method_for_inline?
         options["inline"]
+      end
+
+      def component_path
+        Rails.application.config.view_component.view_component_path || "app/components"
       end
     end
   end
