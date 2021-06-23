@@ -26,7 +26,7 @@ module ViewComponent
 
       if subclass_instance_methods.include?(:before_render_check)
         ActiveSupport::Deprecation.warn(
-          "`before_render_check` will be removed in v3.0.0. Use `before_render` instead."
+          "`before_render_check` will be removed in v3.0.0. Use `#before_render` instead."
         )
       end
 
@@ -81,7 +81,7 @@ module ViewComponent
     end
 
     def template_errors
-      @_template_errors ||= begin
+      @__vc_template_errors ||= begin
         errors = []
 
         if (templates + inline_calls).empty?
@@ -150,7 +150,7 @@ module ViewComponent
     end
 
     def variants
-      @_variants = (
+      @__vc_variants = (
         templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
       ).compact.uniq
     end

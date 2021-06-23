@@ -8,7 +8,7 @@ Rails.application.load_generators
 
 class SlimGeneratorTest < Rails::Generators::TestCase
   tests Slim::Generators::ComponentGenerator
-  destination File.expand_path("../tmp", __dir__)
+  destination Dir.mktmpdir
   setup :prepare_destination
 
   arguments %w[user]

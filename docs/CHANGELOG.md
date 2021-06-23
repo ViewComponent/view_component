@@ -1,13 +1,51 @@
-# CHANGELOG
+---
+layout: default
+title: Changelog
+---
 
-## 2.33.0
+# Changelog
+
+## main
+
+* Adds support to change default components path (app/components) with `config.view_component.view_component_path`.
+
+  *lfalcao*
+
+* Rename private instance variables (such as @variant) to reduce potential conflicts with subclasses.
+
+    *Joel Hawksley*
+
+* Add documentation for configuration options.
+
+    *Joel Hawksley*
+
+
+## 2.35.0
 
 * Add view helper `preview_source` for rendering a source code preview below previews.
 * Add config option `config.view_component.show_previews_source` for enabling the soure preview.
 
     *Johannes Engl*
 
-## main
+## 2.34.0
+
+* Add the ability to enable ActiveSupport notifications (`!render.view_component` event) with `config.view_component.instrumentation_enabled`.
+
+    *Svyatoslav Kryukov*
+
+* Add [Generators](https://viewcomponent.org/guide/generators.html) page to documentation.
+
+    *Hans Lemuet*
+
+* Fix bug where ViewComponents did not work in ActionMailers.
+
+    *dark-panda*
+
+## 2.33.0
+
+* Add support for `_iteration` parameter when rendering in a collection
+
+    *Will Cosgrove*
 
 * Don't raise an error when rendering empty components.
 
