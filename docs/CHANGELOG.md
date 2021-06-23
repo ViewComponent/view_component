@@ -19,7 +19,6 @@ title: Changelog
 
     *Joel Hawksley*
 
-
 ## 2.35.0
 
 * Add view helper `preview_source` for rendering a source code preview below previews.
