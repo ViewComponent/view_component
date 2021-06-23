@@ -31,6 +31,13 @@ class LocalizedTest < ViewComponent::TestCase
     assert_text("hello,world!")
   end
 
+  def test_render_component_methods
+    methods = MyComponent.new.methods.grep(/call/)
+    assert_includes methods, :call
+    assert_includes methods, :call_es
+    assert_includes methods, :call_pt_br
+  end
+
   # def test_render_component_localized_with_custom_view
   # end
 

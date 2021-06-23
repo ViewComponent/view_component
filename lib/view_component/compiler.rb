@@ -126,7 +126,7 @@ module ViewComponent
 
     def templates
       @templates ||= begin
-        extensions = %w[builder erb haml html jbuilder raw ruby slim]
+        extensions = ActionView::Template.template_handler_extensions
 
         component_class._sidecar_files(extensions).each_with_object([]) do |path, memo|
           pieces = File.basename(path).split(".")
@@ -136,9 +136,7 @@ module ViewComponent
           localized_template = pieces.second.downcase.tr("-", "_")
 
           # if template is a localized (ie file.country_code.html.erb) append as variant
-          if !localized_template.match(/builder|erb|html|jbuilder|raw|ruby|slim|tablet|iphone|json|html|\+/).present?
-            variant = [variant, localized_template].join("_")
-          end
+          variant = [variant, localized_template].compact.reduce { |s, x| s + "_" + x } if pieces.size >= 4
 
           memo << {
             path: path,

@@ -95,12 +95,12 @@ module ViewComponent
       before_render
 
       if render?
-        custom_variant = [@__vc_variant]
         if defined?(I18n.locale) && I18n.locale != :en
-          custom_variant << I18n.locale.to_s.downcase.tr("-", "_")
+          custom_variant = [@__vc_variant, I18n.locale.to_s.downcase.tr("-", "_")]
+          custom_variant = custom_variant.compact.reduce { |s, x| s + "_" + x }.to_sym
         end
 
-        render_template_for(custom_variant.join("_").to_sym).to_s + _output_postamble
+        render_template_for(custom_variant || @__vc_variant).to_s + _output_postamble
       else
         ""
       end

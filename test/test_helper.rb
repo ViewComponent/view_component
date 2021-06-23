@@ -38,6 +38,7 @@ end
 # @param configs [Array<String>] Use 'parameter = value'
 # @yield Test code to run
 # @return [void]
+# rubocop:disable Security/Eval
 def with_custom_config(*configs)
   old_config = configs.map do |config|
     config_name = config.split("=").first.strip
