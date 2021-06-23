@@ -33,6 +33,30 @@ def with_preview_paths(new_value)
   Rails.application.config.view_component.preview_paths = old_value
 end
 
+# Accepts any config, so we dont need to create one function for each attribute
+#
+# @param configs [Array<String>] Use 'parameter = value'
+# @yield Test code to run
+# @return [void]
+def with_custom_config(*configs)
+  old_config = configs.map do |config|
+    config_name = config.split("=").first.strip
+    val = eval(config_name)
+    val = val.is_a?(Symbol) ? ":#{val}" : val
+
+    "#{config_name} = #{val}"
+  end
+
+  apply_config = ->(c) { c.each { |ee| eval(ee) } }
+
+  begin
+    apply_config.call(configs)
+    yield
+  ensure
+    apply_config.call(old_config)
+  end
+end
+
 def with_preview_route(new_value)
   old_value = Rails.application.config.view_component.preview_route
   Rails.application.config.view_component.preview_route = new_value

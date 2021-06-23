@@ -38,8 +38,11 @@ module ViewComponent
       templates.each do |template|
         # Remove existing compiled template methods,
         # as Ruby warns when redefining a method.
-        method_name = call_method_name(template[:variant])
-        component_class.send(:undef_method, method_name.to_sym) if component_class.instance_methods.include?(method_name.to_sym)
+        method_name = call_method_name(template[:variant]).to_sym
+
+        if component_class.instance_methods.include?(method_name)
+          component_class.send(:undef_method, method_name)
+        end
 
         component_class.class_eval <<-RUBY, template[:path], -1
           def #{method_name}
@@ -61,7 +64,9 @@ module ViewComponent
     attr_reader :component_class
 
     def define_render_template_for
-      component_class.send(:undef_method, :render_template_for) if component_class.instance_methods.include?(:render_template_for)
+      if component_class.instance_methods.include?(:render_template_for)
+        component_class.send(:undef_method, :render_template_for)
+      end
 
       variant_elsifs = variants.compact.uniq.map do |variant|
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
@@ -121,13 +126,23 @@ module ViewComponent
 
     def templates
       @templates ||= begin
-        extensions = ActionView::Template.template_handler_extensions
+        extensions = %w[builder erb haml html jbuilder raw ruby slim]
 
         component_class._sidecar_files(extensions).each_with_object([]) do |path, memo|
           pieces = File.basename(path).split(".")
+          variant = pieces.second.split("+").second&.to_sym
+
+          # grab localized templates and fix regional dash (pt-BR, en-GB...)
+          localized_template = pieces.second.downcase.tr("-", "_")
+
+          # if template is a localized (ie file.country_code.html.erb) append as variant
+          if !localized_template.match(/builder|erb|html|jbuilder|raw|ruby|slim|tablet|iphone|json|html|\+/).present?
+            variant = [variant, localized_template].join("_")
+          end
+
           memo << {
             path: path,
-            variant: pieces.second.split("+").second&.to_sym,
+            variant: variant,
             handler: pieces.last
           }
         end
