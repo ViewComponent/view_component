@@ -7,9 +7,13 @@ title: Changelog
 
 ## main
 
+* Add @boardfish to Triage.
+
+    *Joel Hawksley*
+
 * Adds support to change default components path (app/components) with `config.view_component.view_component_path`.
 
-  *lfalcao*
+    *lfalcao*
 
 * Rename private instance variables (such as @variant) to reduce potential conflicts with subclasses.
 
