@@ -130,13 +130,17 @@ module ViewComponent
 
         component_class._sidecar_files(extensions).each_with_object([]) do |path, memo|
           pieces = File.basename(path).split(".")
-          variant = pieces.second.split("+").second&.to_sym
 
-          # grab localized templates and fix regional dash (pt-BR, en-GB...)
-          localized_template = pieces.second.downcase.tr("-", "_")
-
-          # if template is a localized (ie file.country_code.html.erb) append as variant
-          variant = [variant, localized_template].compact.reduce { |s, x| s + "_" + x } if pieces.size >= 4
+          # if template is a localized file (ie file.country_code.html.erb)
+          # append into locale inside variant and fix regional dash (pt-BR, en-GB...)
+          if pieces.length >= 4
+            variant = [
+              pieces.third.split("+").second&.to_sym,
+              pieces.second.downcase.tr("-", "_")
+            ].compact.reduce { |s, x| "#{s}_#{x}" }
+          else
+            variant = pieces.second.split("+").second&.to_sym
+          end
 
           memo << {
             path: path,

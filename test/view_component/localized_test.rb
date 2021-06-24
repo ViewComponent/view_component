@@ -16,19 +16,33 @@ class LocalizedTest < ViewComponent::TestCase
     assert_text("hello,world!")
   end
 
-  # some regional locales (pt-BR, en-GB...) contains a dash and
-  # and functions names can't have name dashs... :thinking:
-  def test_render_component_with_dashed_language
-    render_inline(MyComponent.new)
-    assert_text("hello,world!")
-
+  def test_render_component_with_dashed_regional_locale_name
     with_custom_config("I18n.locale = 'pt-BR'") do
       render_inline(MyComponent.new)
       assert_text("olá,mundo!")
     end
+  end
 
-    render_inline(MyComponent.new)
-    assert_text("hello,world!")
+  def test_render_component_with_default_locale
+    assert I18n.locale, :en
+    assert I18n.default_locale, :en
+
+    with_custom_config(
+      "I18n.default_locale = :es",
+      "I18n.locale = 'pt-BR'"
+    ) do
+      render_inline(MyComponent.new)
+      assert_text("olá,mundo!")
+    end
+
+    # if both locale and default_locale are equal, we use 'component_name.html.erb'
+    with_custom_config(
+      "I18n.locale = :es",
+      "I18n.default_locale = :es",
+    ) do
+      render_inline(MiComponente.new)
+      assert_text("hola,mundo!")
+    end
   end
 
   def test_render_component_methods
@@ -38,10 +52,10 @@ class LocalizedTest < ViewComponent::TestCase
     assert_includes methods, :call_pt_br
   end
 
-  # def test_render_component_localized_with_custom_view
-  # end
-
-  # def test_render_component_localized_with_variants
-  # end
-
+  def test_render_component_localized_with_variant
+    with_custom_config("I18n.locale = 'pt-BR'") do
+      render_inline(VariantsComponent.new.with_variant(:phone))
+      assert_text("Telefone")
+    end
+  end
 end
