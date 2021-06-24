@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Require all PRs to include changelog entries.
+
+    *Joel Hawksley*
+
 * Add @boardfish to Triage.
 
     *Joel Hawksley*
