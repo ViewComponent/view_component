@@ -50,6 +50,23 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector(".footer.text-blue")
   end
 
+  def test_renders_slots_with_args
+    render_inline(SlotsV2WithArgsComponent.new) do |component|
+      component.slot_with_arg("Arg 0") do
+        "Arg slot content"
+      end
+      component.slot_with_kwarg(a: "Kwarg a") do
+        "Kwarg slot content"
+      end
+    end
+
+    assert_selector(".slot-with-arg .arg-0", text: "Arg 0")
+    assert_selector(".slot-with-arg .content", text: "Arg slot content")
+
+    assert_selector(".slot-with-kwarg .kwarg-a", text: "Kwarg a")
+    assert_selector(".slot-with-kwarg .content", text: "Kwarg slot content")
+  end
+
   def test_renders_slots_in_inherited_components
     render_inline(InheritedSlotsV2Component.new(classes: "mt-4")) do |component|
       component.title do

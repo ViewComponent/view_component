@@ -219,6 +219,10 @@ module ViewComponent
       # `view_context.capture` twice, which is slower
       slot.__vc_content_block = block if block_given?
 
+      # Used to allow access to slot arguments via SlotV2#args
+      slot.__vc_args = args
+      slot.__vc_kwargs = kwargs
+
       # If class
       if slot_definition[:renderable]
         slot.__vc_component_instance = slot_definition[:renderable].new(*args, **kwargs)

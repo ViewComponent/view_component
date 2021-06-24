@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add support for slot arguments
+
+    *dkniffin*
+
 * Add @boardfish to Triage.
 
     *Joel Hawksley*

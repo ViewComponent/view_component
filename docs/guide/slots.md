@@ -29,10 +29,10 @@ To render a `renders_many` slot, iterate over the name of the slot:
 
 ```erb
 <%# blog_component.html.erb %>
-<h1><%= header %></h1>
+<h1 class="<%= header.args[:classes] %>"><%= header %></h1>
 
 <% posts.each do |post| %>
-  <%= post %>
+  <%= post.args.post %>
 <% end %>
 ```
 

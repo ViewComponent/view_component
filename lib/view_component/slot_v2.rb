@@ -6,7 +6,7 @@ module ViewComponent
   class SlotV2
     include ViewComponent::WithContentHelper
 
-    attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content
+    attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content, :__vc_args, :__vc_kwargs
 
     def initialize(parent)
       @parent = parent
@@ -58,6 +58,17 @@ module ViewComponent
       end
 
       @content
+    end
+
+    # Allow access to slot arguments
+    def args
+      @args ||= begin
+        a = @__vc_kwargs
+        @__vc_args.each_with_index do |arg, i|
+          a[i] = arg
+        end
+        a
+      end
     end
 
     # Allow access to public component methods via the wrapper
