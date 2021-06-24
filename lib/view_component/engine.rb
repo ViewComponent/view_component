@@ -105,6 +105,8 @@ module ViewComponent
     initializer "view_component.fragment_caching" do |app|
       next unless app.config.view_component.fragment_caching_enabled
 
+      ActionController::Base.view_paths.unshift "app/components"
+
       ActiveSupport.on_load(:action_view) do
         require "view_component/caching/digestor_monkey_patch"
         require "view_component/caching/erb_tracker"
