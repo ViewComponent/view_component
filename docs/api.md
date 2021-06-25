@@ -105,6 +105,14 @@ Enable or disable component previews:
 
 Defaults to `true` in development.
 
+### #show_previews_source
+
+Enable or disable source code previews in component previews:
+
+    config.view_component.show_previews_source = true
+
+Defaults to `false`.
+
 ### #test_controller
 
 Set the controller used for testing components:
