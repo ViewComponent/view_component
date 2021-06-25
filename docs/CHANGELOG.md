@@ -23,6 +23,11 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Add view helper `preview_source` for rendering a source code preview below previews.
+* Add config option `config.view_component.show_previews_source` for enabling the source preview.
+
+    *Johannes Engl*
+
 ## 2.34.0
 
 * Add the ability to enable ActiveSupport notifications (`!render.view_component` event) with `config.view_component.instrumentation_enabled`.
