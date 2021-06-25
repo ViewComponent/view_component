@@ -1,1 +1,1 @@
-docs/changelog.md
+docs/CHANGELOG.md

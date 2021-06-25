@@ -241,6 +241,14 @@ module ViewComponent
     #
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
+    # Enable or disable source code previews in component previews:
+    #
+    #     config.view_component.show_previews_source = true
+    #
+    # Defaults to `false`.
+    #
+    mattr_accessor :show_previews_source, instance_writer: false, default: false
+
     class << self
       # @private
       attr_accessor :source_location, :virtual_path
