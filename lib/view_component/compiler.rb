@@ -38,11 +38,9 @@ module ViewComponent
       templates.each do |template|
         # Remove existing compiled template methods,
         # as Ruby warns when redefining a method.
-        method_name = call_method_name(template[:variant]).to_sym
+        method_name = call_method_name(template[:variant])
 
-        if component_class.instance_methods.include?(method_name)
-          component_class.send(:undef_method, method_name)
-        end
+        component_class.send(:undef_method, method_name.to_sym) if component_class.instance_methods.include?(method_name.to_sym)
 
         component_class.class_eval <<-RUBY, template[:path], -1
           def #{method_name}
@@ -64,9 +62,7 @@ module ViewComponent
     attr_reader :component_class
 
     def define_render_template_for
-      if component_class.instance_methods.include?(:render_template_for)
-        component_class.send(:undef_method, :render_template_for)
-      end
+      component_class.send(:undef_method, :render_template_for) if component_class.instance_methods.include?(:render_template_for)
 
       variant_elsifs = variants.compact.uniq.map do |variant|
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
@@ -132,12 +128,12 @@ module ViewComponent
           pieces = File.basename(path).split(".")
 
           # if template is a localized file (ie file.country_code.html.erb)
-          # append into locale inside variant and fix regional dash (pt-BR, en-GB...)
+          # append locale inside variant and fix regional dash (pt-BR, en-GB...)
           if pieces.length >= 4
             variant = [
-              pieces.third.split("+").second&.to_sym,
-              pieces.second.downcase.tr("-", "_")
-            ].compact.reduce { |s, x| "#{s}_#{x}" }
+              pieces.third.split("+").second,
+              pieces.second.underscore
+            ].compact.join('_')
           else
             variant = pieces.second.split("+").second&.to_sym
           end

@@ -7,7 +7,7 @@ class LocalizedTest < ViewComponent::TestCase
     render_inline(MyComponent.new)
     assert_text("hello,world!")
 
-    with_custom_config("I18n.locale = :es") do
+    with_locale(:es) do
       render_inline(MyComponent.new)
       assert_text("Hola,mundo!")
     end
@@ -17,9 +17,16 @@ class LocalizedTest < ViewComponent::TestCase
   end
 
   def test_render_component_with_dashed_regional_locale_name
-    with_custom_config("I18n.locale = 'pt-BR'") do
+    with_locale('pt-BR') do
       render_inline(MyComponent.new)
       assert_text("olá,mundo!")
+    end
+  end
+
+  def test_render_component_fallback
+    with_locale('ru') do
+      render_inline(MyComponent.new)
+      assert_text("hello,world!")
     end
   end
 
@@ -27,19 +34,13 @@ class LocalizedTest < ViewComponent::TestCase
     assert I18n.locale, :en
     assert I18n.default_locale, :en
 
-    with_custom_config(
-      "I18n.default_locale = :es",
-      "I18n.locale = 'pt-BR'"
-    ) do
+    with_locale('pt-BR', :es) do
       render_inline(MyComponent.new)
       assert_text("olá,mundo!")
     end
 
     # if both locale and default_locale are equal, we use 'component_name.html.erb'
-    with_custom_config(
-      "I18n.locale = :es",
-      "I18n.default_locale = :es",
-    ) do
+    with_locale(:es, :es) do
       render_inline(MiComponente.new)
       assert_text("hola,mundo!")
     end
@@ -53,7 +54,7 @@ class LocalizedTest < ViewComponent::TestCase
   end
 
   def test_render_component_localized_with_variant
-    with_custom_config("I18n.locale = 'pt-BR'") do
+    with_locale('pt-BR') do
       render_inline(VariantsComponent.new.with_variant(:phone))
       assert_text("Telefone")
     end

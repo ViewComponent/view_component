@@ -96,9 +96,8 @@ module ViewComponent
 
       if render?
         if defined?(I18n) && !I18n.locale.eql?(I18n.default_locale)
-          attr = (I18n.locale || I18n.default_locale).to_s.downcase.tr("-", "_")
-
-          custom_variant = [@__vc_variant, attr].compact.reduce { |s, x| "#{s}_#{x}" }
+          attr = (I18n.locale || I18n.default_locale).to_s.underscore
+          custom_variant = [@__vc_variant, attr].compact.join('_')
         end
 
         render_template_for(custom_variant || @__vc_variant).to_s + _output_postamble
