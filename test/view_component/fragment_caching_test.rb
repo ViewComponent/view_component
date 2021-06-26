@@ -1,25 +1,22 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "view_component/caching/erb_tracker"
-require "view_component/caching/component_tracker"
+require "support/fragment_caching_helper"
 
-class DependencyTrackingTest < ActionDispatch::IntegrationTest
+class DependencyTrackingTest < ActiveSupport::TestCase
+  include FragmentCachingHelper
+
   def setup
-    Mime::Type.register "text/ruby", :rb
-    set_tracker :erb, ViewComponent::Caching::ERBTracker
-    set_tracker :rb, ViewComponent::Caching::ComponentTracker
+    fragment_caching_setup
   end
 
   def teardown
-    Mime::Type.unregister :rb
-    set_tracker :erb, ActionView::DependencyTracker::ERBTracker
-    set_tracker :rb, nil
+    fragment_caching_teardown
   end
 
   test "finds dependencies of rails templates including components" do
     name = "integration_examples/partial"
-    template = find_template name, "test/app/views", :html
+    template = find_template name, template_finder
 
     dependencies = ActionView::DependencyTracker.find_dependencies name, template
 
@@ -28,28 +25,54 @@ class DependencyTrackingTest < ActionDispatch::IntegrationTest
 
   test "finds dependencies of components including template files and parent classes" do
     name = "InheritedWithOwnTemplateComponent"
-    template = find_template name.underscore, "test/app/components", :rb
+    template = find_template name.underscore, component_finder
 
     dependencies = ActionView::DependencyTracker.find_dependencies name, template
 
     assert_equal ["inherited_with_own_template_component", "MyComponent"], dependencies
   end
+end
 
-  private
+class DigestorTest < ActiveSupport::TestCase
+  include FragmentCachingHelper
 
-    def set_tracker(extension, tracker)
-      ActionView::DependencyTracker.remove_tracker ActionView::Template.handler_for_extension(extension)
-      ActionView::DependencyTracker.register_tracker extension, tracker if tracker
+  def setup
+    fragment_caching_setup
+  end
+
+  def teardown
+    fragment_caching_teardown
+  end
+
+  test "changes in component class are reflected in rendering view's digest" do
+    name = "integration_examples/partial"
+    finder = template_finder
+    template = find_template name, finder
+
+    first_digest = digest name, template, finder
+
+    finder.digest_cache.clear
+
+    second_digest = modify_file("app/components/partial_component.rb", "# Modified!") do
+      digest name, template, finder
     end
 
-    def find_template(name, path, format)
-      template_finder(path, format).find_all(name, [], false, []).first
+    assert_not_equal first_digest, second_digest
+  end
+
+  test "changes in a component's parent class are reflected in the component's digest" do
+    name = "ChildComponent"
+    finder = component_finder
+    template = find_template name.underscore, finder
+
+    first_digest = digest name, template, finder
+
+    finder.digest_cache.clear
+
+    second_digest = modify_file("app/components/parent_component.rb", "# Modified!") do
+      digest name, template, finder
     end
 
-    def template_finder(path, format)
-      ActionView::LookupContext.new(
-        ActionView::PathSet.new([path]),
-        formats: [format]
-      )
-    end
+    assert_not_equal first_digest, second_digest
+  end
 end
