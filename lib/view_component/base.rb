@@ -249,6 +249,13 @@ module ViewComponent
     #
     mattr_accessor :show_previews_source, instance_writer: false, default: false
 
+    # Path for component files
+    #
+    #     config.view_component.view_component_path = "app/my_components"
+    #
+    # Defaults to "app/components".
+    mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
+
     class << self
       # @private
       attr_accessor :source_location, :virtual_path
