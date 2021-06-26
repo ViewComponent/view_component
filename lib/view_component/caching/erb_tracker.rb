@@ -34,14 +34,30 @@ module ViewComponent
 
       def add_dependencies(render_dependencies, arguments, pattern)
         arguments.scan(pattern) do
-          add_component_dependency(render_dependencies, Regexp.last_match[:component])
-          add_dynamic_dependency(render_dependencies, Regexp.last_match[:dynamic])
-          add_static_dependency(render_dependencies, Regexp.last_match[:static])
+          match = Regexp.last_match
+          add_component_dependency(render_dependencies, match[:component])
+          add_dynamic_dependency(render_dependencies, match[:dynamic])
+          add_static_dependency(render_dependencies, match[:static], match[:quote])
         end
       end
 
       def add_component_dependency(dependencies, dependency)
         dependencies << dependency if dependency
+      end
+
+      def add_static_dependency(dependencies, dependency, quote_type)
+        if quote_type == '"'
+          # Ignore if there is interpolation
+          return if dependency.include?('#{')
+        end
+
+        if dependency
+          if dependency.include?("/")
+            dependencies << dependency
+          else
+            dependencies << "#{directory}/#{dependency}"
+          end
+        end
       end
     end
   end
