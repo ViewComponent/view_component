@@ -45,31 +45,31 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   end
 
   def test_sidecar_files
-    root = ViewComponent::Engine.root
+    root = ViewComponent::Engine.root.join("test/sandbox")
 
     assert_equal(
       [
-        "#{root}/test/app/components/template_and_sidecar_directory_template_component.html.erb",
-        "#{root}/test/app/components/template_and_sidecar_directory_template_component/template_and_sidecar_directory_template_component.html.erb",
+        "#{root}/app/components/template_and_sidecar_directory_template_component.html.erb",
+        "#{root}/app/components/template_and_sidecar_directory_template_component/template_and_sidecar_directory_template_component.html.erb",
       ],
       TemplateAndSidecarDirectoryTemplateComponent._sidecar_files(["erb"])
     )
 
     assert_equal(
       [
-        "#{root}/test/app/components/css_sidecar_file_component.css",
-        "#{root}/test/app/components/css_sidecar_file_component.html.erb",
+        "#{root}/app/components/css_sidecar_file_component.css",
+        "#{root}/app/components/css_sidecar_file_component.html.erb",
       ],
       CssSidecarFileComponent._sidecar_files(["css", "erb"])
     )
 
     assert_equal(
-      ["#{root}/test/app/components/css_sidecar_file_component.css"],
+      ["#{root}/app/components/css_sidecar_file_component.css"],
       CssSidecarFileComponent._sidecar_files(["css"])
     )
 
     assert_equal(
-      ["#{root}/test/app/components/translatable_component.yml"],
+      ["#{root}/app/components/translatable_component.yml"],
       TranslatableComponent._sidecar_files(["yml"])
     )
   end

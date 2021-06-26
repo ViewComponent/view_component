@@ -13,13 +13,13 @@ require "haml"
 require "slim"
 require "jbuilder"
 
-module Dummy
+module Sandbox
   class Application < Rails::Application
     config.action_controller.asset_host = "http://assets.example.com"
   end
 end
 
-Dummy::Application.config.secret_key_base = "foo"
+Sandbox::Application.config.secret_key_base = "foo"
 
 # Do not silence library backtraces in test reports
 Rails.backtrace_cleaner.remove_filters!
