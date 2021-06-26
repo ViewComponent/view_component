@@ -52,10 +52,11 @@ def with_preview_controller(new_value)
 end
 
 def with_custom_component_path(new_value)
-  old_value = Rails.application.config.view_component.view_component_path
-  Rails.application.config.view_component.view_component_path = new_value
+  old_value = ViewComponent::Base.view_component_path
+  ViewComponent::Base.view_component_path = new_value
   yield
-  Rails.application.config.view_component.view_component_path = old_value
+ensure
+  ViewComponent::Base.view_component_path = old_value
 end
 
 def with_new_cache
