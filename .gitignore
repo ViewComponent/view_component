@@ -14,7 +14,8 @@
 /test/version_tmp/
 /tmp/
 /test/log/*
-/test/app/tmp/*
+/test/sandbox/tmp/*
+/test/sandbox/log/*
 /test/tmp/*
 /.yardoc
 /_yardoc/
