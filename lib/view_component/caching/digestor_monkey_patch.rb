@@ -52,7 +52,7 @@ module ViewComponent
 
         def component_finder
           @component_finder ||= ActionView::LookupContext.new(
-            ActionView::PathSet.new(["app/components"]),
+            ActionView::PathSet.new([Rails.root.join("app/components")]),
             formats: [:rb]
           )
         end
