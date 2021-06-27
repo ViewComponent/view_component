@@ -51,7 +51,7 @@ class DigestorTest < ActiveSupport::TestCase
 
     first_digest = digest name, template, finder
 
-    finder.digest_cache.clear
+    clear_digest_cache! finder
 
     second_digest = modify_file("app/components/partial_component.rb", "# Modified!") do
       digest name, template, finder
@@ -67,7 +67,7 @@ class DigestorTest < ActiveSupport::TestCase
 
     first_digest = digest name, template, finder
 
-    finder.digest_cache.clear
+    clear_digest_cache! finder
 
     second_digest = modify_file("app/components/parent_component.rb", "# Modified!") do
       digest name, template, finder

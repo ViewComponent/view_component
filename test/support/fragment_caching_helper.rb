@@ -34,6 +34,10 @@ module FragmentCachingHelper
     )
   end
 
+  def clear_digest_cache!(finder)
+    finder.digest_cache.clear
+  end
+
   def fragment_caching_setup
     # Apply monkey patch to ActionView::Digestor
     ActionView::Digestor.prepend ViewComponent::Caching::DigestorMonkeyPatch
