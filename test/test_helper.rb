@@ -18,7 +18,7 @@ require "minitest/autorun"
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path("../config/environment.rb", __FILE__)
+require File.expand_path("../sandbox/config/environment.rb", __FILE__)
 require "rails/test_help"
 
 # Sets custom preview paths in tests.

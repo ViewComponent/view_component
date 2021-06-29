@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Rename test app and move files under /test/sandbox.
+
+    *Matt-Yorkley*
+
 * Make view_component_path config option available on ViewComponent::Base.
 
     *Matt-Yorkley*
