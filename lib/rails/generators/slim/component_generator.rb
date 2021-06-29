@@ -17,7 +17,6 @@ module Slim
       def copy_view_file
         super
       end
-
     end
   end
 end

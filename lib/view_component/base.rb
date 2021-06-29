@@ -249,6 +249,13 @@ module ViewComponent
     #
     mattr_accessor :show_previews_source, instance_writer: false, default: false
 
+    # Path for component files
+    #
+    #     config.view_component.view_component_path = "app/my_components"
+    #
+    # Defaults to "app/components".
+    mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
+
     class << self
       # @private
       attr_accessor :source_location, :virtual_path
@@ -330,7 +337,9 @@ module ViewComponent
         child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].absolute_path
 
         # Removes the first part of the path and the extension.
-        child.virtual_path = child.source_location.gsub(%r{(.*app/components)|(\.rb)}, "")
+        child.virtual_path = child.source_location.gsub(
+          %r{(.*#{Regexp.quote(ViewComponent::Base.view_component_path)})|(\.rb)}, ""
+        )
 
         super
       end

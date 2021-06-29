@@ -121,3 +121,11 @@ Set the controller used for testing components:
 
 Defaults to ApplicationController. Can also be configured on a per-test
 basis using `with_controller_class`.
+
+### #view_component_path
+
+Path for component files
+
+    config.view_component.view_component_path = "app/my_components"
+
+Defaults to "app/components".
