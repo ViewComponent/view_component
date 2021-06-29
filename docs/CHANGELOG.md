@@ -7,9 +7,9 @@ title: Changelog
 
 ## main
 
-* Make view_component_path config option available on ViewComponent::Base
+* Make view_component_path config option available on ViewComponent::Base.
 
-  *Matt-Yorkley*
+    *Matt-Yorkley*
 
 * Add @boardfish to Triage.
 
