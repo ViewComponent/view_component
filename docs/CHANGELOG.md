@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Require all PRs to include changelog entries.
+
+    *Joel Hawksley*
+
 * Rename test app and move files under /test/sandbox.
 
     *Matt-Yorkley*
