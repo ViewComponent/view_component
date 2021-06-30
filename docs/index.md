@@ -14,7 +14,7 @@ ViewComponents are Ruby objects used to build markup. Think of them as an evolut
 
 ## When should I use ViewComponents?
 
-ViewComponents best for templates that are reused or benefit from being tested directly. Heavily reused partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
+ViewComponents work best for templates that are reused or benefit from being tested directly. Heavily reused partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
 
 ## Benefits
 
@@ -107,6 +107,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/vinistock?s=64" alt="vinistock" width="32" />
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
+<img src="https://avatars.githubusercontent.com/Matt-Yorkley?s=64" alt="Matt-Yorkley" width="32" />
 
 <hr />
 

@@ -7,6 +7,26 @@ title: Changelog
 
 ## main
 
+* Require all PRs to include changelog entries.
+
+    *Joel Hawksley*
+
+* Rename test app and move files under /test/sandbox.
+
+    *Matt-Yorkley*
+
+* Make view_component_path config option available on ViewComponent::Base.
+
+    *Matt-Yorkley*
+
+* Add @boardfish to Triage.
+
+    *Joel Hawksley*
+
+* Adds support to change default components path (app/components) with `config.view_component.view_component_path`.
+
+    *lfalcao*
+
 * Rename private instance variables (such as @variant) to reduce potential conflicts with subclasses.
 
     *Joel Hawksley*
@@ -14,6 +34,11 @@ title: Changelog
 * Add documentation for configuration options.
 
     *Joel Hawksley*
+
+* Add view helper `preview_source` for rendering a source code preview below previews.
+* Add config option `config.view_component.show_previews_source` for enabling the source preview.
+
+    *Johannes Engl*
 
 ## 2.34.0
 

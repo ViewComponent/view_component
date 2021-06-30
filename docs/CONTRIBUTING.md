@@ -20,7 +20,7 @@ Contributions to this project are [released](https://help.github.com/articles/gi
 1. Make sure the tests pass on your machine: `bundle exec rake`. (Run a subset of tests by supplying a file glob to the test command: `TEST="test/components/YOUR_COMPONENT_test.rb" bundle exec rake`)
 1. Create a new branch: `git checkout -b my-branch-name`.
 1. Make your change, add tests, and make sure the tests still pass.
-1. Add an entry to the top of `CHANGELOG.md` for your changes.
+1. Add an entry to the top of `CHANGELOG.md` for your changes, no matter how small they are. We want to recognize your contribution!
 2. If it's your first time contributing, add yourself to `docs/index.md`.
 3. Push to your fork and [submit a pull request](https://github.com/github/view_component/compare).
 4. Pat yourself on the back and wait for your pull request to be reviewed and merged.
@@ -66,7 +66,7 @@ ViewComponent triagers are able to manage issues and pull request by assigning o
 
 After helping with the project by participating in issues, pull requests, and/or discussions, members of the community are welcome to request triage access by opening a pull request to update this list:
 
-The triagers team is @andrewmcodes, @bbugh, @cesariouy, @dark-panda, @dylnclrk, @g13ydson, @horacio, @jcoyne, @johannesengl, @kaspermeyer, @mellowfish, @metade, @nashby, @rainerborene, @rdavid1099, @spdawson, and @vinistock.
+The triagers team is @andrewmcodes, @bbugh, @boardfish, @cesariouy, @dark-panda, @dylnclrk, @g13ydson, @horacio, @jcoyne, @johannesengl, @kaspermeyer, @mellowfish, @metade, @nashby, @rainerborene, @rdavid1099, @spdawson, and @vinistock.
 
 Committers and maintainers may also nominate triagers by opening a pull request to update this list.
 

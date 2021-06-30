@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Dummy::Application.routes.draw do
+Sandbox::Application.routes.draw do
   root to: "integration_examples#index"
   get :content_areas, to: "integration_examples#content_areas"
   get :slots, to: "integration_examples#slots"
