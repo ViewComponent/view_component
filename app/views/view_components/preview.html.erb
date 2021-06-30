@@ -3,3 +3,7 @@
 <% else %>
   <%= render_component(@render_args[:component], &@render_args[:block])%>
 <% end %>
+
+<% if ViewComponent::Base.show_previews_source %>
+  <%= preview_source %>
+<% end %>

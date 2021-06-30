@@ -23,7 +23,7 @@ module ViewComponent
     end
 
     def component_path
-      Rails.application.config.view_component.view_component_path || "app/components"
+      ViewComponent::Base.view_component_path
     end
   end
 end

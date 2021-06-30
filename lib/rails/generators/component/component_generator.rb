@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require "rails/generators/abstract_generator"
+
 module Rails
   module Generators
     class ComponentGenerator < Rails::Generators::NamedBase
+      include ViewComponent::AbstractGenerator
+
       source_root File.expand_path("templates", __dir__)
 
       argument :attributes, type: :array, default: [], banner: "attribute"
@@ -23,10 +27,6 @@ module Rails
 
       private
 
-      def file_name
-        @_file_name ||= super.sub(/_component\z/i, "")
-      end
-
       def parent_class
         defined?(ApplicationComponent) ? "ApplicationComponent" : "ViewComponent::Base"
       end
@@ -43,10 +43,6 @@ module Rails
 
       def initialize_call_method_for_inline?
         options["inline"]
-      end
-
-      def component_path
-        Rails.application.config.view_component.view_component_path || "app/components"
       end
     end
   end
