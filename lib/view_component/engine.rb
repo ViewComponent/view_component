@@ -105,7 +105,7 @@ module ViewComponent
     initializer "view_component.fragment_caching" do |app|
       next unless app.config.view_component.fragment_caching_enabled
 
-      ActionController::Base.view_paths.unshift "app/components"
+      ActionController::Base.view_paths.unshift ViewComponent::Base.view_component_path
 
       if Rails.version.to_f >= 6.1
         Mime::Type.register "text/ruby", :rb

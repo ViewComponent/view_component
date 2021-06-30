@@ -24,9 +24,9 @@ module ViewComponent
 
       # Returns relevant templates for the component
       def templates
-        component_class.
-          _sidecar_files(ActionView::Template.template_handler_extensions).
-          map { |path| path.gsub(%r{(.*app/components/)|(\..*)}, "") }
+        component_class._sidecar_files(ActionView::Template.template_handler_extensions).map do |path|
+          path.gsub(%r{(.*#{Regexp.quote(ViewComponent::Base.view_component_path)}/)|(\..*)}, "")
+        end
       end
 
       # Returns relevant ancestors the component inherits from (if any)
