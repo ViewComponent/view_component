@@ -105,6 +105,11 @@ module ViewComponent
     initializer "view_component.fragment_caching" do |app|
       next unless app.config.view_component.fragment_caching_enabled
 
+      if Rails.version.to_f < 6.0
+        logger.error "Fragment Caching with ViewComponent is not supported in Rails < 6.0"
+        next
+      end
+
       ActionController::Base.view_paths.unshift ViewComponent::Base.view_component_path
 
       if Rails.version.to_f >= 6.1
