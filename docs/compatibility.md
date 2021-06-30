@@ -37,5 +37,3 @@ This is because ViewComponent does not have access to the helpers it needs via A
 ```
 delegate :rich_text_area_tag, to: :helpers
 ```
-
-*_This is the simplest route. Adding the helpers directly via `include ActionText::Engine.helpers` leads to several more errors and requires additional configuration that is not necessary._
