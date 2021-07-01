@@ -125,9 +125,10 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_sub_component_raise_with_duplicate_slot_name
-    exception = assert_raises ArgumentError do
-      SlotsV2Component.renders_one :title
-    end
+    exception =
+      assert_raises ArgumentError do
+        SlotsV2Component.renders_one :title
+      end
 
     assert_includes exception.message, "title slot declared multiple times"
   end
@@ -264,7 +265,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_nested_blocks_content_selectable_true
     render_inline(NestedSharedState::TableComponent.new(selectable: true)) do |table_card|
-      table_card.header("regular_argument", class_names: "table__header extracted_kwarg", data: { splatted_kwarg: "splatted_keyword_argument"}) do |header|
+      table_card.header("regular_argument", class_names: "table__header extracted_kwarg", data: { splatted_kwarg: "splatted_keyword_argument" }) do |header|
         header.cell { "Cell1" }
         header.cell(class_names: "-has-sort") { "Cell2" }
       end
@@ -302,11 +303,12 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_component_raises_when_given_invalid_slot_name
-    exception = assert_raises ArgumentError do
-      Class.new(ViewComponent::Base) do
-        renders_one :content
+    exception =
+      assert_raises ArgumentError do
+        Class.new(ViewComponent::Base) do
+          renders_one :content
+        end
       end
-    end
 
     assert_includes exception.message, "content is not a valid slot name"
   end
@@ -339,14 +341,15 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_raises_if_using_both_block_content_and_with_content
-    error = assert_raises ArgumentError do
-      component = SlotsV2Component.new
-      slot = component.title("some_argument")
-      slot.with_content("This is my title!")
-      slot.__vc_content_block = "some block"
+    error =
+      assert_raises ArgumentError do
+        component = SlotsV2Component.new
+        slot = component.title("some_argument")
+        slot.with_content("This is my title!")
+        slot.__vc_content_block = "some block"
 
-      render_inline(component)
-    end
+        render_inline(component)
+      end
 
     assert_equal "Block provided after calling `with_content`. Use one or the other.", error.message
   end

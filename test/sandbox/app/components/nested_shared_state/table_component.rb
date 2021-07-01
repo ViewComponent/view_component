@@ -2,7 +2,7 @@
 
 module NestedSharedState
   class TableComponent < ViewComponent::Base
-    renders_one :header, -> (arg = nil, **system_arguments, &block) do
+    renders_one :header, ->(arg = nil, **system_arguments, &block) do
       header_system_arguments = system_arguments
       header_system_arguments[:selectable] = @selectable
 

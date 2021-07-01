@@ -10,9 +10,9 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       "/tilda~/component/test_component.html.haml"
     ]
     expected = [
-      {variant: :phone, handler: "erb"},
-      {variant: :desktop, handler: "slim"},
-      {variant: nil, handler: "haml"}
+      { variant: :phone, handler: "erb" },
+      { variant: :desktop, handler: "slim" },
+      { variant: nil, handler: "haml" }
     ]
 
     compiler = ViewComponent::Compiler.new(ViewComponent::Base)
@@ -30,17 +30,19 @@ class ViewComponent::Base::UnitTest < Minitest::Test
 
   def test_calling_helpers_outside_render_raises
     component = ViewComponent::Base.new
-    err = assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
-      component.helpers
-    end
+    err =
+      assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+        component.helpers
+      end
     assert_equal "`helpers` can only be called at render time.", err.message
   end
 
   def test_calling_controller_outside_render_raises
     component = ViewComponent::Base.new
-    err = assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
-      component.controller
-    end
+    err =
+      assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+        component.controller
+      end
     assert_equal "`controller` can only be called at render time.", err.message
   end
 

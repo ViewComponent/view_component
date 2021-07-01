@@ -3,7 +3,7 @@
 class SlotsV2Component < ViewComponent::Base
   renders_one :title
   renders_one :subtitle
-  renders_one :footer, -> (classes: "", &block) do
+  renders_one :footer, ->(classes: "", &block) do
     content_tag :footer, class: "footer #{classes}" do
       block.call if block
     end
@@ -11,7 +11,7 @@ class SlotsV2Component < ViewComponent::Base
 
   renders_many :tabs
 
-  renders_many :items, -> (highlighted: false) do
+  renders_many :items, ->(highlighted: false) do
     MyHighlightComponent.new(highlighted: highlighted)
   end
   renders_one :extra, "ExtraComponent"

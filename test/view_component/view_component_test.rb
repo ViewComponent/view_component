@@ -34,19 +34,21 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_raise_error_when_content_already_set
-    error = assert_raises ArgumentError do
-      render_inline(WrapperComponent.new.with_content("setter content")) do
-        "block content"
+    error =
+      assert_raises ArgumentError do
+        render_inline(WrapperComponent.new.with_content("setter content")) do
+          "block content"
+        end
       end
-    end
 
     assert_includes error.message, "Block provided after calling `with_content`"
   end
 
   def test_raise_error_when_component_implements_with_content
-    exception = assert_raises ViewComponent::ComponentError do
-      render_inline(InvalidWithRenderComponent.new)
-    end
+    exception =
+      assert_raises ViewComponent::ComponentError do
+        render_inline(InvalidWithRenderComponent.new)
+      end
 
     assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `with_content`."
   end
@@ -58,9 +60,10 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_raises_error_when_with_content_is_called_withot_any_values
-    exception = assert_raises ArgumentError do
-      WrapperComponent.new.with_content(nil)
-    end
+    exception =
+      assert_raises ArgumentError do
+        WrapperComponent.new.with_content(nil)
+      end
 
     assert_equal "No content provided.", exception.message
   end
@@ -283,19 +286,21 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_content_areas_template_raise_with_unknown_content_areas
-    exception = assert_raises ArgumentError do
-      render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
-        component.with(:foo) { "Hello!" }
+    exception =
+      assert_raises ArgumentError do
+        render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
+          component.with(:foo) { "Hello!" }
+        end
       end
-    end
 
     assert_includes exception.message, "Unknown content_area 'foo' - expected one of '[:title, :body, :footer]'"
   end
 
   def test_with_content_areas_raise_with_content_keyword
-    exception = assert_raises ArgumentError do
-      ContentAreasComponent.with_content_areas :content
-    end
+    exception =
+      assert_raises ArgumentError do
+        ContentAreasComponent.with_content_areas :content
+      end
 
     assert_includes exception.message, ":content is a reserved content area name"
   end
@@ -469,18 +474,20 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_validations_component
-    exception = assert_raises ActiveModel::ValidationError do
-      render_inline(ValidationsComponent.new)
-    end
+    exception =
+      assert_raises ActiveModel::ValidationError do
+        render_inline(ValidationsComponent.new)
+      end
 
     assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
   # TODO: Remove in v3.0.0
   def test_before_render_check
-    exception = assert_raises ActiveModel::ValidationError do
-      render_inline(OldValidationsComponent.new)
-    end
+    exception =
+      assert_raises ActiveModel::ValidationError do
+        render_inline(OldValidationsComponent.new)
+      end
 
     assert_equal "Validation failed: Content can't be blank", exception.message
   end
@@ -500,51 +507,57 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_raises_error_when_sidecar_template_is_missing
-    exception = assert_raises ViewComponent::TemplateError do
-      render_inline(MissingTemplateComponent.new)
-    end
+    exception =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(MissingTemplateComponent.new)
+      end
 
     assert_includes exception.message, "Could not find a template file or inline render method for MissingTemplateComponent"
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_is_present
-    error = assert_raises ViewComponent::TemplateError do
-      render_inline(TooManySidecarFilesComponent.new)
-    end
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(TooManySidecarFilesComponent.new)
+      end
 
     assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
-    error = assert_raises ViewComponent::TemplateError do
-      render_inline(TooManySidecarFilesForVariantComponent.new)
-    end
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(TooManySidecarFilesForVariantComponent.new)
+      end
 
     assert_includes error.message, "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
   end
 
   def test_raise_error_when_default_template_file_and_inline_default_call_exist
-    error = assert_raises ViewComponent::TemplateError do
-      render_inline(DefaultTemplateAndInlineDefaultTemplateComponent.new)
-    end
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(DefaultTemplateAndInlineDefaultTemplateComponent.new)
+      end
 
     assert_includes error.message, "Template file and inline render method found for DefaultTemplateAndInlineDefaultTemplateComponent."
   end
 
   def test_raise_error_when_variant_template_file_and_inline_variant_call_exist
-    error = assert_raises ViewComponent::TemplateError do
-      with_variant :phone do
-        render_inline(VariantTemplateAndInlineVariantTemplateComponent.new)
+    error =
+      assert_raises ViewComponent::TemplateError do
+        with_variant :phone do
+          render_inline(VariantTemplateAndInlineVariantTemplateComponent.new)
+        end
       end
-    end
 
     assert_includes error.message, "Template file and inline render method found for variant 'phone' in VariantTemplateAndInlineVariantTemplateComponent."
   end
 
   def test_raise_error_when_template_file_and_sidecar_directory_template_exist
-    error = assert_raises ViewComponent::TemplateError do
-      render_inline(TemplateAndSidecarDirectoryTemplateComponent.new)
-    end
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(TemplateAndSidecarDirectoryTemplateComponent.new)
+      end
 
     assert_includes error.message, "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
   end
@@ -558,9 +571,10 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_backtrace_returns_correct_file_and_line_number
-    error = assert_raises NameError do
-      render_inline(ExceptionInTemplateComponent.new)
-    end
+    error =
+      assert_raises NameError do
+        render_inline(ExceptionInTemplateComponent.new)
+      end
 
     assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
   end
@@ -622,18 +636,20 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_render_collection_missing_collection_object
-    exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.with_collection("foo"))
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(ProductComponent.with_collection("foo"))
+      end
 
     assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: \"foo\""
   end
 
   def test_render_collection_missing_arg
     products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
-    exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.with_collection(products))
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(ProductComponent.with_collection(products))
+      end
 
     assert_match(/missing keyword/, exception.message)
     assert_match(/notice/, exception.message)
@@ -649,19 +665,21 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_collection_component_missing_parameter_name
-    exception = assert_raises ArgumentError do
-      render_inline(MissingCollectionParameterNameComponent.with_collection([]))
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(MissingCollectionParameterNameComponent.with_collection([]))
+      end
 
     assert_match(/MissingCollectionParameterNameComponent initializer must accept `foo` collection parameter/, exception.message)
   end
 
   def test_collection_component_missing_default_parameter_name
-    exception = assert_raises ArgumentError do
-      render_inline(
-        MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
-      )
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(
+          MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
+        )
+      end
 
     assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
   end
@@ -671,9 +689,10 @@ class ViewComponentTest < ViewComponent::TestCase
       old_cache = ViewComponent::CompileCache.cache
       ViewComponent::CompileCache.cache = Set.new
 
-      exception = assert_raises ViewComponent::ComponentError do
-        InvalidParametersComponent.compile(raise_errors: true)
-      end
+      exception =
+        assert_raises ViewComponent::ComponentError do
+          InvalidParametersComponent.compile(raise_errors: true)
+        end
 
       assert_match(/InvalidParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
     ensure
@@ -686,9 +705,10 @@ class ViewComponentTest < ViewComponent::TestCase
       old_cache = ViewComponent::CompileCache.cache
       ViewComponent::CompileCache.cache = Set.new
 
-      exception = assert_raises ViewComponent::ComponentError do
-        InvalidNamedParametersComponent.compile(raise_errors: true)
-      end
+      exception =
+        assert_raises ViewComponent::ComponentError do
+          InvalidNamedParametersComponent.compile(raise_errors: true)
+        end
 
       assert_match(/InvalidNamedParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
     ensure
@@ -697,11 +717,12 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_collection_component_with_trailing_comma_attr_reader
-    exception = assert_raises ArgumentError do
-      render_inline(
-        ProductReaderOopsComponent.with_collection(["foo"])
-      )
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(
+          ProductReaderOopsComponent.with_collection(["foo"])
+        )
+      end
 
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
@@ -752,17 +773,18 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_collection_parameter_does_not_require_compile
-    dynamic_component = Class.new(ViewComponent::Base) do
-      with_collection_parameter :greeting
+    dynamic_component =
+      Class.new(ViewComponent::Base) do
+        with_collection_parameter :greeting
 
-      def initialize(greeting = "hello world")
-        @greeting = greeting
-      end
+        def initialize(greeting = "hello world")
+          @greeting = greeting
+        end
 
-      def call
-        content_tag :h1, @greeting
+        def call
+          content_tag :h1, @greeting
+        end
       end
-    end
 
     # Necessary because anonymous classes don't have a `name` property
     Object.const_set("MY_COMPONENT", dynamic_component)
