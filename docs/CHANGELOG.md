@@ -56,7 +56,7 @@ title: Changelog
 
     *Johannes Engl*
 
-* Add documentation for compatibility with ActionText
+* Add documentation for compatibility with ActionText.
 
     *Jared Planter*
 
