@@ -89,7 +89,7 @@ PATH
   specs:
     view_component (2.34.0)
       activesupport (>= 5.0.0, < 7.0)
-      method_source
+      method_source (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
