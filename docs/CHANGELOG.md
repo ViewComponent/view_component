@@ -7,6 +7,22 @@ title: Changelog
 
 ## main
 
+* Bump `activesupport` upper bound from `< 7.0` to `< 8.0`.
+
+    *Richard Macklin*
+
+* Add ERB Lint for a few basic rules.
+
+    *Joel Hawksley*
+
+* Sort `gemspec` dependencies alphabetically.
+
+    *Joel Hawksley*
+
+* Lock `method_source` at `1.0` to avoid open-ended dependency.
+
+    *Joel Hawksley*
+
 * Require all PRs to include changelog entries.
 
     *Joel Hawksley*
