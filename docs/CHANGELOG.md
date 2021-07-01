@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix references to moved documentation files.
+
+    *Richard Macklin*
+
 * Ensure consistent indentation with Rubocop.
 
     *Joel Hawksley
