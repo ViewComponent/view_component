@@ -11,6 +11,14 @@ title: Changelog
 
     *Joel Hawksley
 
+* Bump `activesupport` upper bound from `< 7.0` to `< 8.0`.
+
+    *Richard Macklin*
+
+* Add ERB Lint for a few basic rules.
+
+    *Joel Hawksley*
+
 * Sort `gemspec` dependencies alphabetically.
 
     *Joel Hawksley*
