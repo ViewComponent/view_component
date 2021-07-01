@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Bump `activesupport` upper bound from `< 7.0` to `< 8.0`.
+
+    *Richard Macklin*
+
 * Add ERB Lint for a few basic rules.
 
     *Joel Hawksley*
