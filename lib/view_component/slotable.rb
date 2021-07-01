@@ -136,7 +136,7 @@ module ViewComponent
         # Append Slot instance to collection accessor Array
         instance_variable_get(slot[:instance_variable_name]) << slot_instance
       else
-         # Assign the Slot instance to the slot accessor
+        # Assign the Slot instance to the slot accessor
         instance_variable_set(slot[:instance_variable_name], slot_instance)
       end
 

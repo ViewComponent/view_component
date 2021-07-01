@@ -18,15 +18,20 @@ class TranslatableTest < ViewComponent::TestCase
   end
 
   def test_multi_key_support
-    assert_equal [
-      "Hello from sidecar translations!",
-      "This is coming from the sidecar",
-      "This is coming from Rails",
-    ], translate([
-      ".hello",
-      ".from.sidecar",
-      "from.rails",
-    ])
+    assert_equal(
+      [
+        "Hello from sidecar translations!",
+        "This is coming from the sidecar",
+        "This is coming from Rails",
+      ],
+      translate(
+        [
+          ".hello",
+          ".from.sidecar",
+          "from.rails",
+        ]
+      )
+    )
   end
 
   def test_relative_keys_missing_from_component_translations

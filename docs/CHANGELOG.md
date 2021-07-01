@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Ensure consistent indentation with Rubocop.
+
+    *Joel Hawksley
+
 * Bump `activesupport` upper bound from `< 7.0` to `< 8.0`.
 
     *Richard Macklin*

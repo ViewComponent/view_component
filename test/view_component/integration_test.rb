@@ -312,10 +312,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_preview_source
-      get "/rails/view_components/preview_component/default"
+    get "/rails/view_components/preview_component/default"
 
-      assert_select ".view-component-source-example h2", "Source:"
-      assert_select ".view-component-source-example pre.source code"
+    assert_select ".view-component-source-example h2", "Source:"
+    assert_select ".view-component-source-example pre.source code"
   end
 
   def test_renders_preview_source_with_template_from_layout
@@ -400,9 +400,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   if Rails.version.to_f >= 6.1
     def test_rendering_component_using_the_render_component_helper_raises_an_error
-      error = assert_raises ActionView::Template::Error do
-        get "/render_component"
-      end
+      error =
+        assert_raises ActionView::Template::Error do
+          get "/render_component"
+        end
       assert_match(/undefined method `render_component'/, error.message)
     end
   end
@@ -496,9 +497,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_raises_an_error_if_the_template_is_not_present_and_the_render_with_template_method_is_used_in_the_example
-    error = assert_raises ViewComponent::PreviewTemplateError do
-      get "/rails/view_components/inline_component/without_template"
-    end
+    error =
+      assert_raises ViewComponent::PreviewTemplateError do
+        get "/rails/view_components/inline_component/without_template"
+      end
     assert_match(/preview template for example without_template does not exist/, error.message)
   end
 

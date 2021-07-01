@@ -21,6 +21,7 @@ module ViewComponent
 
       if template_errors.present?
         raise ViewComponent::TemplateError.new(template_errors) if raise_errors
+
         return false
       end
 
@@ -77,72 +78,75 @@ module ViewComponent
           end
         end
       RUBY
-
     end
 
     def template_errors
-      @__vc_template_errors ||= begin
-        errors = []
+      @__vc_template_errors ||=
+        begin
+          errors = []
 
-        if (templates + inline_calls).empty?
-          errors << "Could not find a template file or inline render method for #{component_class}."
+          if (templates + inline_calls).empty?
+            errors << "Could not find a template file or inline render method for #{component_class}."
+          end
+
+          if templates.count { |template| template[:variant].nil? } > 1
+            errors << "More than one template found for #{component_class}. There can only be one default template file per component."
+          end
+
+          invalid_variants =
+            templates.
+            group_by { |template| template[:variant] }.
+            map { |variant, grouped| variant if grouped.length > 1 }.
+            compact.
+            sort
+
+          unless invalid_variants.empty?
+            errors << "More than one template found for #{'variant'.pluralize(invalid_variants.count)} #{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. There can only be one template file per variant."
+          end
+
+          if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
+            errors << "Template file and inline render method found for #{component_class}. There can only be a template file or inline render method per component."
+          end
+
+          duplicate_template_file_and_inline_variant_calls =
+            templates.pluck(:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
+
+          unless duplicate_template_file_and_inline_variant_calls.empty?
+            count = duplicate_template_file_and_inline_variant_calls.count
+
+            errors << "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} found for #{'variant'.pluralize(count)} #{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. There can only be a template file or inline render method per variant."
+          end
+
+          errors
         end
-
-        if templates.count { |template| template[:variant].nil? } > 1
-          errors << "More than one template found for #{component_class}. There can only be one default template file per component."
-        end
-
-        invalid_variants = templates
-          .group_by { |template| template[:variant] }
-          .map { |variant, grouped| variant if grouped.length > 1 }
-          .compact
-          .sort
-
-        unless invalid_variants.empty?
-          errors << "More than one template found for #{'variant'.pluralize(invalid_variants.count)} #{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. There can only be one template file per variant."
-        end
-
-        if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
-          errors << "Template file and inline render method found for #{component_class}. There can only be a template file or inline render method per component."
-        end
-
-        duplicate_template_file_and_inline_variant_calls =
-          templates.pluck(:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
-
-        unless duplicate_template_file_and_inline_variant_calls.empty?
-          count = duplicate_template_file_and_inline_variant_calls.count
-
-          errors << "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} found for #{'variant'.pluralize(count)} #{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. There can only be a template file or inline render method per variant."
-        end
-
-        errors
-      end
     end
 
     def templates
-      @templates ||= begin
-        extensions = ActionView::Template.template_handler_extensions
+      @templates ||=
+        begin
+          extensions = ActionView::Template.template_handler_extensions
 
-        component_class._sidecar_files(extensions).each_with_object([]) do |path, memo|
-          pieces = File.basename(path).split(".")
-          memo << {
-            path: path,
-            variant: pieces.second.split("+").second&.to_sym,
-            handler: pieces.last
-          }
+          component_class._sidecar_files(extensions).each_with_object([]) do |path, memo|
+            pieces = File.basename(path).split(".")
+            memo << {
+              path: path,
+              variant: pieces.second.split("+").second&.to_sym,
+              handler: pieces.last
+            }
+          end
         end
-      end
     end
 
     def inline_calls
-      @inline_calls ||= begin
-        # Fetch only ViewComponent ancestor classes to limit the scope of
-        # finding inline calls
-        view_component_ancestors =
-          component_class.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - component_class.included_modules
+      @inline_calls ||=
+        begin
+          # Fetch only ViewComponent ancestor classes to limit the scope of
+          # finding inline calls
+          view_component_ancestors =
+            component_class.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - component_class.included_modules
 
-        view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call/) }.uniq
-      end
+          view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call/) }.uniq
+        end
     end
 
     def inline_calls_defined_on_self

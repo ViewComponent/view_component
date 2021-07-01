@@ -11,3 +11,9 @@ AllCops:
 
 Gemspec/OrderedDependencies:
   Enabled: true
+
+Layout:
+  Enabled: true
+
+Layout/DotPosition:
+  EnforcedStyle: trailing

@@ -155,6 +155,7 @@ module ViewComponent
     # @return [ActionController::Base]
     def controller
       raise ViewContextCalledBeforeRenderError, "`controller` can only be called at render time." if view_context.nil?
+
       @__vc_controller ||= view_context.controller
     end
 
@@ -163,6 +164,7 @@ module ViewComponent
     # @return [ActionView::Base]
     def helpers
       raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
+
       @__vc_helpers ||= controller.view_context
     end
 
@@ -214,11 +216,12 @@ module ViewComponent
       @__vc_content_evaluated = true
       return @__vc_content if defined?(@__vc_content)
 
-      @__vc_content = if @view_context && @__vc_render_in_block
-        view_context.capture(self, &@__vc_render_in_block)
-      elsif defined?(@__vc_content_set_by_with_content)
-        @__vc_content_set_by_with_content
-      end
+      @__vc_content =
+        if @view_context && @__vc_render_in_block
+          view_context.capture(self, &@__vc_render_in_block)
+        elsif defined?(@__vc_content_set_by_with_content)
+          @__vc_content_set_by_with_content
+        end
     end
 
     def content_evaluated?
@@ -288,11 +291,12 @@ module ViewComponent
         # end
         #
         # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
-        nested_component_files = if name.include?("::") && component_name != filename
-          Dir["#{directory}/#{filename}/#{component_name}.*{#{extensions}}"]
-        else
-          []
-        end
+        nested_component_files =
+          if name.include?("::") && component_name != filename
+            Dir["#{directory}/#{filename}/#{component_name}.*{#{extensions}}"]
+          else
+            []
+          end
 
         # view files in the same directory as the component
         sidecar_files = Dir["#{directory}/#{component_name}.*{#{extensions}}"]
