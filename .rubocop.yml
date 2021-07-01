@@ -8,3 +8,6 @@ AllCops:
   Exclude:
     - test/tmp/**/*
     - vendor/bundle/**/*
+
+Gemspec/OrderedDependencies:
+  Enabled: true

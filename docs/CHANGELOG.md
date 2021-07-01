@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Sort `gemspec` dependencies alphabetically.
+
+    *Joel Hawksley*
+
 * Lock `method_source` at `1.0` to avoid open-ended dependency.
 
     *Joel Hawksley*
