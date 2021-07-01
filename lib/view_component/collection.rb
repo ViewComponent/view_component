@@ -5,6 +5,7 @@ require "action_view/renderer/collection_renderer" if Rails.version.to_f >= 6.1
 module ViewComponent
   class Collection
     attr_reader :component
+
     delegate :format, to: :component
 
     def render_in(view_context, &block)

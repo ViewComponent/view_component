@@ -12,8 +12,8 @@ AllCops:
 Gemspec/OrderedDependencies:
   Enabled: true
 
-Layout/IndentationConsistency:
+Layout:
   Enabled: true
 
-Layout/IndentationWidth:
-  Enabled: true
+Layout/DotPosition:
+  EnforcedStyle: trailing

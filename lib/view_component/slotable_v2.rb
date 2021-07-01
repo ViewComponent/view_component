@@ -230,13 +230,14 @@ module ViewComponent
         # Use `bind(self)` to ensure lambda is executed in the context of the
         # current component. This is necessary to allow the lambda to access helper
         # methods like `content_tag` as well as parent component state.
-        renderable_value = if block_given?
-                             slot_definition[:renderable_function].bind(self).call(*args, **kwargs) do |*args, **kwargs|
-                               view_context.capture(*args, **kwargs, &block)
-                             end
-        else
-          slot_definition[:renderable_function].bind(self).call(*args, **kwargs)
-        end
+        renderable_value =
+          if block_given?
+            slot_definition[:renderable_function].bind(self).call(*args, **kwargs) do |*args, **kwargs|
+              view_context.capture(*args, **kwargs, &block)
+            end
+          else
+            slot_definition[:renderable_function].bind(self).call(*args, **kwargs)
+          end
 
         # Function calls can return components, so if it's a component handle it specially
         if renderable_value.respond_to?(:render_in)

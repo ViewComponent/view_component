@@ -57,8 +57,8 @@ namespace :docs do
       meths.
       select do |method|
         !method.tag(:private) &&
-        method.path.include?("ViewComponent::Base") &&
-        method.visibility == :public
+          method.path.include?("ViewComponent::Base") &&
+          method.visibility == :public
       end.sort_by { |method| method[:name] }
 
     instance_methods_to_document = meths.select { |method| method.scope != :class }
@@ -83,9 +83,10 @@ namespace :docs do
             " (Deprecated)"
           end
 
-        types = if method.tag(:return)&.types
-                  " → [#{method.tag(:return).types.join(',')}]"
-        end
+        types =
+          if method.tag(:return)&.types
+            " → [#{method.tag(:return).types.join(',')}]"
+          end
 
         f.puts
         f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
@@ -107,9 +108,10 @@ namespace :docs do
             " (Deprecated)"
           end
 
-        types = if method.tag(:return)&.types
-                  " → [#{method.tag(:return).types.join(',')}]"
-        end
+        types =
+          if method.tag(:return)&.types
+            " → [#{method.tag(:return).types.join(',')}]"
+          end
 
         f.puts
         f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
@@ -131,7 +133,6 @@ namespace :docs do
         select { |method| method[:mattr_accessor] }.
         sort_by { |method| method[:name] }.
         each do |method|
-
         suffix =
           if method.tag(:deprecated)
             " (Deprecated)"

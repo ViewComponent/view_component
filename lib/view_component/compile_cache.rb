@@ -7,6 +7,7 @@ module ViewComponent
     mattr_accessor :cache, instance_reader: false, instance_accessor: false do
       Set.new
     end
+
     module_function
 
     def register(klass)
