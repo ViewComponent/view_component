@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Ensure consistent indentation with Rubocop.
+
+    *Joel Hawksley
+
 * Sort `gemspec` dependencies alphabetically.
 
     *Joel Hawksley*

@@ -312,10 +312,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_preview_source
-      get "/rails/view_components/preview_component/default"
+    get "/rails/view_components/preview_component/default"
 
-      assert_select ".view-component-source-example h2", "Source:"
-      assert_select ".view-component-source-example pre.source code"
+    assert_select ".view-component-source-example h2", "Source:"
+    assert_select ".view-component-source-example pre.source code"
   end
 
   def test_renders_preview_source_with_template_from_layout

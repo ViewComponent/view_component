@@ -215,7 +215,7 @@ module ViewComponent
       return @__vc_content if defined?(@__vc_content)
 
       @__vc_content = if @view_context && @__vc_render_in_block
-        view_context.capture(self, &@__vc_render_in_block)
+                        view_context.capture(self, &@__vc_render_in_block)
       elsif defined?(@__vc_content_set_by_with_content)
         @__vc_content_set_by_with_content
       end
@@ -289,7 +289,7 @@ module ViewComponent
         #
         # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
         nested_component_files = if name.include?("::") && component_name != filename
-          Dir["#{directory}/#{filename}/#{component_name}.*{#{extensions}}"]
+                                   Dir["#{directory}/#{filename}/#{component_name}.*{#{extensions}}"]
         else
           []
         end

@@ -11,3 +11,9 @@ AllCops:
 
 Gemspec/OrderedDependencies:
   Enabled: true
+
+Layout/IndentationConsistency:
+  Enabled: true
+
+Layout/IndentationWidth:
+  Enabled: true

@@ -33,22 +33,22 @@ module ViewComponent
       raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content)
 
       @content = if defined?(@__vc_component_instance)
-        if defined?(@__vc_content_set_by_with_content)
-          @__vc_component_instance.with_content(@__vc_content_set_by_with_content)
+                   if defined?(@__vc_content_set_by_with_content)
+                     @__vc_component_instance.with_content(@__vc_content_set_by_with_content)
 
-          view_context.capture do
-            @__vc_component_instance.render_in(view_context)
-          end
-        elsif defined?(@__vc_content_block)
-          view_context.capture do
-            # render_in is faster than `parent.render`
-            @__vc_component_instance.render_in(view_context, &@__vc_content_block)
-          end
-        else
-          view_context.capture do
-            @__vc_component_instance.render_in(view_context)
-          end
-        end
+                     view_context.capture do
+                       @__vc_component_instance.render_in(view_context)
+                     end
+                   elsif defined?(@__vc_content_block)
+                     view_context.capture do
+                       # render_in is faster than `parent.render`
+                       @__vc_component_instance.render_in(view_context, &@__vc_content_block)
+                     end
+                   else
+                     view_context.capture do
+                       @__vc_component_instance.render_in(view_context)
+                     end
+                   end
       elsif defined?(@__vc_content)
         @__vc_content
       elsif defined?(@__vc_content_block)

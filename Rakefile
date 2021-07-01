@@ -84,7 +84,7 @@ namespace :docs do
           end
 
         types = if method.tag(:return)&.types
-          " → [#{method.tag(:return).types.join(',')}]"
+                  " → [#{method.tag(:return).types.join(',')}]"
         end
 
         f.puts
@@ -108,7 +108,7 @@ namespace :docs do
           end
 
         types = if method.tag(:return)&.types
-          " → [#{method.tag(:return).types.join(',')}]"
+                  " → [#{method.tag(:return).types.join(',')}]"
         end
 
         f.puts
