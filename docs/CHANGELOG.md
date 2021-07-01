@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add ERB Lint for a few basic rules.
+
+    *Joel Hawksley*
+
 * Sort `gemspec` dependencies alphabetically.
 
     *Joel Hawksley*
