@@ -29,6 +29,10 @@ With the monkey patch disabled, use `render_component` (or  `render_component_to
 
 Using `rich_text_area` from ActionText in a ViewComponent will result in this error:
 
+```ruby
+undefined method 'rich_text_area_tag'
+```
+
 This is due to ViewComponent not having access to the helpers it needs via ActionText. As a workaround, add the following to your component (or base component):
 
 ```ruby
