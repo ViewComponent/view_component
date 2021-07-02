@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Only load assets for Preview source highlighting if previews are enabled.
+
+    *Joel Hawksley*
+
 * Fix references to moved documentation files.
 
     *Richard Macklin*
