@@ -98,7 +98,9 @@ module ViewComponent
     end
 
     initializer "static assets" do |app|
-      app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/app/assets/vendor")
+      if app.config.view_component.show_previews
+        app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/app/assets/vendor")
+      end
     end
 
     config.after_initialize do |app|
