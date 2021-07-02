@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.35.0
+
 * Only load assets for Preview source highlighting if previews are enabled.
 
     *Joel Hawksley*
