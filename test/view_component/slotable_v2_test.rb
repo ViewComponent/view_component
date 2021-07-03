@@ -313,6 +313,16 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_includes exception.message, "content is not a valid slot name"
   end
 
+  def test_component_raises_when_given_invalid_slot_name_for_has_many
+    exception = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_many :contents
+      end
+    end
+
+    assert_includes exception.message, "contents is not a valid slot name"
+  end
+
   def test_renders_pass_through_slot_using_with_content
     component = SlotsV2Component.new
     component.title("some_argument").with_content("This is my title!")
