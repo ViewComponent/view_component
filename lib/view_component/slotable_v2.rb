@@ -65,7 +65,7 @@ module ViewComponent
       #     <% end %>
       #   <% end %>
       def renders_one(slot_name, callable = nil)
-        validate_slot_name(slot_name)
+        validate_singular_slot_name(slot_name)
 
         define_method slot_name do |*args, **kwargs, &block|
           if args.empty? && kwargs.empty? && block.nil?
@@ -116,7 +116,7 @@ module ViewComponent
       #     <% end %>
       #   <% end %>
       def renders_many(slot_name, callable = nil)
-        validate_slot_name(slot_name)
+        validate_plural_slot_name(slot_name)
 
         singular_name = ActiveSupport::Inflector.singularize(slot_name)
 
@@ -174,11 +174,23 @@ module ViewComponent
         self.registered_slots[slot_name] = slot
       end
 
-      def validate_slot_name(slot_name)
+      def validate_plural_slot_name(slot_name)
+        if slot_name.to_sym == :contents
+          raise ArgumentError.new("#{slot_name} is not a valid slot name.")
+        end
+
+        raise_if_slot_registered(slot_name)
+      end
+
+      def validate_singular_slot_name(slot_name)
         if slot_name.to_sym == :content
           raise ArgumentError.new("#{slot_name} is not a valid slot name.")
         end
 
+        raise_if_slot_registered(slot_name)
+      end
+
+      def raise_if_slot_registered(slot_name)
         if self.registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
           raise ArgumentError.new("#{slot_name} slot declared multiple times")
