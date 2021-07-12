@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Raise an error if the slot name for renders_many is :contents
+
+    *Simon Fish*
+
 ## 2.35.0
 
 * Only load assets for Preview source highlighting if previews are enabled.
