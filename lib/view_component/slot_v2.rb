@@ -34,7 +34,7 @@ module ViewComponent
         raise ArgumentError.new(
           "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
           "which means that ViewComponent doesn't know which content to use.\n\n" \
-          "To fix this issue, only use either `with_content` or a block."
+          "To fix this issue, use either `with_content` or a block."
         )
       end
 

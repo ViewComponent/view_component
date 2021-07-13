@@ -89,7 +89,7 @@ module ViewComponent
         raise ArgumentError.new(
           "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
           "which means that ViewComponent doesn't know which content to use.\n\n" \
-          "To fix this issue, only use either `with_content` or a block."
+          "To fix this issue, use either `with_content` or a block."
         )
       end
 
@@ -162,9 +162,9 @@ module ViewComponent
         raise(
           ViewContextCalledBeforeRenderError,
           "`#controller` cannot be used during initialization, as it depends " \
-          "on the view context that only exists once a ViewComponent passed to " \
+          "on the view context that only exists once a ViewComponent is passed to " \
           "the Rails render pipeline.\n\n" \
-          "It's sometimes possible to fix this issue by moving code depedent on " \
+          "It's sometimes possible to fix this issue by moving code dependent on " \
           "`#controller` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
         )
       end
@@ -180,9 +180,9 @@ module ViewComponent
         raise(
           ViewContextCalledBeforeRenderError,
           "`#helpers` cannot be used during initialization, as it depends " \
-          "on the view context that only exists once a ViewComponent passed to " \
+          "on the view context that only exists once a ViewComponent is passed to " \
           "the Rails render pipeline.\n\n" \
-          "It's sometimes possible to fix this issue by moving code depedent on " \
+          "It's sometimes possible to fix this issue by moving code dependent on " \
           "`#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
         )
       end
@@ -432,14 +432,14 @@ module ViewComponent
         if initialize_parameters.empty?
           raise ArgumentError.new(
             "The #{self} initializer is empty or invalid." \
-            "It must accept the parameter `#{parameter}, to render it as a collection.\n\n" \
+            "It must accept the parameter `#{parameter}` to render it as a collection.\n\n" \
             "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
             "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
           )
         end
 
         raise ArgumentError.new(
-          "The initializer for #{self} does not accept the parameter `#{parameter}, " \
+          "The initializer for #{self} does not accept the parameter `#{parameter}`, " \
           "which is required in order to render it as a collection.\n\n" \
           "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
           "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."

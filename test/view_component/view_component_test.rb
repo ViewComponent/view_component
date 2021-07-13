@@ -641,7 +641,7 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(ProductComponent.with_collection("foo"))
       end
 
-    assert_includes exception.message, "Make sure it responds to `to_ary`: \"foo\""
+    assert_includes exception.message, "Make sure it responds to `to_ary`"
   end
 
   def test_render_collection_missing_arg

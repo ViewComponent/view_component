@@ -34,7 +34,7 @@ module ViewComponent
       else
         raise ArgumentError.new(
           "The value of the first argument passed to `with_collection` isn't a valid collection. " \
-          "Make sure it responds to `to_ary`: #{object.inspect}."
+          "Make sure it responds to `to_ary`."
         )
       end
     end
