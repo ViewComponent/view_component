@@ -41,7 +41,7 @@ class ViewComponentTest < ViewComponent::TestCase
         end
       end
 
-    assert_includes error.message, "Block provided after calling `with_content`"
+    assert_includes error.message, "It looks like a block was provided after calling"
   end
 
   def test_raise_error_when_component_implements_with_content
@@ -50,7 +50,7 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(InvalidWithRenderComponent.new)
       end
 
-    assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `with_content`."
+    assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `#with_content`"
   end
 
   def test_renders_content_given_as_argument
@@ -65,7 +65,7 @@ class ViewComponentTest < ViewComponent::TestCase
         WrapperComponent.new.with_content(nil)
       end
 
-    assert_equal "No content provided.", exception.message
+    assert_includes exception.message, "No content provided to"
   end
 
   def test_render_without_template
@@ -293,7 +293,7 @@ class ViewComponentTest < ViewComponent::TestCase
         end
       end
 
-    assert_includes exception.message, "Unknown content_area 'foo' - expected one of '[:title, :body, :footer]'"
+    assert_includes exception.message, "expected one of '[:title, :body, :footer]'"
   end
 
   def test_with_content_areas_raise_with_content_keyword
@@ -302,7 +302,7 @@ class ViewComponentTest < ViewComponent::TestCase
         ContentAreasComponent.with_content_areas :content
       end
 
-    assert_includes exception.message, ":content is a reserved content area name"
+    assert_includes exception.message, "defines a content area called :content"
   end
 
   def test_with_content_areas_render_predicate
@@ -641,7 +641,7 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(ProductComponent.with_collection("foo"))
       end
 
-    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: \"foo\""
+    assert_includes exception.message, "Make sure it responds to `to_ary`: \"foo\""
   end
 
   def test_render_collection_missing_arg
@@ -670,7 +670,7 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(MissingCollectionParameterNameComponent.with_collection([]))
       end
 
-    assert_match(/MissingCollectionParameterNameComponent initializer must accept `foo` collection parameter/, exception.message)
+    assert_match(/The initializer for MissingCollectionParameterNameComponent does not accept the parameter/, exception.message)
   end
 
   def test_collection_component_missing_default_parameter_name
@@ -681,7 +681,7 @@ class ViewComponentTest < ViewComponent::TestCase
         )
       end
 
-    assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
+    assert_match(/MissingDefaultCollectionParameterComponent does not accept the parameter/, exception.message)
   end
 
   def test_component_with_invalid_parameter_names
@@ -694,7 +694,7 @@ class ViewComponentTest < ViewComponent::TestCase
           InvalidParametersComponent.compile(raise_errors: true)
         end
 
-      assert_match(/InvalidParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
+      assert_match(/InvalidParametersComponent initializer cannot accept the parameter/, exception.message)
     ensure
       ViewComponent::CompileCache.cache = old_cache
     end
@@ -710,7 +710,7 @@ class ViewComponentTest < ViewComponent::TestCase
           InvalidNamedParametersComponent.compile(raise_errors: true)
         end
 
-      assert_match(/InvalidNamedParametersComponent initializer cannot contain `content` since it will override a public ViewComponent method/, exception.message)
+      assert_match(/InvalidNamedParametersComponent initializer cannot accept the parameter `content`/, exception.message)
     ensure
       ViewComponent::CompileCache.cache = old_cache
     end

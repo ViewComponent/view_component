@@ -14,7 +14,11 @@ module ViewComponent
     # @private
     def with(area, content = nil, &block)
       unless content_areas.include?(area)
-        raise ArgumentError.new "Unknown content_area '#{area}' - expected one of '#{content_areas}'"
+        raise ArgumentError.new(
+          "Unknown content_area '#{area}' for #{self} - expected one of '#{content_areas}'.\n\n" \
+          "To fix this issue, add `with_content_area :#{area}` to #{self} or reference " \
+          "a valid content area."
+        )
       end
 
       if block_given?
@@ -28,12 +32,15 @@ module ViewComponent
     class_methods do
       def with_content_areas(*areas)
         ActiveSupport::Deprecation.warn(
-          "`with_content_areas` is deprecated and will be removed in ViewComponent v3.0.0.\n" \
+          "`with_content_areas` is deprecated and will be removed in ViewComponent v3.0.0.\n\n" \
           "Use slots (https://viewcomponent.org/guide/slots.html) instead."
         )
 
         if areas.include?(:content)
-          raise ArgumentError.new ":content is a reserved content area name. Please use another name, such as ':body'"
+          raise ArgumentError.new(
+            "#{self} defines a content area called :content, which is a reserved name. \n\n" \
+            "To fix this issue, use another name, such as `:body`."
+          )
         end
 
         areas.each do |area|

@@ -130,7 +130,7 @@ class SlotsV2sTest < ViewComponent::TestCase
         SlotsV2Component.renders_one :title
       end
 
-    assert_includes exception.message, "title slot declared multiple times"
+    assert_includes exception.message, "declares the title slot multiple times"
   end
 
   def test_sub_component_with_positional_args
@@ -310,7 +310,7 @@ class SlotsV2sTest < ViewComponent::TestCase
         end
       end
 
-    assert_includes exception.message, "content is not a valid slot name"
+    assert_includes exception.message, "declares a slot named content"
   end
 
   def test_component_raises_when_given_invalid_slot_name_for_has_many
@@ -320,7 +320,7 @@ class SlotsV2sTest < ViewComponent::TestCase
       end
     end
 
-    assert_includes exception.message, "contents is not a valid slot name"
+    assert_includes exception.message, "declares a slot named contents"
   end
 
   def test_renders_pass_through_slot_using_with_content
@@ -361,6 +361,6 @@ class SlotsV2sTest < ViewComponent::TestCase
         render_inline(component)
       end
 
-    assert_equal "Block provided after calling `with_content`. Use one or the other.", error.message
+    assert_includes error.message, "It looks like a block was provided after calling"
   end
 end

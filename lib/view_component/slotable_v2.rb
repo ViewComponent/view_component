@@ -176,7 +176,10 @@ module ViewComponent
 
       def validate_plural_slot_name(slot_name)
         if slot_name.to_sym == :contents
-          raise ArgumentError.new("#{slot_name} is not a valid slot name.")
+          raise ArgumentError.new(
+            "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
+            "To fix this issue, choose a different name."
+          )
         end
 
         raise_if_slot_registered(slot_name)
@@ -184,7 +187,10 @@ module ViewComponent
 
       def validate_singular_slot_name(slot_name)
         if slot_name.to_sym == :content
-          raise ArgumentError.new("#{slot_name} is not a valid slot name.")
+          raise ArgumentError.new(
+            "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
+            "To fix this issue, choose a different name."
+          )
         end
 
         raise_if_slot_registered(slot_name)
@@ -193,7 +199,10 @@ module ViewComponent
       def raise_if_slot_registered(slot_name)
         if self.registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
-          raise ArgumentError.new("#{slot_name} slot declared multiple times")
+          raise ArgumentError.new(
+            "#{self} declares the #{slot_name} slot multiple times.\n\n" \
+            "To fix this issue, choose a different slot name."
+          )
         end
       end
     end

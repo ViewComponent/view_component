@@ -34,7 +34,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
         component.helpers
       end
-    assert_equal "`helpers` can only be called at render time.", err.message
+    assert_includes err.message, "cannot be used during initialization"
   end
 
   def test_calling_controller_outside_render_raises
@@ -43,7 +43,8 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
         component.controller
       end
-    assert_equal "`controller` can only be called at render time.", err.message
+
+    assert_includes err.message, "cannot be used during initialization"
   end
 
   def test_sidecar_files

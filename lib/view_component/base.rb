@@ -86,7 +86,11 @@ module ViewComponent
       @current_template = self
 
       if block && defined?(@__vc_content_set_by_with_content)
-        raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.")
+        raise ArgumentError.new(
+          "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
+          "which means that ViewComponent doesn't know which content to use.\n\n" \
+          "To fix this issue, only use either `with_content` or a block."
+        )
       end
 
       @__vc_content_evaluated = false
@@ -154,7 +158,16 @@ module ViewComponent
     #
     # @return [ActionController::Base]
     def controller
-      raise ViewContextCalledBeforeRenderError, "`controller` can only be called at render time." if view_context.nil?
+      if view_context.nil?
+        raise(
+          ViewContextCalledBeforeRenderError,
+          "`#controller` cannot be used during initialization, as it depends " \
+          "on the view context that only exists once a ViewComponent passed to " \
+          "the Rails render pipeline.\n\n" \
+          "It's sometimes possible to fix this issue by moving code depedent on " \
+          "`#controller` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
+        )
+      end
 
       @__vc_controller ||= view_context.controller
     end
@@ -163,7 +176,16 @@ module ViewComponent
     #
     # @return [ActionView::Base]
     def helpers
-      raise ViewContextCalledBeforeRenderError, "`helpers` can only be called at render time." if view_context.nil?
+      if view_context.nil?
+        raise(
+          ViewContextCalledBeforeRenderError,
+          "`#helpers` cannot be used during initialization, as it depends " \
+          "on the view context that only exists once a ViewComponent passed to " \
+          "the Rails render pipeline.\n\n" \
+          "It's sometimes possible to fix this issue by moving code depedent on " \
+          "`#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
+        )
+      end
 
       @__vc_helpers ||= controller.view_context
     end
@@ -409,13 +431,18 @@ module ViewComponent
         # the component.
         if initialize_parameters.empty?
           raise ArgumentError.new(
-            "#{self} initializer is empty or invalid."
+            "The #{self} initializer is empty or invalid." \
+            "It must accept the parameter `#{parameter}, to render it as a collection.\n\n" \
+            "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
+            "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
           )
         end
 
         raise ArgumentError.new(
-          "#{self} initializer must accept " \
-          "`#{parameter}` collection parameter."
+          "The initializer for #{self} does not accept the parameter `#{parameter}, " \
+          "which is required in order to render it as a collection.\n\n" \
+          "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
+          "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
         )
       end
 
@@ -427,9 +454,8 @@ module ViewComponent
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
         raise ViewComponent::ComponentError.new(
-          "#{self} initializer cannot contain " \
-          "`#{RESERVED_PARAMETER}` since it will override a " \
-          "public ViewComponent method."
+          "#{self} initializer cannot accept the parameter `#{RESERVED_PARAMETER}`, as it will override a " \
+          "public ViewComponent method. To fix this issue, rename the parameter."
         )
       end
 
