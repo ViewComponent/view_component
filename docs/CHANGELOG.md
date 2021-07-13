@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Document decision to not change naming convention recommendation to remove `-Component` suffix.
+
+    *Joel Hawksley*
+
 * Fix typo in documentation
 
     *Ryo.gift*
