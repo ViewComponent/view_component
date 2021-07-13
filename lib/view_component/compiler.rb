@@ -16,7 +16,10 @@ module ViewComponent
       subclass_instance_methods = component_class.instance_methods(false)
 
       if subclass_instance_methods.include?(:with_content) && raise_errors
-        raise ViewComponent::ComponentError.new("#{component_class} implements a reserved method, `with_content`.")
+        raise ViewComponent::ComponentError.new(
+          "#{component_class} implements a reserved method, `#with_content`.\n\n" \
+          "To fix this issue, change the name of the method."
+        )
       end
 
       if template_errors.present?
@@ -27,7 +30,8 @@ module ViewComponent
 
       if subclass_instance_methods.include?(:before_render_check)
         ActiveSupport::Deprecation.warn(
-          "`before_render_check` will be removed in v3.0.0. Use `#before_render` instead."
+          "`#before_render_check` will be removed in v3.0.0.\n\n" \
+          "To fix this issue, use `#before_render` instead."
         )
       end
 
@@ -101,11 +105,16 @@ module ViewComponent
             sort
 
           unless invalid_variants.empty?
-            errors << "More than one template found for #{'variant'.pluralize(invalid_variants.count)} #{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. There can only be one template file per variant."
+            errors <<
+              "More than one template found for #{'variant'.pluralize(invalid_variants.count)} " \
+              "#{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
+              "There can only be one template file per variant."
           end
 
           if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
-            errors << "Template file and inline render method found for #{component_class}. There can only be a template file or inline render method per component."
+            errors <<
+              "Template file and inline render method found for #{component_class}. " \
+              "There can only be a template file or inline render method per component."
           end
 
           duplicate_template_file_and_inline_variant_calls =
@@ -114,7 +123,10 @@ module ViewComponent
           unless duplicate_template_file_and_inline_variant_calls.empty?
             count = duplicate_template_file_and_inline_variant_calls.count
 
-            errors << "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} found for #{'variant'.pluralize(count)} #{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. There can only be a template file or inline render method per variant."
+            errors <<
+              "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} found for #{'variant'.pluralize(count)} " \
+              "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
+              "There can only be a template file or inline render method per variant."
           end
 
           errors

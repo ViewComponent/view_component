@@ -47,6 +47,7 @@ Here are a few things you can do that will increase the likelihood of your pull 
 - Avoid unclear antecedents. Use `the method name is too long` instead of `it is too long`.
 - Avoid `you`, `we`, `your`, `our`.
 - Write in the [active voice](https://writing.wisc.edu/handbook/style/ccs_activevoice/). Avoid the passive voice.
+- Refer to methods as `#instance_method` and `.class_method`.
 
 Don't be afraid to ask for help! We recognize that English is not the first language of many folks who contribute to ViewComponent.
 

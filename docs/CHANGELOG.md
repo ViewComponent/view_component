@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update error messages to be more descriptive and helpful.
+
+    *Joel Hawksley*
+
 * Raise an error if the slot name for renders_many is :contents
 
     *Simon Fish*

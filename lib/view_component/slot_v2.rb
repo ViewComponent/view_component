@@ -30,7 +30,13 @@ module ViewComponent
 
       view_context = @parent.send(:view_context)
 
-      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content)
+      if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content)
+        raise ArgumentError.new(
+          "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
+          "which means that ViewComponent doesn't know which content to use.\n\n" \
+          "To fix this issue, use either `with_content` or a block."
+        )
+      end
 
       @content =
         if defined?(@__vc_component_instance)
