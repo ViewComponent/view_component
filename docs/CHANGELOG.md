@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Change naming convention recommendation to remove `-Component` suffix.
+
+    *Joel Hawksley*
+
 * Update error messages to be more descriptive and helpful.
 
     *Joel Hawksley*
