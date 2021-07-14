@@ -11,7 +11,7 @@ nav_order: 1
 
 - Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's common practice to create and inherit from an `ApplicationComponent` that is a subclass of `ViewComponent::Base`.
 - Component module names are plural, as for controllers and views: `Users::Avatar`
-- Name components for what they render, not what they accept. (`Users::Avatar` instead of `Users::User`)
+- Name components after the UI element they render.
 
 ## Installation
 
