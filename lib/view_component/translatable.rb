@@ -52,7 +52,7 @@ module ViewComponent
 
       def scope_data(data)
         @i18n_scope.reverse_each do |part|
-          data = { part => data}
+          data = { part => data }
         end
         data
       end
@@ -70,9 +70,10 @@ module ViewComponent
       key = key&.to_s unless key.is_a?(String)
       key = "#{i18n_scope}#{key}" if key.start_with?(".")
 
-      translated = catch(:exception) do
-        i18n_backend.translate(locale, key, options)
-      end
+      translated =
+        catch(:exception) do
+          i18n_backend.translate(locale, key, options)
+        end
 
       # Fallback to the global translations
       if translated.is_a? ::I18n::MissingTranslation
@@ -80,7 +81,7 @@ module ViewComponent
       end
 
       if HTML_SAFE_TRANSLATION_KEY.match?(key)
-        translated = translated.html_safe
+        translated = translated.html_safe # rubocop:disable Rails/OutputSafety
       end
 
       translated

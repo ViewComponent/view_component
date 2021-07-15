@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "action_view"
 require "active_support/dependencies/autoload"
 
@@ -8,6 +9,7 @@ module ViewComponent
   autoload :Base
   autoload :Compiler
   autoload :ComponentError
+  autoload :Instrumentation
   autoload :Preview
   autoload :PreviewTemplateError
   autoload :TestHelpers

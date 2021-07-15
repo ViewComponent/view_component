@@ -8,7 +8,7 @@ Rails.application.load_generators
 
 class ComponentGeneratorTest < Rails::Generators::TestCase
   tests Rails::Generators::ComponentGenerator
-  destination File.expand_path("../tmp", __dir__)
+  destination Dir.mktmpdir
   setup :prepare_destination
 
   arguments %w[user]
@@ -125,5 +125,14 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator %w[user --template-engine haml]
 
     assert_file "app/components/user_component.html.haml"
+  end
+
+  def test_generating_components_with_custom_component_path
+    with_custom_component_path("app/parts") do
+      run_generator %w[user]
+
+      assert_file "app/parts/user_component.rb"
+      assert_file "app/parts/user_component.html.erb"
+    end
   end
 end

@@ -3,6 +3,7 @@
 require "bundler/gem_tasks"
 require "rake/testtask"
 require "yard"
+require "yard/mattr_accessor_handler"
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
@@ -50,13 +51,18 @@ namespace :docs do
     registry = YARD::RegistryStore.new
     registry.load!(".yardoc")
 
-    instance_methods = registry.get("ViewComponent::Base").meths.select { |method| method.scope != :class }
-    instance_methods_to_document =
-      instance_methods.select do |method|
+    meths =
+      registry.
+      get("ViewComponent::Base").
+      meths.
+      select do |method|
         !method.tag(:private) &&
-        method.path.include?("ViewComponent::Base") &&
-        method.visibility == :public
-      end
+          method.path.include?("ViewComponent::Base") &&
+          method.visibility == :public
+      end.sort_by { |method| method[:name] }
+
+    instance_methods_to_document = meths.select { |method| method.scope != :class }
+    class_methods_to_document = meths.select { |method| method.scope == :class }
 
     File.open("docs/api.md", "w") do |f|
       f.puts("---")
@@ -67,6 +73,32 @@ namespace :docs do
       f.puts("<!-- Warning: AUTO-GENERATED file, do not edit. Add code comments to your Ruby instead <3 -->")
       f.puts
       f.puts("# API")
+
+      f.puts
+      f.puts("## Class methods")
+
+      class_methods_to_document.each do |method|
+        suffix =
+          if method.tag(:deprecated)
+            " (Deprecated)"
+          end
+
+        types =
+          if method.tag(:return)&.types
+            " → [#{method.tag(:return).types.join(',')}]"
+          end
+
+        f.puts
+        f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
+        f.puts
+        f.puts(method.docstring)
+
+        if method.tag(:deprecated)
+          f.puts
+          f.puts("_#{method.tag(:deprecated).text}_")
+        end
+      end
+
       f.puts
       f.puts("## Instance methods")
 
@@ -76,14 +108,43 @@ namespace :docs do
             " (Deprecated)"
           end
 
-        types = if method.tag(:return)&.types
-          " → [#{method.tag(:return).types.join(',')}]"
-        end
+        types =
+          if method.tag(:return)&.types
+            " → [#{method.tag(:return).types.join(',')}]"
+          end
 
         f.puts
         f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
         f.puts
         f.puts(method.docstring)
+
+        if method.tag(:deprecated)
+          f.puts
+          f.puts("_#{method.tag(:deprecated).text}_")
+        end
+      end
+
+      f.puts
+      f.puts("## Configuration")
+
+      registry.
+        get("ViewComponent::Base").
+        meths.
+        select { |method| method[:mattr_accessor] }.
+        sort_by { |method| method[:name] }.
+        each do |method|
+        suffix =
+          if method.tag(:deprecated)
+            " (Deprecated)"
+          end
+
+        f.puts
+        f.puts("### #{method.sep}#{method.name}#{suffix}")
+
+        if method.docstring.length > 0
+          f.puts
+          f.puts(method.docstring)
+        end
 
         if method.tag(:deprecated)
           f.puts

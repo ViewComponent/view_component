@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require "rails/generators/abstract_generator"
+
 module Rails
   module Generators
     class ComponentGenerator < Rails::Generators::NamedBase
+      include ViewComponent::AbstractGenerator
+
       source_root File.expand_path("templates", __dir__)
 
       argument :attributes, type: :array, default: [], banner: "attribute"
@@ -10,7 +14,7 @@ module Rails
       class_option :inline, type: :boolean, default: false
 
       def create_component_file
-        template "component.rb", File.join("app/components", class_path, "#{file_name}_component.rb")
+        template "component.rb", File.join(component_path, class_path, "#{file_name}_component.rb")
       end
 
       hook_for :test_framework
@@ -22,10 +26,6 @@ module Rails
       end
 
       private
-
-      def file_name
-        @_file_name ||= super.sub(/_component\z/i, "")
-      end
 
       def parent_class
         defined?(ApplicationComponent) ? "ApplicationComponent" : "ViewComponent::Base"
