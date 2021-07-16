@@ -198,10 +198,10 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_collection_returns_slots
     render_inline SlotsV2DelegateComponent.new do |component|
-      component.items([{ highlighted: false }, { highlighted: true }, { highlighted: false }])
-      .each_with_index do |slot, index|
-        slot.with_content("My Item #{index+1}")
-      end
+      component.items([{ highlighted: false }, { highlighted: true }, { highlighted: false }]).
+        each_with_index do |slot, index|
+          slot.with_content("My Item #{index + 1}")
+        end
     end
 
     assert_selector(".item", count: 1, text: "My Item 1")
