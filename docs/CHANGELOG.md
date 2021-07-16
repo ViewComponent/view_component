@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add slot_type slotable helpers.
+
+    *Jon Palmer*
+
 * Update error messages to be more descriptive and helpful.
 
     *Joel Hawksley*
