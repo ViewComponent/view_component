@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Rendering slot collections returns the array of slots
+* Setting a collection slot with the plural setter (`component.items(array)` for `renders_many :items`)  returns the array of slots.
 
     *Jon Palmer*
 
