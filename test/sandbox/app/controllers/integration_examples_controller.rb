@@ -11,6 +11,12 @@ class IntegrationExamplesController < ActionController::Base
     render(ControllerInlineComponent.new(message: "bar"))
   end
 
+  def controller_inline_with_block
+    render ControllerInlineComponent.new(message: "bar") do |c|
+      c.slot(name: "baz")
+    end
+  end
+
   def controller_inline_baseline
     render("integration_examples/_controller_inline", locals: { message: "bar" })
   end
