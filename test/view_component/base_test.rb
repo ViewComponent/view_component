@@ -53,7 +53,8 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     assert_equal(
       [
         "#{root}/app/components/template_and_sidecar_directory_template_component.html.erb",
-        "#{root}/app/components/template_and_sidecar_directory_template_component/template_and_sidecar_directory_template_component.html.erb",
+        "#{root}/app/components/template_and_sidecar_directory_template_component/" \
+        "template_and_sidecar_directory_template_component.html.erb",
       ],
       TemplateAndSidecarDirectoryTemplateComponent._sidecar_files(["erb"])
     )

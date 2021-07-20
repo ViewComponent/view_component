@@ -110,8 +110,19 @@ module ViewComponent
         app.routes.prepend do
           preview_controller = options.preview_controller.sub(/Controller$/, "").underscore
 
-          get options.preview_route, to: "#{preview_controller}#index", as: :preview_view_components, internal: true
-          get "#{options.preview_route}/*path", to: "#{preview_controller}#previews", as: :preview_view_component, internal: true
+          get(
+            options.preview_route,
+            to: "#{preview_controller}#index",
+            as: :preview_view_components,
+            internal: true
+          )
+
+          get(
+            "#{options.preview_route}/*path",
+            to: "#{preview_controller}#previews",
+            as: :preview_view_component,
+            internal: true
+          )
         end
       end
 

@@ -14,7 +14,9 @@ class ViewComponent::TestUnitGeneratorTest < ::Rails::Generators::TestCase
 
   def test_generates_component
     assert_file "test/components/dummy_component_test.rb" do |content|
-      assert_match(/render_inline\(DummyComponent.new\(message: "Hello, components!"\)\).css\("span"\).to_html/, content)
+      assert_match(
+        /render_inline\(DummyComponent.new\(message: "Hello, components!"\)\).css\("span"\).to_html/, content
+      )
     end
   end
 end
