@@ -164,7 +164,10 @@ module ViewComponent
           # Fetch only ViewComponent ancestor classes to limit the scope of
           # finding inline calls
           view_component_ancestors =
-            component_class.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - component_class.included_modules
+            (
+              component_class.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } -
+              component_class.included_modules
+            )
 
           view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call/) }.uniq
         end
@@ -193,7 +196,13 @@ module ViewComponent
       if handler.method(:call).parameters.length > 1
         handler.call(component_class, template)
       else
-        handler.call(OpenStruct.new(source: template, identifier: component_class.identifier, type: component_class.type))
+        handler.call(
+          OpenStruct.new(
+            source: template,
+            identifier: component_class.identifier,
+            type: component_class.type
+          )
+        )
       end
     end
 
