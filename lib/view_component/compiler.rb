@@ -131,8 +131,10 @@ module ViewComponent
             count = duplicate_template_file_and_inline_variant_calls.count
 
             errors <<
-              "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} " \ "found for #{'variant'.pluralize(count)} " \
-              "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \ "in #{component_class}. " \
+              "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} " \
+              "found for #{'variant'.pluralize(count)} " \
+              "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \
+              "in #{component_class}. " \
               "There can only be a template file or inline render method per variant."
           end
 
