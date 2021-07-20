@@ -133,7 +133,7 @@ module ViewComponent
           if collection_args.nil? && block.nil?
             get_slot(slot_name)
           else
-            collection_args.each do |args|
+            collection_args.map do |args|
               set_slot(slot_name, **args, &block)
             end
           end
