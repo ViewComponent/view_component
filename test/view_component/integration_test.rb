@@ -39,11 +39,11 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_rendering_component_in_a_controller_with_block
-    # Currently unsupported.
-
     get "/controller_inline_with_block"
+
     assert_select("div", "bar")
-    assert_select("div", { count: 0, text: "baz" })
+    assert_select("div#slot", "baz")
+    assert_select("div#content", "bam")
     assert_response :success
   end
 

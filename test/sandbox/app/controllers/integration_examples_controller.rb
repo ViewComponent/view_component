@@ -12,9 +12,10 @@ class IntegrationExamplesController < ActionController::Base
   end
 
   def controller_inline_with_block
-    render ControllerInlineComponent.new(message: "bar") do |c|
+    render(ControllerInlineWithBlockComponent.new(message: "bar").tap do |c|
       c.slot(name: "baz")
-    end
+      c.with_content("bam")
+    end)
   end
 
   def controller_inline_baseline
