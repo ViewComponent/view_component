@@ -13,6 +13,7 @@ module ViewComponent
 
       options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
       options.show_previews = Rails.env.development? || Rails.env.test? if options.show_previews.nil?
+      options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
       options.preview_route ||= ViewComponent::Base.preview_route
       options.preview_controller ||= ViewComponent::Base.preview_controller
 
@@ -30,7 +31,17 @@ module ViewComponent
       end
 
       ActiveSupport.on_load(:view_component) do
-        options.each { |k, v| send("#{k}=", v) }
+        options.each { |k, v| send("#{k}=", v) if respond_to?("#{k}=") }
+      end
+    end
+
+    initializer "view_component.enable_instrumentation" do |app|
+      ActiveSupport.on_load(:view_component) do
+        if app.config.view_component.instrumentation_enabled.present?
+          # :nocov:
+          ViewComponent::Base.prepend(ViewComponent::Instrumentation)
+          # :nocov:
+        end
       end
     end
 
@@ -83,6 +94,12 @@ module ViewComponent
         require "view_component/render_component_to_string_helper"
         ActionController::Base.include ViewComponent::RenderingComponentHelper
         ActionController::Base.include ViewComponent::RenderComponentToStringHelper
+      end
+    end
+
+    initializer "static assets" do |app|
+      if app.config.view_component.show_previews
+        app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/app/assets/vendor")
       end
     end
 

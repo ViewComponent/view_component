@@ -34,7 +34,6 @@ class SlotableTest < ViewComponent::TestCase
       end
     end
 
-
     assert_selector(".card.mt-4")
 
     assert_selector(".title", text: "This is my title!")
@@ -82,7 +81,6 @@ class SlotableTest < ViewComponent::TestCase
       end
     end
 
-
     assert_selector(".card.mt-4")
 
     assert_selector(".title", text: "This is my title!")
@@ -100,11 +98,12 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_invalid_slot_class_raises_error
-    exception = assert_raises ArgumentError do
-      render_inline(BadSlotComponent.new) do |component|
-        component.slot(:title)
+    exception =
+      assert_raises ArgumentError do
+        render_inline(BadSlotComponent.new) do |component|
+          component.slot(:title)
+        end
       end
-    end
 
     assert_includes exception.message, "Title must inherit from ViewComponent::Slot"
   end
@@ -129,27 +128,30 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_renders_slots_template_raise_with_unknown_content_areas
-    exception = assert_raises ArgumentError do
-      render_inline(SlotsComponent.new) do |component|
-        component.slot(:foo) { "Hello!" }
+    exception =
+      assert_raises ArgumentError do
+        render_inline(SlotsComponent.new) do |component|
+          component.slot(:foo) { "Hello!" }
+        end
       end
-    end
 
     assert_includes exception.message, "Unknown slot 'foo' - expected one of '[:title, :subtitle, :footer, :tab, :item]'"
   end
 
   def test_with_slot_raise_with_duplicate_slot_name
-    exception = assert_raises ArgumentError do
-      SlotsComponent.with_slot :title
-    end
+    exception =
+      assert_raises ArgumentError do
+        SlotsComponent.with_slot :title
+      end
 
     assert_includes exception.message, "title slot declared multiple times"
   end
 
   def test_with_slot_raise_with_content_keyword
-    exception = assert_raises ArgumentError do
-      SlotsComponent.with_slot :content
-    end
+    exception =
+      assert_raises ArgumentError do
+        SlotsComponent.with_slot :content
+      end
 
     assert_includes exception.message, ":content is a reserved slot name"
   end

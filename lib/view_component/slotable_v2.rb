@@ -65,7 +65,7 @@ module ViewComponent
       #     <% end %>
       #   <% end %>
       def renders_one(slot_name, callable = nil)
-        validate_slot_name(slot_name)
+        validate_singular_slot_name(slot_name)
 
         define_method slot_name do |*args, **kwargs, &block|
           if args.empty? && kwargs.empty? && block.nil?
@@ -116,7 +116,7 @@ module ViewComponent
       #     <% end %>
       #   <% end %>
       def renders_many(slot_name, callable = nil)
-        validate_slot_name(slot_name)
+        validate_plural_slot_name(slot_name)
 
         singular_name = ActiveSupport::Inflector.singularize(slot_name)
 
@@ -133,7 +133,7 @@ module ViewComponent
           if collection_args.nil? && block.nil?
             get_slot(slot_name)
           else
-            collection_args.each do |args|
+            collection_args.map do |args|
               set_slot(slot_name, **args, &block)
             end
           end
@@ -174,14 +174,35 @@ module ViewComponent
         self.registered_slots[slot_name] = slot
       end
 
-      def validate_slot_name(slot_name)
-        if slot_name.to_sym == :content
-          raise ArgumentError.new("#{slot_name} is not a valid slot name.")
+      def validate_plural_slot_name(slot_name)
+        if slot_name.to_sym == :contents
+          raise ArgumentError.new(
+            "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
+            "To fix this issue, choose a different name."
+          )
         end
 
+        raise_if_slot_registered(slot_name)
+      end
+
+      def validate_singular_slot_name(slot_name)
+        if slot_name.to_sym == :content
+          raise ArgumentError.new(
+            "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
+            "To fix this issue, choose a different name."
+          )
+        end
+
+        raise_if_slot_registered(slot_name)
+      end
+
+      def raise_if_slot_registered(slot_name)
         if self.registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
-          raise ArgumentError.new("#{slot_name} slot declared multiple times")
+          raise ArgumentError.new(
+            "#{self} declares the #{slot_name} slot multiple times.\n\n" \
+            "To fix this issue, choose a different slot name."
+          )
         end
       end
     end
@@ -190,10 +211,10 @@ module ViewComponent
       content unless content_evaluated? # ensure content is loaded so slots will be defined
 
       slot = self.class.registered_slots[slot_name]
-      @_set_slots ||= {}
+      @__vc_set_slots ||= {}
 
-      if @_set_slots[slot_name]
-        return @_set_slots[slot_name]
+      if @__vc_set_slots[slot_name]
+        return @__vc_set_slots[slot_name]
       end
 
       if slot[:collection]
@@ -217,42 +238,43 @@ module ViewComponent
       # 2. Since we have to pass block content to components when calling
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
-      slot._content_block = block if block_given?
+      slot.__vc_content_block = block if block_given?
 
       # If class
       if slot_definition[:renderable]
-        slot._component_instance = slot_definition[:renderable].new(*args, **kwargs)
+        slot.__vc_component_instance = slot_definition[:renderable].new(*args, **kwargs)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
-        slot._component_instance = self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
+        slot.__vc_component_instance = self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
       # If passed a lambda
       elsif slot_definition[:renderable_function]
         # Use `bind(self)` to ensure lambda is executed in the context of the
         # current component. This is necessary to allow the lambda to access helper
         # methods like `content_tag` as well as parent component state.
-        renderable_value = if block_given?
-          slot_definition[:renderable_function].bind(self).call(*args, **kwargs) do |*args, **kwargs|
-            view_context.capture(*args, **kwargs, &block)
+        renderable_value =
+          if block_given?
+            slot_definition[:renderable_function].bind(self).call(*args, **kwargs) do |*args, **kwargs|
+              view_context.capture(*args, **kwargs, &block)
+            end
+          else
+            slot_definition[:renderable_function].bind(self).call(*args, **kwargs)
           end
-        else
-          slot_definition[:renderable_function].bind(self).call(*args, **kwargs)
-        end
 
         # Function calls can return components, so if it's a component handle it specially
         if renderable_value.respond_to?(:render_in)
-          slot._component_instance = renderable_value
+          slot.__vc_component_instance = renderable_value
         else
-          slot._content = renderable_value
+          slot.__vc_content = renderable_value
         end
       end
 
-      @_set_slots ||= {}
+      @__vc_set_slots ||= {}
 
       if slot_definition[:collection]
-        @_set_slots[slot_name] ||= []
-        @_set_slots[slot_name].push(slot)
+        @__vc_set_slots[slot_name] ||= []
+        @__vc_set_slots[slot_name].push(slot)
       else
-        @_set_slots[slot_name] = slot
+        @__vc_set_slots[slot_name] = slot
       end
 
       slot

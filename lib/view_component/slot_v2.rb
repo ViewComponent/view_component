@@ -6,7 +6,7 @@ module ViewComponent
   class SlotV2
     include ViewComponent::WithContentHelper
 
-    attr_writer :_component_instance, :_content_block, :_content
+    attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content
 
     def initialize(parent)
       @parent = parent
@@ -21,7 +21,7 @@ module ViewComponent
     # component instance, returning the string.
     #
     # If the slot renderable is a function and returns a string, it is
-    # set as `@_content` and is returned directly.
+    # set as `@__vc_content` and is returned directly.
     #
     # If there is no slot renderable, we evaluate the block passed to
     # the slot and return it.
@@ -30,32 +30,39 @@ module ViewComponent
 
       view_context = @parent.send(:view_context)
 
-      raise ArgumentError.new("Block provided after calling `with_content`. Use one or the other.") if defined?(@_content_block) && defined?(@_content_set_by_with_content)
-
-      @content = if defined?(@_component_instance)
-        if defined?(@_content_set_by_with_content)
-          @_component_instance.with_content(@_content_set_by_with_content)
-
-          view_context.capture do
-            @_component_instance.render_in(view_context)
-          end
-        elsif defined?(@_content_block)
-          view_context.capture do
-            # render_in is faster than `parent.render`
-            @_component_instance.render_in(view_context, &@_content_block)
-          end
-        else
-          view_context.capture do
-            @_component_instance.render_in(view_context)
-          end
-        end
-      elsif defined?(@_content)
-        @_content
-      elsif defined?(@_content_block)
-        view_context.capture(&@_content_block)
-      elsif defined?(@_content_set_by_with_content)
-        @_content_set_by_with_content
+      if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content)
+        raise ArgumentError.new(
+          "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
+          "which means that ViewComponent doesn't know which content to use.\n\n" \
+          "To fix this issue, use either `with_content` or a block."
+        )
       end
+
+      @content =
+        if defined?(@__vc_component_instance)
+          if defined?(@__vc_content_set_by_with_content)
+            @__vc_component_instance.with_content(@__vc_content_set_by_with_content)
+
+            view_context.capture do
+              @__vc_component_instance.render_in(view_context)
+            end
+          elsif defined?(@__vc_content_block)
+            view_context.capture do
+              # render_in is faster than `parent.render`
+              @__vc_component_instance.render_in(view_context, &@__vc_content_block)
+            end
+          else
+            view_context.capture do
+              @__vc_component_instance.render_in(view_context)
+            end
+          end
+        elsif defined?(@__vc_content)
+          @__vc_content
+        elsif defined?(@__vc_content_block)
+          view_context.capture(&@__vc_content_block)
+        elsif defined?(@__vc_content_set_by_with_content)
+          @__vc_content_set_by_with_content
+             end
 
       @content
     end
@@ -80,7 +87,7 @@ module ViewComponent
     # end
     #
     def method_missing(symbol, *args, &block)
-      @_component_instance.public_send(symbol, *args, &block)
+      @__vc_component_instance.public_send(symbol, *args, &block)
     end
 
     def html_safe?
@@ -88,7 +95,7 @@ module ViewComponent
     end
 
     def respond_to_missing?(symbol, include_all = false)
-      defined?(@_component_instance) && @_component_instance.respond_to?(symbol, include_all)
+      defined?(@__vc_component_instance) && @__vc_component_instance.respond_to?(symbol, include_all)
     end
   end
 end
