@@ -265,7 +265,11 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_nested_blocks_content_selectable_true
     render_inline(NestedSharedState::TableComponent.new(selectable: true)) do |table_card|
-      table_card.header("regular_argument", class_names: "table__header extracted_kwarg", data: { splatted_kwarg: "splatted_keyword_argument" }) do |header|
+      table_card.header(
+        "regular_argument",
+        class_names: "table__header extracted_kwarg",
+        data: { splatted_kwarg: "splatted_keyword_argument" }
+      ) do |header|
         header.cell { "Cell1" }
         header.cell(class_names: "-has-sort") { "Cell2" }
       end

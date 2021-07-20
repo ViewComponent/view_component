@@ -114,7 +114,8 @@ module ViewComponent
       ""
     end
 
-    # Called before rendering the component. Override to perform operations that depend on having access to the view context, such as helpers.
+    # Called before rendering the component. Override to perform operations that
+    # depend on having access to the view context, such as helpers.
     #
     # @return [void]
     def before_render
@@ -154,7 +155,8 @@ module ViewComponent
       end
     end
 
-    # The current controller. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
+    # The current controller. Use sparingly as doing so introduces coupling
+    # that inhibits encapsulation & reuse, often making testing difficult.
     #
     # @return [ActionController::Base]
     def controller
@@ -172,7 +174,8 @@ module ViewComponent
       @__vc_controller ||= view_context.controller
     end
 
-    # A proxy through which to access helpers. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
+    # A proxy through which to access helpers. Use sparingly as doing so introduces
+    # coupling that inhibits encapsulation & reuse, often making testing difficult.
     #
     # @return [ActionView::Base]
     def helpers
@@ -223,7 +226,8 @@ module ViewComponent
       self
     end
 
-    # The current request. Use sparingly as doing so introduces coupling that inhibits encapsulation & reuse, often making testing difficult.
+    # The current request. Use sparingly as doing so introduces coupling that
+    # inhibits encapsulation & reuse, often making testing difficult.
     #
     # @return [ActionDispatch::Request]
     def request

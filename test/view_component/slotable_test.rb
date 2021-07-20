@@ -135,7 +135,10 @@ class SlotableTest < ViewComponent::TestCase
         end
       end
 
-    assert_includes exception.message, "Unknown slot 'foo' - expected one of '[:title, :subtitle, :footer, :tab, :item]'"
+    assert_includes(
+      exception.message,
+      "Unknown slot 'foo' - expected one of '[:title, :subtitle, :footer, :tab, :item]'"
+    )
   end
 
   def test_with_slot_raise_with_duplicate_slot_name

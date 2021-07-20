@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Set maximum line length to 120.
+
+    *Joel Hawksley*
+
 * Update error messages to be more descriptive and helpful.
 
     *Joel Hawksley*
