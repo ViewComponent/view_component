@@ -10,7 +10,7 @@ title: Changelog
 * Set maximum line length to 120.
 
     *Joel Hawksley*
-    
+
 * Setting a collection slot with the plural setter (`component.items(array)` for `renders_many :items`)  returns the array of slots.
 
     *Jon Palmer*
