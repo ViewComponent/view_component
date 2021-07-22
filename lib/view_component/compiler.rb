@@ -44,7 +44,10 @@ module ViewComponent
         # Remove existing compiled template methods,
         # as Ruby warns when redefining a method.
         method_name = call_method_name(template[:variant])
-        component_class.send(:undef_method, method_name.to_sym) if component_class.instance_methods.include?(method_name.to_sym)
+
+        if component_class.instance_methods.include?(method_name.to_sym)
+          component_class.send(:undef_method, method_name.to_sym)
+        end
 
         component_class.class_eval <<-RUBY, template[:path], -1
           def #{method_name}
@@ -66,7 +69,9 @@ module ViewComponent
     attr_reader :component_class
 
     def define_render_template_for
-      component_class.send(:undef_method, :render_template_for) if component_class.instance_methods.include?(:render_template_for)
+      if component_class.instance_methods.include?(:render_template_for)
+        component_class.send(:undef_method, :render_template_for)
+      end
 
       variant_elsifs = variants.compact.uniq.map do |variant|
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
@@ -94,7 +99,9 @@ module ViewComponent
           end
 
           if templates.count { |template| template[:variant].nil? } > 1
-            errors << "More than one template found for #{component_class}. There can only be one default template file per component."
+            errors <<
+              "More than one template found for #{component_class}. " \
+              "There can only be one default template file per component."
           end
 
           invalid_variants =
@@ -124,8 +131,10 @@ module ViewComponent
             count = duplicate_template_file_and_inline_variant_calls.count
 
             errors <<
-              "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} found for #{'variant'.pluralize(count)} " \
-              "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
+              "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} " \
+              "found for #{'variant'.pluralize(count)} " \
+              "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \
+              "in #{component_class}. " \
               "There can only be a template file or inline render method per variant."
           end
 
@@ -155,7 +164,10 @@ module ViewComponent
           # Fetch only ViewComponent ancestor classes to limit the scope of
           # finding inline calls
           view_component_ancestors =
-            component_class.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - component_class.included_modules
+            (
+              component_class.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } -
+              component_class.included_modules
+            )
 
           view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call/) }.uniq
         end
@@ -184,7 +196,13 @@ module ViewComponent
       if handler.method(:call).parameters.length > 1
         handler.call(component_class, template)
       else
-        handler.call(OpenStruct.new(source: template, identifier: component_class.identifier, type: component_class.type))
+        handler.call(
+          OpenStruct.new(
+            source: template,
+            identifier: component_class.identifier,
+            type: component_class.type
+          )
+        )
       end
     end
 

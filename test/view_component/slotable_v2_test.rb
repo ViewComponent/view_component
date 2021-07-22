@@ -196,6 +196,21 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector(".item.normal", count: 2)
   end
 
+  def test_slot_with_collection_returns_slots
+    render_inline SlotsV2DelegateComponent.new do |component|
+      component.items([{ highlighted: false }, { highlighted: true }, { highlighted: false }]).
+        each_with_index do |slot, index|
+          slot.with_content("My Item #{index + 1}")
+        end
+    end
+
+    assert_selector(".item", count: 1, text: "My Item 1")
+    assert_selector(".item", count: 1, text: "My Item 2")
+    assert_selector(".item", count: 1, text: "My Item 3")
+    assert_selector(".item.highlighted", count: 1)
+    assert_selector(".item.normal", count: 2)
+  end
+
   def test_renders_nested_content_in_order
     render_inline TitleWrapperComponent.new(title: "Hello world!")
 
@@ -265,7 +280,11 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_nested_blocks_content_selectable_true
     render_inline(NestedSharedState::TableComponent.new(selectable: true)) do |table_card|
-      table_card.header("regular_argument", class_names: "table__header extracted_kwarg", data: { splatted_kwarg: "splatted_keyword_argument" }) do |header|
+      table_card.header(
+        "regular_argument",
+        class_names: "table__header extracted_kwarg",
+        data: { splatted_kwarg: "splatted_keyword_argument" }
+      ) do |header|
         header.cell { "Cell1" }
         header.cell(class_names: "-has-sort") { "Cell2" }
       end

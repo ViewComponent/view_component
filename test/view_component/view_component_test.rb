@@ -512,7 +512,10 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(MissingTemplateComponent.new)
       end
 
-    assert_includes exception.message, "Could not find a template file or inline render method for MissingTemplateComponent"
+    assert_includes(
+      exception.message,
+      "Could not find a template file or inline render method for MissingTemplateComponent"
+    )
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_is_present
@@ -530,7 +533,10 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(TooManySidecarFilesForVariantComponent.new)
       end
 
-    assert_includes error.message, "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
+    assert_includes(
+      error.message,
+      "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
+    )
   end
 
   def test_raise_error_when_default_template_file_and_inline_default_call_exist
@@ -539,7 +545,10 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(DefaultTemplateAndInlineDefaultTemplateComponent.new)
       end
 
-    assert_includes error.message, "Template file and inline render method found for DefaultTemplateAndInlineDefaultTemplateComponent."
+    assert_includes(
+      error.message,
+      "Template file and inline render method found for DefaultTemplateAndInlineDefaultTemplateComponent."
+    )
   end
 
   def test_raise_error_when_variant_template_file_and_inline_variant_call_exist
@@ -550,7 +559,11 @@ class ViewComponentTest < ViewComponent::TestCase
         end
       end
 
-    assert_includes error.message, "Template file and inline render method found for variant 'phone' in VariantTemplateAndInlineVariantTemplateComponent."
+    assert_includes(
+      error.message,
+      "Template file and inline render method found for variant 'phone' in " \
+      "VariantTemplateAndInlineVariantTemplateComponent."
+    )
   end
 
   def test_raise_error_when_template_file_and_sidecar_directory_template_exist
@@ -559,7 +572,10 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(TemplateAndSidecarDirectoryTemplateComponent.new)
       end
 
-    assert_includes error.message, "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
+    assert_includes(
+      error.message,
+      "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
+    )
   end
 
   def test_with_custom_test_controller
@@ -670,7 +686,9 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(MissingCollectionParameterNameComponent.with_collection([]))
       end
 
-    assert_match(/The initializer for MissingCollectionParameterNameComponent does not accept the parameter/, exception.message)
+    assert_match(
+      /The initializer for MissingCollectionParameterNameComponent does not accept the parameter/, exception.message
+    )
   end
 
   def test_collection_component_missing_default_parameter_name
@@ -710,7 +728,10 @@ class ViewComponentTest < ViewComponent::TestCase
           InvalidNamedParametersComponent.compile(raise_errors: true)
         end
 
-      assert_match(/InvalidNamedParametersComponent initializer cannot accept the parameter `content`/, exception.message)
+      assert_match(
+        /InvalidNamedParametersComponent initializer cannot accept the parameter `content`/,
+        exception.message
+      )
     ensure
       ViewComponent::CompileCache.cache = old_cache
     end

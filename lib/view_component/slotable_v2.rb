@@ -133,7 +133,7 @@ module ViewComponent
           if collection_args.nil? && block.nil?
             get_slot(slot_name)
           else
-            collection_args.each do |args|
+            collection_args.map do |args|
               set_slot(slot_name, **args, &block)
             end
           end
@@ -256,7 +256,8 @@ module ViewComponent
         slot.__vc_component_instance = slot_definition[:renderable].new(*args, **kwargs)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
-        slot.__vc_component_instance = self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
+        slot.__vc_component_instance =
+          self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
       # If passed a lambda
       elsif slot_definition[:renderable_function]
         # Use `bind(self)` to ensure lambda is executed in the context of the

@@ -9,7 +9,11 @@ module ViewComponent # :nodoc:
     end
 
     def render_in(view_context, &block)
-      ActiveSupport::Notifications.instrument("!render.view_component", name: self.class.name, identifier: self.class.identifier) do
+      ActiveSupport::Notifications.instrument(
+        "!render.view_component",
+        name: self.class.name,
+        identifier: self.class.identifier
+      ) do
         super(view_context, &block)
       end
     end

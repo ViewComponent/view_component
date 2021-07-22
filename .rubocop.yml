@@ -17,3 +17,7 @@ Layout:
 
 Layout/DotPosition:
   EnforcedStyle: trailing
+
+Layout/LineLength:
+  Max: 120
+  Enabled: true
