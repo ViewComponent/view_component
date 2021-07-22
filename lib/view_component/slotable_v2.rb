@@ -142,6 +142,17 @@ module ViewComponent
         register_slot(slot_name, collection: true, callable: callable)
       end
 
+      def slot_type(slot_name)
+        registered_slot = registered_slots[slot_name]
+        if registered_slot
+          registered_slot[:collection] ? :collection : :single
+        else
+          plural_slot_name = ActiveSupport::Inflector.pluralize(slot_name).to_sym
+          plural_registered_slot = registered_slots[plural_slot_name]
+          plural_registered_slot&.fetch(:collection) ? :collection_item : nil
+        end
+      end
+
       # Clone slot configuration into child class
       # see #test_slots_pollution
       def inherited(child)

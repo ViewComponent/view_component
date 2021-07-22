@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add `slot_type` helper method.
+
+    *Jon Palmer*
+
 * Add test case for rendering a ViewComponent with slots in a controller.
 
     *Simon Fish*
