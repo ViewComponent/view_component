@@ -38,6 +38,15 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes inline_response, baseline_response
   end
 
+  def test_rendering_component_in_a_controller_with_block
+    get "/controller_inline_with_block"
+
+    assert_select("div", "bar")
+    assert_select("div#slot", "baz")
+    assert_select("div#content", "bam")
+    assert_response :success
+  end
+
   def test_template_changes_are_not_reflected_on_new_request_when_cache_template_loading_is_true
     # cache_template_loading is set to true on the initializer
 
