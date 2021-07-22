@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Add slot_type slotable helpers.
+* Add slot_type helper method.
 
     *Jon Palmer*
 
