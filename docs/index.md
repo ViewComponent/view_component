@@ -6,17 +6,46 @@ nav_order: 1
 
 # ViewComponent
 
-A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
+A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
 ## What is a ViewComponent?
 
 ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
 
+ViewComponents are objects that encapsulate a template:
+
+```ruby
+# app/components/message_component.rb
+class MessageComponent < ViewComponent::Base
+  def initialize(name:)
+    @name = name
+  end
+end
+```
+
+```erb
+<%# app/components/message_component.html.erb %>
+<h1>Hello, <%= @name %>!<h1>
+```
+
+Which is rendered by calling:
+
+```erb
+<%# app/views/demo/index.html.erb %>
+<%= render(MessageComponent.new(name: "World")) %>
+```
+
+Returning:
+
+```html
+<h1>Hello, World!</h1>
+```
+
 ## When should I use ViewComponents?
 
 ViewComponents work best for templates that are reused or benefit from being tested directly. Heavily reused partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
 
-## Benefits
+## Why should I use ViewComponents?
 
 ### Testing
 
@@ -24,25 +53,58 @@ Unlike traditional Rails templates, ViewComponents can be unit tested. In the Gi
 
 With ViewComponent, integration tests can be reserved for end-to-end assertions, with permutations covered at the unit level.
 
+For example, to test the `MessageComponent` above:
+
+```ruby
+class MessageComponentTest < GitHub::TestCase
+  include ViewComponent::TestHelpers
+
+  test "renders message" do
+    render_inline(MessageComponent.new(name: "World"))
+
+    assert_selector "h1", text: "Hello, World!"
+  end
+end
+```
+
+ViewComponent unit tests leverage the Capybara matchers library, allowing for complex assertions traditionally reserved for controller and browser tests.
+
 ### Data Flow
 
 Traditional Rails templates have an implicit interface, making it hard to reason about their dependencies. This can lead to subtle bugs when rendering the same template in different contexts.
 
-ViewComponents use a standard Ruby initializer that clearly defines what is needed to render, making reuse easier (and safer) than with partials.
+ViewComponents use a standard Ruby initializer that clearly defines what is needed to render, making reuse easier and safer than partials.
 
 ### Performance
 
-Based on our [benchmarks](https://github.com/github/view_component/blob/main/performance/benchmark.rb), ViewComponents are ~10x faster than partials.
+Based on several [benchmarks](https://github.com/github/view_component/blob/main/performance/benchmark.rb), ViewComponents are ~10x faster than partials in real-world use-cases.
+
+The primary optimization is pre-compiling all ViewComponent templates at application boot, instead of at runtime like traditional Rails views.
+
+For example, the `MessageComponent` template is compiled onto the Ruby object like so:
+
+`# app/components/message_component.rb`
+
+```ruby
+class MessageComponent < ViewComponent::Base
+  def initialize(name:)
+    @name = name
+  end
+
+  def call
+    @output_buffer.safe_append='<h1>Hello, '.freeze
+    @output_buffer.append=( @name )
+    @output_buffer.safe_append='!</h1>'.freeze
+    @output_buffer.to_s
+  end
+end
+```
 
 ### Code quality
 
 Template code often fails basic Ruby standards: long methods, deep conditional nesting, and mystery guests abound.
 
 ViewComponents are Ruby objects, making it easy to follow (and enforce) code quality standards.
-
-## Design philosophy
-
-ViewComponent is designed to integrate with Rails as seamlessly as possible, with the [least surprise](https://www.artima.com/intv/ruby4.html).
 
 ## Contributors
 
