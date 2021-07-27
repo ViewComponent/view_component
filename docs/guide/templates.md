@@ -6,7 +6,7 @@ parent: Building ViewComponents
 
 # Templates
 
-ViewComponent templates can be defined in several ways:
+ViewComponents wrap one (or more, if using [variants](https://guides.rubyonrails.org/layouts_and_rendering.html#the-variants-option)) template(s), defined in one of several ways:
 
 ## Sibling file
 
