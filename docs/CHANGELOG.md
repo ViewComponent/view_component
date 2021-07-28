@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.36.0
+
 * Add `slot_type` helper method.
 
     *Jon Palmer*
