@@ -7,6 +7,7 @@ title: Changelog
 
 ## main
 
+<<<<<<< Updated upstream
 * Add `slot_type` helper method.
 
     *Jon Palmer*
@@ -14,6 +15,11 @@ title: Changelog
 * Add test case for rendering a ViewComponent with slots in a controller.
 
     *Simon Fish*
+=======
+* Add example ViewComponent to documentation landing page.
+
+    *Joel Hawksley*
+>>>>>>> Stashed changes
 
 * Set maximum line length to 120.
 
