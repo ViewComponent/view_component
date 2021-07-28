@@ -6,7 +6,7 @@ parent: Building ViewComponents
 
 # Templates
 
-ViewComponents wrap one (or more, if using [variants](https://guides.rubyonrails.org/layouts_and_rendering.html#the-variants-option)) template(s), defined in one of several ways:
+ViewComponents wrap one template (or more, if using [variants](https://guides.rubyonrails.org/layouts_and_rendering.html#the-variants-option)), defined in one of several ways:
 
 ## Sibling file
 
