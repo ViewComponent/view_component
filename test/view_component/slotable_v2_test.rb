@@ -382,4 +382,20 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_includes error.message, "It looks like a block was provided after calling"
   end
+
+  def test_slot_type_single
+    assert_equal(:single, SlotsV2Component.slot_type(:title))
+  end
+
+  def test_slot_type_collection
+    assert_equal(:collection, SlotsV2Component.slot_type(:tabs))
+  end
+
+  def test_slot_type_collection_item?
+    assert_equal(:collection_item, SlotsV2Component.slot_type(:tab))
+  end
+
+  def test_slot_type_nil?
+    assert_nil(SlotsV2Component.slot_type(:junk))
+  end
 end
