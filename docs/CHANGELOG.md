@@ -15,6 +15,10 @@ title: Changelog
 
     *Simon Fish*
 
+* Add example ViewComponent to documentation landing page.
+
+    *Joel Hawksley*
+
 * Set maximum line length to 120.
 
     *Joel Hawksley*

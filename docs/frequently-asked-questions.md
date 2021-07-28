@@ -9,6 +9,10 @@ title: Frequently asked questions
 
 Yes. ViewComponent is tested against ERB, Haml, and Slim, but it should support most Rails template handlers.
 
+## Can I use a ViewComponent for an entire view?
+
+If the view could benefit from unit testing, making it a ViewComponent is probably a good idea.
+
 ## Isn't this just like X library?
 
 ViewComponent is far from a novel idea! Popular implementations of view components in Ruby include, but are not limited to:
