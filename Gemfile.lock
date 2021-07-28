@@ -87,7 +87,7 @@ GIT
 PATH
   remote: .
   specs:
-    view_component (2.35.0)
+    view_component (2.36.0)
       activesupport (>= 5.0.0, < 8.0)
       method_source (~> 1.0)
 
