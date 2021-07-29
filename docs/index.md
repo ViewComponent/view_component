@@ -25,7 +25,7 @@ end
 
 ```erb
 <%# app/components/message_component.html.erb %>
-<h1>Hello, <%= @name %>!<h1>
+<h1>Hello, <%= @name %>!</h1>
 ```
 
 Which is rendered by calling:
@@ -170,6 +170,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
 <img src="https://avatars.githubusercontent.com/Matt-Yorkley?s=64" alt="Matt-Yorkley" width="32" />
+<img src="https://avatars.githubusercontent.com/ryogift?s=64" alt="ryogift" width="32" />
 
 <hr />
 
