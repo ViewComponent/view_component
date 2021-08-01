@@ -135,4 +135,10 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
       assert_file "app/parts/user_component.html.erb"
     end
   end
+
+  def test_component_with_stimulus
+    run_generator %w[user --stimulus]
+
+    assert_file "app/components/user_component_controller.js"
+  end
 end

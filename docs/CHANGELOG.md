@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add `--stimulus` flag to the component generator. Generates a Stimulus controller alongside the component.
+
+    *Sebastien Auriault*
+
 * Add test case for conflict with internal `@variant` variable.
 
    *David Backeus*
