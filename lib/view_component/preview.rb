@@ -71,16 +71,30 @@ module ViewComponent # :nodoc:
 
       # Returns the relative path (from preview_path) to the preview example template if the template exists
       def preview_example_template_path(example)
-        preview_path = Array(preview_paths).detect do |preview_path|
-          Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
-        end
+        preview_path =
+          Array(preview_paths).detect do |preview_path|
+            Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
+          end
 
         if preview_path.nil?
-          raise PreviewTemplateError, "preview template for example #{example} does not exist"
+          raise(
+            PreviewTemplateError,
+            "A preview template for example #{example} does not exist.\n\n" \
+            "To fix this issue, create a template for the example."
+          )
         end
 
         path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
-        Pathname.new(path).relative_path_from(Pathname.new(preview_path)).to_s
+        Pathname.new(path).
+          relative_path_from(Pathname.new(preview_path)).
+          to_s.
+          sub(/\..*$/, "")
+      end
+
+      # Returns the method body for the example from the preview file.
+      def preview_source(example)
+        source = self.instance_method(example.to_sym).source.split("\n")
+        source[1...(source.size - 1)].join("\n")
       end
 
       private

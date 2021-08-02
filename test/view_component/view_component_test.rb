@@ -33,11 +33,53 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("span", text: "content")
   end
 
+  def test_raise_error_when_content_already_set
+    error =
+      assert_raises ArgumentError do
+        render_inline(WrapperComponent.new.with_content("setter content")) do
+          "block content"
+        end
+      end
+
+    assert_includes error.message, "It looks like a block was provided after calling"
+  end
+
+  def test_raise_error_when_component_implements_with_content
+    exception =
+      assert_raises ViewComponent::ComponentError do
+        render_inline(InvalidWithRenderComponent.new)
+      end
+
+    assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `#with_content`"
+  end
+
+  def test_renders_content_given_as_argument
+    render_inline(WrapperComponent.new.with_content("from arg"))
+
+    assert_selector("span", text: "from arg")
+  end
+
+  def test_raises_error_when_with_content_is_called_withot_any_values
+    exception =
+      assert_raises ArgumentError do
+        WrapperComponent.new.with_content(nil)
+      end
+
+    assert_includes exception.message, "No content provided to"
+  end
+
   def test_render_without_template
     render_inline(InlineComponent.new)
 
     assert_predicate InlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
+  end
+
+  def test_render_without_template_variant
+    render_inline(InlineComponent.new.with_variant(:email))
+
+    assert_predicate InlineComponent, :compiled?
+    assert_selector("input[type='text'][name='email']")
   end
 
   def test_render_child_without_template
@@ -47,6 +89,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
+  def test_render_empty_component
+    assert_nothing_raised do
+      render_inline(EmptyComponent.new)
+    end
+  end
+
   def test_renders_slim_template
     render_inline(SlimComponent.new(message: "bar")) { "foo" }
 
@@ -54,8 +102,53 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("bar")
   end
 
+  def test_renders_haml_with_html_formatted_slot
+    render_inline(HamlHtmlFormattedSlotComponent.new)
+
+    assert_selector("p", text: "HTML Formatted one")
+    assert_selector("p", text: "HTML Formatted many", count: 2)
+
+    # ensure the content isn't rendered twice (once escaped, once not)
+    assert_no_text "<p>HTML Formatted one</p>"
+    assert_no_text "<p>HTML Formatted many</p>"
+  end
+
+  def test_renders_slim_with_many_slots
+    render_inline(SlimRendersManyComponent.new) do |c|
+      c.slim_component(message: "Bar A") do
+        "Foo A "
+      end
+      c.slim_component(message: "Bar B") do
+        "Foo B "
+      end
+    end
+
+    assert_selector(".slim-div", text: "Foo A Bar A")
+    assert_selector(".slim-div", text: "Foo B Bar B")
+  end
+
+  def test_renders_slim_with_html_formatted_slot
+    render_inline(SlimHtmlFormattedSlotComponent.new)
+
+    assert_selector("p", text: "HTML Formatted")
+  end
+
+  def test_renders_slim_escaping_dangerous_html_assign
+    render_inline(SlimWithUnsafeHtmlComponent.new)
+
+    refute_selector("script")
+    assert_selector(".slim-div", text: "<script>alert('xss')</script>")
+  end
+
   def test_renders_haml_template
     render_inline(HamlComponent.new(message: "bar")) { "foo" }
+
+    assert_text("foo")
+    assert_text("bar")
+  end
+
+  def test_render_jbuilder_template
+    render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
 
     assert_text("foo")
     assert_text("bar")
@@ -71,6 +164,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='hidden'][name='authenticity_token']", visible: false)
 
     ActionController::Base.allow_forgery_protection = old_value
+  end
+
+  def test_renders_component_with_variant_method
+    render_inline(VariantsComponent.new.with_variant(:phone))
+
+    assert_text("Phone")
   end
 
   def test_renders_component_with_variant
@@ -125,7 +224,7 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_renders_partial_template
     render_inline(PartialComponent.new)
 
-    assert_text("hello,partial world!", count: 2)
+    assert_text("hello,partial world!", count: 3)
   end
 
   def test_renders_content_for_template
@@ -176,6 +275,7 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_renders_content_areas_template_can_wrap_render_arguments
     render_inline(ContentAreasComponent.new(title: "Hello!", footer: "Bye!")) do |component|
+      # rubocop:disable Rails/OutputSafety
       component.with(:title) { "<strong>#{component.title}</strong>".html_safe }
       component.with(:body) { "Have a nice day." }
     end
@@ -186,133 +286,33 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_content_areas_template_raise_with_unknown_content_areas
-    exception = assert_raises ArgumentError do
-      render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
-        component.with(:foo) { "Hello!" }
+    exception =
+      assert_raises ArgumentError do
+        render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
+          component.with(:foo) { "Hello!" }
+        end
       end
-    end
 
-    assert_includes exception.message, "Unknown content_area 'foo' - expected one of '[:title, :body, :footer]'"
+    assert_includes exception.message, "expected one of '[:title, :body, :footer]'"
   end
 
   def test_with_content_areas_raise_with_content_keyword
-    exception = assert_raises ArgumentError do
-      ContentAreasComponent.with_content_areas :content
-    end
+    exception =
+      assert_raises ArgumentError do
+        ContentAreasComponent.with_content_areas :content
+      end
 
-    assert_includes exception.message, ":content is a reserved content area name"
+    assert_includes exception.message, "defines a content area called :content"
   end
 
-  def test_renders_slots
-    render_inline(SlotsComponent.new(class_names: "mt-4")) do |component|
-      component.slot(:title) do
-        "This is my title!"
-      end
-      component.slot(:subtitle) do
-        "This is my subtitle!"
-      end
-
-      component.slot(:tab) do
-        "Tab A"
-      end
-      component.slot(:tab) do
-        "Tab B"
-      end
-
-      component.slot(:item) do
-        "Item A"
-      end
-      component.slot(:item, highlighted: true) do
-        "Item B"
-      end
-      component.slot(:item) do
-        "Item C"
-      end
-
-      component.slot(:footer, class_names: "text-blue") do
-        "This is the footer"
+  def test_with_content_areas_render_predicate
+    render_inline(ContentAreasPredicateComponent.new) do |c|
+      c.with :title do
+        "hello world"
       end
     end
 
-
-    assert_selector(".card.mt-4")
-
-    assert_selector(".title", text: "This is my title!")
-
-    assert_selector(".subtitle", text: "This is my subtitle!")
-
-    assert_selector(".tab", text: "Tab A")
-    assert_selector(".tab", text: "Tab B")
-
-    assert_selector(".item", count: 3)
-    assert_selector(".item.highlighted", count: 1)
-    assert_selector(".item.normal", count: 2)
-
-    assert_selector(".footer.text-blue", text: "This is the footer")
-  end
-
-  def test_invalid_slot_class_raises_error
-    exception = assert_raises ArgumentError do
-      render_inline(BadSlotComponent.new) do |component|
-        component.slot(:title)
-      end
-    end
-
-    assert_includes exception.message, "Title must inherit from ViewComponent::Slot"
-  end
-
-  def test_renders_slots_with_empty_collections
-    render_inline(SlotsComponent.new) do |component|
-      component.slot(:title) do
-        "This is my title!"
-      end
-
-      component.slot(:subtitle) do
-        "This is my subtitle!"
-      end
-
-      component.slot(:footer) do
-        "This is the footer"
-      end
-    end
-
-    assert_text "No tabs provided"
-    assert_text "No items provided"
-  end
-
-  def test_renders_slots_template_raise_with_unknown_content_areas
-    exception = assert_raises ArgumentError do
-      render_inline(SlotsComponent.new) do |component|
-        component.slot(:foo) { "Hello!" }
-      end
-    end
-
-    assert_includes exception.message, "Unknown slot 'foo' - expected one of '[:title, :subtitle, :footer, :tab, :item]'"
-  end
-
-  def test_with_slot_raise_with_duplicate_slot_name
-    exception = assert_raises ArgumentError do
-      SlotsComponent.with_slot :title
-    end
-
-    assert_includes exception.message, "title slot declared multiple times"
-  end
-
-  def test_with_slot_raise_with_content_keyword
-    exception = assert_raises ArgumentError do
-      SlotsComponent.with_slot :content
-    end
-
-    assert_includes exception.message, ":content is a reserved slot name"
-  end
-
-  # In a previous implementation of slots,
-  # the list of slots registered to a component
-  # was accidentally assigned to all components!
-  def test_slots_pollution
-    # this returned:
-    # [SlotsComponent::Subtitle, SlotsComponent::Tab...]
-    assert_empty WrapperComponent.slots
+    assert_selector("h1", text: "hello world")
   end
 
   def test_renders_helper_method_through_proxy
@@ -322,7 +322,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_helper_method_within_nested_component
-    render_inline(HelpersContainerComponent.new)
+    render_inline(ContainerComponent.new)
 
     assert_text("Hello helper method")
   end
@@ -376,13 +376,20 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_component_with_asset_url
-    render_inline(AssetComponent.new)
+    component = AssetComponent.new
+    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
 
-    assert_text(%r{http://assets.example.com/assets/application-\w+.css})
+    component.config.asset_host = nil
+    assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
+
+    component.config.asset_host = "http://assets.example.com"
+    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+
+    component.config.asset_host = "assets.example.com"
+    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
   end
 
   def test_template_changes_are_not_reflected_if_cache_is_not_cleared
-
     render_inline(MyComponent.new)
 
     assert_text("hello,world!")
@@ -435,6 +442,18 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_no_text("component was rendered")
   end
 
+  def test_conditional_rendering_if_content_provided
+    render_inline(ConditionalContentComponent.new)
+
+    refute_component_rendered
+
+    render_inline(ConditionalContentComponent.new) do
+      "Content"
+    end
+
+    assert_text("Content")
+  end
+
   def test_render_check
     render_inline(RenderCheckComponent.new)
 
@@ -455,20 +474,22 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_validations_component
-    exception = assert_raises ActiveModel::ValidationError do
-      render_inline(ValidationsComponent.new)
-    end
+    exception =
+      assert_raises ActiveModel::ValidationError do
+        render_inline(ValidationsComponent.new)
+      end
 
-    assert_equal exception.message, "Validation failed: Content can't be blank"
+    assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
   # TODO: Remove in v3.0.0
   def test_before_render_check
-    exception = assert_raises ActiveModel::ValidationError do
-      render_inline(OldValidationsComponent.new)
-    end
+    exception =
+      assert_raises ActiveModel::ValidationError do
+        render_inline(OldValidationsComponent.new)
+      end
 
-    assert_equal exception.message, "Validation failed: Content can't be blank"
+    assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
   def test_compiles_unrendered_component
@@ -486,59 +507,90 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_raises_error_when_sidecar_template_is_missing
-    exception = assert_raises ViewComponent::TemplateError do
-      render_inline(MissingTemplateComponent.new)
-    end
+    exception =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(MissingTemplateComponent.new)
+      end
 
-    assert_includes exception.message, "Could not find a template file or inline render method for MissingTemplateComponent"
+    assert_includes(
+      exception.message,
+      "Could not find a template file or inline render method for MissingTemplateComponent"
+    )
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_is_present
-    error = assert_raises ViewComponent::TemplateError do
-      render_inline(TooManySidecarFilesComponent.new)
-    end
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(TooManySidecarFilesComponent.new)
+      end
 
     assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
-    error = assert_raises ViewComponent::TemplateError do
-      render_inline(TooManySidecarFilesForVariantComponent.new)
-    end
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(TooManySidecarFilesForVariantComponent.new)
+      end
 
-    assert_includes error.message, "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
+    assert_includes(
+      error.message,
+      "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
+    )
   end
 
   def test_raise_error_when_default_template_file_and_inline_default_call_exist
-    error = assert_raises ViewComponent::TemplateError do
-      render_inline(DefaultTemplateAndInlineDefaultTemplateComponent.new)
-    end
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(DefaultTemplateAndInlineDefaultTemplateComponent.new)
+      end
 
-    assert_includes error.message, "Template file and inline render method found for DefaultTemplateAndInlineDefaultTemplateComponent."
+    assert_includes(
+      error.message,
+      "Template file and inline render method found for DefaultTemplateAndInlineDefaultTemplateComponent."
+    )
   end
 
   def test_raise_error_when_variant_template_file_and_inline_variant_call_exist
-    error = assert_raises ViewComponent::TemplateError do
-      with_variant :phone do
-        render_inline(VariantTemplateAndInlineVariantTemplateComponent.new)
+    error =
+      assert_raises ViewComponent::TemplateError do
+        with_variant :phone do
+          render_inline(VariantTemplateAndInlineVariantTemplateComponent.new)
+        end
       end
-    end
 
-    assert_includes error.message, "Template file and inline render method found for variant 'phone' in VariantTemplateAndInlineVariantTemplateComponent."
+    assert_includes(
+      error.message,
+      "Template file and inline render method found for variant 'phone' in " \
+      "VariantTemplateAndInlineVariantTemplateComponent."
+    )
   end
 
   def test_raise_error_when_template_file_and_sidecar_directory_template_exist
-    error = assert_raises ViewComponent::TemplateError do
-      render_inline(TemplateAndSidecarDirectoryTemplateComponent.new)
-    end
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(TemplateAndSidecarDirectoryTemplateComponent.new)
+      end
 
-    assert_includes error.message, "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
+    assert_includes(
+      error.message,
+      "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
+    )
+  end
+
+  def test_with_custom_test_controller
+    with_controller_class CustomTestControllerController do
+      render_inline(CustomTestControllerComponent.new)
+
+      assert_text("foo")
+    end
   end
 
   def test_backtrace_returns_correct_file_and_line_number
-    error = assert_raises NameError do
-      render_inline(ExceptionInTemplateComponent.new)
-    end
+    error =
+      assert_raises NameError do
+        render_inline(ExceptionInTemplateComponent.new)
+      end
 
     assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
   end
@@ -548,8 +600,8 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(ProductComponent.with_collection(products, notice: "On sale"))
 
     assert_selector("h1", text: "Product", count: 2)
-    assert_selector("h2", text: "Radio clock")
-    assert_selector("h2", text: "Mints")
+    assert_selector("h2.first", text: "Radio clock")
+    assert_selector("h2:not(.first)", text: "Mints")
     assert_selector("p", text: "On sale", count: 2)
     assert_selector("p", text: "Radio clock counter: 1")
     assert_selector("p", text: "Mints counter: 2")
@@ -577,6 +629,20 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
+  def test_render_collection_custom_collection_parameter_name_iteration
+    photos = [
+      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+    ]
+    render_inline(CollectionIterationComponent.with_collection(photos))
+
+    assert_selector("figure.first[data-index=0]", { count: 1 })
+    assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
+
+    assert_selector("figure[data-index=1]:not(.first)", { count: 1 })
+    assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
+  end
+
   def test_render_collection_nil_and_empty_collection
     [nil, []].each do |collection|
       render_inline(ProductComponent.with_collection(collection, notice: "On sale"))
@@ -586,18 +652,20 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_render_collection_missing_collection_object
-    exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.with_collection("foo"))
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(ProductComponent.with_collection("foo"))
+      end
 
-    assert_equal exception.message, "The value of the argument isn't a valid collection. Make sure it responds to to_ary: \"foo\""
+    assert_includes exception.message, "Make sure it responds to `to_ary`"
   end
 
   def test_render_collection_missing_arg
     products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
-    exception = assert_raises ArgumentError do
-      render_inline(ProductComponent.with_collection(products))
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(ProductComponent.with_collection(products))
+      end
 
     assert_match(/missing keyword/, exception.message)
     assert_match(/notice/, exception.message)
@@ -613,29 +681,69 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_collection_component_missing_parameter_name
-    exception = assert_raises ArgumentError do
-      render_inline(MissingCollectionParameterNameComponent.with_collection([]))
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(MissingCollectionParameterNameComponent.with_collection([]))
+      end
 
-    assert_match(/MissingCollectionParameterNameComponent initializer must accept `foo` collection parameter/, exception.message)
+    assert_match(
+      /The initializer for MissingCollectionParameterNameComponent does not accept the parameter/, exception.message
+    )
   end
 
   def test_collection_component_missing_default_parameter_name
-    exception = assert_raises ArgumentError do
-      render_inline(
-        MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
-      )
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(
+          MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
+        )
+      end
 
-    assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
+    assert_match(/MissingDefaultCollectionParameterComponent does not accept the parameter/, exception.message)
+  end
+
+  def test_component_with_invalid_parameter_names
+    begin
+      old_cache = ViewComponent::CompileCache.cache
+      ViewComponent::CompileCache.cache = Set.new
+
+      exception =
+        assert_raises ViewComponent::ComponentError do
+          InvalidParametersComponent.compile(raise_errors: true)
+        end
+
+      assert_match(/InvalidParametersComponent initializer cannot accept the parameter/, exception.message)
+    ensure
+      ViewComponent::CompileCache.cache = old_cache
+    end
+  end
+
+  def test_component_with_invalid_named_parameter_names
+    begin
+      old_cache = ViewComponent::CompileCache.cache
+      ViewComponent::CompileCache.cache = Set.new
+
+      exception =
+        assert_raises ViewComponent::ComponentError do
+          InvalidNamedParametersComponent.compile(raise_errors: true)
+        end
+
+      assert_match(
+        /InvalidNamedParametersComponent initializer cannot accept the parameter `content`/,
+        exception.message
+      )
+    ensure
+      ViewComponent::CompileCache.cache = old_cache
+    end
   end
 
   def test_collection_component_with_trailing_comma_attr_reader
-    exception = assert_raises ArgumentError do
-      render_inline(
-        ProductReaderOopsComponent.with_collection(["foo"])
-      )
-    end
+    exception =
+      assert_raises ArgumentError do
+        render_inline(
+          ProductReaderOopsComponent.with_collection(["foo"])
+        )
+      end
 
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
@@ -659,14 +767,79 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_inherited_inline_component_inherits_inline_method
-    render_inline(InheritedInlineComponent.new)
+    render_inline(InlineInheritedComponent.new)
 
-    assert_predicate InheritedInlineComponent, :compiled?
+    assert_predicate InlineInheritedComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
 
   def test_renders_ivar_named_variant
     render_inline(VariantIvarComponent.new(variant: "foo"))
 
     assert_text("foo")
+  end
+
+  def test_after_compile
+    assert_equal AfterCompileComponent.compiled_value, "Hello, World!"
+
+    render_inline(AfterCompileComponent.new)
+
+    assert_text "Hello, World!"
+  end
+
+  def test_does_not_render_passed_in_content_if_render_is_false
+    start_time = Time.now
+
+    render_inline ConditionalRenderComponent.new(should_render: false) do |c|
+      c.render SleepComponent.new(seconds: 5)
+    end
+
+    total = Time.now - start_time
+
+    assert total < 1
+  end
+
+  def test_collection_parameter_does_not_require_compile
+    dynamic_component =
+      Class.new(ViewComponent::Base) do
+        with_collection_parameter :greeting
+
+        def initialize(greeting = "hello world")
+          @greeting = greeting
+        end
+
+        def call
+          content_tag :h1, @greeting
+        end
+      end
+
+    # Necessary because anonymous classes don't have a `name` property
+    Object.const_set("MY_COMPONENT", dynamic_component)
+
+    render_inline MY_COMPONENT.new
+    assert_selector "h1", text: "hello world"
+
+    render_inline MY_COMPONENT.with_collection(["hello world", "hello view component"])
+    assert_selector "h1", text: "hello world"
+    assert_selector "h1", text: "hello view component"
+  ensure
+    Object.send(:remove_const, "MY_COMPONENT")
+  end
+
+  def test_with_request_url
+    with_request_url "/" do
+      render_inline UrlForComponent.new
+      assert_text "/?key=value"
+    end
+
+    with_request_url "/products" do
+      render_inline UrlForComponent.new
+      assert_text "/products?key=value"
+    end
+  end
+
+  def test_output_postamble
+    render_inline(AfterRenderComponent.new)
+
+    assert_text("Hello, World!")
   end
 end

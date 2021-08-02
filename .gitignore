@@ -1,5 +1,6 @@
 *.gem
 *.rbc
+.ruby-version
 /.config
 /coverage/assets
 /coverage/index.html
@@ -13,8 +14,11 @@
 /test/version_tmp/
 /tmp/
 /test/log/*
-/test/app/tmp/*
+/test/sandbox/tmp/*
+/test/sandbox/log/*
 /test/tmp/*
+/.yardoc
+/_yardoc/
 
 # Used by dotenv library to load environment variables.
 # .env

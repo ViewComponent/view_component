@@ -1,11 +1,14 @@
 # frozen_string_literal: true
+
 require "simplecov"
 require "simplecov-console"
 
-SimpleCov.start do
-  command_name "rails#{ENV["RAILS_VERSION"]}-ruby#{ENV["RUBY_VERSION"]}" if ENV["RUBY_VERSION"]
+if ENV["MEASURE_COVERAGE"]
+  SimpleCov.start do
+    command_name "rails#{ENV["RAILS_VERSION"]}-ruby#{ENV["RUBY_VERSION"]}" if ENV["RUBY_VERSION"]
 
-  formatter SimpleCov::Formatter::Console
+    formatter SimpleCov::Formatter::Console
+  end
 end
 
 require "bundler/setup"
@@ -16,8 +19,20 @@ require "minitest/autorun"
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path("../config/environment.rb", __FILE__)
+require File.expand_path("../sandbox/config/environment.rb", __FILE__)
 require "rails/test_help"
+
+# Sets custom preview paths in tests.
+#
+# @param new_value [Array<String>] List of preview paths
+# @yield Test code to run
+# @return [void]
+def with_preview_paths(new_value)
+  old_value = Rails.application.config.view_component.preview_paths
+  Rails.application.config.view_component.preview_paths = new_value
+  yield
+  Rails.application.config.view_component.preview_paths = old_value
+end
 
 def with_preview_route(new_value)
   old_value = Rails.application.config.view_component.preview_route
@@ -26,6 +41,54 @@ def with_preview_route(new_value)
   yield
   Rails.application.config.view_component.preview_route = old_value
   app.reloader.reload!
+end
+
+def with_preview_controller(new_value)
+  old_value = Rails.application.config.view_component.preview_controller
+  Rails.application.config.view_component.preview_controller = new_value
+  app.reloader.reload!
+  yield
+  Rails.application.config.view_component.preview_controller = old_value
+  app.reloader.reload!
+end
+
+def with_custom_component_path(new_value)
+  old_value = ViewComponent::Base.view_component_path
+  ViewComponent::Base.view_component_path = new_value
+  yield
+ensure
+  ViewComponent::Base.view_component_path = old_value
+end
+
+def with_new_cache
+  begin
+    old_cache = ViewComponent::CompileCache.cache
+    ViewComponent::CompileCache.cache = Set.new
+    old_cache_template_loading = ActionView::Base.cache_template_loading
+    ActionView::Base.cache_template_loading = false
+
+    yield
+  ensure
+    ActionView::Base.cache_template_loading = old_cache_template_loading
+    ViewComponent::CompileCache.cache = old_cache
+  end
+end
+
+def without_template_annotations
+  if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
+    old_value = ActionView::Base.annotate_rendered_view_with_filenames
+    ActionView::Base.annotate_rendered_view_with_filenames = false
+    app.reloader.reload!
+
+    with_new_cache do
+      yield
+    end
+
+    ActionView::Base.annotate_rendered_view_with_filenames = old_value
+    app.reloader.reload!
+  else
+    yield
+  end
 end
 
 def modify_file(file, content)

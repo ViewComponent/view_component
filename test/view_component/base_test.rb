@@ -10,13 +10,15 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       "/tilda~/component/test_component.html.haml"
     ]
     expected = [
-      {variant: :phone, handler: "erb"},
-      {variant: :desktop, handler: "slim"},
-      {variant: nil, handler: "haml"}
+      { variant: :phone, handler: "erb" },
+      { variant: :desktop, handler: "slim" },
+      { variant: nil, handler: "haml" }
     ]
 
-    ViewComponent::Base.stub(:matching_views_in_source_location, file_path) do
-      templates = ViewComponent::Base.send(:templates)
+    compiler = ViewComponent::Compiler.new(ViewComponent::Base)
+
+    ViewComponent::Base.stub(:_sidecar_files, file_path) do
+      templates = compiler.send(:templates)
 
       templates.each_with_index do |template, index|
         assert_equal(template[:path], file_path[index])
@@ -28,17 +30,51 @@ class ViewComponent::Base::UnitTest < Minitest::Test
 
   def test_calling_helpers_outside_render_raises
     component = ViewComponent::Base.new
-    err = assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
-      component.helpers
-    end
-    assert_equal "`helpers` can only be called at render time.", err.message
+    err =
+      assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+        component.helpers
+      end
+    assert_includes err.message, "cannot be used during initialization"
   end
 
   def test_calling_controller_outside_render_raises
     component = ViewComponent::Base.new
-    err = assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
-      component.controller
-    end
-    assert_equal "`controller` can only be called at render time.", err.message
+    err =
+      assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+        component.controller
+      end
+
+    assert_includes err.message, "cannot be used during initialization"
+  end
+
+  def test_sidecar_files
+    root = ViewComponent::Engine.root.join("test/sandbox")
+
+    assert_equal(
+      [
+        "#{root}/app/components/template_and_sidecar_directory_template_component.html.erb",
+        "#{root}/app/components/template_and_sidecar_directory_template_component/" \
+        "template_and_sidecar_directory_template_component.html.erb",
+      ],
+      TemplateAndSidecarDirectoryTemplateComponent._sidecar_files(["erb"])
+    )
+
+    assert_equal(
+      [
+        "#{root}/app/components/css_sidecar_file_component.css",
+        "#{root}/app/components/css_sidecar_file_component.html.erb",
+      ],
+      CssSidecarFileComponent._sidecar_files(["css", "erb"])
+    )
+
+    assert_equal(
+      ["#{root}/app/components/css_sidecar_file_component.css"],
+      CssSidecarFileComponent._sidecar_files(["css"])
+    )
+
+    assert_equal(
+      ["#{root}/app/components/translatable_component.yml"],
+      TranslatableComponent._sidecar_files(["yml"])
+    )
   end
 end

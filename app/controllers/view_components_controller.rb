@@ -56,7 +56,7 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
     if preview
       @preview = ViewComponent::Preview.find(preview)
     else
-      raise AbstractController::ActionNotFound, "Component preview '#{params[:path]}' not found"
+      raise AbstractController::ActionNotFound, "Component preview '#{params[:path]}' not found."
     end
   end
 

@@ -8,7 +8,7 @@ Rails.application.load_generators
 
 class ErbGeneratorTest < Rails::Generators::TestCase
   tests Erb::Generators::ComponentGenerator
-  destination File.expand_path("../tmp", __dir__)
+  destination Dir.mktmpdir
   setup :prepare_destination
 
   arguments %w[user]
@@ -39,5 +39,11 @@ class ErbGeneratorTest < Rails::Generators::TestCase
     run_generator %w[admins/user --sidecar]
 
     assert_file "app/components/admins/user_component/user_component.html.erb"
+  end
+
+  def test_component_with_inline
+    run_generator %w[user name --inline]
+
+    assert_no_file "app/components/user_component.html.erb"
   end
 end
