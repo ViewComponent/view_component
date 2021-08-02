@@ -11,6 +11,7 @@ module Erb
       source_root File.expand_path("templates", __dir__)
       class_option :sidecar, type: :boolean, default: false
       class_option :inline, type: :boolean, default: false
+      class_option :stimulus, type: :boolean, default: false
 
       def engine_name
         "erb"
@@ -18,6 +19,20 @@ module Erb
 
       def copy_view_file
         super
+      end
+
+      private
+
+      def data_attributes
+        if options["stimulus"]
+          controller_path = destination
+            .sub("#{component_path}/", "")
+            .sub(".html.#{engine_name}", "")
+            .gsub("_", "-")
+            .gsub("/", "--")
+
+          " data-controller=\"#{controller_path}\""
+        end
       end
     end
   end
