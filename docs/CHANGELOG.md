@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add test case for conflict with internal `@variant` variable.
+
+   *David Backeus*
+
 * Document decision to not change naming convention recommendation to remove `-Component` suffix.
 
     *Joel Hawksley*
