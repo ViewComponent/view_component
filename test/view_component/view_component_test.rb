@@ -773,6 +773,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
+  def test_renders_ivar_named_variant
+    render_inline(VariantIvarComponent.new(variant: "foo"))
+
+    assert_text("foo")
+  end
+
   def test_after_compile
     assert_equal AfterCompileComponent.compiled_value, "Hello, World!"
 
