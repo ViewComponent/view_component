@@ -19,6 +19,10 @@ title: Changelog
 
     *Ryo.gift*
 
+* Add inline template example to benchmark script.
+
+    *Andrew Tait*
+
 * Fix benchmark scripts.
 
     *Andrew Tait*
