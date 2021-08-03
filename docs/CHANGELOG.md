@@ -23,6 +23,10 @@ title: Changelog
 
     *Andrew Tait*
 
+* Fix benchmark scripts.
+
+    *Andrew Tait*
+
 ## 2.36.0
 
 * Add `slot_type` helper method.
