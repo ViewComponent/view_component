@@ -19,7 +19,7 @@ title: Changelog
 
     *Ryo.gift*
 
-* Fix benchmark scripts
+* Fix benchmark scripts.
 
     *Andrew Tait*
 
