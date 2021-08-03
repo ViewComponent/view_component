@@ -5,13 +5,15 @@
 
 require "benchmark/ips"
 
-# Configure Rails Envinronment
+# Configure Rails Environment
 ENV["RAILS_ENV"] = "production"
-require File.expand_path("../test/config/environment.rb", __dir__)
+require File.expand_path("../test/sandbox/config/environment.rb", __dir__)
 
-require_relative "components/slot_component.rb"
-require_relative "components/slots_v2_component.rb"
-require_relative "components/content_areas_component.rb"
+module Performance
+  require_relative "components/slot_component.rb"
+  require_relative "components/slots_v2_component.rb"
+  require_relative "components/content_areas_component.rb"
+end
 
 class BenchmarksController < ActionController::Base
 end
@@ -24,18 +26,18 @@ Benchmark.ips do |x|
   x.warmup = 2
 
   x.report("content_areas:") do
-    component = ContentAreasComponent.new(name: "Fox Mulder")
+    component = Performance::ContentAreasComponent.new(name: "Fox Mulder")
 
     controller_view.render(component) do |c|
       c.with(:header) do
-        c.render SlotsV2Component::HeaderComponent.new(classes: "header") do
+        c.render Performance::SlotsV2Component::HeaderComponent.new(classes: "header") do
           "Header"
         end
       end
 
       c.with(:items) do
         ["a", "b", "c"].each do |item|
-          c.render SlotsV2Component::ItemComponent.new(classes: "header") do
+          c.render Performance::SlotsV2Component::ItemComponent.new(classes: "header") do
             item
           end
         end
@@ -44,7 +46,7 @@ Benchmark.ips do |x|
   end
 
   x.report("slot:") do
-    component = SlotComponent.new(name: "Fox Mulder")
+    component = Performance::SlotComponent.new(name: "Fox Mulder")
 
     controller_view.render(component) do |c|
       c.slot(:header, classes: "my-header") do
@@ -61,7 +63,7 @@ Benchmark.ips do |x|
     end
   end
   x.report("subcomponent:") do
-    component = SlotsV2Component.new(name: "Fox Mulder")
+    component = Performance::SlotsV2Component.new(name: "Fox Mulder")
 
     controller_view.render(component) do |c|
       c.header(classes: "my-header") do

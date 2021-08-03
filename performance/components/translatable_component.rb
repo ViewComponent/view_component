@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TranslatableComponent < ViewComponent::Base
+class Performance::TranslatableComponent < ViewComponent::Base
   include ViewComponent::Translatable
 
   def initialize(key)
