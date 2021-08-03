@@ -58,7 +58,7 @@ jobs:
         bundle install --jobs 4 --retry 3
         bundle exec rubocop
         bundle exec erblint **/*.html.erb
-  test:
+  benchmark:
     needs: lint
     runs-on: ubuntu-latest
     steps:
