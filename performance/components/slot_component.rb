@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SlotComponent < ViewComponent::Base
+class Performance::SlotComponent < ViewComponent::Base
   include ViewComponent::Slotable
 
   with_slot :header, class_name: "Header"

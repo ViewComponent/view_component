@@ -171,6 +171,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
 <img src="https://avatars.githubusercontent.com/Matt-Yorkley?s=64" alt="Matt-Yorkley" width="32" />
 <img src="https://avatars.githubusercontent.com/ryogift?s=64" alt="ryogift" width="32" />
+<img src="https://avatars.githubusercontent.com/andrewjtait?s=64" alt="andrewjtait" width="32" />
 
 <hr />
 
