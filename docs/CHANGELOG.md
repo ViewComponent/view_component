@@ -19,6 +19,10 @@ title: Changelog
 
     *Ryo.gift*
 
+* Add inline template example to benchmark script.
+
+    *Andrew Tait*
+
 ## 2.36.0
 
 * Add `slot_type` helper method.

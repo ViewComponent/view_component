@@ -7,9 +7,10 @@ require "benchmark/ips"
 
 # Configure Rails Envinronment
 ENV["RAILS_ENV"] = "production"
-require File.expand_path("../test/config/environment.rb", __dir__)
+require File.expand_path("../test/sandbox/config/environment.rb", __dir__)
 
 require_relative "components/name_component.rb"
+require_relative "components/inline_component.rb"
 
 class BenchmarksController < ActionController::Base
 end
@@ -22,6 +23,7 @@ Benchmark.ips do |x|
   x.warmup = 2
 
   x.report("component:") { controller_view.render(NameComponent.new(name: "Fox Mulder")) }
+  x.report("inline:") { controller_view.render(InlineComponent.new(name: "Fox Mulder")) }
   x.report("partial:") { controller_view.render("partial", name: "Fox Mulder") }
 
   x.compare!
