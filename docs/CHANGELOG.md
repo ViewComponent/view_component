@@ -27,6 +27,10 @@ title: Changelog
 
     *Andrew Tait*
 
+* Run benchmarks in CI.
+
+    *Joel Hawksley*
+
 ## 2.36.0
 
 * Add `slot_type` helper method.
