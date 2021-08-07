@@ -36,10 +36,10 @@ module ViewComponent
 
     def stimulus_controller
       if options["stimulus"]
-        File.join(destination_directory, destination_file_name)
-          .sub("#{component_path}/", "")
-          .gsub("_", "-")
-          .gsub("/", "--")
+        File.join(destination_directory, destination_file_name).
+          sub("#{component_path}/", "").
+          gsub("_", "-").
+          gsub("/", "--")
       end
     end
   end
