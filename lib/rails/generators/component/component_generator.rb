@@ -12,6 +12,8 @@ module Rails
       argument :attributes, type: :array, default: [], banner: "attribute"
       check_class_collision suffix: "Component"
       class_option :inline, type: :boolean, default: false
+      class_option :stimulus, type: :boolean, default: false
+      class_option :sidecar, type: :boolean, default: false
 
       def create_component_file
         template "component.rb", File.join(component_path, class_path, "#{file_name}_component.rb")

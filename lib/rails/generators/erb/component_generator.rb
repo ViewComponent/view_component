@@ -25,13 +25,7 @@ module Erb
 
       def data_attributes
         if options["stimulus"]
-          controller_path = destination
-            .sub("#{component_path}/", "")
-            .sub(".html.#{engine_name}", "")
-            .gsub("_", "-")
-            .gsub("/", "--")
-
-          " data-controller=\"#{controller_path}\""
+          " data-controller=\"#{stimulus_controller}\""
         end
       end
     end
