@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Clarify slots example in docs to reduce naming confusion.
+
+    *Joel Hawksley*, *Blake Williams*
+
 * Fix error in documentation for `render_many` passthrough slots.
 
     *Ollie Nye*
