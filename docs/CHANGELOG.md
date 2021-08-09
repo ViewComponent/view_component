@@ -25,7 +25,7 @@ title: Changelog
 
     *Joel Hawksley*
 
-* Fix typo in documentation
+* Fix typo in documentation.
 
     *Ryo.gift*
 
