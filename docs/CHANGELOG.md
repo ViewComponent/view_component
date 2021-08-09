@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Fix error in documentation for `render_many` passthrough slots
+* Fix error in documentation for `render_many` passthrough slots.
 
     *Ollie Nye*
 
