@@ -44,7 +44,7 @@ To render a `renders_many` slot, iterate over the name of the slot:
   <% end %>
 
   <% @posts.each do |post| %>
-    <%= c.post(post: post) %>
+    <%= c.post { post } %>
   <% end %>
 <% end %>
 ```
