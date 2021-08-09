@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.37.0
+
 * Clarify slots example in docs to reduce naming confusion.
 
     *Joel Hawksley*, *Blake Williams*
