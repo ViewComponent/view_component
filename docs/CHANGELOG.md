@@ -11,6 +11,10 @@ title: Changelog
 
     *Sebastien Auriault*
 
+* Fix error in documentation for `renders_many` passthrough slots.
+
+    *Ollie Nye*
+
 * Add test case for conflict with internal `@variant` variable.
 
    *David Backeus*
