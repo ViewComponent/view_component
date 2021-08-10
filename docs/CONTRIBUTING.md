@@ -86,4 +86,4 @@ ViewComponent maintainers have `admin` access, enabling them to manage repositor
 
 Maintainership is open by invitation only at this time.
 
-The maintainers team is @blakewilliams, @joelhawksley, @jonrohan, and @manuelpuyol.
+The maintainers team is @camertron, @blakewilliams, @joelhawksley, @jonrohan, and @manuelpuyol.
