@@ -8,6 +8,7 @@ title: Changelog
 ## main
 
 * Add `--stimulus` flag to the component generator. Generates a Stimulus controller alongside the component.
+* Add config option `config.view_component.generate_stimulus_controller` to always generate a Stimulus controller.
 
     *Sebastien Auriault*
 

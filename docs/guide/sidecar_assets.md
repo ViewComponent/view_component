@@ -164,3 +164,5 @@ app/components
   <button data-action="click->example--component#greet">Greet</button>
 </div>
 ```
+
+See [Generators Options](generators.html#generate-a-stimulus-controller) to generate a Stimulus controller alongside the component using the generator.
