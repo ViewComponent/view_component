@@ -11,7 +11,7 @@ Hi there! We're thrilled that you'd like to contribute to this project. Your hel
 
 If you have any substantial changes that you would like to make, please [open an issue](http://github.com/github/view_component/issues/new) first to discuss them with us.
 
-Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE.txt).
+Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](/LICENSE.txt).
 
 ## Submitting a pull request
 
@@ -86,4 +86,4 @@ ViewComponent maintainers have `admin` access, enabling them to manage repositor
 
 Maintainership is open by invitation only at this time.
 
-The maintainers team is @blakewilliams, @joelhawksley, @jonrohan, and @manuelpuyol.
+The maintainers team is @camertron, @blakewilliams, @joelhawksley, @jonrohan, and @manuelpuyol.

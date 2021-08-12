@@ -12,7 +12,13 @@ title: Changelog
 
     *Sebastien Auriault*
 
-* Fix error in documentation for `renders_many` passthrough slots.
+## 2.37.0
+
+* Clarify slots example in docs to reduce naming confusion.
+
+    *Joel Hawksley*, *Blake Williams*
+
+* Fix error in documentation for `render_many` passthrough slots.
 
     *Ollie Nye*
 
@@ -24,7 +30,7 @@ title: Changelog
 
     *Joel Hawksley*
 
-* Fix typo in documentation
+* Fix typo in documentation.
 
     *Ryo.gift*
 
