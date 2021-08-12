@@ -66,6 +66,22 @@ bin/rails generate component Example title --preview
       create    app/components/example_component.html.erb
 ```
 
+### Generate a [Stimulus controller](/guide/sidecar_assets.html#stimulus)
+
+```console
+bin/rails generate component Example title --stimulus
+
+      create  app/components/example_component.rb
+      invoke  test_unit
+      create    test/components/example_component_test.rb
+      invoke  stimulus
+      create    test/components/example_component_controller.js
+      invoke  erb
+      create    app/components/example_component.html.erb
+```
+
+To always generate a Stimulus controller, set `config.view_component.generate_stimulus_controller = true`.
+
 ### Place the view in a [sidecar directory](/guide/sidecar_assets.html)
 
 ```console

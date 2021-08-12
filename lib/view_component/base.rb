@@ -278,6 +278,14 @@ module ViewComponent
     #
     mattr_accessor :show_previews_source, instance_writer: false, default: false
 
+    # Always generate a Stimulus controller alongside the component:
+    #
+    #     config.view_component.generate_stimulus_controller = true
+    #
+    # Defaults to `false`.
+    #
+    mattr_accessor :generate_stimulus_controller, instance_writer: false, default: false
+
     # Path for component files
     #
     #     config.view_component.view_component_path = "app/my_components"

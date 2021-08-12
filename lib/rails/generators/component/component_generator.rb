@@ -12,6 +12,8 @@ module Rails
       argument :attributes, type: :array, default: [], banner: "attribute"
       check_class_collision suffix: "Component"
       class_option :inline, type: :boolean, default: false
+      class_option :stimulus, type: :boolean, default: ViewComponent::Base.generate_stimulus_controller
+      class_option :sidecar, type: :boolean, default: false
 
       def create_component_file
         template "component.rb", File.join(component_path, class_path, "#{file_name}_component.rb")
@@ -20,6 +22,8 @@ module Rails
       hook_for :test_framework
 
       hook_for :preview, type: :boolean
+
+      hook_for :stimulus, type: :boolean
 
       hook_for :template_engine do |instance, template_engine|
         instance.invoke template_engine, [instance.name]

@@ -135,4 +135,40 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
       assert_file "app/parts/user_component.html.erb"
     end
   end
+
+  def test_component_with_stimulus
+    run_generator %w[user --stimulus]
+
+    assert_file "app/components/user_component.html.erb" do |component|
+      assert_match(/data-controller="user-component"/, component)
+    end
+
+    assert_file "app/components/user_component_controller.js"
+  end
+
+  def test_component_with_stimulus_and_inline
+    run_generator %w[user --stimulus --inline]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/data: { controller: "user-component" }/, component)
+    end
+
+    assert_file "app/components/user_component_controller.js"
+  end
+
+  def test_component_with_stimulus_and_sidecar
+    run_generator %w[user --stimulus --sidecar]
+
+    assert_file "app/components/user_component/user_component_controller.js"
+  end
+
+  def test_component_with_stimulus_and_sidecar_and_inline
+    run_generator %w[user --stimulus --sidecar --inline]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/data: { controller: "user-component--user-component" }/, component)
+    end
+
+    assert_file "app/components/user_component/user_component_controller.js"
+  end
 end
