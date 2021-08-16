@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Clarify documentation of `with_variant` as an override of Action Pack.
+
+    *Blake Williams*, *Cameron Dutro*, *Joel Hawksley*
+
 ## 2.38.0
 
 * Add `--stimulus` flag to the component generator. Generates a Stimulus controller alongside the component.
