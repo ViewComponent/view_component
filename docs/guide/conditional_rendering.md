@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Conditional rendering
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Conditional rendering

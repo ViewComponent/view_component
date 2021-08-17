@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Javascript and CSS
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Javascript and CSS (experimental)

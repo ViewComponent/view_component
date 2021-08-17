@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Translations
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Translations (experimental)

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Templates
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Templates

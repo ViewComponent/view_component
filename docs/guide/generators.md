@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Generators
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Generators
