@@ -218,7 +218,7 @@ module ViewComponent
 
     # Use the provided variant instead of the one determined by the current request.
     #
-    # @deprecated Define separate per-variant templates instead. Will be removed in v3.0.0.
+    # @deprecated Will be removed in v3.0.0.
     # @param variant [Symbol] The variant to be used by the component.
     # @return [self]
     def with_variant(variant)
