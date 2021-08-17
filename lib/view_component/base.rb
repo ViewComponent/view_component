@@ -223,8 +223,7 @@ module ViewComponent
     # @return [self]
     def with_variant(variant)
       ActiveSupport::Deprecation.warn(
-        "`with_variant` is deprecated and will be removed in ViewComponent v3.0.0.\n\n" \
-        "Define separate per-variant templates instead."
+        "`with_variant` is deprecated and will be removed in ViewComponent v3.0.0."
       )
 
       @__vc_variant = variant
