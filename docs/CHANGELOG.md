@@ -11,6 +11,10 @@ title: Changelog
 
     *Blake Williams*, *Cameron Dutro*, *Joel Hawksley*
 
+* Update docs page to be called Javascript and CSS, rename Building ViewComponents to Guide.
+
+    *Joel Hawksley*
+
 * Deprecate `Base#with_variant`.
 
     *Cameron Dutro*

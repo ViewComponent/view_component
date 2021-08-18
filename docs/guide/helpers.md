@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Helpers
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Helpers

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Getting started
-parent: Building ViewComponents
+parent: Guide
 nav_order: 1
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Previews
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Previews

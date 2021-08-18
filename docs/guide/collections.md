@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Collections
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Collections

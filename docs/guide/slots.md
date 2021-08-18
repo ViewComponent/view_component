@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Slots
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Slots

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Instrumentation
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Instrumentation

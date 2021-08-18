@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Lifecycle
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Lifecycle

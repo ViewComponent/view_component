@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Testing
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Testing
