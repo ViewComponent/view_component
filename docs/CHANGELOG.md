@@ -11,6 +11,10 @@ title: Changelog
 
     *Blake Williams*, *Cameron Dutro*, *Joel Hawksley*
 
+* Update docs page to be called Javascript and CSS, rename Building ViewComponents to Guide.
+
+    *Joel Hawksley*
+
 ## 2.38.0
 
 * Add `--stimulus` flag to the component generator. Generates a Stimulus controller alongside the component.
