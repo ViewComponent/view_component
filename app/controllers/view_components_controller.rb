@@ -34,7 +34,9 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
       opts = {}
       opts[:layout] = layout if layout.present? || layout == false
       opts[:locals] = locals if locals.present?
-      render template, opts # rubocop:disable GitHub/RailsControllerRenderLiteral
+      # The way that we use the template is the preview that renders everything okay.
+      # We'll want to keep using the preview template but we'll need to feed it with another template
+      render "view_components/preview", opts # rubocop:disable GitHub/RailsControllerRenderLiteral
     end
   end
 

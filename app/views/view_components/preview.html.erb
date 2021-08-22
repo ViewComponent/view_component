@@ -1,4 +1,6 @@
-<% if ViewComponent::Base.render_monkey_patch_enabled || Rails.version.to_f >= 6.1 %>
+<% if @render_args[:template] != "view_component/preview" %>
+  <%= render template: @render_args[:template] %>
+<% elsif ViewComponent::Base.render_monkey_patch_enabled || Rails.version.to_f >= 6.1 %>
   <%= render(@render_args[:component], @render_args[:args], &@render_args[:block]) %>
 <% else %>
   <%= render_component(@render_args[:component], &@render_args[:block]) %>
