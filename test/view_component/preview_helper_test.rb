@@ -21,17 +21,17 @@ class PreviewHelperTest < ActiveSupport::TestCase
   end
 
   def test_returns_language_using_a_template_path
-    template_path = 'test.html.erb'
+    template_path = "test.html.erb"
     assert_equal(PreviewHelper.prism_language_name(template: template_path), "erb")
   end
 
   def test_returns_language_using_a_template_path_with_haml
-    template_path = 'test.haml.html'
+    template_path = "test.haml.html"
     assert_equal(PreviewHelper.prism_language_name(template: template_path), "haml")
   end
 
   def test_returns_language_using_a_template_with_fallback
-    template_path = 'test.slim.html'
+    template_path = "test.slim.html"
     assert_equal(PreviewHelper.prism_language_name(template: template_path), "ruby")
   end
 
@@ -46,7 +46,10 @@ class PreviewHelperTest < ActiveSupport::TestCase
     lookup_context = Minitest::Mock.new
     lookup_context.expect(:find_template, mock_template, [template_identifier])
 
-    template = PreviewHelper.find_template_source(lookup_context: lookup_context, template_identifier: template_identifier)
+    template = PreviewHelper.find_template_source(
+      lookup_context: lookup_context,
+      template_identifier: template_identifier
+    )
     assert_equal(template.source, "expected_template")
   end
 
@@ -66,7 +69,10 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock.expect :map, [template_identifier + ".html.haml"]
       ViewComponent::Base.stub :preview_paths, mock do
         File.stub(:read, expected_source) do
-          template = PreviewHelper.find_template_source(lookup_context: lookup_context, template_identifier: template_identifier)
+          template = PreviewHelper.find_template_source(
+            lookup_context: lookup_context,
+            template_identifier: template_identifier
+          )
           assert_equal(template, expected_source)
         end
       end
@@ -113,5 +119,4 @@ class PreviewHelperTest < ActiveSupport::TestCase
       end
     end
   end
-
 end

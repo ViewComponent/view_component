@@ -9,7 +9,7 @@ module PreviewHelper
       language = template.identifier.split(".").last
     else
       # Handle case when the template is a path
-      language = template.gsub('.html', '').split('.').last
+      language = template.gsub(".html", "").split(".").last
     end
 
     return FALLBACK_LANGUAGE unless AVAILABLE_PRISM_LANGUAGES.include? language
@@ -46,5 +46,4 @@ module PreviewHelper
 
     File.read(matching_templates.first)
   end
-
 end
