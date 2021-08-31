@@ -19,6 +19,10 @@ title: Changelog
 
     *Cameron Dutro*
 
+* Error out in the CI if docs/api.md has to be regenerated.
+
+    *Dany Marcoux*
+
 ## 2.38.0
 
 * Add `--stimulus` flag to the component generator. Generates a Stimulus controller alongside the component.

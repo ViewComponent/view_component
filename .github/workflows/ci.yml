@@ -58,6 +58,26 @@ jobs:
         bundle install --jobs 4 --retry 3
         bundle exec rubocop
         bundle exec erblint **/*.html.erb
+  docs_api:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7.2
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: gems-build-rails-main-ruby-2.7.2-${{ hashFiles('**/Gemfile.lock') }}
+    - name: Generate docs/api.md from YARD comments
+      run: |
+        bundle config path vendor/bundle
+        bundle update
+        bundle exec rake docs:build
+    - name: Error out if docs/api.md has to be regenerated
+      run: git diff --exit-code docs/api.md || echo '::error file=docs/api.md.md,line=1,col=1::Please make sure to run `bundle exec rake docs:build` to regenerate docs/api.md to include changes in YARD comments from this pull request.'
   benchmark:
     needs: lint
     runs-on: ubuntu-latest
