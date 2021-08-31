@@ -77,7 +77,7 @@ jobs:
         bundle update
         bundle exec rake docs:build
     - name: Error out if docs/api.md has to be regenerated
-      run: git diff --exit-code docs/api.md || echo '::error file=docs/api.md.md,line=1,col=1::Please make sure to run `bundle exec rake docs:build` to regenerate docs/api.md to include changes in YARD comments from this pull request.'
+      run: git diff --exit-code docs/api.md || echo '::error file=docs/api.md,line=1,col=1::Please make sure to run `bundle exec rake docs:build` to regenerate docs/api.md to include changes in YARD comments from this pull request.'
   benchmark:
     needs: lint
     runs-on: ubuntu-latest
