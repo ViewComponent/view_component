@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.39.0
+
 * Clarify documentation of `with_variant` as an override of Action Pack.
 
     *Blake Williams*, *Cameron Dutro*, *Joel Hawksley*
