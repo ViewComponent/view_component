@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add components to `rails stats` task.
+
+    *Nicolas Brousse*
+
 ## 2.39.0
 
 * Clarify documentation of `with_variant` as an override of Action Pack.
