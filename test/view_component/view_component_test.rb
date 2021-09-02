@@ -643,7 +643,7 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
-  def test_render_collection_custom_collection_parameter_name_iteration
+  def test_render_collection_custom_collection_parameter_name_iteration_extend_other_component
     photos = [
       OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
       OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
