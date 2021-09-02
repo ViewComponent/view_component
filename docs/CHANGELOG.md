@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+* Fix collection parameter to be inherited from parent component
+
 * Add components to `rails stats` task.
 
     *Nicolas Brousse*
