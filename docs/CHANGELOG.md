@@ -9,6 +9,8 @@ title: Changelog
 
 * Fix collection parameter to be inherited from parent component
 
+    *Will Drexler*, *Christian Campoli*
+
 * Add components to `rails stats` task.
 
     *Nicolas Brousse*
