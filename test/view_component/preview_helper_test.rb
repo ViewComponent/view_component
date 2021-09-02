@@ -63,11 +63,11 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock_template.expect(:source, "")
 
       lookup_context = Minitest::Mock.new
-      expected_template_path = "some/path/#{template_identifier}"
-      lookup_context.expect(:find_template, mock_template, [expected_template_path])
+      expected_template_path = "some/path/#{template_identifier}.html.haml"
+      lookup_context.expect(:find_template, mock_template, [template_identifier])
 
       mock = Minitest::Mock.new
-      mock.expect :map, [template_identifier + ".html.haml"]
+      mock.expect :map, [expected_template_path]
       ViewComponent::Base.stub :preview_paths, mock do
         template_path = PreviewHelper.find_template_source(
           lookup_context: lookup_context,
@@ -86,16 +86,17 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock_template.expect(:source, "")
 
       lookup_context = Minitest::Mock.new
-      expected_template_path = "some/path/#{template_identifier}"
-      lookup_context.expect(:find_template, mock_template, [expected_template_path])
+      lookup_context.expect(:find_template, mock_template, [template_identifier])
 
       mock = Minitest::Mock.new
       mock.expect :map, []
       ViewComponent::Base.stub :preview_paths, mock do
-        PreviewHelper.find_template_source(
-          lookup_context: lookup_context,
-          template_identifier: template_identifier
-        )
+        exception = assert_raises RuntimeError do
+          PreviewHelper.find_template_source(
+            lookup_context: lookup_context,
+            template_identifier: template_identifier
+          )
+        end
 
         assert_equal("found 0 matches for templates for #{template_identifier}.", exception.message)
       end
@@ -109,15 +110,18 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock_template.expect(:source, "")
 
       lookup_context = Minitest::Mock.new
-      expected_template_path = "some/path/#{template_identifier}"
-      lookup_context.expect(:find_template, mock_template, [expected_template_path])
+      lookup_context.expect(:find_template, mock_template, [template_identifier])
 
       mock = Minitest::Mock.new
       mock.expect :map, [template_identifier + ".html.haml", template_identifier + ".html.erb"]
       ViewComponent::Base.stub :preview_paths, mock do
         exception = assert_raises RuntimeError do
-          PreviewHelper.find_template_source(lookup_context: lookup_context, template_identifier: template_identifier)
+          PreviewHelper.find_template_source(
+            lookup_context: lookup_context,
+            template_identifier: template_identifier
+          )
         end
+
         assert_equal("found multiple templates for #{template_identifier}.", exception.message)
       end
     end
