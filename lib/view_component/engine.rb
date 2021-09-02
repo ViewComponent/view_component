@@ -8,6 +8,10 @@ module ViewComponent
     config.view_component = ActiveSupport::OrderedOptions.new
     config.view_component.preview_paths ||= []
 
+    rake_tasks do
+      load "view_component/rails/tasks/view_component.rake"
+    end
+
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 

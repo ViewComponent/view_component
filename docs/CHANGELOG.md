@@ -11,6 +11,12 @@ title: Changelog
 
     *Edwin Mak*, *Joel Hawksley*
 
+* Add components to `rails stats` task.
+
+    *Nicolas Brousse*
+
+## 2.39.0
+
 * Clarify documentation of `with_variant` as an override of Action Pack.
 
     *Blake Williams*, *Cameron Dutro*, *Joel Hawksley*
@@ -22,6 +28,10 @@ title: Changelog
 * Deprecate `Base#with_variant`.
 
     *Cameron Dutro*
+
+* Error out in the CI if docs/api.md has to be regenerated.
+
+    *Dany Marcoux*
 
 ## 2.38.0
 
