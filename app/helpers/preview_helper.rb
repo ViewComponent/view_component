@@ -44,6 +44,6 @@ module PreviewHelper
     raise "found 0 matches for templates for #{template_identifier}." if matching_templates.empty?
     raise "found multiple templates for #{template_identifier}." if matching_templates.size > 1
 
-    File.read(matching_templates.first)
+    matching_templates.first
   end
 end

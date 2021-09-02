@@ -54,7 +54,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
   end
 
   if Rails.version.to_f < 6.1
-    def test_returns_the_template_source_with_template
+    def test_returns_the_template_path_with_template
       template_identifier = "preview/template"
       expected_source = "<%= PreviewTest %>"
 
@@ -63,22 +63,22 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock_template.expect(:source, "")
 
       lookup_context = Minitest::Mock.new
-      lookup_context.expect(:find_template, mock_template, [template_identifier])
+      expected_template_path = "some/path/#{template_identifier}"
+      lookup_context.expect(:find_template, mock_template, [expected_template_path])
 
       mock = Minitest::Mock.new
       mock.expect :map, [template_identifier + ".html.haml"]
       ViewComponent::Base.stub :preview_paths, mock do
-        File.stub(:read, expected_source) do
-          template = PreviewHelper.find_template_source(
-            lookup_context: lookup_context,
-            template_identifier: template_identifier
-          )
-          assert_equal(template, expected_source)
-        end
+        template_path = PreviewHelper.find_template_source(
+          lookup_context: lookup_context,
+          template_identifier: template_identifier
+        )
+
+        assert_equal(template_path, expected_template_path)
       end
     end
 
-    def test_returns_the_template_source_with_template_but_no_matching_template_found
+    def test_raises_with_no_matching_template
       template_identifier = "preview/template"
 
       mock_template = Minitest::Mock.new
@@ -86,20 +86,22 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock_template.expect(:source, "")
 
       lookup_context = Minitest::Mock.new
-      lookup_context.expect(:find_template, mock_template, [template_identifier])
+      expected_template_path = "some/path/#{template_identifier}"
+      lookup_context.expect(:find_template, mock_template, [expected_template_path])
 
       mock = Minitest::Mock.new
       mock.expect :map, []
       ViewComponent::Base.stub :preview_paths, mock do
-        exception = assert_raises RuntimeError do
-          PreviewHelper.find_template_source(lookup_context: lookup_context, template_identifier: template_identifier)
-        end
+        PreviewHelper.find_template_source(
+          lookup_context: lookup_context,
+          template_identifier: template_identifier
+        )
 
         assert_equal("found 0 matches for templates for #{template_identifier}.", exception.message)
       end
     end
 
-    def test_returns_the_template_source_with_template_but_there_is_a_conflict
+    def test_raises_with_conflict_in_template_resolution
       template_identifier = "preview/template"
 
       mock_template = Minitest::Mock.new
@@ -107,7 +109,8 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock_template.expect(:source, "")
 
       lookup_context = Minitest::Mock.new
-      lookup_context.expect(:find_template, mock_template, [template_identifier])
+      expected_template_path = "some/path/#{template_identifier}"
+      lookup_context.expect(:find_template, mock_template, [expected_template_path])
 
       mock = Minitest::Mock.new
       mock.expect :map, [template_identifier + ".html.haml", template_identifier + ".html.erb"]

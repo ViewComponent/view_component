@@ -12,7 +12,7 @@
         <% if template.respond_to?(:source) %>
           <%= h template.source %>
         <% else %>
-          <%= h template %>
+          <%= h File.read(template) %>
         <% end %>
       </code>
     <% end %>
