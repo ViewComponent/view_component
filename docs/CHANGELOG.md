@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Fix collection parameter to be inherited from parent component
+* Fix `with_collection_parameter` to be inherited from parent component
 
     *Will Drexler*, *Christian Campoli*
 
