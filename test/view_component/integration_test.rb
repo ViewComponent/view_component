@@ -325,6 +325,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_select ".view-component-source-example h2", "Source:"
     assert_select ".view-component-source-example pre.source code"
+    assert_select ".language-ruby"
     refute_match "&lt;%=", response.body
     refute_match "%&gt", response.body
   end
@@ -334,6 +335,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_select ".view-component-source-example h2", "Source:"
     assert_select ".view-component-source-example pre.source code"
+    assert_select ".language-erb"
     assert_match "&lt;%=", response.body
     assert_match "%&gt", response.body
   end
