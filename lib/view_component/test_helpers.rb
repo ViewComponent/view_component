@@ -58,6 +58,9 @@ module ViewComponent
       # Visit the file that contains the HTML
       session.visit(filename)
 
+      # Erase temporary file
+      file.unlink
+
       return session
     end
 
