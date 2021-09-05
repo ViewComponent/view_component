@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "pry"
 
 class ViewComponentTest < ViewComponent::TestCase
   def test_render_inline
@@ -848,7 +849,7 @@ class ViewComponentTest < ViewComponent::TestCase
     page = render_in_browser(SimpleJavascriptInteractionComponent.new, { layout: "application" })
 
     # Assert layout is included
-    assert page.body.include?('<title>ViewComponent - Test</title>')
+    assert page.body.include?("<title>ViewComponent - Test</title>")
 
     assert page.find("[data-hidden-field]", visible: false)
     page.find("[data-button]", text: "Click Me To Reveal Something Cool").click
@@ -859,7 +860,7 @@ class ViewComponentTest < ViewComponent::TestCase
     page = render_in_browser(SimpleJavascriptInteractionComponent.new)
 
     # Assert layout is NOT included
-    refute page.body.include?('<title>ViewComponent - Test</title>')
+    refute page.body.include?("<title>ViewComponent - Test</title>")
 
     assert page.find("[data-hidden-field]", visible: false)
     page.find("[data-button]", text: "Click Me To Reveal Something Cool").click
