@@ -522,5 +522,4 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "input[value=?]", "Send this form!"
     end
   end
-
 end

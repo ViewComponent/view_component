@@ -13,7 +13,6 @@ module ViewComponent
       def refute_component_rendered
         assert_no_selector("body")
       end
-
     rescue LoadError
       # We don't have a test case for running an application without capybara installed.
       # It's probably fine to leave this without coverage.
@@ -41,12 +40,12 @@ module ViewComponent
       Nokogiri::HTML.fragment(@rendered_component)
     end
 
-    def render_in_browser(component, options={})
+    def render_in_browser(component, options = {})
       html = controller.render_to_string(component, **options)
 
       # Write to temporary file to contain fully rendered component
       # within a browser
-      file = Tempfile.new([component.class.name, '.html'], "tmp")
+      file = Tempfile.new([component.class.name, ".html"], "tmp")
       file.write(html)
       file.rewind
 
@@ -54,7 +53,7 @@ module ViewComponent
       # given that the application may have their own capybara
       # instance running
       session = fetch_capybara_session
-      filename = file.path.split('/').last
+      filename = file.path.split("/").last
 
       # Visit the file that contains the HTML
       session.visit(filename)
