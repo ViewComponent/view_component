@@ -844,8 +844,22 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("Hello, World!")
   end
 
-  def test_simple_js_interaction_in_browser
+  def test_simple_js_interaction_in_browser_with_layout
     page = render_in_browser(SimpleJavascriptInteractionComponent.new, { layout: "application" })
+
+    # Assert layout is included
+    assert page.body.include?('<title>ViewComponent - Test</title>')
+
+    assert page.find("[data-hidden-field]", visible: false)
+    page.find("[data-button]", text: "Click Me To Reveal Something Cool").click
+    assert page.find("[data-hidden-field]", visible: true)
+  end
+
+  def test_simple_js_interaction_in_browser_without_layout
+    page = render_in_browser(SimpleJavascriptInteractionComponent.new)
+
+    # Assert layout is NOT included
+    refute page.body.include?('<title>ViewComponent - Test</title>')
 
     assert page.find("[data-hidden-field]", visible: false)
     page.find("[data-button]", text: "Click Me To Reveal Something Cool").click
