@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* [WIP] Add render_in_browser method to enable testing JS interactions in components
+
+    *Edwin Mak*
+
 * Add components to `rails stats` task.
 
     *Nicolas Brousse*

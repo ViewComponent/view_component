@@ -844,12 +844,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("Hello, World!")
   end
 
-  def test_interactions
-    render_in_browser(SimpleJavascriptInteractionComponent.new)
+  def test_simple_js_interaction_in_browser
+    page = render_in_browser(SimpleJavascriptInteractionComponent.new, { layout: 'application' })
 
-    assert find('[data-hidden-field]', visible: false)
-    find('[data-button]', text: 'Click Me To Reveal Something Cool').click
-    assert find('[data-hidden-field]', visible: true)
+    assert page.find('[data-hidden-field]', visible: false)
+    page.find('[data-button]', text: 'Click Me To Reveal Something Cool').click
+    assert page.find('[data-hidden-field]', visible: true)
   end
 end
 

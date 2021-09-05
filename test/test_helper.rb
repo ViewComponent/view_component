@@ -22,6 +22,14 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path("../sandbox/config/environment.rb", __FILE__)
 require "rails/test_help"
 
+require "capybara/cuprite"
+Capybara.javascript_driver = :cuprite
+Capybara.register_driver(:cuprite) do |app|
+  Capybara::Cuprite::Driver.new(app, window_size: [1200, 800])
+end
+Capybara.default_driver = :cuprite
+Capybara.server = :puma, { Silent: true }
+
 # Sets custom preview paths in tests.
 #
 # @param new_value [Array<String>] List of preview paths

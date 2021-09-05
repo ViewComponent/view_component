@@ -4,12 +4,9 @@ module ViewComponent
   module TestHelpers
     begin
       require "capybara/minitest"
-      include Capybara::DSL
       include Capybara::Minitest::Assertions
 
       def page
-        return @page if @page
-
         Capybara::Node::Simple.new(@rendered_component)
       end
 
@@ -17,13 +14,6 @@ module ViewComponent
         assert_no_selector("body")
       end
 
-      require "capybara/cuprite"
-      Capybara.javascript_driver = :cuprite
-      Capybara.register_driver(:cuprite) do |app|
-        Capybara::Cuprite::Driver.new(app, window_size: [1200, 800])
-      end
-
-      Capybara.server = :puma, { Silent: true }
     rescue LoadError
       # We don't have a test case for running an application without capybara installed.
       # It's probably fine to leave this without coverage.
@@ -67,11 +57,9 @@ module ViewComponent
       filename = file.path.split('/').last
 
       # Visit the file that contains the HTML
-      @page ||= session
+      session.visit(filename)
 
-      visit(filename)
-
-      return @page
+      return session
     end
 
     def controller
@@ -123,10 +111,8 @@ module ViewComponent
     private
 
     def fetch_capybara_session
-      return @page if @page
-
       rack_app = Rack::File.new("./tmp/")
-      @capybara_session ||= Capybara::Session.new(Capybara.default_driver, rack_app)
+      Capybara::Session.new(Capybara.default_driver, rack_app)
     end
   end
 end
