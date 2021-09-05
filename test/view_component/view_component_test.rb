@@ -845,15 +845,17 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("Hello, World!")
   end
 
-  def test_simple_js_interaction_in_browser_with_layout
-    page = render_in_browser(SimpleJavascriptInteractionComponent.new, { layout: "application" })
+  if Rails.version.to_f >= 6.1
+    def test_simple_js_interaction_in_browser_with_layout
+      page = render_in_browser(SimpleJavascriptInteractionComponent.new, { layout: "application" })
 
-    # Assert layout is included
-    assert page.body.include?("<title>ViewComponent - Test</title>")
+      # Assert layout is included
+      assert page.body.include?("<title>ViewComponent - Test</title>")
 
-    assert page.find("[data-hidden-field]", visible: false)
-    page.find("[data-button]", text: "Click Me To Reveal Something Cool").click
-    assert page.find("[data-hidden-field]", visible: true)
+      assert page.find("[data-hidden-field]", visible: false)
+      page.find("[data-button]", text: "Click Me To Reveal Something Cool").click
+      assert page.find("[data-hidden-field]", visible: true)
+    end
   end
 
   def test_simple_js_interaction_in_browser_without_layout
