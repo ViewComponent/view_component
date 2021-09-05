@@ -25,7 +25,7 @@ require "rails/test_help"
 require "capybara/cuprite"
 Capybara.javascript_driver = :cuprite
 Capybara.register_driver(:cuprite) do |app|
-  Capybara::Cuprite::Driver.new(app, window_size: [1200, 800])
+  Capybara::Cuprite::Driver.new(app, window_size: [1200, 800], browser_options: { process_timeout: 20 })
 end
 Capybara.default_driver = :cuprite
 Capybara.server = :puma, { Silent: true }
