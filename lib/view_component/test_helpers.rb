@@ -40,30 +40,6 @@ module ViewComponent
       Nokogiri::HTML.fragment(@rendered_component)
     end
 
-    def render_in_browser(component, options = {})
-      html = controller.render_to_string(component, **options)
-
-      # Write to temporary file to contain fully rendered component
-      # within a browser
-      file = Tempfile.new([component.class.name, ".html"], "tmp")
-      file.write(html)
-      file.rewind
-
-      # NOTE - not entirely sure how this would work
-      # given that the application may have their own capybara
-      # instance running
-      session = fetch_capybara_session
-      filename = file.path.split("/").last
-
-      # Visit the file that contains the HTML
-      session.visit(filename)
-
-      # Erase temporary file
-      file.unlink
-
-      return session
-    end
-
     def controller
       @controller ||= build_controller(Base.test_controller.constantize)
     end
@@ -108,13 +84,6 @@ module ViewComponent
 
     def build_controller(klass)
       klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)
-    end
-
-    private
-
-    def fetch_capybara_session
-      rack_app = Rack::File.new("./tmp/")
-      Capybara::Session.new(Capybara.default_driver, rack_app)
     end
   end
 end
