@@ -11,3 +11,4 @@ gem "rails", rails_version == "main" ? { git: "https://github.com/rails/rails", 
 # Utilize to test interactions
 gem "cuprite", "~> 0.13"
 gem "puma", "~> 5.4"
+gem "selenium-webdriver"

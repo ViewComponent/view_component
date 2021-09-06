@@ -6,7 +6,7 @@ module ViewComponent
     include Capybara::DSL
 
     def page
-      super
+      Capybara.current_session
     end
 
     def visit_rendered_in_browser(component, **options)
