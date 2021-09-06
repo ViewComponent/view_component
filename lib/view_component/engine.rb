@@ -122,6 +122,13 @@ module ViewComponent
           )
 
           get(
+            "view_components_system_test_entrypoint",
+            to: "#{preview_controller}#system_test_entrypoint",
+            as: :preview_view_component_entry_point,
+            internal: true
+          )
+
+          get(
             "#{options.preview_route}/*path",
             to: "#{preview_controller}#previews",
             as: :preview_view_component,

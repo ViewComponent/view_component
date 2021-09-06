@@ -23,11 +23,8 @@ require File.expand_path("../sandbox/config/environment.rb", __FILE__)
 require "rails/test_help"
 
 require "capybara/cuprite"
-Capybara.javascript_driver = :cuprite
-Capybara.register_driver(:cuprite) do |app|
-  Capybara::Cuprite::Driver.new(app, window_size: [1200, 800], browser_options: { process_timeout: 20 })
-end
-Capybara.default_driver = :cuprite
+
+# Reduce extra logs produced by puma booting up
 Capybara.server = :puma, { Silent: true }
 
 # Sets custom preview paths in tests.

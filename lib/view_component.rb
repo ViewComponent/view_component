@@ -13,9 +13,9 @@ module ViewComponent
   autoload :Preview
   autoload :PreviewTemplateError
   autoload :TestHelpers
-  autoload :BrowserTestHelpers
+  autoload :SystemTestHelpers
   autoload :TestCase
-  autoload :BrowserTestCase
+  autoload :SystemTestCase
   autoload :TemplateError
   autoload :Translatable
 end

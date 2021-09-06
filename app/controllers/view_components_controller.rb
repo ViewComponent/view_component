@@ -38,6 +38,10 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
     end
   end
 
+  def system_test_entrypoint
+    render file: "./tmp/#{params[:file]}", status: 200
+  end
+
   private
 
   def default_preview_layout # :doc:

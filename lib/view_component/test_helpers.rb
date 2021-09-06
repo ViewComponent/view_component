@@ -6,10 +6,6 @@ module ViewComponent
       require "capybara/minitest"
       include Capybara::Minitest::Assertions
 
-      def page
-        Capybara::Node::Simple.new(@rendered_component)
-      end
-
       def refute_component_rendered
         assert_no_selector("body")
       end

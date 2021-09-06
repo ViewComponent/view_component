@@ -1,9 +1,12 @@
+<%= @render_args ||= render_args %>
+
 <% if ViewComponent::Base.render_monkey_patch_enabled || Rails.version.to_f >= 6.1 %>
   <%= render(@render_args[:component], @render_args[:args], &@render_args[:block]) %>
 <% else %>
   <%= render_component(@render_args[:component], &@render_args[:block]) %>
 <% end %>
 
-<% if ViewComponent::Base.show_previews_source %>
+<% # Hide the source because it doesn't appear to be significant to system tests %>
+<% if ViewComponent::Base.show_previews_source && !@render_args[:hide_preview_source] %>
   <%= preview_source %>
 <% end %>
