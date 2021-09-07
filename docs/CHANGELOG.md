@@ -15,7 +15,7 @@ title: Changelog
 
     *Nicolas Brousse*
 
-* Fix bug when using Slim and writing a slot whose block evaluates to `nil`
+* Fix bug when using Slim and writing a slot whose block evaluates to `nil`.
 
     *Yousuf Jukaku*
 
