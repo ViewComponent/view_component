@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Replace antipatterns section in the documentation with best practices.
+
+    *Blake Williams*
+
 * Add components to `rails stats` task.
 
     *Nicolas Brousse*
