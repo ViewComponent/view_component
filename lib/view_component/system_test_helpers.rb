@@ -10,13 +10,19 @@ module ViewComponent
     end
 
     def visit_rendered_in_browser(component, **options)
-      html = controller.render_to_string("view_components/preview", { layout: "application", locals: {
-                                           render_args: {
-                                             component: component,
-                                             template: "view_components/preview",
-                                             hide_preview_source: true
-                                           }
-                                         } })
+      layout = options[:layout] || false
+
+      opts = {
+        layout: layout,
+        locals: {
+          render_args: {
+            component: component,
+            template: "view_components/preview",
+            hide_preview_source: true
+          }
+        }
+      }
+      html = controller.render_to_string("view_components/preview", opts)
 
       # Write to temporary file to contain fully rendered component
       # within a browser
