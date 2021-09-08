@@ -26,9 +26,9 @@ end
 
 _Note: `assert_selector` only matches on visible elements by default. To match on hidden elements, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
-## Antipatterns
+## Best practices
 
-Avoid testing ViewComponent instance methods directly. Test the rendered output to ensure the correct behavior for the consumer of the ViewComponent:
+Prefer testing the behavior of your component over unit testing individual methods:
 
 ```ruby
 # Good
