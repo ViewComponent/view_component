@@ -19,6 +19,10 @@ title: Changelog
 
     *Yousuf Jukaku*
 
+* Add documentation for test helpers.
+
+    *Joel Hawksley*
+
 ## 2.39.0
 
 * Clarify documentation of `with_variant` as an override of Action Pack.
