@@ -15,7 +15,6 @@ title: Changelog
 
     *Blake Williams*
 
-
 * Add components to `rails stats` task.
 
     *Nicolas Brousse*
