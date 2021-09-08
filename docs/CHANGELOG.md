@@ -7,9 +7,14 @@ title: Changelog
 
 ## main
 
-* [WIP] Add render_in_browser method to enable testing JS interactions in components
+* Add render_in_browser method to enable testing JS interactions in components
 
     *Edwin Mak*
+
+* Replace antipatterns section in the documentation with best practices.
+
+    *Blake Williams*
+
 
 * Add components to `rails stats` task.
 
