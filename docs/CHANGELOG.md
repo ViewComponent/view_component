@@ -15,6 +15,10 @@ title: Changelog
 
     *Nicolas Brousse*
 
+* Fix bug when using Slim and writing a slot whose block evaluates to `nil`.
+
+    *Yousuf Jukaku*
+
 ## 2.39.0
 
 * Clarify documentation of `with_variant` as an override of Action Pack.
