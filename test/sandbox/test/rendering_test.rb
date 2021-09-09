@@ -751,16 +751,17 @@ class RenderingTest < ViewComponent::TestCase
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
 
-  def test_render_multiple_templates
-    render_inline(MultipleTemplatesComponent.new(mode: :list))
+  def test_render_sub_templates
+    render_inline(SubTemplatesComponent.new(number: 5, string: "parameter string"))
 
-    assert_selector("li", text: "Apple")
-    assert_selector("li", text: "Banana")
-    assert_selector("li", text: "Pear")
-
-    render_inline(MultipleTemplatesComponent.new(mode: :summary))
-
-    assert_selector("div", text: "Apple, Banana, and Pear")
+    assert_selector("div.container") do
+      assert_selector("div", text: "The items are: Apple, Banana, and Pear, parameter string")
+      assert_selector("ul[data-number=5]") do
+        assert_selector("li", text: "Apple")
+        assert_selector("li", text: "Banana")
+        assert_selector("li", text: "Pear")
+      end
+    end
   end
 
   def test_render_sub_templates_variant

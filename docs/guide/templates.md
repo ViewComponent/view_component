@@ -231,3 +231,33 @@ class TestComponent < ViewComponent::Base
   end
 end
 ```
+
+To define which parameters a sub-template accepts, use the [Rails Strict Locals](https://edgeguides.rubyonrails.org/action_view_overview.html#strict-locals) syntax.
+
+_Note: Unlike Rails, a missing `locals` declaration means the template takes no arguments._
+
+```erb
+<%# list.html.erb %>
+<%# locals: (multiple:) %->
+The parameter is <%= multiple %>
+```
+
+```ruby
+# test_component.rb
+class TestComponent < ViewComponent::Base
+  def initialize(mode:)
+    @mode = mode
+  end
+
+  def call
+    case @mode
+    when :list
+      render_list_template multiple: false
+    when :multilist
+      render_list_template multiple: true
+    when :summary
+      render_summary_template
+    end
+  end
+end
+```
