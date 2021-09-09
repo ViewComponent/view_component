@@ -137,6 +137,19 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+It's also possible to set query parameters:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_with_request_url
+    with_request_url "/products/42?locale=en" do
+      render_inline ExampleComponent.new # contains i.e. `link_to "Recent", url_for(request.query_parameters.merge(filter: "recent"))`
+      assert_link "Recent", href: "/?locale=en&filter=recent"
+    end
+  end
+end
+```
+
 ## RSpec configuration
 
 To use RSpec, add the following:

@@ -838,6 +838,23 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_with_request_url_with_query_parameters
+    with_request_url "/?mykey=myvalue" do
+      render_inline UrlForComponent.new
+      assert_text "/?key=value&mykey=myvalue"
+    end
+
+    with_request_url "/?mykey=myvalue&otherkey=othervalue" do
+      render_inline UrlForComponent.new
+      assert_text "/?key=value&mykey=myvalue&otherkey=othervalue"
+    end
+
+    with_request_url "/products?mykey=myvalue" do
+      render_inline UrlForComponent.new
+      assert_text "/products?key=value&mykey=myvalue"
+    end
+  end
+
   def test_output_postamble
     render_inline(AfterRenderComponent.new)
 
