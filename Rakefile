@@ -151,6 +151,42 @@ namespace :docs do
           f.puts("_#{method.tag(:deprecated).text}_")
         end
       end
+
+      f.puts
+      f.puts("## ViewComponent::TestHelpers")
+
+      registry.
+        get("ViewComponent::TestHelpers").
+        meths.
+        sort_by { |method| method[:name] }.
+        select do |method|
+          !method.tag(:private) &&
+            method.visibility == :public
+        end.
+        each do |method|
+          suffix =
+            if method.tag(:deprecated)
+              " (Deprecated)"
+            end
+
+          types =
+            if method.tag(:return)&.types
+              " → [#{method.tag(:return).types.join(',')}]"
+            end
+
+          f.puts
+          f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
+
+          if method.docstring.length > 0
+            f.puts
+            f.puts(method.docstring)
+          end
+
+          if method.tag(:deprecated)
+            f.puts
+            f.puts("_#{method.tag(:deprecated).text}_")
+          end
+        end
     end
   end
 end
