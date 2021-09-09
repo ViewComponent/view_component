@@ -11,6 +11,8 @@ module ViewComponent
     DEVELOPMENT_MODE = :development
     PRODUCTION_MODE = :production
 
+    EXPLICIT_LOCALS_REGEX = /\#\s+locals:\s+\((.*)\)/
+
     class_attribute :mode, default: PRODUCTION_MODE
 
     def initialize(component_class)
@@ -63,25 +65,18 @@ module ViewComponent
       end
 
       templates.each do |template|
-        pieces = File.basename(template[:path]).split(".")
-
-        method_name =
-          # If the template matches the name of the component,
-          # set the method name with call_method_name
-          if pieces.first == component_class.name.demodulize.underscore
-            call_method_name(template[:variant])
-          # Otherwise, append the name of the template to
-          # call_method_name
-          else
-            "#{call_method_name(template[:variant])}_#{pieces.first.to_sym}"
-          end
+        method_name, method_args = method_name_and_args_for template
+        visibility = method_name.start_with?("call") ? "" : "private "
 
         redefinition_lock.synchronize do
           component_class.silence_redefinition_of_method(method_name)
           # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, template[:path], 0
-          def #{method_name}
+          component_class.class_eval <<-RUBY, template[:path], -1
+          #{visibility}def #{method_name}(#{method_args})
+            old_buffer = @output_buffer if defined? @output_buffer
             #{compiled_template(template[:path])}
+          ensure
+            @output_buffer = old_buffer
           end
           RUBY
           # rubocop:enable Style/EvalWithLocation
@@ -101,7 +96,7 @@ module ViewComponent
 
     def define_render_template_for
       variant_elsifs = variants.compact.uniq.map do |variant|
-        "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
+        "elsif variant.to_sym == :#{variant}\n    #{call_method_name(nil, variant)}"
       end.join("\n")
 
       body = <<-RUBY
@@ -209,6 +204,14 @@ module ViewComponent
         end
     end
 
+    def method_name_and_args_for(template)
+      file = File.read(template[:path])
+      file.match(EXPLICIT_LOCALS_REGEX)
+      explicit_locals = Regexp.last_match(1)
+      basename = template[:base_name]
+      [call_method_name(basename, template[:variant]), explicit_locals]
+    end
+
     def inline_calls_defined_on_self
       @inline_calls_defined_on_self ||= component_class.instance_methods(false).grep(/^call/)
     end
@@ -243,12 +246,16 @@ module ViewComponent
       end
     end
 
-    def call_method_name(variant)
-      if variant.present? && variants.include?(variant)
-        "call_#{variant}"
-      else
-        "call"
-      end
+    def call_method_name(template, variant)
+      name =
+        if template.blank? || template == component_class.name.demodulize.underscore
+          "call"
+        else
+          "render"
+        end
+      name += "_#{variant}" if variant.present? && variants.include?(variant)
+      name += "_#{template}_template" if template.present? && template != component_class.name.demodulize.underscore
+      name.freeze
     end
 
     def should_compile_superclass?
