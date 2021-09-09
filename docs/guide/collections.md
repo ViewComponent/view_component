@@ -44,6 +44,7 @@ end
 By default, `.with_collection` raises an error when the collection parameter is not explicitly included in the `initialize` signature as a keyword argument.
 
 This behavior can be suppressed by setting
+
 ```ruby
 # config/application.rb
 config.view_component.enforce_collection_parameter = false
