@@ -11,6 +11,8 @@ title: Changelog
 
     *Javi Martín*
 
+## 2.40.0
+
 * Replace antipatterns section in the documentation with best practices.
 
     *Blake Williams*
@@ -22,6 +24,10 @@ title: Changelog
 * Fix bug when using Slim and writing a slot whose block evaluates to `nil`.
 
     *Yousuf Jukaku*
+
+* Add documentation for test helpers.
+
+    *Joel Hawksley*
 
 ## 2.39.0
 
