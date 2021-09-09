@@ -6,5 +6,5 @@
   "no-inline-html": false,
   "first-line-heading": false,
   "single-h1": false,
-  "code-block-style": "fenced"
+  "code-block-style": false
 }
