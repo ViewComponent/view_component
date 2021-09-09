@@ -691,6 +691,14 @@ class ViewComponentTest < ViewComponent::TestCase
     )
   end
 
+  def test_collection_component_missing_parameter_name_with_enforcement_disabled
+    old_setting = ViewComponent::Base.enforce_collection_parameter
+    ViewComponent::Base.enforce_collection_parameter = false
+    render_inline(MissingCollectionParameterNameComponent.with_collection([]))
+  ensure
+    ViewComponent::Base.enforce_collection_parameter = old_setting
+  end
+
   def test_collection_component_missing_default_parameter_name
     exception =
       assert_raises ArgumentError do
@@ -700,6 +708,14 @@ class ViewComponentTest < ViewComponent::TestCase
       end
 
     assert_match(/MissingDefaultCollectionParameterComponent does not accept the parameter/, exception.message)
+  end
+
+  def test_collection_component_missing_default_parameter_name_with_enforcement_disabled
+    old_setting = ViewComponent::Base.enforce_collection_parameter
+    ViewComponent::Base.enforce_collection_parameter = false
+    render_inline(MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")]))
+  ensure
+    ViewComponent::Base.enforce_collection_parameter = old_setting
   end
 
   def test_component_with_invalid_parameter_names

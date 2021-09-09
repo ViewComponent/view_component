@@ -298,6 +298,14 @@ module ViewComponent
     # Defaults to "app/components".
     mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
 
+    # Enable or disable enforcement of collection parameter as keyword argument in component initializer:
+    #
+    #     config.view_component.enforce_collection_parameter = false
+    #
+    # Defaults to `true`.
+    #
+    mattr_accessor :enforce_collection_parameter, instance_writer: false, default: true
+
     class << self
       # @private
       attr_accessor :source_location, :virtual_path

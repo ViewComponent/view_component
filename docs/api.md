@@ -71,6 +71,14 @@ Set a custom default layout used for preview index and individual previews:
 
     config.view_component.default_preview_layout = "component_preview"
 
+### #enforce_collection_parameter
+
+Enable or disable enforcement of collection parameter as keyword argument in component initializer:
+
+    config.view_component.enforce_collection_parameter = false
+
+Defaults to `true`.
+
 ### #generate_stimulus_controller
 
 Always generate a Stimulus controller alongside the component:

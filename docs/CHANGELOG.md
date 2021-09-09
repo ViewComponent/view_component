@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Allow disabling of `validate_collection_parameter` checks.
+
+    *Patrick Arnett*
+
 * Replace antipatterns section in the documentation with best practices.
 
     *Blake Williams*

@@ -10,8 +10,7 @@ module ViewComponent
 
     def render_in(view_context, &block)
       iterator = ActionView::PartialIteration.new(@collection.size)
-
-      component.validate_collection_parameter!(validate_default: true)
+      component.validate_collection_parameter!(validate_default: true) if ViewComponent::Base.enforce_collection_parameter
 
       @collection.map do |item|
         content = component.new(**component_options(item, iterator)).render_in(view_context, &block)

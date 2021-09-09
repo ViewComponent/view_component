@@ -37,7 +37,7 @@ module ViewComponent
 
       if raise_errors
         component_class.validate_initialization_parameters!
-        component_class.validate_collection_parameter!
+        component_class.validate_collection_parameter! if ViewComponent::Base.enforce_collection_parameter
       end
 
       templates.each do |template|
