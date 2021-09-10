@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix bug where `with_collection_parameter` did not inherit from parent component.
+
+    *Will Drexler*, *Christian Campoli*
+
 * Allow query parameters in `with_request_url` test helper.
 
     *Javi Martín*
