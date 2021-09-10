@@ -11,9 +11,27 @@ title: Changelog
 
     *Will Drexler*, *Christian Campoli*
 
+* Allow query parameters in `with_request_url` test helper.
+
+    *Javi Martín*
+
+## 2.40.0
+
+* Replace antipatterns section in the documentation with best practices.
+
+    *Blake Williams*
+
 * Add components to `rails stats` task.
 
     *Nicolas Brousse*
+
+* Fix bug when using Slim and writing a slot whose block evaluates to `nil`.
+
+    *Yousuf Jukaku*
+
+* Add documentation for test helpers.
+
+    *Joel Hawksley*
 
 ## 2.39.0
 

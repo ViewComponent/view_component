@@ -143,3 +143,46 @@ Path for component files
     config.view_component.view_component_path = "app/my_components"
 
 Defaults to "app/components".
+
+## ViewComponent::TestHelpers
+
+### #render_inline(component, **args, &block) → [Nokogiri::HTML]
+
+Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
+allowing for Capybara assertions to be used:
+
+```ruby
+render_inline(MyComponent.new)
+assert_text("Hello, World!")
+```
+
+### #with_controller_class(klass)
+
+Set the controller to be used while executing the given block,
+allowing access to controller-specific methods:
+
+```ruby
+with_controller_class(UsersController) do
+  render_inline(MyComponent.new)
+end
+```
+
+### #with_request_url(path)
+
+Set the URL for the current request (such as when using request-dependent path helpers):
+
+```ruby
+with_request_url("/users/42") do
+  render_inline(MyComponent.new)
+end
+```
+
+### #with_variant(variant)
+
+Set the Action Pack request variant for the given block:
+
+```ruby
+with_variant(:phone) do
+  render_inline(MyComponent.new)
+end
+```

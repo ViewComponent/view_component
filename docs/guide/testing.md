@@ -26,9 +26,9 @@ end
 
 _Note: `assert_selector` only matches on visible elements by default. To match on hidden elements, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
-## Antipatterns
+## Best practices
 
-Avoid testing ViewComponent instance methods directly. Test the rendered output to ensure the correct behavior for the consumer of the ViewComponent:
+Prefer testing the behavior of your component over unit testing individual methods:
 
 ```ruby
 # Good
@@ -132,6 +132,19 @@ class ExampleComponentTest < ViewComponent::TestCase
     with_request_url "/products/42" do
       render_inline ExampleComponent.new # contains i.e. `link_to "French", url_for(locale: "fr")`
       assert_link "French", href: "/products/42?locale=fr"
+    end
+  end
+end
+```
+
+It's also possible to set query parameters:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_with_request_url
+    with_request_url "/products/42?locale=en" do
+      render_inline ExampleComponent.new # contains i.e. `link_to "Recent", url_for(request.query_parameters.merge(filter: "recent"))`
+      assert_link "Recent", href: "/?locale=en&filter=recent"
     end
   end
 end
