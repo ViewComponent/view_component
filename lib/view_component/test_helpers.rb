@@ -114,12 +114,15 @@ module ViewComponent
     # @param path [String] The path to set for the current request.
     def with_request_url(path)
       old_request_path_parameters = request.path_parameters
+      old_request_query_parameters = request.query_parameters
       old_controller = defined?(@controller) && @controller
 
       request.path_parameters = Rails.application.routes.recognize_path(path)
+      request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_query(path.split("?")[1]))
       yield
     ensure
       request.path_parameters = old_request_path_parameters
+      request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
       @controller = old_controller
     end
 

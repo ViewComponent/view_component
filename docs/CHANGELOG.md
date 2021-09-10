@@ -11,6 +11,10 @@ title: Changelog
 
     *Patrick Arnett*
 
+* Allow query parameters in `with_request_url` test helper.
+
+    *Javi Martín*
+
 ## 2.40.0
 
 * Replace antipatterns section in the documentation with best practices.
