@@ -60,8 +60,6 @@ module ViewComponent
     # <%= render MyComponent.new(title: "greeting") do %>world<% end %>
     # returns:
     # <span title="greeting">Hello, world!</span>
-    #
-    # @private
     def render_in(view_context, &block)
       self.class.compile(raise_errors: true)
 
