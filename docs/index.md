@@ -177,6 +177,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/websebdev?s=64" alt="websebdev" width="32" />
 <img src="https://avatars.githubusercontent.com/xkraty?s=64" alt="xkraty" width="32" />
 <img src="https://avatars.githubusercontent.com/wdrexler?s=64" alt="wdrexler" width="32" />
+<img src="https://avatars.githubusercontent.com/vpereira?s=64" alt="vpereira" width="32" />
 
 <hr />
 

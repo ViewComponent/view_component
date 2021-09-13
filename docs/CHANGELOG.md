@@ -15,6 +15,10 @@ title: Changelog
 
     *Javi Martín*
 
+* Add test component for multiple formats support.
+
+    * Victor Pereira*
+
 ## 2.40.0
 
 * Replace antipatterns section in the documentation with best practices.
