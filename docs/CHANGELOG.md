@@ -11,7 +11,7 @@ title: Changelog
 
     *Javi Martín*
     
-* Add "how to render a component to a string" to FAQ
+* Add "how to render a component to a string" to FAQ.
 
     *Hans Lemuet*
 
