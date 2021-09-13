@@ -384,6 +384,9 @@ module ViewComponent
           %r{(.*#{Regexp.quote(ViewComponent::Base.view_component_path)})|(\.rb)}, ""
         )
 
+        # Set collection parameter to the extended component
+        child.with_collection_parameter provided_collection_parameter
+
         super
       end
 
