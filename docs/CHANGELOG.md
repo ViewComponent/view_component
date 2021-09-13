@@ -14,7 +14,6 @@ title: Changelog
 * Allow query parameters in `with_request_url` test helper.
 
     *Javi Martín*
-    
 * Add "how to render a component to a string" to FAQ.
 
     *Hans Lemuet*
