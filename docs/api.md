@@ -52,6 +52,15 @@ coupling that inhibits encapsulation & reuse, often making testing difficult.
 
 Override to determine whether the ViewComponent should render.
 
+### #render_in(view_context, &block) → [String]
+
+Entrypoint for rendering components.
+
+- `view_context`: ActionView context from calling view
+- `block`: optional block to be captured within the view context
+
+Returns HTML that has been escaped by the respective template handler.
+
 ### #request → [ActionDispatch::Request]
 
 The current request. Use sparingly as doing so introduces coupling that
