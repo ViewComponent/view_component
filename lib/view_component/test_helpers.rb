@@ -126,6 +126,22 @@ module ViewComponent
       @controller = old_controller
     end
 
+    # Set the format for the current request
+    #
+    # ```ruby
+    # with_request_format(format)
+    #   render_inline(MyComponent.new, format: format)
+    # end
+    # ```
+    #
+    # @param format [Symbol] The format to set for the current request
+    def with_render_format(format)
+      yield
+      # TODO:
+      # search for the view "view_name.#{format}.#{extension}"
+      # render it otherwise 404?
+    end
+
     # @private
     def build_controller(klass)
       klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)

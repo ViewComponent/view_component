@@ -884,8 +884,12 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_output_postamble
-    render_inline(AfterRenderComponent.new)
+    with_render_format :html do
+      render_inline(AfterRenderComponent.new)
+    end
 
-    assert_text("Hello, World!")
+    with_render_format :text do
+      assert_text("Hello, World!")
+    end
   end
 end

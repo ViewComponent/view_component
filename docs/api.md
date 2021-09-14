@@ -167,6 +167,16 @@ with_controller_class(UsersController) do
 end
 ```
 
+### #with_render_format(format)
+
+Set the format for the current request
+
+```ruby
+with_request_format(format)
+  render_inline(MyComponent.new, format: format)
+end
+```
+
 ### #with_request_url(path)
 
 Set the URL for the current request (such as when using request-dependent path helpers):
