@@ -407,6 +407,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  def test_renders_empty_slot_v2_with_slim_without_error
+    get "/empty_slot_v2_with_slim"
+
+    assert_response :success
+  end
+
   if Rails.version.to_f >= 6.1
     def test_rendering_component_using_the_render_component_helper_raises_an_error
       error =

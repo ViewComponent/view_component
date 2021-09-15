@@ -7,9 +7,27 @@ title: Changelog
 
 ## main
 
-* Add render_in_browser method to enable testing JS interactions in components
+* Add visit_rendered_in_browser method to enable testing JS interactions in components
 
     *Edwin Mak*
+
+* Fix bug where `with_collection_parameter` did not inherit from parent component.
+
+    *Will Drexler*, *Christian Campoli*
+
+* Allow query parameters in `with_request_url` test helper.
+
+    *Javi Martín*
+
+* Add "how to render a component to a string" to FAQ.
+
+    *Hans Lemuet*
+
+* Add `#render_in` to API docs.
+
+    *Hans Lemuet*
+
+## 2.40.0
 
 * Replace antipatterns section in the documentation with best practices.
 
@@ -18,6 +36,14 @@ title: Changelog
 * Add components to `rails stats` task.
 
     *Nicolas Brousse*
+
+* Fix bug when using Slim and writing a slot whose block evaluates to `nil`.
+
+    *Yousuf Jukaku*
+
+* Add documentation for test helpers.
+
+    *Joel Hawksley*
 
 ## 2.39.0
 
@@ -56,7 +82,7 @@ title: Changelog
 
 * Add test case for conflict with internal `@variant` variable.
 
-   *David Backeus*
+    *David Backeus*
 
 * Document decision to not change naming convention recommendation to remove `-Component` suffix.
 
@@ -120,7 +146,7 @@ title: Changelog
 
 * Ensure consistent indentation with Rubocop.
 
-    *Joel Hawksley
+    *Joel Hawksley*
 
 * Bump `activesupport` upper bound from `< 7.0` to `< 8.0`.
 
