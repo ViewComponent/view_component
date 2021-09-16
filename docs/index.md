@@ -179,7 +179,6 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/wdrexler?s=64" alt="wdrexler" width="32" />
 <img src="https://avatars.githubusercontent.com/mattwr18?s=64" alt="mattwr18" width="32" />
 
-
 <hr />
 
 [Getting started →](/guide/getting-started.html)
