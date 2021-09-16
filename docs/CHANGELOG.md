@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update docs to add example for using Devise helpers in tests.
+
+    *Matthew Rider*
+
 * Fix bug where `with_collection_parameter` did not inherit from parent component.
 
     *Will Drexler*, *Christian Campoli*
