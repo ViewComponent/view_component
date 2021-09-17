@@ -69,8 +69,7 @@ ensure
 end
 
 def with_application_component_class
-  application_component_klass = Class.new(Object)
-  Object.const_set("ApplicationComponent", application_component_klass)
+  Object.const_set("ApplicationComponent", Class.new(Object))
   yield
 ensure
   Object.send(:remove_const, :ApplicationComponent)
