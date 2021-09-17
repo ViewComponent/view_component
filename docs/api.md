@@ -74,6 +74,14 @@ _Will be removed in v3.0.0._
 
 ## Configuration
 
+### #component_parent_class
+
+Parent class for generated components
+
+    config.view_component.component_parent_class = "MyBaseComponent"
+
+Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+
 ### #default_preview_layout
 
 Set a custom default layout used for preview index and individual previews:
