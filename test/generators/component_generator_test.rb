@@ -144,6 +144,16 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_generating_components_with_custom_component_parent_class
+    with_custom_component_parent_class("BaseComponent") do
+      run_generator %w[user]
+
+      assert_file "app/components/user_component.rb" do |component|
+        assert_match(/class UserComponent < BaseComponent/, component)
+      end
+    end
+  end
+
   def test_component_with_stimulus
     run_generator %w[user --stimulus]
 

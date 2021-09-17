@@ -35,10 +35,8 @@ module Rails
       def parent_class
         if options[:parent]
           options[:parent]
-        elsif defined?(ApplicationComponent)
-          "ApplicationComponent"
         else
-          "ViewComponent::Base"
+          ViewComponent::Base.component_parent_class
         end
       end
 

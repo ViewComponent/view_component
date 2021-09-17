@@ -60,6 +60,14 @@ ensure
   ViewComponent::Base.view_component_path = old_value
 end
 
+def with_custom_component_parent_class(new_value)
+  old_value = ViewComponent::Base.component_parent_class
+  ViewComponent::Base.component_parent_class = new_value
+  yield
+ensure
+  ViewComponent::Base.component_parent_class = old_value
+end
+
 def with_new_cache
   begin
     old_cache = ViewComponent::CompileCache.cache

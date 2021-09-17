@@ -281,6 +281,13 @@ module ViewComponent
     # Defaults to "app/components".
     mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
 
+    # Parent class for generated components
+    #
+    #     config.view_component.component_parent_class = "MyBaseComponent"
+    #
+    # Defaults to "ApplicationComponent" if define, "ViewComponent::Base" else.
+    mattr_accessor :component_parent_class, instance_writer: false, default: defined?(ApplicationComponent) ? "ApplicationComponent" : "ViewComponent::Base"
+
     class << self
       # @private
       attr_accessor :source_location, :virtual_path
