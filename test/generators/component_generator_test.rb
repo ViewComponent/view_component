@@ -83,6 +83,14 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_no_file "component.html.erb"
   end
 
+  def test_component_with_parent
+    run_generator %w[user --parent BaseComponent]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/class UserComponent < BaseComponent/, component)
+    end
+  end
+
   def test_component_with_namespace
     run_generator %w[admins/user]
 
