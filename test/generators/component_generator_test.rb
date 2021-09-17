@@ -17,7 +17,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator
 
     assert_file "app/components/user_component.rb" do |component|
-      assert_match(/class UserComponent < /, component)
+      assert_match(/class UserComponent < ViewComponent::Base/, component)
       assert_no_match(/def initialize/, component)
     end
   end
@@ -141,6 +141,16 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
 
       assert_file "app/parts/user_component.rb"
       assert_file "app/parts/user_component.html.erb"
+    end
+  end
+
+  def test_generating_components_with_application_component_class
+    with_application_component_class do
+      run_generator %w[user]
+
+      assert_file "app/components/user_component.rb" do |component|
+        assert_match(/class UserComponent < ApplicationComponent/, component)
+      end
     end
   end
 

@@ -68,6 +68,14 @@ ensure
   ViewComponent::Base.component_parent_class = old_value
 end
 
+def with_application_component_class
+  application_component_klass = Class.new(Object)
+  Object.const_set("ApplicationComponent", application_component_klass)
+  yield
+ensure
+  Object.send(:remove_const, :ApplicationComponent)
+end
+
 def with_new_cache
   begin
     old_cache = ViewComponent::CompileCache.cache

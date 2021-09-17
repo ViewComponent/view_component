@@ -288,7 +288,7 @@ module ViewComponent
     # Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
     mattr_accessor :component_parent_class,
                    instance_writer: false,
-                   default: defined?(ApplicationComponent) ? "ApplicationComponent" : "ViewComponent::Base"
+                   default: "ViewComponent::Base"
 
     class << self
       # @private
