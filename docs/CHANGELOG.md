@@ -7,6 +7,11 @@ title: Changelog
 
 ## main
 
+* Add `--parent` generator option to specify the parent class.
+* Add config option `config.view_component.component_parent_class` to change it project-wide.
+
+    *Hans Lemuet*
+
 * Update docs to add example for using Devise helpers in tests.
 
     *Matthew Rider*
