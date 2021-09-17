@@ -105,6 +105,22 @@ bin/rails generate component Example title --inline
       invoke  erb
 ```
 
+### Specify the parent class
+
+By default, `ApplicationComponent` is used if defined, `ViewComponent::Base` otherwise.
+
+```console
+bin/rails generate component Example title content --parent MyBaseComponent
+
+      create  app/components/example_component.rb
+      invoke  test_unit
+      create    test/components/example_component_test.rb
+      invoke  erb
+      create    app/components/example_component.html.erb
+```
+
+To always use your own parent class, set `config.view_component.component_parent_class = "MyBaseComponent"`.
+
 ### Skip collision check
 
 The generator prevents naming collisions with existing components. To skip this check and force the generator to run, use the `--skip-collision-check` or `--force` option.
