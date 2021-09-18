@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Display preview source on previews that exclusively use templates
+* Display preview source on previews that exclusively use templates.
 
     *Edwin Mak*, *Joel Hawksley*
 
