@@ -33,13 +33,9 @@ module Rails
       private
 
       def parent_class
-        if options[:parent]
-          options[:parent]
-        elsif defined?(ApplicationComponent)
-          ApplicationComponent
-        else
-          ViewComponent::Base.component_parent_class
-        end
+        return options[:parent] if options[:parent]
+
+        ViewComponent::Base.component_parent_class || default_parent_class
       end
 
       def initialize_signature
@@ -54,6 +50,10 @@ module Rails
 
       def initialize_call_method_for_inline?
         options["inline"]
+      end
+
+      def default_parent_class
+        defined?(ApplicationComponent) ? ApplicationComponent : ViewComponent::Base
       end
     end
   end

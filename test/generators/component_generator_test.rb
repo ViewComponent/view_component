@@ -84,10 +84,30 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   end
 
   def test_component_with_parent
-    run_generator %w[user --parent MyBaseComponent]
+    run_generator %w[user --parent MyOtherBaseComponent]
 
     assert_file "app/components/user_component.rb" do |component|
-      assert_match(/class UserComponent < MyBaseComponent/, component)
+      assert_match(/class UserComponent < MyOtherBaseComponent/, component)
+    end
+  end
+
+  def test_component_with_parent_and_application_component_class
+    with_application_component_class do
+      run_generator %w[user --parent MyOtherBaseComponent]
+
+      assert_file "app/components/user_component.rb" do |component|
+        assert_match(/class UserComponent < MyOtherBaseComponent/, component)
+      end
+    end
+  end
+
+  def test_component_with_parent_and_custom_component_parent_class
+    with_custom_component_parent_class("MyBaseComponent") do
+      run_generator %w[user --parent MyOtherBaseComponent]
+
+      assert_file "app/components/user_component.rb" do |component|
+        assert_match(/class UserComponent < MyOtherBaseComponent/, component)
+      end
     end
   end
 
@@ -160,6 +180,18 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
 
       assert_file "app/components/user_component.rb" do |component|
         assert_match(/class UserComponent < MyBaseComponent/, component)
+      end
+    end
+  end
+
+  def test_generating_components_with_application_component_class_and_custom_parent_class
+    with_application_component_class do
+      with_custom_component_parent_class("MyBaseComponent") do
+        run_generator %w[user]
+
+        assert_file "app/components/user_component.rb" do |component|
+          assert_match(/class UserComponent < MyBaseComponent/, component)
+        end
       end
     end
   end
