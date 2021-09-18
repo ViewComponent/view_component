@@ -137,6 +137,19 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+It's also possible to set query parameters:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_with_request_url
+    with_request_url "/products/42?locale=en" do
+      render_inline ExampleComponent.new # contains i.e. `link_to "Recent", url_for(request.query_parameters.merge(filter: "recent"))`
+      assert_link "Recent", href: "/?locale=en&filter=recent"
+    end
+  end
+end
+```
+
 ## RSpec configuration
 
 To use RSpec, add the following:
@@ -149,6 +162,18 @@ require "capybara/rspec"
 RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
+end
+```
+
+To access Devise's controller helper methods in tests, add the following:
+
+```ruby
+RSpec.configure do |config|
+  config.include Devise::Test::ControllerHelpers, type: :component
+
+  config.before(:each, type: :component) do
+    @request = controller.request
+  end
 end
 ```
 

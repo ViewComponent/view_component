@@ -131,6 +131,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/g13ydson?s=64" alt="g13ydson" width="32" />
 <img src="https://avatars.githubusercontent.com/horacio?s=64" alt="horacio" width="32" />
 <img src="https://avatars.githubusercontent.com/jaredcwhite?s=64" alt="jaredcwhite" width="32" />
+<img src="https://avatars.githubusercontent.com/javierm?s=64" alt="javierm" width="32" />
 <img src="https://avatars.githubusercontent.com/jcoyne?s=64" alt="jcoyne" width="32" />
 <img src="https://avatars.githubusercontent.com/jensljungblad?s=64" alt="jensljungblad" width="32" />
 <img src="https://avatars.githubusercontent.com/joelhawksley?s=64" alt="joelhawksley" width="32" />
@@ -175,6 +176,10 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/andrewjtait?s=64" alt="andrewjtait" width="32" />
 <img src="https://avatars.githubusercontent.com/websebdev?s=64" alt="websebdev" width="32" />
 <img src="https://avatars.githubusercontent.com/edwinthinks?s=64" alt="edwinthinks" width="32" />
+<img src="https://avatars.githubusercontent.com/xkraty?s=64" alt="xkraty" width="32" />
+<img src="https://avatars.githubusercontent.com/wdrexler?s=64" alt="wdrexler" width="32" />
+<img src="https://avatars.githubusercontent.com/mattwr18?s=64" alt="mattwr18" width="32" />
+
 
 <hr />
 

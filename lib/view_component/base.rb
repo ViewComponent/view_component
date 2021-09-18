@@ -39,29 +39,12 @@ module ViewComponent
 
     # Entrypoint for rendering components.
     #
-    # view_context: ActionView context from calling view
-    # block: optional block to be captured within the view context
+    # - `view_context`: ActionView context from calling view
+    # - `block`: optional block to be captured within the view context
     #
-    # returns HTML that has been escaped by the respective template handler
+    # Returns HTML that has been escaped by the respective template handler.
     #
-    # Example subclass:
-    #
-    # app/components/my_component.rb:
-    # class MyComponent < ViewComponent::Base
-    #   def initialize(title:)
-    #     @title = title
-    #   end
-    # end
-    #
-    # app/components/my_component.html.erb
-    # <span title="<%= @title %>">Hello, <%= content %>!</span>
-    #
-    # In use:
-    # <%= render MyComponent.new(title: "greeting") do %>world<% end %>
-    # returns:
-    # <span title="greeting">Hello, world!</span>
-    #
-    # @private
+    # @return [String]
     def render_in(view_context, &block)
       self.class.compile(raise_errors: true)
 
@@ -298,6 +281,15 @@ module ViewComponent
     # Defaults to "app/components".
     mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
 
+    # Parent class for generated components
+    #
+    #     config.view_component.component_parent_class = "MyBaseComponent"
+    #
+    # Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+    mattr_accessor :component_parent_class,
+                   instance_writer: false,
+                   default: "ViewComponent::Base"
+
     class << self
       # @private
       attr_accessor :source_location, :virtual_path
@@ -383,6 +375,9 @@ module ViewComponent
         child.virtual_path = child.source_location.gsub(
           %r{(.*#{Regexp.quote(ViewComponent::Base.view_component_path)})|(\.rb)}, ""
         )
+
+        # Set collection parameter to the extended component
+        child.with_collection_parameter provided_collection_parameter
 
         super
       end
