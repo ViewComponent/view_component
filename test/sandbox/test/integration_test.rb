@@ -127,6 +127,54 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_helper_changes_are_reflected_on_new_request
+    get "/helpers_proxy_component"
+    assert_select("div", "Hello helper method")
+    assert_response :success
+
+    helper = <<~RUBY
+      module MessageHelper
+        def message
+          "Goodbye world!"
+        end
+      end
+    RUBY
+    modify_file "app/helpers/message_helper.rb", helper do
+      get "/helpers_proxy_component"
+      assert_select("div", "Goodbye world!")
+      assert_response :success
+    end
+
+    get "/helpers_proxy_component"
+    assert_select("div", "Hello helper method")
+    assert_response :success
+  end
+
+  def test_helper_changes_are_reflected_on_new_request_with_previews
+    with_preview_route("/previews") do
+      get "/previews/helpers_proxy_component/default"
+      assert_select("div", "Hello helper method")
+      assert_response :success
+
+      helper = <<~RUBY
+        module MessageHelper
+          def message
+            "Goodbye world!"
+          end
+        end
+      RUBY
+      modify_file "app/helpers/message_helper.rb", helper do
+        get "/previews/helpers_proxy_component/default"
+        assert_select("div", "Goodbye world!")
+        assert_response :success
+      end
+
+      get "/previews/helpers_proxy_component/default"
+      assert_select("div", "Hello helper method")
+      assert_response :success
+    end
+  end
+
   def test_rendering_component_in_a_controller_using_render_to_string
     get "/controller_inline_baseline"
 
