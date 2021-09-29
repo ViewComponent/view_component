@@ -40,6 +40,10 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Implement polymorphic slots.
+
+    *Cameron Dutro*
+
 ## 2.40.0
 
 * Replace antipatterns section in the documentation with best practices.
