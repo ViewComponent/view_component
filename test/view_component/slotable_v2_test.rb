@@ -401,8 +401,8 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_polymorphic_slot
     render_inline(PolymorphicSlotComponent.new) do |component|
-      component.item(:foo, "custom-foo": "")
-      component.item(:bar, "custom-bar": "")
+      component.item(:foo, class_names: "custom-foo")
+      component.item(:bar, class_names: "custom-bar")
     end
 
     assert_selector("div .foo.custom-foo:first")
