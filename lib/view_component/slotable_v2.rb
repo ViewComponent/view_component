@@ -163,6 +163,12 @@ module ViewComponent
       private
 
       def register_slot(slot_name, collection:, callable:)
+        self.registered_slots[slot_name] = define_slot(
+          slot_name, collection: collection, callable: callable
+        )
+      end
+
+      def define_slot(slot_name, collection:, callable:)
         # Setup basic slot data
         slot = {
           collection: collection,
@@ -173,6 +179,14 @@ module ViewComponent
         elsif callable.is_a?(String)
           # If callable is a string, we assume it's referencing an internal class
           slot[:renderable_class_name] = callable
+        elsif callable.is_a?(Hash)
+          # If callable is a hash, we assume it's a polymorphic slot
+          slot[:renderable_hash] = callable.each_with_object({}) do |(poly_name, poly_callable), memo|
+            memo[poly_name] = define_slot(
+              "#{slot_name}_#{poly_name}",
+              collection: collection, callable: poly_callable
+            )
+          end
         elsif callable
           # If slot does not respond to `render_in`, we assume it's a proc,
           # define a method, and save a reference to it to call when setting
@@ -181,8 +195,7 @@ module ViewComponent
           slot[:renderable_function] = instance_method(method_name)
         end
 
-        # Register the slot on the component
-        self.registered_slots[slot_name] = slot
+        slot
       end
 
       def validate_plural_slot_name(slot_name)
@@ -238,6 +251,23 @@ module ViewComponent
     def set_slot(slot_name, *args, **kwargs, &block)
       slot_definition = self.class.registered_slots[slot_name]
 
+      if (renderable = slot_definition[:renderable_hash])
+        poly_name, *rest = args
+
+        if (poly_def = renderable[poly_name])
+          set_slot_from_def(slot_name, poly_def, *rest, **kwargs, &block)
+        else
+          raise ArgumentError.new(
+            "'#{poly_name}' is not a member of the polymorphic slot '#{slot_name}'. "\
+            "Members are: #{renderable.keys.map { |k| "'#{k}'" }.join(", ")}."
+          )
+        end
+      else
+        set_slot_from_def(slot_name, slot_definition, *args, **kwargs, &block)
+      end
+    end
+
+    def set_slot_from_def(slot_name, slot_definition, *args, **kwargs, &block)
       slot = SlotV2.new(self)
 
       # Passing the block to the sub-component wrapper like this has two
