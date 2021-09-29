@@ -398,4 +398,24 @@ class SlotsV2sTest < ViewComponent::TestCase
   def test_slot_type_nil?
     assert_nil(SlotsV2Component.slot_type(:junk))
   end
+
+  def test_polymorphic_slot
+    render_inline(PolymorphicSlotComponent.new) do |component|
+      component.item(:foo, "custom-foo": "")
+      component.item(:bar, "custom-bar": "")
+    end
+
+    assert_selector("div .foo.custom-foo:first")
+    assert_selector("div .bar.custom-bar:last")
+  end
+
+  def test_polymorphic_slot_non_member
+    error = assert_raises ArgumentError do
+      render_inline(PolymorphicSlotComponent.new) do |component|
+        component.item(:non_existent)
+      end
+    end
+
+    assert_includes error.message, "'non_existent' is not a member of the polymorphic slot 'items'"
+  end
 end
