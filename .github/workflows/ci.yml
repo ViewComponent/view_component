@@ -167,6 +167,7 @@ jobs:
         cd primer_view_components
         yarn install
         bundle config path vendor/bundle
+        bundle install
         bundle exec rake docs:preview
         bundle exec rake
       env:
