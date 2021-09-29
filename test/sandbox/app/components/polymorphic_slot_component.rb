@@ -3,19 +3,20 @@
 class PolymorphicSlotComponent < ViewComponent::Base
   renders_many :items, {
     foo: "FooItem",
-    bar: lambda { |**system_arguments|
-      classes = class_names("bar", **system_arguments)
+    bar: lambda { |class_names: "", **_system_arguments|
+      classes = (class_names.split(" ") + ["bar"]).join(" ")
       "<div class=\"#{classes}\">bar item</div>".html_safe  # rubocop:disable Rails/OutputSafety
     }
   }
 
   class FooItem < ViewComponent::Base
-    def initialize(**system_arguments)
-      @system_arguments = system_arguments
+    def initialize(class_names: "", **_system_arguments)
+      @class_names = class_names
     end
 
     def call
-      content_tag("div", class: class_names("foo", **@system_arguments)) do
+      classes = (@class_names.split(" ") + ["foo"]).join(" ")
+      content_tag("div", class: classes) do
         "foo item"
       end
     end
