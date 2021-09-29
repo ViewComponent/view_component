@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Implement polymorphic slots.
+
+    *Cameron Dutro*
+
 ## 2.41.0
 
 * Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.

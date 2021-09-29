@@ -5,7 +5,7 @@ class PolymorphicSlotComponent < ViewComponent::Base
     foo: "FooItem",
     bar: lambda { |**system_arguments|
       classes = class_names("bar", **system_arguments)
-      "<div class=\"#{classes}\">bar item</div>".html_safe
+      "<div class=\"#{classes}\">bar item</div>".html_safe  # rubocop:disable Rails/OutputSafety
     }
   }
 
@@ -15,7 +15,7 @@ class PolymorphicSlotComponent < ViewComponent::Base
     end
 
     def call
-      content_tag('div', class: class_names("foo", **@system_arguments)) do
+      content_tag("div", class: class_names("foo", **@system_arguments)) do
         "foo item"
       end
     end
