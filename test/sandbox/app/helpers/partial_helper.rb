@@ -18,6 +18,7 @@ module PartialHelper
 
   def expensive_message
     return @_foo if defined?(@_foo)
+
     @_foo = State.expensive_query
   end
 end

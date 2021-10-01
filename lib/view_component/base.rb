@@ -52,6 +52,7 @@ module ViewComponent
 
       @view_context = view_context
       self.original_view_context ||= view_context
+
       @lookup_context ||= view_context.lookup_context
 
       # required for path helpers in older Rails versions
