@@ -62,7 +62,7 @@ module ViewComponent
           view_context.capture(&@__vc_content_block)
         elsif defined?(@__vc_content_set_by_with_content)
           @__vc_content_set_by_with_content
-             end
+        end
 
       @content = @content.to_s
     end
