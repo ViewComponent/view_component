@@ -883,9 +883,16 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  class MyPartialController < ActionController::Base
+    include ViewComponent::MemoizedViewContext
+  end
+
   def test_components_share_helpers_state
     PartialHelper::State.reset
-    render_inline PartialHelperComponent.new
+
+    with_controller_class MyPartialController do
+      render_inline PartialHelperComponent.new
+    end
 
     assert_equal 1, PartialHelper::State.calls
   end

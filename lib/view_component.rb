@@ -16,4 +16,5 @@ module ViewComponent
   autoload :TestCase
   autoload :TemplateError
   autoload :Translatable
+  autoload :MemoizedViewContext
 end
