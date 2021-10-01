@@ -182,7 +182,7 @@ module ViewComponent
       # component rendered in the rendering pipeline. This prevents the
       # instantiation of a new view_context via `controller.view_context` which
       # always returns a new instance of the view context class.
-
+      #
       # This allows ivars to remain persisted when using the same helper via
       # `helpers` across multiple components and partials.
       @__vc_helpers ||= original_view_context || controller.view_context
