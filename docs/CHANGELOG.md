@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix bug where `helpers` would instantiate and use a new `view_context` in each component.
+
+    *Blake Williams, Ian C. Anderson*
+
 * Fix Ruby indentation warning.
 
     *Blake Williams*
