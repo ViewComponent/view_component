@@ -11,6 +11,10 @@ title: Changelog
 
     *Edwin Mak*, *Joel Hawksley*
 
+* Fix Ruby indentation warning.
+
+    *Blake Williams*
+
 * Add `--parent` generator option to specify the parent class.
 * Add config option `config.view_component.component_parent_class` to change it project-wide.
 
