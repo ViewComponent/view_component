@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add failing test for default form builder
+
+    *Simon Fish*
+
 ## 2.46.0
 
 * Add thread safety to the compiler.
