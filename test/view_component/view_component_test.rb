@@ -586,6 +586,14 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_uses_default_form_builder
+    with_controller_class DefaultFormBuilderController do
+      render_inline(DefaultFormBuilderComponent.new)
+
+      assert_text("changed by default form builder")
+    end
+  end
+
   def test_backtrace_returns_correct_file_and_line_number
     error =
       assert_raises NameError do
