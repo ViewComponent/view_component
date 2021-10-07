@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Don't add ActionDispatch::Static middleware, if rails does not serve static files
+
+    *Daniel Gonzalez*
+
 * Fix Ruby indentation warning.
 
     *Blake Williams*
