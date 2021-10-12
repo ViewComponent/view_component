@@ -9,6 +9,14 @@ ViewComponent is [supported natively](https://edgeguides.rubyonrails.org/layouts
 
 ViewComponent is tested for compatibility [with combinations of](https://github.com/github/view_component/blob/22e3d4ccce70d8f32c7375e5a5ccc3f70b22a703/.github/workflows/ruby_on_rails.yml#L10-L11) Ruby v2.5+ and Rails v5+. Ruby 2.4 is likely compatible, but is no longer tested.
 
+## Ensuring the correct path
+
+In some versions of Rails (tested in 5.0.7.2) you may see `no implicit conversion of nil into String` when attempting to generate a component or render a component. You will need to specify the following in your `config/application.rb` (or an initializer):
+
+```
+config.view_component.view_component_path = "app/components"
+```
+
 ## Disabling the render monkey patch (Rails < 6.1)
 
 In order to [avoid conflicts](https://github.com/github/view_component/issues/288) between ViewComponent and other gems that also monkey patch the `render` method, it is possible to configure ViewComponent to not include the render monkey patch:
