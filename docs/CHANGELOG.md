@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Improve Stimulus controller template to import from `stimulus` or `@hotwired/stimulus`.
+
+    *Mario Schüttel*
+
 ## 2.41.0
 
 * Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.
