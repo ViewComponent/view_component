@@ -93,11 +93,11 @@ class MyLinkComponent < LinkComponent
 end
 ```
 
-#### Multiple templates
+## Multiple templates with arguments
 
-ViewComponents can render multiple templates defined in the sidecar directory:
+ViewComponents can render multiple templates defined in the sidecar directory and send arguments to it:
 
-```
+```console
 app/components
 ├── ...
 ├── test_component.rb
@@ -107,7 +107,7 @@ app/components
 ├── ...
 ```
 
-Templates are compiled to methods in the format `call_#{template_basename}`, which can then be called in the component.
+Templates are compiled to methods in the format `render_#{template_basename}(locals = {})`, which can then be called in the component.
 
 ```ruby
 class TestComponent < ViewComponent::Base
@@ -118,9 +118,9 @@ class TestComponent < ViewComponent::Base
   def call
     case @mode
     when :list
-      call_list
+      render_list number: 1
     when :summary
-      call_summary
+      render_summary string: "foo"
     end
   end
 end

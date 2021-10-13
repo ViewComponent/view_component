@@ -50,20 +50,22 @@ module ViewComponent
           # set the method name with call_method_name
           if pieces.first == component_class.name.demodulize.underscore
             call_method_name(template[:variant])
-          # Otherwise, append the name of the template to
-          # call_method_name
+          # Otherwise, append the name of the template to render_
           else
-            "#{call_method_name(template[:variant])}_#{pieces.first.to_sym}"
+            "render_#{pieces.first.to_sym}"
           end
 
         if component_class.instance_methods.include?(method_name.to_sym)
           component_class.send(:undef_method, method_name.to_sym)
         end
 
-        component_class.class_eval <<-RUBY, template[:path], -1
-          def #{method_name}
+        component_class.class_eval <<-RUBY, template[:path], -2
+          def #{method_name}(**locals)
+            old_buffer = @output_buffer if defined? @output_buffer
             @output_buffer = ActionView::OutputBuffer.new
             #{compiled_template(template[:path])}
+          ensure
+            @output_buffer = old_buffer
           end
         RUBY
       end

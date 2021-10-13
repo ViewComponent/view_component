@@ -36,6 +36,10 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Add support for multiple templates.
+
+    *Rob Sterner*, *Joel Hawksley*
+
 ## 2.40.0
 
 * Replace antipatterns section in the documentation with best practices.
@@ -112,10 +116,6 @@ title: Changelog
 * Run benchmarks in CI.
 
     *Joel Hawksley*
-
-* Add support for multiple templates.
-
-    *Rob Sterner*, *Joel Hawksley*
 
 ## 2.36.0
 

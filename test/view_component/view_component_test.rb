@@ -777,15 +777,14 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_render_multiple_templates
-    render_inline(MultipleTemplatesComponent.new(mode: :list))
+    render_inline(MultipleTemplatesComponent.new)
 
+    assert_selector("div", text: "The items are: Apple, Banana, and Pear, foo")
     assert_selector("li", text: "Apple")
     assert_selector("li", text: "Banana")
     assert_selector("li", text: "Pear")
 
-    render_inline(MultipleTemplatesComponent.new(mode: :summary))
-
-    assert_selector("div", text: "Apple, Banana, and Pear")
+    assert_selector("div.container")
   end
 
   def test_renders_component_using_rails_config
@@ -899,18 +898,5 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")
-  end
-
-  private
-
-  def modify_file(file, content)
-    filename = Rails.root.join(file)
-    old_content = File.read(filename)
-    begin
-      File.open(filename, "wb+") { |f| f.write(content) }
-      yield
-    ensure
-      File.open(filename, "wb+") { |f| f.write(old_content) }
-    end
   end
 end
