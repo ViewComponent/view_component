@@ -11,6 +11,10 @@ title: Changelog
 
     *Blake Williams*, *Ian C. Anderson*
 
+* Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.
+
+    *Blake Williams*
+
 * Fix Ruby indentation warning.
 
     *Blake Williams*
