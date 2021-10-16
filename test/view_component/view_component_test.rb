@@ -776,6 +776,17 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
 
+  def test_render_multiple_templates
+    render_inline(MultipleTemplatesComponent.new)
+
+    assert_selector("div", text: "The items are: Apple, Banana, and Pear, foo")
+    assert_selector("li", text: "Apple")
+    assert_selector("li", text: "Banana")
+    assert_selector("li", text: "Pear")
+
+    assert_selector("div.container")
+  end
+
   def test_renders_component_using_rails_config
     render_inline(RailsConfigComponent.new)
 

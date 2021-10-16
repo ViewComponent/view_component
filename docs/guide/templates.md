@@ -92,3 +92,36 @@ Component subclasses inherit the parent component's template if they don't defin
 class MyLinkComponent < LinkComponent
 end
 ```
+
+## Multiple templates with arguments
+
+ViewComponents can render multiple templates defined in the sidecar directory and send arguments to it:
+
+```console
+app/components
+├── ...
+├── test_component.rb
+├── test_component
+|   ├── list.html.erb
+|   └── summary.html.erb
+├── ...
+```
+
+Templates are compiled to methods in the format `render_#{template_basename}(locals = {})`, which can then be called in the component.
+
+```ruby
+class TestComponent < ViewComponent::Base
+  def initialize(mode:)
+    @mode = mode
+  end
+
+  def call
+    case @mode
+    when :list
+      render_list number: 1
+    when :summary
+      render_summary string: "foo"
+    end
+  end
+end
+```

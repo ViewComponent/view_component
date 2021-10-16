@@ -331,7 +331,7 @@ module ViewComponent
         # view files in the same directory as the component
         sidecar_files = Dir["#{directory}/#{component_name}.*{#{extensions}}"]
 
-        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
+        sidecar_directory_files = Dir["#{directory}/#{component_name}/*.*{#{extensions}}"]
 
         (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files).uniq
       end
