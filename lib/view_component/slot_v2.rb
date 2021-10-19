@@ -86,8 +86,8 @@ module ViewComponent
     #   end
     # end
     #
-    def method_missing(symbol, *args, &block)
-      @__vc_component_instance.public_send(symbol, *args, &block)
+    def method_missing(symbol, *args, **kwargs, &block)
+      @__vc_component_instance.public_send(symbol, *args, **kwargs, &block)
     end
 
     def html_safe?
