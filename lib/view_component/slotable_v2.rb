@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "active_support/concern"
-
 require "view_component/slot_v2"
 
 module ViewComponent
@@ -162,37 +161,29 @@ module ViewComponent
 
       private
 
-      def register_slot(slot_name, collection:, callable:)
-        self.registered_slots[slot_name] = define_slot(
-          slot_name, collection: collection, callable: callable
-        )
+      def register_slot(slot_name, **kwargs)
+        self.registered_slots[slot_name] = define_slot(slot_name, **kwargs)
       end
 
       def define_slot(slot_name, collection:, callable:)
         # Setup basic slot data
-        slot = {
-          collection: collection,
-        }
+        slot = { collection: collection }
+        return slot unless callable
+
         # If callable responds to `render_in`, we set it on the slot as a renderable
-        if callable && callable.respond_to?(:method_defined?) && callable.method_defined?(:render_in)
+        if callable.respond_to?(:method_defined?) && callable.method_defined?(:render_in)
           slot[:renderable] = callable
         elsif callable.is_a?(String)
           # If callable is a string, we assume it's referencing an internal class
           slot[:renderable_class_name] = callable
-        elsif callable.is_a?(Hash)
-          # If callable is a hash, we assume it's a polymorphic slot
-          slot[:renderable_hash] = callable.each_with_object({}) do |(poly_name, poly_callable), memo|
-            memo[poly_name] = define_slot(
-              "#{slot_name}_#{poly_name}",
-              collection: collection, callable: poly_callable
-            )
-          end
-        elsif callable
+        elsif callable.respond_to?(:call)
           # If slot does not respond to `render_in`, we assume it's a proc,
           # define a method, and save a reference to it to call when setting
           method_name = :"_call_#{slot_name}"
           define_method method_name, &callable
           slot[:renderable_function] = instance_method(method_name)
+        else
+          raise ArgumentError, "invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)"
         end
 
         slot
@@ -248,26 +239,8 @@ module ViewComponent
       end
     end
 
-    def set_slot(slot_name, *args, **kwargs, &block)
-      slot_definition = self.class.registered_slots[slot_name]
-
-      if (renderable = slot_definition[:renderable_hash])
-        poly_name, *rest = args
-
-        if (poly_def = renderable[poly_name])
-          set_slot_from_def(slot_name, poly_def, *rest, **kwargs, &block)
-        else
-          raise ArgumentError.new(
-            "'#{poly_name}' is not a member of the polymorphic slot '#{slot_name}'. "\
-            "Members are: #{renderable.keys.map { |k| "'#{k}'" }.join(", ")}."
-          )
-        end
-      else
-        set_slot_from_def(slot_name, slot_definition, *args, **kwargs, &block)
-      end
-    end
-
-    def set_slot_from_def(slot_name, slot_definition, *args, **kwargs, &block)
+    def set_slot(slot_name, *args, slot_definition: nil, **kwargs, &block)
+      slot_definition ||= self.class.registered_slots[slot_name]
       slot = SlotV2.new(self)
 
       # Passing the block to the sub-component wrapper like this has two
