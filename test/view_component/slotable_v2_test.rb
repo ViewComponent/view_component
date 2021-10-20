@@ -430,4 +430,14 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_includes error.message, "'non_existent' is not a member of the polymorphic slot 'items'"
   end
+
+  def test_invalid_slot_definition_raises_error
+    error = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_many :items, :foo
+      end
+    end
+
+    assert_includes error.message, "invalid slot definition"
+  end
 end

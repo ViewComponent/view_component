@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PolymorphicSlotComponent < ViewComponent::Base
+  prepend ViewComponent::PolymorphicSlots
+
   renders_many :items, {
     foo: "FooItem",
     bar: lambda { |class_names: "", **_system_arguments|
