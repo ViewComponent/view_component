@@ -86,8 +86,14 @@ module ViewComponent
     #   end
     # end
     #
-    def method_missing(symbol, *args, **kwargs, &block)
-      @__vc_component_instance.public_send(symbol, *args, **kwargs, &block)
+    if RUBY_VERSION >= "2.7.0"
+      def method_missing(symbol, *args, **kwargs, &block)
+        @__vc_component_instance.public_send(symbol, *args, **kwargs, &block)
+      end
+    else
+      def method_missing(symbol, *args, &block)
+        @__vc_component_instance.public_send(symbol, *args, &block)
+      end
     end
 
     def html_safe?
