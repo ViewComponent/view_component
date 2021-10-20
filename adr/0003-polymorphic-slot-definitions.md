@@ -17,7 +17,7 @@ With these options in mind, imagine a scenario in which a component supports ren
 
 To illustrate, let's consider a list component with an `items` slot. Each constituent `Item` has either an icon or an avatar on the right-hand side followed by some text.
 
-In implementing the `Item` component, we have several options for determining whether we should render an icon or an avatar. We can
+When implementing the `Item` component, we have several options for determining whether we should render an icon or an avatar. We can:
 
 1. **Two slots w/error**: define two different slots for the icon and avatar, and raise an error in the `before_render` lifecycle method if both are defined.
 1. **Two slots w/default**: define two different slots for the icon and avatar, but favor one or the other if both are provided.
@@ -64,6 +64,51 @@ The `Item` component can then be used like this:
 
 Notice that the type of leading visual, either `:icon` or `:avatar`, is passed as the first argument to `leading_visual` and corresponds to the items in the hash passed to `renders_one`.
 
+Finally, the polymorphic slot behavior will be implemented as a `module` so the behavior is opt-in.
+
 ## Consequences
 
+Things we tried and things we've learned.
+
+### Additional Complexity
+
 The biggest consequence of this design is that it makes the slots API more complicated, something the view_component maintainers have been hesitant to do given the confusion we routinely see around slots.
+
+### Content Wrapping
+
+One concern of the proposed approach is that it offers no immediately obvious way to wrap the contents of a slot. Here's an example of how a slot might be wrapped:
+
+```ruby
+renders_many :items do |*args, **kwargs|
+  content_tag :td, class: kwargs[:table_row_classes] do
+    Row.new(*args, **kwargs)
+  end
+end
+```
+
+In such cases, there are several viable workarounds:
+
+1. Add the wrapping HTML to the template.
+1. Provide a lambda for each polymorphic type that adds the wrapping HTML. There is the potential for code duplication here, which could be mitigated by calling a class or helper method.
+1. Manually implement a polymorphic slot using a positional `type` argument and `case` statement, as shown in the example below. This effectively replicates the behavior described in this proposal.
+    ```ruby
+    renders_many :items do |type, *args, **kwargs|
+      content_tag :td, class: kwargs[:table_row_classes] do
+        case type
+          when :foo
+            RowFoo.new(*args, **kwargs)
+          when :bar
+            RowBar.new(*args, **kwargs)
+        end
+      end
+    end
+    ```
+
+### Positional Type Argument vs Method Names
+
+There has been some discussion around whether or not polymorphic slots should accept a positional `type` argument or instead define methods that correspond to each slot type. For example, the polymorphic slot defined by `renders_one :visual, icon: Icon, avatar: Avatar` could define two methods, `visual_icon` and `visual_avatar`, that would both populate the `visual` slot (if both methods are called, the framework would raise an error).
+
+There are a couple of reasons the method approach might be problematic:
+
+1. Multiple methods that correspond to the same slot actually look like _different_ slots from an API perspective.
+1. The slot setters (i.e. `visual_icon`, `visual_avatar`, etc) would have to be different from the getters (i.e. `visual`), which isn't consistent with the existing slot API. The alternative is that getters and setters have the same method names, but that's confusing because it reinforces the misguided notion that there are multiple physical slots.
