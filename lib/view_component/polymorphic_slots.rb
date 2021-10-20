@@ -2,9 +2,14 @@
 
 module ViewComponent
   module PolymorphicSlots
-    extend ActiveSupport::Concern
+    # In older rails versions, using a concern doesn't work here because concerns appear to not work with
+    # Module#prepend and class methods.
+    def self.included(base)
+      base.singleton_class.prepend(ClassMethods)
+      base.include(InstanceMethods)
+    end
 
-    class_methods do
+    module ClassMethods
       def register_slot(slot_name, collection:, callable:)
         if callable.is_a?(Hash)
           # If callable is a hash, we assume it's a polymorphic slot
@@ -23,22 +28,24 @@ module ViewComponent
       end
     end
 
-    def set_slot(slot_name, *args, **kwargs, &block)
-      slot_definition = self.class.registered_slots[slot_name]
+    module InstanceMethods
+      def set_slot(slot_name, *args, **kwargs, &block)
+        slot_definition = self.class.registered_slots[slot_name]
 
-      if (renderable = slot_definition[:renderable_hash])
-        poly_name, *rest = args
+        if (renderable = slot_definition[:renderable_hash])
+          poly_name, *rest = args
 
-        if (poly_def = renderable[poly_name])
-          super(slot_name, *rest, slot_definition: poly_def, **kwargs, &block)
+          if (poly_def = renderable[poly_name])
+            super(slot_name, *rest, slot_definition: poly_def, **kwargs, &block)
+          else
+            raise ArgumentError.new(
+              "'#{poly_name}' is not a member of the polymorphic slot '#{slot_name}'. "\
+              "Members are: #{renderable.keys.map { |k| "'#{k}'" }.join(", ")}."
+            )
+          end
         else
-          raise ArgumentError.new(
-            "'#{poly_name}' is not a member of the polymorphic slot '#{slot_name}'. "\
-            "Members are: #{renderable.keys.map { |k| "'#{k}'" }.join(", ")}."
-          )
+          super
         end
-      else
-        super
       end
     end
   end
