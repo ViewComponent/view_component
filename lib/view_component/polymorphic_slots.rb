@@ -23,7 +23,6 @@ module ViewComponent
       end
     end
 
-
     def set_slot(slot_name, *args, **kwargs, &block)
       slot_definition = self.class.registered_slots[slot_name]
 
