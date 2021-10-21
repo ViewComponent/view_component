@@ -7,6 +7,12 @@ title: Changelog
 
 ## main
 
+* Fix bug where calling lambda slots without arguments would break in Ruby < 2.7.
+
+    *Manuel Puyol*
+
+## 2.41.0
+
 * Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.
 
     *Blake Williams*
@@ -40,9 +46,9 @@ title: Changelog
 
     *Hans Lemuet*
 
-* Fix bug where calling lambda slots without arguments would break in Ruby < 2.7.
+* Forward keyword arguments from slot wrapper to component instance.
 
-    *Manuel Puyol*
+    *Cameron Dutro*
 
 ## 2.40.0
 
