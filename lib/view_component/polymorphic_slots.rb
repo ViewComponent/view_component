@@ -2,7 +2,7 @@
 
 module ViewComponent
   module PolymorphicSlots
-    # In older rails versions, using a concern doesn't work here because concerns appear to not work with
+    # In older rails versions, using a concern isn't a good idea here because they appear to not work with
     # Module#prepend and class methods.
     def self.included(base)
       base.singleton_class.prepend(ClassMethods)
@@ -10,42 +10,67 @@ module ViewComponent
     end
 
     module ClassMethods
-      def register_slot(slot_name, collection:, callable:)
-        if callable.is_a?(Hash)
-          # If callable is a hash, we assume it's a polymorphic slot
-          self.registered_slots[slot_name] = {
-            collection: collection,
-            renderable_hash: callable.each_with_object({}) do |(poly_name, poly_callable), memo|
-              memo[poly_name] = define_slot(
-                "#{slot_name}_#{poly_name}",
-                collection: collection, callable: poly_callable
-              )
+      def renders_one(slot_name, callable = nil)
+        return super unless callable.is_a?(Hash) && callable.key?(:types)
+
+        validate_singular_slot_name(slot_name)
+        register_polymorphic_slot(slot_name, callable[:types], collection: false)
+      end
+
+      def renders_many(slot_name, callable = nil)
+        return super unless callable.is_a?(Hash) && callable.key?(:types)
+
+        validate_plural_slot_name(slot_name)
+        register_polymorphic_slot(slot_name, callable[:types], collection: true)
+      end
+
+      def register_polymorphic_slot(slot_name, types, collection:)
+        renderable_hash = types.each_with_object({}) do |(poly_type, poly_callable), memo|
+          memo[poly_type] = define_slot(
+            "#{slot_name}_#{poly_type}", collection: collection, callable: poly_callable
+          )
+
+          getter_name = slot_name
+          setter_name =
+            if collection
+              "#{ActiveSupport::Inflector.singularize(slot_name)}_#{poly_type}"
+            else
+              "#{slot_name}_#{poly_type}"
             end
-          }
-        else
-          super
+
+          define_method(getter_name) do
+            get_slot(slot_name)
+          end
+
+          define_method(setter_name) do |*args, **kwargs, &block|
+            set_polymorphic_slot(slot_name, poly_type, *args, **kwargs, &block)
+          end
         end
+
+        self.registered_slots[slot_name] = {
+          collection: collection,
+          renderable_hash: renderable_hash
+        }
       end
     end
 
     module InstanceMethods
-      def set_slot(slot_name, *args, **kwargs, &block)
+      def set_polymorphic_slot(slot_name, poly_type = nil, *args, **kwargs, &block)
         slot_definition = self.class.registered_slots[slot_name]
 
-        if (renderable = slot_definition[:renderable_hash])
-          poly_name, *rest = args
-
-          if (poly_def = renderable[poly_name])
-            super(slot_name, *rest, slot_definition: poly_def, **kwargs, &block)
-          else
-            raise ArgumentError.new(
-              "'#{poly_name}' is not a member of the polymorphic slot '#{slot_name}'. "\
-              "Members are: #{renderable.keys.map { |k| "'#{k}'" }.join(", ")}."
-            )
-          end
-        else
-          super
+        if !slot_definition[:collection] && get_slot(slot_name)
+          raise ArgumentError, "content for slot '#{slot_name}' has already been provided"
         end
+
+        poly_def = slot_definition[:renderable_hash][poly_type]
+
+        set_slot(
+          slot_name,
+          *args,
+          slot_definition: poly_def,
+          **kwargs,
+          &block
+        )
       end
     end
   end

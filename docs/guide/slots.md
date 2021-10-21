@@ -197,22 +197,24 @@ For example, consider this list item component that can be rendered with either 
 class ListItemComponent < ViewComponent::Base
   include ViewComponent::PolymorphicSlots
 
-  renders_one :visual, icon: :IconComponent, avatar: AvatarComponent
+  renders_one :visual, types: {
+    icon: :IconComponent, avatar: AvatarComponent
+  }
 end
 ```
 
-**NOTE**: the hash's values can be any valid slot definition, including a component class, string, or lambda.
+**NOTE**: the `types` hash's values can be any valid slot definition, including a component class, string, or lambda.
 
 Filling in the `visual` slot is done by passing the type as the first positional argument:
 
 ```erb
 <%= render ListItemComponent.new do |c| %>
-  <% c.visual(:avatar, src: "http://some-site.com/my_avatar.jpg", alt: "username") %>
+  <% c.visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") %>
     Profile
   <% end >
 <% end %>
 <%= render ListItemComponent.new do |c| %>
-  <% c.visual(:icon, icon: :key) %>
+  <% c.visual_icon(icon: :key) %>
     Security Settings
   <% end >
 <% end %>

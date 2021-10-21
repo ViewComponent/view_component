@@ -413,22 +413,33 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_polymorphic_slot
     render_inline(PolymorphicSlotComponent.new) do |component|
-      component.item(:foo, class_names: "custom-foo")
-      component.item(:bar, class_names: "custom-bar")
+      component.header_standard { "standard" }
+      component.item_foo(class_names: "custom-foo")
+      component.item_bar(class_names: "custom-bar")
     end
 
-    assert_selector("div .foo.custom-foo:first")
+    assert_selector("div .standard", text: "standard")
+    assert_selector("div .foo.custom-foo:nth-child(2)")
     assert_selector("div .bar.custom-bar:last")
   end
 
   def test_polymorphic_slot_non_member
+    assert_raises NoMethodError do
+      render_inline(PolymorphicSlotComponent.new) do |component|
+        component.item_non_existent
+      end
+    end
+  end
+
+  def test_singular_polymorphic_slot_raises_on_redefinition
     error = assert_raises ArgumentError do
       render_inline(PolymorphicSlotComponent.new) do |component|
-        component.item(:non_existent)
+        component.header_standard { "standard" }
+        component.header_special { "special" }
       end
     end
 
-    assert_includes error.message, "'non_existent' is not a member of the polymorphic slot 'items'"
+    assert_includes error.message, "has already been provided"
   end
 
   def test_invalid_slot_definition_raises_error

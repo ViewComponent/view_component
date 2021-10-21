@@ -3,11 +3,18 @@
 class PolymorphicSlotComponent < ViewComponent::Base
   include ViewComponent::PolymorphicSlots
 
-  renders_many :items, {
+  renders_one :header, types: {
+    standard: lambda { |&block| content_tag(:div, class: "standard", &block) },
+    special: lambda { |&block| content_tag(:div, class: "special", &block) }
+  }
+
+  renders_many :items, types: {
     foo: "FooItem",
     bar: lambda { |class_names: "", **_system_arguments|
       classes = (class_names.split(" ") + ["bar"]).join(" ")
-      "<div class=\"#{classes}\">bar item</div>".html_safe  # rubocop:disable Rails/OutputSafety
+      content_tag(:div, class: classes) do
+        "bar item"
+      end
     }
   }
 
@@ -18,7 +25,7 @@ class PolymorphicSlotComponent < ViewComponent::Base
 
     def call
       classes = (@class_names.split(" ") + ["foo"]).join(" ")
-      content_tag("div", class: classes) do
+      content_tag(:div, class: classes) do
         "foo item"
       end
     end

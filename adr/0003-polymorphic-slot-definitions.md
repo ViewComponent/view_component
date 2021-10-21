@@ -43,7 +43,9 @@ Here's how the `Item` sub-component of the list example above would be implement
 class Item < ViewComponent::Base
   include ViewComponent::PolymorphicSlots
 
-  renders_one :leading_visual, icon: IconComponent, avatar: AvatarComponent
+  renders_one :leading_visual, types: {
+    icon: IconComponent, avatar: AvatarComponent
+  }
 end
 ```
 
@@ -52,17 +54,17 @@ The `Item` component can then be used like this:
 ```html+erb
 <%= render List.new do |component| %>
   <% component.item do |item| %>
-    <% item.leading_visual(:avatar, src: "assets/user/1234.png") %>
+    <% item.leading_visual_avatar(src: "assets/user/1234.png") %>
     Profile
   <% end %>
   <% component.item do |item| %>
-    <% item.leading_visual(:icon, icon: :gear) %>
+    <% item.leading_visual_icon(icon: :gear) %>
     Settings
   <% end %>
 <% end %>
 ```
 
-Notice that the type of leading visual, either `:icon` or `:avatar`, is passed as the first argument to `leading_visual` and corresponds to the items in the hash passed to `renders_one`.
+Notice that the type of leading visual, either `:icon` or `:avatar`, is appended to the slot name, `leading_visual`, and corresponds to the items in the `types` hash passed to `renders_one`.
 
 Finally, the polymorphic slot behavior will be implemented as a `module` so the behavior is opt-in.
 
@@ -106,9 +108,9 @@ In such cases, there are several viable workarounds:
 
 ### Positional Type Argument vs Method Names
 
-There has been some discussion around whether or not polymorphic slots should accept a positional `type` argument or instead define methods that correspond to each slot type. For example, the polymorphic slot defined by `renders_one :visual, icon: Icon, avatar: Avatar` could define two methods, `visual_icon` and `visual_avatar`, that would both populate the `visual` slot (if both methods are called, the framework would raise an error).
+There has been some discussion around whether or not polymorphic slots should accept a positional `type` argument or instead define methods that correspond to each slot type as described in this ADR. We have decided to implement the method approach for several reasons:
 
-There are a couple of reasons the method approach might be problematic:
+1. Positional arguments aren't used anywhere else in the framework.
+1. There is a preference amongst team members that the slot setter accept the exact same arguments as the slot itself, since doing so reduces the conceptual overhead of the slots API.
 
-1. Multiple methods that correspond to the same slot actually look like _different_ slots from an API perspective.
-1. The slot setters (i.e. `visual_icon`, `visual_avatar`, etc) would have to be different from the getters (i.e. `visual`), which isn't consistent with the existing slot API. The alternative is that getters and setters have the same method names, but that's confusing because it reinforces the misguided notion that there are multiple physical slots.
+An argument was made that multiple setters for the same slot appear to be two different slots, but wasn't considered enough of a drawback to go the `type` argument route.
