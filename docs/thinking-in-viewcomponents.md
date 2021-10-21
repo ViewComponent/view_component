@@ -12,7 +12,7 @@ _Consider it to be more opinion than fact._
 
 ## Why we use ViewComponents
 
-We built the ViewComponent framework to help manage the growing complexity of the GitHub.com view layer. We've accumulated thousands of templates over the years, almost entirely through copy-pasting. A lack of abstraction made it difficult to make sweeping changes for design, accessibility, and behavior improvements.
+We built the ViewComponent framework to help manage the growing complexity of the GitHub.com view layer. We've accumulated thousands of templates over the years, almost entirely through copy-pasting. A lack of abstraction made it difficult to make sweeping design, accessibility, and behavior improvements.
 
 ViewComponent gives us a way to isolate and abstract common UI patterns for testability and reuse, helping us improve the quality and consistency of the customer experience.
 
