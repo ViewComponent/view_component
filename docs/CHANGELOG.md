@@ -42,7 +42,7 @@ title: Changelog
 
     *Hans Lemuet*
 
-* Forward keyword arguments from slot wrapper to component instance.
+* Forward keyword arguments from slot wrapper to component instance using ruby2_keywords.
 
     *Cameron Dutro*
 
