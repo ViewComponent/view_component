@@ -184,6 +184,18 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert component.items.first.respond_to?(:classes)
   end
 
+  def test_slot_forwards_kwargs_to_component
+    component = SlotsV2Component.new
+
+    render_inline component do |c|
+      c.item do
+        "Item A"
+      end
+    end
+
+    assert_equal component.items.first.method_with_kwargs(**{ foo: :bar }), { foo: :bar }
+  end
+
   def test_slot_with_collection
     render_inline SlotsV2DelegateComponent.new do |component|
       component.items([{ highlighted: false }, { highlighted: true }, { highlighted: false }]) do
