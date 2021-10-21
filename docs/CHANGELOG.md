@@ -8,6 +8,7 @@ title: Changelog
 ## main
 
 * Add compatibility note for Rails 5.0.7.2
+
     *Dave Paola*
 
 * Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.
