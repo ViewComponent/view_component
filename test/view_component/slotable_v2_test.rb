@@ -389,6 +389,19 @@ class SlotsV2sTest < ViewComponent::TestCase
       c.item { "Item 2" }
       c.item { "Item 3" }
     end
+
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 1")
+      assert_selector(".item-content", text: "Item 1")
+    end
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 2")
+      assert_selector(".item-content", text: "Item 2")
+    end
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 3")
+      assert_selector(".item-content", text: "Item 3")
+    end
   end
 
   def test_slot_type_single

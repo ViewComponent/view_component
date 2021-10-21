@@ -3,7 +3,7 @@
 class SlotsV2WithEmptyLambdaComponent < ViewComponent::Base
   renders_many :items, -> do
     @item_count += 1
-    Item.new("Item #{@item_count}")
+    Item.new("Title #{@item_count}")
   end
 
   def initialize
