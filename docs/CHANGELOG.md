@@ -40,6 +40,10 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Fix bug where calling lambda slots without arguments would break in Ruby < 2.7.
+
+    *Manuel Puyol*
+
 ## 2.40.0
 
 * Replace antipatterns section in the documentation with best practices.
