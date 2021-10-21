@@ -265,7 +265,7 @@ module ViewComponent
         # methods like `content_tag` as well as parent component state.
         renderable_value =
           if block_given?
-            slot_definition[:renderable_function].bind(self).call(*args, **kwargs) do |*args, **kwargs|
+            call_renderable_function(slot_definition[:renderable_function].bind(self), *args, **kwargs) do |*args, **kwargs|
               view_context.capture(*args, **kwargs, &block)
             end
           else
@@ -290,6 +290,13 @@ module ViewComponent
       end
 
       slot
+    end
+
+    def call_renderable_function(func, *args, **kwargs, &block)
+      # In case the slot lamda does not accept any arguments, we'll call it without empty args and kwargs
+      return func.call(*args, **kwargs, &block) if args.present? || kwargs.present?
+
+      func.call(&block)
     end
   end
 end
