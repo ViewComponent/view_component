@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix bug where `helpers` would instantiate and use a new `view_context` in each component.
+
+    *Blake Williams*, *Ian C. Anderson*
+
 ## 2.41.0
 
 * Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.
