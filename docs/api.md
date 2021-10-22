@@ -48,6 +48,14 @@ that inhibits encapsulation & reuse, often making testing difficult.
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
 
+### #original_view_context
+
+Returns the value of attribute original_view_context.
+
+### #original_view_context=(value)
+
+Sets the attribute original_view_context
+
 ### #render? → [Boolean]
 
 Override to determine whether the ViewComponent should render.
