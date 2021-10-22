@@ -395,6 +395,27 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_includes error.message, "It looks like a block was provided after calling"
   end
 
+  def test_renders_lamda_slot_with_no_args
+    render_inline(SlotsV2WithEmptyLambdaComponent.new) do |c|
+      c.item { "Item 1" }
+      c.item { "Item 2" }
+      c.item { "Item 3" }
+    end
+
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 1")
+      assert_selector(".item-content", text: "Item 1")
+    end
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 2")
+      assert_selector(".item-content", text: "Item 2")
+    end
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 3")
+      assert_selector(".item-content", text: "Item 3")
+    end
+  end
+
   def test_slot_type_single
     assert_equal(:single, SlotsV2Component.slot_type(:title))
   end
