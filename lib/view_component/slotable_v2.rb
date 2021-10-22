@@ -266,7 +266,7 @@ module ViewComponent
         renderable_function = slot_definition[:renderable_function].bind(self)
         renderable_value =
           if block_given?
-            call_renderable_function(renderable_function, *args, **kwargs) do |*args, **kwargs|
+            renderable_function.call(*args, **kwargs) do |*args, **kwargs|
               view_context.capture(*args, **kwargs, &block)
             end
           else
@@ -291,13 +291,6 @@ module ViewComponent
       end
 
       slot
-    end
-
-    def call_renderable_function(func, *args, **kwargs, &block)
-      # In case the slot lamda does not accept any arguments, we'll call it without empty args and kwargs
-      return func.call(*args, **kwargs, &block) if args.present? || kwargs.present?
-
-      func.call(&block)
     end
   end
 end
