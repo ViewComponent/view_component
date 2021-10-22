@@ -55,5 +55,3 @@ The more a ViewComponent is dependent on global state (such as request paramters
 ### Avoid inline Ruby in ViewComponent templates
 
 As much as possible, avoid writing inline Ruby in ViewComponent templates. Try using an instance method on the ViewComponent instead.
-
-###
