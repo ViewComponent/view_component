@@ -46,7 +46,7 @@ Just as ViewComponent itself was extracted from GitHub.com, our experience has s
 
 ### Reduce permutations
 
-As we build ViewComponents, we should look for opportunities to consolidate similar patterns into a single implementation.
+As we build ViewComponents, we should look for opportunities to consolidate similar patterns into a single implementation. We tend to follow typical DRY practices in this regard, such as abstracting once there are three or more similar instances.
 
 ### Avoid global state
 
