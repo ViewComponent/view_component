@@ -34,7 +34,7 @@ General-purpose ViewComponents implement common UI patterns. At GitHub, we open-
 
 App-specific ViewComponents translate a domain object (often an ActiveRecord model) into one or more general-purpose components.
 
-For example: we have a `User::AvatarComponent` that accepts a `User` ActiveREcord object and renders a `Primer::AvatarComponent`.
+For example: we have a `User::AvatarComponent` that accepts a `User` ActiveRecord object and renders a `Primer::AvatarComponent`.
 
 ## Implementation
 
