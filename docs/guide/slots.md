@@ -189,7 +189,7 @@ _To view documentation for content_areas (deprecated) and the original implement
 
 ## Polymorphic Slots
 
-Polymorphic slots are defined using a series of constituent types. Users specify the type when filling in the slot, along with type-specific arguments. The polymorphic slot uses the given type to render the right content.
+Polymorphic slots are defined using a series of constituent types. Users specify the type when defining the slot contents, along with type-specific arguments. The polymorphic slot uses the given type to render the right content.
 
 For example, consider this list item component that can be rendered with either an icon or an avatar visual. The `visual` slot is passed a hash mapping types to slot definitions, and is therefore polymorphic:
 
@@ -205,7 +205,7 @@ end
 
 **NOTE**: the `types` hash's values can be any valid slot definition, including a component class, string, or lambda.
 
-Filling in the `visual` slot is done by passing the type as the first positional argument:
+Filling in the `visual` slot is done by calling the appropriate slot method:
 
 ```erb
 <%= render ListItemComponent.new do |c| %>
@@ -219,5 +219,3 @@ Filling in the `visual` slot is done by passing the type as the first positional
   <% end >
 <% end %>
 ```
-
-**NOTE**: polymorphic slots are only compatible with version 2 of the slots API.
