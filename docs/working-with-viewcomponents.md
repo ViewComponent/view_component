@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Thinking in ViewComponents
+title: Working with ViewComponents
 nav_order: 4
 ---
 
-# Thinking in ViewComponents
+# Working with ViewComponents
 
 _GitHub's guide to building component-driven UI in Rails, shared publicly due to interest from the community._
 
