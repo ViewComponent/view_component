@@ -883,6 +883,14 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_components_share_helpers_state
+    PartialHelper::State.reset
+
+    render_inline PartialHelperComponent.new
+
+    assert_equal 1, PartialHelper::State.calls
+  end
+
   def test_output_postamble
     render_inline(AfterRenderComponent.new)
 
