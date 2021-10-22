@@ -18,7 +18,7 @@ ViewComponent gives us a way to isolate common UI patterns for reuse, helping us
 
 Our goal is to build all of GitHub's Rails-rendered HTML with ViewComponents, composed of [Primer ViewComponents](https://primer.style/view-components/).
 
-Using Primer ViewComponents ensures that our UIs remain consistent, accessible, and correctly designed.
+Using Primer ViewComponents ensures that our user interfaces are consistent, accessible, and correctly designed.
 
 ## The two types of ViewComponents we write
 
