@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Improve Stimulus controller template to import from `stimulus` or `@hotwired/stimulus`.
+
+    *Mario Schüttel*
+
 * Fix bug where `helpers` would instantiate and use a new `view_context` in each component.
 
     *Blake Williams*, *Ian C. Anderson*
