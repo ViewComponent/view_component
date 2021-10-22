@@ -7,6 +7,18 @@ title: Changelog
 
 ## main
 
+* Fix bug where calling lambda slots without arguments would break in Ruby < 2.7.
+
+    *Manuel Puyol*
+
+* Improve Stimulus controller template to import from `stimulus` or `@hotwired/stimulus`.
+
+    *Mario Schüttel*
+
+* Fix bug where `helpers` would instantiate and use a new `view_context` in each component.
+
+    *Blake Williams*, *Ian C. Anderson*
+
 * Implement polymorphic slots.
 
     *Cameron Dutro*
