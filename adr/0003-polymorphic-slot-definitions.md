@@ -21,7 +21,7 @@ With these options in mind, imagine a scenario in which a component supports ren
 
 To illustrate, let's consider a list component with an `items` slot. Each constituent `Item` has either an icon or an avatar on the right-hand side followed by some text.
 
-When implementing the `Item` component, we have several options for determining whether we should render an icon or an avatar. We can:
+When implementing the `Item` component, we have several options for determining whether we should render an icon or an avatar:
 
 1. **Two slots w/error**: define two different slots for the icon and avatar, and raise an error in the `before_render` lifecycle method if both are defined.
 1. **Two slots w/default**: define two different slots for the icon and avatar, but favor one or the other if both are provided.
