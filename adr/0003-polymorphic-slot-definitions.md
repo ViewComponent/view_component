@@ -2,6 +2,10 @@
 
 Date: 2021-09-29
 
+## Author
+
+Cameron Dutro
+
 ## Status
 
 Accepted
