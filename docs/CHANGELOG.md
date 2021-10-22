@@ -11,6 +11,8 @@ title: Changelog
 
     *Blake Williams*, *Ian C. Anderson*
 
+## 2.41.0
+
 * Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.
 
     *Blake Williams*
@@ -43,6 +45,10 @@ title: Changelog
 * Add `#render_in` to API docs.
 
     *Hans Lemuet*
+
+* Forward keyword arguments from slot wrapper to component instance using ruby2_keywords.
+
+    *Cameron Dutro*
 
 ## 2.40.0
 

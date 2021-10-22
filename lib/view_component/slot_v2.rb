@@ -89,6 +89,7 @@ module ViewComponent
     def method_missing(symbol, *args, &block)
       @__vc_component_instance.public_send(symbol, *args, &block)
     end
+    ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
 
     def html_safe?
       to_s.html_safe?
