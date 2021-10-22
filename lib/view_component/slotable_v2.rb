@@ -67,13 +67,14 @@ module ViewComponent
       def renders_one(slot_name, callable = nil)
         validate_singular_slot_name(slot_name)
 
-        define_method slot_name do |*args, **kwargs, &block|
-          if args.empty? && kwargs.empty? && block.nil?
+        define_method slot_name do |*args, &block|
+          if args.empty? && block.nil?
             get_slot(slot_name)
           else
-            set_slot(slot_name, *args, **kwargs, &block)
+            set_slot(slot_name, *args, &block)
           end
         end
+        ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
         register_slot(slot_name, collection: false, callable: callable)
       end
@@ -123,9 +124,10 @@ module ViewComponent
         # Define setter for singular names
         # e.g. `renders_many :items` allows fetching all tabs with
         # `component.tabs` and setting a tab with `component.tab`
-        define_method singular_name do |*args, **kwargs, &block|
-          set_slot(slot_name, *args, **kwargs, &block)
+        define_method singular_name do |*args, &block|
+          set_slot(slot_name, *args, &block)
         end
+        ruby2_keywords(singular_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
         # Instantiates and and adds multiple slots forwarding the first
         # argument to each slot constructor
@@ -235,7 +237,7 @@ module ViewComponent
       end
     end
 
-    def set_slot(slot_name, *args, **kwargs, &block)
+    def set_slot(slot_name, *args, &block)
       slot_definition = self.class.registered_slots[slot_name]
 
       slot = SlotV2.new(self)
@@ -253,11 +255,11 @@ module ViewComponent
 
       # If class
       if slot_definition[:renderable]
-        slot.__vc_component_instance = slot_definition[:renderable].new(*args, **kwargs)
+        slot.__vc_component_instance = slot_definition[:renderable].new(*args)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
         slot.__vc_component_instance =
-          self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
+          self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
       # If passed a lambda
       elsif slot_definition[:renderable_function]
         # Use `bind(self)` to ensure lambda is executed in the context of the
@@ -266,11 +268,11 @@ module ViewComponent
         renderable_function = slot_definition[:renderable_function].bind(self)
         renderable_value =
           if block_given?
-            renderable_function.call(*args, **kwargs) do |*args, **kwargs|
-              view_context.capture(*args, **kwargs, &block)
+            renderable_function.call(*args) do |*args|
+              view_context.capture(*args, &block)
             end
           else
-            renderable_function.call(*args, **kwargs)
+            renderable_function.call(*args)
           end
 
         # Function calls can return components, so if it's a component handle it specially
@@ -292,5 +294,6 @@ module ViewComponent
 
       slot
     end
+    ruby2_keywords(:set_slot) if respond_to?(:ruby2_keywords, true)
   end
 end
