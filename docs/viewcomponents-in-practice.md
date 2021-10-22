@@ -22,7 +22,7 @@ Using Primer ViewComponents ensures that our UIs remain consistent, accessible, 
 
 ## The two types of ViewComponents we write
 
-We build our views using ViewComponents that generally fall into two categories: app-specific and general-purpose.
+We build our views using ViewComponents that generally fall into two categories: general-purpose and app-specific.
 
 ### General-purpose ViewComponents
 
@@ -38,7 +38,7 @@ For example: we have a `User::AvatarComponent` that accepts a `User` ActiveRecor
 
 ### Extract general-purpose ViewComponents
 
-> Good frameworks are extracted, not invented - [DHH](https://dhh.dk/arc/000416.html)
+"Good frameworks are extracted, not invented" - [DHH](https://dhh.dk/arc/000416.html)
 
 Just as ViewComponent itself was extracted from GitHub.com, our experience has shown that the best general-purpose components are those extracted from the GitHub application once they've proven useful across more than one area.
 
@@ -54,8 +54,8 @@ As we build ViewComponents, we should look for opportunities to consolidate simi
 
 ### Avoid global state
 
-The more a ViewComponent is dependent on global state (such as request paramters or the current URL), the less likely it is to be reusable. Avoid implicit coupling to global state, instead passing it into the component explicitly. Unit testing your ViewComponent thoroughly is a good way to ensure decoupling from global state.
+The more a ViewComponent is dependent on global state (such as request parameters or the current URL), the less likely it is to be reusable. Avoid implicit coupling to global state, instead passing it into the component explicitly. Thorough unit testing is a good way to ensure decoupling from global state.
 
 ### Avoid inline Ruby in ViewComponent templates
 
-As much as possible, avoid writing inline Ruby in ViewComponent templates. Try using an instance method on the ViewComponent instead.
+Avoid writing inline Ruby in ViewComponent templates. Try using an instance method on the ViewComponent instead.
