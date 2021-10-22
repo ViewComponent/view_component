@@ -44,6 +44,12 @@ For example: we have a `User::AvatarComponent` that accepts a `User` ActiveRecor
 
 Just as ViewComponent itself was extracted from GitHub.com, our experience has shown that the best general-purpose components are those extracted from the GitHub application once they've proven useful across more than one area.
 
+Our process typically follows the following steps:
+
+1. Single use-case component implemented in application.
+2. Component adapted for general use in multiple locations in application.
+3. Component extracted into [Primer ViewComponents](https://primer.style/view-components/).
+
 ### Reduce permutations
 
 As we build ViewComponents, we should look for opportunities to consolidate similar patterns into a single implementation. We tend to follow typical DRY practices in this regard, such as abstracting once there are three or more similar instances.
