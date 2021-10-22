@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add `Thinking in ViewComponents` documentation.
+
+    *Joel Hawksley*
+
 ## 2.41.0
 
 * Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.
