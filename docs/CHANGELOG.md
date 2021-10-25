@@ -19,7 +19,7 @@ title: Changelog
 
     *Blake Williams*, *Ian C. Anderson*
 
-* Implement polymorphic slots.
+* Implement polymorphic slots as experimental feature. See the Slots documentation to learn more.
 
     *Cameron Dutro*
 
