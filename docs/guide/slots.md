@@ -191,7 +191,7 @@ _To view documentation for content_areas (deprecated) and the original implement
 
 Polymorphic slots can render one of several possible slots. To use this experimental feature, include `ViewComponent::PolymorphicSlots`.
 
-For example, consider this list item component that can be rendered with either an icon or an avatar visual. The `visual` slot is passed a hash mapping types to slot definitions, and is therefore polymorphic:
+For example, consider this list item component that can be rendered with either an icon or an avatar visual. The `visual` slot is passed a hash mapping types to slot definitions:
 
 ```ruby
 class ListItemComponent < ViewComponent::Base
