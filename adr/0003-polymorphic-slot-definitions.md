@@ -1,4 +1,4 @@
-# 3. Polymorphic Slot Definitions
+# 3. Polymorphic slots
 
 Date: 2021-09-29
 
