@@ -70,7 +70,7 @@ The `Item` component can then be used like this:
 
 Notice that the type of leading visual, either `:icon` or `:avatar`, is appended to the slot name, `leading_visual`, and corresponds to the items in the `types` hash passed to `renders_one`.
 
-Finally, the polymorphic slot behavior will be implemented as a `module` so the behavior is opt-in.
+Finally, the polymorphic slot behavior will be implemented as a `module` so the behavior is opt-in until we're confident that it's a good addition to ViewComponent.
 
 ## Consequences
 
