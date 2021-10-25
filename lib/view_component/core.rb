@@ -16,8 +16,6 @@ module ViewComponent
 
     RESERVED_PARAMETER = :content
 
-    attr_accessor :original_view_context
-
     # EXPERIMENTAL: This API is experimental and may be removed at any time.
     # Hook for allowing components to do work as part of the compilation process.
     #
@@ -410,5 +408,9 @@ module ViewComponent
         @provided_collection_parameter ||= nil
       end
     end
+
+    protected
+
+    attr_accessor :original_view_context
   end
 end

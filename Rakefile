@@ -57,7 +57,7 @@ namespace :docs do
       meths.
       select do |method|
         !method.tag(:private) &&
-          method.path.include?("ViewComponent::Base") &&
+          method.path.match?("ViewComponent::(Base|Core)") &&
           method.visibility == :public
       end.sort_by { |method| method[:name] }
 
