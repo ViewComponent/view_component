@@ -72,8 +72,6 @@ module ViewComponent
       @request ||= controller.request if controller.respond_to?(:request)
     end
 
-    private
-
     # Set the controller used for testing components:
     #
     #     config.view_component.test_controller = "MyTestController"
