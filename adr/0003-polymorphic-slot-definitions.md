@@ -39,7 +39,7 @@ It is my opinion that we need the ability to choose between multiple types withi
 
 ## Decision
 
-We will introduce a third type of slot called a polymorphic slot. The `renders_one` and `renders_many` methods will accept a hash as a second argument that will contain a mapping of the various acceptable sub-components. Each of these sub-components will themselves be slot definitions, meaning they can be defined as either a class/string or proc.
+We will introduce a third type of slot called a polymorphic slot. The `renders_one` and `renders_many` methods will accept a mapping of the various acceptable sub-components. Each of these sub-components will themselves be slot definitions, meaning they can be defined as either a class/string or proc.
 
 Here's how the `Item` sub-component of the list example above would be implemented using polymorphic slots:
 
