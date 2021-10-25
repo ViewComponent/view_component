@@ -14,7 +14,7 @@ Accepted
 
 Components can currently define slots in two ways:
 
-1. by specifying a component class (or class name string), or
+1. by specifying a component class (or class name string)
 1. by providing a proc (i.e. lambda) that either returns HTML or a component instance.
 
 With these options in mind, imagine a scenario in which a component supports rendering one of two possible sub-components in a slot. In other words, the user of the component may only fill the slot with one of two (or more) possible kinds of sub-component.
