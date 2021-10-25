@@ -12,7 +12,7 @@ Accepted
 
 ## Context
 
-Component authors can currently define slots in two ways:
+Components can currently define slots in two ways:
 
 1. by specifying a component class (or class name string), or
 1. by providing a proc (i.e. lambda) that either returns HTML or a component instance.
