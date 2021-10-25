@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Add `Thinking in ViewComponents` documentation.
+* Add `ViewComponents in practice` documentation.
 
     *Joel Hawksley*
 
