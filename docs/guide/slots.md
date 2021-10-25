@@ -187,7 +187,7 @@ Slot content can also be set using `#with_content`:
 
 _To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
 
-## Polymorphic Slots
+## Polymorphic slots (Experimental)
 
 Polymorphic slots are defined using a series of constituent types. Users specify the type when defining the slot contents, along with type-specific arguments. The polymorphic slot uses the given type to render the right content.
 
