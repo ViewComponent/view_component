@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Extract `ViewComponent::Core` class from `ViewComponent::Base`.
+
+    *Blake Williams*
+
 * Fix bug where calling lambda slots without arguments would break in Ruby < 2.7.
 
     *Manuel Puyol*
