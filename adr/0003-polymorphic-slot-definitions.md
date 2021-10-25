@@ -28,7 +28,7 @@ When implementing the `Item` component, we have several options for determining 
 1. **Examine kwargs**: define a single slot and determine which sub-component to render by examining the contents of `**kwargs`.
 1. **Unrestricted content**: define a single slot that renders any content provided by the caller. The component has to "trust" that the caller will pass in only an icon or avatar.
 
-All these options are perfectly acceptable and will probably work just fine. However, there are problems with each.
+While all of these options are reasonably acceptable, there are problems with each:
 
 1. **Two slots w/error**: using `before_render` for slot validation feels like an anti-pattern. To make the interface clear, defining both slots shouldn't be possible.
 1. **Two slots w/default**: same issues as #1, but worse because it silently "swallows" the error. This behavior probably won't be obvious to the component's users.
