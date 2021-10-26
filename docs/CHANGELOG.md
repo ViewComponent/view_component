@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add `ViewComponents in practice` documentation.
+
+    *Joel Hawksley*
+
 * Fix bug where calling lambda slots without arguments would break in Ruby < 2.7.
 
     *Manuel Puyol*
