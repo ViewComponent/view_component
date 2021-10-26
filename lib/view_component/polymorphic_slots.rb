@@ -41,10 +41,12 @@ module ViewComponent
           define_method(getter_name) do
             get_slot(slot_name)
           end
+          ruby2_keywords(getter_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
-          define_method(setter_name) do |*args, **kwargs, &block|
-            set_polymorphic_slot(slot_name, poly_type, *args, **kwargs, &block)
+          define_method(setter_name) do |*args, &block|
+            set_polymorphic_slot(slot_name, poly_type, *args, &block)
           end
+          ruby2_keywords(setter_name.to_sym) if respond_to?(:ruby2_keywords, true)
         end
 
         self.registered_slots[slot_name] = {
@@ -55,7 +57,7 @@ module ViewComponent
     end
 
     module InstanceMethods
-      def set_polymorphic_slot(slot_name, poly_type = nil, *args, **kwargs, &block)
+      def set_polymorphic_slot(slot_name, poly_type = nil, *args, &block)
         slot_definition = self.class.registered_slots[slot_name]
 
         if !slot_definition[:collection] && get_slot(slot_name)
@@ -64,14 +66,9 @@ module ViewComponent
 
         poly_def = slot_definition[:renderable_hash][poly_type]
 
-        set_slot(
-          slot_name,
-          *args,
-          slot_definition: poly_def,
-          **kwargs,
-          &block
-        )
+        set_slot(slot_name, poly_def, *args, &block)
       end
+      ruby2_keywords(:set_polymorphic_slot) if respond_to?(:ruby2_keywords, true)
     end
   end
 end

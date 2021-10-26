@@ -395,7 +395,7 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_includes error.message, "It looks like a block was provided after calling"
   end
 
-  def test_renders_lamda_slot_with_no_args
+  def test_renders_lambda_slot_with_no_args
     render_inline(SlotsV2WithEmptyLambdaComponent.new) do |c|
       c.item { "Item 1" }
       c.item { "Item 2" }

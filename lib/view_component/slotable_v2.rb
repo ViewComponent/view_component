@@ -70,7 +70,7 @@ module ViewComponent
           if args.empty? && block.nil?
             get_slot(slot_name)
           else
-            set_slot(slot_name, *args, &block)
+            set_slot(slot_name, nil, *args, &block)
           end
         end
         ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
@@ -124,7 +124,7 @@ module ViewComponent
         # e.g. `renders_many :items` allows fetching all tabs with
         # `component.tabs` and setting a tab with `component.tab`
         define_method singular_name do |*args, &block|
-          set_slot(slot_name, *args, &block)
+          set_slot(slot_name, nil, *args, &block)
         end
         ruby2_keywords(singular_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
@@ -135,7 +135,7 @@ module ViewComponent
             get_slot(slot_name)
           else
             collection_args.map do |args|
-              set_slot(slot_name, **args, &block)
+              set_slot(slot_name, nil, **args, &block)
             end
           end
         end
@@ -246,7 +246,7 @@ module ViewComponent
       end
     end
 
-    def set_slot(slot_name, *args, slot_definition: nil, **kwargs, &block)
+    def set_slot(slot_name, slot_definition = nil, *args, &block)
       slot_definition ||= self.class.registered_slots[slot_name]
       slot = SlotV2.new(self)
 
