@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Frequently asked questions
+nav_order: 5
 ---
 
 # Frequently asked questions
@@ -22,10 +23,10 @@ class PagesController < ApplicationController
   def index
     # Does not work: triggers a `AbstractController::DoubleRenderError`
     # @reusable_icon = render IconComponent.new('close')
-    
+
     # Does not work: renders the whole index view as a string
     # @reusable_icon = render_to_string IconComponent.new('close')
-  
+
     # Works: renders the component as a string
     @reusable_icon = IconComponent.new('close').render_in(view_context)
   end
