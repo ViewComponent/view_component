@@ -23,6 +23,10 @@ title: Changelog
 
     *Blake Williams*, *Ian C. Anderson*
 
+* Implement polymorphic slots as experimental feature. See the Slots documentation to learn more.
+
+    *Cameron Dutro*
+
 ## 2.41.0
 
 * Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.

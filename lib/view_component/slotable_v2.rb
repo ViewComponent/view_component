@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "active_support/concern"
-
 require "view_component/slot_v2"
 
 module ViewComponent
@@ -71,7 +70,7 @@ module ViewComponent
           if args.empty? && block.nil?
             get_slot(slot_name)
           else
-            set_slot(slot_name, *args, &block)
+            set_slot(slot_name, nil, *args, &block)
           end
         end
         ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
@@ -125,7 +124,7 @@ module ViewComponent
         # e.g. `renders_many :items` allows fetching all tabs with
         # `component.tabs` and setting a tab with `component.tab`
         define_method singular_name do |*args, &block|
-          set_slot(slot_name, *args, &block)
+          set_slot(slot_name, nil, *args, &block)
         end
         ruby2_keywords(singular_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
@@ -136,7 +135,7 @@ module ViewComponent
             get_slot(slot_name)
           else
             collection_args.map do |args|
-              set_slot(slot_name, **args, &block)
+              set_slot(slot_name, nil, **args, &block)
             end
           end
         end
@@ -164,27 +163,37 @@ module ViewComponent
 
       private
 
-      def register_slot(slot_name, collection:, callable:)
+      def register_slot(slot_name, **kwargs)
+        self.registered_slots[slot_name] = define_slot(slot_name, **kwargs)
+      end
+
+      def define_slot(slot_name, collection:, callable:)
         # Setup basic slot data
         slot = {
           collection: collection,
         }
+        return slot unless callable
+
         # If callable responds to `render_in`, we set it on the slot as a renderable
-        if callable && callable.respond_to?(:method_defined?) && callable.method_defined?(:render_in)
+        if callable.respond_to?(:method_defined?) && callable.method_defined?(:render_in)
           slot[:renderable] = callable
         elsif callable.is_a?(String)
           # If callable is a string, we assume it's referencing an internal class
           slot[:renderable_class_name] = callable
-        elsif callable
+        elsif callable.respond_to?(:call)
           # If slot does not respond to `render_in`, we assume it's a proc,
           # define a method, and save a reference to it to call when setting
           method_name = :"_call_#{slot_name}"
           define_method method_name, &callable
           slot[:renderable_function] = instance_method(method_name)
+        else
+          raise(
+            ArgumentError,
+            "invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)"
+          )
         end
 
-        # Register the slot on the component
-        self.registered_slots[slot_name] = slot
+        slot
       end
 
       def validate_plural_slot_name(slot_name)
@@ -237,9 +246,8 @@ module ViewComponent
       end
     end
 
-    def set_slot(slot_name, *args, &block)
-      slot_definition = self.class.registered_slots[slot_name]
-
+    def set_slot(slot_name, slot_definition = nil, *args, &block)
+      slot_definition ||= self.class.registered_slots[slot_name]
       slot = SlotV2.new(self)
 
       # Passing the block to the sub-component wrapper like this has two
