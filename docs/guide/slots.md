@@ -198,7 +198,10 @@ class ListItemComponent < ViewComponent::Base
   include ViewComponent::PolymorphicSlots
 
   renders_one :visual, types: {
-    icon: :IconComponent, avatar: AvatarComponent
+    icon: IconComponent,
+    avatar: lambda { |**system_arguments|
+      AvatarComponent.new(size: 16, **system_arguments)
+    }
   }
 end
 ```
