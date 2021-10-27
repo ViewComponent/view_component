@@ -5,13 +5,11 @@ title: Changelog
 
 # Changelog
 
-## main
+## 2.42.0
 
 * Add logo files and page to docs.
 
     *Dylan Smith*
-
-## 2.42.0
 
 * Add `ViewComponents in practice` documentation.
 
