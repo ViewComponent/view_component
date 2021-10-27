@@ -186,3 +186,39 @@ Slot content can also be set using `#with_content`:
 ```
 
 _To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
+
+## Polymorphic slots (Experimental)
+
+Polymorphic slots can render one of several possible slots. To use this experimental feature, include `ViewComponent::PolymorphicSlots`.
+
+For example, consider this list item component that can be rendered with either an icon or an avatar visual. The `visual` slot is passed a hash mapping types to slot definitions:
+
+```ruby
+class ListItemComponent < ViewComponent::Base
+  include ViewComponent::PolymorphicSlots
+
+  renders_one :visual, types: {
+    icon: IconComponent,
+    avatar: lambda { |**system_arguments|
+      AvatarComponent.new(size: 16, **system_arguments)
+    }
+  }
+end
+```
+
+**NOTE**: the `types` hash's values can be any valid slot definition, including a component class, string, or lambda.
+
+Filling in the `visual` slot is done by calling the appropriate slot method:
+
+```erb
+<%= render ListItemComponent.new do |c| %>
+  <% c.visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") %>
+    Profile
+  <% end >
+<% end %>
+<%= render ListItemComponent.new do |c| %>
+  <% c.visual_icon(icon: :key) %>
+    Security Settings
+  <% end >
+<% end %>
+```
