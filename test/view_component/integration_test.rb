@@ -66,7 +66,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   # skip this test in `main` until https://github.com/rails/rails/pull/43546#issuecomment-953218263 is resolved
-  if ENV['RAILS_VERSION'].present? && ENV['RAILS_VERSION'] != "main"
+  if ENV["RAILS_VERSION"].present? && ENV["RAILS_VERSION"] != "main"
     def test_template_changes_are_reflected_on_new_request_when_cache_template_loading_is_false
       with_new_cache do
         get "/controller_inline"
