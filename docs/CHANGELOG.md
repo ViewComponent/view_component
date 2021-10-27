@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add logo files and page to docs.
+
+    *Dylan Smith*
+
 * Add `ViewComponents in practice` documentation.
 
     *Joel Hawksley*
