@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Add logo files and page in to docs.
+* Add logo files and page to docs.
 
     *Dylan Smith*
 
