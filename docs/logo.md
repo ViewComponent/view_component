@@ -9,35 +9,35 @@ title: Logo
 
 ### Color
 
-![Full ViewComponent logo in red and black](logo/viewcomponent-color-logo.svg)
+<img src="logo/viewcomponent-color-logo.svg" alt="Full ViewComponent logo in red and black" class="px-1 mt-2">
 
 Full logo for light backgrounds ([SVG](logo/viewcomponent-color-logo.svg) • [PNG](logo/viewcomponent-color-logo.png))
 
-<img src="/logo/viewcomponent-color-logo-inverse.svg" alt="Full ViewComponent logo in red and white" class="bg-grey-lt-200">
+<img src="/logo/viewcomponent-color-logo-inverse.svg" alt="Full ViewComponent logo in red and white" class="bg-grey-dk-200 p-1 mt-2">
 
 Full logo for dark backgrounds ([SVG](logo/viewcomponent-color-logo-inverse.svg) • [PNG](logo/viewcomponent-color-logo-inverse.png))
 
-![ViewComponent logomark in red](logo/viewcomponent-color-logomark.svg)
+<img src="logo/viewcomponent-color-logomark.svg" alt="ViewComponent logomark in red" class="px-1 mt-2">
 
 Logomark for light or dark backgrounds ([SVG](logo/viewcomponent-color-logomark.svg) • [PNG](logo/viewcomponent-color-logomark.png))
 
 ### Black
 
-![Full ViewComponent logo in black](logo/viewcomponent-black-logo.svg)
+<img src="logo/viewcomponent-black-logo.svg" alt="Full ViewComponent logo in black" class="px-1 mt-2">
 
 Full logo for light backgrounds ([SVG](logo/viewcomponent-black-logo.svg) • [PNG](logo/viewcomponent-black-logo.png))
 
-![ViewComponent logomark in black](logo/viewcomponent-black-logomark.svg)
+<img src="logo/viewcomponent-black-logomark.svg" alt="ViewComponent logomark in black" class="px-1 mt-2">
 
 Logomark for light backgrounds ([SVG](logo/viewcomponent-black-logomark.svg) • [PNG](logo/viewcomponent-black-logomark.png))
 
 ### White
 
-<img src="/logo/viewcomponent-white-logo.svg" alt="Full ViewComponent logo in white" class="bg-grey-lt-200">
+<img src="/logo/viewcomponent-white-logo.svg" alt="Full ViewComponent logo in white" class="bg-grey-dk-200 p-1 mt-2">
 
 Full logo for dark backgrounds ([SVG](logo/viewcomponent-white-logo.svg) • [PNG](logo/viewcomponent-white-logo.png))
 
-<img src="/logo/viewcomponent-white-logomark.svg" alt="ViewComponent logomark in white" class="bg-grey-lt-200">
+<img src="/logo/viewcomponent-white-logomark.svg" alt="ViewComponent logomark in white" class="bg-grey-dk-200 p-1 mt-2">
 
 Logomark for dark backgrounds ([SVG](logo/viewcomponent-white-logomark.svg) • [PNG](logo/viewcomponent-white-logomark.png))
 
