@@ -9,35 +9,35 @@ title: Logo
 
 ### Color
 
-<img src="logo/viewcomponent-color-logo.svg" alt="Full ViewComponent logo in red and black" class="px-1 mt-2">
+<img src="logo/viewcomponent-color-logo.svg" alt="Full ViewComponent logo in red and black" class="px-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Full logo for light backgrounds ([SVG](logo/viewcomponent-color-logo.svg) • [PNG](logo/viewcomponent-color-logo.png))
 
-<img src="/logo/viewcomponent-color-logo-inverse.svg" alt="Full ViewComponent logo in red and white" class="bg-grey-dk-200 p-1 mt-2">
+<img src="/logo/viewcomponent-color-logo-inverse.svg" alt="Full ViewComponent logo in red and white" class="bg-grey-dk-200 p-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Full logo for dark backgrounds ([SVG](logo/viewcomponent-color-logo-inverse.svg) • [PNG](logo/viewcomponent-color-logo-inverse.png))
 
-<img src="logo/viewcomponent-color-logomark.svg" alt="ViewComponent logomark in red" class="px-1 mt-2">
+<img src="logo/viewcomponent-color-logomark.svg" alt="ViewComponent logomark in red" class="px-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Logomark for light or dark backgrounds ([SVG](logo/viewcomponent-color-logomark.svg) • [PNG](logo/viewcomponent-color-logomark.png))
 
 ### Black
 
-<img src="logo/viewcomponent-black-logo.svg" alt="Full ViewComponent logo in black" class="px-1 mt-2">
+<img src="logo/viewcomponent-black-logo.svg" alt="Full ViewComponent logo in black" class="px-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Full logo for light backgrounds ([SVG](logo/viewcomponent-black-logo.svg) • [PNG](logo/viewcomponent-black-logo.png))
 
-<img src="logo/viewcomponent-black-logomark.svg" alt="ViewComponent logomark in black" class="px-1 mt-2">
+<img src="logo/viewcomponent-black-logomark.svg" alt="ViewComponent logomark in black" class="px-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Logomark for light backgrounds ([SVG](logo/viewcomponent-black-logomark.svg) • [PNG](logo/viewcomponent-black-logomark.png))
 
 ### White
 
-<img src="/logo/viewcomponent-white-logo.svg" alt="Full ViewComponent logo in white" class="bg-grey-dk-200 p-1 mt-2">
+<img src="/logo/viewcomponent-white-logo.svg" alt="Full ViewComponent logo in white" class="bg-grey-dk-200 p-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Full logo for dark backgrounds ([SVG](logo/viewcomponent-white-logo.svg) • [PNG](logo/viewcomponent-white-logo.png))
 
-<img src="/logo/viewcomponent-white-logomark.svg" alt="ViewComponent logomark in white" class="bg-grey-dk-200 p-1 mt-2">
+<img src="/logo/viewcomponent-white-logomark.svg" alt="ViewComponent logomark in white" class="bg-grey-dk-200 p-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Logomark for dark backgrounds ([SVG](logo/viewcomponent-white-logomark.svg) • [PNG](logo/viewcomponent-white-logomark.png))
 
