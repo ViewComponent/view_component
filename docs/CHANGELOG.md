@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.41.1
+
 * Add `ViewComponents in practice` documentation.
 
     *Joel Hawksley*
