@@ -1,6 +1,7 @@
 ---
 layout: default
 title: API
+nav_order: 3
 ---
 
 <!-- Warning: AUTO-GENERATED file, do not edit. Add code comments to your Ruby instead <3 -->
@@ -47,6 +48,14 @@ that inhibits encapsulation & reuse, often making testing difficult.
 
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
+
+### #original_view_context
+
+Returns the value of attribute original_view_context.
+
+### #original_view_context=(value)
+
+Sets the attribute original_view_context
 
 ### #render? → [Boolean]
 

@@ -395,6 +395,27 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_includes error.message, "It looks like a block was provided after calling"
   end
 
+  def test_renders_lambda_slot_with_no_args
+    render_inline(SlotsV2WithEmptyLambdaComponent.new) do |c|
+      c.item { "Item 1" }
+      c.item { "Item 2" }
+      c.item { "Item 3" }
+    end
+
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 1")
+      assert_selector(".item-content", text: "Item 1")
+    end
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 2")
+      assert_selector(".item-content", text: "Item 2")
+    end
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 3")
+      assert_selector(".item-content", text: "Item 3")
+    end
+  end
+
   def test_slot_type_single
     assert_equal(:single, SlotsV2Component.slot_type(:title))
   end
@@ -409,5 +430,46 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_type_nil?
     assert_nil(SlotsV2Component.slot_type(:junk))
+  end
+
+  def test_polymorphic_slot
+    render_inline(PolymorphicSlotComponent.new) do |component|
+      component.header_standard { "standard" }
+      component.item_foo(class_names: "custom-foo")
+      component.item_bar(class_names: "custom-bar")
+    end
+
+    assert_selector("div .standard", text: "standard")
+    assert_selector("div .foo.custom-foo:nth-child(2)")
+    assert_selector("div .bar.custom-bar:last")
+  end
+
+  def test_polymorphic_slot_non_member
+    assert_raises NoMethodError do
+      render_inline(PolymorphicSlotComponent.new) do |component|
+        component.item_non_existent
+      end
+    end
+  end
+
+  def test_singular_polymorphic_slot_raises_on_redefinition
+    error = assert_raises ArgumentError do
+      render_inline(PolymorphicSlotComponent.new) do |component|
+        component.header_standard { "standard" }
+        component.header_special { "special" }
+      end
+    end
+
+    assert_includes error.message, "has already been provided"
+  end
+
+  def test_invalid_slot_definition_raises_error
+    error = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_many :items, :foo
+      end
+    end
+
+    assert_includes error.message, "invalid slot definition"
   end
 end

@@ -5,6 +5,7 @@ require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/content_areas"
+require "view_component/polymorphic_slots"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
@@ -28,6 +29,8 @@ module ViewComponent
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
+    attr_accessor :original_view_context
+
     # EXPERIMENTAL: This API is experimental and may be removed at any time.
     # Hook for allowing components to do work as part of the compilation process.
     #
@@ -49,6 +52,8 @@ module ViewComponent
       self.class.compile(raise_errors: true)
 
       @view_context = view_context
+      self.original_view_context ||= view_context
+
       @lookup_context ||= view_context.lookup_context
 
       # required for path helpers in older Rails versions
@@ -132,9 +137,10 @@ module ViewComponent
     # @private
     def render(options = {}, args = {}, &block)
       if options.is_a? ViewComponent::Base
+        options.original_view_context = original_view_context
         super
       else
-        view_context.render(options, args, &block)
+        original_view_context.render(options, args, &block)
       end
     end
 
@@ -173,7 +179,14 @@ module ViewComponent
         )
       end
 
-      @__vc_helpers ||= controller.view_context
+      # Attempt to re-use the original view_context passed to the first
+      # component rendered in the rendering pipeline. This prevents the
+      # instantiation of a new view_context via `controller.view_context` which
+      # always returns a new instance of the view context class.
+      #
+      # This allows ivars to remain persisted when using the same helper via
+      # `helpers` across multiple components and partials.
+      @__vc_helpers ||= original_view_context || controller.view_context
     end
 
     # Exposes .virtual_path as an instance method

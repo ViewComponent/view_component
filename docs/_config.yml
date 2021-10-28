@@ -27,6 +27,7 @@ url: "https://viewcomponent.org"
 remote_theme: pmarsceill/just-the-docs
 search_enabled: true
 color_scheme: custom
+logo: "/logo/viewcomponent-color-logo.svg"
 
 # Exclude from processing.
 # The following items will not be processed, by default.

@@ -216,10 +216,22 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/user_component_controller.js"
   end
 
+  def test_component_with_legacy_stimulus_and_sidecar
+    with_package_json({ dependencies: { "stimulus": "0.0.0" } }) do
+      run_generator %w[user --stimulus --sidecar]
+
+      assert_file "app/components/user_component/user_component_controller.js" do |file|
+        assert_match(/import { Controller } from "stimulus"/, file)
+      end
+    end
+  end
+
   def test_component_with_stimulus_and_sidecar
     run_generator %w[user --stimulus --sidecar]
 
-    assert_file "app/components/user_component/user_component_controller.js"
+    assert_file "app/components/user_component/user_component_controller.js" do |file|
+      assert_match(/import { Controller } from "@hotwired\/stimulus"/, file)
+    end
   end
 
   def test_component_with_stimulus_and_sidecar_and_inline
@@ -230,5 +242,15 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
 
     assert_file "app/components/user_component/user_component_controller.js"
+  end
+
+  private
+
+  def with_package_json(content, &block)
+    package_json_pathname = Rails.root.join("package.json")
+    package_json_pathname.write(JSON.generate(content))
+    yield
+  ensure
+    package_json_pathname.delete
   end
 end
