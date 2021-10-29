@@ -180,6 +180,13 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/mattwr18?s=64" alt="mattwr18" width="32" />
 <img src="https://avatars.githubusercontent.com/dylanatsmith?s=64" alt="dylanatsmith" width="32" />
 
+## Who uses ViewComponent?
+
+* [GitHub](https://github.com/) (900+ components used 15k+ times)
+* [Podia](https://www.podia.com/)
+
+If your team starts using ViewComponent, [send a pull request](https://github.com/github/view_component/edit/main/docs/README.md) to let us know!
+
 <hr />
 
 [Getting started →](/guide/getting-started.html)

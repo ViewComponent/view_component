@@ -5,6 +5,10 @@ title: Changelog
 
 # Changelog
 
+* Add section to docs listing users of ViewComponent. Please submit a PR to add your team to the list!
+
+    *Joel Hawksley*
+
 ## 2.42.0
 
 * Add logo files and page to docs.
