@@ -11,7 +11,7 @@ title: Changelog
 
     *Gregory Igelmund*
 
-* Require `view_component/engine` automatically
+* Require `view_component/engine` automatically.
 
     *Cameron Dutro*
 
