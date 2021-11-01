@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add section to docs listing users of ViewComponent. Please submit a PR to add your team to the list!
+
+    *Joel Hawksley*
+
 * Fix loading issue with Stimulus generator and add specs for Stimulus generator.
 
     *Peter Sumskas*
