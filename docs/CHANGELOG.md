@@ -5,7 +5,6 @@ title: Changelog
 
 # Changelog
 
-
 ## main
 
 * Fix loading issue with Stimulus generator and add specs for Stimulus generator.
