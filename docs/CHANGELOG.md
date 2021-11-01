@@ -5,6 +5,10 @@ title: Changelog
 
 # Changelog
 
+* Fix loading issue with Stimulus generator and add specs for Stimulus generator.
+
+    *Peter Sumskas*
+
 ## 2.42.0
 
 * Add logo files and page to docs.
