@@ -5,9 +5,16 @@ title: Changelog
 
 # Changelog
 
+
+## main
+
 * Fix loading issue with Stimulus generator and add specs for Stimulus generator.
 
     *Peter Sumskas*
+
+* Remove dependency on `ActionDispatch::Static` in Rails middleware stack when enabling statics assets for source code preview.
+
+    *Gregory Igelmund*
 
 ## 2.42.0
 
