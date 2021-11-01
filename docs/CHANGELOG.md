@@ -5,6 +5,12 @@ title: Changelog
 
 # Changelog
 
+## main
+
+* Remove dependency on `ActionDispatch::Static` in Rails middleware stack when enabling statics assets for source code preview.
+
+    *Gregory Igelmund*
+
 ## 2.42.0
 
 * Add logo files and page to docs.
