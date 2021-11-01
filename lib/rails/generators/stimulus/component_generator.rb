@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rails/generators/erb/component_generator"
+require "rails/generators/abstract_generator"
 
 module Stimulus
   module Generators
