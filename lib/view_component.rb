@@ -17,3 +17,5 @@ module ViewComponent
   autoload :TemplateError
   autoload :Translatable
 end
+
+require "view_component/engine" if defined?(Rails::Engine)
