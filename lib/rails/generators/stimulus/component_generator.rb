@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rails/generators/erb/component_generator"
+
 module Stimulus
   module Generators
     class ComponentGenerator < ::Rails::Generators::NamedBase
