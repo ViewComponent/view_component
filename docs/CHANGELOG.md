@@ -11,6 +11,10 @@ title: Changelog
 
     *Gregory Igelmund*
 
+* Require `view_component/engine` automatically
+
+    *Cameron Dutro*
+
 ## 2.42.0
 
 * Add logo files and page to docs.
