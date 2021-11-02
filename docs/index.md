@@ -180,6 +180,15 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/mattwr18?s=64" alt="mattwr18" width="32" />
 <img src="https://avatars.githubusercontent.com/dylanatsmith?s=64" alt="dylanatsmith" width="32" />
 
+## Who uses ViewComponent?
+
+* [GitHub](https://github.com/) (900+ components used 15k+ times)
+* [Podia](https://www.podia.com/)
+* [City of Paris](https://www.paris.fr/)
+
+If your team starts using ViewComponent, [send a pull request](https://github.com/github/view_component/edit/main/docs/README.md) to let us know!
+You can also check out [how various projects use ViewComponent](https://github.com/github/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
+
 <hr />
 
 [Getting started →](/guide/getting-started.html)

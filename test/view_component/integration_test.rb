@@ -528,4 +528,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "input[value=?]", "Send this form!"
     end
   end
+
+  def test_renders_a_preview_with_image_path
+    get "/rails/view_components/image_path_component/default"
+
+    assert_includes response.body, "images/foo.png"
+  end
 end
