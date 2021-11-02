@@ -11,6 +11,10 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Separate lint and CI workflows.
+
+    *Blake Williams*
+
 * Add support for `image_path` helper in previews.
 
     *Tobias Ahlin*, *Joel Hawksley*
