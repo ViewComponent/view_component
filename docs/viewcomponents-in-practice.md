@@ -6,7 +6,7 @@ nav_order: 4
 
 # ViewComponents in practice
 
-_GitHub's guide to building component-driven UI in Rails, shared publicly due to interest from the community. Consider it to be more opinion than fact._
+_GitHub's internal guide to building component-driven UI in Rails. Consider it to be more opinion than fact._
 
 ## Why we use ViewComponents
 
