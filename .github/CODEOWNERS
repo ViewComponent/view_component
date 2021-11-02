@@ -10,6 +10,7 @@
 /test/view_component/test_unit_generator_test.rb @spone
 
 /app/**/* @juanmanuelramallo
+/docs/guide/previews.md @juanmanuelramallo
 /lib/view_component/preview.rb @juanmanuelramallo
 /lib/view_component/previewable.rb @juanmanuelramallo
 /lib/view_component/preview_template_error.rb @juanmanuelramallo
