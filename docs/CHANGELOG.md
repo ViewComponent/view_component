@@ -11,6 +11,10 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Add support for `image_path` helper in previews.
+
+    *Tobias Ahlin*, *Joel Hawksley*
+
 * Add section to docs listing users of ViewComponent. Please submit a PR to add your team to the list!
 
     *Joel Hawksley*
