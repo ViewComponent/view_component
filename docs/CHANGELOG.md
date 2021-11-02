@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add CODEOWNERS entries for feature areas owned by community committers.
+
+    *Joel Hawksley*
+
 * Add section to docs listing users of ViewComponent. Please submit a PR to add your team to the list!
 
     *Joel Hawksley*
