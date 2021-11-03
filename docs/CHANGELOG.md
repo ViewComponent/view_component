@@ -11,6 +11,10 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Add CODEOWNERS entries for feature areas owned by community committers.
+
+    *Joel Hawksley*
+
 * Separate lint and CI workflows.
 
     *Blake Williams*
