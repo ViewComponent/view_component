@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Flesh out `ViewComponents in practice`.
+
+    *Joel Hawksley*
+
 * Separate lint and CI workflows.
 
     *Blake Williams*
