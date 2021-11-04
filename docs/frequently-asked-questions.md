@@ -32,7 +32,3 @@ ViewComponent is far from a novel idea! Popular implementations of view componen
 - [dry-rb/dry-view](https://github.com/dry-rb/dry-view)
 - [komposable/komponent](https://github.com/komposable/komponent)
 - [activeadmin/arbre](https://github.com/activeadmin/arbre)
-
-## Can I use ViewComponent with `X library`?
-
-ViewComponent is currently only available for Rails. Read more: [compatibility section](./compatibility).
