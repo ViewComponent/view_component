@@ -6,10 +6,6 @@ nav_order: 5
 
 # Frequently asked questions
 
-## Can I use other templating languages besides ERB?
-
-Yes. ViewComponent is tested against ERB, Haml, and Slim, but it should support most Rails template handlers.
-
 ## Can I render a ViewComponent to a string, from inside a controller action?
 
 When rendering multiple times the same component, you may want to render it only once, from the controller action, and reuse it.
