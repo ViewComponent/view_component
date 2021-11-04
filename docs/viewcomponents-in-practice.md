@@ -70,6 +70,8 @@ Refactoring a view to being a ViewComponent often exposes existing complexity. F
 
 ViewComponents have less value in single-use cases like replacing a `show` view. However, it can make sense to render an entire route with a ViewComponent when unit testing is valuable, such as for views with many permutations from a state machine.
 
+When migrating an entire route to use ViewComponents, we've had our best luck doing so from the bottom up, extracting portions of the page into ViewComponents first.
+
 ### Integrating Javascript behaviors
 
 Write ViewComponents that wrap Web Components, writing any custom Javascript with [Catalyst](https://github.github.io/catalyst/).
