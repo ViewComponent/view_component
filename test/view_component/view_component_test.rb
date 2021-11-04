@@ -896,4 +896,10 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_text("Hello, World!")
   end
+
+  def test_outputs_component_with_trimmed_spaces
+    render_inline(TrimmedComponent.new)
+
+    assert_equal "Content", page.find("div").text
+  end
 end
