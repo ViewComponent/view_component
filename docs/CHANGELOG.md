@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add note about tests and instance methods.
+
+    *Joel Hawksley*
+
 * Flesh out `ViewComponents in practice`.
 
     *Joel Hawksley*

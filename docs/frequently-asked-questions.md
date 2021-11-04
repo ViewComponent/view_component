@@ -10,10 +10,6 @@ nav_order: 5
 
 Yes. ViewComponent is tested against ERB, Haml, and Slim, but it should support most Rails template handlers.
 
-## Can I use a ViewComponent for an entire view?
-
-If the view could benefit from unit testing, making it a ViewComponent is probably a good idea.
-
 ## Can I render a ViewComponent to a string, from inside a controller action?
 
 When rendering multiple times the same component, you may want to render it only once, from the controller action, and reuse it.
