@@ -76,6 +76,42 @@ When migrating an entire route to use ViewComponents, we've had our best luck do
 
 Write ViewComponents that wrap Web Components, writing any custom Javascript with [Catalyst](https://github.github.io/catalyst/).
 
+### Prefer tests against rendered content, not instance methods
+
+ViewComponent tests should use `render_inline` and assert against the rendered output. While it can be useful to test specific component instance methods directly, we've found it more valuable to write assertions against what we show to the end user:
+
+```ruby
+# good
+render_inline(MyComponent.new)
+assert_text("Hello, World!")
+
+# bad
+assert_equal(MyComponent.new.message, "Hello, World!")
+```
+
+### Most ViewComponent instance methods can be private
+
+Most ViewComponent instance methods can be private, as they will still be available in the component template:
+
+```ruby
+# bad
+class MyComponent < ViewComponent::Base
+  def initialize; end
+
+  def method_used_in_template; end
+end
+
+# good
+
+class MyComponent < ViewComponent::Base
+  def initialize; end
+
+  private
+
+  def method_used_in_template; end
+end
+```
+
 ### Prefer ViewComponents over ViewModels
 
 ViewModels (view-specific objects) are deprecated in favor of ViewComponents. New ViewModels should not be created, and existing ViewModels should be migrated to be ViewComponents when possible.
