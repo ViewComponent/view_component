@@ -90,10 +90,6 @@ Use ViewComponents in place of helpers that return HTML.
 
 The more a ViewComponent is dependent on global state (such as request parameters or the current URL), the less likely it is to be reusable. Avoid implicit coupling to global state, instead passing it into the component explicitly. Thorough unit testing is a good way to ensure decoupling from global state.
 
-### Cache at the data layer
-
-We tend to avoid caching ViewComponents, instead opting to cache the result of queries at the controller layer. ViewComponent rendering is fast enough that caching generally adds little benefit.
-
 ### Avoid inline Ruby in ViewComponent templates
 
 Avoid writing inline Ruby in ViewComponent templates. Try using an instance method on the ViewComponent instead.
