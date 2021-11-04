@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Flesh out `ViewComponents in practice`.
+
+    *Joel Hawksley*
+
 * Add CODEOWNERS entries for feature areas owned by community committers.
 
     *Joel Hawksley*
