@@ -85,7 +85,7 @@ ViewComponent tests should use `render_inline` and assert against the rendered o
 render_inline(MyComponent.new)
 assert_text("Hello, World!")
 
-# bad
+# not our preference
 assert_equal(MyComponent.new.message, "Hello, World!")
 ```
 
@@ -94,19 +94,18 @@ assert_equal(MyComponent.new.message, "Hello, World!")
 Most ViewComponent instance methods can be private, as they will still be available in the component template:
 
 ```ruby
-# bad
-class MyComponent < ViewComponent::Base
-  def initialize; end
-
-  def method_used_in_template; end
-end
-
 # good
-
 class MyComponent < ViewComponent::Base
   def initialize; end
 
   private
+
+  def method_used_in_template; end
+end
+
+# bad
+class MyComponent < ViewComponent::Base
+  def initialize; end
 
   def method_used_in_template; end
 end
