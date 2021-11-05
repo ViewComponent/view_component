@@ -8,6 +8,7 @@ module ViewComponent
 
   autoload :Base
   autoload :Compiler
+  autoload :CompileCache
   autoload :ComponentError
   autoload :Instrumentation
   autoload :Preview
