@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Autoload `CompileCache`, which is optionally called in `engine.rb`. fixing #566
+
+    *Gregory Igelmund*
+
 * Add note about tests and instance methods.
 
     *Joel Hawksley*
