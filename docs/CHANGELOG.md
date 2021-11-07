@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.43.0
+
 * Add note about tests and instance methods.
 
     *Joel Hawksley*
