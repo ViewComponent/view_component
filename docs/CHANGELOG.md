@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Remove unnecessary call to `ruby2_keywords` for polymorphic slot getters.
+
+    *Cameron Dutro*
+
 ## 2.43.0
 
 * Add note about tests and instance methods.
