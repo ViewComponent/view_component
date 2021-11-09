@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.43.1
+
 * Remove unnecessary call to `ruby2_keywords` for polymorphic slot getters.
 
     *Cameron Dutro*
