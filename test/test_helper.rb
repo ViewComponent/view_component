@@ -16,7 +16,7 @@ require "pp"
 require "pathname"
 require "minitest/autorun"
 
-# Configure Rails Envinronment
+# Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
 require File.expand_path("../sandbox/config/environment.rb", __FILE__)
