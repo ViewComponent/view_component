@@ -8,7 +8,7 @@ nav_order: 5
 
 ## Can I render a ViewComponent to a string, from inside a controller action?
 
-When rendering multiple times the same component, you may want to render it only once, from the controller action, and reuse it.
+When rendering the same component multiple times, you may want to render it only once, from the controller action, and reuse it.
 
 ```rb
 class PagesController < ApplicationController
