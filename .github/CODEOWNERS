@@ -4,6 +4,15 @@
 # for details on how to update this file <3
 * @github/primer-rails-reviewers
 
+/lib/view_component/slotable.rb @blakewilliams
+/test/view_component/slotable_test.rb @blakewilliams
+/lib/view_component/slotable_v2.rb @blakewilliams
+/test/view_component/slotable_v2_test.rb @blakewilliams
+/lib/view_component/slot.rb @blakewilliams
+/lib/view_component/slot_v2.rb @blakewilliams
+/docs/guide/slots.md @blakewilliams
+/docs/guide/slots_v2.md @blakewilliams
+
 /lib/rails/generators/**/* @spone
 /docs/guide/generators.md @spone
 /test/generators/**/* @spone
