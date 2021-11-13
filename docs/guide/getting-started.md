@@ -96,7 +96,7 @@ end
 
 _In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout._
 
-### Can I render a ViewComponent to a string from inside a controller action
+### Rendering ViewComponents to strings inside controller actions
 
 When rendering the same component multiple times for later reuse, use `render_in`:
 
