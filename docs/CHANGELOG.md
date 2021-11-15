@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Autoload `CompileCache`, which is optionally called in `engine.rb`.
+
+    *Gregory Igelmund*
+
 * Move frequently asked questions to other pages, add History page.
 
     *Joel Hawksley*
