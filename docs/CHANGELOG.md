@@ -7,7 +7,11 @@ title: Changelog
 
 ## main
 
-* Fixes typo
+* Move frequently asked questions to other pages, add History page.
+
+    *Joel Hawksley*
+
+* Fix typo.
 
     *James Hart*
 

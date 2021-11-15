@@ -95,3 +95,21 @@ end
 ```
 
 _In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout._
+
+### Rendering ViewComponents to strings inside controller actions
+
+When rendering the same component multiple times for later reuse, use `render_in`:
+
+```rb
+class PagesController < ApplicationController
+  def index
+    # Does not work: triggers a `AbstractController::DoubleRenderError`
+    # @reusable_icon = render IconComponent.new('close')
+
+    # Does not work: renders the whole index view as a string
+    # @reusable_icon = render_to_string IconComponent.new('close')
+
+    # Works: renders the component as a string
+    @reusable_icon = IconComponent.new('close').render_in(view_context)
+  end
+```
