@@ -41,7 +41,6 @@ module ViewComponent
           define_method(getter_name) do
             get_slot(slot_name)
           end
-          ruby2_keywords(getter_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
           define_method(setter_name) do |*args, &block|
             set_polymorphic_slot(slot_name, poly_type, *args, &block)

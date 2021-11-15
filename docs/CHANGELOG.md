@@ -7,9 +7,25 @@ title: Changelog
 
 ## main
 
-* Autoload `CompileCache`, which is optionally called in `engine.rb`. fixing #566
+* Autoload `CompileCache`, which is optionally called in `engine.rb`.
 
     *Gregory Igelmund*
+
+* Move frequently asked questions to other pages, add History page.
+
+    *Joel Hawksley*
+
+* Fix typo.
+
+    *James Hart*
+
+## 2.43.1
+
+* Remove unnecessary call to `ruby2_keywords` for polymorphic slot getters.
+
+    *Cameron Dutro*
+
+## 2.43.0
 
 * Add note about tests and instance methods.
 
