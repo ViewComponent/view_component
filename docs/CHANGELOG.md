@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Move frequently asked questions to other pages, flesh out ViewComponents in Practice.
+* Move frequently asked questions to other pages, add History page.
 
     *Joel Hawksley*
 
