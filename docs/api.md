@@ -168,7 +168,7 @@ Path for component files
 
     config.view_component.view_component_path = "app/my_components"
 
-Defaults to "app/components".
+Defaults to `app/components`.
 
 ## ViewComponent::TestHelpers
 

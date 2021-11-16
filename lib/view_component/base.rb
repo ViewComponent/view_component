@@ -291,7 +291,7 @@ module ViewComponent
     #
     #     config.view_component.view_component_path = "app/my_components"
     #
-    # Defaults to "app/components".
+    # Defaults to `app/components`.
     mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
 
     # Parent class for generated components
