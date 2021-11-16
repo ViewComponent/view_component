@@ -181,7 +181,7 @@ module ViewComponent
           # If callable is a string, we assume it's referencing an internal class
           slot[:renderable_class_name] = callable
         elsif callable.respond_to?(:call)
-          # If slot does not respond to `render_in`, we assume it's a proc,
+          # If slot doesn't respond to `render_in`, we assume it's a proc,
           # define a method, and save a reference to it to call when setting
           method_name = :"_call_#{slot_name}"
           define_method method_name, &callable
@@ -256,7 +256,7 @@ module ViewComponent
       # 1. If this is a `content_area` style sub-component, we will render the
       # block via the `slot`
       #
-      # 2. Since we have to pass block content to components when calling
+      # 2. Since we've to pass block content to components when calling
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
       slot.__vc_content_block = block if block_given?

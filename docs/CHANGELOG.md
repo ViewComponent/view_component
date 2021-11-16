@@ -112,7 +112,7 @@ title: Changelog
 
     *Matthew Rider*
 
-* Fix bug where `with_collection_parameter` did not inherit from parent component.
+* Fix bug where `with_collection_parameter` didn't inherit from parent component.
 
     *Will Drexler*, *Christian Campoli*
 
@@ -316,7 +316,7 @@ title: Changelog
 
     *Hans Lemuet*
 
-* Fix bug where ViewComponents did not work in ActionMailers.
+* Fix bug where ViewComponents didn't work in ActionMailers.
 
     *dark-panda*
 
@@ -364,7 +364,7 @@ title: Changelog
 
 ## 2.31.0
 
-_Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot should not be returned. (`<%`)_
+_Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot shouldn't be returned. (`<%`)_
 
 * Add `#with_content` to allow setting content without a block.
 
@@ -461,7 +461,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Blake Williams*
 
-* Do not generate template when using `--inline` flag.
+* Don't generate template when using `--inline` flag.
 
     *Hans Lemuet*
 
@@ -585,7 +585,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.18.2
 
-* Raise an error if controller or view context is accessed during initialize as they are only available in render.
+* Raise an error if controller or view context is accessed during initialize as they're only available in render.
 
     *Julian Nadeau*
 
@@ -694,7 +694,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.10.0
 
-* Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
+* Raise an `ArgumentError` with a helpful message when Ruby can't parse a component class.
 
     *Max Beizer*
 
@@ -786,7 +786,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## v2.2.1
 
-* Fix bug where template could not be found if `inherited` was redefined.
+* Fix bug where template couldn't be found if `inherited` was redefined.
 
     *Joel Hawksley*
 
@@ -824,7 +824,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Andrew Mason*
 
-* ViewComponent generators do not not prompt for content requirement.
+* ViewComponent generators don't not prompt for content requirement.
 
     *Joel Hawksley*
 
@@ -1152,7 +1152,7 @@ Note: `actionview-component` is now loaded by requiring `actionview/component`, 
 
 ## v1.3.3
 
-* Do not raise error when sidecar files that are not templates exist.
+* Don't raise error when sidecar files that aren't templates exist.
 
     *Joel Hawksley*
 

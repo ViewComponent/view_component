@@ -8,7 +8,7 @@ nav_order: 1
 
 A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
-## What is a ViewComponent?
+## What's a ViewComponent?
 
 ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
 
@@ -73,7 +73,7 @@ ViewComponent unit tests leverage the Capybara matchers library, allowing for co
 
 Traditional Rails templates have an implicit interface, making it hard to reason about their dependencies. This can lead to subtle bugs when rendering the same template in different contexts.
 
-ViewComponents use a standard Ruby initializer that clearly defines what is needed to render, making reuse easier and safer than partials.
+ViewComponents use a standard Ruby initializer that clearly defines what's needed to render, making reuse easier and safer than partials.
 
 ### Performance
 

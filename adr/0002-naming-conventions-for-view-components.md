@@ -16,7 +16,7 @@ We will recommend that ViewComponents are named without the `-Component` suffix,
 
 ## Alternatives considered
 
-We've used the `-Component` suffix for some time, so it is a viable alternative.
+We've used the `-Component` suffix for some time, so it's a viable alternative.
 
 ## Consequences
 

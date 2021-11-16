@@ -58,7 +58,7 @@ It's also possible to have a slot be a ViewComponent itself by passing in a seco
 ```ruby
 # blog_component.rb
 class BlogComponent < ViewComponent::Base
-  # Since `HeaderComponent` is nested inside of this component, we have to
+  # Since `HeaderComponent` is nested inside of this component, we've to
   # reference it as a string instead of a class name.
   renders_one :header, "HeaderComponent"
 

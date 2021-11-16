@@ -36,7 +36,7 @@ General-purpose ViewComponents implement common UI patterns. At GitHub, we open-
 
 App-specific ViewComponents translate a domain object (often an ActiveRecord model) into one or more general-purpose components.
 
-For example: we have a `User::AvatarComponent` that accepts a `User` ActiveRecord object and renders a `Primer::AvatarComponent`.
+For example: we've a `User::AvatarComponent` that accepts a `User` ActiveRecord object and renders a `Primer::AvatarComponent`.
 
 ## Organization
 
@@ -113,7 +113,7 @@ end
 
 ### Prefer ViewComponents over ViewModels
 
-ViewModels (view-specific objects) are deprecated in favor of ViewComponents. New ViewModels should not be created, and existing ViewModels should be migrated to be ViewComponents when possible.
+ViewModels (view-specific objects) are deprecated in favor of ViewComponents. New ViewModels shouldn't be created, and existing ViewModels should be migrated to be ViewComponents when possible.
 
 ### Prefer ViewComponents over partials
 
@@ -125,7 +125,7 @@ Use ViewComponents in place of helpers that return HTML.
 
 ### Avoid global state
 
-The more a ViewComponent is dependent on global state (such as request parameters or the current URL), the less likely it is to be reusable. Avoid implicit coupling to global state, instead passing it into the component explicitly. Thorough unit testing is a good way to ensure decoupling from global state.
+The more a ViewComponent is dependent on global state (such as request parameters or the current URL), the less likely it's to be reusable. Avoid implicit coupling to global state, instead passing it into the component explicitly. Thorough unit testing is a good way to ensure decoupling from global state.
 
 ### Avoid inline Ruby in ViewComponent templates
 
