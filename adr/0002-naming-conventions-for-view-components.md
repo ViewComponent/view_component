@@ -1,6 +1,6 @@
 # 2. Naming conventions for ViewComponents
 
-Date: 2021-07-13
+Date: 2021/07/13
 
 ## Status
 
@@ -16,7 +16,7 @@ We will recommend that ViewComponents are named without the `-Component` suffix,
 
 ## Alternatives considered
 
-We've used the `-Component` suffix for some time, so it's a viable alternative.
+We've used the `-Component` suffix for some time, so it's a valid option to continue with our existing practice.
 
 ## Consequences
 
