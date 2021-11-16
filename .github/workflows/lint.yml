@@ -3,6 +3,17 @@ name: Lint
 on: [pull_request]
 
 jobs:
+  prose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Vale
+        uses: errata-ai/vale-action@310a5ac41197ffb704515622b4914c72d3abc54b
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          files: docs
   markdown:
     runs-on: ubuntu-latest
     steps:
