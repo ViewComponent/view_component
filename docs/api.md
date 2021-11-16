@@ -195,7 +195,7 @@ end
 
 ### #with_request_url(path)
 
-Set the URL for the current request (such as when using request-dependent path helpers):
+Set the URL of the current request (such as when using request-dependent path helpers):
 
 ```ruby
 with_request_url("/users/42") do
