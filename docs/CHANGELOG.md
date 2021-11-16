@@ -601,7 +601,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.18.0
 
-* Fix auto-loading of previews (changes no longer require a server restart)
+* Fix auto loading of previews (changes no longer require a server restart)
 
     *Matt Brictson*
 
