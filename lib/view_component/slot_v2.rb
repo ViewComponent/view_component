@@ -69,7 +69,7 @@ module ViewComponent
 
     # Allow access to public component methods via the wrapper
     #
-    # e.g.
+    # for example
     #
     # calling `header.name` (where `header` is a slot) will call `name`
     # on the `HeaderComponent` instance.

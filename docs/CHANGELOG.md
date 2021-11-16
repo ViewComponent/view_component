@@ -417,7 +417,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Alex Robbin, Blake Williams*
 
-* Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
+* Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, for example passing `["yml", "yaml"]`.
 
     *Elia Schito*
 
@@ -522,7 +522,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
   * `with_slot collection: true` becomes `renders_many`.
   * Slot definitions now accept either a component class, component class name, or a lambda instead of a `class_name:` keyword argument.
   * Slots now support positional arguments.
-  * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. e.g. `<%= my_slot %>`.
+  * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. for example `<%= my_slot %>`.
   * Slot values are no longer set via the `slot` method, and instead use the name of the slot.
 
     *Blake Williams*
@@ -802,7 +802,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## v2.1.0
 
-* Support rendering collections (e.g., `render(MyComponent.with_collection(@items))`).
+* Support rendering collections (for example, `render(MyComponent.with_collection(@items))`).
 
     *Tim Clem*
 

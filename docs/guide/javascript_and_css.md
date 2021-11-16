@@ -10,7 +10,7 @@ While ViewComponent does not provide any built-in tooling to do so, it’s possi
 
 To use the Webpacker gem to compile assets located in `app/components`:
 
-1. In `config/webpacker.yml`, add `"app/components"` to the `additional_paths` array (e.g. `additional_paths: ["app/components"]`).
+1. In `config/webpacker.yml`, add `"app/components"` to the `additional_paths` array (for example `additional_paths: ["app/components"]`).
 2. In the Webpack entry file (often `app/javascript/packs/application.js`), add an import statement to a helper file, and in the helper file, import the components' Javascript:
 
 ```js

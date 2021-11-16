@@ -326,7 +326,7 @@ module ViewComponent
 
         # Add support for nested components defined in the same file.
         #
-        # e.g.
+        # for example
         #
         # class MyComponent < ViewComponent::Base
         #   class MyOtherComponent < ViewComponent::Base

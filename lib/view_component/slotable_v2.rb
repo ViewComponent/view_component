@@ -121,7 +121,7 @@ module ViewComponent
         singular_name = ActiveSupport::Inflector.singularize(slot_name)
 
         # Define setter for singular names
-        # e.g. `renders_many :items` allows fetching all tabs with
+        # for example `renders_many :items` allows fetching all tabs with
         # `component.tabs` and setting a tab with `component.tab`
         define_method singular_name do |*args, &block|
           set_slot(slot_name, nil, *args, &block)
