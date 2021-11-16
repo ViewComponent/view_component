@@ -206,7 +206,7 @@ class ListItemComponent < ViewComponent::Base
 end
 ```
 
-**NOTE**: the `types` hash's values can be any valid slot definition, including a component class, string, or lambda.
+**Note**: the `types` hash's values can be any valid slot definition, including a component class, string, or lambda.
 
 Filling in the `visual` slot is done by calling the appropriate slot method:
 
