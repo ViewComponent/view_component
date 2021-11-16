@@ -375,7 +375,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
     *Mario Schüttel*
 
 * Improve feature parity with Rails translations
-  * Don't create a translation backend if the component has no translation file
+  * Don't create a translation back end if the component has no translation file
   * Mark translation keys ending with `html` as HTML-safe
   * Always convert keys to String
   * Support multiple keys
