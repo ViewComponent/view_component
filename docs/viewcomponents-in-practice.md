@@ -16,7 +16,7 @@ ViewComponent gives us a way to isolate common UI patterns for reuse, helping us
 
 ## Everything is a ViewComponent
 
-Our goal is to build all of GitHub's Rails-rendered HTML with ViewComponents, composed of [Primer ViewComponents](https://primer.style/view-components/).
+Our goal is to build all GitHub's Rails-rendered HTML with ViewComponents, composed of [Primer ViewComponents](https://primer.style/view-components/).
 
 ## ViewComponent is to UI what ActiveRecord is to SQL
 

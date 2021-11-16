@@ -118,7 +118,7 @@ customElements.define('my-comment', Comment)
 
 ## Stimulus
 
-In Stimulus, create a 1:1 mapping between a Stimulus controller and a component. In order to load in Stimulus controllers from the `app/components` tree, amend the Stimulus boot code in `app/javascript/controllers/index.js`:
+In Stimulus, create a 1:1 mapping between a Stimulus controller and a component. To load in Stimulus controllers from the `app/components` tree, amend the Stimulus boot code in `app/javascript/controllers/index.js`:
 
 ```js
 import { Application } from "stimulus"
