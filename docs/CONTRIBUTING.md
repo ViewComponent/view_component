@@ -54,6 +54,8 @@ Here are a few things you can do that will increase the likelihood of your pull 
 
 Don't be afraid to ask for help! We recognize that English is not the first language of many folks who contribute to ViewComponent.
 
+To run the Vale prose linter locally, `brew install vale` and `vale docs/`.
+
 ## Releasing
 
 If you are the current maintainer of this gem:
