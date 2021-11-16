@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add @dylanatsmith as codeowner of the ViewComponent logo and member of committers team.
+
+    *Joel Hawksley*
+
 * Autoload `CompileCache`, which is optionally called in `engine.rb`.
 
     *Gregory Igelmund*
