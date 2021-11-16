@@ -43,7 +43,7 @@ Returning:
 
 ## When should I use ViewComponents?
 
-ViewComponents work best for templates that are reused or benefit from being tested directly. Heavily reused partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
+ViewComponents work best for templates that are reused or benefit from being tested directly. Partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
 
 ## Why should I use ViewComponents?
 

@@ -457,7 +457,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.26.0
 
-* Lazily evaluate component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
+* Delay evaluating component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
 
     *Blake Williams*
 
@@ -946,7 +946,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Jon Palmer*
 
-* Add `#render?` hook to easily allow components to be no-ops.
+* Add `#render?` hook to allow components to be no-ops.
 
     *Kyle Fox*
 

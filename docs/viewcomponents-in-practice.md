@@ -26,7 +26,7 @@ At GitHub, this means enabling developers to build consistent, accessible, and c
 
 ## The two types of ViewComponents we write
 
-We build our views using ViewComponents that generally fall into two categories: general-purpose and app-specific.
+We build our views using ViewComponents that tend to fall into two categories: general-purpose and app-specific.
 
 ### General-purpose ViewComponents
 
