@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add Litmus to users list
+
+    *Dylan Smith*
+
 * Autoload `CompileCache`, which is optionally called in `engine.rb`.
 
     *Gregory Igelmund*
