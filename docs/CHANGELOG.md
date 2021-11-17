@@ -35,6 +35,11 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
+* Move show_previews_source definition to Previewable.
+
+
+    *Yoshiyuki Hirano*
+
 ## 2.43.1
 
 * Remove unnecessary call to `ruby2_keywords` for polymorphic slot getters.
