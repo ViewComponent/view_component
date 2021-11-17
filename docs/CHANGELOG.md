@@ -31,7 +31,7 @@ title: Changelog
 
     *James Hart*
 
-* Add `require "method_source"` if it options.show_previews_source is enabled
+* Add `require "method_source"` if it options.show_previews_source is enabled.
 
     *Yoshiyuki Hirano*
 
