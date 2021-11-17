@@ -19,7 +19,7 @@ title: Changelog
 
     *James Hart*
 
-* Move show_previews_source definition to Previewable
+* Move show_previews_source definition to Previewable.
 
     *Yoshiyuki Hirano*
 
