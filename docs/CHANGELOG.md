@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Change logo in README for dark theme readability.
+
+    *Dylan Smith*
+
 * Add Litmus to users list.
 
     *Dylan Smith*
