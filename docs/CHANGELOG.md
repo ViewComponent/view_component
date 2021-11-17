@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Add Litmus to users list
+* Add Litmus to users list.
 
     *Dylan Smith*
 
