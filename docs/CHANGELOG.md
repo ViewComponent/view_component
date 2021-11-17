@@ -37,7 +37,6 @@ title: Changelog
 
 * Move show_previews_source definition to Previewable.
 
-
     *Yoshiyuki Hirano*
 
 ## 2.43.1
