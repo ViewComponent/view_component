@@ -11,6 +11,18 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Change logo in README for dark theme readability.
+
+    *Dylan Smith*
+
+* Add Litmus to users list.
+
+    *Dylan Smith*
+
+* Add @dylanatsmith as codeowner of the ViewComponent logo and member of committers team.
+
+    *Joel Hawksley*
+
 * Autoload `CompileCache`, which is optionally called in `engine.rb`.
 
     *Gregory Igelmund*
@@ -22,6 +34,14 @@ title: Changelog
 * Fix typo.
 
     *James Hart*
+
+* Add `require "method_source"` if it options.show_previews_source is enabled.
+
+    *Yoshiyuki Hirano*
+
+* Move show_previews_source definition to Previewable.
+
+    *Yoshiyuki Hirano*
 
 ## 2.43.1
 

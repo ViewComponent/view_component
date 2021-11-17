@@ -271,14 +271,6 @@ module ViewComponent
     #
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
-    # Enable or disable source code previews in component previews:
-    #
-    #     config.view_component.show_previews_source = true
-    #
-    # Defaults to `false`.
-    #
-    mattr_accessor :show_previews_source, instance_writer: false, default: false
-
     # Always generate a Stimulus controller alongside the component:
     #
     #     config.view_component.generate_stimulus_controller = true
