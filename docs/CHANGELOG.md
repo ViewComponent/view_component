@@ -19,6 +19,10 @@ title: Changelog
 
     *James Hart*
 
+* Add `require "method_source"` if it options.show_previews_source is enabled
+
+    *Yoshiyuki Hirano*
+
 ## 2.43.1
 
 * Remove unnecessary call to `ruby2_keywords` for polymorphic slot getters.
