@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add Litmus to users list.
+
+    *Dylan Smith*
+
 * Add @dylanatsmith as codeowner of the ViewComponent logo and member of committers team.
 
     *Joel Hawksley*
