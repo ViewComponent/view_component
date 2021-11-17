@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Change logo in README for dark theme readability
+* Change logo in README for dark theme readability.
 
     *Dylan Smith*
 
