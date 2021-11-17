@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Change logo in README for dark theme readability
+
+    *Dylan Smith*
+
 * Autoload `CompileCache`, which is optionally called in `engine.rb`.
 
     *Gregory Igelmund*
