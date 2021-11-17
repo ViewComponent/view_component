@@ -4,6 +4,9 @@
 # for details on how to update this file <3
 * @github/primer-rails-reviewers
 
+/docs/logo.md @dylanatsmith
+/docs/logo/**/* @dylanatsmith
+
 /lib/view_component/slotable.rb @blakewilliams
 /test/view_component/slotable_test.rb @blakewilliams
 /lib/view_component/slotable_v2.rb @blakewilliams
