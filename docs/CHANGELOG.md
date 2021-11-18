@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.44.0
+
 * Rename internal accessor to use private naming.
 
     *Joel Hawksley*, *Blake Williams*, *Cameron Dutro*
