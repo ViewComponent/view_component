@@ -39,6 +39,10 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
+* Clear cache in MethodSource to apply the change odf preview code without app server restart.
+
+    *Yoshiyuki Hirano*
+
 ## 2.43.1
 
 * Remove unnecessary call to `ruby2_keywords` for polymorphic slot getters.
