@@ -7,6 +7,14 @@ title: Changelog
 
 ## main
 
+* Rename internal accessor to use private naming.
+
+    *Joel Hawksley*, *Blake Williams*, *Cameron Dutro*
+
+* Add Github repo link to docs website header.
+
+    *Hans Lemuet*
+
 * Change logo in README for dark theme readability.
 
     *Dylan Smith*
