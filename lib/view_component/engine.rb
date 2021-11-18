@@ -34,7 +34,13 @@ module ViewComponent
           options.preview_paths << options.preview_path
         end
 
-        require "method_source" if options.show_previews_source
+        if options.show_previews_source
+          require "method_source"
+
+          app.config.to_prepare do
+            MethodSource.instance_variable_set(:@lines_for_file, {})
+          end
+        end
       end
 
       ActiveSupport.on_load(:view_component) do

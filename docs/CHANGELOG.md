@@ -11,6 +11,14 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Rename internal accessor to use private naming.
+
+    *Joel Hawksley*, *Blake Williams*, *Cameron Dutro*
+
+* Add Github repo link to docs website header.
+
+    *Hans Lemuet*
+
 * Change logo in README for dark theme readability.
 
     *Dylan Smith*
@@ -40,6 +48,10 @@ title: Changelog
     *Yoshiyuki Hirano*
 
 * Move show_previews_source definition to Previewable.
+
+    *Yoshiyuki Hirano*
+
+* Clear cache in MethodSource to apply the change odf preview code without app server restart.
 
     *Yoshiyuki Hirano*
 

@@ -29,7 +29,7 @@ module ViewComponent
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
-    attr_accessor :original_view_context
+    attr_accessor :__vc_original_view_context
 
     # EXPERIMENTAL: This API is experimental and may be removed at any time.
     # Hook for allowing components to do work as part of the compilation process.
@@ -52,7 +52,7 @@ module ViewComponent
       self.class.compile(raise_errors: true)
 
       @view_context = view_context
-      self.original_view_context ||= view_context
+      self.__vc_original_view_context ||= view_context
 
       @lookup_context ||= view_context.lookup_context
 
@@ -137,10 +137,10 @@ module ViewComponent
     # @private
     def render(options = {}, args = {}, &block)
       if options.is_a? ViewComponent::Base
-        options.original_view_context = original_view_context
+        options.__vc_original_view_context = __vc_original_view_context
         super
       else
-        original_view_context.render(options, args, &block)
+        __vc_original_view_context.render(options, args, &block)
       end
     end
 
@@ -186,7 +186,7 @@ module ViewComponent
       #
       # This allows ivars to remain persisted when using the same helper via
       # `helpers` across multiple components and partials.
-      @__vc_helpers ||= original_view_context || controller.view_context
+      @__vc_helpers ||= __vc_original_view_context || controller.view_context
     end
 
     # Exposes .virtual_path as an instance method

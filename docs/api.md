@@ -24,6 +24,14 @@ Set the parameter name used when rendering elements of a collection ([documentat
 
 ## Instance methods
 
+### #__vc_original_view_context
+
+Returns the value of attribute __vc_original_view_context.
+
+### #__vc_original_view_context=(value)
+
+Sets the attribute __vc_original_view_context
+
 ### #_output_postamble → [String]
 
 EXPERIMENTAL: Optional content to be returned after the rendered template.
@@ -48,14 +56,6 @@ that inhibits encapsulation & reuse, often making testing difficult.
 
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
-
-### #original_view_context
-
-Returns the value of attribute original_view_context.
-
-### #original_view_context=(value)
-
-Sets the attribute original_view_context
 
 ### #render? → [Boolean]
 
