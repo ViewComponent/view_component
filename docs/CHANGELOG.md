@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add Github repo link to docs website header.
+
+    *Hans Lemuet*
+
 * Change logo in README for dark theme readability.
 
     *Dylan Smith*
