@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Rename internal accessor to use private naming.
+
+    *Joel Hawksley*, *Blake Williams*, *Cameron Dutro*
+
 * Change logo in README for dark theme readability.
 
     *Dylan Smith*
