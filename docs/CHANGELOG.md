@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Remove `require "rails/generators/test_case"` in generator tests
+* Remove `require "rails/generators/test_case"` in generator tests.
 
     *Yoshiyuki Hirano*
 
