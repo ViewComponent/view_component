@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Remove `require "rails/generators/test_case"` in generator tests.
+
+    *Yoshiyuki Hirano*
+
 ## 2.44.0
 
 * Rename internal accessor to use private naming.
