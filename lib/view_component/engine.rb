@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails"
-require "view_component"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
@@ -145,3 +144,7 @@ module ViewComponent
     end
   end
 end
+
+# In the case of automatic loading, "view_component" is loaded first,
+# so there is no need to load it.
+require "view_component" unless defined?(ViewComponent::Base)
