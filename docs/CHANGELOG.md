@@ -11,6 +11,10 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
+* Suppress zeitwerk warning about circular require.
+
+    *Yoshiyuki Hirano*
+
 ## 2.44.0
 
 * Rename internal accessor to use private naming.
