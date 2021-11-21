@@ -65,9 +65,9 @@ The rendered output will look like this:
 
 ## Component slots
 
-Slots can also render other components. Pass the name of the component as the second argument. Component slots are
-useful when you want to render a specific component, but still allow full control of the arguments that are passed to
-it.
+Slots can also render other components. Pass the name of a component as the second argument to define a component slot.
+
+Any arguments you pass when calling a component slot will be used to initialize the component and render it. You can also pass a block to set that component's content and slots.
 
 ```ruby
 # blog_component.rb
