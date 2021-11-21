@@ -15,6 +15,10 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
+* Unify test code of TestUnitGeneratorTest with the other generators tests.
+
+    *Yoshiyuki Hirano*
+
 ## 2.44.0
 
 * Rename internal accessor to use private naming.

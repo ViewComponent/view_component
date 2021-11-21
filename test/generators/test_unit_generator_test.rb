@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require_relative File.expand_path("../../../lib/rails/generators/test_unit/component_generator", __FILE__)
+require "rails/generators/test_unit/component_generator"
 
-class ViewComponent::TestUnitGeneratorTest < ::Rails::Generators::TestCase
+Rails.application.load_generators
+
+class TestUnitGeneratorTest < Rails::Generators::TestCase
   tests TestUnit::Generators::ComponentGenerator
   destination Dir.mktmpdir
   setup :prepare_destination
 
-  setup do
-    run_generator %w(Dummy data)
-  end
-
   def test_generates_component
+    run_generator %w(Dummy data)
+
     assert_file "test/components/dummy_component_test.rb" do |content|
       assert_match(
         /render_inline\(DummyComponent.new\(message: "Hello, components!"\)\).css\("span"\).to_html/, content
