@@ -13,8 +13,10 @@ Slots are defined with `renders_one` and `renders_many`:
 - `renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
 - `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :posts`
 
-If you don't specify a second argument to these methods, you'll create a **passthrough slot**. Arbitrary content can be
-rendered inside these slots. If you need to render arbitrary markup or components, these may be the way to go.
+If you don't specify a second argument to these methods, you'll create a
+**passthrough slot**. Any content you pass through can be rendered inside these
+slots. If you don't want to strictly specify what should go in the slot you're
+making, these may be the way to go.
 
 For example:
 
