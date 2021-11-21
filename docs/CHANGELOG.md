@@ -11,6 +11,10 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
+* Move test_unit_generator_test.rb to generators dir from view_component dir.
+
+    *Yoshiyuki Hirano*
+
 ## 2.44.0
 
 * Rename internal accessor to use private naming.
