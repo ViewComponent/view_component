@@ -54,7 +54,14 @@ To render a `renders_many` slot, iterate over the name of the slot:
 <% end %>
 ```
 
-The link to "My blog" will render inside the `<h1>` tags, and links to each `BlogPost` will be rendered beneath.
+The rendered output will look like this:
+
+```erb
+<h1><a href="/">My blog</a></h1>
+
+<a href="/blog/first-post">First post</a>
+<a href="/blog/second-post">Second post</a>
+```
 
 ## Component slots
 
