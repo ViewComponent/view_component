@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Correct a typo in the sample slots code
+
+    *Simon Fish*
+
 * Remove `require "rails/generators/test_case"` in generator tests.
 
     *Yoshiyuki Hirano*
