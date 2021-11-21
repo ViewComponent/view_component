@@ -35,6 +35,10 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
+* Deprecate engine loading manually.
+
+    *Yoshiyuki Hirano*
+
 ## 2.44.0
 
 * Rename internal accessor to use private naming.
