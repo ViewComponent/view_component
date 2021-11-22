@@ -11,6 +11,14 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
+* Move `test_unit_generator_test.rb` from `test/view_component/` to `test/generators/`.
+
+    *Yoshiyuki Hirano*
+
+* Unify test code of `TestUnitGeneratorTest` with the other generators tests.
+
+    *Yoshiyuki Hirano*
+
 ## 2.44.0
 
 * Rename internal accessor to use private naming.
