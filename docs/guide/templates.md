@@ -60,7 +60,7 @@ class InlineComponent < ViewComponent::Base
 end
 ```
 
-It is also possible to define methods for Action Pack variants (`phone` in this case):
+It's also possible to define methods for Action Pack variants (`phone` in this case):
 
 ```ruby
 class InlineVariantComponent < ViewComponent::Base
@@ -87,7 +87,7 @@ To override the `variant` set by the request, use `with_variant`:
 Component subclasses inherit the parent component's template if they don't define their own template.
 
 ```ruby
-# If MyLinkComponent does not define a template,
+# If MyLinkComponent doesn't define a template,
 # it will fall back to the `LinkComponent` template.
 class MyLinkComponent < LinkComponent
 end

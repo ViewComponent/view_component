@@ -71,7 +71,7 @@ namespace :docs do
       f.puts("nav_order: 3")
       f.puts("---")
       f.puts
-      f.puts("<!-- Warning: AUTO-GENERATED file, do not edit. Add code comments to your Ruby instead <3 -->")
+      f.puts("<!-- Warning: AUTO-GENERATED file, don't edit. Add code comments to your Ruby instead <3 -->")
       f.puts
       f.puts("# API")
 

@@ -22,6 +22,6 @@ end
 
 Sandbox::Application.config.secret_key_base = "foo"
 
-# Do not silence library backtraces in test reports
+# Don't silence library backtraces in test reports
 Rails.backtrace_cleaner.remove_filters!
 Rails.backtrace_cleaner.remove_silencers!

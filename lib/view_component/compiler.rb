@@ -95,7 +95,7 @@ module ViewComponent
           errors = []
 
           if (templates + inline_calls).empty?
-            errors << "Could not find a template file or inline render method for #{component_class}."
+            errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
           if templates.count { |template| template[:variant].nil? } > 1

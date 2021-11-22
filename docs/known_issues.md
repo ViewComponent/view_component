@@ -7,8 +7,8 @@ title: Known issues
 
 ## form_for compatibility
 
-ViewComponent is [not currently compatible](https://github.com/github/view_component/issues/241) with `form_for` helpers.
+ViewComponent [isn't currently compatible](https://github.com/github/view_component/issues/241) with `form_for` helpers.
 
 ## Inconsistent controller rendering behavior between Rails versions
 
-In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout.
+In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout.

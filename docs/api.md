@@ -4,7 +4,7 @@ title: API
 nav_order: 3
 ---
 
-<!-- Warning: AUTO-GENERATED file, do not edit. Add code comments to your Ruby instead <3 -->
+<!-- Warning: AUTO-GENERATED file, don't edit. Add code comments to your Ruby instead <3 -->
 
 # API
 
@@ -168,7 +168,7 @@ Path for component files
 
     config.view_component.view_component_path = "app/my_components"
 
-Defaults to "app/components".
+Defaults to `app/components`.
 
 ## ViewComponent::TestHelpers
 
@@ -195,7 +195,7 @@ end
 
 ### #with_request_url(path)
 
-Set the URL for the current request (such as when using request-dependent path helpers):
+Set the URL of the current request (such as when using request-dependent path helpers):
 
 ```ruby
 with_request_url("/users/42") do
