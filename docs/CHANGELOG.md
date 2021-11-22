@@ -11,7 +11,7 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
-* Move test_unit_generator_test.rb to generators dir from view_component dir.
+* Move `test_unit_generator_test.rb` from `test/view_component/` to `test/generators/`.
 
     *Yoshiyuki Hirano*
 
