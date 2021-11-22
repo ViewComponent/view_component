@@ -58,7 +58,7 @@ It's also possible to have a slot be a ViewComponent itself by passing in a seco
 ```ruby
 # blog_component.rb
 class BlogComponent < ViewComponent::Base
-  # Since `HeaderComponent` is nested inside of this component, we have to
+  # Since `HeaderComponent` is nested inside of this component, we've to
   # reference it as a string instead of a class name.
   renders_one :header, "HeaderComponent"
 
@@ -206,7 +206,7 @@ class ListItemComponent < ViewComponent::Base
 end
 ```
 
-**NOTE**: the `types` hash's values can be any valid slot definition, including a component class, string, or lambda.
+**Note**: the `types` hash's values can be any valid slot definition, including a component class, string, or lambda.
 
 Filling in the `visual` slot is done by calling the appropriate slot method:
 

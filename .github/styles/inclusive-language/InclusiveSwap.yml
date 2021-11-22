@@ -1,0 +1,13 @@
+extends: substitution
+message: Consider using '%s' instead of '%s'.
+ignorecase: true
+level: error
+action:
+  name: replace
+swap:
+  black\s?list\s?(?:ed)?: blocklist
+  white\s?list\s?(?:ed)?: allowlist
+  sanity check(?:ing)?: gut check
+  brown bag session: lunch and learn
+  redline(?:ing)?: markup
+  rule of thumb: standard, principle

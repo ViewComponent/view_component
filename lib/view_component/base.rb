@@ -152,7 +152,7 @@ module ViewComponent
       if view_context.nil?
         raise(
           ViewContextCalledBeforeRenderError,
-          "`#controller` cannot be used during initialization, as it depends " \
+          "`#controller` can't be used during initialization, as it depends " \
           "on the view context that only exists once a ViewComponent is passed to " \
           "the Rails render pipeline.\n\n" \
           "It's sometimes possible to fix this issue by moving code dependent on " \
@@ -171,7 +171,7 @@ module ViewComponent
       if view_context.nil?
         raise(
           ViewContextCalledBeforeRenderError,
-          "`#helpers` cannot be used during initialization, as it depends " \
+          "`#helpers` can't be used during initialization, as it depends " \
           "on the view context that only exists once a ViewComponent is passed to " \
           "the Rails render pipeline.\n\n" \
           "It's sometimes possible to fix this issue by moving code dependent on " \
@@ -206,7 +206,7 @@ module ViewComponent
     #
     # @private
     def format
-      # Ruby 2.6 throws a warning without checking `defined?`, 2.7 does not
+      # Ruby 2.6 throws a warning without checking `defined?`, 2.7 doesn't
       if defined?(@__vc_variant)
         @__vc_variant
       end
@@ -283,7 +283,7 @@ module ViewComponent
     #
     #     config.view_component.view_component_path = "app/my_components"
     #
-    # Defaults to "app/components".
+    # Defaults to `app/components`.
     mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
 
     # Parent class for generated components
@@ -318,7 +318,7 @@ module ViewComponent
 
         # Add support for nested components defined in the same file.
         #
-        # e.g.
+        # for example
         #
         # class MyComponent < ViewComponent::Base
         #   class MyOtherComponent < ViewComponent::Base
@@ -431,7 +431,7 @@ module ViewComponent
       end
 
       # Ensure the component initializer accepts the
-      # collection parameter. By default, we do not
+      # collection parameter. By default, we don't
       # validate that the default parameter name
       # is accepted, as support for collection
       # rendering is optional.
@@ -442,7 +442,7 @@ module ViewComponent
         return unless parameter
         return if initialize_parameter_names.include?(parameter)
 
-        # If Ruby cannot parse the component class, then the initalize
+        # If Ruby can't parse the component class, then the initalize
         # parameters will be empty and ViewComponent will not be able to render
         # the component.
         if initialize_parameters.empty?
@@ -455,14 +455,14 @@ module ViewComponent
         end
 
         raise ArgumentError.new(
-          "The initializer for #{self} does not accept the parameter `#{parameter}`, " \
+          "The initializer for #{self} doesn't accept the parameter `#{parameter}`, " \
           "which is required in order to render it as a collection.\n\n" \
           "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
           "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
         )
       end
 
-      # Ensure the component initializer does not define
+      # Ensure the component initializer doesn't define
       # invalid parameters that could override the framework's
       # methods.
       # @private TODO: add documentation
@@ -470,7 +470,7 @@ module ViewComponent
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
         raise ViewComponent::ComponentError.new(
-          "#{self} initializer cannot accept the parameter `#{RESERVED_PARAMETER}`, as it will override a " \
+          "#{self} initializer can't accept the parameter `#{RESERVED_PARAMETER}`, as it will override a " \
           "public ViewComponent method. To fix this issue, rename the parameter."
         )
       end
