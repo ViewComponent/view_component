@@ -15,7 +15,7 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
-* Unify test code of TestUnitGeneratorTest with the other generators tests.
+* Unify test code of `TestUnitGeneratorTest` with the other generators tests.
 
     *Yoshiyuki Hirano*
 
