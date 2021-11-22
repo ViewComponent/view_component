@@ -1,6 +1,6 @@
 # 3. Polymorphic slots
 
-Date: 2021-09-29
+Date: 2021/09/29
 
 ## Author
 
@@ -15,27 +15,27 @@ Accepted
 Components can currently define slots in two ways:
 
 1. by specifying a component class (or class name string)
-1. by providing a proc (i.e. lambda) that either returns HTML or a component instance.
+1. by providing a proc that either returns HTML or a component instance.
 
 With these options in mind, imagine a scenario in which a component supports rendering one of two possible sub-components in a slot. In other words, the user of the component may only fill the slot with one of two (or more) possible kinds of sub-component.
 
 To illustrate, let's consider a list component with an `items` slot. Each constituent `Item` has either an icon or an avatar on the right-hand side followed by some text.
 
-When implementing the `Item` component, we have several options for determining whether we should render an icon or an avatar:
+When implementing the `Item` component, we've several options for determining whether we should render an icon or an avatar:
 
 1. **Two slots w/error**: define two different slots for the icon and avatar, and raise an error in the `before_render` lifecycle method if both are defined.
 1. **Two slots w/default**: define two different slots for the icon and avatar, but favor one or the other if both are provided.
 1. **Examine kwargs**: define a single slot and determine which sub-component to render by examining the contents of `**kwargs`.
 1. **Unrestricted content**: define a single slot that renders any content provided by the caller. The component has to "trust" that the caller will pass in only an icon or avatar.
 
-While all of these options are reasonably acceptable, there are problems with each:
+While these options are reasonably acceptable, there are problems with each:
 
 1. **Two slots w/error**: using `before_render` for slot validation feels like an anti-pattern. To make the interface clear, defining both slots shouldn't be possible.
-1. **Two slots w/default**: same issues as #1, but worse because it silently "swallows" the error. This behavior probably won't be obvious to the component's users.
-1. **Examine kwargs**: this approach is brittle because the kwargs accepted by constituent components can change over time, potentially requiring changes to the `Item` component as well.
+1. **Two slots w/default**: same issues as #1, but worse because it "swallows" the error. This behavior probably won't be obvious to the component's users.
+1. **Examine kwargs**: this approach is brittle because the kwargs accepted by constituent components can change over time, which may require changes to the `Item` component as well.
 1. **Unrestricted content**: not ideal because the content can literally be anything and relies on the caller following the "rules."
 
-It is my opinion that we need the ability to choose between multiple types within a single slot.
+It's my opinion that we need the ability to choose between multiple types within a single slot.
 
 ## Decision
 
@@ -112,9 +112,9 @@ In such cases, there are several viable workarounds:
 
 ### Positional Type Argument vs Method Names
 
-There has been some discussion around whether or not polymorphic slots should accept a positional `type` argument or instead define methods that correspond to each slot type as described in this ADR. We have decided to implement the method approach for several reasons:
+There has been some discussion around whether polymorphic slots should accept a positional `type` argument or instead define methods that correspond to each slot type as described in this ADR. We've decided to implement the method approach for several reasons:
 
 1. Positional arguments aren't used anywhere else in the framework.
-1. There is a preference amongst team members that the slot setter accept the exact same arguments as the slot itself, since doing so reduces the conceptual overhead of the slots API.
+2. There is a preference amongst team members that the slot setter accept the exact same arguments as the slot itself, since doing so reduces the conceptual overhead of the slots API.
 
 An argument was made that multiple setters for the same slot appear to be two different slots, but wasn't considered enough of a drawback to go the `type` argument route.
