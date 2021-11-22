@@ -134,3 +134,13 @@ Avoid writing inline Ruby in ViewComponent templates. Try using an instance meth
 ### Pass an object instead of 3+ object attributes
 
 ViewComponents should be passed individual object attributes unless three or more attributes are needed from the object, in which case the entire object should be passed.
+
+### Avoid database queries
+
+Avoid executing database queries in ViewComponents. Be especially careful for ViewComponents that are rendered as lists.
+
+In the GitHub monolith, we automatically assert that `render_inline` calls execute no database queries. To allow queries to be run, pass `allowed_queries`:
+
+```ruby
+render_inline(MyComponent.new, allowed_queries: 2)
+```
