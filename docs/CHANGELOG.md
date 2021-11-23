@@ -11,6 +11,10 @@ title: Changelog
 
     *Horia Radu*
 
+* Correct a typo in the sample slots code.
+
+    *Simon Fish*
+
 * Add note about `allowed_queries`.
 
     *Joel Hawksley*
@@ -20,6 +24,10 @@ title: Changelog
     *Joel Hawksley*
 
 * Remove `require "rails/generators/test_case"` in generator tests.
+
+    *Yoshiyuki Hirano*
+
+* Suppress zeitwerk warning about circular require.
 
     *Yoshiyuki Hirano*
 
