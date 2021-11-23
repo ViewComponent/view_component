@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Add failing test for default form builder
+* Add failing test for default form builder and documentation around known issue.
 
     *Simon Fish*
 
