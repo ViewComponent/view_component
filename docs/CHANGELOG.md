@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Compiler redefines `call` in a thread-safe way.
+
+    *Horia Radu*
+
 * Add note about `allowed_queries`.
 
     *Joel Hawksley*
