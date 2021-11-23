@@ -24,18 +24,6 @@ Set the parameter name used when rendering elements of a collection ([documentat
 
 ## Instance methods
 
-### #__vc_original_view_context
-
-Returns the value of attribute __vc_original_view_context.
-
-### #__vc_original_view_context=(value)
-
-Sets the attribute __vc_original_view_context
-
-### #_output_postamble → [String]
-
-EXPERIMENTAL: Optional content to be returned after the rendered template.
-
 ### #before_render → [void]
 
 Called before rendering the component. Override to perform operations that
