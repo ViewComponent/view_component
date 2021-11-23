@@ -19,6 +19,10 @@ title: Changelog
 
     *Yoshiyuki Hirano*
 
+* Suppress zeitwerk warning about circular require.
+
+    *Yoshiyuki Hirano*
+
 * Move `test_unit_generator_test.rb` from `test/view_component/` to `test/generators/`.
 
     *Yoshiyuki Hirano*
