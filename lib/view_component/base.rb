@@ -364,6 +364,9 @@ module ViewComponent
 
       # @private
       def inherited(child)
+        # ensure each subclass has it's own lock
+        child.mutex = Mutex.new
+
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
         compile
