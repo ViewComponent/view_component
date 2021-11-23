@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Correct a typo in the sample slots code
+* Correct a typo in the sample slots code.
 
     *Simon Fish*
 
