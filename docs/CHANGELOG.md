@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Correct a typo in the sample slots code.
+
+    *Simon Fish*
+
 * Add note about `allowed_queries`.
 
     *Joel Hawksley*

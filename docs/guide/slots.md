@@ -44,7 +44,7 @@ To render a `renders_many` slot, iterate over the name of the slot:
   <% end %>
 
   <% BlogPost.all.each do |blog_post| %>
-    <%= c.post do %>
+    <% c.post do %>
       <%= link_to blog_post.name, blog_post.url %>
     <% end %>
   <% end %>
