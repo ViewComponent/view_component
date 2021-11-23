@@ -40,7 +40,7 @@ module ViewComponent
         component_class.validate_collection_parameter!
       end
 
-      component_class.mutex.synchronize do
+      component_class.lock.synchronize do
         templates.each do |template|
           # Remove existing compiled template methods,
           # as Ruby warns when redefining a method.
@@ -81,11 +81,13 @@ module ViewComponent
 
       component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil)
-          if variant.nil?
-            call
-          #{variant_elsifs}
-          else
-            call
+          self.class.mutex.synchronize do
+            if variant.nil?
+              call
+            #{variant_elsifs}
+            else
+              call
+            end
           end
         end
       RUBY
