@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Remove internal APIs from API documentation, fix link to license.
+
+    *Joel Hawksley*
+
 * Add @yhirano55 to triage team.
 
     *Joel Hawksley*
