@@ -897,8 +897,8 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_text("Hello, World!")
   end
 
-  def test_each_component_has_a_different_mutex
-    assert_not_equal(MyComponent.mutex, AnotherComponent.mutex)
+  def test_each_component_has_a_different_lock
+    assert_not_equal(MyComponent.lock, AnotherComponent.lock)
   end
 
   def test_multithread_render
