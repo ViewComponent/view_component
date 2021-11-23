@@ -40,28 +40,30 @@ module ViewComponent
         component_class.validate_collection_parameter!
       end
 
-      templates.each do |template|
-        # Remove existing compiled template methods,
-        # as Ruby warns when redefining a method.
-        method_name = call_method_name(template[:variant])
+      component_class.mutex.synchronize do
+        templates.each do |template|
+          # Remove existing compiled template methods,
+          # as Ruby warns when redefining a method.
+          method_name = call_method_name(template[:variant])
 
-        if component_class.instance_methods.include?(method_name.to_sym)
-          component_class.send(:undef_method, method_name.to_sym)
+          if component_class.instance_methods.include?(method_name.to_sym)
+            component_class.send(:undef_method, method_name.to_sym)
+          end
+
+          component_class.class_eval <<-RUBY, template[:path], -1
+            def #{method_name}
+              @output_buffer = ActionView::OutputBuffer.new
+              #{compiled_template(template[:path])}
+            end
+          RUBY
         end
 
-        component_class.class_eval <<-RUBY, template[:path], -1
-          def #{method_name}
-            @output_buffer = ActionView::OutputBuffer.new
-            #{compiled_template(template[:path])}
-          end
-        RUBY
+        define_render_template_for
+
+        component_class._after_compile
+
+        CompileCache.register(component_class)
       end
-
-      define_render_template_for
-
-      component_class._after_compile
-
-      CompileCache.register(component_class)
     end
 
     private

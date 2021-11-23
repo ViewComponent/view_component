@@ -31,6 +31,10 @@ module ViewComponent
 
     attr_accessor :__vc_original_view_context
 
+    # Lock required to be obtained before compiling the component
+    class_attribute :mutex
+    self.mutex = Mutex.new
+
     # EXPERIMENTAL: This API is experimental and may be removed at any time.
     # Hook for allowing components to do work as part of the compilation process.
     #
