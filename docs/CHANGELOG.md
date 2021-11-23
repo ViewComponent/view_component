@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add @yhirano55 to triage team.
+
+    *Joel Hawksley*
+
 * Correct a typo in the sample slots code.
 
     *Simon Fish*
