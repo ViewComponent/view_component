@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add note about `allowed_queries`.
+
+    *Joel Hawksley*
+
 * Add `vale` content linter.
 
     *Joel Hawksley*
