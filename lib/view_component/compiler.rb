@@ -40,7 +40,7 @@ module ViewComponent
         component_class.validate_collection_parameter!
       end
 
-      component_class.lock.synchronize do
+      component_class.mutex.synchronize do
         templates.each do |template|
           # Remove existing compiled template methods,
           # as Ruby warns when redefining a method.
