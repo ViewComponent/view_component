@@ -13,7 +13,7 @@ If you have any substantial changes that you would like to make, please [open an
 
 GitHub engineers tend to focus on areas of the project that are useful to GitHub, but we're happy to pair with members of the community to enable work on other parts. Just let us know in an issue.
 
-Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](/LICENSE.txt).
+Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](https://github.com/github/view_component/blob/main/LICENSE.txt).
 
 ## Submitting a pull request
 
