@@ -87,13 +87,11 @@ module ViewComponent
 
       component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil)
-          self.class.compiler.__vc_compiler_lock.synchronize do
-            if variant.nil?
-              call
-            #{variant_elsifs}
-            else
-              call
-            end
+          if variant.nil?
+            call
+          #{variant_elsifs}
+          else
+            call
           end
         end
       RUBY
