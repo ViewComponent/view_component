@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add theme-specific logo images to readme.
+
+    *Dylan Smith*
+
 * Autoload `CompileCache`, which is optionally called in `engine.rb`.
 
     *Gregory Igelmund*
