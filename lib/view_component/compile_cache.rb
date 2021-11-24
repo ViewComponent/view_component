@@ -18,6 +18,10 @@ module ViewComponent
       cache.include? klass
     end
 
+    def invalidate_class!(klass)
+      cache.delete(klass)
+    end
+
     def invalidate!
       cache.clear
     end

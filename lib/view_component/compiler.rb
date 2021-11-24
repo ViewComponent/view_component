@@ -13,34 +13,36 @@ module ViewComponent
     def compile(raise_errors: false)
       return if compiled?
 
-      subclass_instance_methods = component_class.instance_methods(false)
-
-      if subclass_instance_methods.include?(:with_content) && raise_errors
-        raise ViewComponent::ComponentError.new(
-          "#{component_class} implements a reserved method, `#with_content`.\n\n" \
-          "To fix this issue, change the name of the method."
-        )
-      end
-
-      if template_errors.present?
-        raise ViewComponent::TemplateError.new(template_errors) if raise_errors
-
-        return false
-      end
-
-      if subclass_instance_methods.include?(:before_render_check)
-        ActiveSupport::Deprecation.warn(
-          "`#before_render_check` will be removed in v3.0.0.\n\n" \
-          "To fix this issue, use `#before_render` instead."
-        )
-      end
-
-      if raise_errors
-        component_class.validate_initialization_parameters!
-        component_class.validate_collection_parameter!
-      end
-
       component_class.__vc_compiler_lock.synchronize do
+        CompileCache.invalidate_class!(component_class)
+
+        subclass_instance_methods = component_class.instance_methods(false)
+
+        if subclass_instance_methods.include?(:with_content) && raise_errors
+          raise ViewComponent::ComponentError.new(
+            "#{component_class} implements a reserved method, `#with_content`.\n\n" \
+            "To fix this issue, change the name of the method."
+          )
+        end
+
+        if template_errors.present?
+          raise ViewComponent::TemplateError.new(template_errors) if raise_errors
+
+          return false
+        end
+
+        if subclass_instance_methods.include?(:before_render_check)
+          ActiveSupport::Deprecation.warn(
+            "`#before_render_check` will be removed in v3.0.0.\n\n" \
+            "To fix this issue, use `#before_render` instead."
+          )
+        end
+
+        if raise_errors
+          component_class.validate_initialization_parameters!
+          component_class.validate_collection_parameter!
+        end
+
         templates.each do |template|
           # Remove existing compiled template methods,
           # as Ruby warns when redefining a method.
