@@ -495,7 +495,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   def test_renders_the_inline_component_using_a_non_standard_located_template
     get "/rails/view_components/inline_component/with_non_standard_template"
-    assert_select "h1", "This is not a standard place to have a preview template"
+    assert_select "h1", "This isn't a standard place to have a preview template"
     assert_select "input[name=?]", "name"
   end
 
@@ -516,7 +516,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_raises ViewComponent::PreviewTemplateError do
         get "/rails/view_components/inline_component/without_template"
       end
-    assert_match(/preview template for example without_template does not exist/, error.message)
+    assert_match(/preview template for example without_template doesn't exist/, error.message)
   end
 
   def test_renders_a_preview_template_using_haml_params_from_url_custom_template_and_locals

@@ -16,7 +16,7 @@ ViewComponent gives us a way to isolate common UI patterns for reuse, helping us
 
 ## Everything is a ViewComponent
 
-Our goal is to build all of GitHub's Rails-rendered HTML with ViewComponents, composed of [Primer ViewComponents](https://primer.style/view-components/).
+Our goal is to build all GitHub's Rails-rendered HTML with ViewComponents, composed of [Primer ViewComponents](https://primer.style/view-components/).
 
 ## ViewComponent is to UI what ActiveRecord is to SQL
 
@@ -26,7 +26,7 @@ At GitHub, this means enabling developers to build consistent, accessible, and c
 
 ## The two types of ViewComponents we write
 
-We build our views using ViewComponents that generally fall into two categories: general-purpose and app-specific.
+We build our views using ViewComponents that tend to fall into two categories: general-purpose and app-specific.
 
 ### General-purpose ViewComponents
 
@@ -36,7 +36,7 @@ General-purpose ViewComponents implement common UI patterns. At GitHub, we open-
 
 App-specific ViewComponents translate a domain object (often an ActiveRecord model) into one or more general-purpose components.
 
-For example: we have a `User::AvatarComponent` that accepts a `User` ActiveRecord object and renders a `Primer::AvatarComponent`.
+For example: we've a `User::AvatarComponent` that accepts a `User` ActiveRecord object and renders a `Primer::AvatarComponent`.
 
 ## Organization
 
@@ -113,7 +113,7 @@ end
 
 ### Prefer ViewComponents over ViewModels
 
-ViewModels (view-specific objects) are deprecated in favor of ViewComponents. New ViewModels should not be created, and existing ViewModels should be migrated to be ViewComponents when possible.
+ViewModels (view-specific objects) are deprecated in favor of ViewComponents. New ViewModels shouldn't be created, and existing ViewModels should be migrated to be ViewComponents when possible.
 
 ### Prefer ViewComponents over partials
 
@@ -125,7 +125,7 @@ Use ViewComponents in place of helpers that return HTML.
 
 ### Avoid global state
 
-The more a ViewComponent is dependent on global state (such as request parameters or the current URL), the less likely it is to be reusable. Avoid implicit coupling to global state, instead passing it into the component explicitly. Thorough unit testing is a good way to ensure decoupling from global state.
+The more a ViewComponent is dependent on global state (such as request parameters or the current URL), the less likely it's to be reusable. Avoid implicit coupling to global state, instead passing it into the component explicitly. Thorough unit testing is a good way to ensure decoupling from global state.
 
 ### Avoid inline Ruby in ViewComponent templates
 
@@ -134,3 +134,13 @@ Avoid writing inline Ruby in ViewComponent templates. Try using an instance meth
 ### Pass an object instead of 3+ object attributes
 
 ViewComponents should be passed individual object attributes unless three or more attributes are needed from the object, in which case the entire object should be passed.
+
+### Avoid database queries
+
+Avoid executing database queries in ViewComponents. Be especially careful for ViewComponents that are rendered as lists.
+
+In the GitHub monolith, we automatically assert that `render_inline` calls execute no database queries. To allow queries to be run, pass `allowed_queries`:
+
+```ruby
+render_inline(MyComponent.new, allowed_queries: 2)
+```

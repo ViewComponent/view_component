@@ -1,0 +1,13 @@
+extends: existence
+message: "Use first person (such as '%s') sparingly."
+link: https://docs.microsoft.com/en-us/style-guide/grammar/person
+ignorecase: true
+level: warning
+nonword: true
+tokens:
+  - (?:^|\s)I\s
+  - (?:^|\s)I,\s
+  - \bI'm\b
+  - \bme\b
+  - \bmy\b
+  - \bmine\b

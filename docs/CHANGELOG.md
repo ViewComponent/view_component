@@ -11,6 +11,66 @@ title: Changelog
 
     *Dylan Smith*
 
+## 2.45.0
+
+* Remove internal APIs from API documentation, fix link to license.
+
+    *Joel Hawksley*
+
+* Add @yhirano55 to triage team.
+
+    *Joel Hawksley*
+
+* Correct a typo in the sample slots code.
+
+    *Simon Fish*
+
+* Add note about `allowed_queries`.
+
+    *Joel Hawksley*
+
+* Add `vale` content linter.
+
+    *Joel Hawksley*
+
+* Remove `require "rails/generators/test_case"` in generator tests.
+
+    *Yoshiyuki Hirano*
+
+* Suppress zeitwerk warning about circular require.
+
+    *Yoshiyuki Hirano*
+
+* Move `test_unit_generator_test.rb` from `test/view_component/` to `test/generators/`.
+
+    *Yoshiyuki Hirano*
+
+* Unify test code of `TestUnitGeneratorTest` with the other generators tests.
+
+    *Yoshiyuki Hirano*
+
+## 2.44.0
+
+* Rename internal accessor to use private naming.
+
+    *Joel Hawksley*, *Blake Williams*, *Cameron Dutro*
+
+* Add Github repo link to docs website header.
+
+    *Hans Lemuet*
+
+* Change logo in README for dark theme readability.
+
+    *Dylan Smith*
+
+* Add Litmus to users list.
+
+    *Dylan Smith*
+
+* Add @dylanatsmith as codeowner of the ViewComponent logo and member of committers team.
+
+    *Joel Hawksley*
+
 * Autoload `CompileCache`, which is optionally called in `engine.rb`.
 
     *Gregory Igelmund*
@@ -22,6 +82,18 @@ title: Changelog
 * Fix typo.
 
     *James Hart*
+
+* Add `require "method_source"` if it options.show_previews_source is enabled.
+
+    *Yoshiyuki Hirano*
+
+* Move show_previews_source definition to Previewable.
+
+    *Yoshiyuki Hirano*
+
+* Clear cache in MethodSource to apply the change odf preview code without app server restart.
+
+    *Yoshiyuki Hirano*
 
 ## 2.43.1
 
@@ -112,7 +184,7 @@ title: Changelog
 
     *Matthew Rider*
 
-* Fix bug where `with_collection_parameter` did not inherit from parent component.
+* Fix bug where `with_collection_parameter` didn't inherit from parent component.
 
     *Will Drexler*, *Christian Campoli*
 
@@ -316,7 +388,7 @@ title: Changelog
 
     *Hans Lemuet*
 
-* Fix bug where ViewComponents did not work in ActionMailers.
+* Fix bug where ViewComponents didn't work in ActionMailers.
 
     *dark-panda*
 
@@ -364,7 +436,7 @@ title: Changelog
 
 ## 2.31.0
 
-_Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot should not be returned. (`<%`)_
+_Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot shouldn't be returned. (`<%`)_
 
 * Add `#with_content` to allow setting content without a block.
 
@@ -375,7 +447,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
     *Mario Schüttel*
 
 * Improve feature parity with Rails translations
-  * Don't create a translation backend if the component has no translation file
+  * Don't create a translation back end if the component has no translation file
   * Mark translation keys ending with `html` as HTML-safe
   * Always convert keys to String
   * Support multiple keys
@@ -417,7 +489,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Alex Robbin, Blake Williams*
 
-* Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
+* Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, for example passing `["yml", "yaml"]`.
 
     *Elia Schito*
 
@@ -457,11 +529,11 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.26.0
 
-* Lazily evaluate component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
+* Delay evaluating component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
 
     *Blake Williams*
 
-* Do not generate template when using `--inline` flag.
+* Don't generate template when using `--inline` flag.
 
     *Hans Lemuet*
 
@@ -522,7 +594,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
   * `with_slot collection: true` becomes `renders_many`.
   * Slot definitions now accept either a component class, component class name, or a lambda instead of a `class_name:` keyword argument.
   * Slots now support positional arguments.
-  * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. e.g. `<%= my_slot %>`.
+  * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. for example `<%= my_slot %>`.
   * Slot values are no longer set via the `slot` method, and instead use the name of the slot.
 
     *Blake Williams*
@@ -585,7 +657,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.18.2
 
-* Raise an error if controller or view context is accessed during initialize as they are only available in render.
+* Raise an error if controller or view context is accessed during initialize as they're only available in render.
 
     *Julian Nadeau*
 
@@ -601,7 +673,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.18.0
 
-* Fix auto-loading of previews (changes no longer require a server restart)
+* Fix auto loading of previews (changes no longer require a server restart)
 
     *Matt Brictson*
 
@@ -694,7 +766,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.10.0
 
-* Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
+* Raise an `ArgumentError` with a helpful message when Ruby can't parse a component class.
 
     *Max Beizer*
 
@@ -786,7 +858,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## v2.2.1
 
-* Fix bug where template could not be found if `inherited` was redefined.
+* Fix bug where template couldn't be found if `inherited` was redefined.
 
     *Joel Hawksley*
 
@@ -802,7 +874,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## v2.1.0
 
-* Support rendering collections (e.g., `render(MyComponent.with_collection(@items))`).
+* Support rendering collections (for example, `render(MyComponent.with_collection(@items))`).
 
     *Tim Clem*
 
@@ -824,7 +896,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Andrew Mason*
 
-* ViewComponent generators do not not prompt for content requirement.
+* ViewComponent generators don't not prompt for content requirement.
 
     *Joel Hawksley*
 
@@ -946,7 +1018,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Jon Palmer*
 
-* Add `#render?` hook to easily allow components to be no-ops.
+* Add `#render?` hook to allow components to be no-ops.
 
     *Kyle Fox*
 
@@ -1014,7 +1086,9 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Fix edge case issue with extracting variants from less conventional source_locations.
 
+<!-- vale proselint.GenderBias = NO -->
     *Ryan Workman*
+<!-- vale proselint.GenderBias = YES -->
 
 ## v1.6.0
 
@@ -1050,7 +1124,9 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Add support for RSpec to generators.
 
+<!-- vale proselint.GenderBias = NO -->
     *Dylan Clark, Ryan Workman*
+<!-- vale proselint.GenderBias = YES -->
 
 * Require controllers as part of setting autoload paths.
 
@@ -1074,7 +1150,9 @@ Note: `actionview-component` is now loaded by requiring `actionview/component`, 
 
 * Fix issue with generating component method signatures.
 
+<!-- vale proselint.GenderBias = NO -->
     *Ryan Workman, Dylan Clark*
+<!-- vale proselint.GenderBias = YES -->
 
 * Create component generator.
 
@@ -1146,7 +1224,7 @@ Note: `actionview-component` is now loaded by requiring `actionview/component`, 
 
 ## v1.3.3
 
-* Do not raise error when sidecar files that are not templates exist.
+* Don't raise error when sidecar files that aren't templates exist.
 
     *Joel Hawksley*
 
