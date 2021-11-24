@@ -32,8 +32,8 @@ module ViewComponent
     attr_accessor :__vc_original_view_context
 
     # Lock required to be obtained before compiling the component
-    class_attribute :lock
-    self.lock = Monitor.new
+    class_attribute :__vc_compiler_lock
+    self.__vc_compiler_lock = Monitor.new
 
     # EXPERIMENTAL: This API is experimental and may be removed at any time.
     # Hook for allowing components to do work as part of the compilation process.
@@ -365,7 +365,7 @@ module ViewComponent
       # @private
       def inherited(child)
         # ensure each subclass has it's own lock
-        child.lock = Monitor.new
+        child.__vc_compiler_lock = Monitor.new
 
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines

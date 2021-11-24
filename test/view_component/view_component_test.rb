@@ -898,7 +898,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_each_component_has_a_different_lock
-    assert_not_equal(MyComponent.lock, AnotherComponent.lock)
+    assert_not_equal(MyComponent.__vc_compiler_lock, AnotherComponent.__vc_compiler_lock)
   end
 
   def test_multithread_render
