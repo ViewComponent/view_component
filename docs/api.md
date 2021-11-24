@@ -4,7 +4,7 @@ title: API
 nav_order: 3
 ---
 
-<!-- Warning: AUTO-GENERATED file, do not edit. Add code comments to your Ruby instead <3 -->
+<!-- Warning: AUTO-GENERATED file, don't edit. Add code comments to your Ruby instead <3 -->
 
 # API
 
@@ -23,10 +23,6 @@ Set the parameter name used when rendering elements of a collection ([documentat
     with_collection_parameter :item
 
 ## Instance methods
-
-### #_output_postamble → [String]
-
-EXPERIMENTAL: Optional content to be returned after the rendered template.
 
 ### #before_render → [void]
 
@@ -48,14 +44,6 @@ that inhibits encapsulation & reuse, often making testing difficult.
 
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
-
-### #original_view_context
-
-Returns the value of attribute original_view_context.
-
-### #original_view_context=(value)
-
-Sets the attribute original_view_context
 
 ### #render? → [Boolean]
 
@@ -168,7 +156,7 @@ Path for component files
 
     config.view_component.view_component_path = "app/my_components"
 
-Defaults to "app/components".
+Defaults to `app/components`.
 
 ## ViewComponent::TestHelpers
 
@@ -195,7 +183,7 @@ end
 
 ### #with_request_url(path)
 
-Set the URL for the current request (such as when using request-dependent path helpers):
+Set the URL of the current request (such as when using request-dependent path helpers):
 
 ```ruby
 with_request_url("/users/42") do

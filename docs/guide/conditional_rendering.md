@@ -50,4 +50,4 @@ end
 <%= render(ConfirmEmailComponent.new(user: current_user)) %>
 ```
 
-_To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`._
+_To assert that a component hasn't been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`._

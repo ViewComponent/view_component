@@ -1,0 +1,9 @@
+extends: existence
+message: Avoid using '%s'
+ignorecase: true
+level: warning
+tokens:
+  - sanity
+  - brown bag
+  - ninja
+  - guru

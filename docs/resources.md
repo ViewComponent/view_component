@@ -9,6 +9,7 @@ title: Resources
 
 - [Primer ViewComponents](https://primer.style/view-components/)
 - [GOV.UK Rails Components](https://dfe-digital.github.io/govuk-components/)
+- [Polaris ViewComponents](https://github.com/baoagency/polaris_view_components)
 
 ## Frameworks using ViewComponent
 

@@ -8,7 +8,7 @@ nav_order: 1
 
 A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
-## What is a ViewComponent?
+## What's a ViewComponent?
 
 ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
 
@@ -43,7 +43,7 @@ Returning:
 
 ## When should I use ViewComponents?
 
-ViewComponents work best for templates that are reused or benefit from being tested directly. Heavily reused partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
+ViewComponents work best for templates that are reused or benefit from being tested directly. Partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
 
 ## Why should I use ViewComponents?
 
@@ -73,7 +73,7 @@ ViewComponent unit tests leverage the Capybara matchers library, allowing for co
 
 Traditional Rails templates have an implicit interface, making it hard to reason about their dependencies. This can lead to subtle bugs when rendering the same template in different contexts.
 
-ViewComponents use a standard Ruby initializer that clearly defines what is needed to render, making reuse easier and safer than partials.
+ViewComponents use a standard Ruby initializer that clearly defines what's needed to render, making reuse easier and safer than partials.
 
 ### Performance
 
@@ -185,6 +185,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Podia](https://www.podia.com/)
 * [City of Paris](https://www.paris.fr/)
 * [Cults.](https://cults3d.com/)
+* [Litmus](https://litmus.engineering/)
 
 If your team starts using ViewComponent, [send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to let us know!
 You can also check out [how various projects use ViewComponent](https://github.com/github/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
