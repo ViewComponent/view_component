@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Remove `config/boot.rb` in Sandbox.
+
+    *Yoshiyuki Hirano*
+
 ## 2.45.0
 
 * Remove internal APIs from API documentation, fix link to license.
