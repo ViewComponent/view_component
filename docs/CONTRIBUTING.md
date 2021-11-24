@@ -13,7 +13,7 @@ If you have any substantial changes that you would like to make, please [open an
 
 GitHub engineers tend to focus on areas of the project that are useful to GitHub, but we're happy to pair with members of the community to enable work on other parts. Just let us know in an issue.
 
-Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](/LICENSE.txt).
+Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](https://github.com/github/view_component/blob/main/LICENSE.txt).
 
 ## Submitting a pull request
 
@@ -72,7 +72,7 @@ ViewComponent triagers are able to manage issues and pull request by assigning o
 
 After helping with the project by participating in issues, pull requests, and/or discussions, members of the community are welcome to request triage access by opening a pull request to update this list:
 
-The triagers team is @andrewmcodes, @bbugh, @boardfish, @cesariouy, @dark-panda, @dylnclrk, @g13ydson, @horacio, @jcoyne, @johannesengl, @kaspermeyer, @mellowfish, @metade, @nashby, @rainerborene, @rdavid1099, @spdawson, and @vinistock.
+The triagers team is @andrewmcodes, @bbugh, @boardfish, @cesariouy, @dark-panda, @dylnclrk, @g13ydson, @horacio, @jcoyne, @johannesengl, @kaspermeyer, @mellowfish, @metade, @nashby, @rainerborene, @rdavid1099, @spdawson, @yhirano55, and @vinistock.
 
 Committers and maintainers may also nominate triagers by opening a pull request to update this list.
 

@@ -11,6 +11,16 @@ title: Changelog
 
     *Horia Radu*
 
+## 2.45.0
+
+* Remove internal APIs from API documentation, fix link to license.
+
+    *Joel Hawksley*
+
+* Add @yhirano55 to triage team.
+
+    *Joel Hawksley*
+
 * Correct a typo in the sample slots code.
 
     *Simon Fish*

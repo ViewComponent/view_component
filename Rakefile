@@ -58,7 +58,8 @@ namespace :docs do
       select do |method|
         !method.tag(:private) &&
           method.path.include?("ViewComponent::Base") &&
-          method.visibility == :public
+          method.visibility == :public &&
+          !method[:name].to_s.start_with?("_") # Ignore methods we mark as internal by prefixing with underscores
       end.sort_by { |method| method[:name] }
 
     instance_methods_to_document = meths.select { |method| method.scope != :class }
