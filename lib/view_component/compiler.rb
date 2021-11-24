@@ -2,8 +2,12 @@
 
 module ViewComponent
   class Compiler
+    # Lock required to be obtained before compiling the component
+    attr_reader :__vc_compiler_lock
+
     def initialize(component_class)
       @component_class = component_class
+      @__vc_compiler_lock = Monitor.new
     end
 
     def compiled?
@@ -13,7 +17,7 @@ module ViewComponent
     def compile(raise_errors: false)
       return if compiled?
 
-      component_class.__vc_compiler_lock.synchronize do
+      __vc_compiler_lock.synchronize do
         CompileCache.invalidate_class!(component_class)
 
         subclass_instance_methods = component_class.instance_methods(false)
@@ -83,7 +87,7 @@ module ViewComponent
 
       component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil)
-          self.class.__vc_compiler_lock.synchronize do
+          self.class.compiler.__vc_compiler_lock.synchronize do
             if variant.nil?
               call
             #{variant_elsifs}
