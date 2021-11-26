@@ -13,10 +13,7 @@ Slots are defined with `renders_one` and `renders_many`:
 - `renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
 - `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :posts`
 
-If you don't specify a second argument to these methods, you'll create a
-**passthrough slot**. Any content you pass through can be rendered inside these
-slots. If you don't want to strictly specify what should go in the slot you're
-making, these may be the way to go.
+If a second argument is not provided to these methods, a **passthrough slot** is registered. Any content passed through can be rendered inside these slots without restriction.
 
 For example:
 
@@ -56,7 +53,7 @@ To render a `renders_many` slot, iterate over the name of the slot:
 <% end %>
 ```
 
-The rendered output will look like this:
+Returning:
 
 ```erb
 <h1><a href="/">My blog</a></h1>
@@ -69,7 +66,7 @@ The rendered output will look like this:
 
 Slots can also render other components. Pass the name of a component as the second argument to define a component slot.
 
-Any arguments you pass when calling a component slot will be used to initialize the component and render it. You can also pass a block to set that component's content and slots.
+Arguments passed when calling a component slot will be used to initialize the component and render it. A block can also be passed to set the component's content.
 
 ```ruby
 # blog_component.rb
