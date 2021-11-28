@@ -8,6 +8,7 @@ module ViewComponent
 
   autoload :Base
   autoload :Compiler
+  autoload :CompileCache
   autoload :ComponentError
   autoload :Instrumentation
   autoload :Preview
@@ -17,3 +18,7 @@ module ViewComponent
   autoload :TemplateError
   autoload :Translatable
 end
+
+# In the case of manually loading, "view_component/engine" is loaded first,
+# so there is no need to load it.
+require "view_component/engine" if defined?(Rails::Engine) && !defined?(ViewComponent::Engine)

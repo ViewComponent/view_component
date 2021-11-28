@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rails/generators/abstract_generator"
+
 module Stimulus
   module Generators
     class ComponentGenerator < ::Rails::Generators::NamedBase
@@ -12,6 +14,12 @@ module Stimulus
         template "component_controller.js", destination
       end
 
+      def stimulus_module
+        return "stimulus" if legacy_stimulus?
+
+        "@hotwired/stimulus"
+      end
+
       private
 
       def destination
@@ -20,6 +28,11 @@ module Stimulus
         else
           File.join(component_path, class_path, "#{file_name}_component_controller.js")
         end
+      end
+
+      def legacy_stimulus?
+        package_json_pathname = Rails.root.join("package.json")
+        package_json_pathname.exist? && JSON.parse(package_json_pathname.read).dig("dependencies", "stimulus").present?
       end
     end
   end

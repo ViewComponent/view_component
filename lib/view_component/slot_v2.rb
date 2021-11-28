@@ -20,7 +20,7 @@ module ViewComponent
     # component, or a function that returns a component, we render that
     # component instance, returning the string.
     #
-    # If the slot renderable is a function and returns a string, it is
+    # If the slot renderable is a function and returns a string, it's
     # set as `@__vc_content` and is returned directly.
     #
     # If there is no slot renderable, we evaluate the block passed to
@@ -69,7 +69,7 @@ module ViewComponent
 
     # Allow access to public component methods via the wrapper
     #
-    # e.g.
+    # for example
     #
     # calling `header.name` (where `header` is a slot) will call `name`
     # on the `HeaderComponent` instance.
@@ -89,6 +89,7 @@ module ViewComponent
     def method_missing(symbol, *args, &block)
       @__vc_component_instance.public_send(symbol, *args, &block)
     end
+    ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
 
     def html_safe?
       to_s.html_safe?
