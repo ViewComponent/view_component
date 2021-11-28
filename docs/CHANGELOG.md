@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add Orbit to users list.
+
+    *Nicolas Goutay*
+
 ## 2.45.0
 
 * Remove internal APIs from API documentation, fix link to license.
