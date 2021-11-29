@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add Orbit to users list.
+
+    *Nicolas Goutay*
+
 * Increase clarity around purpose and use of slots.
 
     *Simon Fish*
