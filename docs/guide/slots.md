@@ -13,7 +13,7 @@ Slots are defined with `renders_one` and `renders_many`:
 - `renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
 - `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :posts`
 
-If a second argument is not provided to these methods, a **passthrough slot** is registered. Any content passed through can be rendered inside these slots without restriction.
+If a second argument isn't provided to these methods, a **passthrough slot** is registered. Any content passed through can be rendered inside these slots without restriction.
 
 For example:
 
