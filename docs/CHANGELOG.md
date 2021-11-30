@@ -11,6 +11,10 @@ title: Changelog
 
     *Horia Radu*
 
+* Add theme-specific logo images to readme.
+
+    *Dylan Smith*
+
 * Add Orbit to users list.
 
     *Nicolas Goutay*
