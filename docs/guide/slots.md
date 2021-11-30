@@ -6,12 +6,14 @@ parent: Guide
 
 # Slots
 
-In addition to the `content` accessor, ViewComponents accept content through slots, enabling multiple blocks of content to be passed to a single ViewComponent.
+In addition to the `content` accessor, ViewComponents can accept content through slots. Think of slots as a way to render multiple blocks of content, including other components.
 
 Slots are defined with `renders_one` and `renders_many`:
 
 - `renders_one` defines a slot that will be rendered at most once per component: `renders_one :header`
 - `renders_many` defines a slot that can be rendered multiple times per-component: `renders_many :posts`
+
+If a second argument isn't provided to these methods, a **passthrough slot** is registered. Any content passed through can be rendered inside these slots without restriction.
 
 For example:
 
@@ -39,7 +41,7 @@ To render a `renders_many` slot, iterate over the name of the slot:
 ```erb
 <%# index.html.erb %>
 <%= render BlogComponent.new do |c| %>
-  <% c.header(classes: '') do %>
+  <% c.header do %>
     <%= link_to "My blog", root_path %>
   <% end %>
 
@@ -51,9 +53,20 @@ To render a `renders_many` slot, iterate over the name of the slot:
 <% end %>
 ```
 
+Returning:
+
+```erb
+<h1><a href="/">My blog</a></h1>
+
+<a href="/blog/first-post">First post</a>
+<a href="/blog/second-post">Second post</a>
+```
+
 ## Component slots
 
-It's also possible to have a slot be a ViewComponent itself by passing in a second argument to `renders_one` and `renders_many`:
+Slots can also render other components. Pass the name of a component as the second argument to define a component slot.
+
+Arguments passed when calling a component slot will be used to initialize the component and render it. A block can also be passed to set the component's content.
 
 ```ruby
 # blog_component.rb
@@ -107,18 +120,20 @@ end
 
 ## Lambda slots
 
-It's also possible to define a slot as a lambda that returns content to be rendered (either a string or a ViewComponent instance). Lambda slots are useful for working with helpers like `content_tag` or as wrappers for another ViewComponent with specific default values:
+It's also possible to define a slot as a lambda that returns content to be rendered (either a string or a ViewComponent instance). Lambda slots are useful in cases where writing another component may be unnecessary, such as working with helpers like `content_tag` or as wrappers for another ViewComponent with specific default values:
 
 ```ruby
 class BlogComponent < ViewComponent::Base
-  # Renders the returned string
   renders_one :header, -> (classes:) do
+    # This isn't complex enough to be its own component yet, so we'll use a
+    # lambda slot. If it gets much bigger, it should be extracted out to a
+    # ViewComponent and rendered here with a component slot.
     content_tag :h1 do
       link_to title, root_path, { class: classes }
     end
   end
 
-  # Returns a ViewComponent that will be rendered in that slot with a default argument.
+  # It's also possible to return another ViewComponent with preset default values:
   renders_many :posts, -> (title:, classes:) do
     PostComponent.new(title: title, classes: "my-default-class " + classes)
   end
@@ -141,7 +156,7 @@ end
 
 ## Rendering collections
 
-Collection slots (declared with `renders_many`) can also be passed a collection:
+`renders_many` slots can also be passed a collection, using the plural setter (`links` in this example):
 
 ```ruby
 # navigation_component.rb
