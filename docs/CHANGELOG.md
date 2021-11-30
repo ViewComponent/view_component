@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add theme-specific logo images to readme.
+
+    *Dylan Smith*
+
 * Add Orbit to users list.
 
     *Nicolas Goutay*
