@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Compiler redefines `call` in a thread-safe way.
+* Add thread safety to the compiler
 
     *Horia Radu*
 
