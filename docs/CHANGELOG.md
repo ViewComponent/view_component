@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Add thread safety to the compiler
+* Add thread safety to the compiler.
 
     *Horia Radu*
 
