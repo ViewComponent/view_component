@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add thread safety to the compiler.
+
+    *Horia Radu*
+
 * Add theme-specific logo images to readme.
 
     *Dylan Smith*
