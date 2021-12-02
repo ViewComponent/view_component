@@ -56,11 +56,11 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7.2
+        ruby-version: 2.7
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: gems-build-rails-main-ruby-2.7.2-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
     - name: Lint with Rubocop and ERB Lint
       run: |
         bundle config path vendor/bundle
@@ -75,11 +75,11 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7.2
+        ruby-version: 2.7
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: gems-build-rails-main-ruby-2.7.2-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
     - name: Generate docs/api.md from YARD comments
       run: |
         bundle config path vendor/bundle
