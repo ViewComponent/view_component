@@ -11,6 +11,25 @@ title: Changelog
 
     *Edwin Mak*, *Joel Hawksley*
 
+## 2.46.0
+
+* Add thread safety to the compiler.
+
+    *Horia Radu*
+
+* Add theme-specific logo images to readme.
+
+    *Dylan Smith*
+
+* Add Orbit to users list.
+
+    *Nicolas Goutay*
+
+* Increase clarity around purpose and use of slots.
+
+    *Simon Fish*
+
+
 ## 2.45.0
 
 * Remove internal APIs from API documentation, fix link to license.
@@ -46,6 +65,10 @@ title: Changelog
     *Yoshiyuki Hirano*
 
 * Unify test code of `TestUnitGeneratorTest` with the other generators tests.
+
+    *Yoshiyuki Hirano*
+
+* Deprecate engine loading manually.
 
     *Yoshiyuki Hirano*
 

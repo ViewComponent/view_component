@@ -145,6 +145,13 @@ module ViewComponent
   end
 end
 
-# In the case of automatic loading, "view_component" is loaded first,
-# so there is no need to load it.
-require "view_component" unless defined?(ViewComponent::Base)
+# :nocov:
+unless defined?(ViewComponent::Base)
+  ActiveSupport::Deprecation.warn(
+    "This manually engine loading is deprecated and will be removed in v3.0.0. " \
+    "Remove `require \"view_component/engine\"`."
+  )
+
+  require "view_component"
+end
+# :nocov:

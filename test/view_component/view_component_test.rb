@@ -896,4 +896,22 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_text("Hello, World!")
   end
+
+  def test_each_component_has_a_different_lock
+    assert_not_equal(MyComponent.compiler.__vc_compiler_lock, AnotherComponent.compiler.__vc_compiler_lock)
+  end
+
+  def test_multithread_render
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+
+    threads = 100.times.map do
+      Thread.new do
+        render_inline(MyComponent.new)
+
+        assert_selector("div", text: "hello,world!")
+      end
+    end
+
+    threads.map(&:join)
+  end
 end
