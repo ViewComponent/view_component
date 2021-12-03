@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.46.0
+
 * Add thread safety to the compiler.
 
     *Horia Radu*
