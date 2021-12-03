@@ -19,6 +19,13 @@ module ViewComponent
   autoload :Translatable
 end
 
-# In the case of manually loading, "view_component/engine" is loaded first,
-# so there is no need to load it.
-require "view_component/engine" if defined?(Rails::Engine) && !defined?(ViewComponent::Engine)
+# :nocov:
+if defined?(ViewComponent::Engine)
+  ActiveSupport::Deprecation.warn(
+    "This manually engine loading is deprecated and will be removed in v3.0.0. " \
+    "Remove `require \"view_component/engine\"`."
+  )
+elsif defined?(Rails::Engine)
+  require "view_component/engine"
+end
+# :nocov:
