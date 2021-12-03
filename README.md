@@ -1,4 +1,5 @@
-<img src="/docs/logo/github-readme-logo.svg" alt="ViewComponent logo" width="400">
+![ViewComponent logo](/docs/logo/readme-light.svg#gh-light-mode-only)
+![ViewComponent logo](/docs/logo/readme-dark.svg#gh-dark-mode-only)
 
 A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
 

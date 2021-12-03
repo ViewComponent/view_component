@@ -129,6 +129,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/fugufish?s=64" alt="fugufish" width="32" />
 <img src="https://avatars.githubusercontent.com/g13ydson?s=64" alt="g13ydson" width="32" />
 <img src="https://avatars.githubusercontent.com/horacio?s=64" alt="horacio" width="32" />
+<img src="https://avatars.githubusercontent.com/horiaradu?s=64" alt="horiaradu" width="32" />
 <img src="https://avatars.githubusercontent.com/jaredcwhite?s=64" alt="jaredcwhite" width="32" />
 <img src="https://avatars.githubusercontent.com/javierm?s=64" alt="javierm" width="32" />
 <img src="https://avatars.githubusercontent.com/jcoyne?s=64" alt="jcoyne" width="32" />
@@ -186,6 +187,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [City of Paris](https://www.paris.fr/)
 * [Cults.](https://cults3d.com/)
 * [Litmus](https://litmus.engineering/)
+* [Orbit](https://orbit.love)
 
 If your team starts using ViewComponent, [send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to let us know!
 You can also check out [how various projects use ViewComponent](https://github.com/github/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
