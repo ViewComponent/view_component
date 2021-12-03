@@ -16,7 +16,7 @@ require "pp"
 require "pathname"
 require "minitest/autorun"
 
-# Configure Rails Envinronment
+# Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
 require File.expand_path("../sandbox/config/environment.rb", __FILE__)
@@ -63,6 +63,21 @@ def with_custom_component_path(new_value)
   yield
 ensure
   ViewComponent::Base.view_component_path = old_value
+end
+
+def with_custom_component_parent_class(new_value)
+  old_value = ViewComponent::Base.component_parent_class
+  ViewComponent::Base.component_parent_class = new_value
+  yield
+ensure
+  ViewComponent::Base.component_parent_class = old_value
+end
+
+def with_application_component_class
+  Object.const_set("ApplicationComponent", Class.new(Object))
+  yield
+ensure
+  Object.send(:remove_const, :ApplicationComponent)
 end
 
 def with_new_cache

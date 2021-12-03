@@ -514,7 +514,7 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_includes(
       exception.message,
-      "Could not find a template file or inline render method for MissingTemplateComponent"
+      "Couldn't find a template file or inline render method for MissingTemplateComponent"
     )
   end
 
@@ -715,7 +715,7 @@ class ViewComponentTest < ViewComponent::TestCase
       end
 
     assert_match(
-      /The initializer for MissingCollectionParameterNameComponent does not accept the parameter/, exception.message
+      /The initializer for MissingCollectionParameterNameComponent doesn't accept the parameter/, exception.message
     )
   end
 
@@ -727,7 +727,7 @@ class ViewComponentTest < ViewComponent::TestCase
         )
       end
 
-    assert_match(/MissingDefaultCollectionParameterComponent does not accept the parameter/, exception.message)
+    assert_match(/MissingDefaultCollectionParameterComponent doesn't accept the parameter/, exception.message)
   end
 
   def test_component_with_invalid_parameter_names
@@ -740,7 +740,7 @@ class ViewComponentTest < ViewComponent::TestCase
           InvalidParametersComponent.compile(raise_errors: true)
         end
 
-      assert_match(/InvalidParametersComponent initializer cannot accept the parameter/, exception.message)
+      assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
     ensure
       ViewComponent::CompileCache.cache = old_cache
     end
@@ -757,7 +757,7 @@ class ViewComponentTest < ViewComponent::TestCase
         end
 
       assert_match(
-        /InvalidNamedParametersComponent initializer cannot accept the parameter `content`/,
+        /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
         exception.message
       )
     ensure
@@ -883,9 +883,35 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_components_share_helpers_state
+    PartialHelper::State.reset
+
+    render_inline PartialHelperComponent.new
+
+    assert_equal 1, PartialHelper::State.calls
+  end
+
   def test_output_postamble
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")
+  end
+
+  def test_each_component_has_a_different_lock
+    assert_not_equal(MyComponent.compiler.__vc_compiler_lock, AnotherComponent.compiler.__vc_compiler_lock)
+  end
+
+  def test_multithread_render
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+
+    threads = 100.times.map do
+      Thread.new do
+        render_inline(MyComponent.new)
+
+        assert_selector("div", text: "hello,world!")
+      end
+    end
+
+    threads.map(&:join)
   end
 end

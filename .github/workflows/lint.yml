@@ -1,0 +1,91 @@
+name: Lint
+
+on: [pull_request]
+
+jobs:
+  prose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Vale
+        uses: errata-ai/vale-action@310a5ac41197ffb704515622b4914c72d3abc54b
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          files: '**/*'
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: avto-dev/markdown-lint@v1
+      with:
+        config: '.github/lint/markdown.json'
+        args: 'docs/**/*.md'
+  changedfiles:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      all: ${{ steps.changes.outputs.all}}
+      markdown: ${{ steps.changes.outputs.markdown }}
+    steps:
+      # Make sure we have some code to diff.
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get changed files
+        id: changes
+        # Set outputs using the command.
+        run: |
+          echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | xargs)"
+          echo "::set-output name=markdown::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep .md$ | xargs)"
+  changelog:
+    runs-on: ubuntu-latest
+    # require the first job to have ran
+    needs: changedfiles
+    steps:
+      - name: echo changed files
+        run: |
+          if [[ ! "${{needs.changedfiles.outputs.markdown}}" == *"CHANGELOG.md"* ]]; then
+            echo "::error file=CHANGELOG.md,line=1,col=1::Please make sure that you add a docs/CHANGELOG.md entry to describe the changes in this pull request."
+            exit 1
+          fi
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7.2
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: gems-build-rails-main-ruby-2.7.2-${{ hashFiles('**/Gemfile.lock') }}
+    - name: Lint with Rubocop and ERB Lint
+      run: |
+        bundle config path vendor/bundle
+        bundle install --jobs 4 --retry 3
+        bundle exec rubocop
+        bundle exec erblint **/*.html.erb
+  docs_api:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7.2
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: gems-build-rails-main-ruby-2.7.2-${{ hashFiles('**/Gemfile.lock') }}
+    - name: Generate docs/api.md from YARD comments
+      run: |
+        bundle config path vendor/bundle
+        bundle update
+        bundle exec rake docs:build
+    - name: Error out if docs/api.md has to be regenerated
+      run: git diff --exit-code docs/api.md || echo '::error file=docs/api.md,line=1,col=1::Please make sure to run `bundle exec rake docs:build` to regenerate docs/api.md to include changes in YARD comments from this pull request.'

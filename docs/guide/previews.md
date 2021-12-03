@@ -8,7 +8,7 @@ parent: Guide
 
 `ViewComponent::Preview`, like `ActionMailer::Preview`, provides a quick way to preview components in isolation.
 
-_For a more interactive experience, consider using [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)._
+_For a more interactive experience, consider using [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook) or [Lookbook](https://github.com/allmarkedup/lookbook)._
 
 Define a `ViewComponent::Preview`:
 

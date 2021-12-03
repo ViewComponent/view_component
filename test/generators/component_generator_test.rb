@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "rails/generators/test_case"
 require "rails/generators/component/component_generator"
 
 Rails.application.load_generators
@@ -17,7 +16,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator
 
     assert_file "app/components/user_component.rb" do |component|
-      assert_match(/class UserComponent < /, component)
+      assert_match(/class UserComponent < ViewComponent::Base/, component)
       assert_no_match(/def initialize/, component)
     end
   end
@@ -83,6 +82,34 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_no_file "component.html.erb"
   end
 
+  def test_component_with_parent
+    run_generator %w[user --parent MyOtherBaseComponent]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/class UserComponent < MyOtherBaseComponent/, component)
+    end
+  end
+
+  def test_component_with_parent_and_application_component_class
+    with_application_component_class do
+      run_generator %w[user --parent MyOtherBaseComponent]
+
+      assert_file "app/components/user_component.rb" do |component|
+        assert_match(/class UserComponent < MyOtherBaseComponent/, component)
+      end
+    end
+  end
+
+  def test_component_with_parent_and_custom_component_parent_class
+    with_custom_component_parent_class("MyBaseComponent") do
+      run_generator %w[user --parent MyOtherBaseComponent]
+
+      assert_file "app/components/user_component.rb" do |component|
+        assert_match(/class UserComponent < MyOtherBaseComponent/, component)
+      end
+    end
+  end
+
   def test_component_with_namespace
     run_generator %w[admins/user]
 
@@ -136,6 +163,38 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_generating_components_with_application_component_class
+    with_application_component_class do
+      run_generator %w[user]
+
+      assert_file "app/components/user_component.rb" do |component|
+        assert_match(/class UserComponent < ApplicationComponent/, component)
+      end
+    end
+  end
+
+  def test_generating_components_with_custom_component_parent_class
+    with_custom_component_parent_class("MyBaseComponent") do
+      run_generator %w[user]
+
+      assert_file "app/components/user_component.rb" do |component|
+        assert_match(/class UserComponent < MyBaseComponent/, component)
+      end
+    end
+  end
+
+  def test_generating_components_with_application_component_class_and_custom_parent_class
+    with_application_component_class do
+      with_custom_component_parent_class("MyBaseComponent") do
+        run_generator %w[user]
+
+        assert_file "app/components/user_component.rb" do |component|
+          assert_match(/class UserComponent < MyBaseComponent/, component)
+        end
+      end
+    end
+  end
+
   def test_component_with_stimulus
     run_generator %w[user --stimulus]
 
@@ -156,10 +215,22 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/user_component_controller.js"
   end
 
+  def test_component_with_legacy_stimulus_and_sidecar
+    with_package_json({ dependencies: { "stimulus": "0.0.0" } }) do
+      run_generator %w[user --stimulus --sidecar]
+
+      assert_file "app/components/user_component/user_component_controller.js" do |file|
+        assert_match(/import { Controller } from "stimulus"/, file)
+      end
+    end
+  end
+
   def test_component_with_stimulus_and_sidecar
     run_generator %w[user --stimulus --sidecar]
 
-    assert_file "app/components/user_component/user_component_controller.js"
+    assert_file "app/components/user_component/user_component_controller.js" do |file|
+      assert_match(/import { Controller } from "@hotwired\/stimulus"/, file)
+    end
   end
 
   def test_component_with_stimulus_and_sidecar_and_inline
@@ -170,5 +241,15 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
 
     assert_file "app/components/user_component/user_component_controller.js"
+  end
+
+  private
+
+  def with_package_json(content, &block)
+    package_json_pathname = Rails.root.join("package.json")
+    package_json_pathname.write(JSON.generate(content))
+    yield
+  ensure
+    package_json_pathname.delete
   end
 end

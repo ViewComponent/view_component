@@ -6,7 +6,7 @@ nav_exclude: true
 
 _Slots V1 is now deprecated and will be removed in 3.0. Please migrate to [Slots V2](/guide/slots.html)_
 
-Slots enable multiple blocks of content to be passed to a single ViewComponent, reducing the need for sub-components (e.g. ModalHeader, ModalBody).
+Slots enable multiple blocks of content to be passed to a single ViewComponent, reducing the need for sub-components (for example ModalHeader, ModalBody).
 
 By default, slots can be rendered once per component. They provide an accessor with the name of the slot (`#header`) that returns an instance of `ViewComponent::Slot`, etc.
 

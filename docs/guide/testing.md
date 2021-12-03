@@ -165,6 +165,18 @@ RSpec.configure do |config|
 end
 ```
 
+To access Devise's controller helper methods in tests, add the following:
+
+```ruby
+RSpec.configure do |config|
+  config.include Devise::Test::ControllerHelpers, type: :component
+
+  config.before(:each, type: :component) do
+    @request = controller.request
+  end
+end
+```
+
 Specs created by the generator have access to test helpers like `render_inline`. For example:
 
 ```ruby

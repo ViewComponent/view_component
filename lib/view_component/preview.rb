@@ -5,6 +5,7 @@ require "active_support/descendants_tracker"
 module ViewComponent # :nodoc:
   class Preview
     include ActionView::Helpers::TagHelper
+    include ActionView::Helpers::AssetTagHelper
     extend ActiveSupport::DescendantsTracker
 
     def render(component, **args, &block)
@@ -79,7 +80,7 @@ module ViewComponent # :nodoc:
         if preview_path.nil?
           raise(
             PreviewTemplateError,
-            "A preview template for example #{example} does not exist.\n\n" \
+            "A preview template for example #{example} doesn't exist.\n\n" \
             "To fix this issue, create a template for the example."
           )
         end
