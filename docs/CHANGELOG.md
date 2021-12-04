@@ -11,8 +11,6 @@ title: Changelog
 
     *Edwin Mak*
 
-* Fix bug where `with_collection_parameter` did not inherit from parent component.
-
 ## 2.46.0
 
 * Add thread safety to the compiler.
