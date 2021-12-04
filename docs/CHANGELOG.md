@@ -25,7 +25,14 @@ title: Changelog
 
     *Simon Fish*
 
-* Deprecate engine loading manually.
+* Deprecate loading `view_component/engine` directly.
+
+  **Upgrade notice**: You should update your `Gemfile` like this:
+
+  ```diff
+  - gem "view_component", require: "view_component/engine"`
+  + gem "view_component"
+  ```
 
     *Yoshiyuki Hirano*
 
