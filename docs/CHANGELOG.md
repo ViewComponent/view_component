@@ -25,6 +25,10 @@ title: Changelog
 
     *Simon Fish*
 
+* Deprecate engine loading manually.
+
+    *Yoshiyuki Hirano*
+
 ## 2.45.0
 
 * Remove internal APIs from API documentation, fix link to license.
@@ -60,10 +64,6 @@ title: Changelog
     *Yoshiyuki Hirano*
 
 * Unify test code of `TestUnitGeneratorTest` with the other generators tests.
-
-    *Yoshiyuki Hirano*
-
-* Deprecate engine loading manually.
 
     *Yoshiyuki Hirano*
 
