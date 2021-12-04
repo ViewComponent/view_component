@@ -209,7 +209,6 @@ title: Changelog
     *Matthew Rider*
 
 * Fix bug where `with_collection_parameter` didn't inherit from parent component.
->>>>>>> cb5b2da1be2ad73d7ebd828bfbd016acd09c9f58
 
     *Will Drexler*, *Christian Campoli*
 
