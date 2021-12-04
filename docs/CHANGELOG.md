@@ -29,7 +29,6 @@ title: Changelog
 
     *Simon Fish*
 
-
 ## 2.45.0
 
 * Remove internal APIs from API documentation, fix link to license.
