@@ -25,6 +25,17 @@ title: Changelog
 
     *Simon Fish*
 
+* Deprecate loading `view_component/engine` directly.
+
+  **Upgrade notice**: You should update your `Gemfile` like this:
+
+  ```diff
+  - gem "view_component", require: "view_component/engine"`
+  + gem "view_component"
+  ```
+
+    *Yoshiyuki Hirano*
+
 ## 2.45.0
 
 * Remove internal APIs from API documentation, fix link to license.
@@ -60,10 +71,6 @@ title: Changelog
     *Yoshiyuki Hirano*
 
 * Unify test code of `TestUnitGeneratorTest` with the other generators tests.
-
-    *Yoshiyuki Hirano*
-
-* Deprecate engine loading manually.
 
     *Yoshiyuki Hirano*
 
