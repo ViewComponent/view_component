@@ -745,7 +745,13 @@ class ViewComponentTest < ViewComponent::TestCase
       )
     end
 
-    assert_match(/MissingCollectionParameterWithActiveModelComponent initializer must accept `name` collection parameter/, exception.message)
+    assert_match(
+      "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, "\
+      "which is required in order to render it as a collection.\n\n" \
+      "To fix this issue, update the initializer to accept `name`.\n\n" \
+      "See https://viewcomponent.org/guide/collections.html for more information on rendering collections.",
+      exception.message
+    )
   end
 
   def test_collection_component_present_custom_parameter_name_with_activemodel
