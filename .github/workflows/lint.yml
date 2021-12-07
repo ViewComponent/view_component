@@ -12,8 +12,6 @@ jobs:
         uses: errata-ai/vale-action@310a5ac41197ffb704515622b4914c72d3abc54b
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          files: '**/*'
   markdown:
     runs-on: ubuntu-latest
     steps:
