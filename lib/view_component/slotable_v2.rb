@@ -56,7 +56,7 @@ module ViewComponent
       # = Setting sub-component content
       #
       # Consumers of the component can render a sub-component by calling a
-      # helper method with the same name as the slot prefixed with `with`.
+      # helper method with the same name as the slot prefixed with `with_`.
       #
       #   <%= render_inline(MyComponent.new) do |component| %>
       #     <% component.with_header(classes: "Foo") do %>
