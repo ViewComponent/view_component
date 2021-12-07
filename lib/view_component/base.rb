@@ -509,7 +509,7 @@ module ViewComponent
       def initialize_parameter_names
         return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
 
-        return attributes.keys.map(&:to_sym) if Rails::VERSION::MAJOR <= 5
+        return self.class.column_names.map(&:to_sym) if Rails::VERSION::MAJOR <= 5
 
         initialize_parameters.map(&:last)
       end
