@@ -96,6 +96,8 @@ bin/rails generate component Example title --translations
       create    app/components/example_component.html.erb
 ```
 
+To always generate a translations file, set `config.view_component.generate_translations = true`.
+
 ### Place the view in a sidecar directory
 
 ```console

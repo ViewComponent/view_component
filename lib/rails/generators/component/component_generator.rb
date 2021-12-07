@@ -15,7 +15,7 @@ module Rails
       class_option :parent, type: :string, desc: "The parent class for the generated component"
       class_option :stimulus, type: :boolean, default: ViewComponent::Base.generate_stimulus_controller
       class_option :sidecar, type: :boolean, default: false
-      class_option :translations, type: :boolean, default: false
+      class_option :translations, type: :boolean, default: ViewComponent::Base.generate_translations
 
       def create_component_file
         template "component.rb", File.join(component_path, class_path, "#{file_name}_component.rb")

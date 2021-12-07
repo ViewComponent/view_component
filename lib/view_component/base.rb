@@ -279,6 +279,14 @@ module ViewComponent
     #
     mattr_accessor :generate_stimulus_controller, instance_writer: false, default: false
 
+     # Always generate a translations file alongside the component:
+     #
+     #     config.view_component.generate_translations = true
+     #
+     # Defaults to `false`.
+     #
+     mattr_accessor :generate_translations, instance_writer: false, default: false
+
     # Path for component files
     #
     #     config.view_component.view_component_path = "app/my_components"
