@@ -55,7 +55,7 @@ Then run the test command:
 RAILS_VERSION=5.2.5 bundle exec rake
 ```
 
-When you're done, make sure you do not commit changes to `Gemfile.lock`. Instead, discard your changes to the file: `git checkout -- Gemfile.lock`
+When you're done, make sure you don't commit changes to `Gemfile.lock`. Instead, discard your changes to the file: `git checkout -- Gemfile.lock`
 
 ## Documentation
 
