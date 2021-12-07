@@ -82,6 +82,20 @@ bin/rails generate component Example title --stimulus
 
 To always generate a Stimulus controller, set `config.view_component.generate_stimulus_controller = true`.
 
+### Generate a [translations file](/guide/translations.html)
+
+```console
+bin/rails generate component Example title --translations
+
+      create  app/components/example_component.rb
+      invoke  test_unit
+      create    test/components/example_component_test.rb
+      invoke  translations
+      create    test/components/previews/example_component.yml
+      invoke  erb
+      create    app/components/example_component.html.erb
+```
+
 ### Place the view in a sidecar directory
 
 ```console
