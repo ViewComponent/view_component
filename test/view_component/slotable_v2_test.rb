@@ -449,8 +449,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_supports_with_collection_setter
     render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
-      component.with_items([{}, {highlighted: true}, {}]) do
-      end
+      component.with_items([{}, { highlighted: true }, {}])
     end
 
     assert_selector(".item", count: 3)

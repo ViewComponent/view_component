@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add `with_*` slot API for defining slots
+
+    *Blake Williams*
+
 * Add failing test for default form builder and documentation around known issue.
 
     *Simon Fish*
