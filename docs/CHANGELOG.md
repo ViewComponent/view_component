@@ -6,6 +6,7 @@ title: Changelog
 # Changelog
 
 ## main
+
 * Make `ViewComponent::Collection` act like a collection of view components
 
     *Sammy Henningsson*
