@@ -35,6 +35,10 @@ title: Changelog
 
     *Simon Fish*
 
+* Add `--locales` flag to the component generator. Generates as many locale files as defined in `I18n.available_locales`, alongside the component.
+
+    *Bob Maerten*
+
 ## 2.46.0
 
 * Add thread safety to the compiler.
