@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix `vale` linter config options.
+
+    *Hans Lemuet*
+
 * Improve Contributing docs to include how to run tests for a specific version on Rails.
 
     *Hans Lemuet*
