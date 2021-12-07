@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix `vale` linter config options.
+
+    *Hans Lemuet*
+
 * Add failing test for default form builder and documentation around known issue.
 
     *Simon Fish*
