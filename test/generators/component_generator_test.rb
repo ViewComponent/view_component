@@ -243,14 +243,12 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/user_component/user_component_controller.js"
   end
 
-
   def test_component_with_translations
     run_generator %w[user --translations]
 
     assert_file "app/components/user_component.rb"
     assert_file "app/components/user_component.yml"
   end
-
 
   def test_component_with_translations_and_sidecar
     run_generator %w[user --translations --sidecar]
