@@ -108,7 +108,7 @@ module ViewComponent
       # = Setting sub-component content
       #
       # Consumers of the component can set the content of a slot by calling a
-      # helper method with the same name as the slot prefixed with `with`. The
+      # helper method with the same name as the slot prefixed with `with_`. The
       # method can be called multiple times to append to the slot.
       #
       #   <%= render_inline(MyComponent.new) do |component| %>
