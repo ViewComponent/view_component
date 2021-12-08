@@ -12,8 +12,6 @@ jobs:
         uses: errata-ai/vale-action@310a5ac41197ffb704515622b4914c72d3abc54b
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          files: '**/*'
   markdown:
     runs-on: ubuntu-latest
     steps:
@@ -58,11 +56,11 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7.2
+        ruby-version: 2.7
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: gems-build-rails-main-ruby-2.7.2-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
     - name: Lint with Rubocop and ERB Lint
       run: |
         bundle config path vendor/bundle
@@ -77,11 +75,11 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7.2
+        ruby-version: 2.7
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: gems-build-rails-main-ruby-2.7.2-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
     - name: Generate docs/api.md from YARD comments
       run: |
         bundle config path vendor/bundle

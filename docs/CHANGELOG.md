@@ -7,6 +7,18 @@ title: Changelog
 
 ## main
 
+* Update ruby to the latest versions
+
+    *Pedro Paiva*
+
+* Fix `vale` linter config options.
+
+    *Hans Lemuet*
+
+* Improve Contributing docs to include how to run tests for a specific version on Rails.
+
+    *Hans Lemuet*
+
 * Add failing test for default form builder and documentation around known issue.
 
     *Simon Fish*
