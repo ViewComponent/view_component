@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update ruby to the latest versions
+
+    *Pedro Paiva*
+
 * Fix `vale` linter config options.
 
     *Hans Lemuet*
