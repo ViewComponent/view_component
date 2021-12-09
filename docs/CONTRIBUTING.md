@@ -102,7 +102,7 @@ Committers and maintainers may also nominate triagers by opening a pull request 
 
 ### Commit
 
-ViewComponent committers have `write` access, enabling them to push directly to the repository and approve/merge pull requests. Committers often have implicit ownership over a particular area of the project, such as previews, generators, or translations.
+ViewComponent committers have `write` access, enabling them to push directly to the repository (and thus not needing to contribute via forks) and approve/merge pull requests. Committers often have implicit ownership over a particular area of the project, such as previews, generators, or translations.
 
 Triagers are invited to become committers by having an existing committer or maintainer open a pull request on the repository to update this list of committers:
 
