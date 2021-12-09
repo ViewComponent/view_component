@@ -7,7 +7,11 @@ title: Changelog
 
 ## main
 
-* Validate collection parameter with Active Model attribute names
+* Make @boardfish a committer.
+
+    *Joel Hawksley*
+
+* Validate collection parameter with Active Model attribute names.
 
     *Simon Fish*
 
