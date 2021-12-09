@@ -106,7 +106,7 @@ ViewComponent committers have `write` access, enabling them to push directly to 
 
 Triagers are invited to become committers by having an existing committer or maintainer open a pull request on the repository to update this list of committers:
 
-The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, @spone, and @dylanatsmith.
+The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, @spone, @dylanatsmith, and @boardfish.
 
 ### Maintain
 
