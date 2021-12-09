@@ -11,6 +11,10 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Validate collection parameter with Active Model attribute names.
+
+    *Simon Fish*
+
 * Fix `helpers` not working with component slots when rendered more than 2 component levels deep.
 
     *Blake Williams*
