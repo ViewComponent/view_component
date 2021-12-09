@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Make @boardfish a committer.
+
+    *Joel Hawksley*
+
 * Fix `helpers` not working with component slots when rendered more than 2 component levels deep.
 
     *Blake Williams*
