@@ -52,4 +52,26 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       end
     end
   end
+
+  def test_component_generator_with_attributes
+    with_preview_paths([]) do
+      run_generator %w[user nickname fullname]
+
+      assert_file "test/components/previews/user_component_preview.rb" do |preview|
+        assert_match(/class UserComponentPreview/, preview)
+        assert_match(/render\(UserComponent.new\(nickname: "nickname", fullname: "fullname"\)\)/, preview)
+      end
+    end
+  end
+
+  def test_component_with_namespace_and_attributes
+    with_preview_paths([]) do
+      run_generator %w[admins/user nickname fullname]
+
+      assert_file "test/components/previews/admins/user_component_preview.rb" do |preview|
+        assert_match(/class Admins::UserComponentPreview/, preview)
+        assert_match(/render\(Admins::UserComponent.new\(nickname: "nickname", fullname: "fullname"\)\)/, preview)
+      end
+    end
+  end
 end
