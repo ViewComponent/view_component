@@ -243,18 +243,22 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/user_component/user_component_controller.js"
   end
 
-  def test_component_with_translations
-    run_generator %w[user --translations]
+  def test_component_with_locales
+    run_generator %w[user --locales]
 
     assert_file "app/components/user_component.rb"
-    assert_file "app/components/user_component.yml"
+    I18n.available_locales.each do |locale|
+      assert_file "app/components/user_component.#{locale}.yml"
+    end
   end
 
-  def test_component_with_translations_and_sidecar
-    run_generator %w[user --translations --sidecar]
+  def test_component_with_locales_and_sidecar
+    run_generator %w[user --locales --sidecar]
 
     assert_file "app/components/user_component.rb"
-    assert_file "app/components/user_component/user_component.yml"
+    I18n.available_locales.each do |locale|
+      assert_file "app/components/user_component/user_component.#{locale}.yml"
+    end
   end
 
   private
