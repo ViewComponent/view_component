@@ -14,20 +14,22 @@ module Locale
       def create_locale_file
         if ViewComponent::Base.generate_splitted_locale_files
           I18n.available_locales.each do |locale|
-            @locales = [locale]
-            template "component.yml", destination(locale)
+            create_file destination(locale), translations_hash([locale]).to_yaml
           end
         else
-          @locales = I18n.available_locales.presence || [:en]
-          template "component.yml", destination
+          create_file destination, translations_hash(I18n.available_locales.presence).to_yaml
         end
       end
 
       private
 
-      def render_translations
+      def translations_hash(locales = [:en])
+        locales.to_h { |locale| [locale.to_s, translation_keys]}
+      end
+
+      def translation_keys
         keys = attributes.map(&:name).presence || [:hello]
-        keys.map { |key| %(  #{key}: "#{key.capitalize}") }.join("\n")
+        keys.to_h { |key| [key.to_s, "#{key.capitalize}"] }
       end
 
       def destination(locale = nil)

@@ -1,4 +1,0 @@
-<%- @locales.each do |locale| -%>
-<%= locale %>:
-<%= render_translations %>
-<%- end -%>
