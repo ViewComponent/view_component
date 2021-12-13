@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Add @boardfish to docs/index.md and sort contributors
+* Add @boardfish to docs/index.md and sort contributors.
 
     *Simon Fish*
 
