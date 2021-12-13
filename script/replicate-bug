@@ -1,6 +1,6 @@
 #!/bin/bash
 # Exit if repo already exists
-
+[ -d "replicate-bug" ] && echo "Sample repo exists. Rename or remove it to begin." && exit
 branch_name=$(git rev-parse --abbrev-ref HEAD)
 # Ensure that when we install view_component in the repo, we install this copy.
 bundle config local.view_component $(pwd)
