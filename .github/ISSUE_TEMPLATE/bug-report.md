@@ -3,7 +3,12 @@ name: ViewComponent bug report
 about: Create a report to help us improve ViewComponent
 ---
 
-<!-- If possible, please provide a PR with a failing test for bugs instead of filing an issue. -->
+<!--
+When opening an issue to describe a bug you're facing, it's helpful to replicate
+the bug. You can do this either by contributing failing tests in a pull request,
+or by creating a new repository that demonstrates the issue. Check out
+CONTRIBUTING.md to get started.
+-->
 
 ### Steps to reproduce
 <!-- Provide a series of steps or, better yet, a link to a repo to demonstrate the bug you've identified. -->
