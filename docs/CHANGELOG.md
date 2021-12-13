@@ -11,6 +11,10 @@ title: Changelog
 
     *Simon Fish*
 
+* Add instructions for replicating bugs and failures.
+
+    *Simon Fish*
+
 * Make @boardfish a committer.
 
     *Joel Hawksley*
