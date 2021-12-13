@@ -99,7 +99,7 @@ bin/rails generate component Example title --locales
       create    app/components/example_component.html.erb
 ```
 
-To always generate locale files, set `config.view_component.generate_locales = true`.
+To always generate locale files, set `config.view_component.generate_locales = true`. Make sure I18n.available_locales is defined in your project, so that only the necessary locale files are created when generating a component.
 
 ### Place the view in a sidecar directory
 
