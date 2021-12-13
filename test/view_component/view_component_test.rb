@@ -934,23 +934,19 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_compilation_in_blocking_mode
-    ViewComponent::CompileCache.cache.delete(MyComponent)
-    MyComponent.compiler.mode = :blocking
-
-    render_inline(MyComponent.new)
-
-    assert_selector("div", text: "hello,world!")
+    with_compiler_mode(:blocking, MyComponent) do |clazz|
+      ViewComponent::CompileCache.cache.delete(clazz)
+      render_inline(clazz.new)
+      assert_selector("div", text: "hello,world!")
+    end
   end
 
   def test_compilation_in_non_blocking_mode
-    ViewComponent::CompileCache.cache.delete(MyComponent)
-    MyComponent.compiler.mode = :non_blocking
-
-    render_inline(MyComponent.new)
-
-    assert_selector("div", text: "hello,world!")
-
-    MyComponent.compiler.mode = :blocking
+    with_compiler_mode(:non_blocking, MyComponent) do |clazz|
+      ViewComponent::CompileCache.cache.delete(clazz)
+      render_inline(clazz.new)
+      assert_selector("div", text: "hello,world!")
+    end
   end
 
   def test_multithread_render

@@ -131,3 +131,11 @@ def with_render_monkey_patch_config(enabled)
 ensure
   ViewComponent::Base.render_monkey_patch_enabled = old_default
 end
+
+def with_compiler_mode(mode, component)
+  previous_mode = component.compiler.mode
+  component.compiler.mode = mode
+  yield(component)
+ensure
+  component.compiler.mode = previous_mode
+end
