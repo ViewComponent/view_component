@@ -279,13 +279,21 @@ module ViewComponent
     #
     mattr_accessor :generate_stimulus_controller, instance_writer: false, default: false
 
-    # Always generate a locale file(s) alongside the component:
+    # Always generate translation file alongside the component:
     #
-    #     config.view_component.generate_locales = true
+    #     config.view_component.generate_locale = true
     #
-    # Defaults to `false`. Relies on I18n.available_locales, be sure to configure them in your Rails project before use.
+    # Defaults to `false`.
     #
-    mattr_accessor :generate_locales, instance_writer: false, default: false
+    mattr_accessor :generate_locale, instance_writer: false, default: false
+
+    # Always generate one translations file per available locale:
+    #
+    #     config.view_component.generate_splitted_locale_files = true
+    #
+    # Defaults to `false`. One file will be generated for each configured `I18n.available_locales`.
+    #
+    mattr_accessor :generate_splitted_locale_files, instance_writer: false, default: false
 
     # Path for component files
     #
