@@ -91,10 +91,10 @@ bin/rails generate component Example title --locales
       invoke  test_unit
       create    test/components/example_component_test.rb
       invoke  locales
-      create    test/components/previews/example_component.en.yml
-        gsub    test/components/previews/example_component.en.yml
-      create    test/components/previews/example_component.fr.yml
-        gsub    test/components/previews/example_component.fr.yml
+      create    app/components/example_component.en.yml
+        gsub    app/components/example_component.en.yml
+      create    app/components/example_component.fr.yml
+        gsub    app/components/example_component.fr.yml
       invoke  erb
       create    app/components/example_component.html.erb
 ```
