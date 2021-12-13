@@ -17,19 +17,20 @@ module Locale
             create_file destination(locale), translations_hash([locale]).to_yaml
           end
         else
-          create_file destination, translations_hash(I18n.available_locales.presence).to_yaml
+          create_file destination, translations_hash(I18n.available_locales).to_yaml
         end
       end
 
       private
 
       def translations_hash(locales = [:en])
-        locales.to_h { |locale| [locale.to_s, translation_keys] }
+        locales.map { |locale| [locale.to_s, translation_keys] }.to_h
       end
 
       def translation_keys
-        keys = attributes.map(&:name).presence || [:hello]
-        keys.to_h { |key| [key.to_s, "#{key.capitalize}"] }
+        keys = attributes
+        keys = [:hello] if keys.empty?
+        keys.map(&:name).map { |name| [name, name.capitalize] }.to_h
       end
 
       def destination(locale = nil)
