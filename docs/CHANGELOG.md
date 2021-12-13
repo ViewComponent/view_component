@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add blocking compiler mode, used in Rails development and testing mode
+
+    *Horia Radu*
+
 * Make @boardfish a committer.
 
     *Joel Hawksley*
