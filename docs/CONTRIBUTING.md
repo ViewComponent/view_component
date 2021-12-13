@@ -26,6 +26,16 @@ When opening an issue to describe a bug you're facing, it's helpful to replicate
 5. Implement and render components that you're experiencing an issue with in the app. If possible, it's helpful to directly transfer the code you're using straight in. The repo should replicate your original issue.
 6. Share the app with us by creating a public GitHub repo and adding a link to it in your issue.
 
+### GitHub Codespaces
+
+This repository's GitHub Codespaces config can take care of most of the above steps for you and give you an environment in which to replicate your issue. Follow [GitHub's guide](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace#creating-a-codespace) to create a codespace in this repository.
+
+After the codespace has been prepared, you should be able to access a new minimal Rails app with ViewComponent installed from its `replicate-bug` directory. You may then need to:
+
+1. Start the Rails server from the codespace's terminal with `rails s`.
+2. Expose the port when prompted by the Visual Studio Code Web Editor.
+3. Add the external URL to the config block in `config/application.rb` as prompted by the error.
+
 ## Submitting a pull request
 
 1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
