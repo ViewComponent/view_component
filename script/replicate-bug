@@ -1,12 +1,14 @@
 #!/bin/bash
 # Exit if repo already exists
+
+branch_name=$(git rev-parse --abbrev-ref HEAD)
 # Ensure that when we install view_component in the repo, we install this copy.
 bundle config local.view_component $(pwd)
 # Create and enter a minimal example repo
 rails new --minimal replicate-bug
 cd replicate-bug
 # Add our local copy of ViewComponent
-bundle add --git https://github.com/github/view_component --branch main
+bundle add view_component --git https://github.com/github/view_component --branch $branch_name
 # Generate a controller
 rails g controller Home index
 # Generate ApplicationComponent, assuming most folks use it.
