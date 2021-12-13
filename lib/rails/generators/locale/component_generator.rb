@@ -28,9 +28,9 @@ module Locale
       end
 
       def translation_keys
-        keys = attributes
-        keys = [:hello] if keys.empty?
-        keys.map(&:name).map { |name| [name, name.capitalize] }.to_h
+        keys = attributes.map(&:name)
+        keys = %w[hello] if keys.empty?
+        keys.map { |name| [name, name.capitalize] }.to_h
       end
 
       def destination(locale = nil)
