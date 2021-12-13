@@ -8,6 +8,7 @@ module Locale
       include ViewComponent::AbstractGenerator
 
       source_root File.expand_path("templates", __dir__)
+      argument :attributes, type: :array, default: [], banner: "attribute"
       class_option :sidecar, type: :boolean, default: false
 
       def create_locale_file
@@ -23,6 +24,11 @@ module Locale
       end
 
       private
+
+      def render_translations
+        keys = attributes.map(&:name).presence || [:hello]
+        keys.map { |key| %(  #{key}: "#{key.capitalize}") }.join("\n")
+      end
 
       def destination(locale = nil)
         extention = ".#{locale}" if locale

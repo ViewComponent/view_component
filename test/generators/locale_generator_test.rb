@@ -18,6 +18,19 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
     I18n.available_locales.each do |locale|
       assert_file "app/components/user_component.yml" do |content|
         assert_match(/^#{locale}:\n/, content)
+        assert_match(/^  hello: "Hello"\n/, content)
+      end
+    end
+  end
+
+  def test_component_generator_with_arguments
+    run_generator %w[user name]
+
+    I18n.available_locales.each do |locale|
+      assert_file "app/components/user_component.yml" do |content|
+        assert_match(/^#{locale}:\n/, content)
+        assert_match(/^  name: "Name"\n/, content)
+        assert_no_match(/^  hello: "Hello"\n/, content)
       end
     end
   end
@@ -30,6 +43,7 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
     I18n.available_locales.each do |locale|
       assert_file "app/components/user_component.#{locale}.yml" do |content|
         assert_match(/^#{locale}:\n/, content)
+        assert_match(/^  hello: "Hello"\n/, content)
       end
     end
   end

@@ -1,4 +1,4 @@
 <%- @locales.each do |locale| -%>
 <%= locale %>:
-  hello: "Hello"
+<%= render_translations %>
 <%- end -%>
