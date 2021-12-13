@@ -15,6 +15,17 @@ GitHub engineers tend to focus on areas of the project that are useful to GitHub
 
 Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](https://github.com/github/view_component/blob/main/LICENSE.txt).
 
+## Bugs and issues
+
+When opening an issue to describe a bug you're facing, it's helpful to replicate the bug. You can do this either by contributing failing tests in a pull request, or by creating a new repository that demonstrates the issue. You can do this as follows:
+
+1. Run `rails new --minimal view_component-bug-replica` in the console.
+2. Run `bundle add view_component` in the console. You may need to update your Gemfile and run `bundle install` to run against the version of `view_component` with which you're experiencing the issue.
+3. Run `rails generate controller Home index`.
+4. Remove any routes from `config/routes` and add `root to: 'home#index'`.
+5. Implement and render components that you're experiencing an issue with in the app. If possible, it's helpful to directly transfer the code you're using straight in. The repo should replicate your original issue.
+6. Share the app with us by creating a public GitHub repo and adding a link to it in your issue.
+
 ## Submitting a pull request
 
 1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
