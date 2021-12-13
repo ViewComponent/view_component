@@ -85,13 +85,21 @@ Set a custom default layout used for preview index and individual previews:
 
     config.view_component.default_preview_layout = "component_preview"
 
-### #generate_locales
+### #generate_locale
 
-Always generate a locale file(s) alongside the component:
+Always generate translation file alongside the component:
 
-    config.view_component.generate_locales = true
+    config.view_component.generate_locale = true
 
-Defaults to `false`. Relies on I18n.available_locales, be sure to configure them in your Rails project before use.
+Defaults to `false`.
+
+### #generate_splitted_locale_files
+
+Always generate one translations file per available locale:
+
+    config.view_component.generate_splitted_locale_files = true
+
+Defaults to `false`. One file will be generated for each configured `I18n.available_locales`.
 
 ### #generate_stimulus_controller
 
