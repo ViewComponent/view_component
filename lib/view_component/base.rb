@@ -283,7 +283,7 @@ module ViewComponent
     #
     #     config.view_component.generate_locales = true
     #
-    # Defaults to `false`.
+    # Defaults to `false`. Relies on I18n.available_locales, be sure to configure them in your Rails project before use.
     #
     mattr_accessor :generate_locales, instance_writer: false, default: false
 
