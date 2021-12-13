@@ -85,6 +85,14 @@ Set a custom default layout used for preview index and individual previews:
 
     config.view_component.default_preview_layout = "component_preview"
 
+### #generate_locales
+
+Always generate a locale file(s) alongside the component:
+
+    config.view_component.generate_locales = true
+
+Defaults to `false`. Relies on I18n.available_locales, be sure to configure them in your Rails project before use.
+
 ### #generate_stimulus_controller
 
 Always generate a Stimulus controller alongside the component:
