@@ -119,6 +119,6 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
   def with_generate_splitted_locale_files
     ViewComponent::Base.generate_splitted_locale_files = true
     yield
-    ViewComponent::Base.generate_splitted_locale_files= false
+    ViewComponent::Base.generate_splitted_locale_files = false
   end
 end

@@ -24,7 +24,7 @@ module Locale
       private
 
       def translations_hash(locales = [:en])
-        locales.to_h { |locale| [locale.to_s, translation_keys]}
+        locales.to_h { |locale| [locale.to_s, translation_keys] }
       end
 
       def translation_keys
