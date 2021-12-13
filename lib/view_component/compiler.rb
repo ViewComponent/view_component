@@ -3,7 +3,12 @@
 module ViewComponent
   class Compiler
     # Lock required to be obtained before compiling the component
-    attr_reader :__vc_compiler_lock, :mode
+    attr_reader :__vc_compiler_lock
+
+    # Compiler mode. Can be either:
+    # * blocking (default in Rails development and test mode)
+    # * non_blocking (default in Rails production mode)
+    attr_accessor :mode
 
     def initialize(component_class)
       @component_class = component_class

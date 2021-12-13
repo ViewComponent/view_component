@@ -933,6 +933,26 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_not_equal(MyComponent.compiler.__vc_compiler_lock, AnotherComponent.compiler.__vc_compiler_lock)
   end
 
+  def test_compilation_in_blocking_mode
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+    MyComponent.compiler.mode = :blocking
+
+    render_inline(MyComponent.new)
+
+    assert_selector("div", text: "hello,world!")
+  end
+
+  def test_compilation_in_non_blocking_mode
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+    MyComponent.compiler.mode = :non_blocking
+
+    render_inline(MyComponent.new)
+
+    assert_selector("div", text: "hello,world!")
+
+    MyComponent.compiler.mode = :blocking
+  end
+
   def test_multithread_render
     ViewComponent::CompileCache.cache.delete(MyComponent)
 
