@@ -11,6 +11,10 @@ title: Changelog
 
     *Simon Fish*
 
+* Set up Codespaces for bug replication.
+
+    *Simon Fish*
+
 * Add instructions for replicating bugs and failures.
 
     *Simon Fish*
