@@ -105,9 +105,10 @@ module ViewComponent
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
       end.join("\n")
 
-      component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      if development?
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil)
-          self.class.compiler.call_synchronized_block do
+          self.class.compiler.with_lock do
             if variant.nil?
               call
             #{variant_elsifs}
@@ -116,7 +117,19 @@ module ViewComponent
             end
           end
         end
-      RUBY
+        RUBY
+      else
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil)
+          if variant.nil?
+            call
+          #{variant_elsifs}
+          else
+            call
+          end
+        end
+        RUBY
+      end
     end
 
     def template_errors
