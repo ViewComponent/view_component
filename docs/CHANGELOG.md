@@ -11,7 +11,19 @@ title: Changelog
 
     *Horia Radu*
 
+* Add linters for file consistency.
+
+    *Simon Fish*
+
 * Add @boardfish to docs/index.md and sort contributors.
+
+    *Simon Fish*
+
+* Set up Codespaces for bug replication.
+
+    *Simon Fish*
+
+* Add instructions for replicating bugs and failures.
 
     *Simon Fish*
 

@@ -15,6 +15,29 @@ GitHub engineers tend to focus on areas of the project that are useful to GitHub
 
 Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](https://github.com/github/view_component/blob/main/LICENSE.txt).
 
+## Reporting bugs
+
+When opening an issue to describe a bug, it's helpful to provide steps to reproduce it, either with failing tests in a pull request, or by sharing a repository that demonstrates the issue.
+
+### Creating a Rails application to demonstrate a ViewComponent bug
+
+1. Run `rails new --minimal view_component-bug-replica` in the console.
+2. Run `bundle add view_component` in the console. If testing against a previous version of ViewComponent, update the `Gemfile` to that version and run `bundle install`.
+3. Run `rails generate controller Home index`.
+4. Add `root to: 'home#index'`.
+5. Add as little code as possible that's necessary to reproduce the issue. If possible, use the original code that caused the issue in your application.
+6. Publish the repository and add a link to the bug report issue.
+
+### GitHub Codespaces
+
+This repository includes configuration for GitHub Codespaces, making it easy to set up a cloud-based development environment. Follow [GitHub's guide](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace#creating-a-codespace) to get started.
+
+The codespace environment includes a minimal Rails app with ViewComponent installed in the `replicate-bug` directory. To run the application:
+
+1. Start the Rails server from the codespace's terminal with `rails s`.
+2. Expose the port when prompted by the Visual Studio Code Web Editor.
+3. Add the external URL to the config block in `config/application.rb` as prompted by the error.
+
 ## Submitting a pull request
 
 1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
