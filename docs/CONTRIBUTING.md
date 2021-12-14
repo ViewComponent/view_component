@@ -25,7 +25,7 @@ When opening an issue to describe a bug, it's helpful to provide steps to reprod
 2. Run `bundle add view_component` in the console. If testing against a previous version of ViewComponent, update the `Gemfile` to that version and run `bundle install`.
 3. Run `rails generate controller Home index`.
 4. Add `root to: 'home#index'`.
-5. Add as little code as possible that is necessary to reproduce the issue. If possible, use the original code that caused the issue in your application.
+5. Add as little code as possible that's necessary to reproduce the issue. If possible, use the original code that caused the issue in your application.
 6. Publish the repository and add a link to the bug report issue.
 
 ### GitHub Codespaces
