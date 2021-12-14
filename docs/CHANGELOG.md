@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add linters for file consistency.
+
+    *Simon Fish*
+
 * Add @boardfish to docs/index.md and sort contributors.
 
     *Simon Fish*
