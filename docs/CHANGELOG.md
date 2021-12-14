@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Lint for trailing whitespace, newline at EOF, and merge conflicts
+
+    *Simon Fish*
+
 * Add @boardfish to docs/index.md and sort contributors.
 
     *Simon Fish*
