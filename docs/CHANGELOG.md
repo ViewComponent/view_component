@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Lint for trailing whitespace, newline at EOF, and merge conflicts
+* Add linters for file consistency.
 
     *Simon Fish*
 
