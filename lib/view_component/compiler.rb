@@ -9,25 +9,27 @@ module ViewComponent
     # * blocking (default in Rails development and test mode)
     # * non_blocking (default in Rails production mode)
     attr_accessor :mode
+    DEVELOPMENT_MODE = :development
+    PRODUCTION_MODE = :production
 
     def initialize(component_class)
       @component_class = component_class
       @__vc_compiler_lock = Monitor.new
-      @mode = defined?(Rails.root) && (Rails.env.development? || Rails.env.test?) ? :blocking : :non_blocking
+      @mode = defined?(Rails.root) && (Rails.env.development? || Rails.env.test?) ? DEVELOPMENT_MODE : PRODUCTION_MODE
     end
 
     def compiled?
       CompileCache.compiled?(component_class)
     end
 
-    def blocking?
-      mode == :blocking
+    def development?
+      mode == DEVELOPMENT_MODE
     end
 
     def compile(raise_errors: false)
       return if compiled?
 
-      call_synchronized_block { do_compile(raise_errors: raise_errors) }
+      with_lock { do_compile(raise_errors: raise_errors) }
     end
 
     def do_compile(raise_errors: false)
@@ -84,8 +86,8 @@ module ViewComponent
       CompileCache.register(component_class)
     end
 
-    def call_synchronized_block(&block)
-      if blocking?
+    def with_lock(&block)
+      if development?
         __vc_compiler_lock.synchronize(&block)
       else
         block.call
