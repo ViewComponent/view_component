@@ -19,7 +19,7 @@ Contributions to this project are [released](https://help.github.com/articles/gi
 
 When opening an issue to describe a bug, it's helpful to provide steps to reproduce it, either with failing tests in a pull request, or by sharing a repository that demonstrates the issue.
 
-#### Creating a Rails application to demonstrate a ViewComponent bug
+### Creating a Rails application to demonstrate a ViewComponent bug
 
 1. Run `rails new --minimal view_component-bug-replica` in the console.
 2. Run `bundle add view_component` in the console. If testing against a previous version of ViewComponent, update the `Gemfile` to that version and run `bundle install`.
