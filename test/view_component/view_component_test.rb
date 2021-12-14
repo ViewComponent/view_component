@@ -934,32 +934,34 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_compilation_in_development_mode
-    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE, MyComponent) do |klass|
-      ViewComponent::CompileCache.cache.delete(klass)
-      render_inline(klass.new)
-      assert_selector("div", text: "hello,world!")
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE, MyComponent) do
+      with_new_cache do
+        render_inline(MyComponent.new)
+        assert_selector("div", text: "hello,world!")
+      end
     end
   end
 
   def test_compilation_in_production_mode
-    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE, MyComponent) do |klass|
-      ViewComponent::CompileCache.cache.delete(klass)
-      render_inline(klass.new)
-      assert_selector("div", text: "hello,world!")
+    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE, MyComponent) do
+      with_new_cache do
+        render_inline(MyComponent.new)
+        assert_selector("div", text: "hello,world!")
+      end
     end
   end
 
   def test_multithread_render
-    ViewComponent::CompileCache.cache.delete(MyComponent)
+    with_new_cache do
+      threads = 100.times.map do
+        Thread.new do
+          render_inline(MyComponent.new)
 
-    threads = 100.times.map do
-      Thread.new do
-        render_inline(MyComponent.new)
-
-        assert_selector("div", text: "hello,world!")
+          assert_selector("div", text: "hello,world!")
+        end
       end
-    end
 
-    threads.map(&:join)
+      threads.map(&:join)
+    end
   end
 end

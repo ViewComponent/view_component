@@ -135,7 +135,7 @@ end
 def with_compiler_mode(mode, component)
   previous_mode = component.compiler.mode
   component.compiler.mode = mode
-  yield(component)
+  yield
 ensure
   component.compiler.mode = previous_mode
 end
