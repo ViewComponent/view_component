@@ -534,4 +534,25 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_includes response.body, "images/foo.png"
   end
+
+  def test_sets_the_compiler_mode_in_production_mode
+    Rails.env.stub :development?, false do
+      Rails.env.stub :test?, false do
+        ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+        assert_equal ViewComponent::Compiler.mode, ViewComponent::Compiler::PRODUCTION_MODE
+      end
+    end
+  end
+
+  def test_sets_the_compiler_mode_in_development_mode
+    Rails.env.stub :development?, true do
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+      assert_equal ViewComponent::Compiler.mode, ViewComponent::Compiler::DEVELOPMENT_MODE
+    end
+
+    Rails.env.stub :test?, true do
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+      assert_equal ViewComponent::Compiler.mode, ViewComponent::Compiler::DEVELOPMENT_MODE
+    end
+  end
 end
