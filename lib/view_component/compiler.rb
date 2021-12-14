@@ -8,14 +8,13 @@ module ViewComponent
     # Compiler mode. Can be either:
     # * blocking (default in Rails development and test mode)
     # * non_blocking (default in Rails production mode)
-    attr_accessor :mode
+    class_attribute :mode
     DEVELOPMENT_MODE = :development
     PRODUCTION_MODE = :production
 
     def initialize(component_class)
       @component_class = component_class
       @__vc_compiler_lock = Monitor.new
-      @mode = defined?(Rails.root) && (Rails.env.development? || Rails.env.test?) ? DEVELOPMENT_MODE : PRODUCTION_MODE
     end
 
     def compiled?
@@ -23,7 +22,7 @@ module ViewComponent
     end
 
     def development?
-      mode == DEVELOPMENT_MODE
+      self.class.mode == DEVELOPMENT_MODE
     end
 
     def compile(raise_errors: false)

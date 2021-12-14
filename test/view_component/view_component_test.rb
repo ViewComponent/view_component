@@ -934,7 +934,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_compilation_in_development_mode
-    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE, MyComponent) do
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
       with_new_cache do
         render_inline(MyComponent.new)
         assert_selector("div", text: "hello,world!")
@@ -943,7 +943,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_compilation_in_production_mode
-    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE, MyComponent) do
+    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE) do
       with_new_cache do
         render_inline(MyComponent.new)
         assert_selector("div", text: "hello,world!")
