@@ -8,9 +8,10 @@ module ViewComponent
     # Compiler mode. Can be either:
     # * blocking (default in Rails development and test mode)
     # * non_blocking (default in Rails production mode)
-    class_attribute :mode, default: PRODUCTION_MODE
     DEVELOPMENT_MODE = :development
     PRODUCTION_MODE = :production
+
+    class_attribute :mode, default: PRODUCTION_MODE
 
     def initialize(component_class)
       @component_class = component_class
