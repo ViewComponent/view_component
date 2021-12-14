@@ -15,22 +15,24 @@ GitHub engineers tend to focus on areas of the project that are useful to GitHub
 
 Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](https://github.com/github/view_component/blob/main/LICENSE.txt).
 
-## Bugs and issues
+## Reporting bugs
 
-When opening an issue to describe a bug you're facing, it's helpful to replicate the bug. You can do this either by contributing failing tests in a pull request, or by creating a new repository that demonstrates the issue. You can do this as follows:
+When opening an issue to describe a bug, it's helpful to provide steps to reproduce it, either with failing tests in a pull request, or by sharing a repository that demonstrates the issue.
+
+#### Creating a Rails application to demonstrate a ViewComponent bug
 
 1. Run `rails new --minimal view_component-bug-replica` in the console.
-2. Run `bundle add view_component` in the console. You may need to update your Gemfile and run `bundle install` to run against the version of `view_component` with which you're experiencing the issue.
+2. Run `bundle add view_component` in the console. If testing against a previous version of ViewComponent, update the `Gemfile` to that version and run `bundle install`.
 3. Run `rails generate controller Home index`.
-4. Remove any routes from `config/routes` and add `root to: 'home#index'`.
-5. Implement and render components that you're experiencing an issue with in the app. If possible, it's helpful to directly transfer the code you're using straight in. The repo should replicate your original issue.
-6. Share the app with us by creating a public GitHub repo and adding a link to it in your issue.
+4. Add `root to: 'home#index'`.
+5. Add as little code as possible that is necessary to reproduce the issue. If possible, use the original code that caused the issue in your application.
+6. Publish the repository and add a link to the bug report issue.
 
 ### GitHub Codespaces
 
-This repository's GitHub Codespaces config can take care of most of the above steps for you and give you an environment in which to replicate your issue. Follow [GitHub's guide](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace#creating-a-codespace) to create a codespace in this repository.
+This repository includes configuration for GitHub Codespaces, making it easy to set up a cloud-based development environment. Follow [GitHub's guide](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace#creating-a-codespace) to get started.
 
-After the codespace has been prepared, you should be able to access a new minimal Rails app with ViewComponent installed from its `replicate-bug` directory. You may then need to:
+The codespace environment includes a minimal Rails app with ViewComponent installed in the `replicate-bug` directory. To run the application:
 
 1. Start the Rails server from the codespace's terminal with `rails s`.
 2. Expose the port when prompted by the Visual Studio Code Web Editor.

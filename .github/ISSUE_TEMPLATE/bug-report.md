@@ -4,10 +4,7 @@ about: Create a report to help us improve ViewComponent
 ---
 
 <!--
-When opening an issue to describe a bug you're facing, it's helpful to replicate
-the bug. You can do this either by contributing failing tests in a pull request,
-or by creating a new repository that demonstrates the issue. Check out
-CONTRIBUTING.md to get started.
+When opening an issue to describe a bug, it's helpful to provide steps to reproduce it, either with failing tests in a pull request, or by sharing a repository that demonstrates the issue. See CONTRIBUTING.md for more details.
 -->
 
 ### Steps to reproduce
