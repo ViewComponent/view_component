@@ -11,6 +11,10 @@ title: Changelog
 
     *Horia Radu*
 
+* Add @boardfish to docs/index.md and sort contributors.
+
+    *Simon Fish*
+
 * Make @boardfish a committer.
 
     *Joel Hawksley*
