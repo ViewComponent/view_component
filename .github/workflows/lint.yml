@@ -3,6 +3,20 @@ name: Lint
 on: [pull_request]
 
 jobs:
+  trailing-whitespace:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Check for trailing whitespace
+      uses: raisedevs/find-trailing-whitespace@restrict-to-plaintext-only
+    - name: Check for merge conflicts
+      run: git diff --check
+      shell: bash
+    - name: Ensure all files have newline at EOF
+      uses: Logerfo/newline-action@0.0.2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
   prose:
     runs-on: ubuntu-latest
     steps:
