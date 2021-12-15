@@ -77,4 +77,15 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       TranslatableComponent._sidecar_files(["yml"])
     )
   end
+
+  def test_does_not_render_additional_newline_with_render_in
+    skip unless Rails::VERSION::MAJOR >= 7
+    without_template_annotations do
+      ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
+      rendered_component = Array.new(2) { DisplayInlineComponent.new.render_in(ActionController::Base.new.view_context) }.join
+      assert_includes rendered_component, "<span>Hello, world!</span><span>Hello, world!</span>"
+    end
+  ensure
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+  end
 end
