@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add a test to ensure blocks can be passed into lambda slots without the need for any other arguments.
+
+    *Simon Fish*
+
 * Add linters for file consistency.
 
     *Simon Fish*
