@@ -39,7 +39,7 @@ title: Changelog
 
     *Simon Fish*
 
-* Add `--locales` flag to the component generator. Generates as many locale files as defined in `I18n.available_locales`, alongside the component.
+* Add `--locale` flag to the component generator. Generates as many locale files as defined in `I18n.available_locales`, alongside the component.
 
     *Bob Maerten*
 
