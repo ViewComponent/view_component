@@ -289,11 +289,11 @@ module ViewComponent
 
     # Always generate one translations file per available locale:
     #
-    #     config.view_component.generate_splitted_locale_files = true
+    #     config.view_component.generate_distinct_locale_files = true
     #
     # Defaults to `false`. One file will be generated for each configured `I18n.available_locales`.
     #
-    mattr_accessor :generate_splitted_locale_files, instance_writer: false, default: false
+    mattr_accessor :generate_distinct_locale_files, instance_writer: false, default: false
 
     # Path for component files
     #

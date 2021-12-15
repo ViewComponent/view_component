@@ -35,8 +35,8 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_component_generator_with_generate_splitted_locale_files
-    with_generate_splitted_locale_files do
+  def test_component_generator_with_generate_distinct_locale_files
+    with_generate_distinct_locale_files do
       run_generator
     end
 
@@ -58,8 +58,8 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_component_generator_with_sidecar_with_generate_splitted_locale_files
-    with_generate_splitted_locale_files do
+  def test_component_generator_with_sidecar_with_generate_distinct_locale_files
+    with_generate_distinct_locale_files do
       run_generator %w[user --sidecar]
     end
 
@@ -80,8 +80,8 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_component_with_namespace_with_generate_splitted_locale_files
-    with_generate_splitted_locale_files do
+  def test_component_with_namespace_with_generate_distinct_locale_files
+    with_generate_distinct_locale_files do
       run_generator %w[admins/user]
     end
 
@@ -102,8 +102,8 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_component_with_namespace_and_sidecar_with_generate_splitted_locale_files
-    with_generate_splitted_locale_files do
+  def test_component_with_namespace_and_sidecar_with_generate_distinct_locale_files
+    with_generate_distinct_locale_files do
       run_generator %w[admins/user --sidecar]
     end
 
@@ -116,9 +116,9 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
 
   private
 
-  def with_generate_splitted_locale_files
-    ViewComponent::Base.generate_splitted_locale_files = true
+  def with_generate_distinct_locale_files
+    ViewComponent::Base.generate_distinct_locale_files = true
     yield
-    ViewComponent::Base.generate_splitted_locale_files = false
+    ViewComponent::Base.generate_distinct_locale_files = false
   end
 end
