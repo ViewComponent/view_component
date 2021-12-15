@@ -6,8 +6,9 @@ module ViewComponent
     attr_reader :__vc_compiler_lock
 
     # Compiler mode. Can be either:
-    # * blocking (default in Rails development and test mode)
-    # * non_blocking (default in Rails production mode)
+    # * development (a blocking mode which ensures thread safety when redefining the `call` method for components,
+    #                default in Rails development and test mode)
+    # * production (a non-blocking mode, default in Rails production mode)
     DEVELOPMENT_MODE = :development
     PRODUCTION_MODE = :production
 
