@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Add blocking compiler mode for us use in Rails development and testing modes, improving thread safety.
+* Add blocking compiler mode for use in Rails development and testing modes, improving thread safety.
 
     *Horia Radu*
 
