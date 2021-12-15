@@ -37,7 +37,7 @@ module ViewComponent
         if subclass_instance_methods.include?(:with_content) && raise_errors
           raise ViewComponent::ComponentError.new(
             "#{component_class} implements a reserved method, `#with_content`.\n\n" \
-          "To fix this issue, change the name of the method."
+            "To fix this issue, change the name of the method."
           )
         end
 
