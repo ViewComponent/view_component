@@ -953,17 +953,16 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_multithread_render
     ViewComponent::CompileCache.cache.delete(MyComponent)
-
-    threads = 100.times.map do
-      Thread.new do
-        Rails.env.stub :test?, true do
+    Rails.env.stub :test?, true do
+      threads = 100.times.map do
+        Thread.new do
           render_inline(MyComponent.new)
 
           assert_selector("div", text: "hello,world!")
         end
       end
-    end
 
-    threads.map(&:join)
+      threads.map(&:join)
+    end
   end
 end
