@@ -7,9 +7,9 @@
         <%= h @preview.preview_source(@example_name) %>
       </code>
     <% else %>
-      <% template = @view_renderer.lookup_context.find_template(@render_args[:template]) %>
-      <code class="language-<%= prism_language_name(template: template) %>">
-        <%= h template.source %>
+      <% template_data = find_template_data(lookup_context: @view_renderer.lookup_context, template_identifier: @render_args[:template]) %>
+      <code class="language-<%= template_data[:prism_language_name] %>">
+        <%= h template_data[:source] %>
       </code>
     <% end %>
   </pre>

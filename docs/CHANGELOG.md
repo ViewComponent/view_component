@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Display preview source on previews that exclusively use templates.
+
+    *Edwin Mak*
+
 * Add a test to ensure trailing newlines are stripped when rendering with `#render_in`.
 
     *Simon Fish*
