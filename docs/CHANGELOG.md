@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add a test to ensure trailing newlines are stripped when rendering with `#render_in`.
+
+    *Simon Fish*
+
 * Add WEBrick as a depenency to the docs application.
 
     *Connor McQuillan*
