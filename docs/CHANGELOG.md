@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add WEBrick as a depenency to the docs application.
+
+    *Connor McQuillan*
+
 * Add a test to ensure blocks can be passed into lambda slots without the need for any other arguments.
 
     *Simon Fish*
