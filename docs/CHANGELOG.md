@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update Ruby version in `.tool-versions`.
+
+    *Connor McQuillan*
+
 * Add a test to ensure blocks can be passed into lambda slots without the need for any other arguments.
 
     *Simon Fish*
