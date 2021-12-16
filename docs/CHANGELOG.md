@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add WEBrick as a depenency to the docs application.
+
+    *Connor McQuillan*
+
 * Update Ruby version in `.tool-versions`.
 
     *Connor McQuillan*
