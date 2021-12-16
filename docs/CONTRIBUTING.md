@@ -15,11 +15,34 @@ GitHub engineers tend to focus on areas of the project that are useful to GitHub
 
 Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](https://github.com/github/view_component/blob/main/LICENSE.txt).
 
+## Reporting bugs
+
+When opening an issue to describe a bug, it's helpful to provide steps to reproduce it, either with failing tests in a pull request, or by sharing a repository that demonstrates the issue.
+
+### Creating a Rails application to demonstrate a ViewComponent bug
+
+1. Run `rails new --minimal view_component-bug-replica` in the console.
+2. Run `bundle add view_component` in the console. If testing against a previous version of ViewComponent, update the `Gemfile` to that version and run `bundle install`.
+3. Run `rails generate controller Home index`.
+4. Add `root to: 'home#index'`.
+5. Add as little code as possible that's necessary to reproduce the issue. If possible, use the original code that caused the issue in your application.
+6. Publish the repository and add a link to the bug report issue.
+
+### GitHub Codespaces
+
+This repository includes configuration for GitHub Codespaces, making it easy to set up a cloud-based development environment. Follow [GitHub's guide](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace#creating-a-codespace) to get started.
+
+The codespace environment includes a minimal Rails app with ViewComponent installed in the `replicate-bug` directory. To run the application:
+
+1. Start the Rails server from the codespace's terminal with `rails s`.
+2. Expose the port when prompted by the Visual Studio Code Web Editor.
+3. Add the external URL to the config block in `config/application.rb` as prompted by the error.
+
 ## Submitting a pull request
 
 1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
 1. Configure and install the dependencies: `bundle`.
-1. Make sure the tests pass on your machine: `bundle exec rake`. (Run a subset of tests by supplying a file glob to the test command: `TEST="test/components/YOUR_COMPONENT_test.rb" bundle exec rake`)
+1. Make sure the tests pass on your machine: `bundle exec rake` (see below for specific cases).
 1. Create a new branch: `git checkout -b my-branch-name`.
 1. Make your change, add tests, and make sure the tests still pass.
 1. Add an entry to the top of `docs/CHANGELOG.md` for your changes, no matter how small they're. We want to recognize your contribution!
@@ -32,6 +55,30 @@ Here are a few things you can do that will increase the likelihood of your pull 
 - Write tests.
 - Keep your change as focused as possible. If there are multiple changes you would like to make that aren't dependent upon each other, consider submitting them as separate pull requests.
 - Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
+
+### Running a subset of tests
+
+Supply a file glob to the test command:
+
+```command
+TEST="test/components/YOUR_COMPONENT_test.rb" bundle exec rake
+```
+
+### Run tests for a specific version of Rails
+
+Update the bundle:
+
+```command
+RAILS_VERSION=5.2.5 bundle update
+```
+
+Then run the test command:
+
+```command
+RAILS_VERSION=5.2.5 bundle exec rake
+```
+
+When you're done, make sure you don't commit changes to `Gemfile.lock`. Instead, discard your changes to the file: `git checkout -- Gemfile.lock`
 
 ## Documentation
 
@@ -78,11 +125,11 @@ Committers and maintainers may also nominate triagers by opening a pull request 
 
 ### Commit
 
-ViewComponent committers have `write` access, enabling them to push directly to the repository and approve/merge pull requests. Committers often have implicit ownership over a particular area of the project, such as previews, generators, or translations.
+ViewComponent committers have `write` access, enabling them to push directly to the repository (and thus not needing to contribute via forks) and approve/merge pull requests. Committers often have implicit ownership over a particular area of the project, such as previews, generators, or translations.
 
 Triagers are invited to become committers by having an existing committer or maintainer open a pull request on the repository to update this list of committers:
 
-The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, @spone, and @dylanatsmith.
+The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, @spone, @dylanatsmith, and @boardfish.
 
 ### Maintain
 

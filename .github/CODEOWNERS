@@ -39,3 +39,6 @@
 /test/sandbox/app/components/translatable_component.yml @elia
 /test/sandbox/app/components/translations_component.html.erb @elia
 /test/sandbox/app/components/translations_component.rb @elia
+
+/.devcontainer/**/* @boardfish
+/script/replicate-bug @boardfish

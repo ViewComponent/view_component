@@ -586,6 +586,14 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_uses_default_form_builder
+    with_controller_class DefaultFormBuilderController do
+      render_inline(DefaultFormBuilderComponent.new)
+
+      assert_text("changed by default form builder")
+    end
+  end
+
   def test_backtrace_returns_correct_file_and_line_number
     error =
       assert_raises NameError do
@@ -728,6 +736,30 @@ class ViewComponentTest < ViewComponent::TestCase
       end
 
     assert_match(/MissingDefaultCollectionParameterComponent doesn't accept the parameter/, exception.message)
+  end
+
+  def test_collection_component_missing_custom_parameter_name_with_activemodel
+    exception = assert_raises ArgumentError do
+      render_inline(
+        MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
+
+    assert_match(
+      "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, "\
+      "which is required in order to render it as a collection.\n\n" \
+      "To fix this issue, update the initializer to accept `name`.\n\n" \
+      "See https://viewcomponent.org/guide/collections.html for more information on rendering collections.",
+      exception.message
+    )
+  end
+
+  def test_collection_component_present_custom_parameter_name_with_activemodel
+    assert_nothing_raised do
+      render_inline(
+        CollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
   end
 
   def test_component_with_invalid_parameter_names
