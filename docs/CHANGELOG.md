@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Allow component tests to define the current user.
+
+    *Connor McQuillan*
+
 * Add a test to ensure blocks can be passed into lambda slots without the need for any other arguments.
 
     *Simon Fish*

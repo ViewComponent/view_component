@@ -3,6 +3,8 @@
 class IntegrationExamplesController < ActionController::Base
   layout false
 
+  helper_method :current_user
+
   def variants
     request.variant = params[:variant].to_sym if params[:variant]
   end
@@ -46,5 +48,11 @@ class IntegrationExamplesController < ActionController::Base
     products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
 
     render(ProductComponent.with_collection(products, notice: "Today only"))
+  end
+
+  private
+
+  def current_user
+    nil
   end
 end

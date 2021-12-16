@@ -150,6 +150,27 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+## Setting the current user
+
+Authentication gems like [clearance] and [devise] define a `current_user` helper method that can be used in controllers and views.
+
+When a component delegates `:current_user` to the Rails helpers, the component can be rendered as a given user in tests using `with_current_user` from `ViewComponent::TestHelpers`:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_with_current_user
+    with_current_user User.new(name: "Test User") do
+      render_inline ExampleComponent.new # contains i.e `<h1>Hello, <%= current_user.name %>!</h1>
+
+      assert_text "Hello, Test User!
+    end
+  end
+end
+```
+
+[clearance]: https://github.com/thoughtbot/clearance
+[devise]: https://github.com/heartcombo/devise
+
 ## RSpec configuration
 
 To use RSpec, add the following:

@@ -126,6 +126,22 @@ module ViewComponent
       @controller = old_controller
     end
 
+    # Set the current_user in the given controller to the given value:
+    #
+    # ```ruby
+    # with_current_user(user) do
+    #  render_inline(MyComponent.new)
+    # end
+    # ```
+    #
+    # @param user [Object] The user to set as the current_user.
+    def with_current_user(user)
+      controller.define_singleton_method(:current_user) { user }
+      yield
+    ensure
+      controller.define_singleton_method(:current_user) { nil }
+    end
+
     # @private
     def build_controller(klass)
       klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)

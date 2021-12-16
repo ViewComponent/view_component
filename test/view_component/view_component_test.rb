@@ -915,6 +915,16 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_with_current_user
+    with_current_user "A user object" do
+      render_inline CurrentUserComponent.new
+      assert_text "A user object"
+    end
+
+    render_inline CurrentUserComponent.new
+    assert_text "No user present"
+  end
+
   def test_components_share_helpers_state
     PartialHelper::State.reset
 
