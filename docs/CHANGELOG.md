@@ -11,6 +11,18 @@ title: Changelog
 
     *Simon Fish*
 
+* Add WEBrick as a depenency to the docs application.
+
+    *Connor McQuillan*
+
+* Update Ruby version in `.tool-versions`.
+
+    *Connor McQuillan*
+
+* Add a test to ensure blocks can be passed into lambda slots without the need for any other arguments.
+
+    *Simon Fish*
+
 * Add linters for file consistency.
 
     *Simon Fish*

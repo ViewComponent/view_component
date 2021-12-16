@@ -496,6 +496,13 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_renders_a_block_passed_to_a_lambda_slot
+    get "/rails/view_components/lambda_slot_passthrough_component/default"
+    assert_select ".lambda_slot" do
+      assert_select ".content", "hello,world!"
+    end
+  end
+
   def test_renders_an_inline_component_preview_using_url_params_and_a_template
     get "/rails/view_components/inline_component/with_params?form_title=This is a test form"
     assert_select "form" do
