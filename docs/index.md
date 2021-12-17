@@ -119,6 +119,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/bradparker?s=64" alt="bradparker" width="32" />
 <img src="https://avatars.githubusercontent.com/cesariouy?s=64" alt="cesariouy" width="32" />
 <img src="https://avatars.githubusercontent.com/cover?s=64" alt="cover" width="32" />
+<img src="https://avatars.githubusercontent.com/cpjmcquillan?s=64" alt="cpjmcquillan" width="32" />
 <img src="https://avatars.githubusercontent.com/czj?s=64" alt="czj" width="32" />
 <img src="https://avatars.githubusercontent.com/dark-panda?s=64" alt="dark-panda" width="32" />
 <img src="https://avatars.githubusercontent.com/davekaro?s=64" alt="davekaro" width="32" />
@@ -178,6 +179,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/vinistock?s=64" alt="vinistock" width="32" />
 <img src="https://avatars.githubusercontent.com/wdrexler?s=64" alt="wdrexler" width="32" />
 <img src="https://avatars.githubusercontent.com/websebdev?s=64" alt="websebdev" width="32" />
+<img src="https://avatars.githubusercontent.com/edwinthinks?s=64" alt="edwinthinks" width="32" />
 <img src="https://avatars.githubusercontent.com/xkraty?s=64" alt="xkraty" width="32" />
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 

@@ -320,11 +320,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "hello,world!")
   end
 
-  def test_renders_preview_source
+  def test_renders_preview_source_without_template
     get "/rails/view_components/preview_component/default"
 
     assert_select ".view-component-source-example h2", "Source:"
     assert_select ".view-component-source-example pre.source code"
+    assert_select ".language-ruby"
+    refute_match "&lt;%=", response.body
+    refute_match "%&gt", response.body
   end
 
   def test_renders_preview_source_with_template_from_layout
@@ -332,6 +335,9 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_select ".view-component-source-example h2", "Source:"
     assert_select ".view-component-source-example pre.source code"
+    assert_select ".language-erb"
+    assert_match "&lt;%=", response.body
+    assert_match "%&gt", response.body
   end
 
   def test_renders_collections
@@ -471,6 +477,17 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
       get "/rails/view_components/display_inline_component/with_newline"
+      assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
+    end
+  ensure
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+  end
+
+  def test_does_not_render_additional_newline_with_render_in
+    skip unless Rails::VERSION::MAJOR >= 7
+    without_template_annotations do
+      ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
+      get "/rails/view_components/display_inline_component/with_newline_render_in"
       assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   ensure
