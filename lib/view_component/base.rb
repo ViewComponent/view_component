@@ -279,6 +279,25 @@ module ViewComponent
     #
     mattr_accessor :generate_stimulus_controller, instance_writer: false, default: false
 
+    # Always generate translations file alongside the component:
+    #
+    #     config.view_component.generate_locale = true
+    #
+    # Defaults to `false`.
+    #
+    mattr_accessor :generate_locale, instance_writer: false, default: false
+
+    # Always generate as many translations files as available locales:
+    #
+    #     config.view_component.generate_distinct_locale_files = true
+    #
+    # Defaults to `false`.
+    #
+    # One file will be generated for each configured `I18n.available_locales`.
+    # Fallback on `[:en]` when no available_locales is defined.
+    #
+    mattr_accessor :generate_distinct_locale_files, instance_writer: false, default: false
+
     # Path for component files
     #
     #     config.view_component.view_component_path = "app/my_components"
@@ -507,6 +526,10 @@ module ViewComponent
       private
 
       def initialize_parameter_names
+        return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
+
+        return attribute_types.keys.map(&:to_sym) if Rails::VERSION::MAJOR <= 5 && respond_to?(:attribute_types)
+
         initialize_parameters.map(&:last)
       end
 

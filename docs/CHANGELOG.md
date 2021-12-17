@@ -11,6 +11,76 @@ title: Changelog
 
     *Edwin Mak*
 
+* Display preview source on previews that exclusively use templates.
+
+    *Edwin Mak*
+
+* Add a test to ensure trailing newlines are stripped when rendering with `#render_in`.
+
+    *Simon Fish*
+
+* Add WEBrick as a depenency to the docs application.
+
+    *Connor McQuillan*
+
+* Update Ruby version in `.tool-versions`.
+
+    *Connor McQuillan*
+
+* Add a test to ensure blocks can be passed into lambda slots without the need for any other arguments.
+
+    *Simon Fish*
+
+* Add linters for file consistency.
+
+    *Simon Fish*
+
+* Add @boardfish to docs/index.md and sort contributors.
+
+    *Simon Fish*
+
+* Set up Codespaces for bug replication.
+
+    *Simon Fish*
+
+* Add instructions for replicating bugs and failures.
+
+    *Simon Fish*
+
+* Make @boardfish a committer.
+
+    *Joel Hawksley*
+
+* Validate collection parameter with Active Model attribute names.
+
+    *Simon Fish*
+
+* Fix `helpers` not working with component slots when rendered more than 2 component levels deep.
+
+    *Blake Williams*
+
+* Update ruby to the latest versions
+
+    *Pedro Paiva*
+
+* Fix `vale` linter config options.
+
+    *Hans Lemuet*
+
+* Improve Contributing docs to include how to run tests for a specific version on Rails.
+
+    *Hans Lemuet*
+
+* Add failing test for default form builder and documentation around known issue.
+
+    *Simon Fish*
+
+* Add `--locale` flag to the component generator. Generates as many locale files as defined in `I18n.available_locales`, alongside the component.
+* Add config option `config.view_component.generate_locale` to enable project-wide locale generation.
+* Add config option `config.view_component.generate_distinct_locale_files` to enable project-wide per-locale translations file generation.
+
+    *Bob Maerten*
+
 ## 2.46.0
 
 * Add thread safety to the compiler.
@@ -28,6 +98,17 @@ title: Changelog
 * Increase clarity around purpose and use of slots.
 
     *Simon Fish*
+
+* Deprecate loading `view_component/engine` directly.
+
+  **Upgrade notice**: You should update your `Gemfile` like this:
+
+  ```diff
+  - gem "view_component", require: "view_component/engine"`
+  + gem "view_component"
+  ```
+
+    *Yoshiyuki Hirano*
 
 ## 2.45.0
 
@@ -64,10 +145,6 @@ title: Changelog
     *Yoshiyuki Hirano*
 
 * Unify test code of `TestUnitGeneratorTest` with the other generators tests.
-
-    *Yoshiyuki Hirano*
-
-* Deprecate engine loading manually.
 
     *Yoshiyuki Hirano*
 

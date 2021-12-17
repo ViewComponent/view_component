@@ -109,18 +109,22 @@ ViewComponents are Ruby objects, making it easy to follow (and enforce) code qua
 
 ViewComponent is built by over a hundred members of the community, including:
 
+<img src="https://avatars.githubusercontent.com/andrewjtait?s=64" alt="andrewjtait" width="32" />
 <img src="https://avatars.githubusercontent.com/asgerb?s=64" alt="asgerb" width="32" />
 <img src="https://avatars.githubusercontent.com/bbugh?s=64" alt="bbugh" width="32" />
 <img src="https://avatars.githubusercontent.com/bigbigdoudou?s=64" alt="bigbigdoudou" width="32" />
 <img src="https://avatars.githubusercontent.com/blakewilliams?s=64" alt="blakewilliams" width="32" />
+<img src="https://avatars.githubusercontent.com/boardfish?s=64" alt="boardfish" width="32" />
 <img src="https://avatars.githubusercontent.com/bobmaerten?s=64" alt="bobmaerten" width="32" />
 <img src="https://avatars.githubusercontent.com/bradparker?s=64" alt="bradparker" width="32" />
 <img src="https://avatars.githubusercontent.com/cesariouy?s=64" alt="cesariouy" width="32" />
 <img src="https://avatars.githubusercontent.com/cover?s=64" alt="cover" width="32" />
+<img src="https://avatars.githubusercontent.com/cpjmcquillan?s=64" alt="cpjmcquillan" width="32" />
 <img src="https://avatars.githubusercontent.com/czj?s=64" alt="czj" width="32" />
 <img src="https://avatars.githubusercontent.com/dark-panda?s=64" alt="dark-panda" width="32" />
 <img src="https://avatars.githubusercontent.com/davekaro?s=64" alt="davekaro" width="32" />
 <img src="https://avatars.githubusercontent.com/dukex?s=64" alt="dukex" width="32" />
+<img src="https://avatars.githubusercontent.com/dylanatsmith?s=64" alt="dylanatsmith" width="32" />
 <img src="https://avatars.githubusercontent.com/dylnclrk?s=64" alt="dylnclrk" width="32" />
 <img src="https://avatars.githubusercontent.com/elia?s=64" alt="elia" width="32" />
 <img src="https://avatars.githubusercontent.com/franco?s=64" alt="franco" width="32" />
@@ -142,7 +146,10 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
 <img src="https://avatars.githubusercontent.com/manuelpuyol?s=64" alt="manuelpuyol" width="32" />
+<img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
+<img src="https://avatars.githubusercontent.com/matt-yorkley?s=64" alt="Matt-Yorkley" width="32" />
 <img src="https://avatars.githubusercontent.com/mattbrictson?s=64" alt="mattbrictson" width="32" />
+<img src="https://avatars.githubusercontent.com/mattwr18?s=64" alt="mattwr18" width="32" />
 <img src="https://avatars.githubusercontent.com/maxbeizer?s=64" alt="maxbeizer" width="32" />
 <img src="https://avatars.githubusercontent.com/mellowfish?s=64" alt="mellowfish" width="32" />
 <img src="https://avatars.githubusercontent.com/metade?s=64" alt="metade" width="32" />
@@ -156,12 +163,13 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/rainerborene?s=64" alt="rainerborene" width="32" />
 <img src="https://avatars.githubusercontent.com/rdavid1099?s=64" alt="rdavid1099" width="32" />
 <img src="https://avatars.githubusercontent.com/rmacklin?s=64" alt="rmacklin" width="32" />
+<img src="https://avatars.githubusercontent.com/ryogift?s=64" alt="ryogift" width="32" />
 <img src="https://avatars.githubusercontent.com/seanpdoyle?s=64" alt="seanpdoyle" width="32" />
 <img src="https://avatars.githubusercontent.com/simonrand?s=64" alt="simonrand" width="32" />
 <img src="https://avatars.githubusercontent.com/skryukov?s=64" alt="skryukov" width="32" />
 <img src="https://avatars.githubusercontent.com/smashwilson?s=64" alt="smashwilson" width="32" />
 <img src="https://avatars.githubusercontent.com/spdawson?s=64" alt="spdawson" width="32" />
-<img src="https://avatars.githubusercontent.com/Spone?s=64" alt="Spone" width="32" />
+<img src="https://avatars.githubusercontent.com/spone?s=64" alt="Spone" width="32" />
 <img src="https://avatars.githubusercontent.com/swanson?s=64" alt="swanson" width="32" />
 <img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=64" alt="tbroad-ramsey" width="32" />
 <img src="https://avatars.githubusercontent.com/tclem?s=64" alt="tclem" width="32" />
@@ -169,16 +177,11 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/tonkpils?s=64" alt="tonkpils" width="32" />
 <img src="https://avatars.githubusercontent.com/traels?s=64" alt="traels" width="32" />
 <img src="https://avatars.githubusercontent.com/vinistock?s=64" alt="vinistock" width="32" />
-<img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
-<img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
-<img src="https://avatars.githubusercontent.com/Matt-Yorkley?s=64" alt="Matt-Yorkley" width="32" />
-<img src="https://avatars.githubusercontent.com/ryogift?s=64" alt="ryogift" width="32" />
-<img src="https://avatars.githubusercontent.com/andrewjtait?s=64" alt="andrewjtait" width="32" />
-<img src="https://avatars.githubusercontent.com/websebdev?s=64" alt="websebdev" width="32" />
-<img src="https://avatars.githubusercontent.com/xkraty?s=64" alt="xkraty" width="32" />
 <img src="https://avatars.githubusercontent.com/wdrexler?s=64" alt="wdrexler" width="32" />
-<img src="https://avatars.githubusercontent.com/mattwr18?s=64" alt="mattwr18" width="32" />
-<img src="https://avatars.githubusercontent.com/dylanatsmith?s=64" alt="dylanatsmith" width="32" />
+<img src="https://avatars.githubusercontent.com/websebdev?s=64" alt="websebdev" width="32" />
+<img src="https://avatars.githubusercontent.com/edwinthinks?s=64" alt="edwinthinks" width="32" />
+<img src="https://avatars.githubusercontent.com/xkraty?s=64" alt="xkraty" width="32" />
+<img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 
 ## Who uses ViewComponent?
 
