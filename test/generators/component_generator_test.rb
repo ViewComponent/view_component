@@ -243,6 +243,20 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/user_component/user_component_controller.js"
   end
 
+  def test_component_with_locale
+    run_generator %w[user --locale]
+
+    assert_file "app/components/user_component.rb"
+    assert_file "app/components/user_component.yml"
+  end
+
+  def test_component_with_locale_and_sidecar
+    run_generator %w[user --locale --sidecar]
+
+    assert_file "app/components/user_component.rb"
+    assert_file "app/components/user_component/user_component.yml"
+  end
+
   private
 
   def with_package_json(content, &block)
