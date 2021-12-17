@@ -23,7 +23,7 @@ en:
   hello: "Hello world!"
 ```
 
-Translations can also be defined in distinct per-locale files for convenience.
+Translations can also be defined in per-locale files:
 
 ```yml
 # app/components/example_component.en.yml
