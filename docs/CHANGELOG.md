@@ -75,6 +75,12 @@ title: Changelog
 
     *Simon Fish*
 
+* Add `--locale` flag to the component generator. Generates as many locale files as defined in `I18n.available_locales`, alongside the component.
+* Add config option `config.view_component.generate_locale` to enable project-wide locale generation.
+* Add config option `config.view_component.generate_distinct_locale_files` to enable project-wide per-locale translations file generation.
+
+    *Bob Maerten*
+
 ## 2.46.0
 
 * Add thread safety to the compiler.

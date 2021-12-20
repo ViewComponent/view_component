@@ -85,6 +85,25 @@ Set a custom default layout used for preview index and individual previews:
 
     config.view_component.default_preview_layout = "component_preview"
 
+### #generate_distinct_locale_files
+
+Always generate as many translations files as available locales:
+
+    config.view_component.generate_distinct_locale_files = true
+
+Defaults to `false`.
+
+One file will be generated for each configured `I18n.available_locales`.
+Fallback on `[:en]` when no available_locales is defined.
+
+### #generate_locale
+
+Always generate translations file alongside the component:
+
+    config.view_component.generate_locale = true
+
+Defaults to `false`.
+
 ### #generate_stimulus_controller
 
 Always generate a Stimulus controller alongside the component:

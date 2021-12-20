@@ -82,6 +82,24 @@ bin/rails generate component Example title --stimulus
 
 To always generate a Stimulus controller, set `config.view_component.generate_stimulus_controller = true`.
 
+### Generate [locale files](/guide/translations.html)
+
+```console
+bin/rails generate component Example title --locale
+
+      create  app/components/example_component.rb
+      invoke  test_unit
+      create    test/components/example_component_test.rb
+      invoke  locale
+      create    app/components/example_component.yml
+      invoke  erb
+      create    app/components/example_component.html.erb
+```
+
+To always generate locale files, set `config.view_component.generate_locale = true`.
+
+If your prefer having your translations in distinct locale files you can set `config.view_component.generate_distinct_locale_files = true` in order to generate as many files as configured in `I18n.available_locales`.
+
 ### Place the view in a sidecar directory
 
 ```console
