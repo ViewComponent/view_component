@@ -11,6 +11,8 @@ title: Changelog
 
     *Horia Radu*
 
+## 2.47.0
+
 * Display preview source on previews that exclusively use templates.
 
     *Edwin Mak*
