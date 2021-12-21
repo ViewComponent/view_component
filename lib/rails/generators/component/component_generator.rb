@@ -14,6 +14,7 @@ module Rails
       class_option :inline, type: :boolean, default: false
       class_option :parent, type: :string, desc: "The parent class for the generated component"
       class_option :stimulus, type: :boolean, default: ViewComponent::Base.generate.stimulus_controller
+      class_option :preview, type: :boolean, default: ViewComponent::Base.generate.preview
       class_option :sidecar, type: :boolean, default: false
       class_option :locale, type: :boolean, default: ViewComponent::Base.generate.locale
 
