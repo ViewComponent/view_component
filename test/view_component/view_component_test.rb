@@ -942,6 +942,15 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_compilation_in_production_mode
+    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE) do
+      with_new_cache do
+        render_inline(MyComponent.new)
+        assert_selector("div", text: "hello,world!")
+      end
+    end
+  end
+
   def test_multithread_render
     ViewComponent::CompileCache.cache.delete(MyComponent)
     Rails.env.stub :test?, true do
