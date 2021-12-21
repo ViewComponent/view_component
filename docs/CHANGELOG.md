@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Make `ViewComponent::Collection` act like a collection of view components
+
+    *Sammy Henningsson*
+
 * Update `@param` of `#render_inline` to include `ViewComponent::Collection`.
 
     *Yutaka Kamei*
