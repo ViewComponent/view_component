@@ -11,6 +11,11 @@ title: Changelog
 
     *Simon Fish*
 
+* Allow preview generator to use provided component attributes.
+* Add config option `config.view_component.generate.preview` to enable project-wide preview generation.
+
+  *Bob Maerten*
+
 ## 2.49.0
 
 * Fix path handling for evaluated view components that broke in Ruby 3.1.
