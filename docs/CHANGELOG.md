@@ -11,6 +11,14 @@ title: Changelog
 
     *Horia Radu*
 
+* Make `ViewComponent::Collection` act like a collection of view components
+
+    *Sammy Henningsson*
+
+* Update `@param` of `#render_inline` to include `ViewComponent::Collection`.
+
+    *Yutaka Kamei*
+
 ## 2.47.0
 
 * Display preview source on previews that exclusively use templates.
