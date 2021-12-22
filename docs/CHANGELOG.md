@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add good and bad examples to `ViewComponents in practice`.
+
+    *Joel Hawksley*
+
 * Make `ViewComponent::Collection` act like a collection of view components
 
     *Sammy Henningsson*
