@@ -127,7 +127,6 @@ Use ViewComponents in place of helpers that return HTML.
 
 The more a ViewComponent is dependent on global state (such as request parameters or the current URL), the less likely it's to be reusable. Avoid implicit coupling to global state, instead passing it into the component explicitly. Thorough unit testing is a good way to ensure decoupling from global state.
 
-
 ```ruby
 # good
 class MyComponent < ViewComponent::Base
