@@ -314,11 +314,11 @@ module ViewComponent
 
     # Always generate a component with a sidecar directory:
     #
-    #     config.view_component.sidecar = true
+    #     config.view_component.generate_sidecar = true
     #
     # Defaults to `false`.
     #
-    mattr_accessor :sidecar, instance_writer: false, default: false
+    mattr_accessor :generate_sidecar, instance_writer: false, default: false
 
     class << self
       # @private
