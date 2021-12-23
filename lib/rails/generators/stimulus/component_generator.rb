@@ -23,7 +23,7 @@ module Stimulus
       private
 
       def destination
-        if options["sidecar"]
+        if sidecar?
           File.join(component_path, class_path, "#{file_name}_component", "#{file_name}_component_controller.js")
         else
           File.join(component_path, class_path, "#{file_name}_component_controller.js")
