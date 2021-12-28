@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Return properly values for `request.path` and `request.query_string` methods.
+
+    *Vasiliy Matyushin*
+
 * Make `ViewComponent::Collection` act like a collection of view components
 
     *Sammy Henningsson*
