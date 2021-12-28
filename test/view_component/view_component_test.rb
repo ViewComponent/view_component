@@ -898,7 +898,7 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     with_request_url "/products" do
-      assert_equal  "/products", request.path
+      assert_equal "/products", request.path
     end
   end
 
@@ -919,7 +919,7 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
-      assert_equal  "mykey=myvalue&otherkey=othervalue", request.query_string
+      assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
     end
   end
 
