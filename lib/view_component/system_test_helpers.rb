@@ -24,6 +24,9 @@ module ViewComponent
       }
       html = controller.render_to_string("view_components/preview", opts)
 
+      # Add 'tmp/' directory if it doesn't exist to store the rendered component html
+      Dir.mkdir('tmp/') unless Dir.exist?('tmp/')
+
       # Write to temporary file to contain fully rendered component
       # within a browser
       file = Tempfile.new(["rendered_#{component.class.name}", ".html"], "tmp/")
