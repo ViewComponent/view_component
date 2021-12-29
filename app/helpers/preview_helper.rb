@@ -60,6 +60,8 @@ module PreviewHelper
   def prism_language_name_by_template_path(template_file_path:)
     language = template_file_path.gsub(".html", "").split(".").last
 
-    render "view_components/preview_source"
+    return FALLBACK_LANGUAGE unless AVAILABLE_PRISM_LANGUAGES.include? language
+
+    language
   end
 end
