@@ -7,9 +7,19 @@ title: Changelog
 
 ## main
 
-* Add visit_rendered_in_browser method to enable testing JS interactions in components
+* Add visit_rendered_component_in_browser method to enable testing JS interactions in components
 
     *Edwin Mak*
+
+* Make `ViewComponent::Collection` act like a collection of view components
+
+    *Sammy Henningsson*
+
+* Update `@param` of `#render_inline` to include `ViewComponent::Collection`.
+
+    *Yutaka Kamei*
+
+## 2.47.0
 
 * Display preview source on previews that exclusively use templates.
 

@@ -38,7 +38,7 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     #
-    # @param component [ViewComponent::Base] The instance of the component to be rendered.
+    # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
     # @return [Nokogiri::HTML]
     def render_inline(component, **args, &block)
       @rendered_component =
