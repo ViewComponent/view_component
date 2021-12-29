@@ -12,8 +12,6 @@
 /spec/examples.txt
 /test/tmp/
 /test/version_tmp/
-/tmp/*
-!tmp/.gitkeep 
 /test/log/*
 /test/sandbox/tmp/*
 /test/sandbox/log/*
