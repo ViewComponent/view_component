@@ -20,6 +20,18 @@ bin/rails generate component Example title content
       create    app/components/example_component.html.erb
 ```
 
+Organize components using namespaces. To generate a namespaced `Sections::ExampleComponent`:
+
+```console
+bin/rails generate component Sections::Example
+
+      create  app/components/sections/example_component.rb
+      invoke  test_unit
+      create    test/components/sections/example_component_test.rb
+      invoke  erb
+      create    app/components/sections/example_component.html.erb
+```
+
 ## Options
 
 Generated ViewComponents are added to `app/components` by default. Set `config.view_component.view_component_path` to use a different path.
