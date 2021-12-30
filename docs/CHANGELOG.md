@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add a namespaced component example to docs.
+
+    *Hans Lemuet*
+
 * Make `ViewComponent::Collection` act like a collection of view components
 
     *Sammy Henningsson*
