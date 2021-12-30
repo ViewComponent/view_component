@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix Ruby versions and update Rails versions used in CI.
+
+    *Hans Lemuet*
+
 * Make `ViewComponent::Collection` act like a collection of view components
 
     *Sammy Henningsson*
