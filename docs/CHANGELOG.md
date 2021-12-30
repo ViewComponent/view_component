@@ -7,7 +7,11 @@ title: Changelog
 
 ## main
 
-* Make `ViewComponent::Collection` act like a collection of view components
+* Setup `Appraisal` to simplify testing multiple Rails versions.
+
+    *Hans Lemuet*
+
+* Make `ViewComponent::Collection` act like a collection of view components.
 
     *Sammy Henningsson*
 
