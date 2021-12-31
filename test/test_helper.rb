@@ -26,6 +26,8 @@ require "capybara/cuprite"
 
 # Reduce extra logs produced by puma booting up
 Capybara.server = :puma, { Silent: true }
+# Increase the max wait time to appease test failures due to timeouts.
+Capybara.default_max_wait_time = 4
 
 # Sets custom preview paths in tests.
 #

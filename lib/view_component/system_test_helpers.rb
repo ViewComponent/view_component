@@ -33,9 +33,6 @@ module ViewComponent
       file.write(html)
       file.rewind
 
-      # NOTE - not entirely sure how this would work
-      # given that the application may have their own capybara
-      # instance running
       filename = file.path.split("/").last
 
       # Visit the file that contains the HTML
