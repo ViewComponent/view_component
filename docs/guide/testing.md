@@ -199,3 +199,42 @@ To use component previews:
 # config/application.rb
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 ```
+
+## Testing Interactive Components
+
+Use the `visit_rendered_component_in_browser` helper method in your system tests to test interactivity of components. 
+
+```rb
+require "test_helper"
+
+class ViewComponentSystemTest < ViewComponent::SystemTestCase
+  driven_by :cuprite
+
+  def test_simple_js_interaction_in_browser_without_layout
+    visit_rendered_component_in_browser(SimpleJavascriptInteractionWithJsIncludedComponent.new)
+
+    assert find("[data-hidden-field]", visible: false)
+    find("[data-button]", text: "Click Me To Reveal Something Cool").click
+    assert find("[data-hidden-field]", visible: true)
+  end
+end
+```
+
+### Handling components without JS included
+A common pattern is to include assets in a layout rather than directly inside the component. In those cases, you can define a `layout` in the `visit_rendered_component_in_browser` so that the component is rendered with those assets:
+
+```rb
+require "test_helper"
+
+class ViewComponentSystemTest < ViewComponent::SystemTestCase
+  driven_by :cuprite
+
+  def test_simple_js_interaction_in_browser_with_layout
+    visit_rendered_component_in_browser(SimpleJavascriptInteractionWithoutJsIncludedComponent.new, layout: 'application')
+
+    assert find("[data-hidden-field]", visible: false)
+    find("[data-button]", text: "Click Me To Reveal Something Cool").click
+    assert find("[data-hidden-field]", visible: true)
+  end
+end
+```
