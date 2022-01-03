@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Fix Ruby versions and update Rails versions used in CI.
+* Correctly type Ruby version strings and update Rails versions used in CI configuration.
 
     *Hans Lemuet*
 
