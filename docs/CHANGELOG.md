@@ -10,7 +10,7 @@ title: Changelog
 * Add a namespaced component example to docs.
 
     *Hans Lemuet*
-    
+
 * Correctly type Ruby version strings and update Rails versions used in CI configuration.
 
     *Hans Lemuet*
