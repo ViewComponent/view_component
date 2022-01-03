@@ -11,6 +11,10 @@ title: Changelog
 
     *Horia Radu*
 
+* Correctly type Ruby version strings and update Rails versions used in CI configuration.
+
+    *Hans Lemuet*
+
 * Make `ViewComponent::Collection` act like a collection of view components
 
     *Sammy Henningsson*
