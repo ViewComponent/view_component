@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add test coverage for use of `turbo_stream` helpers in components.
+
+  *Simon Fish*
+
 * Add experimental `SlotableDefault` module, allowing components to define a `default_SLOTNAME` method to provide a default value for slots.
 
     *Joel Hawksley*

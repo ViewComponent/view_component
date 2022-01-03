@@ -570,6 +570,15 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
   end
 
+  def test_render_component_in_turbo_stream
+    without_template_annotations do
+      get turbo_stream_path, headers: { "HTTP_ACCEPT" => "text/vnd.turbo-stream.html" }
+      assert_equal <<~TURBOSTREAM, response.body
+        <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
+      TURBOSTREAM
+    end
+  end
+
   def test_renders_the_preview_example_with_its_own_template_and_a_layout
     get "/rails/view_components/my_component/inside_banner"
     assert_includes response.body, "ViewComponent - Admin - Test"

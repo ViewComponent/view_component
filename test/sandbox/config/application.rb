@@ -7,6 +7,7 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
 require "sprockets/railtie"
+require "turbo-rails"
 
 # Track when different Rails frameworks get loaded.
 # Ideally, none of them should be loaded until after initialization is complete.
