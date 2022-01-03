@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Correct style in generators docs.
+* Improve style in generators docs.
 
     *Hans Lemuet*
 
