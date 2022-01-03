@@ -7,9 +7,15 @@ title: Changelog
 
 ## main
 
+
 * Add visit_rendered_component_in_browser method to enable testing JS interactions in components
 
     *Edwin Mak*
+
+* Correctly type Ruby version strings and update Rails versions used in CI configuration.
+
+    *Hans Lemuet*
+
 
 * Make `ViewComponent::Collection` act like a collection of view components
 
