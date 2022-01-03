@@ -33,9 +33,9 @@ jobs:
             ruby_version: '3.0'
           - rails_version: '6.0.4.4'
             ruby_version: '3.0'
-          - rails_version: main
+          - rails_version: 'main'
             ruby_version: '2.5'
-          - rails_version: main
+          - rails_version: 'main'
             ruby_version: '2.6'
     steps:
     - uses: actions/checkout@master
