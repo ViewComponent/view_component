@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Setup `Appraisal` to simplify testing multiple Rails versions.
+* Setup `Appraisal` to add flexibility when testing ViewComponent against multiple Rails versions.
 
     *Hans Lemuet*
 
