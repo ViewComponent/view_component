@@ -7,6 +7,14 @@ title: Changelog
 
 ## main
 
+* Return correct values for `request.path` and `request.query_string` methods when using the `with_request_url` test helper.
+
+    *Vasiliy Matyushin*
+
+* Improve style in generators docs.
+
+    *Hans Lemuet*
+
 * Correctly type Ruby version strings and update Rails versions used in CI configuration.
 
     *Hans Lemuet*
@@ -29,7 +37,7 @@ title: Changelog
 
     *Simon Fish*
 
-* Add WEBrick as a depenency to the docs application.
+* Add WEBrick as a depenency to the application.
 
     *Connor McQuillan*
 
