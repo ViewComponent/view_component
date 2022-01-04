@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Return properly values for `request.path` and `request.query_string` methods.
+* Return correct values for `request.path` and `request.query_string` methods when using the `with_request_url` test helper.
 
     *Vasiliy Matyushin*
 
