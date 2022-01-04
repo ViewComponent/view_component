@@ -11,6 +11,10 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Improve style in generators docs.
+
+    *Hans Lemuet*
+
 * Correctly type Ruby version strings and update Rails versions used in CI configuration.
 
     *Hans Lemuet*
@@ -33,7 +37,7 @@ title: Changelog
 
     *Simon Fish*
 
-* Add WEBrick as a depenency to the docs application.
+* Add WEBrick as a depenency to the application.
 
     *Connor McQuillan*
 
