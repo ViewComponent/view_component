@@ -11,6 +11,14 @@ title: Changelog
 
     *Vasiliy Matyushin*
 
+* Improve style in generators docs.
+
+    *Hans Lemuet*
+
+* Correctly type Ruby version strings and update Rails versions used in CI configuration.
+
+    *Hans Lemuet*
+
 * Make `ViewComponent::Collection` act like a collection of view components
 
     *Sammy Henningsson*
@@ -29,7 +37,7 @@ title: Changelog
 
     *Simon Fish*
 
-* Add WEBrick as a depenency to the docs application.
+* Add WEBrick as a depenency to the application.
 
     *Connor McQuillan*
 
