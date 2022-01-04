@@ -20,10 +20,12 @@ bin/rails generate component Example title content
       create    app/components/example_component.html.erb
 ```
 
-Organize components using namespaces. To generate a namespaced `Sections::ExampleComponent`:
+## Generating namespaced components
+
+To generate a namespaced `Sections::ExampleComponent`:
 
 ```console
-bin/rails generate component Sections::Example
+bin/rails generate component Sections::Example title content
 
       create  app/components/sections/example_component.rb
       invoke  test_unit
