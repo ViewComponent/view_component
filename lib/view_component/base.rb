@@ -303,6 +303,7 @@ module ViewComponent
     #     config.view_component.view_component_path = "app/my_components"
     #
     # Defaults to `app/components`.
+    #
     mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
 
     # Parent class for generated components
@@ -310,6 +311,7 @@ module ViewComponent
     #     config.view_component.component_parent_class = "MyBaseComponent"
     #
     # Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+    #
     mattr_accessor :component_parent_class, instance_writer: false
 
     # Always generate a component with a sidecar directory:
