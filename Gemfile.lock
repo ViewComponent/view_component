@@ -239,7 +239,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  appraisal
+  appraisal (~> 2.4)
   benchmark-ips (~> 2.8.2)
   better_html (~> 1)
   bundler (>= 1.15.0)
