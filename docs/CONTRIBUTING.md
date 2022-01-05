@@ -41,8 +41,8 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 ## Submitting a pull request
 
 1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
-1. Configure and install the dependencies: `bundle`.
-1. Make sure the tests pass on your machine: `bundle exec rake` (see below for specific cases).
+1. Configure and install the dependencies: `bundle exec appraisal install`.
+1. Make sure the tests pass on your machine: `bundle exec appraisal rake` (see below for specific cases).
 1. Create a new branch: `git checkout -b my-branch-name`.
 1. Make your change, add tests, and make sure the tests still pass.
 1. Add an entry to the top of `docs/CHANGELOG.md` for your changes, no matter how small they're. We want to recognize your contribution!
@@ -61,24 +61,16 @@ Here are a few things you can do that will increase the likelihood of your pull 
 Supply a file glob to the test command:
 
 ```command
-TEST="test/components/YOUR_COMPONENT_test.rb" bundle exec rake
+TEST="test/components/YOUR_COMPONENT_test.rb" bundle exec appraisal rake
 ```
 
-### Run tests for a specific version of Rails
+### Running tests for a specific version of Rails
 
-Update the bundle:
+Specify one of the supported versions, listed in [Appraisal](https://github.com/github/view_component/blob/main/Appraisals):
 
 ```command
-RAILS_VERSION=5.2.5 bundle update
+bundle exec appraisal rails-5.2 rake
 ```
-
-Then run the test command:
-
-```command
-RAILS_VERSION=5.2.5 bundle exec rake
-```
-
-When you're done, make sure you don't commit changes to `Gemfile.lock`. Instead, discard your changes to the file: `git checkout -- Gemfile.lock`
 
 ## Documentation
 
