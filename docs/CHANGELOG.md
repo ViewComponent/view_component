@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add a namespaced component example to docs.
+
+    *Hans Lemuet*
+
 * Setup `Appraisal` to add flexibility when testing ViewComponent against multiple Rails versions.
 
     *Hans Lemuet*
