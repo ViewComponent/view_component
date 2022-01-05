@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add blocking compiler mode for use in Rails development and testing modes, improving thread safety.
+
+    *Horia Radu*
+
 * Add generators to support `tailwindcss-rails`.
 
     *Dino Maric*, *Hans Lemuet*
