@@ -11,6 +11,10 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Return correct values for `request.path` and `request.query_string` methods when using the `with_request_url` test helper.
+
+    *Vasiliy Matyushin*
+
 * Improve style in generators docs.
 
     *Hans Lemuet*
