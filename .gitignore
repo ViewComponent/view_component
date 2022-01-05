@@ -61,3 +61,7 @@ build-iPhoneSimulator/
 
 # Sample bug replication repo
 /replicate-bug
+
+# Appraisal
+/gemfiles/*.gemfile.lock
+/gemfiles/.bundle/
