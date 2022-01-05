@@ -7,6 +7,14 @@ title: Changelog
 
 ## main
 
+* Add a namespaced component example to docs.
+
+    *Hans Lemuet*
+
+* Setup `Appraisal` to add flexibility when testing ViewComponent against multiple Rails versions.
+
+    *Hans Lemuet*
+
 * Return correct values for `request.path` and `request.query_string` methods when using the `with_request_url` test helper.
 
     *Vasiliy Matyushin*
@@ -19,7 +27,7 @@ title: Changelog
 
     *Hans Lemuet*
 
-* Make `ViewComponent::Collection` act like a collection of view components
+* Make `ViewComponent::Collection` act like a collection of view components.
 
     *Sammy Henningsson*
 
