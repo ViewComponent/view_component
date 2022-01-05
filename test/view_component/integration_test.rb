@@ -562,7 +562,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_sets_the_compiler_mode_in_production_mode
     old_env = Rails.env
     begin
-      Rails.env = "production"
+      Rails.env = "production".inquiry
 
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
       assert_equal ViewComponent::Compiler::PRODUCTION_MODE, ViewComponent::Compiler.mode
