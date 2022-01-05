@@ -7,6 +7,11 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
 require "sprockets/railtie"
+begin
+  require "turbo-rails"
+rescue LoadError
+  raise if Rails::VERSION::MAJOR >= 6
+end
 
 # Track when different Rails frameworks get loaded.
 # Ideally, none of them should be loaded until after initialization is complete.
