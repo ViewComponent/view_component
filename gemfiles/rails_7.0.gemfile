@@ -10,6 +10,7 @@ gem "net-pop", require: false
 gem "net-smtp", require: false
 gem "debug"
 gem "tailwindcss-rails", "~> 2.0"
+gem "turbo-rails", "~> 1"
 
 group :test do
   gem "cuprite", "~> 0.15"
