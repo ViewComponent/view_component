@@ -11,6 +11,10 @@ title: Changelog
 
     *Horia Radu*
 
+* Add generators to support `tailwindcss-rails`.
+
+    *Dino Maric*, *Hans Lemuet*
+
 * Add a namespaced component example to docs.
 
     *Hans Lemuet*
