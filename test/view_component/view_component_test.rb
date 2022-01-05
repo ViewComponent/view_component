@@ -896,6 +896,10 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline UrlForComponent.new
       assert_text "/products?key=value"
     end
+
+    with_request_url "/products" do
+      assert_equal "/products", request.path
+    end
   end
 
   def test_with_request_url_with_query_parameters
@@ -912,6 +916,10 @@ class ViewComponentTest < ViewComponent::TestCase
     with_request_url "/products?mykey=myvalue" do
       render_inline UrlForComponent.new
       assert_text "/products?key=value&mykey=myvalue"
+    end
+
+    with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
+      assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
     end
   end
 
