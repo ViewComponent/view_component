@@ -559,15 +559,28 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "images/foo.png"
   end
 
+  def test_sets_the_compiler_mode_in_production_mode
+    old_env = Rails.env
+    begin
+      Rails.env = 'production'
+
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+      assert_equal ViewComponent::Compiler::PRODUCTION_MODE, ViewComponent::Compiler.mode
+    ensure
+      Rails.env = old_env
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+    end
+  end
+
   def test_sets_the_compiler_mode_in_development_mode
     Rails.env.stub :development?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal ViewComponent::Compiler.mode, ViewComponent::Compiler::DEVELOPMENT_MODE
+      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
     end
 
     Rails.env.stub :test?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal ViewComponent::Compiler.mode, ViewComponent::Compiler::DEVELOPMENT_MODE
+      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
     end
   end
 end
