@@ -138,3 +138,11 @@ def with_render_monkey_patch_config(enabled)
 ensure
   ViewComponent::Base.render_monkey_patch_enabled = old_default
 end
+
+def with_compiler_mode(mode)
+  previous_mode = ViewComponent::Compiler.mode
+  ViewComponent::Compiler.mode = mode
+  yield
+ensure
+  ViewComponent::Compiler.mode = previous_mode
+end

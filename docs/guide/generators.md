@@ -20,6 +20,20 @@ bin/rails generate component Example title content
       create    app/components/example_component.html.erb
 ```
 
+## Generating namespaced components
+
+To generate a namespaced `Sections::ExampleComponent`:
+
+```console
+bin/rails generate component Sections::Example title content
+
+      create  app/components/sections/example_component.rb
+      invoke  test_unit
+      create    test/components/sections/example_component_test.rb
+      invoke  erb
+      create    app/components/sections/example_component.html.erb
+```
+
 ## Options
 
 Generated ViewComponents are added to `app/components` by default. Set `config.view_component.view_component_path` to use a different path.
@@ -98,7 +112,7 @@ bin/rails generate component Example title --locale
 
 To always generate locale files, set `config.view_component.generate_locale = true`.
 
-If your prefer having your translations in distinct locale files you can set `config.view_component.generate_distinct_locale_files = true` in order to generate as many files as configured in `I18n.available_locales`.
+If your prefer having your translations in distinct locale files you can set `config.view_component.generate_distinct_locale_files = true` to generate as many files as configured in `I18n.available_locales`.
 
 ### Place the view in a sidecar directory
 

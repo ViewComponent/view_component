@@ -7,17 +7,39 @@ title: Changelog
 
 ## main
 
-
 * Add visit_rendered_component_in_browser method to enable testing JS interactions in components
 
     *Edwin Mak*
+
+* Add blocking compiler mode for use in Rails development and testing modes, improving thread safety.
+
+    *Horia Radu*
+
+* Add generators to support `tailwindcss-rails`.
+
+    *Dino Maric*, *Hans Lemuet*
+
+* Add a namespaced component example to docs.
+
+    *Hans Lemuet*
+
+* Setup `Appraisal` to add flexibility when testing ViewComponent against multiple Rails versions.
+
+    *Hans Lemuet*
+
+* Return correct values for `request.path` and `request.query_string` methods when using the `with_request_url` test helper.
+
+    *Vasiliy Matyushin*
+
+* Improve style in generators docs.
+
+    *Hans Lemuet*
 
 * Correctly type Ruby version strings and update Rails versions used in CI configuration.
 
     *Hans Lemuet*
 
-
-* Make `ViewComponent::Collection` act like a collection of view components
+* Make `ViewComponent::Collection` act like a collection of view components.
 
     *Sammy Henningsson*
 
@@ -35,7 +57,7 @@ title: Changelog
 
     *Simon Fish*
 
-* Add WEBrick as a depenency to the docs application.
+* Add WEBrick as a depenency to the application.
 
     *Connor McQuillan*
 

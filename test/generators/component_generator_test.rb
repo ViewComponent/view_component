@@ -154,6 +154,12 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/user_component.html.haml"
   end
 
+  def test_invoking_tailwindcss_template_engine
+    run_generator %w[user --template-engine tailwindcss]
+
+    assert_file "app/components/user_component.html.erb"
+  end
+
   def test_generating_components_with_custom_component_path
     with_custom_component_path("app/parts") do
       run_generator %w[user]
