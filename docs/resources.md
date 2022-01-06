@@ -21,6 +21,7 @@ title: Resources
 
 - [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)
 - [ViewComponent Contrib](https://github.com/palkan/view_component-contrib)
+- [Lookbook](https://github.com/allmarkedup/lookbook)
 
 ## Podcasts
 

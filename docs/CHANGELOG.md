@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add Lookbook to Resources docs page
+
+    *Mark Perkins*
+
 * Add blocking compiler mode for use in Rails development and testing modes, improving thread safety.
 
     *Horia Radu*
