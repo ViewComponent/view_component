@@ -202,7 +202,7 @@ config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 
 ## Testing Interactive Components
 
-Use the `visit_rendered_component_in_browser` helper method in your system tests to test interactivity of components. 
+Use the `visit_rendered_component_in_browser` helper method in your system tests to test interactivity of components.
 
 ```rb
 require "test_helper"
