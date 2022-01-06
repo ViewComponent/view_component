@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Update CI configuration to use `Appraisal`.
+
+    *Hans Lemuet, Simon Fish*
+
 ## 3.9.0
 
 * Don’t break `rails stats` if ViewComponent path is missing.
