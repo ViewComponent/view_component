@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update CI configuration to use `Appraisal`.
+
+    *Hans Lemuet*
+
 * Add blocking compiler mode for use in Rails development and testing modes, improving thread safety.
 
     *Horia Radu*
