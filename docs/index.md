@@ -192,6 +192,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [Podia](https://www.podia.com/)
 * [City of Paris](https://www.paris.fr/)
+* [Wecasa](https://www.wecasa.fr/)
 * [Cults.](https://cults3d.com/)
 * [Litmus](https://litmus.engineering/)
 * [Orbit](https://orbit.love)
