@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Add Lookbook to Resources docs page
+* Add Lookbook to Resources docs page.
 
     *Mark Perkins*
 
