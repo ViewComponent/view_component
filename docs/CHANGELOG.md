@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update link to GOV.UK Components library in the resources list.
+
+    *Peter Yates*
+
 * Add Lookbook to Resources docs page.
 
     *Mark Perkins*
