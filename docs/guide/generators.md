@@ -126,6 +126,8 @@ bin/rails generate component Example title --sidecar
       create    app/components/example_component/example_component.html.erb
 ```
 
+To always generate in the sidecar directory, set `config.view_component.generate_sidecar = true`.
+
 ### Use [inline rendering](/guide/templates.html#inline) (no template file)
 
 ```console

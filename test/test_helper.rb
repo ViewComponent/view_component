@@ -75,6 +75,14 @@ ensure
   Object.send(:remove_const, :ApplicationComponent)
 end
 
+def with_generate_sidecar(enabled)
+  old_value = ViewComponent::Base.generate_sidecar
+  ViewComponent::Base.generate_sidecar = enabled
+  yield
+ensure
+  ViewComponent::Base.generate_sidecar = old_value
+end
+
 def with_new_cache
   begin
     old_cache = ViewComponent::CompileCache.cache

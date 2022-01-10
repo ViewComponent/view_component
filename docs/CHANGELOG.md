@@ -127,6 +127,10 @@ title: Changelog
 
     *Bob Maerten*
 
+* Add config option `config.view_component.generate_sidecar` to always generate in the sidecar directory.
+
+    *Gleydson Tavares*
+
 ## 2.46.0
 
 * Add thread safety to the compiler.

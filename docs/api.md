@@ -104,6 +104,14 @@ Always generate translations file alongside the component:
 
 Defaults to `false`.
 
+### #generate_sidecar
+
+Always generate a component with a sidecar directory:
+
+    config.view_component.generate_sidecar = true
+
+Defaults to `false`.
+
 ### #generate_stimulus_controller
 
 Always generate a Stimulus controller alongside the component:
