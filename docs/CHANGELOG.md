@@ -7,6 +7,22 @@ title: Changelog
 
 ## main
 
+* Update link to GOV.UK Components library in the resources list.
+
+    *Peter Yates*
+
+* Add Lookbook to Resources docs page.
+
+    *Mark Perkins*
+
+* Add blocking compiler mode for use in Rails development and testing modes, improving thread safety.
+
+    *Horia Radu*
+
+* Add generators to support `tailwindcss-rails`.
+
+    *Dino Maric*, *Hans Lemuet*
+
 * Add a namespaced component example to docs.
 
     *Hans Lemuet*
@@ -34,6 +50,10 @@ title: Changelog
 * Update `@param` of `#render_inline` to include `ViewComponent::Collection`.
 
     *Yutaka Kamei*
+
+* Add Wecasa to users list.
+
+    *Mohamed Ziata*
 
 ## 2.47.0
 
