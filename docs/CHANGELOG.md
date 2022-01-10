@@ -51,6 +51,10 @@ title: Changelog
 
     *Yutaka Kamei*
 
+* Add Wecasa to users list.
+
+    *Mohamed Ziata*
+
 ## 2.47.0
 
 * Display preview source on previews that exclusively use templates.
