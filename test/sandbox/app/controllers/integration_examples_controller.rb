@@ -22,6 +22,8 @@ class IntegrationExamplesController < ActionController::Base
     render("integration_examples/_controller_inline", locals: { message: "bar" })
   end
 
+  def stylesheet_link_tag; end
+
   def controller_to_string
     # Ensures render_to_string_monkey_patch.rb correctly calls `super` when
     # not rendering a component:

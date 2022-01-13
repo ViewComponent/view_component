@@ -20,4 +20,5 @@ Sandbox::Application.routes.draw do
   get :render_component, to: "integration_examples#render_component"
   get :controller_inline_render_component, to: "integration_examples#controller_inline_render_component"
   get :controller_to_string_render_component, to: "integration_examples#controller_to_string_render_component"
+  get :stylesheet_link_tag, to: "integration_examples#stylesheet_link_tag"
 end

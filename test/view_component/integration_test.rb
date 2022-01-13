@@ -47,6 +47,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  def test_rendering_component_with_stylesheet_link_tag
+    assert_nothing_raised { get "/stylesheet_link_tag" }
+  end
+
   def test_template_changes_are_not_reflected_on_new_request_when_cache_template_loading_is_true
     # cache_template_loading is set to true on the initializer
 
