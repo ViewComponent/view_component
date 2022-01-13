@@ -87,7 +87,8 @@ jobs:
     - name: Build and test with Rake
       run: |
         cd primer_view_components
-        yarn install
+        yarn
+        cd demo && yarn && cd ..
         bundle config path vendor/bundle
         bundle install
         bundle exec rake docs:preview
