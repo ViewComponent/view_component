@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Correct path in example test command in Contributing document.
+
+    *Mark Wilkinson*
+
 * Update link to GOV.UK Components library in the resources list.
 
     *Peter Yates*
