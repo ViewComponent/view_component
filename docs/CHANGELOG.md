@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Correct path in example test command in Contributing document.
+* Correct path in example test command in Contributing docs.
 
     *Mark Wilkinson*
 
