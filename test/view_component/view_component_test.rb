@@ -973,4 +973,8 @@ class ViewComponentTest < ViewComponent::TestCase
       threads.map(&:join)
     end
   end
+
+  def test_rendering_component_with_stylesheet_link_tag
+    assert_nothing_raised { render_inline StylesheetLinkTagComponent.new }
+  end
 end
