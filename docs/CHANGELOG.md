@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add good and bad examples to `ViewComponents in practice`.
+
+    *Joel Hawksley*
+
 ## 2.48.0
 
 * Correct path in example test command in Contributing docs.
