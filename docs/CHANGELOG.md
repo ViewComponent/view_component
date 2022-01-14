@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add test cases to ensure `stylesheet_link_tag` works consistently.
+
+    *Simon Fish*
+
 * Correct path in example test command in Contributing docs.
 
     *Mark Wilkinson*
