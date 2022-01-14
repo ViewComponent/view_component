@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.48.0
+
 * Correct path in example test command in Contributing docs.
 
     *Mark Wilkinson*
