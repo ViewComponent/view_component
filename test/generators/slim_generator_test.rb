@@ -40,6 +40,14 @@ class SlimGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/admins/user_component/user_component.html.slim"
   end
 
+  def test_component_with_generate_sidecar
+    with_generate_sidecar(true) do
+      run_generator %w[user]
+
+      assert_file "app/components/user_component/user_component.html.slim"
+    end
+  end
+
   def test_component_with_inline
     run_generator %w[user name --inline]
 

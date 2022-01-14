@@ -896,6 +896,10 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline UrlForComponent.new
       assert_text "/products?key=value"
     end
+
+    with_request_url "/products" do
+      assert_equal "/products", request.path
+    end
   end
 
   def test_with_request_url_with_query_parameters
@@ -912,6 +916,10 @@ class ViewComponentTest < ViewComponent::TestCase
     with_request_url "/products?mykey=myvalue" do
       render_inline UrlForComponent.new
       assert_text "/products?key=value&mykey=myvalue"
+    end
+
+    with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
+      assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
     end
   end
 
@@ -933,17 +941,36 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_not_equal(MyComponent.compiler.__vc_compiler_lock, AnotherComponent.compiler.__vc_compiler_lock)
   end
 
-  def test_multithread_render
-    ViewComponent::CompileCache.cache.delete(MyComponent)
-
-    threads = 100.times.map do
-      Thread.new do
+  def test_compilation_in_development_mode
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
         render_inline(MyComponent.new)
-
         assert_selector("div", text: "hello,world!")
       end
     end
+  end
 
-    threads.map(&:join)
+  def test_compilation_in_production_mode
+    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE) do
+      with_new_cache do
+        render_inline(MyComponent.new)
+        assert_selector("div", text: "hello,world!")
+      end
+    end
+  end
+
+  def test_multithread_render
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+    Rails.env.stub :test?, true do
+      threads = 100.times.map do
+        Thread.new do
+          render_inline(MyComponent.new)
+
+          assert_selector("div", text: "hello,world!")
+        end
+      end
+
+      threads.map(&:join)
+    end
   end
 end

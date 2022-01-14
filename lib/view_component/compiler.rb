@@ -5,6 +5,15 @@ module ViewComponent
     # Lock required to be obtained before compiling the component
     attr_reader :__vc_compiler_lock
 
+    # Compiler mode. Can be either:
+    # * development (a blocking mode which ensures thread safety when redefining the `call` method for components,
+    #                default in Rails development and test mode)
+    # * production (a non-blocking mode, default in Rails production mode)
+    DEVELOPMENT_MODE = :development
+    PRODUCTION_MODE = :production
+
+    class_attribute :mode, default: PRODUCTION_MODE
+
     def initialize(component_class)
       @component_class = component_class
       @__vc_compiler_lock = Monitor.new
@@ -14,10 +23,14 @@ module ViewComponent
       CompileCache.compiled?(component_class)
     end
 
+    def development?
+      self.class.mode == DEVELOPMENT_MODE
+    end
+
     def compile(raise_errors: false)
       return if compiled?
 
-      __vc_compiler_lock.synchronize do
+      with_lock do
         CompileCache.invalidate_class!(component_class)
 
         subclass_instance_methods = component_class.instance_methods(false)
@@ -57,10 +70,10 @@ module ViewComponent
           end
 
           component_class.class_eval <<-RUBY, template[:path], -1
-            def #{method_name}
-              @output_buffer = ActionView::OutputBuffer.new
-              #{compiled_template(template[:path])}
-            end
+          def #{method_name}
+            @output_buffer = ActionView::OutputBuffer.new
+            #{compiled_template(template[:path])}
+          end
           RUBY
         end
 
@@ -69,6 +82,14 @@ module ViewComponent
         component_class._after_compile
 
         CompileCache.register(component_class)
+      end
+    end
+
+    def with_lock(&block)
+      if development?
+        __vc_compiler_lock.synchronize(&block)
+      else
+        block.call
       end
     end
 
@@ -85,16 +106,30 @@ module ViewComponent
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
       end.join("\n")
 
-      component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
-          if variant.nil?
-            call
-          #{variant_elsifs}
-          else
-            call
-          end
+      body = <<-RUBY
+        if variant.nil?
+          call
+        #{variant_elsifs}
+        else
+          call
         end
       RUBY
+
+      if development?
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil)
+          self.class.compiler.with_lock do
+            #{body}
+          end
+        end
+        RUBY
+      else
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil)
+          #{body}
+        end
+        RUBY
+      end
     end
 
     def template_errors

@@ -20,6 +20,8 @@
 /docs/guide/generators.md @spone
 /test/generators/**/* @spone
 /test/view_component/test_unit_generator_test.rb @spone
+/Appraisals @spone
+/gemfiles/**/* @spone
 
 /app/**/* @juanmanuelramallo
 /docs/guide/previews.md @juanmanuelramallo

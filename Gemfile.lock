@@ -86,7 +86,7 @@ GIT
 PATH
   remote: .
   specs:
-    view_component (2.47.0)
+    view_component (2.48.0)
       activesupport (>= 5.0.0, < 8.0)
       method_source (~> 1.0)
 
@@ -96,6 +96,10 @@ GEM
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     ansi (1.5.0)
+    appraisal (2.4.1)
+      bundler
+      rake
+      thor (>= 0.14.0)
     ast (2.4.1)
     benchmark-ips (2.8.4)
     better_html (1.0.15)
@@ -235,6 +239,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  appraisal (~> 2.4)
   benchmark-ips (~> 2.8.2)
   better_html (~> 1)
   bundler (>= 1.15.0)
@@ -256,4 +261,4 @@ DEPENDENCIES
   yard-activesupport-concern
 
 BUNDLED WITH
-   2.2.22
+   2.2.33

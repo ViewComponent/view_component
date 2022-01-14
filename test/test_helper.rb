@@ -75,6 +75,14 @@ ensure
   Object.send(:remove_const, :ApplicationComponent)
 end
 
+def with_generate_sidecar(enabled)
+  old_value = ViewComponent::Base.generate_sidecar
+  ViewComponent::Base.generate_sidecar = enabled
+  yield
+ensure
+  ViewComponent::Base.generate_sidecar = old_value
+end
+
 def with_new_cache
   begin
     old_cache = ViewComponent::CompileCache.cache
@@ -130,4 +138,12 @@ def with_render_monkey_patch_config(enabled)
   yield
 ensure
   ViewComponent::Base.render_monkey_patch_enabled = old_default
+end
+
+def with_compiler_mode(mode)
+  previous_mode = ViewComponent::Compiler.mode
+  ViewComponent::Compiler.mode = mode
+  yield
+ensure
+  ViewComponent::Compiler.mode = previous_mode
 end
