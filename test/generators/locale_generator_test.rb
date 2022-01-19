@@ -131,8 +131,8 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
   private
 
   def with_generate_distinct_locale_files
-    ViewComponent::Base.generate_distinct_locale_files = true
+    ViewComponent::Base.generate.distinct_locale_files = true
     yield
-    ViewComponent::Base.generate_distinct_locale_files = false
+    ViewComponent::Base.generate.distinct_locale_files = false
   end
 end
