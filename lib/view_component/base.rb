@@ -271,14 +271,6 @@ module ViewComponent
     #
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
-    # Always generate translations file alongside the component:
-    #
-    #     config.view_component.generate_locale = true
-    #
-    # Defaults to `false`.
-    #
-    mattr_accessor :generate_locale, instance_writer: false, default: false
-
     # Always generate as many translations files as available locales:
     #
     #     config.view_component.generate_distinct_locale_files = true
@@ -317,6 +309,10 @@ module ViewComponent
     # Always generate a Stimulus controller alongside the component:
     #
     #     config.view_component.generate.stimulus_controller = true
+    #
+    # Always generate translations file alongside the component:
+    #
+    #     config.view_component.generate_locale = true
     #
     mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new
 
