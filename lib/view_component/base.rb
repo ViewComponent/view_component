@@ -271,14 +271,6 @@ module ViewComponent
     #
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
-    # Always generate a Stimulus controller alongside the component:
-    #
-    #     config.view_component.generate_stimulus_controller = true
-    #
-    # Defaults to `false`.
-    #
-    mattr_accessor :generate_stimulus_controller, instance_writer: false, default: false
-
     # Always generate translations file alongside the component:
     #
     #     config.view_component.generate_locale = true
@@ -321,6 +313,10 @@ module ViewComponent
     # Always generate a component with a sidecar directory:
     #
     #     config.view_component.generate.sidecar = true
+    #
+    # Always generate a Stimulus controller alongside the component:
+    #
+    #     config.view_component.generate.stimulus_controller = true
     #
     mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new
 
