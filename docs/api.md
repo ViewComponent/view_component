@@ -71,54 +71,48 @@ _Will be removed in v3.0.0._
 
 ## Configuration
 
-### #component_parent_class
-
-Parent class for generated components
-
-    config.view_component.component_parent_class = "MyBaseComponent"
-
-Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
-
 ### #default_preview_layout
 
 Set a custom default layout used for preview index and individual previews:
 
     config.view_component.default_preview_layout = "component_preview"
 
-### #generate_distinct_locale_files
+### #generate
 
-Always generate as many translations files as available locales:
+Configuration for generators
 
-    config.view_component.generate_distinct_locale_files = true
+Defaults to `false` unless otherwise stated.
 
-Defaults to `false`.
+Always generate a component with a sidecar directory:
 
-One file will be generated for each configured `I18n.available_locales`.
-Fallback on `[:en]` when no available_locales is defined.
+    config.view_component.generate.sidecar = true
 
-### #generate_locale
+Always generate a Stimulus controller alongside the component:
+
+    config.view_component.generate.stimulus_controller = true
 
 Always generate translations file alongside the component:
 
     config.view_component.generate_locale = true
 
-Defaults to `false`.
+Always generate as many translations files as available locales:
 
-### #generate_sidecar
+    config.view_component.generate.distinct_locale_files = true
 
-Always generate a component with a sidecar directory:
+One file will be generated for each configured `I18n.available_locales`.
+Fallback on `[:en]` when no available_locales is defined.
 
-    config.view_component.generate_sidecar = true
+Path for component files
 
-Defaults to `false`.
+    config.view_component.generate.component_path = "app/my_components"
 
-### #generate_stimulus_controller
+Defaults to `app/components`.
 
-Always generate a Stimulus controller alongside the component:
+Parent class for generated components
 
-    config.view_component.generate_stimulus_controller = true
+    config.view_component.generate.parent_class = "MyBaseComponent"
 
-Defaults to `false`.
+Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
 
 ### #preview_controller
 
@@ -176,14 +170,6 @@ Set the controller used for testing components:
 
 Defaults to ApplicationController. Can also be configured on a per-test
 basis using `with_controller_class`.
-
-### #view_component_path
-
-Path for component files
-
-    config.view_component.view_component_path = "app/my_components"
-
-Defaults to `app/components`.
 
 ## ViewComponent::TestHelpers
 
