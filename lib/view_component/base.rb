@@ -311,7 +311,7 @@ module ViewComponent
     # Fallback on `[:en]` when no available_locales is defined.
     #
     mattr_accessor :generate, instance_writer: false, default: (ActiveSupport::OrderedOptions.new.tap do |c|
-      c.component_path = 'app/components'
+      c.component_path = "app/components"
     end)
 
     class << self
