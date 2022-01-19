@@ -314,13 +314,11 @@ module ViewComponent
     #
     mattr_accessor :component_parent_class, instance_writer: false
 
-    # Always generate a component with a sidecar directory:
+    # Configuration for generators
     #
-    #     config.view_component.generate_sidecar = true
+    #     config.view_component.generate.sidecar = true
     #
-    # Defaults to `false`.
-    #
-    mattr_accessor :generate_sidecar, instance_writer: false, default: false
+    mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new
 
     class << self
       # @private
