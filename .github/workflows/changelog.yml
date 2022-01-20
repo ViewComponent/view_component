@@ -9,27 +9,29 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: "Generate release changelog"
-        id: changelog-generation
-        uses: heinrichreimer/github-changelog-generator-action@v2.3
+      - uses: ruby/setup-ruby@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          simpleList: true
-          issues: false
-          prLabel: ""
-          usernamesAsGithubLogins: true
-          frontMatter: |
-            { "layout": "default", "title": "Changelog" }
-          base: docs/CHANGELOG_HISTORY.md
-          sinceTag: v2.48.0
+          ruby-version: 3.0.3
       - uses: actions/checkout@v2
-      - name: Commit and push changelog
+      - name: "Generate, commit, and push release changelog"
+        id: changelog-generation
         run: |
-          echo "$GENERATED_CHANGELOG" > docs/CHANGELOG.md
+        gem install github-changelog-generator
+        github-changelog-generator \
+          --token "$GITHUB_TOKEN" \
+          --simple-list \
+          --no-issues \
+          --pr-label="" \
+          --usernames-as-github-logins \
+          --front-matter="{ \"layout\": \"default\", \"title\": \"Changelog\" }" \
+          --since-tag v2.48.0 \
+          --base docs/CHANGELOG_HISTORY.md > docs/CHANGELOG.md
+      - name: "Configure Git identity"
+        run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
+      - name: "Commit and push updated changelog"
+        run: |
           git add docs/CHANGELOG.md
           git commit -m "Generate updated changelog"
           git push
-        env:
-          GENERATED_CHANGELOG: ${{ steps.changelog-generation.outputs.changelog }}
