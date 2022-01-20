@@ -18,6 +18,8 @@ jobs:
         run: |
           gem install github_changelog_generator
           github_changelog_generator \
+            --user github \
+            --project view_component \
             --token "$GITHUB_TOKEN" \
             --simple-list \
             --no-issues \
