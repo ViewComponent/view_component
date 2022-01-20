@@ -1,0 +1,34 @@
+name: Update Changelog
+
+on:
+  pull_request:
+    types: [ closed ]
+
+jobs:
+  changelog:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Generate release changelog"
+        id: changelog-generation
+        uses: heinrichreimer/github-changelog-generator-action@v2.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          simpleList: true
+          issues: false
+          prLabel: ""
+          usernamesAsGithubLogins: true
+          frontMatter: '{ "layout": "default", "title": "Changelog" }'
+          base: docs/CHANGELOG_HISTORY.md
+          sinceTag: v2.48.0
+      - uses: actions/checkout@v2
+      - name: Commit and push changelog
+        run: |
+          echo "$GENERATED_CHANGELOG" > docs/CHANGELOG.md
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add docs/CHANGELOG.md
+          git commit -m "Generate updated changelog"
+          git push
+        env:
+          GENERATED_CHANGELOG: ${{ steps.changelog-generation.outputs.changelog }}
