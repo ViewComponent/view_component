@@ -15,12 +15,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: "Generate, commit, and push release changelog"
         id: changelog-generation
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gem install github_changelog_generator
           github_changelog_generator \
             --user github \
             --project view_component \
-            --token "$GITHUB_TOKEN" \
             --simple-list \
             --no-issues \
             --pr-label="" \
