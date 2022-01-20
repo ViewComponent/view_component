@@ -18,7 +18,7 @@ jobs:
           issues: false
           prLabel: ""
           usernamesAsGithubLogins: true
-          frontMatter: '{ "layout": "default", "title": "Changelog" }'
+          frontMatter: "{ \"layout\": \"default\", \"title\": \"Changelog\" }"
           base: docs/CHANGELOG_HISTORY.md
           sinceTag: v2.48.0
       - uses: actions/checkout@v2
