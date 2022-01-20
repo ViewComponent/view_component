@@ -16,7 +16,7 @@ jobs:
       - name: "Generate, commit, and push release changelog"
         id: changelog-generation
         run: |
-          gem install github-changelog-generator
+          gem install github_changelog_generator
           github-changelog-generator \
             --token "$GITHUB_TOKEN" \
             --simple-list \
