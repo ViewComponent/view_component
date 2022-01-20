@@ -16,16 +16,16 @@ jobs:
       - name: "Generate, commit, and push release changelog"
         id: changelog-generation
         run: |
-        gem install github-changelog-generator
-        github-changelog-generator \
-          --token "$GITHUB_TOKEN" \
-          --simple-list \
-          --no-issues \
-          --pr-label="" \
-          --usernames-as-github-logins \
-          --front-matter="{ \"layout\": \"default\", \"title\": \"Changelog\" }" \
-          --since-tag v2.48.0 \
-          --base docs/CHANGELOG_HISTORY.md > docs/CHANGELOG.md
+          gem install github-changelog-generator
+          github-changelog-generator \
+            --token "$GITHUB_TOKEN" \
+            --simple-list \
+            --no-issues \
+            --pr-label="" \
+            --usernames-as-github-logins \
+            --front-matter="{ \"layout\": \"default\", \"title\": \"Changelog\" }" \
+            --since-tag v2.48.0 \
+            --base docs/CHANGELOG_HISTORY.md > docs/CHANGELOG.md
       - name: "Configure Git identity"
         run: |
           git config user.name github-actions
