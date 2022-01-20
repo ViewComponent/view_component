@@ -27,7 +27,9 @@ jobs:
             --usernames-as-github-logins \
             --front-matter="{ \"layout\": \"default\", \"title\": \"Changelog\" }" \
             --since-tag v2.48.0 \
-            --base docs/CHANGELOG_HISTORY.md > docs/CHANGELOG.md
+            --base docs/CHANGELOG_HISTORY.md \
+            --output docs/CHANGELOG.md \
+            --verbose
       - name: "Configure Git identity"
         run: |
           git config user.name github-actions
