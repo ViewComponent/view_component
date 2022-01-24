@@ -11,6 +11,10 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Add Ruby 3.1 and Rails 7.0 to CI
+
+    *Peter Goldstein*
+
 ## 2.48.0
 
 * Correct path in example test command in Contributing docs.
