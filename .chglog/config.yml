@@ -1,0 +1,20 @@
+style: github
+template: CHANGELOG.tpl.md
+info:
+  title: CHANGELOG
+  repository_url: https://github.com/github/view_component
+options:
+  commits:
+    # filters:
+    #   Type: []
+  commit_groups:
+    # title_maps: []
+  header:
+    pattern: "^(.*)$"
+    pattern_maps:
+      - Subject
+  merges:
+    pattern: "\\(#\\d+\\)"
+  notes:
+    keywords:
+      - BREAKING CHANGE
