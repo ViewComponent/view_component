@@ -18,7 +18,9 @@ jobs:
       - name: Install git-chglog
         run: go get -u github.com/git-chglog/git-chglog/cmd/git-chglog
       - name: Generate changelog
-        run: git-chglog --output docs/CHANGELOG.md
+        run: |
+          git-chglog --output docs/CHANGELOG.md v2.34.0..
+          cat docs/CHANGELOG_HISTORY.md >> docs/CHANGELOG.md
       - name: "Configure Git identity"
         run: |
           git config user.name github-actions
