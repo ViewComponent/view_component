@@ -14,7 +14,7 @@ options:
     pattern_maps:
       - Subject
   merges:
-    pattern: "\\(#\\d+\\)"
+    pattern: "(Merge pull request|\\(#\\d+\\))"
   notes:
     keywords:
       - BREAKING CHANGE
