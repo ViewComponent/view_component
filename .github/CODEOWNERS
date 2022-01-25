@@ -44,3 +44,5 @@
 
 /.devcontainer/**/* @boardfish
 /script/replicate-bug @boardfish
+/.chglog/**/* @boardfish
+/.github/workflows/changelog.yml @boardfish
