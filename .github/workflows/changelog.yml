@@ -13,5 +13,16 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.17.6'
-      - run: go get -u github.com/git-chglog/git-chglog/cmd/git-chglog
-      - run: git-chglog --output docs/CHANGELOG.md
+      - name: Install git-chglog
+        run: go get -u github.com/git-chglog/git-chglog/cmd/git-chglog
+      - name: Generate changelog
+        run: git-chglog --output docs/CHANGELOG.md
+      - name: "Configure Git identity"
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - name: "Commit and push updated changelog"
+        run: |
+          git add docs/CHANGELOG.md
+          git commit -m "Generate updated changelog"
+          git push
