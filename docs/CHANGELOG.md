@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Small improvements to collection iteration docs.
+
+    *Brian O'Rourke*
+
 * Add good and bad examples to `ViewComponents in practice`.
 
     *Joel Hawksley*
