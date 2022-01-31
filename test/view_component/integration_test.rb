@@ -583,4 +583,13 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
     end
   end
+
+  def test_uses_form_helper_methods
+    get "/form_helper"
+
+    # The FormHelper module overrides form_tag_html to add this HTML
+    # fragment, so it should get included when form_tag is called
+    # from a ViewComponent.
+    assert_includes response.body, "<span>Hello, World!</span>"
+  end
 end
