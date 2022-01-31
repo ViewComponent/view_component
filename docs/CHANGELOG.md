@@ -5,19 +5,9 @@ title: Changelog
 
 # Changelog
 
-## main
+[View unreleased changes that have been merged into `main`][unreleased-changes]
 
-* Small improvements to collection iteration docs.
-
-    *Brian O'Rourke*
-
-* Add good and bad examples to `ViewComponents in practice`.
-
-    *Joel Hawksley*
-
-* Add Ruby 3.1 and Rails 7.0 to CI
-
-    *Peter Goldstein*
+[unreleased-changes]: https://github.com/github/view_component/compare/v2.48.0...main
 
 ## 2.48.0
 
