@@ -114,6 +114,8 @@ GEM
       rubocop
       smart_properties
     erubi (1.10.0)
+    git (1.10.2)
+      rchardet (~> 1.8)
     globalid (1.0.0)
       activesupport (>= 5.0)
     haml (5.2.2)
@@ -195,6 +197,7 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
+    rchardet (1.8.0)
     regexp_parser (2.2.0)
     rexml (3.2.5)
     rubocop (1.13.0)
@@ -271,6 +274,7 @@ DEPENDENCIES
   bundler (>= 1.15.0)
   capybara (~> 3)
   erb_lint (~> 0.0.37)
+  git (~> 1.10)
   haml (~> 5)
   jbuilder (~> 2)
   minitest (= 5.6.0)
