@@ -32,11 +32,7 @@ create_release_branch() {
 }
 
 update_changelog() {
-  sed -i '' "/## main/ {a\
-  \\
-\\
-## $1.$2.$3
-  }" docs/CHANGELOG.md
+  script/_release/update_changelog.rb $1 $2
 }
 
 update_ruby_version() {
@@ -76,10 +72,10 @@ push() {
 
 main() {
   version=$(ruby ./lib/view_component/version.rb)
-  version=(${version//./ })
-  major=${version[0]}
-  minor=${version[1]}
-  patch=${version[2]}
+  version_segments=(${version//./ })
+  major=${version_segments[0]}
+  minor=${version_segments[1]}
+  patch=${version_segments[2]}
 
   echo "==================="
   echo "Prerequisite Checks"
@@ -140,7 +136,7 @@ main() {
     echo "==============================="
 
     create_release_branch $major $minor $patch
-    update_changelog $major $minor $patch
+    update_changelog $version $major.$minor.$patch
     update_ruby_version $major $minor $patch
     update_gemfiles $major $minor $patch
     add_changed_files $major $minor $patch
