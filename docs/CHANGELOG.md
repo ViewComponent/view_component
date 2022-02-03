@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Small update to preview docs to include rspec mention
+
+    *Leigh Halliday*
+
 * Small improvements to collection iteration docs.
 
     *Brian O'Rourke*
