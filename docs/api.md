@@ -92,17 +92,25 @@ Configuration for generators.
 All options under this namespace default to `false` unless otherwise
 stated.
 
+#### #sidecar
+
 Always generate a component with a sidecar directory:
 
     config.view_component.generate.sidecar = true
+
+#### #stimulus_controller
 
 Always generate a Stimulus controller alongside the component:
 
     config.view_component.generate.stimulus_controller = true
 
+#### #locale
+
 Always generate translations file alongside the component:
 
-    config.view_component.generate_locale = true
+    config.view_component.generate.locale = true
+
+#### #distinct_locale_files
 
 Always generate as many translations files as available locales:
 
