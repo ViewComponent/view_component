@@ -64,131 +64,34 @@ namespace :docs do
 
     instance_methods_to_document = meths.select { |method| method.scope != :class }
     class_methods_to_document = meths.select { |method| method.scope == :class }
-
-    File.open("docs/api.md", "w") do |f|
-      f.puts("---")
-      f.puts("layout: default")
-      f.puts("title: API")
-      f.puts("nav_order: 3")
-      f.puts("---")
-      f.puts
-      f.puts("<!-- Warning: AUTO-GENERATED file, don't edit. Add code comments to your Ruby instead <3 -->")
-      f.puts
-      f.puts("# API")
-
-      f.puts
-      f.puts("## Class methods")
-
-      class_methods_to_document.each do |method|
-        suffix =
-          if method.tag(:deprecated)
-            " (Deprecated)"
-          end
-
-        types =
-          if method.tag(:return)&.types
-            " → [#{method.tag(:return).types.join(',')}]"
-          end
-
-        f.puts
-        f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
-        f.puts
-        f.puts(method.docstring)
-
-        if method.tag(:deprecated)
-          f.puts
-          f.puts("_#{method.tag(:deprecated).text}_")
-        end
-      end
-
-      f.puts
-      f.puts("## Instance methods")
-
-      instance_methods_to_document.each do |method|
-        suffix =
-          if method.tag(:deprecated)
-            " (Deprecated)"
-          end
-
-        types =
-          if method.tag(:return)&.types
-            " → [#{method.tag(:return).types.join(',')}]"
-          end
-
-        f.puts
-        f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
-        f.puts
-        f.puts(method.docstring)
-
-        if method.tag(:deprecated)
-          f.puts
-          f.puts("_#{method.tag(:deprecated).text}_")
-        end
-      end
-
-      f.puts
-      f.puts("## Configuration")
-
-      registry.
-        get("ViewComponent::Base").
-        meths.
-        select { |method| method[:mattr_accessor] }.
-        sort_by { |method| method[:name] }.
-        each do |method|
-        suffix =
-          if method.tag(:deprecated)
-            " (Deprecated)"
-          end
-
-        f.puts
-        f.puts("### #{method.sep}#{method.name}#{suffix}")
-
-        if method.docstring.length > 0
-          f.puts
-          f.puts(method.docstring)
-        end
-
-        if method.tag(:deprecated)
-          f.puts
-          f.puts("_#{method.tag(:deprecated).text}_")
-        end
-      end
-
-      f.puts
-      f.puts("## ViewComponent::TestHelpers")
-
-      registry.
+    configuration_methods_to_document = registry.get("ViewComponent::Base").meths.select { |method| method[:mattr_accessor] }
+    test_helper_methods_to_document = registry.
         get("ViewComponent::TestHelpers").
         meths.
         sort_by { |method| method[:name] }.
         select do |method|
           !method.tag(:private) &&
             method.visibility == :public
-        end.
-        each do |method|
-          suffix =
-            if method.tag(:deprecated)
-              " (Deprecated)"
-            end
-
-          types =
-            if method.tag(:return)&.types
-              " → [#{method.tag(:return).types.join(',')}]"
-            end
-
-          f.puts
-          f.puts("### #{method.sep}#{method.signature.gsub('def ', '')}#{types}#{suffix}")
-
-          if method.docstring.length > 0
-            f.puts
-            f.puts(method.docstring)
-          end
-
-          if method.tag(:deprecated)
-            f.puts
-            f.puts("_#{method.tag(:deprecated).text}_")
-          end
         end
+
+    require 'rails'
+    require 'action_controller'
+    require 'view_component'
+    require 'view_component/docs_builder_component'
+
+    docs = ActionController::Base.new.render_to_string(
+      ViewComponent::DocsBuilderComponent.new(
+        sections: [
+          ViewComponent::DocsBuilderComponent::Section.new(heading: 'Class methods', methods: class_methods_to_document),
+          ViewComponent::DocsBuilderComponent::Section.new(heading: 'Instance methods', methods: instance_methods_to_document),
+          ViewComponent::DocsBuilderComponent::Section.new(heading: 'Configuration', methods: configuration_methods_to_document, show_types: false),
+          ViewComponent::DocsBuilderComponent::Section.new(heading: 'ViewComponent::TestHelpers', methods: test_helper_methods_to_document)
+        ]
+      )
+    )
+
+    File.open("docs/api.md", "w") do |f|
+      f.puts(docs)
     end
   end
 end
