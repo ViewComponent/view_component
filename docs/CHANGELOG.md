@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Small update to preview docs to include rspec mention
+* Small update to preview docs to include rspec mention.
 
     *Leigh Halliday*
 

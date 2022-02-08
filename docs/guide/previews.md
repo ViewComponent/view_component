@@ -174,7 +174,7 @@ To render a source preview in a different place, use the view helper `preview_so
 
 ## Using with rspec
 
-When using previews with rspec, `test/components` should be replaced with `spec/components` and the `preview_paths` setting must be updated.
+When using previews with rspec,  replace `test/components` with `spec/components` and update `preview_paths`:
 
 ```ruby
 # config/application.rb
