@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ViewComponent
   class DocsBuilderComponent < Base
     class Section < Struct.new(:heading, :methods, :show_types, keyword_init: true)
@@ -30,7 +32,7 @@ module ViewComponent
       end
 
       def signature_or_name
-        @method.signature ? @method.signature.gsub('def ', '') : @method.name
+        @method.signature ? @method.signature.gsub("def ", "") : @method.name
       end
 
       def separator
