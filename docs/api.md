@@ -71,6 +71,14 @@ _Will be removed in v3.0.0._
 
 ## Configuration
 
+### #component_parent_class
+
+Parent class for generated components
+
+    config.view_component.component_parent_class = "MyBaseComponent"
+
+Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+
 ### #default_preview_layout
 
 Set a custom default layout used for preview index and individual previews:
@@ -102,19 +110,6 @@ Always generate as many translations files as available locales:
 
 One file will be generated for each configured `I18n.available_locales`,
 falling back to `[:en]` when no available_locales is defined.
-
-Path for component files
-
-    config.view_component.generate.component_path = "app/my_components"
-
-Defaults to `app/components`.
-
-Parent class for generated components
-
-    config.view_component.generate.parent_class = "MyBaseComponent"
-
-Defaults to "ApplicationComponent" if defined, "ViewComponent::Base"
-otherwise.
 
 ### #preview_controller
 
@@ -172,6 +167,14 @@ Set the controller used for testing components:
 
 Defaults to ApplicationController. Can also be configured on a per-test
 basis using `with_controller_class`.
+
+### #view_component_path
+
+Path for component files
+
+    config.view_component.view_component_path = "app/my_components"
+
+Defaults to `app/components`.
 
 ## ViewComponent::TestHelpers
 
