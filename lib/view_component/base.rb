@@ -287,9 +287,10 @@ module ViewComponent
     #
     mattr_accessor :component_parent_class, instance_writer: false
 
-    # Configuration for generators
+    # Configuration for generators.
     #
-    # Defaults to `false` unless otherwise stated.
+    # All options under this namespace default to `false` unless otherwise
+    # stated.
     #
     # Always generate a component with a sidecar directory:
     #
@@ -307,8 +308,8 @@ module ViewComponent
     #
     #     config.view_component.generate.distinct_locale_files = true
     #
-    # One file will be generated for each configured `I18n.available_locales`.
-    # Fallback on `[:en]` when no available_locales is defined.
+    # One file will be generated for each configured `I18n.available_locales`,
+    # falling back to `[:en]` when no available_locales is defined.
     #
     mattr_accessor :generate, instance_writer: false, default: (ActiveSupport::OrderedOptions.new(false).tap do |c|
       c.component_path = "app/components"
