@@ -79,7 +79,7 @@ Set a custom default layout used for preview index and individual previews:
 
 ### #generate
 
-Configuration for generators
+Configuration for generators.
 
 Defaults to `false` unless otherwise stated.
 
@@ -99,8 +99,7 @@ Always generate as many translations files as available locales:
 
     config.view_component.generate.distinct_locale_files = true
 
-One file will be generated for each configured `I18n.available_locales`.
-Fallback on `[:en]` when no available_locales is defined.
+One file will be generated for each configured `I18n.available_locales`, falling back to `[:en]` when `available_locales` is not defined.
 
 Path for component files
 
