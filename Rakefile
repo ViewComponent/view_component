@@ -78,7 +78,6 @@ namespace :docs do
     require 'action_controller'
     require 'view_component'
     require 'view_component/docs_builder_component'
-
     docs = ActionController::Base.new.render_to_string(
       ViewComponent::DocsBuilderComponent.new(
         sections: [
@@ -88,7 +87,7 @@ namespace :docs do
           ViewComponent::DocsBuilderComponent::Section.new(heading: 'ViewComponent::TestHelpers', methods: test_helper_methods_to_document)
         ]
       )
-    )
+    ).chomp
 
     File.open("docs/api.md", "w") do |f|
       f.puts(docs)
