@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix path handling for evaluated view components
+
+    *Adam Hess*
+
 * Ensure i18n scope is a symbol to protect lookups.
 
     *Simon Fish*
