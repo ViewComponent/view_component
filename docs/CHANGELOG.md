@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Ensure i18n scope is a symbol to protect lookups.
+
+    *Simon Fish*
+
 * Small update to preview docs to include rspec mention.
 
     *Leigh Halliday*
