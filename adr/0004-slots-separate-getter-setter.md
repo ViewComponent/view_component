@@ -36,7 +36,7 @@ e.g.
 
 ```ruby
 class MyComponent < ViewComponent::Base
-  has_one :header
+  renders_one :header
 end
 
 c = MyComponent.new
