@@ -40,6 +40,22 @@ _Use `#before_render` instead. Will be removed in v3.0.0._
 The current controller. Use sparingly as doing so introduces coupling
 that inhibits encapsulation & reuse, often making testing difficult.
 
+### #generate_distinct_locale_files (Deprecated)
+
+_Use `#generate.distinct_locale_files` instead. Will be removed in v3.0.0._
+
+### #generate_locale (Deprecated)
+
+_Use `#generate.locale` instead. Will be removed in v3.0.0._
+
+### #generate_sidecar (Deprecated)
+
+_Use `#generate.sidecar` instead. Will be removed in v3.0.0._
+
+### #generate_stimulus_controller (Deprecated)
+
+_Use `#generate.stimulus_controller` instead. Will be removed in v3.0.0._
+
 ### #helpers → [ActionView::Base]
 
 A proxy through which to access helpers. Use sparingly as doing so introduces
