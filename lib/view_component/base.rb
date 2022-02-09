@@ -17,6 +17,7 @@ module ViewComponent
     include ViewComponent::ContentAreas
     include ViewComponent::Previewable
     include ViewComponent::SlotableV2
+    include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
@@ -37,7 +38,7 @@ module ViewComponent
     # For example, one might compile component-specific assets at this point.
     # @private TODO: add documentation
     def self._after_compile
-      # noop
+      super if defined?(super)
     end
 
     # @!macro [attach] deprecated_generate_mattr_accessor

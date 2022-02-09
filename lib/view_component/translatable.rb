@@ -21,7 +21,7 @@ module ViewComponent
       end
 
       def _after_compile
-        super
+        super if defined?(super)
 
         return if CompileCache.compiled? self
 

@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Move the `Translatable` module out of experimental mode.
+
+    *Elia Schito*
+
 * Update docs dependencies.
 
     *Joel Hawksley*

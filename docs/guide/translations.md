@@ -4,18 +4,9 @@ title: Translations
 parent: Guide
 ---
 
-# Translations (experimental)
+# Translations
 
-To use experimental support for `I18n` translations, include `ViewComponent::Translatable`:
-
-```ruby
-# app/components/example_component.rb
-module ExampleComponent < ApplicationComponent
-  include ViewComponent::Translatable
-end
-```
-
-Add a sidecar YAML file with translations for the component:
+To use `I18n` translations, add a sidecar YAML file with translations for the component:
 
 ```yml
 # app/components/example_component.yml
@@ -51,7 +42,7 @@ Global Rails translations are available as well:
 <%= t("my.global.translation") %>
 ```
 
-Global translations shadowed by sidecar translations can be accessed with `helpers` or `I18n`:
+Global translations can still be accessed via `helpers` or `I18n`:
 
 ```erb
 <%# app/components/example_component.html.erb %>
