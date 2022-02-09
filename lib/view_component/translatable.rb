@@ -41,7 +41,7 @@ module ViewComponent
       EMPTY_HASH = {}.freeze
 
       def initialize(i18n_scope:, load_paths:)
-        @i18n_scope = i18n_scope.split(".")
+        @i18n_scope = i18n_scope.split(".").map(&:to_sym)
         @load_paths = load_paths
       end
 
