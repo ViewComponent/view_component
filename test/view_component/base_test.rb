@@ -104,6 +104,6 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       end
     RUBY
 
-    eval(source)
+    eval(source) # rubocop:disable Security/Eval
   end
 end
