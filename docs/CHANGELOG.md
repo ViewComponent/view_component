@@ -27,6 +27,10 @@ title: Changelog
 
     *Peter Goldstein*
 
+* Move preview logic to module, for easier app integration.
+
+    *Sammy Henningsson*
+
 ## 2.48.0
 
 * Correct path in example test command in Contributing docs.
