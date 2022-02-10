@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix support for the `default:` option for a global translation.
+
+    *Elia Schito*
+
 * Ensure i18n scope is a symbol to protect lookups.
 
     *Simon Fish*
