@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Fix path handling for evaluated view components
+* Fix path handling for evaluated view components that broke in Ruby 3.1.
 
     *Adam Hess*
 
