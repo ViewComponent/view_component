@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix example in testing guide for how to setup default Rails tests.
+
+    *Steven Hansen*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
