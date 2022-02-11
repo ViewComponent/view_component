@@ -15,14 +15,6 @@ ViewComponent is tested for compatibility [with combinations of](https://github.
 
 ViewComponent is tested against ERB, Haml, and Slim, but it should support most Rails template handlers.
 
-## Ensuring the correct path
-
-In some versions of Rails (tested in 5.0.7.2) you may see `no implicit conversion of nil into String` when attempting to generate a component or render a component. You will need to specify the following in your `config/application.rb` (or an initializer):
-
-```ruby
-config.view_component.view_component_path = "app/components"
-```
-
 ## Disabling the render monkey patch (Rails < 6.1)
 
 To [avoid conflicts](https://github.com/github/view_component/issues/288) between ViewComponent and other gems that also monkey patch the `render` method, it's possible to configure ViewComponent to not include the render monkey patch:
