@@ -45,4 +45,14 @@ class ErbGeneratorTest < Rails::Generators::TestCase
 
     assert_no_file "app/components/user_component.html.erb"
   end
+
+  def test_component_with_generate_sidecar
+    with_generate_sidecar(true) do
+      run_generator %w[user]
+
+      assert_file "app/components/user_component/user_component.html.erb" do |view|
+        assert_match(/<div>Add User template here<\/div>/, view)
+      end
+    end
+  end
 end

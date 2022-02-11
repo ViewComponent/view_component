@@ -40,6 +40,23 @@ module ViewComponent
       # noop
     end
 
+    # @!macro [attach] deprecated_generate_mattr_accessor
+    #   @method generate_$1
+    #   @deprecated Use `#generate.$1` instead. Will be removed in v3.0.0.
+    def self._deprecated_generate_mattr_accessor(name)
+      define_singleton_method("generate_#{name}".to_sym) do
+        generate.public_send(name)
+      end
+      define_singleton_method("generate_#{name}=".to_sym) do |value|
+        generate.public_send("#{name}=".to_sym, value)
+      end
+    end
+
+    _deprecated_generate_mattr_accessor :distinct_locale_files
+    _deprecated_generate_mattr_accessor :locale
+    _deprecated_generate_mattr_accessor :sidecar
+    _deprecated_generate_mattr_accessor :stimulus_controller
+
     # Entrypoint for rendering components.
     #
     # - `view_context`: ActionView context from calling view
@@ -271,47 +288,56 @@ module ViewComponent
     #
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
-    # Always generate a Stimulus controller alongside the component:
-    #
-    #     config.view_component.generate_stimulus_controller = true
-    #
-    # Defaults to `false`.
-    #
-    mattr_accessor :generate_stimulus_controller, instance_writer: false, default: false
-
-    # Always generate translations file alongside the component:
-    #
-    #     config.view_component.generate_locale = true
-    #
-    # Defaults to `false`.
-    #
-    mattr_accessor :generate_locale, instance_writer: false, default: false
-
-    # Always generate as many translations files as available locales:
-    #
-    #     config.view_component.generate_distinct_locale_files = true
-    #
-    # Defaults to `false`.
-    #
-    # One file will be generated for each configured `I18n.available_locales`.
-    # Fallback on `[:en]` when no available_locales is defined.
-    #
-    mattr_accessor :generate_distinct_locale_files, instance_writer: false, default: false
-
     # Path for component files
     #
     #     config.view_component.view_component_path = "app/my_components"
     #
     # Defaults to `app/components`.
+    #
     mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
 
     # Parent class for generated components
     #
     #     config.view_component.component_parent_class = "MyBaseComponent"
     #
-    # Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
-    mattr_accessor :component_parent_class,
-                   instance_writer: false
+    # Defaults to nil. If this is falsy, generators will use
+    # "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+    #
+    mattr_accessor :component_parent_class, instance_writer: false
+
+    # Configuration for generators.
+    #
+    # All options under this namespace default to `false` unless otherwise
+    # stated.
+    #
+    # #### #sidecar
+    #
+    # Always generate a component with a sidecar directory:
+    #
+    #     config.view_component.generate.sidecar = true
+    #
+    # #### #stimulus_controller
+    #
+    # Always generate a Stimulus controller alongside the component:
+    #
+    #     config.view_component.generate.stimulus_controller = true
+    #
+    # #### #locale
+    #
+    # Always generate translations file alongside the component:
+    #
+    #     config.view_component.generate.locale = true
+    #
+    # #### #distinct_locale_files
+    #
+    # Always generate as many translations files as available locales:
+    #
+    #     config.view_component.generate.distinct_locale_files = true
+    #
+    # One file will be generated for each configured `I18n.available_locales`,
+    # falling back to `[:en]` when no `available_locales` is defined.
+    #
+    mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new(false)
 
     class << self
       # @private
@@ -392,7 +418,7 @@ module ViewComponent
         # Derive the source location of the component Ruby file from the call stack.
         # We need to ignore `inherited` frames here as they indicate that `inherited`
         # has been re-defined by the consuming application, likely in ApplicationComponent.
-        child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].absolute_path
+        child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].path
 
         # Removes the first part of the path and the extension.
         child.virtual_path = child.source_location.gsub(

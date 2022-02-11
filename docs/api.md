@@ -40,6 +40,22 @@ _Use `#before_render` instead. Will be removed in v3.0.0._
 The current controller. Use sparingly as doing so introduces coupling
 that inhibits encapsulation & reuse, often making testing difficult.
 
+### #generate_distinct_locale_files (Deprecated)
+
+_Use `#generate.distinct_locale_files` instead. Will be removed in v3.0.0._
+
+### #generate_locale (Deprecated)
+
+_Use `#generate.locale` instead. Will be removed in v3.0.0._
+
+### #generate_sidecar (Deprecated)
+
+_Use `#generate.sidecar` instead. Will be removed in v3.0.0._
+
+### #generate_stimulus_controller (Deprecated)
+
+_Use `#generate.stimulus_controller` instead. Will be removed in v3.0.0._
+
 ### #helpers → [ActionView::Base]
 
 A proxy through which to access helpers. Use sparingly as doing so introduces
@@ -77,7 +93,8 @@ Parent class for generated components
 
     config.view_component.component_parent_class = "MyBaseComponent"
 
-Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+Defaults to nil. If this is falsy, generators will use
+"ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
 
 ### #default_preview_layout
 
@@ -85,32 +102,39 @@ Set a custom default layout used for preview index and individual previews:
 
     config.view_component.default_preview_layout = "component_preview"
 
-### #generate_distinct_locale_files
+### #generate
 
-Always generate as many translations files as available locales:
+Configuration for generators.
 
-    config.view_component.generate_distinct_locale_files = true
+All options under this namespace default to `false` unless otherwise
+stated.
 
-Defaults to `false`.
+#### #sidecar
 
-One file will be generated for each configured `I18n.available_locales`.
-Fallback on `[:en]` when no available_locales is defined.
+Always generate a component with a sidecar directory:
 
-### #generate_locale
+    config.view_component.generate.sidecar = true
 
-Always generate translations file alongside the component:
-
-    config.view_component.generate_locale = true
-
-Defaults to `false`.
-
-### #generate_stimulus_controller
+#### #stimulus_controller
 
 Always generate a Stimulus controller alongside the component:
 
-    config.view_component.generate_stimulus_controller = true
+    config.view_component.generate.stimulus_controller = true
 
-Defaults to `false`.
+#### #locale
+
+Always generate translations file alongside the component:
+
+    config.view_component.generate.locale = true
+
+#### #distinct_locale_files
+
+Always generate as many translations files as available locales:
+
+    config.view_component.generate.distinct_locale_files = true
+
+One file will be generated for each configured `I18n.available_locales`,
+falling back to `[:en]` when no `available_locales` is defined.
 
 ### #preview_controller
 

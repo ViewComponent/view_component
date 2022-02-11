@@ -61,7 +61,7 @@ Here are a few things you can do that will increase the likelihood of your pull 
 Supply a file glob to the test command:
 
 ```command
-TEST="test/components/YOUR_COMPONENT_test.rb" bundle exec appraisal rake
+TEST="test/view_component/YOUR_COMPONENT_test.rb" bundle exec appraisal rake
 ```
 
 ### Running tests for a specific version of Rails

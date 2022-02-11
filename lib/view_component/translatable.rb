@@ -41,7 +41,7 @@ module ViewComponent
       EMPTY_HASH = {}.freeze
 
       def initialize(i18n_scope:, load_paths:)
-        @i18n_scope = i18n_scope.split(".")
+        @i18n_scope = i18n_scope.split(".").map(&:to_sym)
         @load_paths = load_paths
       end
 
@@ -70,21 +70,25 @@ module ViewComponent
       key = key&.to_s unless key.is_a?(String)
       key = "#{i18n_scope}#{key}" if key.start_with?(".")
 
-      translated =
-        catch(:exception) do
-          i18n_backend.translate(locale, key, options)
+      if key.start_with?(i18n_scope + ".")
+        translated =
+          catch(:exception) do
+            i18n_backend.translate(locale, key, options)
+          end
+
+        # Fallback to the global translations
+        if translated.is_a? ::I18n::MissingTranslation
+          return super(key, locale: locale, **options)
         end
 
-      # Fallback to the global translations
-      if translated.is_a? ::I18n::MissingTranslation
-        return super(key, locale: locale, **options)
-      end
+        if HTML_SAFE_TRANSLATION_KEY.match?(key)
+          translated = translated.html_safe # rubocop:disable Rails/OutputSafety
+        end
 
-      if HTML_SAFE_TRANSLATION_KEY.match?(key)
-        translated = translated.html_safe # rubocop:disable Rails/OutputSafety
+        translated
+      else
+        super(key, locale: locale, **options)
       end
-
-      translated
     end
     alias :t :translate
 

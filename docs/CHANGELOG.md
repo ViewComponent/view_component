@@ -11,6 +11,54 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Place all generator options under `config.generate` namespace.
+
+    *Simon Fish*
+
+## 2.49.0
+
+* Fix path handling for evaluated view components that broke in Ruby 3.1.
+
+    *Adam Hess*
+
+* Fix support for the `default:` option for a global translation.
+
+    *Elia Schito*
+
+* Ensure i18n scope is a symbol to protect lookups.
+
+    *Simon Fish*
+
+* Small update to preview docs to include rspec mention.
+
+    *Leigh Halliday*
+
+* Small improvements to collection iteration docs.
+
+    *Brian O'Rourke*
+
+* Add good and bad examples to `ViewComponents in practice`.
+
+    *Joel Hawksley*
+
+* Add Ruby 3.1 and Rails 7.0 to CI
+
+    *Peter Goldstein*
+
+## 2.48.0
+
+* Correct path in example test command in Contributing docs.
+
+    *Mark Wilkinson*
+
+* Update link to GOV.UK Components library in the resources list.
+
+    *Peter Yates*
+
+* Add Lookbook to Resources docs page.
+
+    *Mark Perkins*
+
 * Add blocking compiler mode for use in Rails development and testing modes, improving thread safety.
 
     *Horia Radu*
@@ -46,6 +94,10 @@ title: Changelog
 * Update `@param` of `#render_inline` to include `ViewComponent::Collection`.
 
     *Yutaka Kamei*
+
+* Add Wecasa to users list.
+
+    *Mohamed Ziata*
 
 ## 2.47.0
 
@@ -118,6 +170,10 @@ title: Changelog
 * Add config option `config.view_component.generate_distinct_locale_files` to enable project-wide per-locale translations file generation.
 
     *Bob Maerten*
+
+* Add config option `config.view_component.generate_sidecar` to always generate in the sidecar directory.
+
+    *Gleydson Tavares*
 
 ## 2.46.0
 
