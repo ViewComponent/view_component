@@ -337,9 +337,7 @@ module ViewComponent
     # One file will be generated for each configured `I18n.available_locales`,
     # falling back to `[:en]` when no available_locales is defined.
     #
-    mattr_accessor :generate, instance_writer: false, default: (ActiveSupport::OrderedOptions.new(false).tap do |c|
-      c.component_path = "app/components"
-    end)
+    mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new(false)
 
     class << self
       # @private
