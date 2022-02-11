@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update the docs only when releasing a new version.
+
+    *Hans Lemuet*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
