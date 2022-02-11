@@ -21,7 +21,13 @@ module ViewComponent
       #
       # Defaults to `false`.
       #
-      mattr_accessor :show_previews_source, instance_writer: false, default: false
+      if Rails.version.to_f >= 5.2
+        mattr_accessor :show_previews_source, instance_writer: false, default: false
+      else
+        mattr_accessor :show_previews_source, instance_writer: false do
+          false
+        end
+      end
 
       # Set a custom default layout used for preview index and individual previews:
       #

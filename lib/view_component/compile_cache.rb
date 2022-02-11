@@ -4,8 +4,12 @@ module ViewComponent
   # Keeps track of which templates have already been compiled
   # This isn't part of the public API
   module CompileCache
-    mattr_accessor :cache, instance_reader: false, instance_accessor: false do
-      Set.new
+    if Rails.version.to_f >= 5.2
+      mattr_accessor :cache, instance_reader: false, instance_accessor: false, default: Set.new
+    else
+      mattr_accessor :cache, instance_reader: false, instance_accessor: false do
+        Set.new
+      end
     end
 
     module_function

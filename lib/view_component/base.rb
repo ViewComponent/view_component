@@ -286,7 +286,13 @@ module ViewComponent
     #
     #     config.view_component.render_monkey_patch_enabled = false
     #
-    mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
+    if Rails.version.to_f >= 5.2
+      mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
+    else
+      mattr_accessor :render_monkey_patch_enabled, instance_writer: false do
+        true
+      end
+    end
 
     # Path for component files
     #
@@ -294,7 +300,13 @@ module ViewComponent
     #
     # Defaults to `app/components`.
     #
-    mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
+    if Rails.version.to_f >= 5.2
+      mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
+    else
+      mattr_accessor :view_component_path, instance_writer: false do
+        "app/components"
+      end
+    end
 
     # Parent class for generated components
     #
@@ -337,7 +349,13 @@ module ViewComponent
     # One file will be generated for each configured `I18n.available_locales`,
     # falling back to `[:en]` when no `available_locales` is defined.
     #
-    mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new(false)
+    if Rails.version.to_f >= 5.2
+      mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new(false)
+    else
+      mattr_accessor :generate, instance_writer: false do
+        ActiveSupport::OrderedOptions.new(false)
+      end
+    end
 
     class << self
       # @private
