@@ -52,7 +52,7 @@ module ViewComponent
           ActiveSupport::Deprecation.warn(
             "`#before_render_check` will be removed in v3.0.0.\n\n" \
             "To fix this issue, use `#before_render` instead."
-          )
+          ) unless ENV["CI"]
         end
 
         if raise_errors

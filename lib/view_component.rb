@@ -24,7 +24,7 @@ if defined?(ViewComponent::Engine)
   ActiveSupport::Deprecation.warn(
     "This manually engine loading is deprecated and will be removed in v3.0.0. " \
     "Remove `require \"view_component/engine\"`."
-  )
+  ) unless ENV["CI"]
 elsif defined?(Rails::Engine)
   require "view_component/engine"
 end

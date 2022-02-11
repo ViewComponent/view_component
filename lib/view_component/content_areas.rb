@@ -34,7 +34,7 @@ module ViewComponent
         ActiveSupport::Deprecation.warn(
           "`with_content_areas` is deprecated and will be removed in ViewComponent v3.0.0.\n\n" \
           "Use slots (https://viewcomponent.org/guide/slots.html) instead."
-        )
+        ) unless ENV["CI"]
 
         if areas.include?(:content)
           raise ArgumentError.new(

@@ -237,7 +237,7 @@ module ViewComponent
     def with_variant(variant)
       ActiveSupport::Deprecation.warn(
         "`with_variant` is deprecated and will be removed in ViewComponent v3.0.0."
-      )
+      ) unless ENV["CI"]
 
       @__vc_variant = variant
 

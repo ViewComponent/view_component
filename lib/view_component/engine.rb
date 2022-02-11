@@ -29,7 +29,7 @@ module ViewComponent
         if options.preview_path.present?
           ActiveSupport::Deprecation.warn(
             "`preview_path` will be removed in v3.0.0. Use `preview_paths` instead."
-          )
+          ) unless ENV["CI"]
           options.preview_paths << options.preview_path
         end
 
@@ -158,7 +158,7 @@ unless defined?(ViewComponent::Base)
   ActiveSupport::Deprecation.warn(
     "This manually engine loading is deprecated and will be removed in v3.0.0. " \
     "Remove `require \"view_component/engine\"`."
-  )
+  ) unless ENV["CI"]
 
   require "view_component"
 end
