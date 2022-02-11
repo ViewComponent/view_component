@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.49.0
+
 * Fix path handling for evaluated view components that broke in Ruby 3.1.
 
     *Adam Hess*
