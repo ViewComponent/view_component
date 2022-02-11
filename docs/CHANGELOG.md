@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update CI configuration to use latest Rails 7.0.
+
+    *Hans Lemuet*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
@@ -37,7 +41,7 @@ title: Changelog
 
     *Joel Hawksley*
 
-* Add Ruby 3.1 and Rails 7.0 to CI
+* Add Ruby 3.1 and Rails 7.0 to CI.
 
     *Peter Goldstein*
 
