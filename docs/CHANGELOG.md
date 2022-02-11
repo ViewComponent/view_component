@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Fix Ruby warnings.
+
+    *Hans Lemuet*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
