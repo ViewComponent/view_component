@@ -134,7 +134,7 @@ Always generate as many translations files as available locales:
     config.view_component.generate.distinct_locale_files = true
 
 One file will be generated for each configured `I18n.available_locales`,
-falling back to `[:en]` when no available_locales is defined.
+falling back to `[:en]` when no `available_locales` is defined.
 
 ### #preview_controller
 
