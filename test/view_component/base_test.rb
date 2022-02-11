@@ -34,7 +34,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
         component.helpers
       end
-    assert_includes err.message, "cannot be used during initialization"
+    assert_includes err.message, "can't be used during initialization"
   end
 
   def test_calling_controller_outside_render_raises
@@ -44,7 +44,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
         component.controller
       end
 
-    assert_includes err.message, "cannot be used during initialization"
+    assert_includes err.message, "can't be used during initialization"
   end
 
   def test_sidecar_files
@@ -76,5 +76,34 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       ["#{root}/app/components/translatable_component.yml"],
       TranslatableComponent._sidecar_files(["yml"])
     )
+  end
+
+  def test_does_not_render_additional_newline_with_render_in
+    skip unless Rails::VERSION::MAJOR >= 7
+    without_template_annotations do
+      ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
+      rendered_component = Array.new(2) {
+        DisplayInlineComponent.new.render_in(ActionController::Base.new.view_context)
+      }.join
+      assert_includes rendered_component, "<span>Hello, world!</span><span>Hello, world!</span>"
+    end
+  ensure
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+  end
+
+  def test_evaled_component
+    source = <<~RUBY
+      class EvaledComponent < ViewComponent::Base
+        def initialize(cta: nil, title:)
+          @cta = cta
+          @title = title
+        end
+        private
+
+        attr_reader :cta, :title
+      end
+    RUBY
+
+    eval(source) # rubocop:disable Security/Eval
   end
 end

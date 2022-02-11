@@ -31,9 +31,10 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency     "activesupport", [">= 5.0.0", "< 8.0"]
   spec.add_runtime_dependency     "method_source", "~> 1.0"
+  spec.add_development_dependency "appraisal", "~> 2.4"
   spec.add_development_dependency "benchmark-ips", "~> 2.8.2"
   spec.add_development_dependency "better_html", "~> 1"
-  spec.add_development_dependency "bundler", "~> 2.2"
+  spec.add_development_dependency "bundler", ">= 1.15.0"
   spec.add_development_dependency "erb_lint", "~> 0.0.37"
   spec.add_development_dependency "haml", "~> 5"
   spec.add_development_dependency "jbuilder", "~> 2"
@@ -44,6 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov", "~> 0.18.0"
   spec.add_development_dependency "simplecov-console", "~> 0.7.2"
   spec.add_development_dependency "slim", "~> 4.0"
+  spec.add_development_dependency "sprockets-rails", "~> 3.2.2"
   spec.add_development_dependency "yard", "~> 0.9.25"
   spec.add_development_dependency "yard-activesupport-concern"
 end

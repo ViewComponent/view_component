@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class ContentAreasComponent < ViewComponent::Base
+class Performance::ContentAreasComponent < ViewComponent::Base
   with_content_areas :header, :items
 end

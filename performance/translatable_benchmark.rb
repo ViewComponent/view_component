@@ -5,23 +5,25 @@
 
 require "benchmark/ips"
 
-# Configure Rails Envinronment
+# Configure Rails Environment
 ENV["RAILS_ENV"] = "production"
-require File.expand_path("../test/config/environment.rb", __dir__)
+require File.expand_path("../test/sandbox/config/environment.rb", __dir__)
 
-require_relative "components/global_i18n_component.rb"
-require_relative "components/translatable_component.rb"
+module Performance
+  require_relative "components/global_i18n_component.rb"
+  require_relative "components/translatable_component.rb"
+end
 
 class BenchmarksController < ActionController::Base
 end
 
 BenchmarksController.view_paths = [File.expand_path("./views", __dir__)]
 controller_view = BenchmarksController.new.view_context
-I18n.load_path = Dir[File.expand_path("../test/config/locales/*.{rb,yml,yaml}", __dir__)]
+I18n.load_path = Dir[File.expand_path("../test/sandbox/config/locales/*.{rb,yml,yaml}", __dir__)]
 I18n.backend.load_translations
 
-global_i18n_component = GlobalI18nComponent.new("hello")
-translatable_component = TranslatableComponent.new(".hello")
+global_i18n_component = Performance::GlobalI18nComponent.new("hello")
+translatable_component = Performance::TranslatableComponent.new(".hello")
 
 controller_view.render(global_i18n_component)
 controller_view.render(translatable_component)

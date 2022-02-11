@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NameComponent < ViewComponent::Base
+class Performance::NameComponent < ViewComponent::Base
   def initialize(name:)
     @name = name
   end

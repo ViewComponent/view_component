@@ -15,6 +15,14 @@ module ViewComponent
       #
       mattr_accessor :show_previews, instance_writer: false
 
+      # Enable or disable source code previews in component previews:
+      #
+      #     config.view_component.show_previews_source = true
+      #
+      # Defaults to `false`.
+      #
+      mattr_accessor :show_previews_source, instance_writer: false, default: false
+
       # Set a custom default layout used for preview index and individual previews:
       #
       #     config.view_component.default_preview_layout = "component_preview"

@@ -1,6 +1,6 @@
 # 2. Naming conventions for ViewComponents
 
-Date: 2021-07-13
+Date: 2021/07/13
 
 ## Status
 
@@ -8,7 +8,7 @@ Withdrawn. We decided to stick with the `-Component` suffix, as it enforces conv
 
 ## Context
 
-The `Component` suffix has been questioned a few times. Based on our ViewComponents at GitHub and those shared on the ViewComponent repo, it looks like the namespaces used are unique even when the `Component` suffix is removed. This is due to following the naming convention of views, which is to use the plural paths in the namespace. e.g. `users/index.html.erb` -> `Users::IndexComponent`/`Users::Index`.
+The `Component` suffix has been questioned a few times. Based on our ViewComponents at GitHub and those shared on the ViewComponent repo, it looks like the namespaces used are unique even when the `Component` suffix is removed. This is due to following the naming convention of views, which is to use the plural paths in the namespace. for example `users/index.html.erb` -> `Users::IndexComponent`/`Users::Index`.
 
 ## Decision
 
@@ -16,7 +16,7 @@ We will recommend that ViewComponents are named without the `-Component` suffix,
 
 ## Alternatives considered
 
-We've used the `-Component` suffix for some time, so it is a viable alternative.
+We've used the `-Component` suffix for some time, so it's a valid option to continue with our existing practice.
 
 ## Consequences
 

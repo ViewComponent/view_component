@@ -28,6 +28,10 @@ class SlotsV2Component < ViewComponent::Base
     def classes
       @highlighted ? "highlighted" : "normal"
     end
+
+    def method_with_kwargs(*args, **kwargs)
+      kwargs
+    end
   end
 
   class ExtraComponent < ViewComponent::Base

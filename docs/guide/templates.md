@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Templates
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Templates
@@ -60,7 +60,7 @@ class InlineComponent < ViewComponent::Base
 end
 ```
 
-It is also possible to define methods for variants:
+It's also possible to define methods for Action Pack variants (`phone` in this case):
 
 ```ruby
 class InlineVariantComponent < ViewComponent::Base
@@ -74,22 +74,20 @@ class InlineVariantComponent < ViewComponent::Base
 end
 ```
 
-And render them `with_variant`:
+_**Note**: `call_*` methods must be public._
+
+To override the `variant` set by the request, use `with_variant`:
 
 ```erb
 <%= render InlineVariantComponent.new.with_variant(:phone) %>
-
-# output: <%= link_to "Phone", phone_path %>
 ```
-
-_**Note**: `call_*` methods must be public._
 
 ## Inherited
 
 Component subclasses inherit the parent component's template if they don't define their own template.
 
 ```ruby
-# If MyLinkComponent does not define a template,
+# If MyLinkComponent doesn't define a template,
 # it will fall back to the `LinkComponent` template.
 class MyLinkComponent < LinkComponent
 end

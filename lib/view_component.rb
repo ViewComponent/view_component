@@ -8,6 +8,7 @@ module ViewComponent
 
   autoload :Base
   autoload :Compiler
+  autoload :CompileCache
   autoload :ComponentError
   autoload :Instrumentation
   autoload :Preview
@@ -17,3 +18,14 @@ module ViewComponent
   autoload :TemplateError
   autoload :Translatable
 end
+
+# :nocov:
+if defined?(ViewComponent::Engine)
+  ActiveSupport::Deprecation.warn(
+    "This manually engine loading is deprecated and will be removed in v3.0.0. " \
+    "Remove `require \"view_component/engine\"`."
+  )
+elsif defined?(Rails::Engine)
+  require "view_component/engine"
+end
+# :nocov:
