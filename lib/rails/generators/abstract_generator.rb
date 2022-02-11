@@ -11,11 +11,19 @@ module ViewComponent
     private
 
     def destination
-      if options["sidecar"]
-        File.join(component_path, class_path, "#{file_name}_component", "#{file_name}_component.html.#{engine_name}")
+      File.join(destination_directory, "#{destination_file_name}.html.#{engine_name}")
+    end
+
+    def destination_directory
+      if sidecar?
+        File.join(component_path, class_path, destination_file_name)
       else
-        File.join(component_path, class_path, "#{file_name}_component.html.#{engine_name}")
+        File.join(component_path, class_path)
       end
+    end
+
+    def destination_file_name
+      "#{file_name}_component"
     end
 
     def file_name
@@ -24,6 +32,19 @@ module ViewComponent
 
     def component_path
       ViewComponent::Base.view_component_path
+    end
+
+    def stimulus_controller
+      if options["stimulus"]
+        File.join(destination_directory, destination_file_name).
+          sub("#{component_path}/", "").
+          gsub("_", "-").
+          gsub("/", "--")
+      end
+    end
+
+    def sidecar?
+      options["sidecar"] || ViewComponent::Base.generate.sidecar
     end
   end
 end

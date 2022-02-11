@@ -4,19 +4,34 @@ require "action_view/renderer/collection_renderer" if Rails.version.to_f >= 6.1
 
 module ViewComponent
   class Collection
+    include Enumerable
     attr_reader :component
+
     delegate :format, to: :component
+    delegate :size, to: :@collection
 
     def render_in(view_context, &block)
+      components.map do |component|
+        component.render_in(view_context, &block)
+      end.join.html_safe # rubocop:disable Rails/OutputSafety
+    end
+
+    def components
+      return @components if defined? @components
+
       iterator = ActionView::PartialIteration.new(@collection.size)
 
       component.validate_collection_parameter!(validate_default: true)
 
-      @collection.map do |item|
-        content = component.new(**component_options(item, iterator)).render_in(view_context, &block)
-        iterator.iterate!
-        content
-      end.join.html_safe # rubocop:disable Rails/OutputSafety
+      @components = @collection.map do |item|
+        component.new(**component_options(item, iterator)).tap do |component|
+          iterator.iterate!
+        end
+      end
+    end
+
+    def each(&block)
+      components.each(&block)
     end
 
     private
@@ -31,14 +46,17 @@ module ViewComponent
       if object.respond_to?(:to_ary)
         object.to_ary
       else
-        raise ArgumentError.new("The value of the argument isn't a valid collection. Make sure it responds to to_ary: #{object.inspect}")
+        raise ArgumentError.new(
+          "The value of the first argument passed to `with_collection` isn't a valid collection. " \
+          "Make sure it responds to `to_ary`."
+        )
       end
     end
 
     def component_options(item, iterator)
       item_options = { component.collection_parameter => item }
       item_options[component.collection_counter_parameter] = iterator.index + 1 if component.counter_argument_present?
-      item_options[component.collection_iteration_parameter] = iterator if component.iteration_argument_present?
+      item_options[component.collection_iteration_parameter] = iterator.dup if component.iteration_argument_present?
 
       @options.merge(item_options)
     end

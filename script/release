@@ -119,7 +119,7 @@ main() {
     else
       read -p "What version? (Currently $major.$minor.$patch): " new_version
       if [ "$new_version" == "$major.$minor.$patch" ]; then
-        echo "Error: Cannot be the same version"
+        echo "Error: Can't be the same version"
         exit 1
       fi
 

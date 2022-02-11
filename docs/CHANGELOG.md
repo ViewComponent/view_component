@@ -7,6 +7,529 @@ title: Changelog
 
 ## main
 
+* Place all generator options under `config.generate` namespace.
+
+    *Simon Fish*
+
+## 2.49.0
+
+* Fix path handling for evaluated view components that broke in Ruby 3.1.
+
+    *Adam Hess*
+
+* Fix support for the `default:` option for a global translation.
+
+    *Elia Schito*
+
+* Ensure i18n scope is a symbol to protect lookups.
+
+    *Simon Fish*
+
+* Small update to preview docs to include rspec mention.
+
+    *Leigh Halliday*
+
+* Small improvements to collection iteration docs.
+
+    *Brian O'Rourke*
+
+* Add good and bad examples to `ViewComponents in practice`.
+
+    *Joel Hawksley*
+
+* Add Ruby 3.1 and Rails 7.0 to CI
+
+    *Peter Goldstein*
+
+## 2.48.0
+
+* Correct path in example test command in Contributing docs.
+
+    *Mark Wilkinson*
+
+* Update link to GOV.UK Components library in the resources list.
+
+    *Peter Yates*
+
+* Add Lookbook to Resources docs page.
+
+    *Mark Perkins*
+
+* Add blocking compiler mode for use in Rails development and testing modes, improving thread safety.
+
+    *Horia Radu*
+
+* Add generators to support `tailwindcss-rails`.
+
+    *Dino Maric*, *Hans Lemuet*
+
+* Add a namespaced component example to docs.
+
+    *Hans Lemuet*
+
+* Setup `Appraisal` to add flexibility when testing ViewComponent against multiple Rails versions.
+
+    *Hans Lemuet*
+
+* Return correct values for `request.path` and `request.query_string` methods when using the `with_request_url` test helper.
+
+    *Vasiliy Matyushin*
+
+* Improve style in generators docs.
+
+    *Hans Lemuet*
+
+* Correctly type Ruby version strings and update Rails versions used in CI configuration.
+
+    *Hans Lemuet*
+
+* Make `ViewComponent::Collection` act like a collection of view components.
+
+    *Sammy Henningsson*
+
+* Update `@param` of `#render_inline` to include `ViewComponent::Collection`.
+
+    *Yutaka Kamei*
+
+* Add Wecasa to users list.
+
+    *Mohamed Ziata*
+
+## 2.47.0
+
+* Display preview source on previews that exclusively use templates.
+
+    *Edwin Mak*
+
+* Add a test to ensure trailing newlines are stripped when rendering with `#render_in`.
+
+    *Simon Fish*
+
+* Add WEBrick as a depenency to the application.
+
+    *Connor McQuillan*
+
+* Update Ruby version in `.tool-versions`.
+
+    *Connor McQuillan*
+
+* Add a test to ensure blocks can be passed into lambda slots without the need for any other arguments.
+
+    *Simon Fish*
+
+* Add linters for file consistency.
+
+    *Simon Fish*
+
+* Add @boardfish to docs/index.md and sort contributors.
+
+    *Simon Fish*
+
+* Set up Codespaces for bug replication.
+
+    *Simon Fish*
+
+* Add instructions for replicating bugs and failures.
+
+    *Simon Fish*
+
+* Make @boardfish a committer.
+
+    *Joel Hawksley*
+
+* Validate collection parameter with Active Model attribute names.
+
+    *Simon Fish*
+
+* Fix `helpers` not working with component slots when rendered more than 2 component levels deep.
+
+    *Blake Williams*
+
+* Update ruby to the latest versions
+
+    *Pedro Paiva*
+
+* Fix `vale` linter config options.
+
+    *Hans Lemuet*
+
+* Improve Contributing docs to include how to run tests for a specific version on Rails.
+
+    *Hans Lemuet*
+
+* Add failing test for default form builder and documentation around known issue.
+
+    *Simon Fish*
+
+* Add `--locale` flag to the component generator. Generates as many locale files as defined in `I18n.available_locales`, alongside the component.
+* Add config option `config.view_component.generate_locale` to enable project-wide locale generation.
+* Add config option `config.view_component.generate_distinct_locale_files` to enable project-wide per-locale translations file generation.
+
+    *Bob Maerten*
+
+* Add config option `config.view_component.generate_sidecar` to always generate in the sidecar directory.
+
+    *Gleydson Tavares*
+
+## 2.46.0
+
+* Add thread safety to the compiler.
+
+    *Horia Radu*
+
+* Add theme-specific logo images to readme.
+
+    *Dylan Smith*
+
+* Add Orbit to users list.
+
+    *Nicolas Goutay*
+
+* Increase clarity around purpose and use of slots.
+
+    *Simon Fish*
+
+* Deprecate loading `view_component/engine` directly.
+
+  **Upgrade notice**: You should update your `Gemfile` like this:
+
+  ```diff
+  - gem "view_component", require: "view_component/engine"`
+  + gem "view_component"
+  ```
+
+    *Yoshiyuki Hirano*
+
+## 2.45.0
+
+* Remove internal APIs from API documentation, fix link to license.
+
+    *Joel Hawksley*
+
+* Add @yhirano55 to triage team.
+
+    *Joel Hawksley*
+
+* Correct a typo in the sample slots code.
+
+    *Simon Fish*
+
+* Add note about `allowed_queries`.
+
+    *Joel Hawksley*
+
+* Add `vale` content linter.
+
+    *Joel Hawksley*
+
+* Remove `require "rails/generators/test_case"` in generator tests.
+
+    *Yoshiyuki Hirano*
+
+* Suppress zeitwerk warning about circular require.
+
+    *Yoshiyuki Hirano*
+
+* Move `test_unit_generator_test.rb` from `test/view_component/` to `test/generators/`.
+
+    *Yoshiyuki Hirano*
+
+* Unify test code of `TestUnitGeneratorTest` with the other generators tests.
+
+    *Yoshiyuki Hirano*
+
+## 2.44.0
+
+* Rename internal accessor to use private naming.
+
+    *Joel Hawksley*, *Blake Williams*, *Cameron Dutro*
+
+* Add Github repo link to docs website header.
+
+    *Hans Lemuet*
+
+* Change logo in README for dark theme readability.
+
+    *Dylan Smith*
+
+* Add Litmus to users list.
+
+    *Dylan Smith*
+
+* Add @dylanatsmith as codeowner of the ViewComponent logo and member of committers team.
+
+    *Joel Hawksley*
+
+* Autoload `CompileCache`, which is optionally called in `engine.rb`.
+
+    *Gregory Igelmund*
+
+* Move frequently asked questions to other pages, add History page.
+
+    *Joel Hawksley*
+
+* Fix typo.
+
+    *James Hart*
+
+* Add `require "method_source"` if it options.show_previews_source is enabled.
+
+    *Yoshiyuki Hirano*
+
+* Move show_previews_source definition to Previewable.
+
+    *Yoshiyuki Hirano*
+
+* Clear cache in MethodSource to apply the change odf preview code without app server restart.
+
+    *Yoshiyuki Hirano*
+
+## 2.43.1
+
+* Remove unnecessary call to `ruby2_keywords` for polymorphic slot getters.
+
+    *Cameron Dutro*
+
+## 2.43.0
+
+* Add note about tests and instance methods.
+
+    *Joel Hawksley*
+
+* Flesh out `ViewComponents in practice`.
+
+    *Joel Hawksley*
+
+* Add CODEOWNERS entries for feature areas owned by community committers.
+
+    *Joel Hawksley*
+
+* Separate lint and CI workflows.
+
+    *Blake Williams*
+
+* Add support for `image_path` helper in previews.
+
+    *Tobias Ahlin*, *Joel Hawksley*
+
+* Add section to docs listing users of ViewComponent. Please submit a PR to add your team to the list!
+
+    *Joel Hawksley*
+
+* Fix loading issue with Stimulus generator and add specs for Stimulus generator.
+
+    *Peter Sumskas*
+
+* Remove dependency on `ActionDispatch::Static` in Rails middleware stack when enabling statics assets for source code preview.
+
+    *Gregory Igelmund*
+
+* Require `view_component/engine` automatically.
+
+    *Cameron Dutro*
+
+## 2.42.0
+
+* Add logo files and page to docs.
+
+    *Dylan Smith*
+
+* Add `ViewComponents in practice` documentation.
+
+    *Joel Hawksley*
+
+* Fix bug where calling lambda slots without arguments would break in Ruby < 2.7.
+
+    *Manuel Puyol*
+
+* Improve Stimulus controller template to import from `stimulus` or `@hotwired/stimulus`.
+
+    *Mario Schüttel*
+
+* Fix bug where `helpers` would instantiate and use a new `view_context` in each component.
+
+    *Blake Williams*, *Ian C. Anderson*
+
+* Implement polymorphic slots as experimental feature. See the Slots documentation to learn more.
+
+    *Cameron Dutro*
+
+## 2.41.0
+
+* Add `sprockets-rails` development dependency to fix test suite failures when using rails@main.
+
+    *Blake Williams*
+
+* Fix Ruby indentation warning.
+
+    *Blake Williams*
+
+* Add `--parent` generator option to specify the parent class.
+* Add config option `config.view_component.component_parent_class` to change it project-wide.
+
+    *Hans Lemuet*
+
+* Update docs to add example for using Devise helpers in tests.
+
+    *Matthew Rider*
+
+* Fix bug where `with_collection_parameter` didn't inherit from parent component.
+
+    *Will Drexler*, *Christian Campoli*
+
+* Allow query parameters in `with_request_url` test helper.
+
+    *Javi Martín*
+
+* Add "how to render a component to a string" to FAQ.
+
+    *Hans Lemuet*
+
+* Add `#render_in` to API docs.
+
+    *Hans Lemuet*
+
+* Forward keyword arguments from slot wrapper to component instance using ruby2_keywords.
+
+    *Cameron Dutro*
+
+## 2.40.0
+
+* Replace antipatterns section in the documentation with best practices.
+
+    *Blake Williams*
+
+* Add components to `rails stats` task.
+
+    *Nicolas Brousse*
+
+* Fix bug when using Slim and writing a slot whose block evaluates to `nil`.
+
+    *Yousuf Jukaku*
+
+* Add documentation for test helpers.
+
+    *Joel Hawksley*
+
+## 2.39.0
+
+* Clarify documentation of `with_variant` as an override of Action Pack.
+
+    *Blake Williams*, *Cameron Dutro*, *Joel Hawksley*
+
+* Update docs page to be called Javascript and CSS, rename Building ViewComponents to Guide.
+
+    *Joel Hawksley*
+
+* Deprecate `Base#with_variant`.
+
+    *Cameron Dutro*
+
+* Error out in the CI if docs/api.md has to be regenerated.
+
+    *Dany Marcoux*
+
+## 2.38.0
+
+* Add `--stimulus` flag to the component generator. Generates a Stimulus controller alongside the component.
+* Add config option `config.view_component.generate_stimulus_controller` to always generate a Stimulus controller.
+
+    *Sebastien Auriault*
+
+## 2.37.0
+
+* Clarify slots example in docs to reduce naming confusion.
+
+    *Joel Hawksley*, *Blake Williams*
+
+* Fix error in documentation for `render_many` passthrough slots.
+
+    *Ollie Nye*
+
+* Add test case for conflict with internal `@variant` variable.
+
+    *David Backeus*
+
+* Document decision to not change naming convention recommendation to remove `-Component` suffix.
+
+    *Joel Hawksley*
+
+* Fix typo in documentation.
+
+    *Ryo.gift*
+
+* Add inline template example to benchmark script.
+
+    *Andrew Tait*
+
+* Fix benchmark scripts.
+
+    *Andrew Tait*
+
+* Run benchmarks in CI.
+
+    *Joel Hawksley*
+
+## 2.36.0
+
+* Add `slot_type` helper method.
+
+    *Jon Palmer*
+
+* Add test case for rendering a ViewComponent with slots in a controller.
+
+    *Simon Fish*
+
+* Add example ViewComponent to documentation landing page.
+
+    *Joel Hawksley*
+
+* Set maximum line length to 120.
+
+    *Joel Hawksley*
+
+* Setting a collection slot with the plural setter (`component.items(array)` for `renders_many :items`)  returns the array of slots.
+
+    *Jon Palmer*
+
+* Update error messages to be more descriptive and helpful.
+
+    *Joel Hawksley*
+
+* Raise an error if the slot name for renders_many is :contents
+
+    *Simon Fish*
+
+## 2.35.0
+
+* Only load assets for Preview source highlighting if previews are enabled.
+
+    *Joel Hawksley*
+
+* Fix references to moved documentation files.
+
+    *Richard Macklin*
+
+* Ensure consistent indentation with Rubocop.
+
+    *Joel Hawksley*
+
+* Bump `activesupport` upper bound from `< 7.0` to `< 8.0`.
+
+    *Richard Macklin*
+
+* Add ERB Lint for a few basic rules.
+
+    *Joel Hawksley*
+
+* Sort `gemspec` dependencies alphabetically.
+
+    *Joel Hawksley*
+
+* Lock `method_source` at `1.0` to avoid open-ended dependency.
+
+    *Joel Hawksley*
+
 * Require all PRs to include changelog entries.
 
     *Joel Hawksley*
@@ -40,6 +563,10 @@ title: Changelog
 
     *Johannes Engl*
 
+* Add documentation for compatibility with ActionText.
+
+    *Jared Planter*
+
 ## 2.34.0
 
 * Add the ability to enable ActiveSupport notifications (`!render.view_component` event) with `config.view_component.instrumentation_enabled`.
@@ -50,7 +577,7 @@ title: Changelog
 
     *Hans Lemuet*
 
-* Fix bug where ViewComponents did not work in ActionMailers.
+* Fix bug where ViewComponents didn't work in ActionMailers.
 
     *dark-panda*
 
@@ -98,7 +625,7 @@ title: Changelog
 
 ## 2.31.0
 
-_Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot should not be returned. (`<%`)_
+_Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot shouldn't be returned. (`<%`)_
 
 * Add `#with_content` to allow setting content without a block.
 
@@ -109,7 +636,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
     *Mario Schüttel*
 
 * Improve feature parity with Rails translations
-  * Don't create a translation backend if the component has no translation file
+  * Don't create a translation back end if the component has no translation file
   * Mark translation keys ending with `html` as HTML-safe
   * Always convert keys to String
   * Support multiple keys
@@ -151,7 +678,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Alex Robbin, Blake Williams*
 
-* Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, e.g. passing `["yml", "yaml"]`.
+* Experimental: call `._sidecar_files` to fetch the sidecar files for a given list of extensions, for example passing `["yml", "yaml"]`.
 
     *Elia Schito*
 
@@ -191,11 +718,11 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.26.0
 
-* Lazily evaluate component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
+* Delay evaluating component `content` in `render?`, preventing the `content` block from being evaluated when `render?` returns false.
 
     *Blake Williams*
 
-* Do not generate template when using `--inline` flag.
+* Don't generate template when using `--inline` flag.
 
     *Hans Lemuet*
 
@@ -256,7 +783,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
   * `with_slot collection: true` becomes `renders_many`.
   * Slot definitions now accept either a component class, component class name, or a lambda instead of a `class_name:` keyword argument.
   * Slots now support positional arguments.
-  * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. e.g. `<%= my_slot %>`.
+  * Slots no longer use the `content` attribute to render content, instead relying on `to_s`. for example `<%= my_slot %>`.
   * Slot values are no longer set via the `slot` method, and instead use the name of the slot.
 
     *Blake Williams*
@@ -319,7 +846,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.18.2
 
-* Raise an error if controller or view context is accessed during initialize as they are only available in render.
+* Raise an error if controller or view context is accessed during initialize as they're only available in render.
 
     *Julian Nadeau*
 
@@ -335,7 +862,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.18.0
 
-* Fix auto-loading of previews (changes no longer require a server restart)
+* Fix auto loading of previews (changes no longer require a server restart)
 
     *Matt Brictson*
 
@@ -428,7 +955,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## 2.10.0
 
-* Raise an `ArgumentError` with a helpful message when Ruby cannot parse a component class.
+* Raise an `ArgumentError` with a helpful message when Ruby can't parse a component class.
 
     *Max Beizer*
 
@@ -520,7 +1047,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## v2.2.1
 
-* Fix bug where template could not be found if `inherited` was redefined.
+* Fix bug where template couldn't be found if `inherited` was redefined.
 
     *Joel Hawksley*
 
@@ -536,7 +1063,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## v2.1.0
 
-* Support rendering collections (e.g., `render(MyComponent.with_collection(@items))`).
+* Support rendering collections (for example, `render(MyComponent.with_collection(@items))`).
 
     *Tim Clem*
 
@@ -558,7 +1085,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Andrew Mason*
 
-* ViewComponent generators do not not prompt for content requirement.
+* ViewComponent generators don't not prompt for content requirement.
 
     *Joel Hawksley*
 
@@ -680,7 +1207,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Jon Palmer*
 
-* Add `#render?` hook to easily allow components to be no-ops.
+* Add `#render?` hook to allow components to be no-ops.
 
     *Kyle Fox*
 
@@ -748,7 +1275,9 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Fix edge case issue with extracting variants from less conventional source_locations.
 
+<!-- vale proselint.GenderBias = NO -->
     *Ryan Workman*
+<!-- vale proselint.GenderBias = YES -->
 
 ## v1.6.0
 
@@ -784,7 +1313,9 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Add support for RSpec to generators.
 
+<!-- vale proselint.GenderBias = NO -->
     *Dylan Clark, Ryan Workman*
+<!-- vale proselint.GenderBias = YES -->
 
 * Require controllers as part of setting autoload paths.
 
@@ -808,7 +1339,9 @@ Note: `actionview-component` is now loaded by requiring `actionview/component`, 
 
 * Fix issue with generating component method signatures.
 
+<!-- vale proselint.GenderBias = NO -->
     *Ryan Workman, Dylan Clark*
+<!-- vale proselint.GenderBias = YES -->
 
 * Create component generator.
 
@@ -880,7 +1413,7 @@ Note: `actionview-component` is now loaded by requiring `actionview/component`, 
 
 ## v1.3.3
 
-* Do not raise error when sidecar files that are not templates exist.
+* Don't raise error when sidecar files that aren't templates exist.
 
     *Joel Hawksley*
 

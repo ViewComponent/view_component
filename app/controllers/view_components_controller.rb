@@ -29,12 +29,11 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
       @example_name = File.basename(params[:path])
       @render_args = @preview.render_args(@example_name, params: params.permit!)
       layout = determine_layout(@render_args[:layout], prepend_views: false)[:layout]
-      template = @render_args[:template]
       locals = @render_args[:locals]
       opts = {}
       opts[:layout] = layout if layout.present? || layout == false
       opts[:locals] = locals if locals.present?
-      render template, opts # rubocop:disable GitHub/RailsControllerRenderLiteral
+      render "view_components/preview", opts # rubocop:disable GitHub/RailsControllerRenderLiteral
     end
   end
 
@@ -56,7 +55,7 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
     if preview
       @preview = ViewComponent::Preview.find(preview)
     else
-      raise AbstractController::ActionNotFound, "Component preview '#{params[:path]}' not found"
+      raise AbstractController::ActionNotFound, "Component preview '#{params[:path]}' not found."
     end
   end
 

@@ -27,6 +27,11 @@ url: "https://viewcomponent.org"
 remote_theme: pmarsceill/just-the-docs
 search_enabled: true
 color_scheme: custom
+logo: "/logo/viewcomponent-color-logo.svg"
+aux_links:
+  "ViewComponent on GitHub":
+    - "https://github.com/github/view_component"
+aux_links_new_tab: true
 
 # Exclude from processing.
 # The following items will not be processed, by default.

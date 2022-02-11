@@ -1,16 +1,16 @@
 ---
 layout: default
-title: Sidecar assets
-parent: Building ViewComponents
+title: Javascript and CSS
+parent: Guide
 ---
 
-# Sidecar assets (experimental)
+# Javascript and CSS (experimental)
 
-It’s possible to include Javascript and CSS alongside components, sometimes called "sidecar" assets or files.
+While ViewComponent doesn't provide any built-in tooling to do so, it’s possible to include Javascript and CSS alongside components.
 
-To use the Webpacker gem to compile sidecar assets located in `app/components`:
+To use the Webpacker gem to compile assets located in `app/components`:
 
-1. In `config/webpacker.yml`, add `"app/components"` to the `additional_paths` array (e.g. `additional_paths: ["app/components"]`).
+1. In `config/webpacker.yml`, add `"app/components"` to the `additional_paths` array (for example `additional_paths: ["app/components"]`).
 2. In the Webpack entry file (often `app/javascript/packs/application.js`), add an import statement to a helper file, and in the helper file, import the components' Javascript:
 
 ```js
@@ -29,11 +29,11 @@ importAll(require.context("../components", true, /[_\/]component\.js$/))
 
 Any file with the `_component.js` suffix (such as `app/components/widget_component.js`) will be compiled into the Webpack bundle. If that file itself imports another file, for example `app/components/widget_component.css`, it will also be compiled and bundled into Webpack's output stylesheet if Webpack is being used for styles.
 
-## Encapsulating sidecar assets
+## Encapsulating assets
 
-Ideally, sidecar Javascript/CSS should not "leak" out of the context of its associated component.
+Ideally, Javascript and CSS should be scoped to the associated component.
 
-One approach is to use Web Components, which contain all Javascript functionality, internal markup, and styles within the shadow root of the Web Component.
+One approach is to use Web Components which contain all Javascript functionality, internal markup, and styles within the shadow root of the Web Component.
 
 For example:
 
@@ -118,7 +118,7 @@ customElements.define('my-comment', Comment)
 
 ## Stimulus
 
-In Stimulus, create a 1:1 mapping between a Stimulus controller and a component. In order to load in Stimulus controllers from the `app/components` tree, amend the Stimulus boot code in `app/javascript/controllers/index.js`:
+In Stimulus, create a 1:1 mapping between a Stimulus controller and a component. To load in Stimulus controllers from the `app/components` tree, amend the Stimulus boot code in `app/javascript/controllers/index.js`:
 
 ```js
 import { Application } from "stimulus"
@@ -164,3 +164,5 @@ app/components
   <button data-action="click->example--component#greet">Greet</button>
 </div>
 ```
+
+See [Generators Options](generators.html#generate-a-stimulus-controller) to generate a Stimulus controller alongside the component using the generator.
