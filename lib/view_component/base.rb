@@ -28,7 +28,8 @@ module ViewComponent
     if Rails.version.to_f >= 5.2
       delegate :form_authenticity_token, to: :helpers
     else
-      def form_authenticity_token(**kwargs)
+      # @private
+      def form_authenticity_token(**_)
         helpers.form_authenticity_token
       end
     end
@@ -289,11 +290,11 @@ module ViewComponent
     mattr_accessor :test_controller
     @@test_controller = "ApplicationController"
 
-    # Set if render monkey patches should be included or not in Rails <6.1:
-    #
-    #     config.view_component.render_monkey_patch_enabled = false
-    #
     if Rails.version.to_f >= 5.2
+      # Set if render monkey patches should be included or not in Rails <6.1:
+      #
+      #     config.view_component.render_monkey_patch_enabled = false
+      #
       mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
     else
       mattr_accessor :render_monkey_patch_enabled, instance_writer: false do
@@ -301,13 +302,13 @@ module ViewComponent
       end
     end
 
-    # Path for component files
-    #
-    #     config.view_component.view_component_path = "app/my_components"
-    #
-    # Defaults to `app/components`.
-    #
     if Rails.version.to_f >= 5.2
+      # Path for component files
+      #
+      #     config.view_component.view_component_path = "app/my_components"
+      #
+      # Defaults to `app/components`.
+      #
       mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
     else
       mattr_accessor :view_component_path, instance_writer: false do
@@ -324,39 +325,39 @@ module ViewComponent
     #
     mattr_accessor :component_parent_class, instance_writer: false
 
-    # Configuration for generators.
-    #
-    # All options under this namespace default to `false` unless otherwise
-    # stated.
-    #
-    # #### #sidecar
-    #
-    # Always generate a component with a sidecar directory:
-    #
-    #     config.view_component.generate.sidecar = true
-    #
-    # #### #stimulus_controller
-    #
-    # Always generate a Stimulus controller alongside the component:
-    #
-    #     config.view_component.generate.stimulus_controller = true
-    #
-    # #### #locale
-    #
-    # Always generate translations file alongside the component:
-    #
-    #     config.view_component.generate.locale = true
-    #
-    # #### #distinct_locale_files
-    #
-    # Always generate as many translations files as available locales:
-    #
-    #     config.view_component.generate.distinct_locale_files = true
-    #
-    # One file will be generated for each configured `I18n.available_locales`,
-    # falling back to `[:en]` when no `available_locales` is defined.
-    #
     if Rails.version.to_f >= 5.2
+      # Configuration for generators.
+      #
+      # All options under this namespace default to `false` unless otherwise
+      # stated.
+      #
+      # #### #sidecar
+      #
+      # Always generate a component with a sidecar directory:
+      #
+      #     config.view_component.generate.sidecar = true
+      #
+      # #### #stimulus_controller
+      #
+      # Always generate a Stimulus controller alongside the component:
+      #
+      #     config.view_component.generate.stimulus_controller = true
+      #
+      # #### #locale
+      #
+      # Always generate translations file alongside the component:
+      #
+      #     config.view_component.generate.locale = true
+      #
+      # #### #distinct_locale_files
+      #
+      # Always generate as many translations files as available locales:
+      #
+      #     config.view_component.generate.distinct_locale_files = true
+      #
+      # One file will be generated for each configured `I18n.available_locales`,
+      # falling back to `[:en]` when no `available_locales` is defined.
+      #
       mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new(false)
     else
       mattr_accessor :generate, instance_writer: false do

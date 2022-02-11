@@ -15,13 +15,13 @@ module ViewComponent
       #
       mattr_accessor :show_previews, instance_writer: false
 
-      # Enable or disable source code previews in component previews:
-      #
-      #     config.view_component.show_previews_source = true
-      #
-      # Defaults to `false`.
-      #
       if Rails.version.to_f >= 5.2
+        # Enable or disable source code previews in component previews:
+        #
+        #     config.view_component.show_previews_source = true
+        #
+        # Defaults to `false`.
+        #
         mattr_accessor :show_previews_source, instance_writer: false, default: false
       else
         mattr_accessor :show_previews_source, instance_writer: false do
