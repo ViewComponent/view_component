@@ -514,7 +514,7 @@ class ViewComponentTest < ViewComponent::TestCase
 
     assert_includes(
       exception.message,
-      "Could not find a template file or inline render method for MissingTemplateComponent"
+      "Couldn't find a template file or inline render method for MissingTemplateComponent"
     )
   end
 
@@ -583,6 +583,14 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline(CustomTestControllerComponent.new)
 
       assert_text("foo")
+    end
+  end
+
+  def test_uses_default_form_builder
+    with_controller_class DefaultFormBuilderController do
+      render_inline(DefaultFormBuilderComponent.new)
+
+      assert_text("changed by default form builder")
     end
   end
 
@@ -715,7 +723,7 @@ class ViewComponentTest < ViewComponent::TestCase
       end
 
     assert_match(
-      /The initializer for MissingCollectionParameterNameComponent does not accept the parameter/, exception.message
+      /The initializer for MissingCollectionParameterNameComponent doesn't accept the parameter/, exception.message
     )
   end
 
@@ -727,7 +735,31 @@ class ViewComponentTest < ViewComponent::TestCase
         )
       end
 
-    assert_match(/MissingDefaultCollectionParameterComponent does not accept the parameter/, exception.message)
+    assert_match(/MissingDefaultCollectionParameterComponent doesn't accept the parameter/, exception.message)
+  end
+
+  def test_collection_component_missing_custom_parameter_name_with_activemodel
+    exception = assert_raises ArgumentError do
+      render_inline(
+        MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
+
+    assert_match(
+      "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, "\
+      "which is required in order to render it as a collection.\n\n" \
+      "To fix this issue, update the initializer to accept `name`.\n\n" \
+      "See https://viewcomponent.org/guide/collections.html for more information on rendering collections.",
+      exception.message
+    )
+  end
+
+  def test_collection_component_present_custom_parameter_name_with_activemodel
+    assert_nothing_raised do
+      render_inline(
+        CollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
   end
 
   def test_component_with_invalid_parameter_names
@@ -740,7 +772,7 @@ class ViewComponentTest < ViewComponent::TestCase
           InvalidParametersComponent.compile(raise_errors: true)
         end
 
-      assert_match(/InvalidParametersComponent initializer cannot accept the parameter/, exception.message)
+      assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
     ensure
       ViewComponent::CompileCache.cache = old_cache
     end
@@ -757,7 +789,7 @@ class ViewComponentTest < ViewComponent::TestCase
         end
 
       assert_match(
-        /InvalidNamedParametersComponent initializer cannot accept the parameter `content`/,
+        /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
         exception.message
       )
     ensure
@@ -864,6 +896,10 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline UrlForComponent.new
       assert_text "/products?key=value"
     end
+
+    with_request_url "/products" do
+      assert_equal "/products", request.path
+    end
   end
 
   def test_with_request_url_with_query_parameters
@@ -881,11 +917,75 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline UrlForComponent.new
       assert_text "/products?key=value&mykey=myvalue"
     end
+
+    with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
+      assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
+    end
+  end
+
+  def test_components_share_helpers_state
+    PartialHelper::State.reset
+
+    render_inline PartialHelperComponent.new
+
+    assert_equal 1, PartialHelper::State.calls
   end
 
   def test_output_postamble
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")
+  end
+
+  def test_each_component_has_a_different_lock
+    assert_not_equal(MyComponent.compiler.__vc_compiler_lock, AnotherComponent.compiler.__vc_compiler_lock)
+  end
+
+  def test_compilation_in_development_mode
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
+        render_inline(MyComponent.new)
+        assert_selector("div", text: "hello,world!")
+      end
+    end
+  end
+
+  def test_compilation_in_production_mode
+    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE) do
+      with_new_cache do
+        render_inline(MyComponent.new)
+        assert_selector("div", text: "hello,world!")
+      end
+    end
+  end
+
+  def test_multithread_render
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+    Rails.env.stub :test?, true do
+      threads = 100.times.map do
+        Thread.new do
+          render_inline(MyComponent.new)
+
+          assert_selector("div", text: "hello,world!")
+        end
+      end
+
+      threads.map(&:join)
+    end
+  end
+
+  def test_deprecated_generate_mattr_accessor
+    ViewComponent::Base._deprecated_generate_mattr_accessor(:test_accessor)
+    assert(ViewComponent::Base.respond_to?(:generate_test_accessor))
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+    ViewComponent::Base.generate_test_accessor = "changed"
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+    ViewComponent::Base.generate.test_accessor = "changed again"
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+  ensure
+    ViewComponent::Base.class_eval do
+      singleton_class.undef_method :generate_test_accessor
+      singleton_class.undef_method :generate_test_accessor=
+    end
   end
 end

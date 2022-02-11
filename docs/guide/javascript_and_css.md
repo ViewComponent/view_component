@@ -6,11 +6,11 @@ parent: Guide
 
 # Javascript and CSS (experimental)
 
-While ViewComponent does not provide any built-in tooling to do so, it’s possible to include Javascript and CSS alongside components.
+While ViewComponent doesn't provide any built-in tooling to do so, it’s possible to include Javascript and CSS alongside components.
 
 To use the Webpacker gem to compile assets located in `app/components`:
 
-1. In `config/webpacker.yml`, add `"app/components"` to the `additional_paths` array (e.g. `additional_paths: ["app/components"]`).
+1. In `config/webpacker.yml`, add `"app/components"` to the `additional_paths` array (for example `additional_paths: ["app/components"]`).
 2. In the Webpack entry file (often `app/javascript/packs/application.js`), add an import statement to a helper file, and in the helper file, import the components' Javascript:
 
 ```js
@@ -118,7 +118,7 @@ customElements.define('my-comment', Comment)
 
 ## Stimulus
 
-In Stimulus, create a 1:1 mapping between a Stimulus controller and a component. In order to load in Stimulus controllers from the `app/components` tree, amend the Stimulus boot code in `app/javascript/controllers/index.js`:
+In Stimulus, create a 1:1 mapping between a Stimulus controller and a component. To load in Stimulus controllers from the `app/components` tree, amend the Stimulus boot code in `app/javascript/controllers/index.js`:
 
 ```js
 import { Application } from "stimulus"

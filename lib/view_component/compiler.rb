@@ -2,66 +2,95 @@
 
 module ViewComponent
   class Compiler
+    # Lock required to be obtained before compiling the component
+    attr_reader :__vc_compiler_lock
+
+    # Compiler mode. Can be either:
+    # * development (a blocking mode which ensures thread safety when redefining the `call` method for components,
+    #                default in Rails development and test mode)
+    # * production (a non-blocking mode, default in Rails production mode)
+    DEVELOPMENT_MODE = :development
+    PRODUCTION_MODE = :production
+
+    class_attribute :mode, default: PRODUCTION_MODE
+
     def initialize(component_class)
       @component_class = component_class
+      @__vc_compiler_lock = Monitor.new
     end
 
     def compiled?
       CompileCache.compiled?(component_class)
     end
 
+    def development?
+      self.class.mode == DEVELOPMENT_MODE
+    end
+
     def compile(raise_errors: false)
       return if compiled?
 
-      subclass_instance_methods = component_class.instance_methods(false)
+      with_lock do
+        CompileCache.invalidate_class!(component_class)
 
-      if subclass_instance_methods.include?(:with_content) && raise_errors
-        raise ViewComponent::ComponentError.new(
-          "#{component_class} implements a reserved method, `#with_content`.\n\n" \
-          "To fix this issue, change the name of the method."
-        )
-      end
+        subclass_instance_methods = component_class.instance_methods(false)
 
-      if template_errors.present?
-        raise ViewComponent::TemplateError.new(template_errors) if raise_errors
-
-        return false
-      end
-
-      if subclass_instance_methods.include?(:before_render_check)
-        ActiveSupport::Deprecation.warn(
-          "`#before_render_check` will be removed in v3.0.0.\n\n" \
-          "To fix this issue, use `#before_render` instead."
-        )
-      end
-
-      if raise_errors
-        component_class.validate_initialization_parameters!
-        component_class.validate_collection_parameter!
-      end
-
-      templates.each do |template|
-        # Remove existing compiled template methods,
-        # as Ruby warns when redefining a method.
-        method_name = call_method_name(template[:variant])
-
-        if component_class.instance_methods.include?(method_name.to_sym)
-          component_class.send(:undef_method, method_name.to_sym)
+        if subclass_instance_methods.include?(:with_content) && raise_errors
+          raise ViewComponent::ComponentError.new(
+            "#{component_class} implements a reserved method, `#with_content`.\n\n" \
+            "To fix this issue, change the name of the method."
+          )
         end
 
-        component_class.class_eval <<-RUBY, template[:path], -1
+        if template_errors.present?
+          raise ViewComponent::TemplateError.new(template_errors) if raise_errors
+
+          return false
+        end
+
+        if subclass_instance_methods.include?(:before_render_check)
+          ActiveSupport::Deprecation.warn(
+            "`#before_render_check` will be removed in v3.0.0.\n\n" \
+            "To fix this issue, use `#before_render` instead."
+          )
+        end
+
+        if raise_errors
+          component_class.validate_initialization_parameters!
+          component_class.validate_collection_parameter!
+        end
+
+        templates.each do |template|
+          # Remove existing compiled template methods,
+          # as Ruby warns when redefining a method.
+          method_name = call_method_name(template[:variant])
+
+          if component_class.instance_methods.include?(method_name.to_sym)
+            component_class.send(:undef_method, method_name.to_sym)
+          end
+
+          component_class.class_eval <<-RUBY, template[:path], -1
           def #{method_name}
             @output_buffer = ActionView::OutputBuffer.new
             #{compiled_template(template[:path])}
           end
-        RUBY
+          RUBY
+        end
+
+        define_render_template_for
+
+        component_class._after_compile
+
+        CompileCache.register(component_class)
       end
+    end
 
-      define_render_template_for
-
-      component_class._after_compile
-
-      CompileCache.register(component_class)
+    def with_lock(&block)
+      if development?
+        __vc_compiler_lock.synchronize(&block)
+      else
+        block.call
+      end
     end
 
     private
@@ -77,16 +106,30 @@ module ViewComponent
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
       end.join("\n")
 
-      component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
-          if variant.nil?
-            call
-          #{variant_elsifs}
-          else
-            call
-          end
+      body = <<-RUBY
+        if variant.nil?
+          call
+        #{variant_elsifs}
+        else
+          call
         end
       RUBY
+
+      if development?
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil)
+          self.class.compiler.with_lock do
+            #{body}
+          end
+        end
+        RUBY
+      else
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil)
+          #{body}
+        end
+        RUBY
+      end
     end
 
     def template_errors
@@ -95,7 +138,7 @@ module ViewComponent
           errors = []
 
           if (templates + inline_calls).empty?
-            errors << "Could not find a template file or inline render method for #{component_class}."
+            errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
           if templates.count { |template| template[:variant].nil? } > 1

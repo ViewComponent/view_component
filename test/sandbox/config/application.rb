@@ -6,8 +6,9 @@ require "active_model/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
-require "view_component/engine"
 require "sprockets/railtie"
+
+require "view_component"
 
 require "haml"
 require "slim"
@@ -21,6 +22,6 @@ end
 
 Sandbox::Application.config.secret_key_base = "foo"
 
-# Do not silence library backtraces in test reports
+# Don't silence library backtraces in test reports
 Rails.backtrace_cleaner.remove_filters!
 Rails.backtrace_cleaner.remove_silencers!

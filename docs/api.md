@@ -1,9 +1,10 @@
 ---
 layout: default
 title: API
+nav_order: 3
 ---
 
-<!-- Warning: AUTO-GENERATED file, do not edit. Add code comments to your Ruby instead <3 -->
+<!-- Warning: AUTO-GENERATED file, don't edit. Add code comments to your Ruby instead <3 -->
 
 # API
 
@@ -23,10 +24,6 @@ Set the parameter name used when rendering elements of a collection ([documentat
 
 ## Instance methods
 
-### #_output_postamble → [String]
-
-EXPERIMENTAL: Optional content to be returned after the rendered template.
-
 ### #before_render → [void]
 
 Called before rendering the component. Override to perform operations that
@@ -42,6 +39,22 @@ _Use `#before_render` instead. Will be removed in v3.0.0._
 
 The current controller. Use sparingly as doing so introduces coupling
 that inhibits encapsulation & reuse, often making testing difficult.
+
+### #generate_distinct_locale_files (Deprecated)
+
+_Use `#generate.distinct_locale_files` instead. Will be removed in v3.0.0._
+
+### #generate_locale (Deprecated)
+
+_Use `#generate.locale` instead. Will be removed in v3.0.0._
+
+### #generate_sidecar (Deprecated)
+
+_Use `#generate.sidecar` instead. Will be removed in v3.0.0._
+
+### #generate_stimulus_controller (Deprecated)
+
+_Use `#generate.stimulus_controller` instead. Will be removed in v3.0.0._
 
 ### #helpers → [ActionView::Base]
 
@@ -80,7 +93,8 @@ Parent class for generated components
 
     config.view_component.component_parent_class = "MyBaseComponent"
 
-Defaults to "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+Defaults to nil. If this is falsy, generators will use
+"ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
 
 ### #default_preview_layout
 
@@ -88,13 +102,39 @@ Set a custom default layout used for preview index and individual previews:
 
     config.view_component.default_preview_layout = "component_preview"
 
-### #generate_stimulus_controller
+### #generate
+
+Configuration for generators.
+
+All options under this namespace default to `false` unless otherwise
+stated.
+
+#### #sidecar
+
+Always generate a component with a sidecar directory:
+
+    config.view_component.generate.sidecar = true
+
+#### #stimulus_controller
 
 Always generate a Stimulus controller alongside the component:
 
-    config.view_component.generate_stimulus_controller = true
+    config.view_component.generate.stimulus_controller = true
 
-Defaults to `false`.
+#### #locale
+
+Always generate translations file alongside the component:
+
+    config.view_component.generate.locale = true
+
+#### #distinct_locale_files
+
+Always generate as many translations files as available locales:
+
+    config.view_component.generate.distinct_locale_files = true
+
+One file will be generated for each configured `I18n.available_locales`,
+falling back to `[:en]` when no `available_locales` is defined.
 
 ### #preview_controller
 
@@ -159,7 +199,7 @@ Path for component files
 
     config.view_component.view_component_path = "app/my_components"
 
-Defaults to "app/components".
+Defaults to `app/components`.
 
 ## ViewComponent::TestHelpers
 
@@ -186,7 +226,7 @@ end
 
 ### #with_request_url(path)
 
-Set the URL for the current request (such as when using request-dependent path helpers):
+Set the URL of the current request (such as when using request-dependent path helpers):
 
 ```ruby
 with_request_url("/users/42") do

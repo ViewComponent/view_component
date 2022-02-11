@@ -1,0 +1,18 @@
+---
+layout: default
+title: API
+nav_order: 3
+---
+
+<!-- Warning: AUTO-GENERATED file, don't edit. Add code comments to your Ruby instead <3 -->
+
+# API
+
+<% @sections.each do |section| %>
+## <%= section.heading %>
+
+<% section.methods.each do |method| %>
+### <%== render ViewComponent::DocsBuilderComponent::MethodDoc.new(method) %>
+
+<% end %>
+<% end %>

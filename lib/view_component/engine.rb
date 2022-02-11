@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails"
-require "view_component"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
@@ -17,6 +16,7 @@ module ViewComponent
 
       options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
       options.show_previews = Rails.env.development? || Rails.env.test? if options.show_previews.nil?
+      options.show_previews_source ||= ViewComponent::Base.show_previews_source
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
       options.preview_route ||= ViewComponent::Base.preview_route
       options.preview_controller ||= ViewComponent::Base.preview_controller
@@ -31,6 +31,14 @@ module ViewComponent
             "`preview_path` will be removed in v3.0.0. Use `preview_paths` instead."
           )
           options.preview_paths << options.preview_path
+        end
+
+        if options.show_previews_source
+          require "method_source"
+
+          app.config.to_prepare do
+            MethodSource.instance_variable_set(:@lines_for_file, {})
+          end
         end
       end
 
@@ -103,8 +111,16 @@ module ViewComponent
 
     initializer "static assets" do |app|
       if app.config.view_component.show_previews
-        app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/app/assets/vendor")
+        app.middleware.use(::ActionDispatch::Static, "#{root}/app/assets/vendor")
       end
+    end
+
+    initializer "compiler mode" do |app|
+      ViewComponent::Compiler.mode = if Rails.env.development? || Rails.env.test?
+                                       ViewComponent::Compiler::DEVELOPMENT_MODE
+                                     else
+                                       ViewComponent::Compiler::PRODUCTION_MODE
+                                     end
     end
 
     config.after_initialize do |app|
@@ -136,3 +152,14 @@ module ViewComponent
     end
   end
 end
+
+# :nocov:
+unless defined?(ViewComponent::Base)
+  ActiveSupport::Deprecation.warn(
+    "This manually engine loading is deprecated and will be removed in v3.0.0. " \
+    "Remove `require \"view_component/engine\"`."
+  )
+
+  require "view_component"
+end
+# :nocov:

@@ -16,7 +16,7 @@ require "pp"
 require "pathname"
 require "minitest/autorun"
 
-# Configure Rails Envinronment
+# Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
 require File.expand_path("../sandbox/config/environment.rb", __FILE__)
@@ -75,6 +75,14 @@ ensure
   Object.send(:remove_const, :ApplicationComponent)
 end
 
+def with_generate_sidecar(enabled)
+  old_value = ViewComponent::Base.generate.sidecar
+  ViewComponent::Base.generate.sidecar = enabled
+  yield
+ensure
+  ViewComponent::Base.generate.sidecar = old_value
+end
+
 def with_new_cache
   begin
     old_cache = ViewComponent::CompileCache.cache
@@ -93,14 +101,14 @@ def without_template_annotations
   if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
     old_value = ActionView::Base.annotate_rendered_view_with_filenames
     ActionView::Base.annotate_rendered_view_with_filenames = false
-    app.reloader.reload!
+    app.reloader.reload! if defined?(app)
 
     with_new_cache do
       yield
     end
 
     ActionView::Base.annotate_rendered_view_with_filenames = old_value
-    app.reloader.reload!
+    app.reloader.reload! if defined?(app)
   else
     yield
   end
@@ -130,4 +138,12 @@ def with_render_monkey_patch_config(enabled)
   yield
 ensure
   ViewComponent::Base.render_monkey_patch_enabled = old_default
+end
+
+def with_compiler_mode(mode)
+  previous_mode = ViewComponent::Compiler.mode
+  ViewComponent::Compiler.mode = mode
+  yield
+ensure
+  ViewComponent::Compiler.mode = previous_mode
 end

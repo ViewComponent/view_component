@@ -89,9 +89,11 @@ end
 </li>
 ```
 
-## Collection iteration
+## Collection iteration context
 
-ViewComponent defines a counter variable matching the parameter name above, followed by `_iteration`. To access the variable, add it to `initialize` as an argument:
+ViewComponent defines an iteration variable matching the parameter name above, followed by `_iteration`. This gives contextual information about the iteration to components within the collection (`#size`, `#index`, `#first?`, and `#last?`).
+
+To access the variable, add it to `initialize` as an argument:
 
 ```ruby
 # app/components/product_component.rb
