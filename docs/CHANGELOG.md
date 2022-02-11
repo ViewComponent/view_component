@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Place all generator options under `config.generate` namespace.
+
+    *Simon Fish*
+
 ## 2.49.0
 
 * Fix path handling for evaluated view components that broke in Ruby 3.1.

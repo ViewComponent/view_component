@@ -973,4 +973,19 @@ class ViewComponentTest < ViewComponent::TestCase
       threads.map(&:join)
     end
   end
+
+  def test_deprecated_generate_mattr_accessor
+    ViewComponent::Base._deprecated_generate_mattr_accessor(:test_accessor)
+    assert(ViewComponent::Base.respond_to?(:generate_test_accessor))
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+    ViewComponent::Base.generate_test_accessor = "changed"
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+    ViewComponent::Base.generate.test_accessor = "changed again"
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+  ensure
+    ViewComponent::Base.class_eval do
+      singleton_class.undef_method :generate_test_accessor
+      singleton_class.undef_method :generate_test_accessor=
+    end
+  end
 end
