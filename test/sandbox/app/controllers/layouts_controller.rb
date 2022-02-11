@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Tests for render with/without layouts
-class LayoutsController < ActionController::Base
+class LayoutsController < ApplicationController
   layout "global_for_action", only: :global_for_action
 
   def default
