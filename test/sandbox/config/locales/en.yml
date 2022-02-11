@@ -8,6 +8,3 @@ en:
 
   translatable_component:
     relative_rails_key: Relative key from Rails
-
-  editorb_component:
-    title: Editorb!

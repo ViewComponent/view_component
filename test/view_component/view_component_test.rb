@@ -587,6 +587,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_uses_default_form_builder
+    skip if Rails.version.to_f < 5.2
     with_controller_class DefaultFormBuilderController do
       render_inline(DefaultFormBuilderComponent.new)
 

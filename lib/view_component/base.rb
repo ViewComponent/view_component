@@ -24,7 +24,14 @@ module ViewComponent
     RESERVED_PARAMETER = :content
 
     # For CSRF authenticity tokens in forms
-    delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
+    delegate :protect_against_forgery?, :config, to: :helpers
+    if Rails.version.to_f >= 5.2
+      delegate :form_authenticity_token, to: :helpers
+    else
+      def form_authenticity_token(**kwargs)
+        helpers.form_authenticity_token
+      end
+    end
 
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2

@@ -530,8 +530,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_returns_404_when_preview_does_not_exist
-    assert_raises AbstractController::ActionNotFound do
-      get "/rails/view_components/missing_preview"
+    if Rails.version.to_f >= 5.2
+      assert_raises AbstractController::ActionNotFound do
+        get "/rails/view_components/missing_preview"
+      end
+    else
+      assert_raises AbstractController::ActionNotFound do
+        get "/rails/view_components/missing_preview"
+      end
     end
   end
 

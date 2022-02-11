@@ -2,7 +2,9 @@
 
 class MissingCollectionParameterWithActiveModelComponent < ViewComponent::Base
   include ActiveModel::Model
-  include ActiveModel::Attributes
+  if Rails.version.to_f >= 5.2
+    include ActiveModel::Attributes
+  end
 
   with_collection_parameter :name
 
