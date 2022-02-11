@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Silence deprecation warnings in CI.
+
+    *Hans Lemuet*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
