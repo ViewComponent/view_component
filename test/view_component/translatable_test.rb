@@ -18,15 +18,20 @@ class TranslatableTest < ViewComponent::TestCase
   end
 
   def test_multi_key_support
-    assert_equal [
-      "Hello from sidecar translations!",
-      "This is coming from the sidecar",
-      "This is coming from Rails",
-    ], translate([
-      ".hello",
-      ".from.sidecar",
-      "from.rails",
-    ])
+    assert_equal(
+      [
+        "Hello from sidecar translations!",
+        "This is coming from the sidecar",
+        "This is coming from Rails",
+      ],
+      translate(
+        [
+          ".hello",
+          ".from.sidecar",
+          "from.rails",
+        ]
+      )
+    )
   end
 
   def test_relative_keys_missing_from_component_translations
@@ -38,9 +43,9 @@ class TranslatableTest < ViewComponent::TestCase
   end
 
   def test_converts_key_to_string_as_necessary
-    key = Struct.new(:to_s).new(".hello")
+    klass = Struct.new(:to_s)
+    key = klass.new(".hello")
     assert_equal "Hello from sidecar translations!", translate(key)
-    assert_equal key, translate(:"translations.missing", default: key)
   end
 
   def test_translate_marks_translations_named_html_as_safe_html
@@ -68,6 +73,15 @@ class TranslatableTest < ViewComponent::TestCase
     end
   ensure
     ViewComponent::CompileCache.cache.delete(TranslatableComponent)
+  end
+
+  def test_default
+    default_value = Object.new
+
+    assert_equal default_value, translate(".missing", default: default_value)
+    assert_equal default_value, translate("missing", default: default_value)
+    assert_equal "Hello from Rails translations!", translate("hello", default: default_value)
+    assert_equal "Hello from sidecar translations!", translate(".hello", default: default_value)
   end
 
   private

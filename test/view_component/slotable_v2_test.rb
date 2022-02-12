@@ -125,11 +125,12 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_sub_component_raise_with_duplicate_slot_name
-    exception = assert_raises ArgumentError do
-      SlotsV2Component.renders_one :title
-    end
+    exception =
+      assert_raises ArgumentError do
+        SlotsV2Component.renders_one :title
+      end
 
-    assert_includes exception.message, "title slot declared multiple times"
+    assert_includes exception.message, "declares the title slot multiple times"
   end
 
   def test_slot_index
@@ -193,6 +194,18 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert component.items.first.respond_to?(:classes)
   end
 
+  def test_slot_forwards_kwargs_to_component
+    component = SlotsV2Component.new
+
+    render_inline component do |c|
+      c.item do
+        "Item A"
+      end
+    end
+
+    assert_equal component.items.first.method_with_kwargs(**{ foo: :bar }), { foo: :bar }
+  end
+
   def test_slot_with_collection
     render_inline SlotsV2DelegateComponent.new do |component|
       component.items([{ highlighted: false }, { highlighted: true }, { highlighted: false }]) do
@@ -201,6 +214,21 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
 
     assert_selector(".item", count: 3, text: "My Item")
+    assert_selector(".item.highlighted", count: 1)
+    assert_selector(".item.normal", count: 2)
+  end
+
+  def test_slot_with_collection_returns_slots
+    render_inline SlotsV2DelegateComponent.new do |component|
+      component.items([{ highlighted: false }, { highlighted: true }, { highlighted: false }]).
+        each_with_index do |slot, index|
+          slot.with_content("My Item #{index + 1}")
+        end
+    end
+
+    assert_selector(".item", count: 1, text: "My Item 1")
+    assert_selector(".item", count: 1, text: "My Item 2")
+    assert_selector(".item", count: 1, text: "My Item 3")
     assert_selector(".item.highlighted", count: 1)
     assert_selector(".item.normal", count: 2)
   end
@@ -274,7 +302,11 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_nested_blocks_content_selectable_true
     render_inline(NestedSharedState::TableComponent.new(selectable: true)) do |table_card|
-      table_card.header("regular_argument", class_names: "table__header extracted_kwarg", data: { splatted_kwarg: "splatted_keyword_argument"}) do |header|
+      table_card.header(
+        "regular_argument",
+        class_names: "table__header extracted_kwarg",
+        data: { splatted_kwarg: "splatted_keyword_argument" }
+      ) do |header|
         header.cell { "Cell1" }
         header.cell(class_names: "-has-sort") { "Cell2" }
       end
@@ -312,13 +344,24 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_component_raises_when_given_invalid_slot_name
+    exception =
+      assert_raises ArgumentError do
+        Class.new(ViewComponent::Base) do
+          renders_one :content
+        end
+      end
+
+    assert_includes exception.message, "declares a slot named content"
+  end
+
+  def test_component_raises_when_given_invalid_slot_name_for_has_many
     exception = assert_raises ArgumentError do
       Class.new(ViewComponent::Base) do
-        renders_one :content
+        renders_many :contents
       end
     end
 
-    assert_includes exception.message, "content is not a valid slot name"
+    assert_includes exception.message, "declares a slot named contents"
   end
 
   def test_renders_pass_through_slot_using_with_content
@@ -349,15 +392,108 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_raises_if_using_both_block_content_and_with_content
-    error = assert_raises ArgumentError do
-      component = SlotsV2Component.new
-      slot = component.title("some_argument")
-      slot.with_content("This is my title!")
-      slot.__vc_content_block = "some block"
+    error =
+      assert_raises ArgumentError do
+        component = SlotsV2Component.new
+        slot = component.title("some_argument")
+        slot.with_content("This is my title!")
+        slot.__vc_content_block = "some block"
 
-      render_inline(component)
+        render_inline(component)
+      end
+
+    assert_includes error.message, "It looks like a block was provided after calling"
+  end
+
+  def test_renders_lambda_slot_with_no_args
+    render_inline(SlotsV2WithEmptyLambdaComponent.new) do |c|
+      c.item { "Item 1" }
+      c.item { "Item 2" }
+      c.item { "Item 3" }
     end
 
-    assert_equal "Block provided after calling `with_content`. Use one or the other.", error.message
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 1")
+      assert_selector(".item-content", text: "Item 1")
+    end
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 2")
+      assert_selector(".item-content", text: "Item 2")
+    end
+    assert_selector(".item") do
+      assert_selector("h1", text: "Title 3")
+      assert_selector(".item-content", text: "Item 3")
+    end
+  end
+
+  def test_slot_type_single
+    assert_equal(:single, SlotsV2Component.slot_type(:title))
+  end
+
+  def test_slot_type_collection
+    assert_equal(:collection, SlotsV2Component.slot_type(:tabs))
+  end
+
+  def test_slot_type_collection_item?
+    assert_equal(:collection_item, SlotsV2Component.slot_type(:tab))
+  end
+
+  def test_slot_type_nil?
+    assert_nil(SlotsV2Component.slot_type(:junk))
+  end
+
+  def test_polymorphic_slot
+    render_inline(PolymorphicSlotComponent.new) do |component|
+      component.header_standard { "standard" }
+      component.item_foo(class_names: "custom-foo")
+      component.item_bar(class_names: "custom-bar")
+    end
+
+    assert_selector("div .standard", text: "standard")
+    assert_selector("div .foo.custom-foo:nth-child(2)")
+    assert_selector("div .bar.custom-bar:last")
+  end
+
+  def test_polymorphic_slot_non_member
+    assert_raises NoMethodError do
+      render_inline(PolymorphicSlotComponent.new) do |component|
+        component.item_non_existent
+      end
+    end
+  end
+
+  def test_singular_polymorphic_slot_raises_on_redefinition
+    error = assert_raises ArgumentError do
+      render_inline(PolymorphicSlotComponent.new) do |component|
+        component.header_standard { "standard" }
+        component.header_special { "special" }
+      end
+    end
+
+    assert_includes error.message, "has already been provided"
+  end
+
+  def test_invalid_slot_definition_raises_error
+    error = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_many :items, :foo
+      end
+    end
+
+    assert_includes error.message, "invalid slot definition"
+  end
+
+  def test_component_delegation_slots_work_with_helpers
+    PartialHelper::State.reset
+
+    assert_nothing_raised do
+      render_inline WrapperComponent.new do |c|
+        c.render(PartialSlotHelperComponent.new) do |c|
+          c.header {}
+        end
+      end
+    end
+
+    assert_equal 1, PartialHelper::State.calls
   end
 end

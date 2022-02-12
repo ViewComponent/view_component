@@ -14,7 +14,8 @@
 /test/version_tmp/
 /tmp/
 /test/log/*
-/test/app/tmp/*
+/test/sandbox/tmp/*
+/test/sandbox/log/*
 /test/tmp/*
 /.yardoc
 /_yardoc/
@@ -57,3 +58,10 @@ build-iPhoneSimulator/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+
+# Sample bug replication repo
+/replicate-bug
+
+# Appraisal
+/gemfiles/*.gemfile.lock
+/gemfiles/.bundle/

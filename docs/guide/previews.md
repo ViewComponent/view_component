@@ -1,14 +1,14 @@
 ---
 layout: default
 title: Previews
-parent: Building ViewComponents
+parent: Guide
 ---
 
 # Previews
 
 `ViewComponent::Preview`, like `ActionMailer::Preview`, provides a quick way to preview components in isolation.
 
-_For a more interactive experience, consider using [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)._
+_For a more interactive experience, consider using [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook) or [Lookbook](https://github.com/allmarkedup/lookbook)._
 
 Define a `ViewComponent::Preview`:
 
@@ -158,4 +158,25 @@ Previews are enabled by default in test and development environments. To enable 
 ```ruby
 # config/environments/test.rb
 config.view_component.show_previews = false
+```
+
+## Source previews
+
+A source preview is a syntax highlighted source code example of the usage of a view component, shown below the preview.
+Source previews are disabled by default. To enable or disable source previews, use the `show_previews_source` option:
+
+```ruby
+# config/environments/test.rb
+config.view_component.show_previews_source = true
+```
+
+To render a source preview in a different place, use the view helper `preview_source` from within your preview template or preview layout.
+
+## Using with rspec
+
+When using previews with rspec,  replace `test/components` with `spec/components` and update `preview_paths`:
+
+```ruby
+# config/application.rb
+config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 ```

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "simplecov"
 require "simplecov-console"
 
@@ -15,10 +16,10 @@ require "pp"
 require "pathname"
 require "minitest/autorun"
 
-# Configure Rails Envinronment
+# Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path("../config/environment.rb", __FILE__)
+require File.expand_path("../sandbox/config/environment.rb", __FILE__)
 require "rails/test_help"
 
 # Sets custom preview paths in tests.
@@ -52,10 +53,34 @@ def with_preview_controller(new_value)
 end
 
 def with_custom_component_path(new_value)
-  old_value = Rails.application.config.view_component.view_component_path
-  Rails.application.config.view_component.view_component_path = new_value
+  old_value = ViewComponent::Base.view_component_path
+  ViewComponent::Base.view_component_path = new_value
   yield
-  Rails.application.config.view_component.view_component_path = old_value
+ensure
+  ViewComponent::Base.view_component_path = old_value
+end
+
+def with_custom_component_parent_class(new_value)
+  old_value = ViewComponent::Base.component_parent_class
+  ViewComponent::Base.component_parent_class = new_value
+  yield
+ensure
+  ViewComponent::Base.component_parent_class = old_value
+end
+
+def with_application_component_class
+  Object.const_set("ApplicationComponent", Class.new(Object))
+  yield
+ensure
+  Object.send(:remove_const, :ApplicationComponent)
+end
+
+def with_generate_sidecar(enabled)
+  old_value = ViewComponent::Base.generate.sidecar
+  ViewComponent::Base.generate.sidecar = enabled
+  yield
+ensure
+  ViewComponent::Base.generate.sidecar = old_value
 end
 
 def with_new_cache
@@ -76,14 +101,14 @@ def without_template_annotations
   if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
     old_value = ActionView::Base.annotate_rendered_view_with_filenames
     ActionView::Base.annotate_rendered_view_with_filenames = false
-    app.reloader.reload!
+    app.reloader.reload! if defined?(app)
 
     with_new_cache do
       yield
     end
 
     ActionView::Base.annotate_rendered_view_with_filenames = old_value
-    app.reloader.reload!
+    app.reloader.reload! if defined?(app)
   else
     yield
   end
@@ -113,4 +138,12 @@ def with_render_monkey_patch_config(enabled)
   yield
 ensure
   ViewComponent::Base.render_monkey_patch_enabled = old_default
+end
+
+def with_compiler_mode(mode)
+  previous_mode = ViewComponent::Compiler.mode
+  ViewComponent::Compiler.mode = mode
+  yield
+ensure
+  ViewComponent::Compiler.mode = previous_mode
 end

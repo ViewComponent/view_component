@@ -29,12 +29,12 @@ module ViewComponent
         )
 
         slot_names.each do |slot_name|
-          # Ensure slot_name is not already declared
+          # Ensure slot_name isn't already declared
           if self.slots.key?(slot_name)
             raise ArgumentError.new("#{slot_name} slot declared multiple times")
           end
 
-          # Ensure slot name is not :content
+          # Ensure slot name isn't :content
           if slot_name == :content
             raise ArgumentError.new ":content is a reserved slot name. Please use another name, such as ':body'"
           end
@@ -105,7 +105,7 @@ module ViewComponent
     # <% end %>
     #
     def slot(slot_name, **args, &block)
-      # Raise ArgumentError if `slot` does not exist
+      # Raise ArgumentError if `slot` doesn't exist
       unless slots.keys.include?(slot_name)
         raise ArgumentError.new "Unknown slot '#{slot_name}' - expected one of '#{slots.keys}'"
       end
@@ -136,11 +136,11 @@ module ViewComponent
         # Append Slot instance to collection accessor Array
         instance_variable_get(slot[:instance_variable_name]) << slot_instance
       else
-         # Assign the Slot instance to the slot accessor
+        # Assign the Slot instance to the slot accessor
         instance_variable_set(slot[:instance_variable_name], slot_instance)
       end
 
-      # Return nil, as this method should not output anything to the view itself.
+      # Return nil, as this method shouldn't output anything to the view itself.
       nil
     end
   end

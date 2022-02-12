@@ -1,0 +1,9 @@
+---
+EnableDefaultLinters: true
+exclude:
+  - '**/vendor/**/*'
+linters:
+  ErbSafety:
+    enabled: true
+  FinalNewline:
+    enabled: true

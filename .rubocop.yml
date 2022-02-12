@@ -6,5 +6,19 @@ inherit_gem:
 AllCops:
   SuggestExtensions: false
   Exclude:
+    - gemfiles/**/*
     - test/tmp/**/*
     - vendor/bundle/**/*
+
+Gemspec/OrderedDependencies:
+  Enabled: true
+
+Layout:
+  Enabled: true
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+
+Layout/LineLength:
+  Max: 120
+  Enabled: true

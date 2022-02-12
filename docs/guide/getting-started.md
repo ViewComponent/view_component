@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Getting started
-parent: Building ViewComponents
+parent: Guide
 nav_order: 1
 ---
 
@@ -9,7 +9,7 @@ nav_order: 1
 
 ## Conventions
 
-- Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's common practice to create and inherit from an `ApplicationComponent` that is a subclass of `ViewComponent::Base`.
+- Components are subclasses of `ViewComponent::Base` and live in `app/components`. It's common practice to create and inherit from an `ApplicationComponent` that's a subclass of `ViewComponent::Base`.
 - Component names end in -`Component`.
 - Component module names are plural, as for controllers and jobs: `Users::AvatarComponent`
 - Name components for what they render, not what they accept. (`AvatarComponent` instead of `UserComponent`)
@@ -19,7 +19,7 @@ nav_order: 1
 In `Gemfile`, add:
 
 ```ruby
-gem "view_component", require: "view_component/engine"
+gem "view_component"
 ```
 
 ## Quick start
@@ -94,4 +94,22 @@ def show
 end
 ```
 
-_In versions of Rails < 6.1, rendering a ViewComponent from a controller does not include the layout._
+_In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout._
+
+### Rendering ViewComponents to strings inside controller actions
+
+When rendering the same component multiple times for later reuse, use `render_in`:
+
+```rb
+class PagesController < ApplicationController
+  def index
+    # Doesn't work: triggers a `AbstractController::DoubleRenderError`
+    # @reusable_icon = render IconComponent.new('close')
+
+    # Doesn't work: renders the whole index view as a string
+    # @reusable_icon = render_to_string IconComponent.new('close')
+
+    # Works: renders the component as a string
+    @reusable_icon = IconComponent.new('close').render_in(view_context)
+  end
+```

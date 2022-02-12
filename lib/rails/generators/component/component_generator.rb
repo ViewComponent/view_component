@@ -1,13 +1,21 @@
 # frozen_string_literal: true
 
+require "rails/generators/abstract_generator"
+
 module Rails
   module Generators
     class ComponentGenerator < Rails::Generators::NamedBase
+      include ViewComponent::AbstractGenerator
+
       source_root File.expand_path("templates", __dir__)
 
       argument :attributes, type: :array, default: [], banner: "attribute"
       check_class_collision suffix: "Component"
       class_option :inline, type: :boolean, default: false
+      class_option :parent, type: :string, desc: "The parent class for the generated component"
+      class_option :stimulus, type: :boolean, default: ViewComponent::Base.generate.stimulus_controller
+      class_option :sidecar, type: :boolean, default: false
+      class_option :locale, type: :boolean, default: ViewComponent::Base.generate.locale
 
       def create_component_file
         template "component.rb", File.join(component_path, class_path, "#{file_name}_component.rb")
@@ -17,18 +25,20 @@ module Rails
 
       hook_for :preview, type: :boolean
 
+      hook_for :stimulus, type: :boolean
+
+      hook_for :locale, type: :boolean
+
       hook_for :template_engine do |instance, template_engine|
         instance.invoke template_engine, [instance.name]
       end
 
       private
 
-      def file_name
-        @_file_name ||= super.sub(/_component\z/i, "")
-      end
-
       def parent_class
-        defined?(ApplicationComponent) ? "ApplicationComponent" : "ViewComponent::Base"
+        return options[:parent] if options[:parent]
+
+        ViewComponent::Base.component_parent_class || default_parent_class
       end
 
       def initialize_signature
@@ -45,8 +55,8 @@ module Rails
         options["inline"]
       end
 
-      def component_path
-        Rails.application.config.view_component.view_component_path || "app/components"
+      def default_parent_class
+        defined?(ApplicationComponent) ? ApplicationComponent : ViewComponent::Base
       end
     end
   end

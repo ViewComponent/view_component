@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "rails/generators/test_case"
 require "rails/generators/haml/component_generator"
 
 Rails.application.load_generators
@@ -45,5 +44,13 @@ class HamlGeneratorTest < Rails::Generators::TestCase
     run_generator %w[user name --inline]
 
     assert_no_file "app/components/user_component.html.haml"
+  end
+
+  def test_component_with_generate_sidecar
+    with_generate_sidecar(true) do
+      run_generator %w[user]
+
+      assert_file "app/components/user_component/user_component.html.haml"
+    end
   end
 end

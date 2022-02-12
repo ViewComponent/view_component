@@ -2,11 +2,12 @@
 
 module ViewComponent
   # Keeps track of which templates have already been compiled
-  # This is not part of the public API
+  # This isn't part of the public API
   module CompileCache
     mattr_accessor :cache, instance_reader: false, instance_accessor: false do
       Set.new
     end
+
     module_function
 
     def register(klass)
@@ -15,6 +16,10 @@ module ViewComponent
 
     def compiled?(klass)
       cache.include? klass
+    end
+
+    def invalidate_class!(klass)
+      cache.delete(klass)
     end
 
     def invalidate!

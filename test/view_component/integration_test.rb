@@ -38,6 +38,15 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes inline_response, baseline_response
   end
 
+  def test_rendering_component_in_a_controller_with_block
+    get "/controller_inline_with_block"
+
+    assert_select("div", "bar")
+    assert_select("div#slot", "baz")
+    assert_select("div#content", "bam")
+    assert_response :success
+  end
+
   def test_template_changes_are_not_reflected_on_new_request_when_cache_template_loading_is_true
     # cache_template_loading is set to true on the initializer
 
@@ -311,6 +320,26 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "hello,world!")
   end
 
+  def test_renders_preview_source_without_template
+    get "/rails/view_components/preview_component/default"
+
+    assert_select ".view-component-source-example h2", "Source:"
+    assert_select ".view-component-source-example pre.source code"
+    assert_select ".language-ruby"
+    refute_match "&lt;%=", response.body
+    refute_match "%&gt", response.body
+  end
+
+  def test_renders_preview_source_with_template_from_layout
+    get "/rails/view_components/preview_source_from_layout_component/default_with_template"
+
+    assert_select ".view-component-source-example h2", "Source:"
+    assert_select ".view-component-source-example pre.source code"
+    assert_select ".language-erb"
+    assert_match "&lt;%=", response.body
+    assert_match "%&gt", response.body
+  end
+
   def test_renders_collections
     get "/products"
 
@@ -384,11 +413,18 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  def test_renders_empty_slot_v2_with_slim_without_error
+    get "/empty_slot_v2_with_slim"
+
+    assert_response :success
+  end
+
   if Rails.version.to_f >= 6.1
     def test_rendering_component_using_the_render_component_helper_raises_an_error
-      error = assert_raises ActionView::Template::Error do
-        get "/render_component"
-      end
+      error =
+        assert_raises ActionView::Template::Error do
+          get "/render_component"
+        end
       assert_match(/undefined method `render_component'/, error.message)
     end
   end
@@ -447,11 +483,29 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
   end
 
+  def test_does_not_render_additional_newline_with_render_in
+    skip unless Rails::VERSION::MAJOR >= 7
+    without_template_annotations do
+      ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
+      get "/rails/view_components/display_inline_component/with_newline_render_in"
+      assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
+    end
+  ensure
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+  end
+
   def test_renders_the_preview_example_with_its_own_template_and_a_layout
     get "/rails/view_components/my_component/inside_banner"
     assert_includes response.body, "ViewComponent - Admin - Test"
     assert_select ".banner" do
       assert_select("div", "hello,world!")
+    end
+  end
+
+  def test_renders_a_block_passed_to_a_lambda_slot
+    get "/rails/view_components/lambda_slot_passthrough_component/default"
+    assert_select ".lambda_slot" do
+      assert_select ".content", "hello,world!"
     end
   end
 
@@ -465,7 +519,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   def test_renders_the_inline_component_using_a_non_standard_located_template
     get "/rails/view_components/inline_component/with_non_standard_template"
-    assert_select "h1", "This is not a standard place to have a preview template"
+    assert_select "h1", "This isn't a standard place to have a preview template"
     assert_select "input[name=?]", "name"
   end
 
@@ -482,10 +536,11 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_raises_an_error_if_the_template_is_not_present_and_the_render_with_template_method_is_used_in_the_example
-    error = assert_raises ViewComponent::PreviewTemplateError do
-      get "/rails/view_components/inline_component/without_template"
-    end
-    assert_match(/preview template for example without_template does not exist/, error.message)
+    error =
+      assert_raises ViewComponent::PreviewTemplateError do
+        get "/rails/view_components/inline_component/without_template"
+      end
+    assert_match(/preview template for example without_template doesn't exist/, error.message)
   end
 
   def test_renders_a_preview_template_using_haml_params_from_url_custom_template_and_locals
@@ -495,6 +550,37 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "h1", "Title from params"
       assert_select "input[name=?]", "name"
       assert_select "input[value=?]", "Send this form!"
+    end
+  end
+
+  def test_renders_a_preview_with_image_path
+    get "/rails/view_components/image_path_component/default"
+
+    assert_includes response.body, "images/foo.png"
+  end
+
+  def test_sets_the_compiler_mode_in_production_mode
+    old_env = Rails.env
+    begin
+      Rails.env = "production".inquiry
+
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+      assert_equal ViewComponent::Compiler::PRODUCTION_MODE, ViewComponent::Compiler.mode
+    ensure
+      Rails.env = old_env
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+    end
+  end
+
+  def test_sets_the_compiler_mode_in_development_mode
+    Rails.env.stub :development?, true do
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
+    end
+
+    Rails.env.stub :test?, true do
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
     end
   end
 end
