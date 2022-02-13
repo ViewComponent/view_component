@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails"
+require 'view_component/global_buffer'
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
@@ -91,6 +92,10 @@ module ViewComponent
         ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
         ActionController::Base.prepend ViewComponent::RenderToStringMonkeyPatch
       end
+    end
+
+    initializer "view_component.global_buffer_patch" do |app|
+      ActionView::Base.include(ViewComponent::GlobalBuffer::Patch)
     end
 
     initializer "view_component.include_render_component" do |app|

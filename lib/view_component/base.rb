@@ -69,7 +69,18 @@ module ViewComponent
       self.class.compile(raise_errors: true)
 
       @view_context = view_context
+
+      # TODO flag with initializer
+      if !self.__vc_original_view_context
+        view_context.original_output_buffer = ActionView::OutputBuffer.new if !view_context.output_buffer
+
+        if !view_context.output_buffer.is_a?(GlobalBuffer)
+          view_context.original_output_buffer = GlobalBuffer.new(view_context.output_buffer)
+        end
+      end
+
       self.__vc_original_view_context ||= view_context
+      @output_buffer = self.__vc_original_view_context.output_buffer
 
       @lookup_context ||= view_context.lookup_context
 
@@ -104,7 +115,9 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@__vc_variant).to_s + _output_postamble
+        capture do
+          render_template_for(@__vc_variant).to_s + _output_postamble
+        end
       else
         ""
       end
@@ -155,6 +168,7 @@ module ViewComponent
     def render(options = {}, args = {}, &block)
       if options.is_a? ViewComponent::Base
         options.__vc_original_view_context = __vc_original_view_context
+        # maybe capture, but only if block given?
         super
       else
         __vc_original_view_context.render(options, args, &block)
