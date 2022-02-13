@@ -9,6 +9,7 @@ AllCops:
     - gemfiles/**/*
     - test/tmp/**/*
     - vendor/bundle/**/*
+  NewCops: disable
 
 Gemspec/OrderedDependencies:
   Enabled: true
