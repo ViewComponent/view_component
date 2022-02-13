@@ -25,3 +25,7 @@ Layout/LineLength:
 
 Layout/SpaceBeforeBrackets:
   Enabled: true
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - "**/*.jbuilder" # not yet supported inside jbuilder templates
