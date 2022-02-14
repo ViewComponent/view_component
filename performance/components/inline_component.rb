@@ -17,7 +17,6 @@ class Performance::InlineComponent < ViewComponent::Base
   end
 
   def call
-    # rubocop:disable Rails/OutputSafety
     content = "<h1>hello #{@name}</h1>".html_safe
 
     safe_join(
