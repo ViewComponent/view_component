@@ -1,9 +1,8 @@
 GIT
-  remote: https://github.com/excid3/appraisal.git
-  revision: 8bb003b273ae074356dc67b59ecc67c8ae2f3a27
-  branch: fix-bundle-env
+  remote: https://github.com/Spone/appraisal.git
+  revision: 35db063ad2cd3cd1d79bfad039bdfcc28fa11b58
   specs:
-    appraisal (2.3.0)
+    appraisal (2.4.1)
       bundler
       rake
       thor (>= 0.14.0)

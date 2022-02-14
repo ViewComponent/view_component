@@ -10,7 +10,7 @@ gem "net-imap", require: false
 gem "net-pop", require: false
 
 group :development, :test do
-  gem "appraisal", github: "excid3/appraisal", branch: "fix-bundle-env"
+  gem "appraisal", github: "Spone/appraisal"
 end
 
 gemspec path: "../"
