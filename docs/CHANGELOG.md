@@ -11,9 +11,21 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Fix Ruby warnings.
+
+    *Hans Lemuet*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
+
+* Ensure all generated `.rb` files include `# frozen_string_literal: true` statement.
+
+    *Bob Maerten*
+
+* Add Shogun to users list.
+
+    *Bernie Chiu*
 
 ## 2.49.0
 

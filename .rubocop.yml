@@ -22,3 +22,6 @@ Layout/DotPosition:
 Layout/LineLength:
   Max: 120
   Enabled: true
+
+Layout/SpaceBeforeBrackets:
+  Enabled: true
