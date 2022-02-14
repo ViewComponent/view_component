@@ -344,6 +344,17 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_includes exception.message, "declares a slot named content"
   end
 
+  def test_component_raises_when_given_one_slot_name_ending_with_question_mark
+    exception =
+      assert_raises ArgumentError do
+        Class.new(ViewComponent::Base) do
+          renders_one :item?
+        end
+      end
+
+    assert_includes exception.message, "declares a slot named item?, which ends with a question mark"
+  end
+
   def test_component_raises_when_given_invalid_slot_name_for_has_many
     exception = assert_raises ArgumentError do
       Class.new(ViewComponent::Base) do
@@ -352,6 +363,17 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
 
     assert_includes exception.message, "declares a slot named contents"
+  end
+
+  def test_component_raises_when_given_many_slot_name_ending_with_question_mark
+    exception =
+      assert_raises ArgumentError do
+        Class.new(ViewComponent::Base) do
+          renders_many :items?
+        end
+      end
+
+    assert_includes exception.message, "declares a slot named items?, which ends with a question mark"
   end
 
   def test_renders_pass_through_slot_using_with_content
