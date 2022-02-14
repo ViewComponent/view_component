@@ -9,4 +9,8 @@ gem "net-smtp", require: false
 gem "net-imap", require: false
 gem "net-pop", require: false
 
+group :development, :test do
+  gem "appraisal", github: "excid3/appraisal", branch: "fix-bundle-env"
+end
+
 gemspec path: "../"
