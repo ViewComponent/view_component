@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add test coverage for use of `turbo_stream` helpers in components.
+
+    *Simon Fish*
+
 * Fix Ruby warnings.
 
     *Hans Lemuet*

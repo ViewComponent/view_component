@@ -47,4 +47,8 @@ class IntegrationExamplesController < ActionController::Base
 
     render(ProductComponent.with_collection(products, notice: "Today only"))
   end
+
+  def turbo_stream
+    respond_to { |format| format.turbo_stream { render TurboStreamComponent.new } }
+  end
 end

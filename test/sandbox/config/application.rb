@@ -7,6 +7,11 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
 require "sprockets/railtie"
+begin
+  require "turbo-rails"
+rescue LoadError
+  raise if Rails::VERSION::MAJOR >= 6
+end
 
 require "view_component"
 
