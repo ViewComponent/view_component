@@ -63,6 +63,7 @@ jobs:
       run: |
         bundle config path vendor/bundle
         bundle update
+        bundle check --gemfile='gemfiles/rails_${{ matrix.rails_version }}.gemfile' || bundle install --gemfile='gemfiles/rails_${{ matrix.rails_version }}.gemfile' --retry 1
         bundle exec appraisal rails-${{ matrix.rails_version }} rake
       env:
         MEASURE_COVERAGE: true
