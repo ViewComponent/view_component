@@ -62,7 +62,7 @@ Returning:
 <a href="/blog/second-post">Second post</a>
 ```
 
-### Predicate methods
+## Predicate methods
 
 To test whether a slot has been passed to the component, use the provided `#{slot_name}?` method.
 
