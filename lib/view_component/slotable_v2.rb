@@ -75,6 +75,10 @@ module ViewComponent
         end
         ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
+        define_method "#{slot_name}?" do
+          send(slot_name).present?
+        end
+
         register_slot(slot_name, collection: false, callable: callable)
       end
 
@@ -138,6 +142,10 @@ module ViewComponent
               set_slot(slot_name, nil, **args, &block)
             end
           end
+        end
+
+        define_method "#{slot_name}?" do
+          send(slot_name).present?
         end
 
         register_slot(slot_name, collection: true, callable: callable)
