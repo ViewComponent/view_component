@@ -11,6 +11,10 @@ title: Changelog
 
     *Simon Fish*
 
+* Add Shogun to users list.
+
+    *Bernie Chiu*
+
 ## 2.49.0
 
 * Fix path handling for evaluated view components that broke in Ruby 3.1.
