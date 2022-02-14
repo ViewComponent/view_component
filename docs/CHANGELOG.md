@@ -15,6 +15,10 @@ title: Changelog
 
     *Simon Fish*
 
+* Ensure all generated `.rb` files include `# frozen_string_literal: true` statement.
+
+    *Bob Maerten*
+
 * Add Shogun to users list.
 
     *Bernie Chiu*
