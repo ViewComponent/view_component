@@ -11,6 +11,7 @@ require File.expand_path("../test/sandbox/config/environment.rb", __dir__)
 
 module Performance
   require_relative "components/name_component.rb"
+  require_relative "components/nested_name_component.rb"
   require_relative "components/inline_component.rb"
 end
 
@@ -24,9 +25,9 @@ Benchmark.ips do |x|
   x.time = 10
   x.warmup = 2
 
-  x.report("component:") { controller_view.render(Performance::NameComponent.new(name: "Fox Mulder")) }
-  x.report("inline:") { controller_view.render(Performance::InlineComponent.new(name: "Fox Mulder")) }
-  x.report("partial:") { controller_view.render("partial", name: "Fox Mulder") }
+  x.report("component") { controller_view.render(Performance::NameComponent.new(name: "Fox Mulder")) }
+  x.report("inline") { controller_view.render(Performance::InlineComponent.new(name: "Fox Mulder")) }
+  x.report("partial") { controller_view.render("partial", name: "Fox Mulder") }
 
   x.compare!
 end

@@ -1,22 +1,27 @@
 # frozen_string_literal: true
 
 class Performance::InlineComponent < ViewComponent::Base
-  def initialize(name:, nested: true)
+  class NestedComponent < ViewComponent::Base
+    def initialize(name:)
+      @name = name
+    end
+
+    def call
+      content = "<p>nested hello #{@name}</p>".html_safe
+    end
+  end
+
+  def initialize(name:)
     @name = name
-    @nested = nested
   end
 
   def call
     # rubocop:disable Rails/OutputSafety
     content = "<h1>hello #{@name}</h1>".html_safe
 
-    if @nested
-      safe_join([
-        content,
-        50.times.map { InlineComponent.new(name: @name, nested: false) }
-      ])
-    else
-      content
-    end
+    safe_join([
+      content,
+      50.times.map { render NestedComponent.new(name: @name) }
+    ], "\n\n")
   end
 end
