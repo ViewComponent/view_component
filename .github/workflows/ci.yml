@@ -63,7 +63,7 @@ jobs:
       run: |
         bundle config path vendor/bundle
         bundle update
-        bundle exec rake
+        bundle exec appraisal rails-${{ matrix.rails_version }} rake
       env:
         MEASURE_COVERAGE: true
         RAILS_VERSION: ${{ matrix.rails_version }}
