@@ -7,6 +7,11 @@ module ViewComponent
   module SlotableV2
     extend ActiveSupport::Concern
 
+    RESERVED_NAMES = {
+      singular: %i[content render].freeze,
+      plural: %i[contents].freeze,
+    }.freeze
+
     # Setup component slot state
     included do
       # Hash of registered Slots
@@ -205,7 +210,7 @@ module ViewComponent
       end
 
       def validate_plural_slot_name(slot_name)
-        if slot_name.to_sym == :contents
+        if RESERVED_NAMES[:plural].include?(slot_name.to_sym)
           raise ArgumentError.new(
             "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
             "To fix this issue, choose a different name."
@@ -217,7 +222,7 @@ module ViewComponent
       end
 
       def validate_singular_slot_name(slot_name)
-        if slot_name.to_sym == :content
+        if RESERVED_NAMES[:singular].include?(slot_name.to_sym)
           raise ArgumentError.new(
             "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
             "To fix this issue, choose a different name."
