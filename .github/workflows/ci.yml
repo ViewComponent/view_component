@@ -62,6 +62,7 @@ jobs:
     - name: Build and test with Rake
       run: |
         bundle config path vendor/bundle
+        bundle
         bundle exec appraisal rails-${{ matrix.rails_version }} bundle
         bundle exec appraisal rails-${{ matrix.rails_version }} rake
       env:
