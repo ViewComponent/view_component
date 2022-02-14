@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add predicate methods `#{slot_name}?` to slots.
+
+    *Hans Lemuet*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
