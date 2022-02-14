@@ -276,8 +276,8 @@ module ViewComponent
         renderable_function = slot_definition[:renderable_function].bind(self)
         renderable_value =
           if block_given?
-            renderable_function.call(*args) do |*args|
-              view_context.capture(*args, &block)
+            renderable_function.call(*args) do |*rargs|
+              view_context.capture(*rargs, &block)
             end
           else
             renderable_function.call(*args)

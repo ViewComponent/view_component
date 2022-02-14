@@ -477,8 +477,8 @@ class SlotsV2sTest < ViewComponent::TestCase
     PartialHelper::State.reset
 
     assert_nothing_raised do
-      render_inline WrapperComponent.new do |c|
-        c.render(PartialSlotHelperComponent.new) do |c|
+      render_inline WrapperComponent.new do |w|
+        w.render(PartialSlotHelperComponent.new) do |c|
           c.header {}
         end
       end
