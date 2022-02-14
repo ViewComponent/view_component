@@ -11,6 +11,10 @@ title: Changelog
 
     *Simon Fish*
 
+* Ensure all generated `.rb` files include `# frozen_string_literal: true` statement.
+
+    *Bob Maerten*
+
 ## 2.49.0
 
 * Fix path handling for evaluated view components that broke in Ruby 3.1.
