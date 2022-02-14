@@ -1,1 +1,7 @@
 <h1>hello <%= @name %></h1>
+
+<% if @nested %>
+  <% 50.times do %>
+    <%= render Performance::NameComponent.new(name: @name, nested: false) %>
+  <% end %>
+<% end %>
