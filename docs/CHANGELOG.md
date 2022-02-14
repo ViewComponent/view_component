@@ -7,11 +7,15 @@ title: Changelog
 
 ## main
 
+* Add Cometeer and Framework to users list.
+
+    *Elia Schito*
+
 * Add predicate methods `#{slot_name}?` to slots.
 
     *Hans Lemuet*
 
-* Use a dedicated deprecation instance, silence it while testing
+* Use a dedicated deprecation instance, silence it while testing.
 
     *Max Beizer, Hans Lemuet, Elia Schito*
 
