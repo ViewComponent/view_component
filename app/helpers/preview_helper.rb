@@ -27,8 +27,8 @@ module PreviewHelper
       end.flatten
 
       # Search for templates the contain `html`.
-      matching_templates = all_template_paths.find_all do |template|
-        template =~ /#{template_identifier}*.(html)/
+      matching_templates = all_template_paths.find_all do |path|
+        path =~ /#{template_identifier}*.(html)/
       end
 
       # In-case of a conflict due to multiple template files with
