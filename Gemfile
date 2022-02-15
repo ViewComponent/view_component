@@ -9,7 +9,7 @@ gem "capybara", "~> 3"
 gem "rails", rails_version == "main" ? { git: "https://github.com/rails/rails", ref: "main" } : rails_version
 
 group :development, :test do
-  gem "appraisal", github: "Spone/appraisal"
+  gem "appraisal", github: "excid3/appraisal", branch: "fix-bundle-env"
 end
 
 if RUBY_VERSION >= "3.1"

@@ -6,7 +6,7 @@ gem "capybara", "~> 3"
 gem "rails", "~> 5.2.0"
 
 group :development, :test do
-  gem "appraisal", github: "Spone/appraisal"
+  gem "appraisal", github: "excid3/appraisal", branch: "fix-bundle-env"
 end
 
 gemspec path: "../"
