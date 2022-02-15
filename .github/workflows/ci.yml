@@ -58,7 +58,7 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: gems-build-rails-${{ matrix.rails_version }}-ruby-${{ matrix.ruby_version }}-${{ hashFiles('gemfiles/rails_${{ matrix.rails_version }}.gemfile.lock') }}
+        key: gems-build-rails-${{ matrix.rails_version }}-ruby-${{ matrix.ruby_version }}-${{ hashFiles('gemfiles/rails_${{ matrix.rails_version }}.gemfile') }}
     - name: Build and test with Rake
       run: |
         bundle config path vendor/bundle
