@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update benchmark script to render multiple components/partials instead of a single instance per-run.
+
+    *Blake Williams*
+
 * Add predicate methods `#{slot_name}?` to slots.
 
     *Hans Lemuet*
