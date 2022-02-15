@@ -11,6 +11,10 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Use a dedicated deprecation instance, silence it while testing
+
+    *Max Beizer, Hans Lemuet, Elia Schito*
+
 * Fix Ruby warnings.
 
     *Hans Lemuet*

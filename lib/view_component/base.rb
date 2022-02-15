@@ -235,14 +235,11 @@ module ViewComponent
     # @param variant [Symbol] The variant to be used by the component.
     # @return [self]
     def with_variant(variant)
-      ActiveSupport::Deprecation.warn(
-        "`with_variant` is deprecated and will be removed in ViewComponent v3.0.0."
-      )
-
       @__vc_variant = variant
 
       self
     end
+    deprecate :with_variant, deprecator: ViewComponent::Deprecation
 
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.
