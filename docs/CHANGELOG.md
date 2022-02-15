@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add predicate methods `#{slot_name}?` to slots.
+
+    *Hans Lemuet*
+
 * Use a dedicated deprecation instance, silence it while testing
 
     *Max Beizer, Hans Lemuet, Elia Schito*

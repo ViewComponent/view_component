@@ -7,6 +7,11 @@ module ViewComponent
   module SlotableV2
     extend ActiveSupport::Concern
 
+    RESERVED_NAMES = {
+      singular: %i[content render].freeze,
+      plural: %i[contents renders].freeze,
+    }.freeze
+
     # Setup component slot state
     included do
       # Hash of registered Slots
@@ -75,6 +80,10 @@ module ViewComponent
         end
         ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
+        define_method "#{slot_name}?" do
+          get_slot(slot_name).present?
+        end
+
         register_slot(slot_name, collection: false, callable: callable)
       end
 
@@ -140,6 +149,10 @@ module ViewComponent
           end
         end
 
+        define_method "#{slot_name}?" do
+          get_slot(slot_name).present?
+        end
+
         register_slot(slot_name, collection: true, callable: callable)
       end
 
@@ -197,24 +210,26 @@ module ViewComponent
       end
 
       def validate_plural_slot_name(slot_name)
-        if slot_name.to_sym == :contents
+        if RESERVED_NAMES[:plural].include?(slot_name.to_sym)
           raise ArgumentError.new(
             "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
             "To fix this issue, choose a different name."
           )
         end
 
+        raise_if_slot_ends_with_question_mark(slot_name)
         raise_if_slot_registered(slot_name)
       end
 
       def validate_singular_slot_name(slot_name)
-        if slot_name.to_sym == :content
+        if RESERVED_NAMES[:singular].include?(slot_name.to_sym)
           raise ArgumentError.new(
             "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
             "To fix this issue, choose a different name."
           )
         end
 
+        raise_if_slot_ends_with_question_mark(slot_name)
         raise_if_slot_registered(slot_name)
       end
 
@@ -224,6 +239,17 @@ module ViewComponent
           raise ArgumentError.new(
             "#{self} declares the #{slot_name} slot multiple times.\n\n" \
             "To fix this issue, choose a different slot name."
+          )
+        end
+      end
+
+      def raise_if_slot_ends_with_question_mark(slot_name)
+        if slot_name.to_s.ends_with?("?")
+          raise ArgumentError.new(
+            "#{self} declares a slot named #{slot_name}, which ends with a question mark.\n\n"\
+            "This is not allowed because the ViewComponent framework already provides predicate "\
+            "methods ending in `?`.\n\n" \
+            "To fix this issue, choose a different name."
           )
         end
       end
