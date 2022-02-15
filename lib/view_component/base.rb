@@ -72,17 +72,17 @@ module ViewComponent
 
       # TODO flag with initializer
       if !self.__vc_original_view_context
-        view_context.original_output_buffer = ActionView::OutputBuffer.new if !view_context.output_buffer
+        view_context.output_buffer = ActionView::OutputBuffer.new if !view_context.output_buffer
         self.__vc_original_view_context ||= view_context
         if self.__vc_original_view_context.global_buffer_coordinator.nil?
           coordinator = self.__vc_original_view_context.global_buffer_coordinator = GlobalBuffer::Coordinator.new
-          coordinator.subscribers.push(self.__vc_original_view_context)
+          coordinator.subscribe(self.__vc_original_view_context)
         end
       end
 
       @output_buffer = self.__vc_original_view_context.output_buffer
       self.global_buffer_coordinator = self.__vc_original_view_context.global_buffer_coordinator
-      self.__vc_original_view_context.global_buffer_coordinator.subscribers.push(self)
+      self.__vc_original_view_context.global_buffer_coordinator.subscribe(self)
 
       @lookup_context ||= view_context.lookup_context
 
@@ -114,18 +114,17 @@ module ViewComponent
       @__vc_content_evaluated = false
       @__vc_render_in_block = block
 
-      self.__vc_original_view_context.capture do
-        before_render
+      before_render
 
-        if render?
-          capture do
-            render_template_for(@__vc_variant).to_s + _output_postamble
-          end
-        else
-          ""
+      if render?
+        capture do
+          render_template_for(@__vc_variant).to_s + _output_postamble
         end
+      else
+        ""
       end
     ensure
+      global_buffer_coordinator&.unsubscribe(self)
       @current_template = old_current_template
     end
 
