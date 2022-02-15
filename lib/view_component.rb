@@ -23,7 +23,7 @@ end
 # :nocov:
 if defined?(ViewComponent::Engine)
   ViewComponent::Deprecation.warn(
-    "This manually engine loading is deprecated and will be removed in v3.0.0. " \
+    "Manually loading the engine is deprecated and will be removed in v3.0.0. " \
     "Remove `require \"view_component/engine\"`."
   )
 elsif defined?(Rails::Engine)
