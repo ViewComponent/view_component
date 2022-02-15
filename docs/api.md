@@ -136,6 +136,14 @@ Always generate as many translations files as available locales:
 One file will be generated for each configured `I18n.available_locales`,
 falling back to `[:en]` when no `available_locales` is defined.
 
+#### #preview
+
+Always generate preview alongside the component:
+
+     config.view_component.generate.preview = true
+
+ Defaults to `false`.
+
 ### #preview_controller
 
 Set the controller used for previewing components:
