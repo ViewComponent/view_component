@@ -73,16 +73,18 @@ module ViewComponent
       # TODO flag with initializer
       if !self.__vc_original_view_context
         view_context.output_buffer = ActionView::OutputBuffer.new if !view_context.output_buffer
-        self.__vc_original_view_context ||= view_context
-        if self.__vc_original_view_context.global_buffer_coordinator.nil?
-          coordinator = self.__vc_original_view_context.global_buffer_coordinator = GlobalBuffer::Coordinator.new
-          coordinator.subscribe(self.__vc_original_view_context)
+
+        if view_context.global_buffer_coordinator.nil?
+          coordinator = view_context.global_buffer_coordinator = GlobalBuffer::Coordinator.new
+          coordinator.subscribe(view_context)
         end
+
+        self.__vc_original_view_context = view_context
       end
 
       @output_buffer = self.__vc_original_view_context.output_buffer
       self.global_buffer_coordinator = self.__vc_original_view_context.global_buffer_coordinator
-      self.__vc_original_view_context.global_buffer_coordinator.subscribe(self)
+      self.global_buffer_coordinator.subscribe(self)
 
       @lookup_context ||= view_context.lookup_context
 
