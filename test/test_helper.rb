@@ -19,6 +19,9 @@ require "minitest/autorun"
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
+require "view_component/deprecation"
+ViewComponent::Deprecation.behavior = :silence
+
 require File.expand_path("../sandbox/config/environment.rb", __FILE__)
 require "rails/test_help"
 
