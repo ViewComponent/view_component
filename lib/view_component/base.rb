@@ -119,7 +119,7 @@ module ViewComponent
       before_render
 
       if render?
-        capture do
+        fast_capture do
           render_template_for(@__vc_variant).to_s + _output_postamble
         end
       else
@@ -128,6 +128,12 @@ module ViewComponent
     ensure
       global_buffer_coordinator&.unsubscribe(self)
       @current_template = old_current_template
+    end
+
+    def fast_capture
+      value = nil
+      with_output_buffer(ActionView::OutputBuffer.new) { value = yield }
+      value
     end
 
     # EXPERIMENTAL: Optional content to be returned after the rendered template.

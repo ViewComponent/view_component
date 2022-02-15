@@ -13,3 +13,5 @@ if RUBY_VERSION >= "3.1"
   gem "net-pop", require: false
   gem "net-smtp", require: false
 end
+
+gem "ruby-prof-flamegraph", github: "oozou/ruby-prof-flamegraph", branch: "master"
