@@ -9,7 +9,7 @@ module ViewComponent
 
     RESERVED_NAMES = {
       singular: %i[content render].freeze,
-      plural: %i[contents].freeze,
+      plural: %i[contents renders].freeze,
     }.freeze
 
     # Setup component slot state
