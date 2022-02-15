@@ -11,9 +11,29 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Add predicate methods `#{slot_name}?` to slots.
+
+    *Hans Lemuet*
+
+* Use a dedicated deprecation instance, silence it while testing
+
+    *Max Beizer, Hans Lemuet, Elia Schito*
+
+* Fix Ruby warnings.
+
+    *Hans Lemuet*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
+
+* Ensure all generated `.rb` files include `# frozen_string_literal: true` statement.
+
+    *Bob Maerten*
+
+* Add Shogun to users list.
+
+    *Bernie Chiu*
 
 ## 2.49.0
 
