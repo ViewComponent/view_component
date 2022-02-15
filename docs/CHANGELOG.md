@@ -23,6 +23,8 @@ title: Changelog
 
     *Simon Fish*
 
+* Allow preview generator to use provided component attributes.
+* Add config option `config.view_component.generate.preview` to enable project-wide preview generation.
 * Ensure all generated `.rb` files include `# frozen_string_literal: true` statement.
 
     *Bob Maerten*

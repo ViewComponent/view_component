@@ -2,6 +2,6 @@
 
 class <%= class_name %>ComponentPreview < ViewComponent::Preview
   def default
-    render(<%= class_name %>Component.new)
+    render(<%= class_name %>Component.new<%= "(#{render_signature})" if render_signature %>)
   end
 end
