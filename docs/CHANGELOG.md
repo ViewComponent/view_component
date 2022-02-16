@@ -11,6 +11,10 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Update benchmark script to render multiple components/partials instead of a single instance per-run.
+
+    *Blake Williams*
+
 * Add predicate methods `#{slot_name}?` to slots.
 
     *Hans Lemuet*
@@ -27,6 +31,8 @@ title: Changelog
 
     *Simon Fish*
 
+* Allow preview generator to use provided component attributes.
+* Add config option `config.view_component.generate.preview` to enable project-wide preview generation.
 * Ensure all generated `.rb` files include `# frozen_string_literal: true` statement.
 
     *Bob Maerten*
