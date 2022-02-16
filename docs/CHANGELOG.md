@@ -11,9 +11,35 @@ title: Changelog
 
     *Steven Hansen*
 
+* Update benchmark script to render multiple components/partials instead of a single instance per-run.
+
+    *Blake Williams*
+
+* Add predicate methods `#{slot_name}?` to slots.
+
+    *Hans Lemuet*
+
+* Use a dedicated deprecation instance, silence it while testing
+
+    *Max Beizer, Hans Lemuet, Elia Schito*
+
+* Fix Ruby warnings.
+
+    *Hans Lemuet*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
+
+* Allow preview generator to use provided component attributes.
+* Add config option `config.view_component.generate.preview` to enable project-wide preview generation.
+* Ensure all generated `.rb` files include `# frozen_string_literal: true` statement.
+
+    *Bob Maerten*
+
+* Add Shogun to users list.
+
+    *Bernie Chiu*
 
 ## 2.49.0
 
