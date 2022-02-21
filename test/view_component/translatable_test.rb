@@ -84,6 +84,27 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal "Hello from sidecar translations!", translate(".hello", default: default_value)
   end
 
+  def test_translate_returns_lists
+    assert_equal ["This", "returns", "a list"], translate(".list")
+  end
+
+  def test_translate_returns_html_safe_lists
+    translated_list = translate(".list_html")
+
+    assert_equal(
+      [
+        "<em>This</em>",
+        "returns",
+        "a list with <strong>embedded</strong> HTML"
+      ],
+      translated_list
+    )
+
+    translated_list.each do |item|
+      assert_predicate item, :html_safe?
+    end
+  end
+
   private
 
   def translate(key, **options)

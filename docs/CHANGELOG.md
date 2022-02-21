@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Support returning Arrays from i18n files, and support marking them as HTML-safe translations.
+
+    *foca*
+
 * Fix example in testing guide for how to setup default Rails tests.
 
     *Steven Hansen*
