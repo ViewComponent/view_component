@@ -313,7 +313,7 @@ module ViewComponent
     # config.view_component.test_controller = "MyTestController"
     # ```
     #
-    # Defaults to `nil`. If this is falsy, `"ApplicationComponent"` is used. Can also be
+    # Defaults to `nil`. If this is falsy, `"ApplicationController"` is used. Can also be
     # configured on a per-test basis using `with_controller_class`.
     #
     mattr_accessor :test_controller
