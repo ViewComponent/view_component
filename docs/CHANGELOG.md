@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Update Microsoft Vale styles.
+
+    *Simon Fish*
+
 * Fix example in testing guide for how to setup default Rails tests.
 
     *Steven Hansen*
