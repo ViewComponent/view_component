@@ -14,6 +14,10 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
+      %i[generate preview_controller preview_route show_previews_source].each do |config_option|
+        options[config_option] ||= ViewComponent::Base.public_send(config_option)
+      end
+      options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
       options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
       options.show_previews = Rails.env.development? || Rails.env.test? if options.show_previews.nil?
       options.show_previews_source ||= ViewComponent::Base.show_previews_source
