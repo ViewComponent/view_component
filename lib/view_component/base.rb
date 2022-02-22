@@ -313,8 +313,8 @@ module ViewComponent
     # config.view_component.test_controller = "MyTestController"
     # ```
     #
-    # Defaults to ApplicationController. Can also be configured on a per-test
-    # basis using `with_controller_class`.
+    # Defaults to `nil`. If this is falsy, `"ApplicationComponent"` is used. Can also be
+    # configured on a per-test basis using `with_controller_class`.
     #
     mattr_accessor :test_controller
     @@test_controller = "ApplicationController"
@@ -333,7 +333,7 @@ module ViewComponent
     # config.view_component.view_component_path = "app/my_components"
     # ```
     #
-    # Defaults to `app/components`.
+    # Defaults to `nil`. If this is falsy, `app/components` is used.
     #
     mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
 

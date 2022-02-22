@@ -27,11 +27,15 @@ module ViewComponent
       #
       #     config.view_component.default_preview_layout = "component_preview"
       #
+      # Defaults to nil.
+      #
       mattr_accessor :default_preview_layout, instance_writer: false
 
       # Set the location of component previews:
       #
       #     config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
+      #
+      # Defaults to `[]`.
       #
       mattr_accessor :preview_paths, instance_writer: false
 
