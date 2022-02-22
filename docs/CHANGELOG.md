@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add missing config options to `config.view_component`.
+
+    *Simon Fish*
+
 * Fixed typo in `renders_many` documentation.
 
     *Graham Rogers*
