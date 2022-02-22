@@ -91,12 +91,16 @@ ensure
   Object.send(:remove_const, :ApplicationComponent)
 end
 
-def with_generate_sidecar(enabled)
-  old_value = ViewComponent::Base.generate.sidecar
-  ViewComponent::Base.generate.sidecar = enabled
+def with_generate(config_option, value)
+  old_value = ViewComponent::Base.generate[config_option]
+  ViewComponent::Base.generate[config_option] = value
   yield
 ensure
-  ViewComponent::Base.generate.sidecar = old_value
+  ViewComponent::Base.generate[config_option] = old_value
+end
+
+def with_generate_sidecar(enabled, &block)
+  with_generate(:sidecar, enabled, &block)
 end
 
 def with_new_cache
