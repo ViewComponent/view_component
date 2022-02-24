@@ -11,6 +11,14 @@ title: Changelog
 
     *Elia Schito*
 
+* Update Microsoft Vale styles.
+
+    *Simon Fish*
+
+* Fix example in testing guide for how to setup default Rails tests.
+
+    *Steven Hansen*
+
 * Update benchmark script to render multiple components/partials instead of a single instance per-run.
 
     *Blake Williams*
