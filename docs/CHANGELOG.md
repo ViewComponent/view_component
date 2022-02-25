@@ -11,6 +11,14 @@ title: Changelog
 
     *foca*
 
+* Add Cometeer and Framework to users list.
+
+    *Elia Schito*
+
+* Update Microsoft Vale styles.
+
+    *Simon Fish*
+
 * Fix example in testing guide for how to setup default Rails tests.
 
     *Steven Hansen*
@@ -23,7 +31,7 @@ title: Changelog
 
     *Hans Lemuet*
 
-* Use a dedicated deprecation instance, silence it while testing
+* Use a dedicated deprecation instance, silence it while testing.
 
     *Max Beizer, Hans Lemuet, Elia Schito*
 

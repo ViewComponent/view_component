@@ -200,6 +200,8 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Orbit](https://orbit.love)
 * [Wrapbook](https://wrapbook.com/)
 * [Shogun](https://getshogun.com/)
+* [Cometeer](https://cometeer.com/)
+* [Framework](https://frame.work/)
 
 If your team starts using ViewComponent, [send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to let us know!
 You can also check out [how various projects use ViewComponent](https://github.com/github/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
