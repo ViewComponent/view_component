@@ -99,7 +99,7 @@ module ViewComponent
 
     def html_safe_translation(translation)
       if translation.respond_to?(:map)
-        translation.map { |element| element.respond_to?(:html_safe) ? element.html_safe : element } # rubocop:disable Rails/OutputSafety
+        translation.map { |element| html_safe_translation(element) }
       else
         translation.respond_to?(:html_safe) ? translation.html_safe : translation # rubocop:disable Rails/OutputSafety
       end
