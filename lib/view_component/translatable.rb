@@ -101,6 +101,9 @@ module ViewComponent
       if translation.respond_to?(:map)
         translation.map { |element| html_safe_translation(element) }
       else
+        # It's assumed here that objects loaded by the i18n backend will respond to `#html_safe?`.
+        # It's reasonable that if we're in Rails, `active_support/core_ext/string/output_safety.rb`
+        # will provide this to `Object`.
         translation.html_safe # rubocop:disable Rails/OutputSafety
       end
     end
