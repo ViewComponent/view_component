@@ -11,6 +11,18 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Add Cometeer and Framework to users list.
+
+    *Elia Schito*
+
+* Update Microsoft Vale styles.
+
+    *Simon Fish*
+
+* Fix example in testing guide for how to setup default Rails tests.
+
+    *Steven Hansen*
+
 * Update benchmark script to render multiple components/partials instead of a single instance per-run.
 
     *Blake Williams*
@@ -19,7 +31,7 @@ title: Changelog
 
     *Hans Lemuet*
 
-* Use a dedicated deprecation instance, silence it while testing
+* Use a dedicated deprecation instance, silence it while testing.
 
     *Max Beizer, Hans Lemuet, Elia Schito*
 
