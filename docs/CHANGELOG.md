@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Support returning Arrays from i18n files, and support marking them as HTML-safe translations.
+
+    *foca*
+
 * Add Cometeer and Framework to users list.
 
     *Elia Schito*
