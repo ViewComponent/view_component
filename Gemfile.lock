@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    view_component (2.48.0)
+    view_component (2.49.0)
       activesupport (>= 5.0.0, < 8.0)
       method_source (~> 1.0)
 
@@ -274,11 +274,8 @@ DEPENDENCIES
   haml (~> 5)
   jbuilder (~> 2)
   minitest (= 5.6.0)
-  net-imap
-  net-pop
-  net-smtp
   pry (~> 0.13)
-  rails (~> 7.0.0)
+  rails (= 7.0.1)
   rake (~> 13.0)
   rubocop-github (~> 0.16.1)
   simplecov (~> 0.18.0)

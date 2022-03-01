@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "erb"
 require "set"
 require "i18n"
 require "action_view/helpers/translation_helper"
@@ -66,6 +67,8 @@ module ViewComponent
       return super unless i18n_backend
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
+      html_escape_translation_options!(options)
+
       locale = options.delete(:locale) || ::I18n.locale
       key = key&.to_s unless key.is_a?(String)
       key = "#{i18n_scope}#{key}" if key.start_with?(".")
@@ -95,6 +98,31 @@ module ViewComponent
     # Exposes .i18n_scope as an instance method
     def i18n_scope
       self.class.i18n_scope
+    end
+
+    def html_safe_translation(translation)
+      if translation.respond_to?(:map)
+        translation.map { |element| html_safe_translation(element) }
+      else
+        # It's assumed here that objects loaded by the i18n backend will respond to `#html_safe?`.
+        # It's reasonable that if we're in Rails, `active_support/core_ext/string/output_safety.rb`
+        # will provide this to `Object`.
+        translation.html_safe # rubocop:disable Rails/OutputSafety
+      end
+    end
+
+    private
+
+    def html_escape_translation_options!(options)
+      options.each do |name, value|
+        unless i18n_option?(name) || (name == :count && value.is_a?(Numeric))
+          options[name] = ERB::Util.html_escape(value.to_s)
+        end
+      end
+    end
+
+    def i18n_option?(name)
+      (@i18n_option_names ||= I18n::RESERVED_KEYS.to_set).include?(name)
     end
   end
 end
