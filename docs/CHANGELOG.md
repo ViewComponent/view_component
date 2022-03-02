@@ -7,6 +7,12 @@ title: Changelog
 
 ## main
 
+## 2.49.1
+
+* Patch XSS vulnerability in `Translatable` module caused by improperly escaped interpolation arguments.
+
+    *Cameron Dutro*
+
 ## 2.49.0
 
 * Fix path handling for evaluated view components that broke in Ruby 3.1.
@@ -656,6 +662,12 @@ _Note: This release includes an underlying change to Slots that may affect incor
 * Deprecate `with_content_areas` in favor of [slots](https://viewcomponent.org/guide/slots.html).
 
     *Joel Hawksley*
+
+## 2.29.1
+
+* Patch XSS vulnerability in `ViewComponent::Translatable` module caused by improperly escaped interpolation arguments.
+
+    *Cameron Dutro*
 
 ## 2.29.0
 
