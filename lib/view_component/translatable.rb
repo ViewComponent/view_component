@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "erb"
 require "set"
 require "i18n"
 require "action_view/helpers/translation_helper"
@@ -70,6 +71,10 @@ module ViewComponent
       key = key&.to_s unless key.is_a?(String)
       key = "#{i18n_scope}#{key}" if key.start_with?(".")
 
+      if HTML_SAFE_TRANSLATION_KEY.match?(key)
+        html_escape_translation_options!(options)
+      end
+
       translated = catch(:exception) do
         i18n_backend.translate(locale, key, options)
       end
@@ -90,6 +95,20 @@ module ViewComponent
     # Exposes .i18n_scope as an instance method
     def i18n_scope
       self.class.i18n_scope
+    end
+
+    private
+
+    def html_escape_translation_options!(options)
+      options.each do |name, value|
+        unless i18n_option?(name) || (name == :count && value.is_a?(Numeric))
+          options[name] = ERB::Util.html_escape(value.to_s)
+        end
+      end
+    end
+
+    def i18n_option?(name)
+      (@i18n_option_names ||= I18n::RESERVED_KEYS.to_set).include?(name)
     end
   end
 end

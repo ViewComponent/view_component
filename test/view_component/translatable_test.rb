@@ -53,6 +53,15 @@ class TranslatableTest < ViewComponent::TestCase
     assert_predicate translate(".hello_html"), :html_safe?
   end
 
+  def test_translate_with_html_suffix_escapes_interpolated_arguments
+    translation = translate(".interpolated_html", horse_count: "<script type='text/javascript'>alert('foo');</script>")
+    assert_equal(
+      "There are &lt;script type=&#39;text/javascript&#39;&gt;alert(&#39;foo&#39;);&lt;/script&gt; horses in the "\
+        "<strong>barn</strong>!",
+      translation
+    )
+  end
+
   def test_translate_uses_the_helper_when_no_sidecar_file_is_provided
     # The cache needs to be kept clean for TranslatableComponent, otherwise it will rely on the
     # already created i18n_backend.
