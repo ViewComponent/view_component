@@ -2,6 +2,12 @@
 
 ## main
 
+## 2.31.2
+
+* Patch XSS vulnerability in `Translatable` module caused by improperly escaped interpolation arguments.
+
+    *Cameron Dutro*
+
 ## 2.31.1
 
 * Fix `DEPRECATION WARNING: before_render_check` when compiling `ViewComponent::Base`
