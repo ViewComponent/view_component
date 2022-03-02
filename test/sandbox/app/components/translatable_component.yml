@@ -3,6 +3,8 @@ en:
 
   hello_html: "Hello from <strong>sidecar translations</strong>!"
 
+  interpolated_html: "There are %{horse_count} horses in the <strong>barn</strong>!"
+
   html: "hello <em>world</em>!"
 
   from:

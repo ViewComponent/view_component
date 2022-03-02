@@ -53,6 +53,12 @@ title: Changelog
 
     *Bernie Chiu*
 
+## 2.49.1
+
+* Patch XSS vulnerability in `ViewComponent::Translatable` module caused by improperly escaped interpolation arguments.
+
+    *Cameron Dutro*
+
 ## 2.49.0
 
 * Fix path handling for evaluated view components that broke in Ruby 3.1.
@@ -658,6 +664,12 @@ title: Changelog
 * Are you interested in building the future of ViewComponent? GitHub is looking to hire a Senior Engineer to work on Primer ViewComponents and ViewComponent. Apply here: [US/Canada](https://github.com/careers) / [Europe](https://boards.greenhouse.io/github/jobs/3132294). Feel free to reach out to joelhawksley@github.com with any questions.
 
     *Joel Hawksley*
+
+## 2.31.2
+
+* Patch XSS vulnerability in `ViewComponent::Translatable` module caused by improperly escaped interpolation arguments.
+
+    *Cameron Dutro*
 
 ## 2.31.1
 
