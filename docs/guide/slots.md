@@ -62,6 +62,27 @@ Returning:
 <a href="/blog/second-post">Second post</a>
 ```
 
+## Predicate methods
+
+To test whether a slot has been passed to the component, use the provided `#{slot_name}?` method.
+
+```erb
+<%# blog_component.html.erb %>
+<% if header? %>
+  <h1><%= header %></h1>
+<% end %>
+
+<% if posts? %>
+  <div class="posts">
+    <% posts.each do |post| %>
+      <%= post %>
+    <% end %>
+  </div>
+<% else %>
+  <p>No post yet.</p>
+<% end %>
+```
+
 ## Component slots
 
 Slots can also render other components. Pass the name of a component as the second argument to define a component slot.

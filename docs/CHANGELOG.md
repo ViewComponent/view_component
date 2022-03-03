@@ -11,9 +11,57 @@ title: Changelog
 
     *Felipe Sateler*
 
+* Support returning Arrays from i18n files, and support marking them as HTML-safe translations.
+
+    *foca*
+
+* Add Cometeer and Framework to users list.
+
+    *Elia Schito*
+
+* Update Microsoft Vale styles.
+
+    *Simon Fish*
+
+* Fix example in testing guide for how to setup default Rails tests.
+
+    *Steven Hansen*
+
+* Update benchmark script to render multiple components/partials instead of a single instance per-run.
+
+    *Blake Williams*
+
+* Add predicate methods `#{slot_name}?` to slots.
+
+    *Hans Lemuet*
+
+* Use a dedicated deprecation instance, silence it while testing.
+
+    *Max Beizer, Hans Lemuet, Elia Schito*
+
+* Fix Ruby warnings.
+
+    *Hans Lemuet*
+
 * Place all generator options under `config.generate` namespace.
 
     *Simon Fish*
+
+* Allow preview generator to use provided component attributes.
+* Add config option `config.view_component.generate.preview` to enable project-wide preview generation.
+* Ensure all generated `.rb` files include `# frozen_string_literal: true` statement.
+
+    *Bob Maerten*
+
+* Add Shogun to users list.
+
+    *Bernie Chiu*
+
+## 2.49.1
+
+* Patch XSS vulnerability in `ViewComponent::Translatable` module caused by improperly escaped interpolation arguments.
+
+    *Cameron Dutro*
 
 ## 2.49.0
 
@@ -620,6 +668,12 @@ title: Changelog
 * Are you interested in building the future of ViewComponent? GitHub is looking to hire a Senior Engineer to work on Primer ViewComponents and ViewComponent. Apply here: [US/Canada](https://github.com/careers) / [Europe](https://boards.greenhouse.io/github/jobs/3132294). Feel free to reach out to joelhawksley@github.com with any questions.
 
     *Joel Hawksley*
+
+## 2.31.2
+
+* Patch XSS vulnerability in `ViewComponent::Translatable` module caused by improperly escaped interpolation arguments.
+
+    *Cameron Dutro*
 
 ## 2.31.1
 

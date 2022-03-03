@@ -235,14 +235,11 @@ module ViewComponent
     # @param variant [Symbol] The variant to be used by the component.
     # @return [self]
     def with_variant(variant)
-      ActiveSupport::Deprecation.warn(
-        "`with_variant` is deprecated and will be removed in ViewComponent v3.0.0."
-      )
-
       @__vc_variant = variant
 
       self
     end
+    deprecate :with_variant, deprecator: ViewComponent::Deprecation
 
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.
@@ -337,6 +334,13 @@ module ViewComponent
     # One file will be generated for each configured `I18n.available_locales`,
     # falling back to `[:en]` when no `available_locales` is defined.
     #
+    # #### #preview
+    #
+    # Always generate preview alongside the component:
+    #
+    #      config.view_component.generate.preview = true
+    #
+    #  Defaults to `false`.
     mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new(false)
 
     class << self

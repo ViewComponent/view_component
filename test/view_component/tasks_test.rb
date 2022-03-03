@@ -13,7 +13,7 @@ class TasksTest < ActiveSupport::TestCase
 
   test "adds components to rails stats" do
     Dir.chdir(Rails.root) do
-      assert_output /ViewComponents/ do
+      assert_output(/ViewComponents/) do
         Rake::Task["stats"].invoke
       end
     end
