@@ -38,7 +38,7 @@ module ViewComponent
     # For example, one might compile component-specific assets at this point.
     # @private TODO: add documentation
     def self._after_compile
-      super if defined?(super)
+      # noop
     end
 
     # @!macro [attach] deprecated_generate_mattr_accessor
