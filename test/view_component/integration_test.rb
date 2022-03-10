@@ -174,6 +174,24 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
   end
 
+  def test_rendering_component_with_caching_and_global_output_buffer
+    with_global_output_buffer(components: [CacheIfComponent]) do
+      Rails.cache.clear
+      ActionController::Base.perform_caching = true
+
+      get "/cached?version=1"
+      assert_response :success
+      assert_includes response.body, "Cache 1"
+
+      get "/cached?version=2"
+      assert_response :success
+      assert_includes response.body, "Cache 1"
+
+      ActionController::Base.perform_caching = false
+      Rails.cache.clear
+    end
+  end
+
   def test_optional_rendering_component_depending_on_request_context
     get "/render_check"
     assert_response :success
