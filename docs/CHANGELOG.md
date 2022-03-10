@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.50.0
+
 * Add tests for `layout` usage when rendering via controller.
 
     *Felipe Sateler*
