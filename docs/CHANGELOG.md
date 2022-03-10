@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add CMYK value for ViewComponent Red color on logo page.
+
+    *Dylan Smith*
+
 ## 2.50.0
 
 * Add tests for `layout` usage when rendering via controller.
