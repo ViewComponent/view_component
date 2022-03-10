@@ -100,7 +100,9 @@ module ViewComponent
 
     def define_render_template_for
       if component_class.instance_methods(false).include?(:render_template_for)
+        # :nocov:
         component_class.send(:remove_method, :render_template_for)
+        # :nocov:
       end
 
       variant_elsifs = variants.compact.uniq.map do |variant|
