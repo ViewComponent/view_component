@@ -73,8 +73,8 @@ module ViewComponent # :nodoc:
       # Returns the relative path (from preview_path) to the preview example template if the template exists
       def preview_example_template_path(example)
         preview_path =
-          Array(preview_paths).detect do |preview_path|
-            Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
+          Array(preview_paths).detect do |path|
+            Dir["#{path}/#{preview_name}_preview/#{example}.html.*"].first
           end
 
         if preview_path.nil?

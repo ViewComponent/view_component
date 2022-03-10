@@ -49,7 +49,7 @@ module ViewComponent
         end
 
         if subclass_instance_methods.include?(:before_render_check)
-          ActiveSupport::Deprecation.warn(
+          ViewComponent::Deprecation.warn(
             "`#before_render_check` will be removed in v3.0.0.\n\n" \
             "To fix this issue, use `#before_render` instead."
           )

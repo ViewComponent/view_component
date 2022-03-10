@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "erb"
 require "set"
 require "i18n"
 require "action_view/helpers/translation_helper"
@@ -41,7 +42,7 @@ module ViewComponent
       EMPTY_HASH = {}.freeze
 
       def initialize(i18n_scope:, load_paths:)
-        @i18n_scope = i18n_scope.split(".")
+        @i18n_scope = i18n_scope.split(".").map(&:to_sym)
         @load_paths = load_paths
       end
 
@@ -70,27 +71,60 @@ module ViewComponent
       key = key&.to_s unless key.is_a?(String)
       key = "#{i18n_scope}#{key}" if key.start_with?(".")
 
-      translated =
-        catch(:exception) do
-          i18n_backend.translate(locale, key, options)
+      if HTML_SAFE_TRANSLATION_KEY.match?(key)
+        html_escape_translation_options!(options)
+      end
+
+      if key.start_with?(i18n_scope + ".")
+        translated =
+          catch(:exception) do
+            i18n_backend.translate(locale, key, options)
+          end
+
+        # Fallback to the global translations
+        if translated.is_a? ::I18n::MissingTranslation
+          return super(key, locale: locale, **options)
         end
 
-      # Fallback to the global translations
-      if translated.is_a? ::I18n::MissingTranslation
-        return super(key, locale: locale, **options)
-      end
+        if HTML_SAFE_TRANSLATION_KEY.match?(key)
+          translated = html_safe_translation(translated)
+        end
 
-      if HTML_SAFE_TRANSLATION_KEY.match?(key)
-        translated = translated.html_safe # rubocop:disable Rails/OutputSafety
+        translated
+      else
+        super(key, locale: locale, **options)
       end
-
-      translated
     end
     alias :t :translate
 
     # Exposes .i18n_scope as an instance method
     def i18n_scope
       self.class.i18n_scope
+    end
+
+    def html_safe_translation(translation)
+      if translation.respond_to?(:map)
+        translation.map { |element| html_safe_translation(element) }
+      else
+        # It's assumed here that objects loaded by the i18n backend will respond to `#html_safe?`.
+        # It's reasonable that if we're in Rails, `active_support/core_ext/string/output_safety.rb`
+        # will provide this to `Object`.
+        translation.html_safe # rubocop:disable Rails/OutputSafety
+      end
+    end
+
+    private
+
+    def html_escape_translation_options!(options)
+      options.each do |name, value|
+        unless i18n_option?(name) || (name == :count && value.is_a?(Numeric))
+          options[name] = ERB::Util.html_escape(value.to_s)
+        end
+      end
+    end
+
+    def i18n_option?(name)
+      (@i18n_option_names ||= I18n::RESERVED_KEYS.to_set).include?(name)
     end
   end
 end

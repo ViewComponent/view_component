@@ -90,4 +90,20 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   ensure
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
   end
+
+  def test_evaled_component
+    source = <<~RUBY
+      class EvaledComponent < ViewComponent::Base
+        def initialize(cta: nil, title:)
+          @cta = cta
+          @title = title
+        end
+        private
+
+        attr_reader :cta, :title
+      end
+    RUBY
+
+    eval(source) # rubocop:disable Security/Eval
+  end
 end
