@@ -40,10 +40,6 @@ module ViewComponent
       # rubocop:enable Rails/OutputSafety
     end
 
-    def empty?
-      @current_buffer.empty?
-    end
-
     def length
       @current_buffer.length
     end
