@@ -55,6 +55,30 @@ def with_preview_controller(new_value)
   app.reloader.reload!
 end
 
+def with_global_output_buffer(components: [])
+  old_value = Rails.application.config.view_component.use_global_output_buffer
+
+  components.each do |component|
+    new_component = Class.new(component) do
+      prepend ViewComponent::GlobalOutputBuffer
+    end
+
+    base_name = component.name.split("::").last.to_sym
+    component.module_parent.send(:remove_const, base_name)
+    component.module_parent.const_set(base_name, new_component)
+  end
+
+  Rails.application.config.view_component.use_global_output_buffer = true
+  yield
+  Rails.application.config.view_component.use_global_output_buffer = old_value
+
+  components.each do |component|
+    base_name = component.name.split("::").last.to_sym
+    component.module_parent.send(:remove_const, base_name)
+    component.module_parent.const_set(base_name, component)
+  end
+end
+
 def with_custom_component_path(new_value)
   old_value = ViewComponent::Base.view_component_path
   ViewComponent::Base.view_component_path = new_value

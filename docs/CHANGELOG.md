@@ -63,6 +63,10 @@ title: Changelog
 
     *Bernie Chiu*
 
+* Add the option to use a "global" output buffer so `form_for` and friends can be used with view components.
+
+    *Cameron Dutro*, *Blake Williams*
+
 ## 2.49.1
 
 * Patch XSS vulnerability in `ViewComponent::Translatable` module caused by improperly escaped interpolation arguments.
