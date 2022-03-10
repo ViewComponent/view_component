@@ -55,6 +55,13 @@ def with_preview_controller(new_value)
   app.reloader.reload!
 end
 
+def module_parent_for(mod)
+  # activesupport >= 6
+  return mod.module_parent if mod.respond_to?(:module_parent)
+  # activesupport < 6
+  mod.parent
+end
+
 def with_global_output_buffer(components: [])
   old_value = Rails.application.config.view_component.use_global_output_buffer
 
@@ -64,8 +71,8 @@ def with_global_output_buffer(components: [])
     end
 
     base_name = component.name.split("::").last.to_sym
-    component.module_parent.send(:remove_const, base_name)
-    component.module_parent.const_set(base_name, new_component)
+    module_parent_for(component).send(:remove_const, base_name)
+    module_parent_for(component).const_set(base_name, new_component)
   end
 
   Rails.application.config.view_component.use_global_output_buffer = true
@@ -74,8 +81,8 @@ def with_global_output_buffer(components: [])
 
   components.each do |component|
     base_name = component.name.split("::").last.to_sym
-    component.module_parent.send(:remove_const, base_name)
-    component.module_parent.const_set(base_name, component)
+    module_parent_for(component).send(:remove_const, base_name)
+    module_parent_for(component).const_set(base_name, component)
   end
 end
 
