@@ -21,13 +21,9 @@ module ViewComponent
     def invalidate_class!(klass)
       cache.delete(klass)
 
-      klass.send(:undef_method, :render_template_for)
-      klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
-          self.class.compile(raise_errors: true)
-          render_template_for(variant)
-        end
-      RUBY
+      if klass.instance_methods(false).include?(:render_template_for)
+        klass.send(:remove_method, :render_template_for)
+      end
     end
 
     def invalidate!

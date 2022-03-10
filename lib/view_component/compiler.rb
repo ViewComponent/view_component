@@ -29,6 +29,7 @@ module ViewComponent
 
     def compile(raise_errors: false, force: false)
       return if compiled? && !force
+      return if component_class == ViewComponent::Base
 
       with_lock do
         CompileCache.invalidate_class!(component_class)
@@ -65,8 +66,8 @@ module ViewComponent
           # as Ruby warns when redefining a method.
           method_name = call_method_name(template[:variant])
 
-          if component_class.instance_methods.include?(method_name.to_sym)
-            component_class.send(:undef_method, method_name.to_sym)
+          if component_class.instance_methods(false).include?(method_name.to_sym)
+            component_class.send(:remove_method, method_name.to_sym)
           end
 
           component_class.class_eval <<-RUBY, template[:path], -1
@@ -98,8 +99,8 @@ module ViewComponent
     attr_reader :component_class
 
     def define_render_template_for
-      if component_class.instance_methods.include?(:render_template_for)
-        component_class.send(:undef_method, :render_template_for)
+      if component_class.instance_methods(false).include?(:render_template_for)
+        component_class.send(:remove_method, :render_template_for)
       end
 
       variant_elsifs = variants.compact.uniq.map do |variant|
