@@ -57,6 +57,10 @@ title: Changelog
 
     *Bernie Chiu*
 
+* Improve performance by moving template compilation from `#render_in` to `#render_template_for`.
+
+    *Cameron Dutro*
+
 ## 2.49.1
 
 * Patch XSS vulnerability in `ViewComponent::Translatable` module caused by improperly escaped interpolation arguments.

@@ -66,8 +66,6 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, &block)
-      self.class.compile(raise_errors: true)
-
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
@@ -111,6 +109,14 @@ module ViewComponent
     ensure
       @current_template = old_current_template
     end
+
+    # :nocov:
+    def render_template_for(variant = nil)
+      self.class.compile(raise_errors: true)
+      # .compile replaces this method; call the new one
+      render_template_for(variant)
+    end
+    # :nocov:
 
     # EXPERIMENTAL: Optional content to be returned after the rendered template.
     #
@@ -445,8 +451,8 @@ module ViewComponent
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
       # @private
-      def compile(raise_errors: false)
-        compiler.compile(raise_errors: raise_errors)
+      def compile(raise_errors: false, force: false)
+        compiler.compile(raise_errors: raise_errors, force: force)
       end
 
       # @private

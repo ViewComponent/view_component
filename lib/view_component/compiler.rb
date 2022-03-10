@@ -27,8 +27,8 @@ module ViewComponent
       self.class.mode == DEVELOPMENT_MODE
     end
 
-    def compile(raise_errors: false)
-      return if compiled?
+    def compile(raise_errors: false, force: false)
+      return if compiled? && !force
 
       with_lock do
         CompileCache.invalidate_class!(component_class)
