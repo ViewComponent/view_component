@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Add tests for `layout` usage when rendering via controller.
+
+    *Felipe Sateler*
+
 * Support returning Arrays from i18n files, and support marking them as HTML-safe translations.
 
     *foca*
