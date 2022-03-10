@@ -58,6 +58,7 @@ end
 def module_parent_for(mod)
   # activesupport >= 6
   return mod.module_parent if mod.respond_to?(:module_parent)
+
   # activesupport < 6
   mod.parent
 end
