@@ -4,29 +4,29 @@ require "test_helper"
 
 class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
   def test_renders_form_for_labels_with_block_correctly
-    with_global_output_buffer(components: [FormForComponent, LabelComponent]) do
-      render_inline(FormForComponent.new)
+    skip unless Rails.application.config.view_component.use_global_output_buffer
 
-      assert_selector("form > div > label > input")
-      refute_selector("form > div > input")
-    end
+    render_inline(FormForComponent.new)
+
+    assert_selector("form > div > label > input")
+    refute_selector("form > div > input")
   end
 
   def test_renders_form_with_labels_with_block_correctly
-    with_global_output_buffer(components: [FormWithComponent, LabelComponent]) do
-      render_inline(FormWithComponent.new)
+    skip unless Rails.application.config.view_component.use_global_output_buffer
 
-      assert_selector("form > div > label > input")
-      refute_selector("form > div > input")
-    end
+    render_inline(FormWithComponent.new)
+
+    assert_selector("form > div > label > input")
+    refute_selector("form > div > input")
   end
 
   def test_form_without_compatibility_does_not_raise
-    with_global_output_buffer(components: [IncompatibleFormComponent, LabelComponent]) do
-      render_inline(IncompatibleFormComponent.new)
+    skip unless Rails.application.config.view_component.use_global_output_buffer
 
-      # Bad selector should be present, at least until fixed upstream or included by default
-      refute_selector("form > div > input")
-    end
+    render_inline(IncompatibleFormComponent.new)
+
+    # Bad selector should be present, at least until fixed upstream or included by default
+    refute_selector("form > div > input")
   end
 end

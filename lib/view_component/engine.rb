@@ -60,7 +60,10 @@ module ViewComponent
 
     initializer "view_component.enable_global_output_buffer" do |app|
       ActiveSupport.on_load(:view_component) do
-        if app.config.view_component.use_global_output_buffer
+        env_use_gob = ENV.fetch("VIEW_COMPONENT_USE_GLOBAL_OUTPUT_BUFFER", "false") == "true"
+        config_use_gob = app.config.view_component.use_global_output_buffer
+
+        if config_use_gob || env_use_gob
           # :nocov:
           ViewComponent::Base.prepend(ViewComponent::GlobalOutputBuffer)
           # :nocov:
