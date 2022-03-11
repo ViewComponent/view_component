@@ -191,18 +191,18 @@ ViewComponent is built by over a hundred members of the community, including:
 
 ## Who uses ViewComponent?
 
-* [GitHub](https://github.com/) (900+ components used 15k+ times)
-* [Podia](https://www.podia.com/)
+* [Brightline](https://hellobrightline.com)
 * [City of Paris](https://www.paris.fr/)
-* [Wecasa](https://www.wecasa.fr/)
+* [Cometeer](https://cometeer.com/)
 * [Cults.](https://cults3d.com/)
+* [Framework](https://frame.work/)
+* [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [Litmus](https://litmus.engineering/)
 * [Orbit](https://orbit.love)
-* [Wrapbook](https://wrapbook.com/)
+* [Podia](https://www.podia.com/)
 * [Shogun](https://getshogun.com/)
-* [Cometeer](https://cometeer.com/)
-* [Framework](https://frame.work/)
-* [Brightline](https://hellobrightline.com)
+* [Wecasa](https://www.wecasa.fr/)
+* [Wrapbook](https://wrapbook.com/)
 
 If your team starts using ViewComponent, [send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to let us know!
 You can also check out [how various projects use ViewComponent](https://github.com/github/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
