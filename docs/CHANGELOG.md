@@ -11,6 +11,10 @@ title: Changelog
 
     *foca*
 
+* Alphabetize companies using ViewComponent and add Brightline to the list.
+
+    *Jack Schuss*
+
 * Add Cometeer and Framework to users list.
 
     *Elia Schito*
