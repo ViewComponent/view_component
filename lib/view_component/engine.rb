@@ -65,6 +65,7 @@ module ViewComponent
 
         if config_use_gob || env_use_gob
           # :nocov:
+          app.config.view_component.use_global_output_buffer = true
           ViewComponent::Base.prepend(ViewComponent::GlobalOutputBuffer)
           # :nocov:
         end

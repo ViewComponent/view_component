@@ -27,13 +27,7 @@ module ViewComponent
     end
 
     def output_buffer=(other_buffer)
-      if @output_buffer && other_buffer
-        @output_buffer.replace(other_buffer)
-      else
-        # :nocov:
-        @output_buffer = other_buffer
-        # :nocov:
-      end
+      @output_buffer.replace(other_buffer)
     end
 
     def with_output_buffer(buf = nil)

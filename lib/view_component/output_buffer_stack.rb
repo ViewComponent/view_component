@@ -22,6 +22,8 @@ module ViewComponent
     end
 
     def replace(buffer)
+      return if self == buffer
+
       @current_buffer = buffer.current
       @buffer_stack = buffer.buffer_stack
     end
