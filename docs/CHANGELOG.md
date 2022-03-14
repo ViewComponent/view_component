@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Alphabetize companies using ViewComponent and add Brightline to the list.
+
+    *Jack Schuss*
+
 * Add CMYK value for ViewComponent Red color on logo page.
 
     *Dylan Smith*
