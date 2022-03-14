@@ -11,6 +11,16 @@ title: Changelog
 
     *Jack Schuss*
 
+* Add CMYK value for ViewComponent Red color on logo page.
+
+    *Dylan Smith*
+
+## 2.50.0
+
+* Add tests for `layout` usage when rendering via controller.
+
+    *Felipe Sateler*
+
 * Support returning Arrays from i18n files, and support marking them as HTML-safe translations.
 
     *foca*
