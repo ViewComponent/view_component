@@ -26,30 +26,36 @@ module ViewComponent
       result
     end
 
-    def output_buffer=(other_buffer)
-      @output_buffer.replace(other_buffer)
+    module ActionViewMods
+      def output_buffer=(other_buffer)
+        @output_buffer.replace(other_buffer)
+      end
+
+      def with_output_buffer(buf = nil)
+        unless buf
+          buf = ActionView::OutputBuffer.new
+          if output_buffer && output_buffer.respond_to?(:encoding)
+            buf.force_encoding(output_buffer.encoding)
+          end
+        end
+
+        output_buffer.push(buf)
+        result = nil
+
+        begin
+          yield
+        ensure
+          # assign result here to avoid a return statement, which will
+          # immediately return to the caller and swallow any errors
+          result = output_buffer.pop
+        end
+
+        result
+      end
     end
 
-    def with_output_buffer(buf = nil)
-      unless buf
-        buf = ActionView::OutputBuffer.new
-        if output_buffer && output_buffer.respond_to?(:encoding)
-          buf.force_encoding(output_buffer.encoding)
-        end
-      end
-
-      output_buffer.push(buf)
-      result = nil
-
-      begin
-        yield
-      ensure
-        # assign result here to avoid a return statement, which will
-        # immediately return to the caller and swallow any errors
-        result = output_buffer.pop
-      end
-
-      result
+    def self.prepended(mod)
+      mod.prepend(ActionViewMods)
     end
   end
 end

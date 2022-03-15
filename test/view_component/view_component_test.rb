@@ -103,7 +103,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_haml_with_html_formatted_slot
-    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < '6.1'
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
 
     render_inline(HamlHtmlFormattedSlotComponent.new)
 

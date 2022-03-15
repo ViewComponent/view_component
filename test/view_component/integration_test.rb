@@ -524,7 +524,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_an_inline_component_preview_using_a_haml_template
-    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < '6.1'
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
 
     get "/rails/view_components/inline_component/with_haml"
     assert_select "h1", "Some HAML here"
@@ -538,7 +538,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_mix_of_haml_and_erb
-    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < '6.1'
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
 
     get "/nested_haml"
     assert_response :success
@@ -554,7 +554,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_preview_template_using_haml_params_from_url_custom_template_and_locals
-    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < '6.1'
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
 
     get "/rails/view_components/inline_component/with_several_options?form_title=Title from params"
 

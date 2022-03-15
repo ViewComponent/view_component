@@ -209,7 +209,16 @@ module ViewComponent
       #
       # This allows ivars to remain persisted when using the same helper via
       # `helpers` across multiple components and partials.
-      @__vc_helpers ||= __vc_original_view_context || controller.view_context
+      @__vc_helpers ||= begin
+        hlp = __vc_original_view_context || controller.view_context
+
+        should_extend_mods = Rails.application.config.view_component.use_global_output_buffer &&
+                             !hlp.singleton_class.included_modules.include?(GlobalOutputBuffer::ActionViewMods)
+
+        hlp.extend(GlobalOutputBuffer::ActionViewMods) if should_extend_mods
+
+        hlp
+      end
     end
 
     # Exposes .virtual_path as an instance method

@@ -29,4 +29,11 @@ class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
     # Bad selector should be present, at least until fixed upstream or included by default
     refute_selector("form > div > input")
   end
+
+  def test_content_tag
+    skip unless Rails.application.config.view_component.use_global_output_buffer
+
+    render_inline(ContentTagComponent.new)
+    assert_selector("div > p")
+  end
 end
