@@ -73,6 +73,7 @@ module ViewComponent
 
           result
         else
+          # :nocov:
           self.output_buffer, old_buffer = buf, output_buffer
 
           begin
@@ -82,6 +83,7 @@ module ViewComponent
           end
 
           output_buffer
+          # :nocov:
         end
       end
     end
