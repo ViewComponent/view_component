@@ -67,6 +67,7 @@ module ViewComponent
           # :nocov:
           app.config.view_component.use_global_output_buffer = true
           ViewComponent::Base.prepend(ViewComponent::GlobalOutputBuffer)
+          ActionView::Base.prepend(ViewComponent::GlobalOutputBuffer::ActionViewMods)
           # :nocov:
         end
       end

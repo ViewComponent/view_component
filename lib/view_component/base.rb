@@ -65,13 +65,13 @@ module ViewComponent
     # Returns HTML that has been escaped by the respective template handler.
     #
     # @return [String]
-    def render_in(view_context, global_buffer = false, &block)
+    def render_in(view_context, global_buffer_in_use = false, &block)
       self.class.compile(raise_errors: true)
 
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
-      @output_buffer = ActionView::OutputBuffer.new unless global_buffer
+      @output_buffer = ActionView::OutputBuffer.new unless global_buffer_in_use
 
       @lookup_context ||= view_context.lookup_context
 
@@ -209,16 +209,7 @@ module ViewComponent
       #
       # This allows ivars to remain persisted when using the same helper via
       # `helpers` across multiple components and partials.
-      @__vc_helpers ||= begin
-        hlp = __vc_original_view_context || controller.view_context
-
-        should_extend_mods = Rails.application.config.view_component.use_global_output_buffer &&
-                             !hlp.singleton_class.included_modules.include?(GlobalOutputBuffer::ActionViewMods)
-
-        hlp.extend(GlobalOutputBuffer::ActionViewMods) if should_extend_mods
-
-        hlp
-      end
+      @__vc_helpers ||= __vc_original_view_context || controller.view_context
     end
 
     # Exposes .virtual_path as an instance method

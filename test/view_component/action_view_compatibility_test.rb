@@ -30,7 +30,7 @@ class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
     refute_selector("form > div > input")
   end
 
-  def test_content_tag
+  def test_helper_with_content_tag
     skip unless Rails.application.config.view_component.use_global_output_buffer
 
     render_inline(ContentTagComponent.new)
