@@ -10,7 +10,7 @@ module ViewComponent
 
       @output_buffer = view_context.output_buffer
 
-      super
+      super(view_context, true, &block)
     end
 
     def perform_render

@@ -976,6 +976,12 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_multiple_inline_renders_of_the_same_component
+    component = ErbComponent.new(message: "foo")
+    render_inline(InlineRenderComponent.new(items: [component, component]))
+    assert_selector("div", text: "foo", count: 2)
+  end
+
   def test_deprecated_generate_mattr_accessor
     ViewComponent::Base._deprecated_generate_mattr_accessor(:test_accessor)
     assert(ViewComponent::Base.respond_to?(:generate_test_accessor))
