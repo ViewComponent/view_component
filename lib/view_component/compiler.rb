@@ -32,8 +32,6 @@ module ViewComponent
       return if component_class == ViewComponent::Base
 
       with_lock do
-        CompileCache.invalidate_class!(component_class)
-
         subclass_instance_methods = component_class.instance_methods(false)
 
         if subclass_instance_methods.include?(:with_content) && raise_errors
