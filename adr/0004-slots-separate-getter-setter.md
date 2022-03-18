@@ -8,12 +8,11 @@ Blake Williams
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
-Currently, slots implement a single method for both getting and setting a slot.
-for example,  Given a slot named `header`:
+Currently, slots implement a single method for both getting and setting a slot. For example, given a slot named `header`:
 
 ```ruby
 class MyComponent < ViewComponent::Base
@@ -23,16 +22,12 @@ end
 c = MyComponent.new
 
 c.header { "Hello world!" } # sets the slot
-c.header # gets the header
+c.header # gets the slot
 ```
 
-This API was built with the assumption that a slot will always be defined by
-either passing an argument or passing a block.
+This API was built with the assumption that a slot will always be set by passing an argument and/or passing a block.
 
-This assumption hasn't remained valid. Specifically, the `with_content` breaks
-the assumption when you want to pass static content to a slot.
-
-e.g.
+This assumption hasn't remained valid. Specifically, `with_content` breaks the assumption when you want to pass static content to a slot:
 
 ```ruby
 class MyComponent < ViewComponent::Base
@@ -47,15 +42,11 @@ c = MyComponent.new
 c.header.with_content("Hello world!") # undefined method `with_content' for nil:NilClass (NoMethodError)
 ```
 
-The above example shows off the gap in the slots API via `with_content`, but it's
-likely that as the library continues to grow this gap will appear in other
-valid use-cases.
+The above example shows off the gap in the slots API via `with_content`, but it's likely that as the library continues to grow this gap will appear in other valid use-cases.
 
 ## Decision
 
-To eliminate this gap in the API, I propose we split the slots API into a
-getter and setter. I think keeping the slot name as the getter makes the most
-sense, but the setter can be renamed to `with_#{slot_name}`.
+Split the slots API into a getter and setter. Keeping the slot name as the getter makes the most sense, but the setter can be renamed to `with_#{slot_name}`.
 
 For example, the above would become:
 
@@ -73,9 +64,6 @@ c.with_header { "hello world" }
 c.with_header.with_content("Hello world!")
 ```
 
-This keeps the getter and setter separate, allowing for more API flexibility
-when working with slots.
-
 ## Alternatives Considered
 
 We've spoken about a few alternatives:
@@ -91,9 +79,7 @@ We've spoken about a few alternatives:
 
 ## Consequences
 
-The largest consequence of this change is that we'll need to deprecate the old
-setter usage (`header { "Hello world!"}`) in favor of the new setter API
-(`with_header { "Hello world!" }`).
+The largest consequence of this change is that we'll need to deprecate the old setter usage (`header { "Hello world!"}`) in favor of the new setter API (`with_header { "Hello world!" }`).
 
 I propose that we make at least one release with the new API and no deprecation
 warning followed by another release that includes the deprecation warning. This
