@@ -65,13 +65,13 @@ module ViewComponent
     # Returns HTML that has been escaped by the respective template handler.
     #
     # @return [String]
-    def render_in(view_context, global_buffer_in_use = false, &block)
+    def render_in(view_context, &block)
       self.class.compile(raise_errors: true)
 
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
-      @output_buffer = ActionView::OutputBuffer.new unless global_buffer_in_use
+      @output_buffer = ActionView::OutputBuffer.new unless @global_buffer_in_use
 
       @lookup_context ||= view_context.lookup_context
 

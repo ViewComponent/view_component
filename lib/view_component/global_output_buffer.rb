@@ -9,8 +9,9 @@ module ViewComponent
       end
 
       @output_buffer = view_context.output_buffer
+      @global_buffer_in_use = true
 
-      super(view_context, true, &block)
+      super(view_context, &block)
     end
 
     def perform_render
