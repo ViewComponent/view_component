@@ -15,6 +15,10 @@ title: Changelog
 
     *Dylan Smith*
 
+* Improve performance by moving template compilation from `#render_in` to `#render_template_for`.
+
+    *Cameron Dutro*
+
 ## 2.50.0
 
 * Add tests for `layout` usage when rendering via controller.
