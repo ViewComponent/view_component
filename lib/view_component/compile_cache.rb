@@ -20,10 +20,7 @@ module ViewComponent
 
     def invalidate_class!(klass)
       cache.delete(klass)
-
-      if klass.instance_methods(false).include?(:render_template_for)
-        klass.send(:remove_method, :render_template_for)
-      end
+      klass.compiler.reset_render_template_for
     end
 
     def invalidate!

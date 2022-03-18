@@ -92,16 +92,18 @@ module ViewComponent
       end
     end
 
+    def reset_render_template_for
+      if component_class.instance_methods(false).include?(:render_template_for)
+        component_class.send(:remove_method, :render_template_for)
+      end
+    end
+
     private
 
     attr_reader :component_class
 
     def define_render_template_for
-      if component_class.instance_methods(false).include?(:render_template_for)
-        # :nocov:
-        component_class.send(:remove_method, :render_template_for)
-        # :nocov:
-      end
+      reset_render_template_for
 
       variant_elsifs = variants.compact.uniq.map do |variant|
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"

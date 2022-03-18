@@ -112,7 +112,9 @@ module ViewComponent
 
     # :nocov:
     def render_template_for(variant = nil)
-      self.class.compile(raise_errors: true)
+      # Force compilation here so the compiler always redefines render_template_for.
+      # This is mostly a safeguard to prevent infinite recursion.
+      self.class.compile(raise_errors: true, force: true)
       # .compile replaces this method; call the new one
       render_template_for(variant)
     end

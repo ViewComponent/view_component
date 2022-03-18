@@ -988,4 +988,16 @@ class ViewComponentTest < ViewComponent::TestCase
       singleton_class.undef_method :generate_test_accessor=
     end
   end
+
+  def test_foo
+    render_inline(MyComponent.new)
+
+    with_new_cache do
+      render_inline(MyComponent.new)
+    end
+
+    # require "pry-byebug"
+    # binding.pry
+    render_inline(MyComponent.new)
+  end
 end
