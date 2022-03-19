@@ -19,6 +19,10 @@ title: Changelog
 
     *Cameron Dutro*
 
+* Add the option to use a "global" output buffer so `form_for` and friends can be used with view components.
+
+    *Cameron Dutro*, *Blake Williams*
+
 ## 2.50.0
 
 * Add tests for `layout` usage when rendering via controller.
@@ -70,10 +74,6 @@ title: Changelog
 * Add Shogun to users list.
 
     *Bernie Chiu*
-
-* Add the option to use a "global" output buffer so `form_for` and friends can be used with view components.
-
-    *Cameron Dutro*, *Blake Williams*
 
 ## 2.49.1
 
