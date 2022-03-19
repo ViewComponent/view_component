@@ -55,14 +55,6 @@ def with_preview_controller(new_value)
   app.reloader.reload!
 end
 
-def module_parent_for(mod)
-  # activesupport >= 6
-  return mod.module_parent if mod.respond_to?(:module_parent)
-
-  # activesupport < 6
-  mod.parent
-end
-
 def with_custom_component_path(new_value)
   old_value = ViewComponent::Base.view_component_path
   ViewComponent::Base.view_component_path = new_value
