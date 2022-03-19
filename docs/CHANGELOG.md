@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.51.0
+
 * Update the docs only when releasing a new version.
 
     *Hans Lemuet*
