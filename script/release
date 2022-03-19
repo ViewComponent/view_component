@@ -59,8 +59,13 @@ update_gemfiles() {
   bundle
 }
 
+build_docs() {
+  bundle exec rake docs:build
+}
+
 add_changed_files() {
   git add \
+    docs/api.md \
     docs/CHANGELOG.md \
     Gemfile.lock \
     lib/view_component/version.rb
