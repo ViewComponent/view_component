@@ -78,7 +78,7 @@ class TranslatableTest < ViewComponent::TestCase
   def test_translate_uses_the_helper_when_no_sidecar_file_is_provided
     # The cache needs to be kept clean for TranslatableComponent, otherwise it will rely on the
     # already created i18n_backend.
-    ViewComponent::CompileCache.cache.delete(TranslatableComponent)
+    ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)
 
     ViewComponent::Base.stub(
       :_sidecar_files,
@@ -89,7 +89,7 @@ class TranslatableTest < ViewComponent::TestCase
       assert_nil TranslatableComponent.i18n_backend
     end
   ensure
-    ViewComponent::CompileCache.cache.delete(TranslatableComponent)
+    ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)
   end
 
   def test_default
