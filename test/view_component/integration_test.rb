@@ -595,4 +595,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
     end
   end
+
+  def test_link_to_helper
+    get "/link_to_helper"
+    assert_select "a > i,span"
+  end
+
+  def test_javascript_helper
+    get "/javascript_helper"
+    assert_includes body, 'alert("hello");'
+  end
 end
