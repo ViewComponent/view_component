@@ -11,6 +11,12 @@ title: Changelog
 
     *Blake Williams*
 
+## 2.51.0
+
+* Update the docs only when releasing a new version.
+
+    *Hans Lemuet*
+
 * Alphabetize companies using ViewComponent and add Brightline to the list.
 
     *Jack Schuss*
@@ -18,6 +24,10 @@ title: Changelog
 * Add CMYK value for ViewComponent Red color on logo page.
 
     *Dylan Smith*
+
+* Improve performance by moving template compilation from `#render_in` to `#render_template_for`.
+
+    *Cameron Dutro*
 
 ## 2.50.0
 
