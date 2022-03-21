@@ -600,9 +600,4 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/link_to_helper"
     assert_select "a > i,span"
   end
-
-  def test_javascript_helper
-    get "/javascript_helper"
-    assert_includes body, 'alert("hello");'
-  end
 end

@@ -76,7 +76,8 @@ module ViewComponent
             end
           else
             # :nocov:
-            result = yield
+            yield
+            result = output_buffer
             # :nocov:
           end
         end
