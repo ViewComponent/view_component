@@ -69,6 +69,8 @@ module ViewComponent
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
+      @output_buffer = ActionView::OutputBuffer.new unless @global_buffer_in_use
+
       @lookup_context ||= view_context.lookup_context
 
       # required for path helpers in older Rails versions
@@ -102,12 +104,16 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@__vc_variant).to_s + _output_postamble
+        perform_render
       else
         ""
       end
     ensure
       @current_template = old_current_template
+    end
+
+    def perform_render
+      render_template_for(@__vc_variant).to_s + _output_postamble
     end
 
     # :nocov:

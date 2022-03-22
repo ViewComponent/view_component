@@ -68,9 +68,8 @@ module ViewComponent
             component_class.send(:remove_method, method_name.to_sym)
           end
 
-          component_class.class_eval <<-RUBY, template[:path], -1
+          component_class.class_eval <<-RUBY, template[:path], 0
           def #{method_name}
-            @output_buffer = ActionView::OutputBuffer.new
             #{compiled_template(template[:path])}
           end
           RUBY

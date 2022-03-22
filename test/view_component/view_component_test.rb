@@ -103,6 +103,8 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_haml_with_html_formatted_slot
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+
     render_inline(HamlHtmlFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted one")
@@ -972,6 +974,12 @@ class ViewComponentTest < ViewComponent::TestCase
 
       threads.map(&:join)
     end
+  end
+
+  def test_multiple_inline_renders_of_the_same_component
+    component = ErbComponent.new(message: "foo")
+    render_inline(InlineRenderComponent.new(items: [component, component]))
+    assert_selector("div", text: "foo", count: 2)
   end
 
   def test_deprecated_generate_mattr_accessor

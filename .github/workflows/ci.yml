@@ -29,6 +29,7 @@ jobs:
       matrix:
         rails_version: ['5.2.6', '6.0.4.4', '6.1.4.4', '7.0.1', 'main']
         ruby_version: ['2.5', '2.6', '2.7', '3.0', '3.1']
+        output_buffer: ['global_buffer', 'local_buffer']
         exclude:
           - rails_version: '5.2.6'
             ruby_version: '3.0'
@@ -64,6 +65,7 @@ jobs:
       env:
         MEASURE_COVERAGE: true
         RAILS_VERSION: ${{ matrix.rails_version }}
+        VIEW_COMPONENT_USE_GLOBAL_OUTPUT_BUFFER: ${{ matrix.output_buffer == 'global_buffer' && 'true' || 'false' }}
     - name: Upload coverage results
       uses: actions/upload-artifact@master
       if: always()
