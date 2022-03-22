@@ -10,6 +10,10 @@ title: Changelog
 * Add ADR for separate slot getter/setter API.
 
     *Blake Williams*
+    
+* Add the option to use a "global" output buffer so `form_for` and friends can be used with view components.
+
+    *Cameron Dutro*, *Blake Williams*
 
 ## 2.51.0
 
@@ -28,10 +32,6 @@ title: Changelog
 * Improve performance by moving template compilation from `#render_in` to `#render_template_for`.
 
     *Cameron Dutro*
-
-* Add the option to use a "global" output buffer so `form_for` and friends can be used with view components.
-
-    *Cameron Dutro*, *Blake Williams*
 
 ## 2.50.0
 
