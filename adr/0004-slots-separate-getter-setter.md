@@ -1,6 +1,6 @@
-# Separate Slot Getters and Settings
+# Separate Slot Getters and Setters
 
-Date: 2022/02/07
+Date: 2022/03/22
 
 ## Author
 
