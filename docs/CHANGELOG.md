@@ -7,6 +7,16 @@ title: Changelog
 
 ## main
 
+* Add ADR for separate slot getter/setter API.
+
+    *Blake Williams*
+
+## 2.51.0
+
+* Update the docs only when releasing a new version.
+
+    *Hans Lemuet*
+
 * Alphabetize companies using ViewComponent and add Brightline to the list.
 
     *Jack Schuss*
