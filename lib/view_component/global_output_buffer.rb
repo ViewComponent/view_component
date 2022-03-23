@@ -54,35 +54,45 @@ module ViewComponent
     end
 
     module ActionViewMods
+      def output_buffer=(other_buffer)
+        if @output_buffer.is_a?(OutputBufferStack)
+          @output_buffer.replace(other_buffer)
+        else
+          super
+        end
+      end
+
       def with_output_buffer(buf = nil)
-        # save a reference to the stack-based buffer
-        orig_buf = output_buffer
-        result = nil
-
-        super do
-          if orig_buf.respond_to?(:push)
-            # super will have set self.output_buffer to the new buffer
-            new_buf = self.output_buffer
-            orig_buf.push(new_buf)
-
-            # set output_buffer back to the original, stack-based buffer we
-            # saved a reference to earlier
-            self.output_buffer = orig_buf
-
-            begin
-              yield
-            ensure
-              result = orig_buf.pop
-            end
-          else
-            # :nocov:
-            yield
-            result = output_buffer
-            # :nocov:
+        unless buf
+          buf = ActionView::OutputBuffer.new
+          if @output_buffer && @output_buffer.respond_to?(:encoding)
+            buf.force_encoding(@output_buffer.encoding)
           end
         end
 
-        result
+        result = nil
+
+        if @output_buffer.is_a?(OutputBufferStack)
+          @output_buffer.push(buf)
+
+          begin
+            yield
+          ensure
+            result = @output_buffer.pop
+          end
+
+          result
+        else
+          @output_buffer, old_buffer = buf, output_buffer
+
+          begin
+            yield
+          ensure
+            @output_buffer = old_buffer
+          end
+
+          buf
+        end
       end
     end
   end

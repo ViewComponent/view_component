@@ -25,6 +25,7 @@ Sandbox::Application.routes.draw do
   get :layout_explicit_in_action, to: "layouts#explicit_in_action"
   get :layout_disabled_in_action, to: "layouts#disabled_in_action"
   get :layout_with_content_for, to: "layouts#with_content_for"
+  get :layout_with_caching, to: "layouts#with_caching"
   get :nested_haml, to: "integration_examples#nested_haml"
   get :link_to_helper, to: "integration_examples#link_to_helper"
 end
