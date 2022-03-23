@@ -33,10 +33,5 @@ class LayoutsTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_select 'body[data-layout="with_content_for"]', "Hello content for\n\n  Foo: bar"
     end
-
-    test "caching" do
-      get "/layout_with_caching"
-      assert_select ".foo-cached", count: 2
-    end
   end
 end

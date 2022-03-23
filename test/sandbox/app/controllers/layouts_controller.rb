@@ -23,8 +23,4 @@ class LayoutsController < ApplicationController
   def with_content_for
     render(ContentForComponent.new, layout: "with_content_for")
   end
-
-  def with_caching
-    render "with_caching", layout: "with_content_for"
-  end
 end
