@@ -1,7 +1,7 @@
 module ViewComponent
   class Config < ActiveSupport::InheritableOptions
     DEFAULTS = {
-      generate: {},
+      generate: ActiveSupport::OrderedOptions.new(false),
       preview_controller: false,
       preview_route: false,
       show_previews_source: false,
