@@ -125,7 +125,7 @@ jobs:
     - name: Collate simplecov
       run: |
         bundle config path vendor/bundle
-        bundle install --jobs 4 --retry 3
+        bundle update
         bundle exec rake coverage:report
       env:
         RAILS_VERSION: '~> 7.0.0'
