@@ -1,17 +1,18 @@
 module ViewComponent
   class Config < ActiveSupport::InheritableOptions
+    DEFAULTS = {
+      generate: {},
+      preview_controller: false,
+      preview_route: false,
+      show_previews_source: false,
+      instrumentation_enabled: false,
+      render_monkey_patch_enabled: true,
+      show_previews: Rails.env.development? || Rails.env.test?,
+      use_global_output_buffer: false,
+      preview_paths: [("#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews"))].compact
+    }
     def initialize
-      self.merge!({
-                    generate: {},
-                    preview_controller: false,
-                    preview_route: false,
-                    show_previews_source: false,
-                    instrumentation_enabled: false,
-                    render_monkey_patch_enabled: true,
-                    show_previews: Rails.env.development? || Rails.env.test?,
-                    use_global_output_buffer: false,
-                    preview_paths: [("#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews"))].compact
-                  })
+      self.merge!(DEFAULTS)
 
       warn_deprecated_config_options
     end
