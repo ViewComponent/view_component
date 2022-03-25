@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Document how to use blocks with lambda slots
+
+    *Sam Partington*
+
 * Add ADR for separate slot getter/setter API.
 
     *Blake Williams*
