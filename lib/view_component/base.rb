@@ -427,6 +427,22 @@ module ViewComponent
         # `compile` defines
         compile
 
+        # Give the child its own personal #render_template_for to protect against the case when
+        # eager loading is disabled and the parent component is rendered before the child. In
+        # such a scenario, the parent will override ViewComponent::Base#render_template_for,
+        # meaning it will not be called for any children and thus not compile their templates.
+        if !child.instance_methods(false).include?(:render_template_for) && !child.compiled?
+          child.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+            def render_template_for(variant = nil)
+              # Force compilation here so the compiler always redefines render_template_for.
+              # This is mostly a safeguard to prevent infinite recursion.
+              self.class.compile(raise_errors: true, force: true)
+              # .compile replaces this method; call the new one
+              render_template_for(variant)
+            end
+          RUBY
+        end
+
         # If Rails application is loaded, add application url_helpers to the component context
         # we need to check this to use this gem as a dependency
         if defined?(Rails) && Rails.application
