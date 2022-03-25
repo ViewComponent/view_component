@@ -175,6 +175,16 @@ class TableComponent < ViewComponent::Base
 end
 ```
 
+To provide content for a lambda slot via a block, you need to explicitly add a block parameter and render the content by calling its `call` method:
+
+```ruby
+class BlogComponent < ViewComponent::Base
+  renders_one :header, -> (classes:, &block) do
+    content_tag :h1, block.call, class: classes
+  end
+end
+```
+
 ## Rendering collections
 
 `renders_many` slots can also be passed a collection, using the plural setter (`links` in this example):
