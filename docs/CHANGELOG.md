@@ -7,6 +7,8 @@ title: Changelog
 
 ## main
 
+## 2.52.0
+
 * Add ADR for separate slot getter/setter API.
 
     *Blake Williams*
