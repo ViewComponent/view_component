@@ -19,5 +19,10 @@ module ViewComponent
       assert_equal @config.use_global_output_buffer, false
       assert_equal @config.preview_paths, ["#{Rails.root}/test/components/previews"]
     end
+
+    def test_preview_path_alias
+      @config.preview_path << "some/new/path"
+      assert_equal @config.preview_paths, @config.preview_path
+    end
   end
 end
