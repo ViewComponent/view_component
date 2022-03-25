@@ -600,4 +600,26 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/link_to_helper"
     assert_select "a > i,span"
   end
+
+  def test_cached_capture
+    Rails.cache.clear
+    ActionController::Base.perform_caching = true
+
+    get "/cached_capture"
+    assert_select ".foo .foo-cached"
+
+    ActionController::Base.perform_caching = false
+    Rails.cache.clear
+  end
+
+  def test_cached_partial
+    Rails.cache.clear
+    ActionController::Base.perform_caching = true
+
+    get "/cached_partial"
+    assert_select "article.quux"
+
+    ActionController::Base.perform_caching = false
+    Rails.cache.clear
+  end
 end

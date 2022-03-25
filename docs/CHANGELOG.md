@@ -15,6 +15,7 @@ title: Changelog
 
     *Cameron Dutro*, *Blake Williams*
 
+* Fix fragment caching in partials when global output buffer is enabled.
 * Fix template inheritance when eager loading is disabled.
 
     *Cameron Dutro*

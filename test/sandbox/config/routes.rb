@@ -27,4 +27,6 @@ Sandbox::Application.routes.draw do
   get :layout_with_content_for, to: "layouts#with_content_for"
   get :nested_haml, to: "integration_examples#nested_haml"
   get :link_to_helper, to: "integration_examples#link_to_helper"
+  get :cached_capture, to: "integration_examples#cached_capture"
+  get :cached_partial, to: "integration_examples#cached_partial"
 end
