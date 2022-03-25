@@ -14,7 +14,7 @@ title: Changelog
 * Add ADR for separate slot getter/setter API.
 
     *Blake Williams*
-    
+
 * Add the option to use a "global" output buffer so `form_for` and friends can be used with view components.
 
     *Cameron Dutro*, *Blake Williams*
