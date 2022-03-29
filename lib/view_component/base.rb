@@ -402,10 +402,7 @@ module ViewComponent
         Rails.application.config.view_component
       end
 
-      delegate :generate, :generate=, :component_parent_class, :component_parent_class=,
-               :view_component_path, :view_component_path=, :render_monkey_patch_enabled, :render_monkey_patch_enabled=,
-               :test_controller, :test_controller=,
-               to: :application_config
+      delegate *ViewComponent::Config.accessor_method_names, to: :application_config
 
       # @private
       attr_accessor :source_location, :virtual_path
