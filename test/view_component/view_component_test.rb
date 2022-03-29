@@ -996,4 +996,22 @@ class ViewComponentTest < ViewComponent::TestCase
       singleton_class.undef_method :generate_test_accessor=
     end
   end
+
+  def test_inherited_component_renders_when_lazy_loading
+    # Simulate lazy loading by manually removing the classes in question. This will completely
+    # undo the changes made by self.class.compile and friends, forcing a compile the next time
+    # #render_template_for is called. This shouldn't be necessary except in the test environment,
+    # since eager loading is turned on here.
+    Object.send(:remove_const, :MyComponent)
+    Object.send(:remove_const, :InheritedWithOwnTemplateComponent)
+
+    load "test/sandbox/app/components/my_component.rb"
+    load "test/sandbox/app/components/inherited_with_own_template_component.rb"
+
+    render_inline(MyComponent.new)
+    assert_selector("div", text: "hello,world!")
+
+    render_inline(InheritedWithOwnTemplateComponent.new)
+    assert_selector("div", text: "hello, my own template")
+  end
 end
