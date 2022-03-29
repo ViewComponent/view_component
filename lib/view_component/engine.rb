@@ -22,6 +22,7 @@ module ViewComponent
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
 
       if options.show_previews
+        # This is still necessary because when `config.view_component` is declared, `Rails.root` is unspecified.
         options.preview_paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?(
           "#{Rails.root}/test/components/previews"
         )
