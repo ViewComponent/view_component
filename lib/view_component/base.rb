@@ -16,7 +16,12 @@ module ViewComponent
     include ActiveSupport::Configurable
 
     ViewComponent::Config.default.each do |option, default_value|
-      config_accessor option, default: default_value
+      if Rails::VERSION::MAJOR <= 6
+        config_accessor option
+        self.config[option] = default_value
+      else
+        config_accessor option, default: default_value
+      end
     end
 
     include ViewComponent::ContentAreas
