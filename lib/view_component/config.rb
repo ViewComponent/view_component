@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ViewComponent
   class Config < ActiveSupport::InheritableOptions
     DEFAULTS = -> {
@@ -12,9 +14,7 @@ module ViewComponent
         component_parent_class: nil,
         show_previews: Rails.env.development? || Rails.env.test?,
         use_global_output_buffer: false,
-        preview_paths: [
-          ("#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews"))
-        ].compact
+        preview_paths: default_preview_paths
       }
     }
     def initialize
@@ -30,8 +30,14 @@ module ViewComponent
       self.preview_paths = [new_value]
     end
 
-    def self.default
-      new
+    class << self
+      alias default new
+
+      def default_preview_paths
+        return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
+
+        ["#{Rails.root}/test/components/previews"]
+      end
     end
   end
 end
