@@ -14,6 +14,11 @@ require "view_component/with_content_helper"
 module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
+
+    ViewComponent::Config.default.each do |option, default_value|
+      config_accessor option, default: default_value
+    end
+
     include ViewComponent::ContentAreas
     include ViewComponent::PolymorphicSlots
     include ViewComponent::Previewable
@@ -397,12 +402,6 @@ module ViewComponent
     #  Defaults to `false`.
 
     class << self
-      def application_config
-        Rails.application.config.view_component
-      end
-
-      delegate *ViewComponent::Config.accessor_method_names, to: :application_config
-
       # @private
       attr_accessor :source_location, :virtual_path
 

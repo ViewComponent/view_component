@@ -38,8 +38,8 @@ module ViewComponent
       end
     end
 
-    def initialize
-      self.merge!(self.class.defaults)
+    def initialize(parent = nil)
+      super.merge!(self.class.defaults)
     end
 
     def preview_path
