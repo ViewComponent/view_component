@@ -11,33 +11,9 @@ module ViewComponent
         Rails.application.config.view_component
       end
 
-      delegate :show_previews_source, :show_previews, :preview_paths, to: :_application_config
-    end
-
-    included do
-      mattr_accessor :default_preview_layout, instance_writer: false
-
-      # @deprecated Use `preview_paths` instead. Will be removed in v3.0.0.
-      mattr_accessor :preview_path, instance_writer: false
-
-      # Set the entry route for component previews:
-      #
-      #     config.view_component.preview_route = "/previews"
-      #
-      # Defaults to `/rails/view_components` when `show_previews` is enabled.
-      #
-      mattr_accessor :preview_route, instance_writer: false do
-        "/rails/view_components"
-      end
-
-      # Set the controller used for previewing components:
-      #
-      #     config.view_component.preview_controller = "MyPreviewController"
-      #
-      # Defaults to `ViewComponentsController`.
-      #
-      mattr_accessor :preview_controller, instance_writer: false do
-        "ViewComponentsController"
+      %i[show_previews_source show_previews preview_paths preview_path preview_route
+         default_preview_layout preview_controller].each do |method_name|
+        delegate method_name, "#{method_name}=".to_sym, to: :_application_config
       end
     end
   end
