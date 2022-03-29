@@ -19,10 +19,7 @@ module ViewComponent
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
       options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
       options.show_previews = Rails.env.development? || Rails.env.test? if options.show_previews.nil?
-      options.show_previews_source ||= ViewComponent::Base.show_previews_source
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
-      options.preview_route ||= ViewComponent::Base.preview_route
-      options.preview_controller ||= ViewComponent::Base.preview_controller
 
       if options.show_previews
         options.preview_paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?(
