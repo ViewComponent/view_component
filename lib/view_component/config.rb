@@ -18,7 +18,8 @@ module ViewComponent
           show_previews: Rails.env.development? || Rails.env.test?,
           use_global_output_buffer: false,
           preview_paths: default_preview_paths,
-          test_controller: nil
+          test_controller: nil,
+          default_preview_layout: nil
         }
       end
 
