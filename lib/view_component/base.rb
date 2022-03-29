@@ -51,6 +51,10 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
+    def self.config
+      ViewComponent::Config.new
+    end
+
     # EXPERIMENTAL: This API is experimental and may be removed at any time.
     # Hook for allowing components to do work as part of the compilation process.
     #

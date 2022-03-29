@@ -4,8 +4,7 @@ require "rails"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ActiveSupport::OrderedOptions.new
-    config.view_component.preview_paths ||= []
+    config.view_component = ViewComponent::Config.new
 
     rake_tasks do
       load "view_component/rails/tasks/view_component.rake"
@@ -29,13 +28,6 @@ module ViewComponent
         options.preview_paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?(
           "#{Rails.root}/test/components/previews"
         )
-
-        if options.preview_path.present?
-          ViewComponent::Deprecation.warn(
-            "`preview_path` will be removed in v3.0.0. Use `preview_paths` instead."
-          )
-          options.preview_paths << options.preview_path
-        end
 
         if options.show_previews_source
           require "method_source"
@@ -73,12 +65,6 @@ module ViewComponent
     initializer "view_component.eager_load_actions" do
       ActiveSupport.on_load(:after_initialize) do
         ViewComponent::Base.descendants.each(&:compile) if Rails.application.config.eager_load
-      end
-    end
-
-    initializer "view_component.compile_config_methods" do
-      ActiveSupport.on_load(:view_component) do
-        config.compile_methods! if config.respond_to?(:compile_methods!)
       end
     end
 
