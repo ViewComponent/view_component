@@ -35,10 +35,6 @@ module ViewComponent
           end
         end
       end
-
-      ActiveSupport.on_load(:view_component) do
-        options.each { |k, v| send("#{k}=", v) if respond_to?("#{k}=") }
-      end
     end
 
     initializer "view_component.enable_instrumentation" do |app|

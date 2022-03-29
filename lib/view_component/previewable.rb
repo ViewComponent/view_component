@@ -6,38 +6,16 @@ module ViewComponent
   module Previewable
     extend ActiveSupport::Concern
 
+    class_methods do
+      def _application_config
+        Rails.application.config.view_component
+      end
+
+      delegate :show_previews_source, :show_previews, :preview_paths, to: :_application_config
+    end
+
     included do
-      # Enable or disable component previews:
-      #
-      #     config.view_component.show_previews = true
-      #
-      # Defaults to `true` in development.
-      #
-      mattr_accessor :show_previews, instance_writer: false
-
-      # Enable or disable source code previews in component previews:
-      #
-      #     config.view_component.show_previews_source = true
-      #
-      # Defaults to `false`.
-      #
-      mattr_accessor :show_previews_source, instance_writer: false, default: false
-
-      # Set a custom default layout used for preview index and individual previews:
-      #
-      #     config.view_component.default_preview_layout = "component_preview"
-      #
-      # Defaults to nil.
-      #
       mattr_accessor :default_preview_layout, instance_writer: false
-
-      # Set the location of component previews:
-      #
-      #     config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
-      #
-      # Defaults to `[]`.
-      #
-      mattr_accessor :preview_paths, instance_writer: false
 
       # @deprecated Use `preview_paths` instead. Will be removed in v3.0.0.
       mattr_accessor :preview_path, instance_writer: false
