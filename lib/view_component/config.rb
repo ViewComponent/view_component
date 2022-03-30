@@ -20,8 +20,8 @@ module ViewComponent
           show_previews: Rails.env.development? || Rails.env.test?,
           use_global_output_buffer: false,
           preview_paths: default_preview_paths,
-          test_controller: nil,
-          default_preview_layout: nil
+          test_controller: "ApplicationController",
+          default_preview_layout: "component_preview"
         }
       end
 
@@ -127,7 +127,7 @@ module ViewComponent
       # @return [String]
       # The controller used for testing components.
       # Can also be configured on a per-test basis using `#with_controller_class`.
-      # Defaults to `nil`. If this is falsy, `ApplicationController` is used.
+      # Defaults to `ApplicationController`.
 
       # @!attribute default_preview_layout
       # @return [String]
