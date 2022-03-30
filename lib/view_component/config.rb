@@ -21,7 +21,7 @@ module ViewComponent
           use_global_output_buffer: false,
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
-          default_preview_layout: "component_preview"
+          default_preview_layout: nil
         }
       end
 
@@ -133,7 +133,7 @@ module ViewComponent
       # @return [String]
       # A custom default layout used for the previews index page and individual
       # previews.
-      # Defaults to `"component_preview"`.
+      # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
 
       def default_preview_paths
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
