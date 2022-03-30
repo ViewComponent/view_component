@@ -138,14 +138,6 @@ module ViewComponent
 
         ["#{Rails.root}/test/components/previews"]
       end
-
-      def keys
-        defaults.keys
-      end
-
-      def accessor_method_names
-        keys + keys.map { |option| "#{option}=".to_sym }
-      end
     end
 
     def initialize(parent = nil)
@@ -158,7 +150,7 @@ module ViewComponent
 
     def preview_path=(new_value)
       ViewComponent::Deprecation.warn("`preview_path` will be removed in v3.0.0. Use `preview_paths` instead.")
-      self.preview_paths = [new_value]
+      self.preview_paths = Array.wrap(new_value)
     end
   end
 end

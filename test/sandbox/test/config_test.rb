@@ -24,5 +24,12 @@ module ViewComponent
       @config.preview_path << "some/new/path"
       assert_equal @config.preview_paths, @config.preview_path
     end
+
+    def test_preview_path_setter_alias
+      old_value = @config.preview_path
+      @config.preview_path = "some/new/path"
+      assert_equal @config.preview_path, ["some/new/path"]
+      @config.preview_path = old_value
+    end
   end
 end
