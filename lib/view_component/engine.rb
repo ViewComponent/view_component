@@ -2,6 +2,7 @@
 
 require "rails"
 require "view_component/base"
+require "view_component/config"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
