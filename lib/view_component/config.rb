@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "view_component/deprecation"
+
 module ViewComponent
   class Config < ActiveSupport::InheritableOptions
     class << self
