@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails"
+require "view_component/base"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
