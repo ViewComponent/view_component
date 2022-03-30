@@ -45,3 +45,5 @@
 /script/replicate-bug @boardfish
 /lib/view_component/docs_builder_component.rb @boardfish
 /lib/view_component/docs_builder_component.html.erb @boardfish
+/lib/view_component/config.rb @boardfish
+/test/view_component/config_test.rb @boardfish
