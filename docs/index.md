@@ -8,7 +8,103 @@ nav_order: 1
 
 A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
-## What's a ViewComponent?
+## Why ViewComponent?
+
+### Cohesion
+
+If you put all your domain logic into Active Record models, then it's easy for the Active Record models to grow too large and lose cohesion.
+
+A model loses cohesion when its contents no longer relate to the same end purpose.
+Maybe there are a few methods that support feature A, a few methods that support feature B, and so on.
+The question "what idea does this model represent?" can’t be answered.
+The reason the question can’t be answered is because the model doesn’t represent just one idea, it represents a heterogeneous mix of ideas.
+
+Because cohesive things are easier to understand than incohesive things, it can be advantageous to organize your code into objects (and other structures) that have cohesion.
+
+### Achieving cohesion
+
+There are two devices that developers often use in order to try to achieve cohesion in their Rails apps.
+
+#### POROs
+
+One way is to organize code into plain old Ruby objects (POROs).
+For example, you might have objects called `AppointmentBalance`, `ChargeBalance`, and `InsuranceBalance` which are responsible for the jobs of calculating the balances for various owed amounts in an application.
+
+#### Concerns/mixins
+
+When there's a piece of code which doesn’t quite fit in with any existing model, but it also doesn’t quite make sense as its own standalone model, then sometimes developers use concerns or mixins.
+
+But even though POROs and concerns/mixins can go a really long way to give structure to my Rails apps, they can’t adequately cover everything.
+
+### Homeless code
+
+It's often possible to keep the vast majority of an app's code out of controllers and views. Most of the app's code can be housed in the model.
+
+But there's often still a good amount of code for which doesn't have a comfortable home in the model.
+That tends to be view-related code.
+View-related code is often very fine-grained and detailed.
+It's also often tightly coupled (at least from a conceptual standpoint) to the DOM or to the HTML or in some other way.
+
+There are certain places where this code could go. None of them is great. Here are some options and why each is less than perfect.
+
+#### The view
+
+Perhaps the most obvious place to try to put view-related code is in the view itself.
+Most of the time this works out great.
+But when the view-related code is sufficiently complicated or voluminous, it creates a distraction.
+It creates a mixture of levels of abstraction, which makes the code harder to understand.
+
+#### The controller
+
+The controller is also not a great home for this view-related code.
+The problem of mixing levels of abstraction is still there.
+In addition, putting view-related code in a controller mixes concerns, which makes the controller code harder to understand.
+
+#### The model
+
+Another poorly-suited home for this view-related code is the model. There are two options, both not great.
+
+The first option is to put the view-related code into some existing model.
+This option isn't great because it pollutes the model with peripheral details, creates a potential mixture of concerns and mixture of levels of abstraction, and makes the model lose cohesion.
+
+The other option is to create a new, standalone model just for the view-related code.
+This is usually better than stuffing it into an existing model but it's often still not great.
+Now the view-related code and the view itself are at a distance from each other.
+Plus it creates a mixture of abstractions at a macro level because now the code in `app/models` contains view-related code.
+
+#### Helpers
+
+Lastly, one possible home for non-trivial view-related code is a helper.
+This can actually be a perfectly good solution sometimes.
+But sometimes there are still problems.
+
+Sometimes the view-related code is sufficiently complicated to require multiple methods.
+If these methods are placed in a helper which is also home to other concerns, then we have a cohesion problem, and things get confusing.
+In those cases the view-related code can perhaps be put into its own new helper, and maybe that’s fine.
+But sometimes that's a lost opportunity because what's really wanted is a concept with meaning, and helpers (with their `-Helper` suffix) aren’t great for creating concepts with meaning.
+
+#### No good home
+
+The result is that when you have non-trivial view-related code, it doesn’t have a good home.
+Instead, your view-related code has to "stay with friends".
+It’s an uncomfortable arrangement.
+The "friends" (controllers, models, etc.) wish that the view-related code would move out and get a place of its own, but it doesn’t have a place to go.
+
+#### How ViewComponent provides a home for view-related code
+
+A ViewComponent consists of two entities: 1) an ERB file and 2) a Ruby object.
+These two files share a name (e.g. `save_button_component.html.erb` and `save_button_component.rb` and sit at a sibling level to each other in the filesystem.
+This makes it easy to see that they’re closely related to one another.
+
+If you use ViewComponent, your homeless view-related code can move into a nice, spacious, tidy new house that it gets all to its own.
+And just as important, it can get out of its friends' hair.
+
+And in case this sounds like a “silver bullet” situation, it’s not.
+The reason is because ViewComponents are a specific solution to a specific problem.
+ViewComponents aren't meant to be used for everything.
+They're only meant to be used when a view has non-trivial logic associated with it that doesn’t have any other good place to live.
+
+## What is a ViewComponent?
 
 ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
 
@@ -40,10 +136,6 @@ Returning:
 ```html
 <h1>Hello, World!</h1>
 ```
-
-## When should I use ViewComponents?
-
-ViewComponents work best for templates that are reused or benefit from being tested directly. Partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
 
 ## Why should I use ViewComponents?
 
