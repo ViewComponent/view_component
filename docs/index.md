@@ -230,6 +230,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/horacio?s=64" alt="horacio" width="32" />
 <img src="https://avatars.githubusercontent.com/horiaradu?s=64" alt="horiaradu" width="32" />
 <img src="https://avatars.githubusercontent.com/jaredcwhite?s=64" alt="jaredcwhite" width="32" />
+<img src="https://avatars.githubusercontent.com/jasonswett?s=64" alt="jasonswett" width="32" />
 <img src="https://avatars.githubusercontent.com/javierm?s=64" alt="javierm" width="32" />
 <img src="https://avatars.githubusercontent.com/jcoyne?s=64" alt="jcoyne" width="32" />
 <img src="https://avatars.githubusercontent.com/jensljungblad?s=64" alt="jensljungblad" width="32" />

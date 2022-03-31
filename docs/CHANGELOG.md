@@ -7,6 +7,12 @@ title: Changelog
 
 ## main
 
+## 2.53.0
+
+* Improve landing page documentation.
+
+    *Jason Swett*
+
 ## 2.52.0
 
 * Add ADR for separate slot getter/setter API.
