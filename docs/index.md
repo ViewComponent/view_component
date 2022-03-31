@@ -139,7 +139,7 @@ They're only meant to be used when a view has non-trivial logic associated with 
 
 ### Additional benefits of using ViewComponent
 
-### Testing
+#### Testing
 
 Unlike traditional Rails templates, ViewComponents can be unit tested. In the GitHub codebase, ViewComponent unit tests are over 100x faster than similar controller tests.
 
@@ -161,13 +161,13 @@ end
 
 ViewComponent unit tests leverage the Capybara matchers library, allowing for complex assertions traditionally reserved for controller and browser tests.
 
-### Data Flow
+#### Data Flow
 
 Traditional Rails templates have an implicit interface, making it hard to reason about their dependencies. This can lead to subtle bugs when rendering the same template in different contexts.
 
 ViewComponents use a standard Ruby initializer that clearly defines what's needed to render, making reuse easier and safer than partials.
 
-### Performance
+#### Performance
 
 Based on several [benchmarks](https://github.com/github/view_component/blob/main/performance/benchmark.rb), ViewComponents are ~10x faster than partials in real-world use-cases.
 
@@ -191,7 +191,7 @@ class MessageComponent < ViewComponent::Base
 end
 ```
 
-### Code quality
+#### Code quality
 
 Template code often fails basic Ruby standards: long methods, deep conditional nesting, and mystery guests abound.
 
