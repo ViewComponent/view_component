@@ -7,8 +7,6 @@ title: Changelog
 
 ## main
 
-## 2.53.0
-
 * Improve landing page documentation.
 
     *Jason Swett*
