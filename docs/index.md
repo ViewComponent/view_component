@@ -104,40 +104,7 @@ The reason is because ViewComponents are a specific solution to a specific probl
 ViewComponents aren't meant to be used for everything.
 They're only meant to be used when a view has non-trivial logic associated with it that doesn’t have any other good place to live.
 
-## What is a ViewComponent?
-
-ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
-
-ViewComponents are objects that encapsulate a template:
-
-```ruby
-# app/components/message_component.rb
-class MessageComponent < ViewComponent::Base
-  def initialize(name:)
-    @name = name
-  end
-end
-```
-
-```erb
-<%# app/components/message_component.html.erb %>
-<h1>Hello, <%= @name %>!</h1>
-```
-
-Which is rendered by calling:
-
-```erb
-<%# app/views/demo/index.html.erb %>
-<%= render(MessageComponent.new(name: "World")) %>
-```
-
-Returning:
-
-```html
-<h1>Hello, World!</h1>
-```
-
-## Why should I use ViewComponents?
+### Additional benefits of using ViewComponent
 
 ### Testing
 
@@ -196,6 +163,39 @@ end
 Template code often fails basic Ruby standards: long methods, deep conditional nesting, and mystery guests abound.
 
 ViewComponents are Ruby objects, making it easy to follow (and enforce) code quality standards.
+
+## What is a ViewComponent?
+
+ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
+
+ViewComponents are objects that encapsulate a template:
+
+```ruby
+# app/components/message_component.rb
+class MessageComponent < ViewComponent::Base
+  def initialize(name:)
+    @name = name
+  end
+end
+```
+
+```erb
+<%# app/components/message_component.html.erb %>
+<h1>Hello, <%= @name %>!</h1>
+```
+
+Which is rendered by calling:
+
+```erb
+<%# app/views/demo/index.html.erb %>
+<%= render(MessageComponent.new(name: "World")) %>
+```
+
+Returning:
+
+```html
+<h1>Hello, World!</h1>
+```
 
 ## Contributors
 
