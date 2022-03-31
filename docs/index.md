@@ -8,6 +8,39 @@ nav_order: 1
 
 A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
+## What's a ViewComponent?
+
+ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
+
+ViewComponents are objects that encapsulate a template:
+
+```ruby
+# app/components/message_component.rb
+class MessageComponent < ViewComponent::Base
+  def initialize(name:)
+    @name = name
+  end
+end
+```
+
+```erb
+<%# app/components/message_component.html.erb %>
+<h1>Hello, <%= @name %>!</h1>
+```
+
+Which is rendered by calling:
+
+```erb
+<%# app/views/demo/index.html.erb %>
+<%= render(MessageComponent.new(name: "World")) %>
+```
+
+Returning:
+
+```html
+<h1>Hello, World!</h1>
+```
+
 ## Why ViewComponent?
 
 ### Cohesion
@@ -163,39 +196,6 @@ end
 Template code often fails basic Ruby standards: long methods, deep conditional nesting, and mystery guests abound.
 
 ViewComponents are Ruby objects, making it easy to follow (and enforce) code quality standards.
-
-## What is a ViewComponent?
-
-ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
-
-ViewComponents are objects that encapsulate a template:
-
-```ruby
-# app/components/message_component.rb
-class MessageComponent < ViewComponent::Base
-  def initialize(name:)
-    @name = name
-  end
-end
-```
-
-```erb
-<%# app/components/message_component.html.erb %>
-<h1>Hello, <%= @name %>!</h1>
-```
-
-Which is rendered by calling:
-
-```erb
-<%# app/views/demo/index.html.erb %>
-<%= render(MessageComponent.new(name: "World")) %>
-```
-
-Returning:
-
-```html
-<h1>Hello, World!</h1>
-```
 
 ## Contributors
 
