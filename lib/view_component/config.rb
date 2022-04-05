@@ -5,6 +5,9 @@ require "view_component/deprecation"
 module ViewComponent
   class Config < ActiveSupport::InheritableOptions
     class << self
+      # `new` without any arguments initializes the default configuration, but
+      # it's important to differentiate in case that's no longer the case in
+      # future.
       alias default new
 
       def defaults
