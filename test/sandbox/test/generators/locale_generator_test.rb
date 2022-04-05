@@ -131,6 +131,6 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
   private
 
   def with_generate_distinct_locale_files(&block)
-    with_generate(:distinct_locale_files, true, &block)
+    with_generate_option(:distinct_locale_files, true, &block)
   end
 end

@@ -675,7 +675,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         preview_route: "/some/other/route",
         show_previews_source: true
       }.each do |option, value|
-        with_generate(option, value) do
+        with_generate_option(option, value) do
           assert_equal(config.public_send(option), ViewComponent::Base.public_send(option))
         end
       end
