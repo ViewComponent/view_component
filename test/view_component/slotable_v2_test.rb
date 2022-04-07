@@ -508,4 +508,14 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_equal 1, PartialHelper::State.calls
   end
+
+  def test_lambda_slot_content_can_be_provided_via_a_block
+    render_inline LambdaSlotComponent.new do |c|
+      c.header(classes: "some-class") do
+        "This is a header!"
+      end
+    end
+
+    assert_selector("h1", text: "This is a header!")
+  end
 end
