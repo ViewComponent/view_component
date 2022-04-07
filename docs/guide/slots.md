@@ -180,7 +180,7 @@ To provide content for a lambda slot via a block, add a block parameter and rend
 ```ruby
 class BlogComponent < ViewComponent::Base
   renders_one :header, -> (classes:, &block) do
-    content_tag :h1, block.call, class: classes
+    content_tag :h1, class: classes, &block
   end
 end
 ```
