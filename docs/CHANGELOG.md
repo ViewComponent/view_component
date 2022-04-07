@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Document how to use blocks with lambda slots
+* Document how to use blocks with lambda slots.
 
     *Sam Partington*
 

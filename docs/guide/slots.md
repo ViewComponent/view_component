@@ -175,7 +175,7 @@ class TableComponent < ViewComponent::Base
 end
 ```
 
-To provide content for a lambda slot via a block, you need to explicitly add a block parameter and render the content by calling its `call` method:
+To provide content for a lambda slot via a block, add a block parameter and render the content by calling its `call` method:
 
 ```ruby
 class BlogComponent < ViewComponent::Base
