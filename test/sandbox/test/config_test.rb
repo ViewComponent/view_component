@@ -31,5 +31,17 @@ module ViewComponent
       assert_equal @config.preview_path, ["some/new/path"]
       @config.preview_path = old_value
     end
+
+    def test_all_methods_are_documented
+      require 'yard'
+      require 'rake'
+      YARD::Rake::YardocTask.new
+      Rake::Task["yard"].execute
+      configuration_methods_to_document = YARD::RegistryStore.new.tap {
+        _1.load!('.yardoc')
+      }.get("ViewComponent::Config").meths.select(&:reader?)
+      assert (Set[*ViewComponent::Config.defaults.keys].subset?(Set[*configuration_methods_to_document.map(&:name)])), 'Not all configuration options are documented.'
+      assert configuration_methods_to_document.map(&:docstring).all?(&:present?), 'Configuration options are missing docstrings.'
+    end
   end
 end
