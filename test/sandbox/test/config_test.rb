@@ -41,7 +41,7 @@ module ViewComponent
         store.load!('.yardoc')
       end.get("ViewComponent::Config").meths.select(&:reader?)
       default_options = ViewComponent::Config.defaults.keys
-      accessors = ViewComponent::Config.instance_methods(false).reject { |method_name| method_name.end_with?('=') }
+      accessors = ViewComponent::Config.instance_methods(false).reject { |method_name| method_name.to_s.end_with?('=') }
       options_defined_on_instance = Set[*default_options, *accessors]
       assert (options_defined_on_instance.subset?(Set[*configuration_methods_to_document.map(&:name)])), 'Not all configuration options are documented.'
       assert configuration_methods_to_document.map(&:docstring).all?(&:present?), 'Configuration options are missing docstrings.'
