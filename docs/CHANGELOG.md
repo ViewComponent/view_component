@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Skip Rails 5.2 in local test environment if using incompatible Ruby version.
+
+    *Cameron Dutro*, *Blake Williams*, *Joel Hawksley*
+
 * Add articles to resources page.
 
     *Joel Hawksley*
