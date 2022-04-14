@@ -26,7 +26,7 @@ end
 <h1>Hello, <%= @name %>!</h1>
 ```
 
-Which is then instantiated and passed to Rails' `#render`:
+Which is instantiated and passed to Rails' `#render`:
 
 ```erb
 <%# app/views/demo/index.html.erb %>
