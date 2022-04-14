@@ -3,10 +3,7 @@ layout: default
 title: Changelog
 ---
 
-<!-- Authoring changelog entries
-
-Add unreleased changes under the "main" heading.
--->
+<!-- Add unreleased changes under the "main" heading. -->
 
 # Changelog
 
