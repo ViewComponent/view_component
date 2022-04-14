@@ -7,6 +7,12 @@ title: Changelog
 
 ## main
 
+## 2.53.0
+
+* Add Bearer to list of companies that heavily rely on ViewComponent.
+
+    *Yaroslav Shmarov*
+
 ## 2.52.0
 
 * Add ADR for separate slot getter/setter API.
