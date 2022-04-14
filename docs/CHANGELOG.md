@@ -7,6 +7,10 @@ title: Changelog
 
 ## main
 
+* Improve landing page documentation.
+
+    *Jason Swett*
+
 * Add Bearer to list of companies that heavily rely on ViewComponent.
 
     *Yaroslav Shmarov*
