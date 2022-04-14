@@ -39,13 +39,18 @@ Returning markup:
 <h1>Hello, World!</h1>
 ```
 
-## Why ViewComponent?
-#### Cohesion
+## Why use ViewComponents?
+
+### TL;DR
+
+ViewComponents work best for templates that are reused or benefit from being tested directly. Partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
+
+### Cohesion
 
 Objects lose cohesion when their contents no longer relate to the same end purpose. Rails applications often scatter view-related logic across models, controllers, and helpers, reducing their cohesion.
 
 ViewComponent methods are implemented within the scope of the template, encapsulating them in proper object-oriented fashion. This cohesion is especially evident when multiple methods are needed for a single view.
-#### Testing
+### Testing
 
 Unlike traditional Rails templates, ViewComponents can be unit tested. In the GitHub codebase, ViewComponent unit tests are over 100x faster than similar controller tests.
 
@@ -67,13 +72,13 @@ end
 
 ViewComponent unit tests leverage the Capybara matchers library, allowing for complex assertions traditionally reserved for controller and browser tests.
 
-#### Data Flow
+### Data Flow
 
 Traditional Rails templates have an implicit interface, making it hard to reason about their dependencies. This can lead to subtle bugs when rendering the same template in different contexts.
 
 ViewComponents use a standard Ruby initializer that clearly defines what's needed to render, making reuse easier and safer than partials.
 
-#### Performance
+### Performance
 
 Based on several [benchmarks](https://github.com/github/view_component/blob/main/performance/benchmark.rb), ViewComponents are ~10x faster than partials in real-world use-cases.
 
@@ -97,7 +102,7 @@ class MessageComponent < ViewComponent::Base
 end
 ```
 
-#### Code quality
+### Code quality
 
 Template code often fails basic Ruby standards: long methods, deep conditional nesting, and mystery guests abound.
 
