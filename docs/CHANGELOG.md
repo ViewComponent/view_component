@@ -3,8 +3,7 @@ layout: default
 title: Changelog
 ---
 
-<!--
-Authoring changelog entries
+<!-- Authoring changelog entries
 
 This file holds all the changes made in previous versions of ViewComponent and the ones coming to the next version.
 
