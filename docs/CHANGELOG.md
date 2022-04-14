@@ -5,9 +5,7 @@ title: Changelog
 
 <!-- Authoring changelog entries
 
-This file holds all the changes made in previous versions of ViewComponent and the ones coming to the next version.
-
-Any unreleased changes should be listed under the "main" heading, while released changes live under the header corresponding to the version they were released in.
+Add unreleased changes under the "main" heading.
 -->
 
 # Changelog
