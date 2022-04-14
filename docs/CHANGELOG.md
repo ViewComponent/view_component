@@ -11,6 +11,10 @@ title: Changelog
 
     *Yaroslav Shmarov*
 
+* Add articles to resources page.
+
+    *Joel Hawksley*
+
 ## 2.52.0
 
 * Add ADR for separate slot getter/setter API.
