@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Skip Rails 5.2 in local test environment if using incompatible Ruby version.
+
+    *Cameron Dutro*, *Blake Williams*, *Joel Hawksley*
+
 * Improve landing page documentation.
 
     *Jason Swett*
