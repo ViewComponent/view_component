@@ -10,9 +10,7 @@ A framework for creating reusable, testable & encapsulated view components, buil
 
 ## What's a ViewComponent?
 
-ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
-
-ViewComponents are objects that encapsulate a template:
+Think of ViewComponents as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html). A ViewComponent is a Ruby object and template:
 
 ```ruby
 # app/components/message_component.rb
@@ -28,24 +26,30 @@ end
 <h1>Hello, <%= @name %>!</h1>
 ```
 
-Which is rendered by calling:
+Which is instantiated and passed to Rails' `#render`:
 
 ```erb
 <%# app/views/demo/index.html.erb %>
 <%= render(MessageComponent.new(name: "World")) %>
 ```
 
-Returning:
+Returning markup:
 
 ```html
 <h1>Hello, World!</h1>
 ```
 
-## When should I use ViewComponents?
+## Why use ViewComponents?
+
+### TL;DR
 
 ViewComponents work best for templates that are reused or benefit from being tested directly. Partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
 
-## Why should I use ViewComponents?
+### Single responsibility
+
+Objects become harder to reason about when their contents no longer relate to the same end purpose. Rails applications often scatter view-related logic across models, controllers, and helpers, often diluting their intended responsibilities. ViewComponents consolidate the logic needed for a template into a single class, resulting in a cohesive object that easy to understand.
+
+ViewComponent methods are implemented within the scope of the template, encapsulating them in proper object-oriented fashion. This cohesion is especially evident when multiple methods are needed for a single view.
 
 ### Testing
 
@@ -138,6 +142,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/horacio?s=64" alt="horacio" width="32" />
 <img src="https://avatars.githubusercontent.com/horiaradu?s=64" alt="horiaradu" width="32" />
 <img src="https://avatars.githubusercontent.com/jaredcwhite?s=64" alt="jaredcwhite" width="32" />
+<img src="https://avatars.githubusercontent.com/jasonswett?s=64" alt="jasonswett" width="32" />
 <img src="https://avatars.githubusercontent.com/javierm?s=64" alt="javierm" width="32" />
 <img src="https://avatars.githubusercontent.com/jcoyne?s=64" alt="jcoyne" width="32" />
 <img src="https://avatars.githubusercontent.com/jensljungblad?s=64" alt="jensljungblad" width="32" />
@@ -191,6 +196,7 @@ ViewComponent is built by over a hundred members of the community, including:
 
 ## Who uses ViewComponent?
 
+* [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [City of Paris](https://www.paris.fr/)
 * [Cometeer](https://cometeer.com/)
