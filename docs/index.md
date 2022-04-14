@@ -50,6 +50,7 @@ ViewComponents work best for templates that are reused or benefit from being tes
 Objects lose cohesion when their contents no longer relate to the same end purpose. Rails applications often scatter view-related logic across models, controllers, and helpers, reducing their cohesion.
 
 ViewComponent methods are implemented within the scope of the template, encapsulating them in proper object-oriented fashion. This cohesion is especially evident when multiple methods are needed for a single view.
+
 ### Testing
 
 Unlike traditional Rails templates, ViewComponents can be unit tested. In the GitHub codebase, ViewComponent unit tests are over 100x faster than similar controller tests.
