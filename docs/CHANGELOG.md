@@ -11,6 +11,10 @@ title: Changelog
 
     *Jason Swett*
 
+* Add Bearer to list of companies that heavily rely on ViewComponent.
+
+    *Yaroslav Shmarov*
+
 * Add articles to resources page.
 
     *Joel Hawksley*
