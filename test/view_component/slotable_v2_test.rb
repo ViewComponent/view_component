@@ -516,6 +516,6 @@ class SlotsV2sTest < ViewComponent::TestCase
       end
     end
 
-    assert_selector("h1", text: "This is a header!")
+    assert_selector("h1.some-class", text: "This is a header!")
   end
 end
