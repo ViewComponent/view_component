@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add support for relative I18n scopes to translations.
+
+    *Elia Schito*
+
 * Document how to use blocks with lambda slots.
 
     *Sam Partington*

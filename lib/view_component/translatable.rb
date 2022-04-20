@@ -67,7 +67,10 @@ module ViewComponent
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
       locale = options.delete(:locale) || ::I18n.locale
+      scope = options.delete(:scope)
+      scope = scope.join('.') if scope.is_a? Array
       key = key&.to_s unless key.is_a?(String)
+      key = "#{scope}.#{key}" if scope
       key = "#{i18n_scope}#{key}" if key.start_with?(".")
 
       if HTML_SAFE_TRANSLATION_KEY.match?(key)
