@@ -3,7 +3,6 @@
 require "erb"
 require "set"
 require "i18n"
-require "action_view/helpers/translation_helper"
 require "active_support/concern"
 
 module ViewComponent
