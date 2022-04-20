@@ -45,7 +45,7 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 1. Make sure the tests pass on your machine: `bundle exec appraisal rake` (see below for specific cases).
 1. Create a new branch: `git checkout -b my-branch-name`.
 1. Make your change, add tests, and make sure the tests still pass.
-1. Add an entry to the top of `docs/CHANGELOG.md` for your changes, no matter how small they're. We want to recognize your contribution!
+1. Add an entry to the top of `docs/CHANGELOG.md` for your changes, no matter how small they are. We want to recognize your contribution!
 2. If it's your first time contributing, add yourself to `docs/index.md`.
 3. Push to your fork and [submit a pull request](https://github.com/github/view_component/compare).
 4. Pat yourself on the back and wait for your pull request to be reviewed and merged.
@@ -80,7 +80,6 @@ bundle exec appraisal rails-5.2 rake
 1. Configure and install the dependencies: `bundle`.
 1. Run Jekyll: `bundle exec jekyll serve`.
 1. Open the docs site at `http://127.0.0.1:4000/`.
-1. If making changes to the API, run `bundle exec rake docs:build` to generate `docs/api.md` from YARD comments.
 
 ### Style guidelines
 

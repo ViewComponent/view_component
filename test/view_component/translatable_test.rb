@@ -58,10 +58,27 @@ class TranslatableTest < ViewComponent::TestCase
     assert_predicate translate(".hello_html"), :html_safe?
   end
 
+  def test_translate_with_html_suffix_escapes_interpolated_arguments
+    translation = translate(".interpolated_html", horse_count: "<script type='text/javascript'>alert('foo');</script>")
+    assert_equal(
+      "There are &lt;script type=&#39;text/javascript&#39;&gt;alert(&#39;foo&#39;);&lt;/script&gt; horses in the "\
+        "<strong>barn</strong>!",
+      translation
+    )
+  end
+
+  def test_translate_with_html_suffix_does_not_double_escape
+    translation = translate(".interpolated_html", horse_count: "> 4")
+    assert_equal(
+      "There are &gt; 4 horses in the <strong>barn</strong>!",
+      translation
+    )
+  end
+
   def test_translate_uses_the_helper_when_no_sidecar_file_is_provided
     # The cache needs to be kept clean for TranslatableComponent, otherwise it will rely on the
     # already created i18n_backend.
-    ViewComponent::CompileCache.cache.delete(TranslatableComponent)
+    ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)
 
     ViewComponent::Base.stub(
       :_sidecar_files,
@@ -72,7 +89,7 @@ class TranslatableTest < ViewComponent::TestCase
       assert_nil TranslatableComponent.i18n_backend
     end
   ensure
-    ViewComponent::CompileCache.cache.delete(TranslatableComponent)
+    ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)
   end
 
   def test_default
@@ -82,6 +99,27 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal default_value, translate("missing", default: default_value)
     assert_equal "Hello from Rails translations!", translate("hello", default: default_value)
     assert_equal "Hello from sidecar translations!", translate(".hello", default: default_value)
+  end
+
+  def test_translate_returns_lists
+    assert_equal ["This", "returns", "a list"], translate(".list")
+  end
+
+  def test_translate_returns_html_safe_lists
+    translated_list = translate(".list_html")
+
+    assert_equal(
+      [
+        "<em>This</em>",
+        "returns",
+        "a list with <strong>embedded</strong> HTML"
+      ],
+      translated_list
+    )
+
+    translated_list.each do |item|
+      assert_predicate item, :html_safe?
+    end
   end
 
   private

@@ -1,0 +1,5 @@
+<% cache ["true"] do %>
+  <%= render CapturingComponent.new(message: "message") do %>
+    <div class="foo-cached">Hello</div>
+  <% end %>
+<% end %>

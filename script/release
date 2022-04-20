@@ -46,6 +46,12 @@ update_ruby_version() {
       -e "s/MINOR = [0-9]+/MINOR = $2/g" \
       -e "s/PATCH = [0-9]+/PATCH = $3/g" \
       lib/view_component/version.rb
+
+  # Update deprecation horizon version
+  major=$1
+  sed -E -i '' \
+      -e "s/DEPRECATION_HORIZON = [0-9]+/DEPRECATION_HORIZON = $((major + 1))/g" \
+      lib/view_component/deprecation.rb
 }
 
 update_gemfiles() {
@@ -53,8 +59,13 @@ update_gemfiles() {
   bundle
 }
 
+build_docs() {
+  bundle exec rake docs:build
+}
+
 add_changed_files() {
   git add \
+    docs/api.md \
     docs/CHANGELOG.md \
     Gemfile.lock \
     lib/view_component/version.rb

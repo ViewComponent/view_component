@@ -66,10 +66,10 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, &block)
-      self.class.compile(raise_errors: true)
-
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
+
+      @output_buffer = ActionView::OutputBuffer.new unless @global_buffer_in_use
 
       @lookup_context ||= view_context.lookup_context
 
@@ -104,13 +104,27 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@__vc_variant).to_s + _output_postamble
+        perform_render
       else
         ""
       end
     ensure
       @current_template = old_current_template
     end
+
+    def perform_render
+      render_template_for(@__vc_variant).to_s + _output_postamble
+    end
+
+    # :nocov:
+    def render_template_for(variant = nil)
+      # Force compilation here so the compiler always redefines render_template_for.
+      # This is mostly a safeguard to prevent infinite recursion.
+      self.class.compile(raise_errors: true, force: true)
+      # .compile replaces this method; call the new one
+      render_template_for(variant)
+    end
+    # :nocov:
 
     # EXPERIMENTAL: Optional content to be returned after the rendered template.
     #
@@ -235,14 +249,11 @@ module ViewComponent
     # @param variant [Symbol] The variant to be used by the component.
     # @return [self]
     def with_variant(variant)
-      ActiveSupport::Deprecation.warn(
-        "`with_variant` is deprecated and will be removed in ViewComponent v3.0.0."
-      )
-
       @__vc_variant = variant
 
       self
     end
+    deprecate :with_variant, deprecator: ViewComponent::Deprecation
 
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.
@@ -337,6 +348,13 @@ module ViewComponent
     # One file will be generated for each configured `I18n.available_locales`,
     # falling back to `[:en]` when no `available_locales` is defined.
     #
+    # #### #preview
+    #
+    # Always generate preview alongside the component:
+    #
+    #      config.view_component.generate.preview = true
+    #
+    #  Defaults to `false`.
     mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new(false)
 
     class << self
@@ -409,6 +427,22 @@ module ViewComponent
         # `compile` defines
         compile
 
+        # Give the child its own personal #render_template_for to protect against the case when
+        # eager loading is disabled and the parent component is rendered before the child. In
+        # such a scenario, the parent will override ViewComponent::Base#render_template_for,
+        # meaning it will not be called for any children and thus not compile their templates.
+        if !child.instance_methods(false).include?(:render_template_for) && !child.compiled?
+          child.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+            def render_template_for(variant = nil)
+              # Force compilation here so the compiler always redefines render_template_for.
+              # This is mostly a safeguard to prevent infinite recursion.
+              self.class.compile(raise_errors: true, force: true)
+              # .compile replaces this method; call the new one
+              render_template_for(variant)
+            end
+          RUBY
+        end
+
         # If Rails application is loaded, add application url_helpers to the component context
         # we need to check this to use this gem as a dependency
         if defined?(Rails) && Rails.application
@@ -441,8 +475,8 @@ module ViewComponent
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
       # @private
-      def compile(raise_errors: false)
-        compiler.compile(raise_errors: raise_errors)
+      def compile(raise_errors: false, force: false)
+        compiler.compile(raise_errors: raise_errors, force: force)
       end
 
       # @private
