@@ -9,7 +9,6 @@ title: Changelog
 
 ## main
 
-<<<<<<< HEAD
 * Update CI configuration to use latest Rails 7.0.
 
     *Hans Lemuet*
