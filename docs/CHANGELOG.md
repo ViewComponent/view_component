@@ -3,6 +3,8 @@ layout: default
 title: Changelog
 ---
 
+<!-- Add unreleased changes under the "main" heading. -->
+
 # Changelog
 
 ## main
@@ -10,6 +12,22 @@ title: Changelog
 * Document how to use blocks with lambda slots.
 
     *Sam Partington*
+
+* Skip Rails 5.2 in local test environment if using incompatible Ruby version.
+
+    *Cameron Dutro*, *Blake Williams*, *Joel Hawksley*
+
+* Improve landing page documentation.
+
+    *Jason Swett*
+
+* Add Bearer to list of companies that heavily rely on ViewComponent.
+
+    *Yaroslav Shmarov*
+
+* Add articles to resources page.
+
+    *Joel Hawksley*
 
 ## 2.52.0
 
