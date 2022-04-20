@@ -47,7 +47,7 @@ ViewComponents work best for templates that are reused or benefit from being tes
 
 ### Single responsibility
 
-Objects become harder to reason about when their contents no longer relate to the same end purpose. Rails applications often scatter view-related logic across models, controllers, and helpers, often diluting their intended responsibilities. ViewComponents consolidate the logic needed for a template into a single class, resulting in a cohesive object that easy to understand.
+Rails applications often scatter view-related logic across models, controllers, and helpers, often diluting their intended responsibilities. ViewComponents consolidate the logic needed for a template into a single class, resulting in a cohesive object that is easy to understand.
 
 ViewComponent methods are implemented within the scope of the template, encapsulating them in proper object-oriented fashion. This cohesion is especially evident when multiple methods are needed for a single view.
 
