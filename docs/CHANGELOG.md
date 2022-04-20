@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add support for relative I18n scopes to translations.
+
+    *Elia Schito*
+
 * Update CI configuration to use latest Rails 7.0.
 
     *Hans Lemuet*
