@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Document how to use blocks with lambda slots.
+
+    *Sam Partington*
+
 * Skip Rails 5.2 in local test environment if using incompatible Ruby version.
 
     *Cameron Dutro*, *Blake Williams*, *Joel Hawksley*
