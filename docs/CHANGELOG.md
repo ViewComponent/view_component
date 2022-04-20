@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Update CI configuration to use latest Rails 7.0.
+
+    *Hans Lemuet*
+
 * Document how to use blocks with lambda slots.
 
     *Sam Partington*
@@ -146,7 +150,7 @@ title: Changelog
 
     *Joel Hawksley*
 
-* Add Ruby 3.1 and Rails 7.0 to CI
+* Add Ruby 3.1 and Rails 7.0 to CI.
 
     *Peter Goldstein*
 
