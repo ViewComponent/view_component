@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Update docs dependencies.
+
+    *Joel Hawksley*
+
 ## 2.53.0
 
 * Add support for relative I18n scopes to translations.
