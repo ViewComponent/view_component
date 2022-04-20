@@ -123,11 +123,11 @@ class TranslatableTest < ViewComponent::TestCase
   end
 
   def test_translate_scopes
-    assert_equal "This is coming from the sidecar", translate("sidecar", scope: '.from')
-    assert_equal "This is coming from Rails", translate("rails", scope: 'from')
-    assert_equal "This is coming from the sidecar", translate("sidecar", scope: ['.from'])
-    assert_equal "This is coming from Rails", translate("rails", scope: ['from'])
-    assert_equal "This is coming from the sidecar", translate(:sidecar, scope: [:'.from'])
+    assert_equal "This is coming from the sidecar", translate("sidecar", scope: ".from")
+    assert_equal "This is coming from Rails", translate("rails", scope: "from")
+    assert_equal "This is coming from the sidecar", translate("sidecar", scope: [".from"])
+    assert_equal "This is coming from Rails", translate("rails", scope: ["from"])
+    assert_equal "This is coming from the sidecar", translate(:sidecar, scope: [:".from"])
     assert_equal "This is coming from Rails", translate(:rails, scope: [:from])
   end
 
