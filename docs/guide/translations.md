@@ -42,7 +42,7 @@ Global Rails translations are available as well:
 <%= t("my.global.translation") %>
 ```
 
-Global translations can still be accessed via `helpers` or `I18n`:
+Access global translations via `helpers` or `I18n`:
 
 ```erb
 <%# app/components/example_component.html.erb %>
