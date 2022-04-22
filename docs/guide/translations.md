@@ -6,7 +6,7 @@ parent: Guide
 
 # Translations
 
-To use `I18n` translations, add a sidecar YAML file with translations for the component:
+To use `I18n` translations, add a sidecar YAML file:
 
 ```yml
 # app/components/example_component.yml
