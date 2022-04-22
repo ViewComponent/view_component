@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Move the `Translatable` module out of experimental mode.
+* Include the `Translatable` module by default.
 
     *Elia Schito*
 
