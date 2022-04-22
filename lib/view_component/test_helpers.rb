@@ -30,7 +30,7 @@ module ViewComponent
     # @private
     attr_reader :rendered_component
 
-    # Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
+    # Render a component or block inline. Internally sets `page` to be a `Capybara::Node::Simple`,
     # allowing for Capybara assertions to be used:
     #
     # ```ruby
@@ -38,15 +38,28 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     #
-    # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
+    # It is also possible to execute a block in the view context instead of rendering a component:
+    #
+    # ```ruby
+    # render_inline do
+    #   render(MyComponent.new)
+    # end
+    #
+    # assert_text("Hello, World!")
+    # ```
+    #
+    # @param component [ViewComponent::Base, ViewComponent::Collection, NilClass] The instance of the component to be rendered. If nil, the block is executed in the view context.
     # @return [Nokogiri::HTML]
-    def render_inline(component, **args, &block)
-      @rendered_component =
+    def render_inline(component = nil, **args, &block)
+      @rendered_component = if component
         if Rails.version.to_f >= 6.1
           controller.view_context.render(component, args, &block)
         else
           controller.view_context.render_component(component, &block)
         end
+      else
+        controller.view_context.instance_exec(&block)
+      end
 
       Nokogiri::HTML.fragment(@rendered_component)
     end
