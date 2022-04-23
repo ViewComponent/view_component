@@ -20,9 +20,7 @@ module ViewComponent
         @i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
       end
 
-      def _after_compile
-        super
-
+      def build_i18n_backend
         return if CompileCache.compiled? self
 
         if (translation_files = _sidecar_files(%w[yml yaml])).any?

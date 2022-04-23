@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Include the `Translatable` module by default.
+
+    *Elia Schito*
+
 * Update docs dependencies.
 
     *Joel Hawksley*

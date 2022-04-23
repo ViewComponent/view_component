@@ -17,6 +17,7 @@ module ViewComponent
     include ViewComponent::ContentAreas
     include ViewComponent::Previewable
     include ViewComponent::SlotableV2
+    include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
