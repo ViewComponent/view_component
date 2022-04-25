@@ -48,18 +48,20 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     #
-    # @param component [ViewComponent::Base, ViewComponent::Collection, NilClass] The instance of the component to be rendered. If nil, the block is executed in the view context.
+    # @param component [ViewComponent::Base, ViewComponent::Collection, NilClass] The instance of the component
+    # to be rendered. If nil, the block is executed in the view context.
     # @return [Nokogiri::HTML]
     def render_inline(component = nil, **args, &block)
-      @rendered_component = if component
-        if Rails.version.to_f >= 6.1
-          controller.view_context.render(component, args, &block)
+      @rendered_component =
+        if component
+          if Rails.version.to_f >= 6.1
+            controller.view_context.render(component, args, &block)
+          else
+            controller.view_context.render_component(component, &block)
+          end
         else
-          controller.view_context.render_component(component, &block)
+          controller.view_context.instance_exec(&block)
         end
-      else
-        controller.view_context.instance_exec(&block)
-      end
 
       Nokogiri::HTML.fragment(@rendered_component)
     end

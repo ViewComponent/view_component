@@ -9,6 +9,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
+  def test_render_inline_block
+    render_inline { render(MyComponent.new) }
+
+    assert_selector("div", text: "hello,world!")
+  end
+
   def test_render_inline_returns_nokogiri_fragment
     assert_includes render_inline(MyComponent.new).css("div").to_html, "hello,world!"
   end
