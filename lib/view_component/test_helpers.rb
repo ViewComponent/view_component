@@ -38,7 +38,7 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     #
-    # It is also possible to execute a block in the view context instead of rendering a component:
+    # If `component` is `nil`, `render_inline` will execute the block in the view context instead:
     #
     # ```ruby
     # render_inline do
