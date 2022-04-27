@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Add `with_*` slot API for defining slots
+* Add `with_*` slot API for defining slots.
 
     *Blake Williams*
 
