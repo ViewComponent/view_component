@@ -20,6 +20,8 @@
 /docs/guide/generators.md @spone
 /test/generators/**/* @spone
 /test/view_component/test_unit_generator_test.rb @spone
+/Appraisals @spone
+/gemfiles/**/* @spone
 
 /app/**/* @juanmanuelramallo
 /docs/guide/previews.md @juanmanuelramallo
@@ -39,3 +41,8 @@
 /test/sandbox/app/components/translatable_component.yml @elia
 /test/sandbox/app/components/translations_component.html.erb @elia
 /test/sandbox/app/components/translations_component.rb @elia
+
+/.devcontainer/**/* @boardfish
+/script/replicate-bug @boardfish
+/lib/view_component/docs_builder_component.rb @boardfish
+/lib/view_component/docs_builder_component.html.erb @boardfish

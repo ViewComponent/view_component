@@ -5,6 +5,15 @@ module ViewComponent
     # Lock required to be obtained before compiling the component
     attr_reader :__vc_compiler_lock
 
+    # Compiler mode. Can be either:
+    # * development (a blocking mode which ensures thread safety when redefining the `call` method for components,
+    #                default in Rails development and test mode)
+    # * production (a non-blocking mode, default in Rails production mode)
+    DEVELOPMENT_MODE = :development
+    PRODUCTION_MODE = :production
+
+    class_attribute :mode, default: PRODUCTION_MODE
+
     def initialize(component_class)
       @component_class = component_class
       @__vc_compiler_lock = Monitor.new
@@ -14,12 +23,15 @@ module ViewComponent
       CompileCache.compiled?(component_class)
     end
 
-    def compile(raise_errors: false)
-      return if compiled?
+    def development?
+      self.class.mode == DEVELOPMENT_MODE
+    end
 
-      __vc_compiler_lock.synchronize do
-        CompileCache.invalidate_class!(component_class)
+    def compile(raise_errors: false, force: false)
+      return if compiled? && !force
+      return if component_class == ViewComponent::Base
 
+      with_lock do
         subclass_instance_methods = component_class.instance_methods(false)
 
         if subclass_instance_methods.include?(:with_content) && raise_errors
@@ -36,7 +48,7 @@ module ViewComponent
         end
 
         if subclass_instance_methods.include?(:before_render_check)
-          ActiveSupport::Deprecation.warn(
+          ViewComponent::Deprecation.warn(
             "`#before_render_check` will be removed in v3.0.0.\n\n" \
             "To fix this issue, use `#before_render` instead."
           )
@@ -52,23 +64,37 @@ module ViewComponent
           # as Ruby warns when redefining a method.
           method_name = call_method_name(template[:variant])
 
-          if component_class.instance_methods.include?(method_name.to_sym)
-            component_class.send(:undef_method, method_name.to_sym)
+          if component_class.instance_methods(false).include?(method_name.to_sym)
+            component_class.send(:remove_method, method_name.to_sym)
           end
 
-          component_class.class_eval <<-RUBY, template[:path], -1
-            def #{method_name}
-              @output_buffer = ActionView::OutputBuffer.new
-              #{compiled_template(template[:path])}
-            end
+          component_class.class_eval <<-RUBY, template[:path], 0
+          def #{method_name}
+            #{compiled_template(template[:path])}
+          end
           RUBY
         end
 
         define_render_template_for
 
+        component_class.build_i18n_backend
         component_class._after_compile
 
         CompileCache.register(component_class)
+      end
+    end
+
+    def with_lock(&block)
+      if development?
+        __vc_compiler_lock.synchronize(&block)
+      else
+        block.call
+      end
+    end
+
+    def reset_render_template_for
+      if component_class.instance_methods(false).include?(:render_template_for)
+        component_class.send(:remove_method, :render_template_for)
       end
     end
 
@@ -77,24 +103,36 @@ module ViewComponent
     attr_reader :component_class
 
     def define_render_template_for
-      if component_class.instance_methods.include?(:render_template_for)
-        component_class.send(:undef_method, :render_template_for)
-      end
+      reset_render_template_for
 
       variant_elsifs = variants.compact.uniq.map do |variant|
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
       end.join("\n")
 
-      component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
-          if variant.nil?
-            call
-          #{variant_elsifs}
-          else
-            call
-          end
+      body = <<-RUBY
+        if variant.nil?
+          call
+        #{variant_elsifs}
+        else
+          call
         end
       RUBY
+
+      if development?
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil)
+          self.class.compiler.with_lock do
+            #{body}
+          end
+        end
+        RUBY
+      else
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil)
+          #{body}
+        end
+        RUBY
+      end
     end
 
     def template_errors

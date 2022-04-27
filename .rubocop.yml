@@ -6,6 +6,7 @@ inherit_gem:
 AllCops:
   SuggestExtensions: false
   Exclude:
+    - gemfiles/**/*
     - test/tmp/**/*
     - vendor/bundle/**/*
 
@@ -21,3 +22,10 @@ Layout/DotPosition:
 Layout/LineLength:
   Max: 120
   Enabled: true
+
+Layout/SpaceBeforeBrackets:
+  Enabled: true
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - "**/*.jbuilder" # not yet supported inside jbuilder templates

@@ -320,11 +320,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "hello,world!")
   end
 
-  def test_renders_preview_source
+  def test_renders_preview_source_without_template
     get "/rails/view_components/preview_component/default"
 
     assert_select ".view-component-source-example h2", "Source:"
     assert_select ".view-component-source-example pre.source code"
+    assert_select ".language-ruby"
+    refute_match "&lt;%=", response.body
+    refute_match "%&gt", response.body
   end
 
   def test_renders_preview_source_with_template_from_layout
@@ -332,6 +335,9 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_select ".view-component-source-example h2", "Source:"
     assert_select ".view-component-source-example pre.source code"
+    assert_select ".language-erb"
+    assert_match "&lt;%=", response.body
+    assert_match "%&gt", response.body
   end
 
   def test_renders_collections
@@ -477,11 +483,29 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
   end
 
+  def test_does_not_render_additional_newline_with_render_in
+    skip unless Rails::VERSION::MAJOR >= 7
+    without_template_annotations do
+      ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
+      get "/rails/view_components/display_inline_component/with_newline_render_in"
+      assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
+    end
+  ensure
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+  end
+
   def test_renders_the_preview_example_with_its_own_template_and_a_layout
     get "/rails/view_components/my_component/inside_banner"
     assert_includes response.body, "ViewComponent - Admin - Test"
     assert_select ".banner" do
       assert_select("div", "hello,world!")
+    end
+  end
+
+  def test_renders_a_block_passed_to_a_lambda_slot
+    get "/rails/view_components/lambda_slot_passthrough_component/default"
+    assert_select ".lambda_slot" do
+      assert_select ".content", "hello,world!"
     end
   end
 
@@ -500,6 +524,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_an_inline_component_preview_using_a_haml_template
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+
     get "/rails/view_components/inline_component/with_haml"
     assert_select "h1", "Some HAML here"
     assert_select "input[name=?]", "name"
@@ -511,6 +537,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_renders_a_mix_of_haml_and_erb
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+
+    get "/nested_haml"
+    assert_response :success
+    assert_select "p.foo > span.bar > div.baz > article.quux > div.haml-div"
+  end
+
   def test_raises_an_error_if_the_template_is_not_present_and_the_render_with_template_method_is_used_in_the_example
     error =
       assert_raises ViewComponent::PreviewTemplateError do
@@ -520,6 +554,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_preview_template_using_haml_params_from_url_custom_template_and_locals
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+
     get "/rails/view_components/inline_component/with_several_options?form_title=Title from params"
 
     assert_select "form" do
@@ -533,5 +569,57 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/rails/view_components/image_path_component/default"
 
     assert_includes response.body, "images/foo.png"
+  end
+
+  def test_sets_the_compiler_mode_in_production_mode
+    old_env = Rails.env
+    begin
+      Rails.env = "production".inquiry
+
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+      assert_equal ViewComponent::Compiler::PRODUCTION_MODE, ViewComponent::Compiler.mode
+    ensure
+      Rails.env = old_env
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+    end
+  end
+
+  def test_sets_the_compiler_mode_in_development_mode
+    Rails.env.stub :development?, true do
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
+    end
+
+    Rails.env.stub :test?, true do
+      ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
+      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
+    end
+  end
+
+  def test_link_to_helper
+    get "/link_to_helper"
+    assert_select "a > i,span"
+  end
+
+  def test_cached_capture
+    Rails.cache.clear
+    ActionController::Base.perform_caching = true
+
+    get "/cached_capture"
+    assert_select ".foo .foo-cached"
+
+    ActionController::Base.perform_caching = false
+    Rails.cache.clear
+  end
+
+  def test_cached_partial
+    Rails.cache.clear
+    ActionController::Base.perform_caching = true
+
+    get "/cached_partial"
+    assert_select "article.quux"
+
+    ActionController::Base.perform_caching = false
+    Rails.cache.clear
   end
 end

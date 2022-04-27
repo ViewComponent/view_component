@@ -1,0 +1,1 @@
+<div<%= data_attributes %>>Add <%= class_name %> template here</div>

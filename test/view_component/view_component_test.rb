@@ -103,6 +103,8 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_haml_with_html_formatted_slot
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+
     render_inline(HamlHtmlFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted one")
@@ -738,6 +740,30 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match(/MissingDefaultCollectionParameterComponent doesn't accept the parameter/, exception.message)
   end
 
+  def test_collection_component_missing_custom_parameter_name_with_activemodel
+    exception = assert_raises ArgumentError do
+      render_inline(
+        MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
+
+    assert_match(
+      "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, "\
+      "which is required in order to render it as a collection.\n\n" \
+      "To fix this issue, update the initializer to accept `name`.\n\n" \
+      "See https://viewcomponent.org/guide/collections.html for more information on rendering collections.",
+      exception.message
+    )
+  end
+
+  def test_collection_component_present_custom_parameter_name_with_activemodel
+    assert_nothing_raised do
+      render_inline(
+        CollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
+  end
+
   def test_component_with_invalid_parameter_names
     begin
       old_cache = ViewComponent::CompileCache.cache
@@ -872,6 +898,10 @@ class ViewComponentTest < ViewComponent::TestCase
       render_inline UrlForComponent.new
       assert_text "/products?key=value"
     end
+
+    with_request_url "/products" do
+      assert_equal "/products", request.path
+    end
   end
 
   def test_with_request_url_with_query_parameters
@@ -888,6 +918,10 @@ class ViewComponentTest < ViewComponent::TestCase
     with_request_url "/products?mykey=myvalue" do
       render_inline UrlForComponent.new
       assert_text "/products?key=value&mykey=myvalue"
+    end
+
+    with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
+      assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
     end
   end
 
@@ -909,17 +943,75 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_not_equal(MyComponent.compiler.__vc_compiler_lock, AnotherComponent.compiler.__vc_compiler_lock)
   end
 
-  def test_multithread_render
-    ViewComponent::CompileCache.cache.delete(MyComponent)
-
-    threads = 100.times.map do
-      Thread.new do
+  def test_compilation_in_development_mode
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
         render_inline(MyComponent.new)
-
         assert_selector("div", text: "hello,world!")
       end
     end
+  end
 
-    threads.map(&:join)
+  def test_compilation_in_production_mode
+    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE) do
+      with_new_cache do
+        render_inline(MyComponent.new)
+        assert_selector("div", text: "hello,world!")
+      end
+    end
+  end
+
+  def test_multithread_render
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+    Rails.env.stub :test?, true do
+      threads = 100.times.map do
+        Thread.new do
+          render_inline(MyComponent.new)
+
+          assert_selector("div", text: "hello,world!")
+        end
+      end
+
+      threads.map(&:join)
+    end
+  end
+
+  def test_multiple_inline_renders_of_the_same_component
+    component = ErbComponent.new(message: "foo")
+    render_inline(InlineRenderComponent.new(items: [component, component]))
+    assert_selector("div", text: "foo", count: 2)
+  end
+
+  def test_deprecated_generate_mattr_accessor
+    ViewComponent::Base._deprecated_generate_mattr_accessor(:test_accessor)
+    assert(ViewComponent::Base.respond_to?(:generate_test_accessor))
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+    ViewComponent::Base.generate_test_accessor = "changed"
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+    ViewComponent::Base.generate.test_accessor = "changed again"
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+  ensure
+    ViewComponent::Base.class_eval do
+      singleton_class.undef_method :generate_test_accessor
+      singleton_class.undef_method :generate_test_accessor=
+    end
+  end
+
+  def test_inherited_component_renders_when_lazy_loading
+    # Simulate lazy loading by manually removing the classes in question. This will completely
+    # undo the changes made by self.class.compile and friends, forcing a compile the next time
+    # #render_template_for is called. This shouldn't be necessary except in the test environment,
+    # since eager loading is turned on here.
+    Object.send(:remove_const, :MyComponent)
+    Object.send(:remove_const, :InheritedWithOwnTemplateComponent)
+
+    load "test/sandbox/app/components/my_component.rb"
+    load "test/sandbox/app/components/inherited_with_own_template_component.rb"
+
+    render_inline(MyComponent.new)
+    assert_selector("div", text: "hello,world!")
+
+    render_inline(InheritedWithOwnTemplateComponent.new)
+    assert_selector("div", text: "hello, my own template")
   end
 end

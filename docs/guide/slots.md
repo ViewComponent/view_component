@@ -62,6 +62,27 @@ Returning:
 <a href="/blog/second-post">Second post</a>
 ```
 
+## Predicate methods
+
+To test whether a slot has been passed to the component, use the provided `#{slot_name}?` method.
+
+```erb
+<%# blog_component.html.erb %>
+<% if header? %>
+  <h1><%= header %></h1>
+<% end %>
+
+<% if posts? %>
+  <div class="posts">
+    <% posts.each do |post| %>
+      <%= post %>
+    <% end %>
+  </div>
+<% else %>
+  <p>No post yet.</p>
+<% end %>
+```
+
 ## Component slots
 
 Slots can also render other components. Pass the name of a component as the second argument to define a component slot.
@@ -150,6 +171,16 @@ class TableComponent < ViewComponent::Base
 
   def initialize(selectable: false)
     @selectable = selectable
+  end
+end
+```
+
+To provide content for a lambda slot via a block, add a block parameter. Render the content by calling the block's `call` method, or by passing the block directly to `content_tag`:
+
+```ruby
+class BlogComponent < ViewComponent::Base
+  renders_one :header, -> (classes:, &block) do
+    content_tag :h1, class: classes, &block
   end
 end
 ```

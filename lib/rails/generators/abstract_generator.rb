@@ -15,7 +15,7 @@ module ViewComponent
     end
 
     def destination_directory
-      if options["sidecar"]
+      if sidecar?
         File.join(component_path, class_path, destination_file_name)
       else
         File.join(component_path, class_path)
@@ -41,6 +41,10 @@ module ViewComponent
           gsub("_", "-").
           gsub("/", "--")
       end
+    end
+
+    def sidecar?
+      options["sidecar"] || ViewComponent::Base.generate.sidecar
     end
   end
 end

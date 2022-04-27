@@ -23,7 +23,7 @@ module ViewComponent
       #   class_name: "Header" # class name string, used to instantiate Slot
       # )
       def with_slot(*slot_names, collection: false, class_name: nil)
-        ActiveSupport::Deprecation.warn(
+        ViewComponent::Deprecation.warn(
           "`with_slot` is deprecated and will be removed in ViewComponent v3.0.0.\n" \
           "Use the new slots API (https://viewcomponent.org/guide/slots.html) instead."
         )

@@ -127,13 +127,55 @@ Use ViewComponents in place of helpers that return HTML.
 
 The more a ViewComponent is dependent on global state (such as request parameters or the current URL), the less likely it's to be reusable. Avoid implicit coupling to global state, instead passing it into the component explicitly. Thorough unit testing is a good way to ensure decoupling from global state.
 
+```ruby
+# good
+class MyComponent < ViewComponent::Base
+  def initialize(name:)
+    @name = name
+  end
+end
+
+# bad
+class MyComponent < ViewComponent::Base
+  def initialize
+    @name = params[:name]
+  end
+end
+```
+
 ### Avoid inline Ruby in ViewComponent templates
 
-Avoid writing inline Ruby in ViewComponent templates. Try using an instance method on the ViewComponent instead.
+Avoid writing inline Ruby in ViewComponent templates. Try using an instance method on the ViewComponent instead:
+
+```ruby
+# good
+class MyComponent < ViewComponent::Base
+  def message
+    "Hello, #{@name}!"
+  end
+end
+```
+
+``` erb
+<%# bad %>
+<% message = "Hello, #{@name}" %>
+```
 
 ### Pass an object instead of 3+ object attributes
 
-ViewComponents should be passed individual object attributes unless three or more attributes are needed from the object, in which case the entire object should be passed.
+ViewComponents should be passed individual object attributes unless three or more attributes are needed from the object, in which case the entire object should be passed:
+
+```ruby
+# good
+class MyComponent < ViewComponent::Base
+  def initialize(repository:); end
+end
+
+# bad
+class MyComponent < ViewComponent::Base
+  def initialize(repository_name:, repository_owner:, repository_created_at:); end
+end
+```
 
 ### Avoid database queries
 

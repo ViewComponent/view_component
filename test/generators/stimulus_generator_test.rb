@@ -39,4 +39,12 @@ class StimulusGeneratorTest < Rails::Generators::TestCase
 
     assert_file "app/components/admins/user_component/user_component_controller.js"
   end
+
+  def test_component_with_generate_sidecar
+    with_generate_sidecar(true) do
+      run_generator %w[user]
+
+      assert_file "app/components/user_component/user_component_controller.js"
+    end
+  end
 end

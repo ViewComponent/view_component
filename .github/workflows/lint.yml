@@ -3,6 +3,20 @@ name: Lint
 on: [pull_request]
 
 jobs:
+  trailing-whitespace:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Check for trailing whitespace
+      uses: raisedevs/find-trailing-whitespace@restrict-to-plaintext-only
+    - name: Check for merge conflicts
+      run: git diff --check
+      shell: bash
+    - name: Ensure all files have newline at EOF
+      uses: Logerfo/newline-action@0.0.2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
   prose:
     runs-on: ubuntu-latest
     steps:
@@ -12,8 +26,6 @@ jobs:
         uses: errata-ai/vale-action@310a5ac41197ffb704515622b4914c72d3abc54b
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          files: '**/*'
   markdown:
     runs-on: ubuntu-latest
     steps:
@@ -58,34 +70,16 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7.2
+        ruby-version: 2.7
     - uses: actions/cache@v2
       with:
         path: vendor/bundle
-        key: gems-build-rails-main-ruby-2.7.2-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
     - name: Lint with Rubocop and ERB Lint
       run: |
         bundle config path vendor/bundle
-        bundle install --jobs 4 --retry 3
+        bundle update
         bundle exec rubocop
         bundle exec erblint **/*.html.erb
-  docs_api:
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.7.2
-    - uses: actions/cache@v2
-      with:
-        path: vendor/bundle
-        key: gems-build-rails-main-ruby-2.7.2-${{ hashFiles('**/Gemfile.lock') }}
-    - name: Generate docs/api.md from YARD comments
-      run: |
-        bundle config path vendor/bundle
-        bundle update
-        bundle exec rake docs:build
-    - name: Error out if docs/api.md has to be regenerated
-      run: git diff --exit-code docs/api.md || echo '::error file=docs/api.md,line=1,col=1::Please make sure to run `bundle exec rake docs:build` to regenerate docs/api.md to include changes in YARD comments from this pull request.'
+      env:
+        RAILS_VERSION: '~> 7.0.0'
