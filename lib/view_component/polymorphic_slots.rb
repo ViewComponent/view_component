@@ -54,7 +54,7 @@ module ViewComponent
           define_method("with_#{setter_name}") do |*args, &block|
             set_polymorphic_slot(slot_name, poly_type, *args, &block)
           end
-          ruby2_keywords(setter_name.to_sym) if respond_to?(:ruby2_keywords, true)
+          ruby2_keywords(:"with_#{setter_name}") if respond_to?(:ruby2_keywords, true)
         end
 
         self.registered_slots[slot_name] = {
