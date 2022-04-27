@@ -469,6 +469,27 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector(".footer.text-blue")
   end
 
+  def test_supports_with_setters_plural
+    render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
+      component.with_items([{ highlighted: true }, { highlighted: false }])
+    end
+
+    assert_selector(".item", count: 2)
+    assert_selector(".item.highlighted", count: 1)
+  end
+
+  def test_polymorphic_slot_with_setters
+    render_inline(PolymorphicSlotComponent.new) do |component|
+      component.with_header_standard { "standard" }
+      component.with_item_foo(class_names: "custom-foo")
+      component.with_item_bar(class_names: "custom-bar")
+    end
+
+    assert_selector("div .standard", text: "standard")
+    assert_selector("div .foo.custom-foo:nth-child(2)")
+    assert_selector("div .bar.custom-bar:last")
+  end
+
   def test_supports_with_collection_setter
     render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
       component.with_items([{}, { highlighted: true }, {}])

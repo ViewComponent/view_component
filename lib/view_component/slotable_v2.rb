@@ -80,6 +80,7 @@ module ViewComponent
           if args.empty? && block.nil?
             get_slot(slot_name)
           else
+            # Deprecated: Will remove in 3.0
             set_slot(slot_name, nil, *args, &block)
           end
         end
@@ -137,6 +138,8 @@ module ViewComponent
         # Define setter for singular names
         # for example `renders_many :items` allows fetching all tabs with
         # `component.tabs` and setting a tab with `component.tab`
+        #
+        # Deprecated: Will remove in 3.0
         define_method singular_name do |*args, &block|
           set_slot(slot_name, nil, *args, &block)
         end
@@ -160,6 +163,7 @@ module ViewComponent
           if collection_args.nil? && block.nil?
             get_slot(slot_name)
           else
+            # Deprecated: Will remove in 3.0
             collection_args.map do |args|
               set_slot(slot_name, nil, **args, &block)
             end
