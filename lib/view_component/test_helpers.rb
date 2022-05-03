@@ -7,7 +7,7 @@ module ViewComponent
       include Capybara::Minitest::Assertions
 
       def page
-        Capybara::Node::Simple.new(@rendered_component)
+        Capybara::Node::Simple.new(@rendered_page)
       end
 
       def refute_component_rendered
@@ -41,14 +41,14 @@ module ViewComponent
     # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
     # @return [Nokogiri::HTML]
     def render_inline(component, **args, &block)
-      @rendered_component =
+      @rendered_page =
         if Rails.version.to_f >= 6.1
           controller.view_context.render(component, args, &block)
         else
           controller.view_context.render_component(component, &block)
         end
 
-      Nokogiri::HTML.fragment(@rendered_component)
+      Nokogiri::HTML.fragment(@rendered_page)
     end
 
     # @private
