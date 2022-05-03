@@ -172,9 +172,9 @@ config.view_component.show_previews_source = true
 
 To render the source preview in a different location, use the view helper `preview_source` from within the preview template or preview layout.
 
-## Using with rspec
+## Use with RSpec
 
-When using previews with rspec,  replace `test/components` with `spec/components` and update `preview_paths`:
+When using previews with RSpec,  replace `test/components` with `spec/components` and update `preview_paths`:
 
 ```ruby
 # config/application.rb
