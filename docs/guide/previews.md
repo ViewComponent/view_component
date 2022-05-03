@@ -6,21 +6,13 @@ parent: Guide
 
 # Previews
 
-`ViewComponent::Preview`, like `ActionMailer::Preview`, provides a quick way to preview components in isolation.
-
-_For a more interactive experience, consider using [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook) or [Lookbook](https://github.com/allmarkedup/lookbook)._
-
-Define a `ViewComponent::Preview`:
+`ViewComponent::Preview`, like `ActionMailer::Preview`, provides a quick way to preview components in isolation:
 
 ```ruby
 # test/components/previews/example_component_preview.rb
 class ExampleComponentPreview < ViewComponent::Preview
   def with_default_title
     render(ExampleComponent.new(title: "Example component default"))
-  end
-
-  def with_long_title
-    render(ExampleComponent.new(title: "This is a really long title to see how the component renders this"))
   end
 
   def with_content_block
@@ -35,11 +27,12 @@ end
 
 Then access the resulting previews at:
 
-* <http://localhost:3000/rails/view_components/example_component/with_default_title>
-* <http://localhost:3000/rails/view_components/example_component/with_long_title>
-* <http://localhost:3000/rails/view_components/example_component/with_content_block>
+* `/rails/view_components/example_component/with_default_title`
+* `/rails/view_components/example_component/with_content_block`
 
-It's also possible to set dynamic values from the params by setting them as arguments:
+## Passing parameters
+
+Set dynamic values from URL parameters by setting them as arguments:
 
 ```ruby
 # test/components/previews/example_component_preview.rb
@@ -50,13 +43,19 @@ class ExampleComponentPreview < ViewComponent::Preview
 end
 ```
 
-Which enables passing in a value with <http://localhost:3000/rails/view_components/example_component/with_dynamic_title?title=Custom+title>.
+Then pass in a value: `/rails/view_components/example_component/with_dynamic_title?title=Custom+title`.
+
+## Helpers
 
 The `ViewComponent::Preview` base class includes
 [`ActionView::Helpers::TagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html), which provides the [`tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-tag)
 and [`content_tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-content_tag) view helper methods.
 
-Previews use the application layout by default, but can use a specific layout with the `layout` option:
+<!-- TODO - add example of these helpers -->
+
+## Layouts
+
+Previews render with the application layout by default, but can use a specific layout with the `layout` option:
 
 ```ruby
 # test/components/previews/example_component_preview.rb
@@ -67,13 +66,15 @@ class ExampleComponentPreview < ViewComponent::Preview
 end
 ```
 
-To set a custom layout for previews and the previews index page, set: `default_preview_layout`:
+To set a custom layout for all previews and the previews index page, set: `default_preview_layout`:
 
 ```ruby
 # config/application.rb
 # Set the default layout to app/views/layouts/component_preview.html.erb
 config.view_component.default_preview_layout = "component_preview"
 ```
+
+## Preview paths
 
 Preview classes live in `test/components/previews`, which can be configured using the `preview_paths` option:
 
@@ -82,15 +83,14 @@ Preview classes live in `test/components/previews`, which can be configured usin
 config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
 ```
 
-Previews are served from <http://localhost:3000/rails/view_components> by default. To use a different endpoint, set the `preview_route` option:
+## Previews route
+
+Previews are served from `/rails/view_components` by default. To use a different endpoint, set the `preview_route` option:
 
 ```ruby
 # config/application.rb
 config.view_component.preview_route = "/previews"
 ```
-
-This example will make the previews available from <http://localhost:3000/previews>.
-
 ## Preview templates
 
 Given a preview `test/components/previews/cell_component_preview.rb`, template files can be defined at `test/components/previews/cell_component_preview/`:
@@ -140,11 +140,11 @@ class CellComponentPreview < ViewComponent::Preview
 end
 ```
 
-Which enables passing in a value with <http://localhost:3000/rails/view_components/cell_component/default?title=Custom+title&subtitle=Another+subtitle>.
+Which enables passing in a value: `/rails/view_components/cell_component/default?title=Custom+title&subtitle=Another+subtitle`.
 
 ## Configuring preview controller
 
-Previews can be extended to allow users to add authentication, authorization, before actions, or anything that the end user would need to meet their needs using the `preview_controller` option:
+Extend previews to add authentication, authorization, before actions, etc. using the `preview_controller` option:
 
 ```ruby
 # config/application.rb
@@ -170,7 +170,7 @@ Source previews are disabled by default. To enable or disable source previews, u
 config.view_component.show_previews_source = true
 ```
 
-To render a source preview in a different place, use the view helper `preview_source` from within your preview template or preview layout.
+To render the source preview in a different location, use the view helper `preview_source` from within the preview template or preview layout.
 
 ## Using with rspec
 
