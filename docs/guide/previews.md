@@ -30,6 +30,21 @@ Then access the resulting previews at:
 * `/rails/view_components/example_component/with_default_title`
 * `/rails/view_components/example_component/with_content_block`
 
+
+## Previews as test cases
+
+Use `render_preview(name)` to render previews in ViewComponent unit tests:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_render_preview
+    render_preview(:with_default_title)
+
+    assert_text("Example component default")
+  end
+end
+```
+
 ## Passing parameters
 
 Set dynamic values from URL parameters by setting them as arguments:

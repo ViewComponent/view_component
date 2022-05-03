@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Introduce `render_preview` test helper.
+
+    *Joel Hawksley*
+
 * Include the `Translatable` module by default.
 
     *Elia Schito*

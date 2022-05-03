@@ -26,6 +26,20 @@ end
 
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
+## Previews as test cases
+
+Use `render_preview(name)` to render previews in ViewComponent unit tests:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_render_preview
+    render_preview(:with_default_title)
+
+    assert_text("Example component default")
+  end
+end
+```
+
 ## Best practices
 
 Prefer testing the behavior of your component over unit testing individual methods:
