@@ -6,7 +6,6 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
   prepend_view_path File.expand_path("../views", __dir__)
 
   around_action :set_locale, only: :previews
-  before_action :find_preview, only: :previews
   before_action :require_local!, unless: :show_previews?
 
   if respond_to?(:content_security_policy)
@@ -20,6 +19,8 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
   end
 
   def previews
+    find_preview
+
     if params[:path] == @preview.preview_name
       @page_title = "Component Previews for #{@preview.preview_name}"
       render "view_components/previews", **determine_layout
