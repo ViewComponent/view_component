@@ -27,7 +27,7 @@ title: Changelog
 
     *Peter Goldstein*
 
-* Move preview logic to module, for easier app integration.
+* Move preview logic to module for easier app integration.
 
     *Sammy Henningsson*
 
