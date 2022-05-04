@@ -9,9 +9,13 @@ title: Changelog
 
 ## main
 
-* Add `with_*` slot API for defining slots.
+* Add `with_*` slot API for defining slots. Note: we plan to deprecate the non `with_*` API for slots in an upcoming release.
 
     *Blake Williams*
+
+* Add QuickNode to list of companies that heavily rely on ViewComponent.
+
+    *Luc Castera*
 
 * Include the `Translatable` module by default.
 
