@@ -66,8 +66,6 @@ The `ViewComponent::Preview` base class includes
 [`ActionView::Helpers::TagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html), which provides the [`tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-tag)
 and [`content_tag`](https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-content_tag) view helper methods.
 
-<!-- TODO - add example of these helpers -->
-
 ## Layouts
 
 Previews render with the application layout by default, but can use a specific layout with the `layout` option:
@@ -81,7 +79,7 @@ class ExampleComponentPreview < ViewComponent::Preview
 end
 ```
 
-To set a custom layout for all previews and the previews index page, set: `default_preview_layout`:
+To set a custom layout for individual previews and the previews index page, set: `default_preview_layout`:
 
 ```ruby
 # config/application.rb
