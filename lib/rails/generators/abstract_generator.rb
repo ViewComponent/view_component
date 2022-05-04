@@ -44,7 +44,7 @@ module ViewComponent
     end
 
     def sidecar?
-      options["sidecar"] || ViewComponent::Base.generate_sidecar
+      options["sidecar"] || ViewComponent::Base.generate.sidecar
     end
   end
 end

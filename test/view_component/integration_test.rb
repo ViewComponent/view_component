@@ -524,6 +524,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_an_inline_component_preview_using_a_haml_template
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+
     get "/rails/view_components/inline_component/with_haml"
     assert_select "h1", "Some HAML here"
     assert_select "input[name=?]", "name"
@@ -535,6 +537,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_renders_a_mix_of_haml_and_erb
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+
+    get "/nested_haml"
+    assert_response :success
+    assert_select "p.foo > span.bar > div.baz > article.quux > div.haml-div"
+  end
+
   def test_raises_an_error_if_the_template_is_not_present_and_the_render_with_template_method_is_used_in_the_example
     error =
       assert_raises ViewComponent::PreviewTemplateError do
@@ -544,6 +554,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_preview_template_using_haml_params_from_url_custom_template_and_locals
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+
     get "/rails/view_components/inline_component/with_several_options?form_title=Title from params"
 
     assert_select "form" do
@@ -582,5 +594,32 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
       assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
     end
+  end
+
+  def test_link_to_helper
+    get "/link_to_helper"
+    assert_select "a > i,span"
+  end
+
+  def test_cached_capture
+    Rails.cache.clear
+    ActionController::Base.perform_caching = true
+
+    get "/cached_capture"
+    assert_select ".foo .foo-cached"
+
+    ActionController::Base.perform_caching = false
+    Rails.cache.clear
+  end
+
+  def test_cached_partial
+    Rails.cache.clear
+    ActionController::Base.perform_caching = true
+
+    get "/cached_partial"
+    assert_select "article.quux"
+
+    ActionController::Base.perform_caching = false
+    Rails.cache.clear
   end
 end

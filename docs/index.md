@@ -10,9 +10,7 @@ A framework for creating reusable, testable & encapsulated view components, buil
 
 ## What's a ViewComponent?
 
-ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
-
-ViewComponents are objects that encapsulate a template:
+Think of ViewComponents as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html). A ViewComponent is a Ruby object and template:
 
 ```ruby
 # app/components/message_component.rb
@@ -28,24 +26,30 @@ end
 <h1>Hello, <%= @name %>!</h1>
 ```
 
-Which is rendered by calling:
+Which is instantiated and passed to Rails' `#render`:
 
 ```erb
 <%# app/views/demo/index.html.erb %>
 <%= render(MessageComponent.new(name: "World")) %>
 ```
 
-Returning:
+Returning markup:
 
 ```html
 <h1>Hello, World!</h1>
 ```
 
-## When should I use ViewComponents?
+## Why use ViewComponents?
+
+### TL;DR
 
 ViewComponents work best for templates that are reused or benefit from being tested directly. Partials and templates with significant amounts of embedded Ruby often make good ViewComponents.
 
-## Why should I use ViewComponents?
+### Single responsibility
+
+Rails applications often scatter view-related logic across models, controllers, and helpers, diluting their intended responsibilities. ViewComponents consolidate the logic needed for a template into a single class, resulting in a cohesive object that is easy to understand.
+
+ViewComponent methods are implemented within the scope of the template, encapsulating them in proper object-oriented fashion. This cohesion is especially evident when multiple methods are needed for a single view.
 
 ### Testing
 
@@ -138,6 +142,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/horacio?s=64" alt="horacio" width="32" />
 <img src="https://avatars.githubusercontent.com/horiaradu?s=64" alt="horiaradu" width="32" />
 <img src="https://avatars.githubusercontent.com/jaredcwhite?s=64" alt="jaredcwhite" width="32" />
+<img src="https://avatars.githubusercontent.com/jasonswett?s=64" alt="jasonswett" width="32" />
 <img src="https://avatars.githubusercontent.com/javierm?s=64" alt="javierm" width="32" />
 <img src="https://avatars.githubusercontent.com/jcoyne?s=64" alt="jcoyne" width="32" />
 <img src="https://avatars.githubusercontent.com/jensljungblad?s=64" alt="jensljungblad" width="32" />
@@ -169,6 +174,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/rmacklin?s=64" alt="rmacklin" width="32" />
 <img src="https://avatars.githubusercontent.com/ryogift?s=64" alt="ryogift" width="32" />
 <img src="https://avatars.githubusercontent.com/sammyhenningsson?s=64" alt="sammyhenningsson" width="32" />
+<img src="https://avatars.githubusercontent.com/sampart?s=64" alt="sampart" width="32" />
 <img src="https://avatars.githubusercontent.com/seanpdoyle?s=64" alt="seanpdoyle" width="32" />
 <img src="https://avatars.githubusercontent.com/simonrand?s=64" alt="simonrand" width="32" />
 <img src="https://avatars.githubusercontent.com/skryukov?s=64" alt="skryukov" width="32" />
@@ -191,13 +197,19 @@ ViewComponent is built by over a hundred members of the community, including:
 
 ## Who uses ViewComponent?
 
-* [GitHub](https://github.com/) (900+ components used 15k+ times)
-* [Podia](https://www.podia.com/)
+* [Bearer](https://www.bearer.com/) (70+ components)
+* [Brightline](https://hellobrightline.com)
 * [City of Paris](https://www.paris.fr/)
-* [Wecasa](https://www.wecasa.fr/)
+* [Cometeer](https://cometeer.com/)
 * [Cults.](https://cults3d.com/)
+* [Framework](https://frame.work/)
+* [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [Litmus](https://litmus.engineering/)
 * [Orbit](https://orbit.love)
+* [Podia](https://www.podia.com/)
+* [QuickNode](https://www.quicknode.com/)
+* [Shogun](https://getshogun.com/)
+* [Wecasa](https://www.wecasa.fr/)
 * [Wrapbook](https://wrapbook.com/)
 
 If your team starts using ViewComponent, [send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to let us know!

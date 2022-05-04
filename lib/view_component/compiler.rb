@@ -27,12 +27,11 @@ module ViewComponent
       self.class.mode == DEVELOPMENT_MODE
     end
 
-    def compile(raise_errors: false)
-      return if compiled?
+    def compile(raise_errors: false, force: false)
+      return if compiled? && !force
+      return if component_class == ViewComponent::Base
 
       with_lock do
-        CompileCache.invalidate_class!(component_class)
-
         subclass_instance_methods = component_class.instance_methods(false)
 
         if subclass_instance_methods.include?(:with_content) && raise_errors
@@ -49,7 +48,7 @@ module ViewComponent
         end
 
         if subclass_instance_methods.include?(:before_render_check)
-          ActiveSupport::Deprecation.warn(
+          ViewComponent::Deprecation.warn(
             "`#before_render_check` will be removed in v3.0.0.\n\n" \
             "To fix this issue, use `#before_render` instead."
           )
@@ -65,13 +64,12 @@ module ViewComponent
           # as Ruby warns when redefining a method.
           method_name = call_method_name(template[:variant])
 
-          if component_class.instance_methods.include?(method_name.to_sym)
-            component_class.send(:undef_method, method_name.to_sym)
+          if component_class.instance_methods(false).include?(method_name.to_sym)
+            component_class.send(:remove_method, method_name.to_sym)
           end
 
-          component_class.class_eval <<-RUBY, template[:path], -1
+          component_class.class_eval <<-RUBY, template[:path], 0
           def #{method_name}
-            @output_buffer = ActionView::OutputBuffer.new
             #{compiled_template(template[:path])}
           end
           RUBY
@@ -79,6 +77,7 @@ module ViewComponent
 
         define_render_template_for
 
+        component_class.build_i18n_backend
         component_class._after_compile
 
         CompileCache.register(component_class)
@@ -93,14 +92,18 @@ module ViewComponent
       end
     end
 
+    def reset_render_template_for
+      if component_class.instance_methods(false).include?(:render_template_for)
+        component_class.send(:remove_method, :render_template_for)
+      end
+    end
+
     private
 
     attr_reader :component_class
 
     def define_render_template_for
-      if component_class.instance_methods.include?(:render_template_for)
-        component_class.send(:undef_method, :render_template_for)
-      end
+      reset_render_template_for
 
       variant_elsifs = variants.compact.uniq.map do |variant|
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"

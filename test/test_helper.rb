@@ -19,6 +19,9 @@ require "minitest/autorun"
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
+require "view_component/deprecation"
+ViewComponent::Deprecation.behavior = :silence
+
 require File.expand_path("../sandbox/config/environment.rb", __FILE__)
 require "rails/test_help"
 
@@ -76,11 +79,11 @@ ensure
 end
 
 def with_generate_sidecar(enabled)
-  old_value = ViewComponent::Base.generate_sidecar
-  ViewComponent::Base.generate_sidecar = enabled
+  old_value = ViewComponent::Base.generate.sidecar
+  ViewComponent::Base.generate.sidecar = enabled
   yield
 ensure
-  ViewComponent::Base.generate_sidecar = old_value
+  ViewComponent::Base.generate.sidecar = old_value
 end
 
 def with_new_cache
@@ -89,11 +92,19 @@ def with_new_cache
     ViewComponent::CompileCache.cache = Set.new
     old_cache_template_loading = ActionView::Base.cache_template_loading
     ActionView::Base.cache_template_loading = false
+    reset_render_template_methods
 
     yield
   ensure
     ActionView::Base.cache_template_loading = old_cache_template_loading
     ViewComponent::CompileCache.cache = old_cache
+    reset_render_template_methods
+  end
+end
+
+def reset_render_template_methods
+  ViewComponent::Base.descendants.each do |klass|
+    klass.compiler.reset_render_template_for
   end
 end
 

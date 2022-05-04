@@ -48,6 +48,7 @@ Logomark for dark backgrounds ([SVG](logo/viewcomponent-white-logomark.svg) • 
 * `#DF3730`
 * `hsl(2 73% 53%)`
 * `rbg(223 55 48)`
+* `cmyk(5% 89% 82% 0%)`
 
 ## Usage
 

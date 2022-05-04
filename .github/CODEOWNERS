@@ -44,3 +44,5 @@
 
 /.devcontainer/**/* @boardfish
 /script/replicate-bug @boardfish
+/lib/view_component/docs_builder_component.rb @boardfish
+/lib/view_component/docs_builder_component.html.erb @boardfish

@@ -11,11 +11,13 @@ module Rails
 
       argument :attributes, type: :array, default: [], banner: "attribute"
       check_class_collision suffix: "Component"
+
       class_option :inline, type: :boolean, default: false
+      class_option :locale, type: :boolean, default: ViewComponent::Base.generate.locale
       class_option :parent, type: :string, desc: "The parent class for the generated component"
-      class_option :stimulus, type: :boolean, default: ViewComponent::Base.generate_stimulus_controller
+      class_option :preview, type: :boolean, default: ViewComponent::Base.generate.preview
       class_option :sidecar, type: :boolean, default: false
-      class_option :locale, type: :boolean, default: ViewComponent::Base.generate_locale
+      class_option :stimulus, type: :boolean, default: ViewComponent::Base.generate.stimulus_controller
 
       def create_component_file
         template "component.rb", File.join(component_path, class_path, "#{file_name}_component.rb")
