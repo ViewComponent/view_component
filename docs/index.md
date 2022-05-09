@@ -207,6 +207,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Litmus](https://litmus.engineering/)
 * [Orbit](https://orbit.love)
 * [Podia](https://www.podia.com/)
+* [QuickNode](https://www.quicknode.com/)
 * [Shogun](https://getshogun.com/)
 * [Wecasa](https://www.wecasa.fr/)
 * [Wrapbook](https://wrapbook.com/)

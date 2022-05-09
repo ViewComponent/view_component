@@ -61,20 +61,26 @@ module ViewComponent
       # = Setting sub-component content
       #
       # Consumers of the component can render a sub-component by calling a
-      # helper method with the same name as the slot.
+      # helper method with the same name as the slot prefixed with `with_`.
       #
       #   <%= render_inline(MyComponent.new) do |component| %>
-      #     <% component.header(classes: "Foo") do %>
+      #     <% component.with_header(classes: "Foo") do %>
       #       <p>Bar</p>
       #     <% end %>
       #   <% end %>
       def renders_one(slot_name, callable = nil)
         validate_singular_slot_name(slot_name)
 
+        define_method :"with_#{slot_name}" do |*args, &block|
+          set_slot(slot_name, nil, *args, &block)
+        end
+        ruby2_keywords(:"with_#{slot_name}") if respond_to?(:ruby2_keywords, true)
+
         define_method slot_name do |*args, &block|
           if args.empty? && block.nil?
             get_slot(slot_name)
           else
+            # Deprecated: Will remove in 3.0
             set_slot(slot_name, nil, *args, &block)
           end
         end
@@ -112,15 +118,15 @@ module ViewComponent
       # = Setting sub-component content
       #
       # Consumers of the component can set the content of a slot by calling a
-      # helper method with the same name as the slot. The method can be
-      # called multiple times to append to the slot.
+      # helper method with the same name as the slot prefixed with `with_`. The
+      # method can be called multiple times to append to the slot.
       #
       #   <%= render_inline(MyComponent.new) do |component| %>
-      #     <% component.item(name: "Foo") do %>
+      #     <% component.with_item(name: "Foo") do %>
       #       <p>One</p>
       #     <% end %>
       #
-      #     <% component.item(name: "Bar") do %>
+      #     <% component.with_item(name: "Bar") do %>
       #       <p>two</p>
       #     <% end %>
       #   <% end %>
@@ -132,10 +138,24 @@ module ViewComponent
         # Define setter for singular names
         # for example `renders_many :items` allows fetching all tabs with
         # `component.tabs` and setting a tab with `component.tab`
+        #
+        # Deprecated: Will remove in 3.0
         define_method singular_name do |*args, &block|
           set_slot(slot_name, nil, *args, &block)
         end
         ruby2_keywords(singular_name.to_sym) if respond_to?(:ruby2_keywords, true)
+
+        define_method :"with_#{singular_name}" do |*args, &block|
+          set_slot(slot_name, nil, *args, &block)
+        end
+        ruby2_keywords(:"with_#{singular_name}") if respond_to?(:ruby2_keywords, true)
+
+        define_method :"with_#{slot_name}" do |collection_args = nil, &block|
+          collection_args.map do |args|
+            set_slot(slot_name, nil, **args, &block)
+          end
+        end
+        ruby2_keywords(:"with_#{slot_name}") if respond_to?(:ruby2_keywords, true)
 
         # Instantiates and and adds multiple slots forwarding the first
         # argument to each slot constructor
@@ -143,6 +163,7 @@ module ViewComponent
           if collection_args.nil? && block.nil?
             get_slot(slot_name)
           else
+            # Deprecated: Will remove in 3.0
             collection_args.map do |args|
               set_slot(slot_name, nil, **args, &block)
             end
