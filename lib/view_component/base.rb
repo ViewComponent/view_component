@@ -117,6 +117,24 @@ module ViewComponent
       render_template_for(@__vc_variant).to_s + _output_postamble
     end
 
+    # Superclass components that call `super` inside their template code will cause a
+    # double render if they accidentally emit the result. In other words, this double
+    # renders:
+    #
+    # <%= super %>
+    #
+    # but this does not:
+    #
+    # <% super %>
+    #
+    # The render_parent method simply calls `super` but makes sure to return nil to
+    # avoid rendering the result twice.
+    def render_parent
+      mtd = @__vc_variant ? "call_#{@__vc_variant}" : "call"
+      method(mtd).super_method.call
+      nil
+    end
+
     # :nocov:
     def render_template_for(variant = nil)
       # Force compilation here so the compiler always redefines render_template_for.

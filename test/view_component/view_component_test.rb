@@ -1014,4 +1014,13 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(InheritedWithOwnTemplateComponent.new)
     assert_selector("div", text: "hello, my own template")
   end
+
+  def test_inherited_component_calls_super
+    render_inline(SuperComponent.new)
+
+    assert_selector(".base-component", count: 1)
+    assert_selector(".derived-component", count: 1) do
+      assert_selector(".base-component", count: 1)
+    end
+  end
 end

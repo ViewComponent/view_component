@@ -92,3 +92,14 @@ Component subclasses inherit the parent component's template if they don't defin
 class MyLinkComponent < LinkComponent
 end
 ```
+
+### Rendering the Parent's Template
+
+Subclasses that wish to render the parent's template may do so by calling the `render_parent` helper method.
+
+```ruby
+<%# my_link_component.html.erb %>
+<div class="base-component-template">
+  <% render_parent %>
+</div>
+```
