@@ -155,6 +155,7 @@ module ViewComponent
             set_slot(slot_name, nil, **args, &block)
           end
         end
+        ruby2_keywords(:"with_#{slot_name}") if respond_to?(:ruby2_keywords, true)
 
         # Instantiates and and adds multiple slots forwarding the first
         # argument to each slot constructor
