@@ -19,7 +19,6 @@ title: Changelog
 * Add QuickNode to list of companies that heavily rely on ViewComponent.
 
     *Luc Castera*
->>>>>>> main
 
 * Include the `Translatable` module by default.
 
