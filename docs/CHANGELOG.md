@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add `render_parent` convenience method to avoid confusion between `<%= super %>` and `<% super %>` in template code.
+
+    *Cameron Dutro*
+
 * Add note about discouraging inheritance.
 
     *Joel Hawksley*
