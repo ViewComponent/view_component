@@ -13,6 +13,21 @@ title: Changelog
 
     *Cameron Dutro*
 
+* Add note about discouraging inheritance.
+
+    *Joel Hawksley*
+
+## 2.54.1
+
+* Update docs dependencies.
+
+    *Joel Hawksley*
+
+* Resolve warning in slots API.
+* Raise in the test environment when ViewComponent code emits a warning.
+
+    *Blake Williams*
+
 ## 2.54.0
 
 * Add `with_*` slot API for defining slots. Note: we plan to deprecate the non `with_*` API for slots in an upcoming release.

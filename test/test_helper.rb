@@ -16,6 +16,19 @@ require "pp"
 require "pathname"
 require "minitest/autorun"
 
+if ENV["RAISE_ON_WARNING"]
+  module Warning
+    PROJECT_ROOT = File.expand_path("..", __dir__).freeze
+
+    def self.warn(message)
+      called_by = caller_locations(1, 1).first.path
+      return super unless called_by&.start_with?(PROJECT_ROOT) && !called_by.start_with?("#{PROJECT_ROOT}/vendor")
+
+      raise "Warning: #{message}"
+    end
+  end
+end
+
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
