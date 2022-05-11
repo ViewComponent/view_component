@@ -117,7 +117,7 @@ module ViewComponent
       render_template_for(@__vc_variant).to_s + _output_postamble
     end
 
-    # Superclass components that call `super` inside their template code will cause a
+    # Subclass components that call `super` inside their template code will cause a
     # double render if they accidentally emit the result. In other words, this double
     # renders:
     #
