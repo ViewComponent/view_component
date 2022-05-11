@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add note about discouraging inheritance.
+
+    *Joel Hawksley*
+
 ## 2.54.1
 
 * Update docs dependencies.
