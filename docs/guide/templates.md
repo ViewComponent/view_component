@@ -97,7 +97,7 @@ end
 
 To render a parent component's template from a subclass, call `render_parent`:
 
-```ruby
+```erb
 <%# my_link_component.html.erb %>
 <div class="base-component-template">
   <% render_parent %>
