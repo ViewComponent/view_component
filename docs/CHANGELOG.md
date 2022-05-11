@@ -9,8 +9,6 @@ title: Changelog
 
 ## main
 
-## 2.55.0
-
 * Add `render_parent` convenience method to avoid confusion between `<%= super %>` and `<% super %>` in template code.
 
     *Cameron Dutro*
