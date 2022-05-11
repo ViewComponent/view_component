@@ -13,6 +13,20 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Add `render_parent` convenience method to avoid confusion between `<%= super %>` and `<% super %>` in template code.
+
+    *Cameron Dutro*
+
+* Add note about discouraging inheritance.
+
+    *Joel Hawksley*
+
+## 2.54.1
+
+* Update docs dependencies.
+
+    *Joel Hawksley*
+
 * Resolve warning in slots API.
 * Raise in the test environment when ViewComponent code emits a warning.
 
