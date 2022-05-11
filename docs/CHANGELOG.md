@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.54.1
+
 * Update docs dependencies.
 
     *Joel Hawksley*
