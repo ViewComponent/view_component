@@ -93,7 +93,7 @@ class MyLinkComponent < LinkComponent
 end
 ```
 
-### Rendering the Parent's Template
+### Rendering parent templates
 
 Subclasses that wish to render the parent's template may do so by calling the `render_parent` helper method.
 
