@@ -22,7 +22,7 @@ if ENV["RAISE_ON_WARNING"]
 
     def self.warn(message)
       called_by = caller_locations(1, 1).first.path
-      return super unless called_by&.start_with?(PROJECT_ROOT)
+      return super unless called_by&.start_with?(PROJECT_ROOT) && !called_by.start_with?("#{PROJECT_ROOT}/vendor")
 
       raise "Warning: #{message}"
     end
