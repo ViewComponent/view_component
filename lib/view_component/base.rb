@@ -120,7 +120,7 @@ module ViewComponent
     # Subclass components that call `super` inside their template code will cause a
     # double render if they accidentally emit the result:
     #
-    # <%= super %>
+    # <%= super %> # double-renders
     #
     # but this does not:
     #
