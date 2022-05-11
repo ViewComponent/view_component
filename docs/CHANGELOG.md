@@ -9,7 +9,9 @@ title: Changelog
 
 ## main
 
-* Resolve warning in slots API, and raise in the test environment when ViewComponent code emits a warning.
+* Resolve warning in slots API.
+
+* Raise in the test environment when ViewComponent code emits a warning.
 
     *Blake Williams*
 
