@@ -11,7 +11,7 @@ class WithoutPreviewComponentTest < ViewComponent::TestCase
     end
 
     assert_equal(
-      error.message,
+      error.message.split(".")[0],
       "`render_preview` expected to find WithoutPreviewComponentPreview, but it does not exist."
     )
   end
