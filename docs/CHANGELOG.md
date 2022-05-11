@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Update docs dependencies.
+
+    *Joel Hawksley*
+
 * Resolve warning in slots API.
 * Raise in the test environment when ViewComponent code emits a warning.
 
