@@ -95,7 +95,7 @@ end
 
 ### Rendering parent templates
 
-Subclasses that wish to render the parent's template may do so by calling the `render_parent` helper method.
+To render a parent component's template from a subclass, call `render_parent`:
 
 ```ruby
 <%# my_link_component.html.erb %>
