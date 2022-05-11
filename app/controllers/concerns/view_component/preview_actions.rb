@@ -8,7 +8,6 @@ module ViewComponent
       prepend_view_path File.expand_path("../../../views", __dir__)
 
       around_action :set_locale, only: :previews
-      before_action :find_preview, only: :previews
       before_action :require_local!, unless: :show_previews?
 
       if respond_to?(:content_security_policy)
