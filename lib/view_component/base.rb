@@ -122,9 +122,7 @@ module ViewComponent
     #
     # <%= super %> # double-renders
     #
-    # but this does not:
-    #
-    # <% super %>
+    # <% super %> # does not double-render
     #
     # The render_parent method simply calls `super` but makes sure to return nil to
     # avoid rendering the result twice.
