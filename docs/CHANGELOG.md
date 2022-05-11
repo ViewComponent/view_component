@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Introduce `render_preview` test helper. Note: `@rendered_component` in `TestHelpers` has been renamed to `@rendered_content`.
+* Introduce experimental `render_preview` test helper. Note: `@rendered_component` in `TestHelpers` has been renamed to `@rendered_content`.
 
     *Joel Hawksley*
 

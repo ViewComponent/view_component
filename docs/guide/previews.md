@@ -32,12 +32,14 @@ Then access the resulting previews at:
 
 _For a more interactive experience, consider using [Lookbook](https://github.com/allmarkedup/lookbook) or [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)._
 
-## Previews as test cases
+## (Experimental) Previews as test cases
 
 Use `render_preview(name)` to render previews in ViewComponent unit tests:
 
 ```ruby
 class ExampleComponentTest < ViewComponent::TestCase
+  include ViewComponent::RenderPreviewHelper
+
   def test_render_preview
     render_preview(:with_default_title)
 
