@@ -221,7 +221,7 @@ render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
 
-If `component` is `nil`, `render_inline` will execute the block in the view context instead:
+If no `component` is provided, `render_inline` executes the block in the view context:
 
 ```ruby
 render_inline do
