@@ -18,7 +18,7 @@ module ViewComponent
     # @param preview [String] The name of the preview to be rendered.
     # @return [Nokogiri::HTML]
     def render_preview(name)
-      ViewComponent::Preview.load_all
+      ViewComponent::Preview.load_all!
 
       begin
         preview_klass = self.class.name.gsub("Test", "Preview")
