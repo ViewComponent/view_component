@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Update docs dependencies.
+
+    *Joel Hawksley*
+
 ## 2.54.0
 
 * Add `with_*` slot API for defining slots. Note: we plan to deprecate the non `with_*` API for slots in an upcoming release.
