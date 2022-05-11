@@ -107,6 +107,7 @@ Previews are served from `/rails/view_components` by default. To use a different
 # config/application.rb
 config.view_component.preview_route = "/previews"
 ```
+
 ## Preview templates
 
 Given a preview `test/components/previews/cell_component_preview.rb`, template files can be defined at `test/components/previews/cell_component_preview/`:
