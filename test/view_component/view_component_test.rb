@@ -9,8 +9,8 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
-  def test_render_inline_block
-    render_inline { render(MyComponent.new) }
+  def test_render_in_view_context
+    render_in_view_context { render(MyComponent.new) }
 
     assert_selector("div", text: "hello,world!")
   end
