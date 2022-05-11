@@ -70,7 +70,7 @@ module ViewComponent
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
-      @output_buffer = ActionView::OutputBuffer.new unless @global_buffer_in_use
+      @output_buffer = ActionView::OutputBuffer.new unless defined?(@global_buffer_in_use) && @global_buffer_in_use
 
       @lookup_context ||= view_context.lookup_context
 

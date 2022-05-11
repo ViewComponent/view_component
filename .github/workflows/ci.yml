@@ -63,6 +63,7 @@ jobs:
         bundle update
         bundle exec rake
       env:
+        RAISE_ON_WARNING: 1
         MEASURE_COVERAGE: true
         RAILS_VERSION: ${{ matrix.rails_version }}
         VIEW_COMPONENT_USE_GLOBAL_OUTPUT_BUFFER: ${{ matrix.output_buffer == 'global_buffer' && 'true' || 'false' }}
