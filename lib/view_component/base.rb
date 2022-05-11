@@ -124,8 +124,7 @@ module ViewComponent
     #
     # <% super %> # does not double-render
     #
-    # The render_parent method simply calls `super` but makes sure to return nil to
-    # avoid rendering the result twice.
+    # Calls `super`, returning nil to avoid rendering the result twice.
     def render_parent
       mtd = @__vc_variant ? "call_#{@__vc_variant}" : "call"
       method(mtd).super_method.call
