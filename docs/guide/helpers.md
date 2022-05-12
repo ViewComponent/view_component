@@ -6,7 +6,7 @@ parent: Guide
 
 # Helpers
 
-Helpers must be included in order to be used:
+Helpers must be included to be used:
 
 ```ruby
 module IconHelper
