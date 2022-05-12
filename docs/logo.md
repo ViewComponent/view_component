@@ -52,7 +52,7 @@ Logomark for dark backgrounds ([SVG](logo/viewcomponent-white-logomark.svg) • 
 
 ## Usage
 
-Use these marks to refer to the ViewComponent project in a way that does not claim endorsement or association.
+Use these marks to refer to the ViewComponent project in a way that doesn't claim endorsement or association.
 
 Don't use these marks in a commercial setting to infer that a product or service is endorsed or associated with ViewComponent without permission.
 
