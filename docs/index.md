@@ -212,7 +212,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Wecasa](https://www.wecasa.fr/)
 * [Wrapbook](https://wrapbook.com/)
 
-If your team starts using ViewComponent, [send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to let us know!
+Using ViewComponent? [Send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to update this list!
 You can also check out [how various projects use ViewComponent](https://github.com/github/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
 
 <hr />
