@@ -51,7 +51,7 @@ module ViewComponent
       Nokogiri::HTML.fragment(@rendered_component)
     end
 
-    # Execute the given block in the view context.Internally sets `page` to be a
+    # Execute the given block in the view context. Internally sets `page` to be a
     # `Capybara::Node::Simple`, allowing for Capybara assertions to be used:
     #
     # ```ruby
