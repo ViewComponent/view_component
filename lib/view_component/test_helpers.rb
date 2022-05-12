@@ -51,6 +51,21 @@ module ViewComponent
       Nokogiri::HTML.fragment(@rendered_component)
     end
 
+    # Execute the given block in the view context. Internally sets `page` to be a
+    # `Capybara::Node::Simple`, allowing for Capybara assertions to be used:
+    #
+    # ```ruby
+    # render_in_view_context do
+    #   render(MyComponent.new)
+    # end
+    #
+    # assert_text("Hello, World!")
+    # ```
+    def render_in_view_context(&block)
+      @rendered_component = controller.view_context.instance_exec(&block)
+      Nokogiri::HTML.fragment(@rendered_component)
+    end
+
     # @private
     def controller
       @controller ||= build_controller(Base.test_controller.constantize)

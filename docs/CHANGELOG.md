@@ -76,6 +76,10 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Enable rendering arbitrary block contents in the view context in tests.
+
+    *Cameron Dutro*
+
 ## 2.52.0
 
 * Add ADR for separate slot getter/setter API.
