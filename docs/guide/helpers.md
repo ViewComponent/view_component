@@ -6,7 +6,19 @@ parent: Guide
 
 # Helpers
 
-Helper methods can be used through the `helpers` proxy:
+Helpers must be included in order to be used:
+
+```ruby
+class UserComponent < ViewComponent::Base
+  include IconHelper
+
+  def profile_icon
+    icon :user
+  end
+end
+```
+
+Or, access helpers through the `helpers` proxy:
 
 ```ruby
 module IconHelper
@@ -27,18 +39,6 @@ Which can be used with `delegate`:
 ```ruby
 class UserComponent < ViewComponent::Base
   delegate :icon, to: :helpers
-
-  def profile_icon
-    icon :user
-  end
-end
-```
-
-Helpers can also be used by including the helper:
-
-```ruby
-class UserComponent < ViewComponent::Base
-  include IconHelper
 
   def profile_icon
     icon :user
