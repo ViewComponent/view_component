@@ -34,7 +34,7 @@ title: Changelog
 
     *Blake Williams*
 
-* Add QuickNode to list of companies that heavily rely on ViewComponent.
+* Add QuickNode to list of companies that use ViewComponent.
 
     *Luc Castera*
 
@@ -68,7 +68,7 @@ title: Changelog
 
     *Jason Swett*
 
-* Add Bearer to list of companies that heavily rely on ViewComponent.
+* Add Bearer to list of companies that use ViewComponent.
 
     *Yaroslav Shmarov*
 
