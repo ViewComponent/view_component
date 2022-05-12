@@ -211,23 +211,13 @@ Defaults to `app/components`.
 
 ## ViewComponent::TestHelpers
 
-### #render_inline(component = nil, **args, &block) → [Nokogiri::HTML]
+### #render_inline(component, **args, &block) → [Nokogiri::HTML]
 
 Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
 allowing for Capybara assertions to be used:
 
 ```ruby
 render_inline(MyComponent.new)
-assert_text("Hello, World!")
-```
-
-If no `component` is provided, `render_inline` executes the block in the view context:
-
-```ruby
-render_inline do
-  render(MyComponent.new)
-end
-
 assert_text("Hello, World!")
 ```
 
