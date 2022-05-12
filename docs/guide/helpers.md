@@ -9,6 +9,12 @@ parent: Guide
 Helpers must be included in order to be used:
 
 ```ruby
+module IconHelper
+  def icon(name)
+    tag.i data: { feather: name.to_s }
+  end
+end
+
 class UserComponent < ViewComponent::Base
   include IconHelper
 
@@ -21,12 +27,6 @@ end
 Or, access helpers through the `helpers` proxy:
 
 ```ruby
-module IconHelper
-  def icon(name)
-    tag.i data: { feather: name.to_s.dasherize }
-  end
-end
-
 class UserComponent < ViewComponent::Base
   def profile_icon
     helpers.icon :user
