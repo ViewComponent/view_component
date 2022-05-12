@@ -17,6 +17,7 @@ module ViewComponent
     include ViewComponent::ContentAreas
     include ViewComponent::Previewable
     include ViewComponent::SlotableV2
+    include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
@@ -69,7 +70,7 @@ module ViewComponent
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
-      @output_buffer = ActionView::OutputBuffer.new unless @global_buffer_in_use
+      @output_buffer = ActionView::OutputBuffer.new unless defined?(@global_buffer_in_use) && @global_buffer_in_use
 
       @lookup_context ||= view_context.lookup_context
 
@@ -114,6 +115,20 @@ module ViewComponent
 
     def perform_render
       render_template_for(@__vc_variant).to_s + _output_postamble
+    end
+
+    # Subclass components that call `super` inside their template code will cause a
+    # double render if they accidentally emit the result:
+    #
+    # <%= super %> # double-renders
+    #
+    # <% super %> # does not double-render
+    #
+    # Calls `super`, returning nil to avoid rendering the result twice.
+    def render_parent
+      mtd = @__vc_variant ? "call_#{@__vc_variant}" : "call"
+      method(mtd).super_method.call
+      nil
     end
 
     # :nocov:

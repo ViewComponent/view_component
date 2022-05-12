@@ -41,12 +41,12 @@ To render a `renders_many` slot, iterate over the name of the slot:
 ```erb
 <%# index.html.erb %>
 <%= render BlogComponent.new do |c| %>
-  <% c.header do %>
+  <% c.with_header do %>
     <%= link_to "My blog", root_path %>
   <% end %>
 
   <% BlogPost.all.each do |blog_post| %>
-    <% c.post do %>
+    <% c.with_post do %>
       <%= link_to blog_post.name, blog_post.url %>
     <% end %>
   <% end %>
@@ -125,15 +125,15 @@ end
 ```erb
 <%# index.html.erb %>
 <%= render BlogComponent.new do |c| %>
-  <% c.header(classes: "") do %>
+  <% c.with_header(classes: "") do %>
     <%= link_to "My Site", root_path %>
   <% end %>
 
-  <% c.post(title: "My blog post") do %>
+  <% c.with_post(title: "My blog post") do %>
     Really interesting stuff.
   <% end %>
 
-  <% c.post(title: "Another post!") do %>
+  <% c.with_post(title: "Another post!") do %>
     Blog every day.
   <% end %>
 <% end %>
@@ -175,6 +175,16 @@ class TableComponent < ViewComponent::Base
 end
 ```
 
+To provide content for a lambda slot via a block, add a block parameter. Render the content by calling the block's `call` method, or by passing the block directly to `content_tag`:
+
+```ruby
+class BlogComponent < ViewComponent::Base
+  renders_one :header, -> (classes:, &block) do
+    content_tag :h1, class: classes, &block
+  end
+end
+```
+
 ## Rendering collections
 
 `renders_many` slots can also be passed a collection, using the plural setter (`links` in this example):
@@ -203,7 +213,7 @@ end
 ```erb
 <%# index.html.erb %>
 <%= render(NavigationComponent.new) do |c| %>
-  <% c.links([
+  <% c.with_links([
     { name: "Home", href: "/" },
     { name: "Pricing", href: "/pricing" },
     { name: "Sign Up", href: "/sign-up" },
@@ -217,7 +227,7 @@ Slot content can also be set using `#with_content`:
 
 ```erb
 <%= render BlogComponent.new do |c| %>
-  <% c.header(classes: "title").with_content("My blog") %>
+  <% c.with_header(classes: "title").with_content("My blog") %>
 <% end %>
 ```
 
@@ -248,12 +258,12 @@ Filling in the `visual` slot is done by calling the appropriate slot method:
 
 ```erb
 <%= render ListItemComponent.new do |c| %>
-  <% c.visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") %>
+  <% c.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") %>
     Profile
   <% end >
 <% end %>
 <%= render ListItemComponent.new do |c| %>
-  <% c.visual_icon(icon: :key) %>
+  <% c.with_visual_icon(icon: :key) %>
     Security Settings
   <% end >
 <% end %>

@@ -3,9 +3,74 @@ layout: default
 title: Changelog
 ---
 
+<!-- Add unreleased changes under the "main" heading. -->
+
 # Changelog
 
 ## main
+
+* Add `render_parent` convenience method to avoid confusion between `<%= super %>` and `<% super %>` in template code.
+
+    *Cameron Dutro*
+
+* Add note about discouraging inheritance.
+
+    *Joel Hawksley*
+
+## 2.54.1
+
+* Update docs dependencies.
+
+    *Joel Hawksley*
+
+* Resolve warning in slots API.
+* Raise in the test environment when ViewComponent code emits a warning.
+
+    *Blake Williams*
+
+## 2.54.0
+
+* Add `with_*` slot API for defining slots. Note: we plan to deprecate the non `with_*` API for slots in an upcoming release.
+
+    *Blake Williams*
+
+* Add QuickNode to list of companies that heavily rely on ViewComponent.
+
+    *Luc Castera*
+
+* Include the `Translatable` module by default.
+
+    *Elia Schito*
+
+* Update docs dependencies.
+
+    *Joel Hawksley*
+
+## 2.53.0
+
+* Add support for relative I18n scopes to translations.
+
+    *Elia Schito*
+
+* Update CI configuration to use latest Rails 7.0.
+
+    *Hans Lemuet*
+
+* Document how to use blocks with lambda slots.
+
+    *Sam Partington*
+
+* Skip Rails 5.2 in local test environment if using incompatible Ruby version.
+
+    *Cameron Dutro*, *Blake Williams*, *Joel Hawksley*
+
+* Improve landing page documentation.
+
+    *Jason Swett*
+
+* Add Bearer to list of companies that heavily rely on ViewComponent.
+
+    *Yaroslav Shmarov*
 
 * Add articles to resources page.
 
@@ -132,9 +197,13 @@ title: Changelog
 
     *Joel Hawksley*
 
-* Add Ruby 3.1 and Rails 7.0 to CI
+* Add Ruby 3.1 and Rails 7.0 to CI.
 
     *Peter Goldstein*
+
+* Move preview logic to module for easier app integration.
+
+    *Sammy Henningsson*
 
 ## 2.48.0
 

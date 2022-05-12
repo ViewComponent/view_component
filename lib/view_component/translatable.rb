@@ -3,7 +3,6 @@
 require "erb"
 require "set"
 require "i18n"
-require "action_view/helpers/translation_helper"
 require "active_support/concern"
 
 module ViewComponent
@@ -21,9 +20,7 @@ module ViewComponent
         @i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
       end
 
-      def _after_compile
-        super
-
+      def build_i18n_backend
         return if CompileCache.compiled? self
 
         if (translation_files = _sidecar_files(%w[yml yaml])).any?
@@ -68,7 +65,10 @@ module ViewComponent
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
       locale = options.delete(:locale) || ::I18n.locale
+      scope = options.delete(:scope)
+      scope = scope.join(".") if scope.is_a? Array
       key = key&.to_s unless key.is_a?(String)
+      key = "#{scope}.#{key}" if scope
       key = "#{i18n_scope}#{key}" if key.start_with?(".")
 
       if HTML_SAFE_TRANSLATION_KEY.match?(key)

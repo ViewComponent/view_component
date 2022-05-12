@@ -66,6 +66,10 @@ Refactoring a view to being a ViewComponent often exposes existing complexity. F
 
 ## General guidance
 
+### Avoid inheritance
+
+In our experience, having one ViewComponent inherit from another leads to confusion, especially when each component has its own template. Instead, we recommend [using composition](https://thoughtbot.com/blog/reusable-oo-composition-vs-inheritance) to wrap one component with another.
+
 ### When to use a ViewComponent for an entire route
 
 ViewComponents have less value in single-use cases like replacing a `show` view. However, it can make sense to render an entire route with a ViewComponent when unit testing is valuable, such as for views with many permutations from a state machine.
