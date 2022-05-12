@@ -21,9 +21,9 @@ title: Changelog
 
     *Joel Hawksley*
 
-* The ViewComponent team at GitHub is hiring! We're looking for a Rails engineer with accessibility experience: https://boards.greenhouse.io/github/jobs/3802139
+* The ViewComponent team at GitHub is hiring! We're looking for a Rails engineer with accessibility experience: [https://boards.greenhouse.io/github/jobs/3802139]. Reach out to joelhawksley@github.com with any questions!
 
-* The Viewcomponent team is hosting a happy hour at RailsConf. Join us for snacks, drinks, and stickers: https://www.eventbrite.com/e/viewcomponent-happy-hour-tickets-304168585427
+* The ViewComponent team is hosting a happy hour at RailsConf. Join us for snacks, drinks, and stickers: [https://www.eventbrite.com/e/viewcomponent-happy-hour-tickets-304168585427]
 
 ## 2.54.1
 
