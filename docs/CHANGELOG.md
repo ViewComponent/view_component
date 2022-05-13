@@ -13,6 +13,12 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Add Mission Met to list of companies that use ViewComponent.
+
+    *Nick Smith*
+
+## 2.55.0
+
 * Add `render_parent` convenience method to avoid confusion between `<%= super %>` and `<% super %>` in template code.
 
     *Cameron Dutro*
@@ -20,6 +26,14 @@ title: Changelog
 * Add note about discouraging inheritance.
 
     *Joel Hawksley*
+
+* Clean up grammar in documentation.
+
+    *Joel Hawksley*
+
+* The ViewComponent team at GitHub is hiring! We're looking for a Rails engineer with accessibility experience: [https://boards.greenhouse.io/github/jobs/4020166](https://boards.greenhouse.io/github/jobs/4020166). Reach out to joelhawksley@github.com with any questions!
+
+* The ViewComponent team is hosting a happy hour at RailsConf. Join us for snacks, drinks, and stickers: [https://www.eventbrite.com/e/viewcomponent-happy-hour-tickets-304168585427](https://www.eventbrite.com/e/viewcomponent-happy-hour-tickets-304168585427)
 
 ## 2.54.1
 
@@ -38,7 +52,7 @@ title: Changelog
 
     *Blake Williams*
 
-* Add QuickNode to list of companies that heavily rely on ViewComponent.
+* Add QuickNode to list of companies that use ViewComponent.
 
     *Luc Castera*
 
@@ -72,13 +86,17 @@ title: Changelog
 
     *Jason Swett*
 
-* Add Bearer to list of companies that heavily rely on ViewComponent.
+* Add Bearer to list of companies that use ViewComponent.
 
     *Yaroslav Shmarov*
 
 * Add articles to resources page.
 
     *Joel Hawksley*
+
+* Enable rendering arbitrary block contents in the view context in tests.
+
+    *Cameron Dutro*
 
 ## 2.52.0
 

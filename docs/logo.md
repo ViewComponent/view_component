@@ -52,12 +52,12 @@ Logomark for dark backgrounds ([SVG](logo/viewcomponent-white-logomark.svg) • 
 
 ## Usage
 
-You may use these marks to refer to ViewComponent in a way where it‘s clear that you‘re simply referring to the project, not claiming endorsement or association.
+Use these marks to refer to the ViewComponent project in a way that doesn't claim endorsement or association.
 
-Please don't use these marks in a commercial setting to infer that your product or service is endorsed or associated with ViewComponent without permission.
+Don't use these marks in a commercial setting to infer that a product or service is endorsed or associated with ViewComponent without permission.
 
-If you‘re planning to use the ViewComponent logo on a book cover or merchandise, please reach out first.
+Reach out before using the ViewComponent logo on a book cover or merchandise.
 
 ## About
 
-The ViewComponent logo was contributed by [Dylan Smith](https://dylanatsmith.com) and is licensed under the MIT license.
+[Dylan Smith](https://dylanatsmith.com) contributed the ViewComponent logo. It is licensed under the MIT license.

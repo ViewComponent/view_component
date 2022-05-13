@@ -5,7 +5,7 @@ title: Resources
 
 # Resources
 
-_Have a link you think belongs on this page? Open a PR!_
+_Is this page missing a link? Open a PR!_
 
 ## ViewComponent libraries
 

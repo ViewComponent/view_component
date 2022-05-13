@@ -1,17 +1,9 @@
-<!-- See https://github.com/github/view_component/blob/main/docs/CONTRIBUTING.md#submitting-a-pull-request -->
+### What are you trying to accomplish?
 
-### Summary
+<!-- Provide a description of the changes. Link to any related issues or projects. -->
 
-<!-- Provide a general description of the code changes in your pull
-request... were there any bugs you had fixed? If so, mention them. If
-these bugs have open GitHub issues, be sure to tag them here as well,
-to keep the conversation linked together. -->
+### What approach did you choose and why?
 
-### Other Information
+<!-- Describe your thought process in making these changes. List any tradeoffs you made. Describe any alternative approaches you considered and why you discarded them. -->
 
-<!-- If there's anything else that's important and relevant to your pull
-request, mention that information here. This could include
-benchmarks, or other information.
-
-If you are updating any of the CHANGELOG files or are asked to update the
-CHANGELOG files by reviewers, please add the CHANGELOG entry at the top of the file. -->
+### Anything you want to highlight for special attention from reviewers?

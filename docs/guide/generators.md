@@ -114,7 +114,7 @@ bin/rails generate component Example title --locale
 
 To always generate locale files, set `config.view_component.generate_locale = true`.
 
-If your prefer having your translations in distinct locale files you can set `config.view_component.generate_distinct_locale_files = true` to generate as many files as configured in `I18n.available_locales`.
+To generate translations in distinct locale files, set `config.view_component.generate_distinct_locale_files = true` to generate as many files as configured in `I18n.available_locales`.
 
 ### Place the view in a sidecar directory
 
@@ -155,7 +155,7 @@ bin/rails generate component Example title content --parent MyBaseComponent
       create    app/components/example_component.html.erb
 ```
 
-To always use your own parent class, set `config.view_component.component_parent_class = "MyBaseComponent"`.
+To always use a specific parent class, set `config.view_component.component_parent_class = "MyBaseComponent"`.
 
 ### Skip collision check
 

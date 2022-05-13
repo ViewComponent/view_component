@@ -44,7 +44,7 @@ end
 
 ## Best practices
 
-Prefer testing the behavior of your component over unit testing individual methods:
+Prefer testing the rendered output over individual methods:
 
 ```ruby
 # Good
