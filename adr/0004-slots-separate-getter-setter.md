@@ -27,7 +27,7 @@ c.header # gets the slot
 
 This API was built with the assumption that a slot will always be set by passing an argument and/or passing a block.
 
-This assumption hasn't remained valid. Specifically, `with_content` breaks the assumption when you want to pass static content to a slot:
+This assumption hasn't remained valid. Specifically, `with_content` breaks the assumption when passing static content to a slot:
 
 ```ruby
 class MyComponent < ViewComponent::Base

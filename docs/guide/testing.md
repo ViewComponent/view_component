@@ -28,7 +28,7 @@ _Note: `assert_selector` only matches on visible elements by default. To match o
 
 ## Best practices
 
-Prefer testing the behavior of your component over unit testing individual methods:
+Prefer testing the rendered output over individual methods:
 
 ```ruby
 # Good

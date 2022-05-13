@@ -19,8 +19,8 @@ module ViewComponent
       # :nocov:
       if ENV["DEBUG"]
         warn(
-          "WARNING in `ViewComponent::TestHelpers`: You must add `capybara` " \
-          "to your Gemfile to use Capybara assertions."
+          "WARNING in `ViewComponent::TestHelpers`: Add `capybara` " \
+          "to Gemfile to use Capybara assertions."
         )
       end
 
