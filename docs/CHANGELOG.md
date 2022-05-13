@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add Mission Met to list of companies that heavily rely on ViewComponent.
+
+    *Nick Smith*
+
 ## 2.55.0
 
 * Add `render_parent` convenience method to avoid confusion between `<%= super %>` and `<% super %>` in template code.
