@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Add Mission Met to list of companies that heavily rely on ViewComponent.
+* Add Mission Met to list of companies that use ViewComponent.
 
     *Nick Smith*
 
