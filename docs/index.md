@@ -211,6 +211,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [QuickNode](https://www.quicknode.com/)
 * [Shogun](https://getshogun.com/)
 * [Wecasa](https://www.wecasa.fr/)
+* [Within3](https://www.within3.com/)
 * [Wrapbook](https://wrapbook.com/)
 
 Using ViewComponent? [Send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to update this list!

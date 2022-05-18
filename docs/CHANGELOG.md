@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add Within3 to list of companies that use ViewComponent.
+
+    *Drew Bragg*
+
 * Add Mission Met to list of companies that use ViewComponent.
 
     *Nick Smith*
