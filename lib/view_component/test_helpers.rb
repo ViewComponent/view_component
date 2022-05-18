@@ -64,8 +64,8 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     def render_in_view_context(&block)
-      @rendered_component = controller.view_context.instance_exec(&block)
-      Nokogiri::HTML.fragment(@rendered_component)
+      @rendered_content = controller.view_context.instance_exec(&block)
+      Nokogiri::HTML.fragment(@rendered_content)
     end
 
     # @private
