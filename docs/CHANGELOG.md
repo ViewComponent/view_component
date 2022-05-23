@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add G2 to list of companies that use ViewComponent.
+
+  *Jack Shuff*
+
 * Add Within3 to list of companies that use ViewComponent.
 
     *Drew Bragg*
