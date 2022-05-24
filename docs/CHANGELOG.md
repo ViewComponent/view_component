@@ -11,7 +11,7 @@ title: Changelog
 
 * Add G2 to list of companies that use ViewComponent.
 
-  *Jack Shuff*
+    *Jack Shuff*
 
 * Add Within3 to list of companies that use ViewComponent.
 
