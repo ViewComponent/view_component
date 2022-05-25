@@ -28,21 +28,11 @@ module ViewComponent # :nodoc:
     alias_method :render_component, :render
 
     class << self
-      def load_all(force: false)
-        if descendants.empty? || force
-          Array(preview_paths).each do |preview_path|
-            Dir["#{preview_path}/**/*_preview.rb"].sort.each { |file| require_dependency file }
-          end
-        end
-      end
-
-      def load_all!
-        load_all(force: true)
-      end
-
       # Returns all component preview classes.
       def all
-        load_all!
+        Array(preview_paths).each do |preview_path|
+          Dir["#{preview_path}/**/*_preview.rb"].sort.each { |file| require_dependency file }
+        end
 
         descendants
       end
