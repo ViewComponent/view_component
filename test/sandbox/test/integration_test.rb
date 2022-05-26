@@ -4,7 +4,7 @@ require "test_helper"
 
 class IntegrationTest < ActionDispatch::IntegrationTest
   def setup
-    # ViewComponent::Preview.load_previews
+    ViewComponent::Preview.load_previews
   end
 
   def test_rendering_component_in_a_view
