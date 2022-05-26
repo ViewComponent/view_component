@@ -30,7 +30,7 @@ module ViewComponent # :nodoc:
     class << self
       # Returns all component preview classes.
       def all
-        load_previews if descendants.empty?
+        load_previews
 
         descendants
       end

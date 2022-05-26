@@ -6,7 +6,7 @@ class MyComponentTest < ViewComponent::TestCase
   include ViewComponent::RenderPreviewHelper
 
   def setup
-    ViewComponent::Preview.load_previews
+    # ViewComponent::Preview.load_previews
   end
 
   def test_render_preview
