@@ -151,6 +151,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/jonspalmer?s=64" alt="jonspalmer" width="32" />
 <img src="https://avatars.githubusercontent.com/juanmanuelramallo?s=64" alt="juanmanuelramallo" width="32" />
 <img src="https://avatars.githubusercontent.com/jules2689?s=64" alt="jules2689" width="32" />
+<img src="https://avatars.githubusercontent.com/jwshuff?s=64" alt="jwshuff" width="32" />
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
 <img src="https://avatars.githubusercontent.com/leighhalliday?s=64" alt="leighhalliday" width="32" />
@@ -203,6 +204,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Cometeer](https://cometeer.com/)
 * [Cults.](https://cults3d.com/)
 * [Framework](https://frame.work/)
+* [G2](https://www.g2.com/) (200+ components)
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [Litmus](https://litmus.engineering/)
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
@@ -211,6 +213,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [QuickNode](https://www.quicknode.com/)
 * [Shogun](https://getshogun.com/)
 * [Wecasa](https://www.wecasa.fr/)
+* [Within3](https://www.within3.com/)
 * [Wrapbook](https://wrapbook.com/)
 
 Using ViewComponent? [Send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to update this list!
