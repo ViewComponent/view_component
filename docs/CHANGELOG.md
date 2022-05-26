@@ -13,6 +13,10 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Move framework tests into sandbox application.
+
+    *Joel Hawksley*
+
 * Add G2 to list of companies that use ViewComponent.
 
     *Jack Shuff*
