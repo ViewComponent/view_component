@@ -5,8 +5,10 @@ require "test_helper"
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
-  def test_protection_unauthorized_access_outside_of_test_environment
+  def test_protection_unauthorized_access_in_production_env
     mock = Minitest::Mock.new
+    mock.expect :production?, true
+    mock.expect :development?, false
     mock.expect :test?, false
 
     Rails.stub :env, mock do

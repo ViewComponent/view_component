@@ -6,7 +6,7 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
   include ViewComponent::PreviewActions
 
   def system_test_entrypoint
-    unless Rails.env.test?
+    if Rails.env.production?
       render body: "Unauthorized", status: 403
     else
       render file: "./tmp/view_component_integrations/#{file_param[:file]}", status: 200
