@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
@@ -21,19 +21,19 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
       SimpleJavascriptInteractionWithJsIncludedComponent.new
     )
 
-    assert find('[data-hidden-field]', visible: false)
-    find('[data-button]', text: 'Click Me To Reveal Something Cool').click
-    assert find('[data-hidden-field]', visible: true)
+    assert find("[data-hidden-field]", visible: false)
+    find("[data-button]", text: "Click Me To Reveal Something Cool").click
+    assert find("[data-hidden-field]", visible: true)
   end
 
   def test_simple_js_interaction_in_browser_with_layout
     visit_rendered_component_in_browser(
       SimpleJavascriptInteractionWithoutJsIncludedComponent.new,
-      layout: 'application'
+      layout: "application"
     )
 
-    assert find('[data-hidden-field]', visible: false)
-    find('[data-button]', text: 'Click Me To Reveal Something Cool').click
-    assert find('[data-hidden-field]', visible: true)
+    assert find("[data-hidden-field]", visible: false)
+    find("[data-button]", text: "Click Me To Reveal Something Cool").click
+    assert find("[data-hidden-field]", visible: true)
   end
 end
