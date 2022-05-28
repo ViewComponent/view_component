@@ -1,26 +1,39 @@
-# frozen_string_literal: true
-
-require "test_helper"
+require 'test_helper'
 
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
-  def test_simple_js_interaction_in_browser_without_layout
-    visit_rendered_component_in_browser(SimpleJavascriptInteractionWithJsIncludedComponent.new)
+  def test_protection_unauthorized_access_outside_of_test_environment
+    mock = Minitest::Mock.new
+    mock.expect :test?, false
 
-    assert find("[data-hidden-field]", visible: false)
-    find("[data-button]", text: "Click Me To Reveal Something Cool").click
-    assert find("[data-hidden-field]", visible: true)
+    Rails.stub :env, mock do
+      visit_rendered_component_in_browser(
+        SimpleJavascriptInteractionWithJsIncludedComponent.new
+      )
+
+      assert_text "Unauthorized"
+    end
+  end
+
+  def test_simple_js_interaction_in_browser_without_layout
+    visit_rendered_component_in_browser(
+      SimpleJavascriptInteractionWithJsIncludedComponent.new
+    )
+
+    assert find('[data-hidden-field]', visible: false)
+    find('[data-button]', text: 'Click Me To Reveal Something Cool').click
+    assert find('[data-hidden-field]', visible: true)
   end
 
   def test_simple_js_interaction_in_browser_with_layout
     visit_rendered_component_in_browser(
       SimpleJavascriptInteractionWithoutJsIncludedComponent.new,
-      layout: "application"
+      layout: 'application'
     )
 
-    assert find("[data-hidden-field]", visible: false)
-    find("[data-button]", text: "Click Me To Reveal Something Cool").click
-    assert find("[data-hidden-field]", visible: true)
+    assert find('[data-hidden-field]', visible: false)
+    find('[data-button]', text: 'Click Me To Reveal Something Cool').click
+    assert find('[data-hidden-field]', visible: true)
   end
 end
