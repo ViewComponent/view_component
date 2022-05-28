@@ -36,6 +36,8 @@ bin/rails generate component Sections::Example title content
 
 ## Options
 
+You can specify options when running the generator. To alter the default values project-wide, define the configuration settings described in [API docs](/api.html#configuration).
+
 Generated ViewComponents are added to `app/components` by default. Set `config.view_component.view_component_path` to use a different path.
 
 ### Override template engine
@@ -112,7 +114,7 @@ bin/rails generate component Example title --locale
 
 To always generate locale files, set `config.view_component.generate_locale = true`.
 
-If your prefer having your translations in distinct locale files you can set `config.view_component.generate_distinct_locale_files = true` to generate as many files as configured in `I18n.available_locales`.
+To generate translations in distinct locale files, set `config.view_component.generate_distinct_locale_files = true` to generate as many files as configured in `I18n.available_locales`.
 
 ### Place the view in a sidecar directory
 
@@ -125,6 +127,8 @@ bin/rails generate component Example title --sidecar
       invoke  erb
       create    app/components/example_component/example_component.html.erb
 ```
+
+To always generate in the sidecar directory, set `config.view_component.generate_sidecar = true`.
 
 ### Use [inline rendering](/guide/templates.html#inline) (no template file)
 
@@ -151,7 +155,7 @@ bin/rails generate component Example title content --parent MyBaseComponent
       create    app/components/example_component.html.erb
 ```
 
-To always use your own parent class, set `config.view_component.component_parent_class = "MyBaseComponent"`.
+To always use a specific parent class, set `config.view_component.component_parent_class = "MyBaseComponent"`.
 
 ### Skip collision check
 

@@ -3,6 +3,8 @@ layout: default
 title: Changelog
 ---
 
+<!-- Add unreleased changes under the "main" heading. -->
+
 # Changelog
 
 ## main
@@ -10,6 +12,242 @@ title: Changelog
 * Add visit_rendered_component_in_browser method to enable testing JS interactions in components
 
     *Edwin Mak*
+
+* Move framework tests into sandbox application.
+
+    *Joel Hawksley*
+
+* Add G2 to list of companies that use ViewComponent.
+
+    *Jack Shuff*
+
+* Add Within3 to list of companies that use ViewComponent.
+
+    *Drew Bragg*
+
+* Add Mission Met to list of companies that use ViewComponent.
+
+    *Nick Smith*
+
+## 2.55.0
+
+* Add `render_parent` convenience method to avoid confusion between `<%= super %>` and `<% super %>` in template code.
+
+    *Cameron Dutro*
+
+* Add note about discouraging inheritance.
+
+    *Joel Hawksley*
+
+* Clean up grammar in documentation.
+
+    *Joel Hawksley*
+
+* The ViewComponent team at GitHub is hiring! We're looking for a Rails engineer with accessibility experience: [https://boards.greenhouse.io/github/jobs/4020166](https://boards.greenhouse.io/github/jobs/4020166). Reach out to joelhawksley@github.com with any questions!
+
+* The ViewComponent team is hosting a happy hour at RailsConf. Join us for snacks, drinks, and stickers: [https://www.eventbrite.com/e/viewcomponent-happy-hour-tickets-304168585427](https://www.eventbrite.com/e/viewcomponent-happy-hour-tickets-304168585427)
+
+## 2.54.1
+
+* Update docs dependencies.
+
+    *Joel Hawksley*
+
+* Resolve warning in slots API.
+* Raise in the test environment when ViewComponent code emits a warning.
+
+    *Blake Williams*
+
+## 2.54.0
+
+* Add `with_*` slot API for defining slots. Note: we plan to deprecate the non `with_*` API for slots in an upcoming release.
+
+    *Blake Williams*
+
+* Add QuickNode to list of companies that use ViewComponent.
+
+    *Luc Castera*
+
+* Include the `Translatable` module by default.
+
+    *Elia Schito*
+
+* Update docs dependencies.
+
+    *Joel Hawksley*
+
+## 2.53.0
+
+* Add support for relative I18n scopes to translations.
+
+    *Elia Schito*
+
+* Update CI configuration to use latest Rails 7.0.
+
+    *Hans Lemuet*
+
+* Document how to use blocks with lambda slots.
+
+    *Sam Partington*
+
+* Skip Rails 5.2 in local test environment if using incompatible Ruby version.
+
+    *Cameron Dutro*, *Blake Williams*, *Joel Hawksley*
+
+* Improve landing page documentation.
+
+    *Jason Swett*
+
+* Add Bearer to list of companies that use ViewComponent.
+
+    *Yaroslav Shmarov*
+
+* Add articles to resources page.
+
+    *Joel Hawksley*
+
+* Enable rendering arbitrary block contents in the view context in tests.
+
+    *Cameron Dutro*
+
+## 2.52.0
+
+* Add ADR for separate slot getter/setter API.
+
+    *Blake Williams*
+
+* Add the option to use a "global" output buffer so `form_for` and friends can be used with view components.
+
+    *Cameron Dutro*, *Blake Williams*
+
+* Fix fragment caching in partials when global output buffer is enabled.
+* Fix template inheritance when eager loading is disabled.
+
+    *Cameron Dutro*
+
+## 2.51.0
+
+* Update the docs only when releasing a new version.
+
+    *Hans Lemuet*
+
+* Alphabetize companies using ViewComponent and add Brightline to the list.
+
+    *Jack Schuss*
+
+* Add CMYK value for ViewComponent Red color on logo page.
+
+    *Dylan Smith*
+
+* Improve performance by moving template compilation from `#render_in` to `#render_template_for`.
+
+    *Cameron Dutro*
+
+## 2.50.0
+
+* Add tests for `layout` usage when rendering via controller.
+
+    *Felipe Sateler*
+
+* Support returning Arrays from i18n files, and support marking them as HTML-safe translations.
+
+    *foca*
+
+* Add Cometeer and Framework to users list.
+
+    *Elia Schito*
+
+* Update Microsoft Vale styles.
+
+    *Simon Fish*
+
+* Fix example in testing guide for how to setup default Rails tests.
+
+    *Steven Hansen*
+
+* Update benchmark script to render multiple components/partials instead of a single instance per-run.
+
+    *Blake Williams*
+
+* Add predicate methods `#{slot_name}?` to slots.
+
+    *Hans Lemuet*
+
+* Use a dedicated deprecation instance, silence it while testing.
+
+    *Max Beizer, Hans Lemuet, Elia Schito*
+
+* Fix Ruby warnings.
+
+    *Hans Lemuet*
+
+* Place all generator options under `config.generate` namespace.
+
+    *Simon Fish*
+
+* Allow preview generator to use provided component attributes.
+* Add config option `config.view_component.generate.preview` to enable project-wide preview generation.
+* Ensure all generated `.rb` files include `# frozen_string_literal: true` statement.
+
+    *Bob Maerten*
+
+* Add Shogun to users list.
+
+    *Bernie Chiu*
+
+## 2.49.1
+
+* Patch XSS vulnerability in `ViewComponent::Translatable` module caused by improperly escaped interpolation arguments.
+
+    *Cameron Dutro*
+
+## 2.49.0
+
+* Fix path handling for evaluated view components that broke in Ruby 3.1.
+
+    *Adam Hess*
+
+* Fix support for the `default:` option for a global translation.
+
+    *Elia Schito*
+
+* Ensure i18n scope is a symbol to protect lookups.
+
+    *Simon Fish*
+
+* Small update to preview docs to include rspec mention.
+
+    *Leigh Halliday*
+
+* Small improvements to collection iteration docs.
+
+    *Brian O'Rourke*
+
+* Add good and bad examples to `ViewComponents in practice`.
+
+    *Joel Hawksley*
+
+* Add Ruby 3.1 and Rails 7.0 to CI.
+
+    *Peter Goldstein*
+
+* Move preview logic to module for easier app integration.
+
+    *Sammy Henningsson*
+
+## 2.48.0
+
+* Correct path in example test command in Contributing docs.
+
+    *Mark Wilkinson*
+
+* Update link to GOV.UK Components library in the resources list.
+
+    *Peter Yates*
+
+* Add Lookbook to Resources docs page.
+
+    *Mark Perkins*
 
 * Add blocking compiler mode for use in Rails development and testing modes, improving thread safety.
 
@@ -46,6 +284,10 @@ title: Changelog
 * Update `@param` of `#render_inline` to include `ViewComponent::Collection`.
 
     *Yutaka Kamei*
+
+* Add Wecasa to users list.
+
+    *Mohamed Ziata*
 
 ## 2.47.0
 
@@ -118,6 +360,10 @@ title: Changelog
 * Add config option `config.view_component.generate_distinct_locale_files` to enable project-wide per-locale translations file generation.
 
     *Bob Maerten*
+
+* Add config option `config.view_component.generate_sidecar` to always generate in the sidecar directory.
+
+    *Gleydson Tavares*
 
 ## 2.46.0
 
@@ -564,6 +810,12 @@ title: Changelog
 * Are you interested in building the future of ViewComponent? GitHub is looking to hire a Senior Engineer to work on Primer ViewComponents and ViewComponent. Apply here: [US/Canada](https://github.com/careers) / [Europe](https://boards.greenhouse.io/github/jobs/3132294). Feel free to reach out to joelhawksley@github.com with any questions.
 
     *Joel Hawksley*
+
+## 2.31.2
+
+* Patch XSS vulnerability in `ViewComponent::Translatable` module caused by improperly escaped interpolation arguments.
+
+    *Cameron Dutro*
 
 ## 2.31.1
 

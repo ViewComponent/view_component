@@ -9,7 +9,7 @@ parent: Guide
 Unit test components using the `render_inline` test helper, asserting against the rendered output:
 
 ```ruby
-require "view_component/test_case"
+require "test_helper"
 
 class ExampleComponentTest < ViewComponent::TestCase
   def test_render_component
@@ -24,11 +24,11 @@ end
 
 (Capybara matchers are available if the gem is installed)
 
-_Note: `assert_selector` only matches on visible elements by default. To match on hidden elements, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
+_Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
 ## Best practices
 
-Prefer testing the behavior of your component over unit testing individual methods:
+Prefer testing the rendered output over individual methods:
 
 ```ruby
 # Good
@@ -221,6 +221,7 @@ end
 ```
 
 ### Handling components without JS included
+
 A common pattern is to include assets in a layout rather than directly inside the component. In those cases, you can define a `layout` in the `visit_rendered_component_in_browser` so that the component is rendered with those assets:
 
 ```rb

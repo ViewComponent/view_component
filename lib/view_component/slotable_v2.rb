@@ -7,6 +7,11 @@ module ViewComponent
   module SlotableV2
     extend ActiveSupport::Concern
 
+    RESERVED_NAMES = {
+      singular: %i[content render].freeze,
+      plural: %i[contents renders].freeze,
+    }.freeze
+
     # Setup component slot state
     included do
       # Hash of registered Slots
@@ -56,24 +61,34 @@ module ViewComponent
       # = Setting sub-component content
       #
       # Consumers of the component can render a sub-component by calling a
-      # helper method with the same name as the slot.
+      # helper method with the same name as the slot prefixed with `with_`.
       #
       #   <%= render_inline(MyComponent.new) do |component| %>
-      #     <% component.header(classes: "Foo") do %>
+      #     <% component.with_header(classes: "Foo") do %>
       #       <p>Bar</p>
       #     <% end %>
       #   <% end %>
       def renders_one(slot_name, callable = nil)
         validate_singular_slot_name(slot_name)
 
+        define_method :"with_#{slot_name}" do |*args, &block|
+          set_slot(slot_name, nil, *args, &block)
+        end
+        ruby2_keywords(:"with_#{slot_name}") if respond_to?(:ruby2_keywords, true)
+
         define_method slot_name do |*args, &block|
           if args.empty? && block.nil?
             get_slot(slot_name)
           else
+            # Deprecated: Will remove in 3.0
             set_slot(slot_name, nil, *args, &block)
           end
         end
         ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
+
+        define_method "#{slot_name}?" do
+          get_slot(slot_name).present?
+        end
 
         register_slot(slot_name, collection: false, callable: callable)
       end
@@ -103,15 +118,15 @@ module ViewComponent
       # = Setting sub-component content
       #
       # Consumers of the component can set the content of a slot by calling a
-      # helper method with the same name as the slot. The method can be
-      # called multiple times to append to the slot.
+      # helper method with the same name as the slot prefixed with `with_`. The
+      # method can be called multiple times to append to the slot.
       #
       #   <%= render_inline(MyComponent.new) do |component| %>
-      #     <% component.item(name: "Foo") do %>
+      #     <% component.with_item(name: "Foo") do %>
       #       <p>One</p>
       #     <% end %>
       #
-      #     <% component.item(name: "Bar") do %>
+      #     <% component.with_item(name: "Bar") do %>
       #       <p>two</p>
       #     <% end %>
       #   <% end %>
@@ -123,10 +138,23 @@ module ViewComponent
         # Define setter for singular names
         # for example `renders_many :items` allows fetching all tabs with
         # `component.tabs` and setting a tab with `component.tab`
+        #
+        # Deprecated: Will remove in 3.0
         define_method singular_name do |*args, &block|
           set_slot(slot_name, nil, *args, &block)
         end
         ruby2_keywords(singular_name.to_sym) if respond_to?(:ruby2_keywords, true)
+
+        define_method :"with_#{singular_name}" do |*args, &block|
+          set_slot(slot_name, nil, *args, &block)
+        end
+        ruby2_keywords(:"with_#{singular_name}") if respond_to?(:ruby2_keywords, true)
+
+        define_method :"with_#{slot_name}" do |collection_args = nil, &block|
+          collection_args.map do |args|
+            set_slot(slot_name, nil, **args, &block)
+          end
+        end
 
         # Instantiates and and adds multiple slots forwarding the first
         # argument to each slot constructor
@@ -134,10 +162,15 @@ module ViewComponent
           if collection_args.nil? && block.nil?
             get_slot(slot_name)
           else
+            # Deprecated: Will remove in 3.0
             collection_args.map do |args|
               set_slot(slot_name, nil, **args, &block)
             end
           end
+        end
+
+        define_method "#{slot_name}?" do
+          get_slot(slot_name).present?
         end
 
         register_slot(slot_name, collection: true, callable: callable)
@@ -197,24 +230,26 @@ module ViewComponent
       end
 
       def validate_plural_slot_name(slot_name)
-        if slot_name.to_sym == :contents
+        if RESERVED_NAMES[:plural].include?(slot_name.to_sym)
           raise ArgumentError.new(
             "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
             "To fix this issue, choose a different name."
           )
         end
 
+        raise_if_slot_ends_with_question_mark(slot_name)
         raise_if_slot_registered(slot_name)
       end
 
       def validate_singular_slot_name(slot_name)
-        if slot_name.to_sym == :content
+        if RESERVED_NAMES[:singular].include?(slot_name.to_sym)
           raise ArgumentError.new(
             "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
             "To fix this issue, choose a different name."
           )
         end
 
+        raise_if_slot_ends_with_question_mark(slot_name)
         raise_if_slot_registered(slot_name)
       end
 
@@ -224,6 +259,17 @@ module ViewComponent
           raise ArgumentError.new(
             "#{self} declares the #{slot_name} slot multiple times.\n\n" \
             "To fix this issue, choose a different slot name."
+          )
+        end
+      end
+
+      def raise_if_slot_ends_with_question_mark(slot_name)
+        if slot_name.to_s.ends_with?("?")
+          raise ArgumentError.new(
+            "#{self} declares a slot named #{slot_name}, which ends with a question mark.\n\n"\
+            "This is not allowed because the ViewComponent framework already provides predicate "\
+            "methods ending in `?`.\n\n" \
+            "To fix this issue, choose a different name."
           )
         end
       end
@@ -276,8 +322,8 @@ module ViewComponent
         renderable_function = slot_definition[:renderable_function].bind(self)
         renderable_value =
           if block_given?
-            renderable_function.call(*args) do |*args|
-              view_context.capture(*args, &block)
+            renderable_function.call(*args) do |*rargs|
+              view_context.capture(*rargs, &block)
             end
           else
             renderable_function.call(*args)

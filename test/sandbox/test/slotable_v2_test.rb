@@ -344,6 +344,17 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_includes exception.message, "declares a slot named content"
   end
 
+  def test_component_raises_when_given_one_slot_name_ending_with_question_mark
+    exception =
+      assert_raises ArgumentError do
+        Class.new(ViewComponent::Base) do
+          renders_one :item?
+        end
+      end
+
+    assert_includes exception.message, "declares a slot named item?, which ends with a question mark"
+  end
+
   def test_component_raises_when_given_invalid_slot_name_for_has_many
     exception = assert_raises ArgumentError do
       Class.new(ViewComponent::Base) do
@@ -352,6 +363,17 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
 
     assert_includes exception.message, "declares a slot named contents"
+  end
+
+  def test_component_raises_when_given_many_slot_name_ending_with_question_mark
+    exception =
+      assert_raises ArgumentError do
+        Class.new(ViewComponent::Base) do
+          renders_many :items?
+        end
+      end
+
+    assert_includes exception.message, "declares a slot named items?, which ends with a question mark"
   end
 
   def test_renders_pass_through_slot_using_with_content
@@ -416,6 +438,67 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
   end
 
+  def test_supports_with_setters
+    render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
+      component.with_title.with_content("This is my title!")
+      component.with_subtitle.with_content("This is my subtitle!")
+      component.with_tab.with_content("Tab A")
+      component.with_tab.with_content("Tab B")
+      component.with_item.with_content("Item A")
+      component.with_item(highlighted: true).with_content("Item B")
+      component.with_item.with_content("Item C")
+
+      component.with_footer(classes: "text-blue") do
+        "This is the footer"
+      end
+    end
+
+    assert_selector(".card.mt-4")
+
+    assert_selector(".title", text: "This is my title!")
+
+    assert_selector(".subtitle", text: "This is my subtitle!")
+
+    assert_selector(".tab", text: "Tab A")
+    assert_selector(".tab", text: "Tab B")
+
+    assert_selector(".item", count: 3)
+    assert_selector(".item.highlighted", count: 1)
+    assert_selector(".item.normal", count: 2)
+
+    assert_selector(".footer.text-blue")
+  end
+
+  def test_supports_with_setters_plural
+    render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
+      component.with_items([{ highlighted: true }, { highlighted: false }])
+    end
+
+    assert_selector(".item", count: 2)
+    assert_selector(".item.highlighted", count: 1)
+  end
+
+  def test_polymorphic_slot_with_setters
+    render_inline(PolymorphicSlotComponent.new) do |component|
+      component.with_header_standard { "standard" }
+      component.with_item_foo(class_names: "custom-foo")
+      component.with_item_bar(class_names: "custom-bar")
+    end
+
+    assert_selector("div .standard", text: "standard")
+    assert_selector("div .foo.custom-foo:nth-child(2)")
+    assert_selector("div .bar.custom-bar:last")
+  end
+
+  def test_supports_with_collection_setter
+    render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
+      component.with_items([{}, { highlighted: true }, {}])
+    end
+
+    assert_selector(".item", count: 3)
+    assert_selector(".item.highlighted", count: 1)
+  end
+
   def test_slot_type_single
     assert_equal(:single, SlotsV2Component.slot_type(:title))
   end
@@ -477,13 +560,23 @@ class SlotsV2sTest < ViewComponent::TestCase
     PartialHelper::State.reset
 
     assert_nothing_raised do
-      render_inline WrapperComponent.new do |c|
-        c.render(PartialSlotHelperComponent.new) do |c|
+      render_inline WrapperComponent.new do |w|
+        w.render(PartialSlotHelperComponent.new) do |c|
           c.header {}
         end
       end
     end
 
     assert_equal 1, PartialHelper::State.calls
+  end
+
+  def test_lambda_slot_content_can_be_provided_via_a_block
+    render_inline LambdaSlotComponent.new do |c|
+      c.header(classes: "some-class") do
+        "This is a header!"
+      end
+    end
+
+    assert_selector("h1.some-class", text: "This is a header!")
   end
 end

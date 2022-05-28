@@ -41,27 +41,6 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_component_preview_with_one_overridden_preview_path
-    with_preview_paths(%w[spec/components/previews]) do
-      run_generator %w[user --preview]
-
-      assert_file "spec/components/previews/user_component_preview.rb" do |component|
-        assert_match(/class UserComponentPreview < /, component)
-        assert_match(/render\(UserComponent.new\)/, component)
-      end
-    end
-  end
-
-  def test_component_preview_with_two_overridden_preview_paths
-    with_preview_paths(%w[spec/components/previews some/other/directory]) do
-      run_generator %w[user --preview]
-
-      assert_no_file "test/components/previews/user_component_preview.rb"
-      assert_no_file "spec/components/previews/user_component_preview.rb"
-      assert_no_file "some/other/directory/user_component_preview.rb"
-    end
-  end
-
   def test_component_with_arguments
     run_generator %w[user name]
 
@@ -122,17 +101,6 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "test/components/admins/user_component_test.rb" do |component|
       assert_match(/class Admins::UserComponentTest < /, component)
       assert_match(/def test_component_renders_something_useful/, component)
-    end
-  end
-
-  def test_component_preview_with_namespace
-    with_preview_paths([]) do
-      run_generator %w[admins/user --preview]
-
-      assert_file "test/components/previews/admins/user_component_preview.rb" do |component|
-        assert_match(/class Admins::UserComponentPreview < /, component)
-        assert_match(/render\(Admins::UserComponent.new\)/, component)
-      end
     end
   end
 
@@ -261,6 +229,14 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
 
     assert_file "app/components/user_component.rb"
     assert_file "app/components/user_component/user_component.yml"
+  end
+
+  def test_component_with_generate_sidecar
+    with_generate_sidecar(true) do
+      run_generator %w[user]
+
+      assert_file "app/components/user_component/user_component.html.erb"
+    end
   end
 
   private

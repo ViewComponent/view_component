@@ -19,8 +19,8 @@ module ViewComponent
       # :nocov:
       if ENV["DEBUG"]
         warn(
-          "WARNING in `ViewComponent::TestHelpers`: You must add `capybara` " \
-          "to your Gemfile to use Capybara assertions."
+          "WARNING in `ViewComponent::TestHelpers`: Add `capybara` " \
+          "to Gemfile to use Capybara assertions."
         )
       end
 
@@ -48,6 +48,21 @@ module ViewComponent
           controller.view_context.render_component(component, &block)
         end
 
+      Nokogiri::HTML.fragment(@rendered_component)
+    end
+
+    # Execute the given block in the view context. Internally sets `page` to be a
+    # `Capybara::Node::Simple`, allowing for Capybara assertions to be used:
+    #
+    # ```ruby
+    # render_in_view_context do
+    #   render(MyComponent.new)
+    # end
+    #
+    # assert_text("Hello, World!")
+    # ```
+    def render_in_view_context(&block)
+      @rendered_component = controller.view_context.instance_exec(&block)
       Nokogiri::HTML.fragment(@rendered_component)
     end
 

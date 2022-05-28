@@ -114,11 +114,25 @@ class LocaleGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_component_with_generate_sidecar
+    with_generate_sidecar(true) do
+      with_generate_distinct_locale_files do
+        run_generator %w[user]
+      end
+
+      I18n.available_locales.each do |locale|
+        assert_file "app/components/user_component/user_component.#{locale}.yml" do |content|
+          assert_match(/^#{locale}:\n/, content)
+        end
+      end
+    end
+  end
+
   private
 
   def with_generate_distinct_locale_files
-    ViewComponent::Base.generate_distinct_locale_files = true
+    ViewComponent::Base.generate.distinct_locale_files = true
     yield
-    ViewComponent::Base.generate_distinct_locale_files = false
+    ViewComponent::Base.generate.distinct_locale_files = false
   end
 end

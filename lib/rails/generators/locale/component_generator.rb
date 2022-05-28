@@ -12,7 +12,7 @@ module Locale
       class_option :sidecar, type: :boolean, default: false
 
       def create_locale_file
-        if ViewComponent::Base.generate_distinct_locale_files
+        if ViewComponent::Base.generate.distinct_locale_files
           I18n.available_locales.each do |locale|
             create_file destination(locale), translations_hash([locale]).to_yaml
           end
@@ -35,7 +35,7 @@ module Locale
 
       def destination(locale = nil)
         extention = ".#{locale}" if locale
-        if options["sidecar"]
+        if sidecar?
           File.join(component_path, class_path, "#{file_name}_component", "#{file_name}_component#{extention}.yml")
         else
           File.join(component_path, class_path, "#{file_name}_component#{extention}.yml")

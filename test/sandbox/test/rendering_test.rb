@@ -9,6 +9,12 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
+  def test_render_in_view_context
+    render_in_view_context { render(MyComponent.new) }
+
+    assert_selector("div", text: "hello,world!")
+  end
+
   def test_render_inline_returns_nokogiri_fragment
     assert_includes render_inline(MyComponent.new).css("div").to_html, "hello,world!"
   end
@@ -103,6 +109,8 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_haml_with_html_formatted_slot
+    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+
     render_inline(HamlHtmlFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted one")
@@ -971,6 +979,54 @@ class ViewComponentTest < ViewComponent::TestCase
       end
 
       threads.map(&:join)
+    end
+  end
+
+  def test_multiple_inline_renders_of_the_same_component
+    component = ErbComponent.new(message: "foo")
+    render_inline(InlineRenderComponent.new(items: [component, component]))
+    assert_selector("div", text: "foo", count: 2)
+  end
+
+  def test_deprecated_generate_mattr_accessor
+    ViewComponent::Base._deprecated_generate_mattr_accessor(:test_accessor)
+    assert(ViewComponent::Base.respond_to?(:generate_test_accessor))
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+    ViewComponent::Base.generate_test_accessor = "changed"
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+    ViewComponent::Base.generate.test_accessor = "changed again"
+    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
+  ensure
+    ViewComponent::Base.class_eval do
+      singleton_class.undef_method :generate_test_accessor
+      singleton_class.undef_method :generate_test_accessor=
+    end
+  end
+
+  def test_inherited_component_renders_when_lazy_loading
+    # Simulate lazy loading by manually removing the classes in question. This will completely
+    # undo the changes made by self.class.compile and friends, forcing a compile the next time
+    # #render_template_for is called. This shouldn't be necessary except in the test environment,
+    # since eager loading is turned on here.
+    Object.send(:remove_const, :MyComponent)
+    Object.send(:remove_const, :InheritedWithOwnTemplateComponent)
+
+    load "test/sandbox/app/components/my_component.rb"
+    load "test/sandbox/app/components/inherited_with_own_template_component.rb"
+
+    render_inline(MyComponent.new)
+    assert_selector("div", text: "hello,world!")
+
+    render_inline(InheritedWithOwnTemplateComponent.new)
+    assert_selector("div", text: "hello, my own template")
+  end
+
+  def test_inherited_component_calls_super
+    render_inline(SuperComponent.new)
+
+    assert_selector(".base-component", count: 1)
+    assert_selector(".derived-component", count: 1) do
+      assert_selector(".base-component", count: 1)
     end
   end
 end
