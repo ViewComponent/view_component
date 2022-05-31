@@ -30,7 +30,7 @@ module ViewComponent
     end
 
     # @private
-    attr_reader :rendered_component
+    attr_reader :rendered_content
 
     # Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
     # allowing for Capybara assertions to be used:

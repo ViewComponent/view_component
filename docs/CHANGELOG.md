@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Rename accessor method name: `rendered_component` => `rendered_content`.
+
+    *Yoshiyuki Hirano*
+
 ## 2.56.0
 
 * Introduce experimental `render_preview` test helper. Note: `@rendered_component` in `TestHelpers` has been renamed to `@rendered_content`.
