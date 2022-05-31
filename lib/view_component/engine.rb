@@ -41,8 +41,6 @@ module ViewComponent
             MethodSource.instance_variable_set(:@lines_for_file, {})
           end
         end
-
-        ViewComponent::Preview.load_previews
       end
 
       ActiveSupport.on_load(:view_component) do
