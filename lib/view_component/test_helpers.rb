@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "view_component/render_preview_helper"
+
 module ViewComponent
   module TestHelpers
     begin
@@ -7,7 +9,7 @@ module ViewComponent
       include Capybara::Minitest::Assertions
 
       def page
-        Capybara::Node::Simple.new(@rendered_component)
+        Capybara::Node::Simple.new(@rendered_content)
       end
 
       def refute_component_rendered
@@ -41,14 +43,14 @@ module ViewComponent
     # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
     # @return [Nokogiri::HTML]
     def render_inline(component, **args, &block)
-      @rendered_component =
+      @rendered_content =
         if Rails.version.to_f >= 6.1
           controller.view_context.render(component, args, &block)
         else
           controller.view_context.render_component(component, &block)
         end
 
-      Nokogiri::HTML.fragment(@rendered_component)
+      Nokogiri::HTML.fragment(@rendered_content)
     end
 
     # Execute the given block in the view context. Internally sets `page` to be a
@@ -62,8 +64,8 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     def render_in_view_context(&block)
-      @rendered_component = controller.view_context.instance_exec(&block)
-      Nokogiri::HTML.fragment(@rendered_component)
+      @rendered_content = controller.view_context.instance_exec(&block)
+      Nokogiri::HTML.fragment(@rendered_content)
     end
 
     # @private

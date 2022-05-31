@@ -19,7 +19,7 @@ jobs:
       run: |
         bundle config path vendor/bundle
         bundle update
-        bundle exec rake benchmark
+        bundle exec rake partial_benchmark
         bundle exec rake translatable_benchmark
         bundle exec rake slotable_benchmark
   test:

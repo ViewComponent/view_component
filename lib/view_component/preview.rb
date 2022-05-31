@@ -30,7 +30,8 @@ module ViewComponent # :nodoc:
     class << self
       # Returns all component preview classes.
       def all
-        load_previews if descendants.empty?
+        load_previews
+
         descendants
       end
 
@@ -98,13 +99,13 @@ module ViewComponent # :nodoc:
         source[1...(source.size - 1)].join("\n")
       end
 
-      private
-
       def load_previews
         Array(preview_paths).each do |preview_path|
           Dir["#{preview_path}/**/*_preview.rb"].sort.each { |file| require_dependency file }
         end
       end
+
+      private
 
       def preview_paths
         Base.preview_paths

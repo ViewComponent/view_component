@@ -22,7 +22,7 @@ class ViewComponentTest < ViewComponent::TestCase
   def test_render_inline_sets_rendered_component
     render_inline(MyComponent.new)
 
-    assert_includes rendered_component, "hello,world!"
+    assert_includes @rendered_content, "hello,world!"
   end
 
   def test_child_component

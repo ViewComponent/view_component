@@ -12,8 +12,8 @@ Rake::TestTask.new(:test) do |t|
 end
 
 desc "Runs benchmarks against components"
-task :benchmark do
-  ruby "./performance/benchmark.rb"
+task :partial_benchmark do
+  ruby "./performance/partial_benchmark.rb"
 end
 
 desc "Runs benchmarks against component content area/ slot implementations"
