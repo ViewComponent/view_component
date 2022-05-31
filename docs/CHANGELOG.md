@@ -25,6 +25,10 @@ title: Changelog
 
     *Nick Smith*
 
+* Fix `#with_request_url` test helper not parsing nested query parameters into nested hashes.
+
+    *Richard Marbach*
+
 ## 2.55.0
 
 * Add `render_parent` convenience method to avoid confusion between `<%= super %>` and `<% super %>` in template code.
