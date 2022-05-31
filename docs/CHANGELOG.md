@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.56.0
+
 * Introduce experimental `render_preview` test helper. Note: `@rendered_component` in `TestHelpers` has been renamed to `@rendered_content`.
 
     *Joel Hawksley*
