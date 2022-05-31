@@ -929,6 +929,10 @@ class ViewComponentTest < ViewComponent::TestCase
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
       assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
     end
+
+    with_request_url "/products?mykey[mynestedkey]=myvalue" do
+      assert_equal({ "mynestedkey" => "myvalue" }, request.parameters["mykey"])
+    end
   end
 
   def test_components_share_helpers_state
