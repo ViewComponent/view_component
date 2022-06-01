@@ -11,9 +11,9 @@ title: Changelog
 
 ## 2.56.1
 
-* Rename private accessor `rendered_component` to `rendered_content`.
+* Rename `rendered_component` reader method to `rendered_content` in `TestHelpers`.
 
-    *Yoshiyuki Hirano*, *Simon Dawson*
+    *Yoshiyuki Hirano*, *Simon Dawson*, *Richard Macklin*
 
 ## 2.56.0
 
