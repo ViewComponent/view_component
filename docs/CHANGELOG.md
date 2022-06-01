@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.56.1
+
 * Rename private accessor `rendered_component` to `rendered_content`.
 
     *Yoshiyuki Hirano*, *Simon Dawson*
