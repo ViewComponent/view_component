@@ -30,9 +30,11 @@ module ViewComponent
     end
 
     # @private
+    # :nocov:
     def rendered_component
       @rendered_content
     end
+    # :nocov:
 
     # Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
     # allowing for Capybara assertions to be used:
