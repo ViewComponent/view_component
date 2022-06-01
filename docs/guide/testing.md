@@ -66,13 +66,13 @@ def test_render_component
 end
 ```
 
-Alternatively, assert against the raw output of the component, which is exposed as `rendered_component`:
+Alternatively, assert against the raw output of the component, which is exposed as `rendered_content`:
 
 ```ruby
 def test_render_component
   render_inline(ExampleComponent.new(title: "my title")) { "Hello, World!" }
 
-  assert_includes rendered_component, "Hello, World!"
+  assert_includes rendered_content, "Hello, World!"
 end
 ```
 
@@ -202,9 +202,9 @@ RSpec.describe ExampleComponent, type: :component do
   it "renders component" do
     render_inline(described_class.new(title: "my title")) { "Hello, World!" }
 
-    expect(rendered_component).to have_css "span[title='my title']", text: "Hello, World!"
+    expect(rendered_content).to have_css "span[title='my title']", text: "Hello, World!"
     # or, to just assert against the text
-    expect(rendered_component).to have_text "Hello, World!"
+    expect(rendered_content).to have_text "Hello, World!"
   end
 end
 ```
