@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Rename private accessor method name: `rendered_component` => `rendered_content`.
+* Rename private accessor `rendered_component` to `rendered_content`.
 
     *Yoshiyuki Hirano*, *Simon Dawson*
 
