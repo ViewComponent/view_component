@@ -11,7 +11,7 @@ title: Changelog
 
 * Rename private accessor method name: `rendered_component` => `rendered_content`.
 
-    *Yoshiyuki Hirano*
+    *Yoshiyuki Hirano*, *Simon Dawson*
 
 ## 2.56.0
 
