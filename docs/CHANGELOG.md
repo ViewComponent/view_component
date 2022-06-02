@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Restore removed `rendered_component`, marking it for deprecation in v3.0.0.
+
+    *Tyson Gach*, *Richard Macklin*, *Joel Hawksley*
+
 ## 2.56.1
 
 * Rename private accessor `rendered_component` to `rendered_content`.
