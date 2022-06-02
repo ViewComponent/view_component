@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add missing `require` for `Translatable` module in `Base`.
+
+    *Hans Lemuet*
+
 ## 2.56.1
 
 * Rename private accessor `rendered_component` to `rendered_content`.
