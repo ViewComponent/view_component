@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Prevent adding duplicates to `autoload_paths`.
+
+    *Thomas Hutterer*
+
 * Add FreeAgent to list of companies using ViewComponent.
 
     *Simon Fish*
