@@ -237,7 +237,7 @@ module ViewComponent
 
     def compiled_template(file_path)
       handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
-      template = File.read(file_path)
+      template = File.read(file_path).strip
 
       if handler.method(:call).parameters.length > 1
         handler.call(component_class, template)
