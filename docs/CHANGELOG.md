@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.56.2
+
 * Restore removed `rendered_component`, marking it for deprecation in v3.0.0.
 
     *Tyson Gach*, *Richard Macklin*, *Joel Hawksley*
