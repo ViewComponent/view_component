@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Strip newlines from templates before compilation to avoid unwanted newlines.
+
+    *Cameron Dutro*
+
 ## 2.56.1
 
 * Rename private accessor `rendered_component` to `rendered_content`.
