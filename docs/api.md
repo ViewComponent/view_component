@@ -10,6 +10,18 @@ nav_order: 3
 
 ## Class methods
 
+### .strip_trailing_newlines(value)
+
+Strips trailing newlines in templates before compiling them.
+
+    class MyComponent < ViewComponent::Base
+      strip_trailing_newlines true
+    end
+
+### .strip_trailing_newlines? → [Boolean]
+
+Whether or not trailing newlines will be stripped before compilation.
+
 ### .with_collection(collection, **args)
 
 Render a component for each element in a collection ([documentation](/guide/collections)):
@@ -61,6 +73,10 @@ _Use `#generate.stimulus_controller` instead. Will be removed in v3.0.0._
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
 
+### #perform_render
+
+
+
 ### #render? → [Boolean]
 
 Override to determine whether the ViewComponent should render.
@@ -73,6 +89,21 @@ Entrypoint for rendering components.
 - `block`: optional block to be captured within the view context
 
 Returns HTML that has been escaped by the respective template handler.
+
+### #render_parent
+
+Subclass components that call `super` inside their template code will cause a
+double render if they accidentally emit the result:
+
+<%= super %> # double-renders
+
+<% super %> # does not double-render
+
+Calls `super`, returning nil to avoid rendering the result twice.
+
+### #render_template_for(variant = nil)
+
+:nocov:
 
 ### #request → [ActionDispatch::Request]
 
@@ -210,6 +241,19 @@ Path for component files
 Defaults to `app/components`.
 
 ## ViewComponent::TestHelpers
+
+### #render_in_view_context(&block)
+
+Execute the given block in the view context. Internally sets `page` to be a
+`Capybara::Node::Simple`, allowing for Capybara assertions to be used:
+
+```ruby
+render_in_view_context do
+  render(MyComponent.new)
+end
+
+assert_text("Hello, World!")
+```
 
 ### #render_inline(component, **args, &block) → [Nokogiri::HTML]
 
