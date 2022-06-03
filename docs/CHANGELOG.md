@@ -9,9 +9,19 @@ title: Changelog
 
 ## main
 
-* Strip newlines from templates before compilation to avoid unwanted newlines.
+* Add per-component config option for stripping newlines from templates before compilation.
 
     *Cameron Dutro*
+
+* Add missing `require` for `Translatable` module in `Base`.
+
+    *Hans Lemuet*
+
+## 2.56.2
+
+* Restore removed `rendered_component`, marking it for deprecation in v3.0.0.
+
+    *Tyson Gach*, *Richard Macklin*, *Joel Hawksley*
 
 ## 2.56.1
 

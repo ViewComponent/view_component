@@ -9,6 +9,7 @@ require "view_component/polymorphic_slots"
 require "view_component/previewable"
 require "view_component/slotable"
 require "view_component/slotable_v2"
+require "view_component/translatable"
 require "view_component/with_content_helper"
 
 module ViewComponent
