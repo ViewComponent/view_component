@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ViewComponentTest < ViewComponent::TestCase
+class RenderingTest < ViewComponent::TestCase
   def test_render_inline
     render_inline(MyComponent.new)
 
@@ -1032,5 +1032,16 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector(".derived-component", count: 1) do
       assert_selector(".base-component", count: 1)
     end
+  end
+
+  def test_component_renders_without_trailing_newline
+    template = File.read(Rails.root.join("app/components/trailing_newline_component.html.erb"))
+    assert template.end_with?("\n"), "Template does not contain a trailing newline"
+
+    without_template_annotations do
+      render_inline(TrailingNewlineComponent.new)
+    end
+
+    refute @rendered_content.end_with?("\n"), "Rendered component contains a trailing newline"
   end
 end
