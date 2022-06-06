@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Add missing config options to `config.view_component`.
+* Add missing `generate.sidecar`, `generate.stimulus_controller`, `generate.locale`, `generate.distinct_locale_files`, `generate.preview` config options to `config.view_component`.
 
     *Simon Fish*
 
