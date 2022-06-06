@@ -20,7 +20,7 @@ Strips trailing newlines in templates before compiling them.
 
 ### .strip_trailing_newlines? → [Boolean]
 
-Whether or not trailing newlines will be stripped before compilation.
+Whether trailing newlines will be stripped before compilation.
 
 ### .with_collection(collection, **args)
 
@@ -93,11 +93,11 @@ Returns HTML that has been escaped by the respective template handler.
 ### #render_parent
 
 Subclass components that call `super` inside their template code will cause a
-double render if they accidentally emit the result:
+double render if they emit the result:
 
 <%= super %> # double-renders
 
-<% super %> # does not double-render
+<% super %> # doesn't double-render
 
 Calls `super`, returning nil to avoid rendering the result twice.
 
@@ -264,6 +264,10 @@ allowing for Capybara assertions to be used:
 render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
+
+### #rendered_component → [String]
+
+Returns the result of a render_inline call.
 
 ### #with_controller_class(klass)
 

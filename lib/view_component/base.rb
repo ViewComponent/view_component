@@ -123,11 +123,11 @@ module ViewComponent
     end
 
     # Subclass components that call `super` inside their template code will cause a
-    # double render if they accidentally emit the result:
+    # double render if they emit the result:
     #
     # <%= super %> # double-renders
     #
-    # <% super %> # does not double-render
+    # <% super %> # doesn't double-render
     #
     # Calls `super`, returning nil to avoid rendering the result twice.
     def render_parent
@@ -540,7 +540,7 @@ module ViewComponent
         self.__vc_strip_trailing_newlines = value
       end
 
-      # Whether or not trailing newlines will be stripped before compilation.
+      # Whether trailing newlines will be stripped before compilation.
       #
       # @return [Boolean]
       def strip_trailing_newlines?
