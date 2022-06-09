@@ -13,6 +13,10 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Allow anything that responds to `#render_in` to be rendered in the parent component's view context.
+
+    *Cameron Dutro*
+
 ## 2.56.2
 
 * Restore removed `rendered_component`, marking it for deprecation in v3.0.0.
