@@ -1039,4 +1039,18 @@ class ViewComponentTest < ViewComponent::TestCase
       assert_selector(".base-component", count: 1)
     end
   end
+
+  def test_renders_objects_in_component_view_context
+    not_a_component = RendersNonComponent::NotAComponent.new
+    component = RendersNonComponent.new(not_a_component: not_a_component)
+
+    render_inline(component)
+
+    assert_selector "span", text: "I'm not a component"
+
+    assert(
+      not_a_component.render_in_view_context == component,
+      "Component-like object was not rendered in the parent component's view context"
+    )
+  end
 end
