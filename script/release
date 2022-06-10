@@ -153,8 +153,6 @@ main() {
     echo "Creating release for $major.$minor.$patch"
     echo "==============================="
 
-    exit 0
-
     create_release_branch $major $minor $patch
     update_readme $major $minor $patch
     update_ruby_version $major $minor $patch
