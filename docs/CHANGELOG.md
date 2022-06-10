@@ -17,6 +17,10 @@ title: Changelog
 
     *Cameron Dutro*
 
+* Fix script/release so it honors semver.
+
+    *Cameron Dutro*
+
 ## 2.56.2
 
 * Restore removed `rendered_component`, marking it for deprecation in v3.0.0.
