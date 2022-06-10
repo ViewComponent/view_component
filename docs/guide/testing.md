@@ -26,6 +26,109 @@ end
 
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
+## Capybara DSL
+
+Some parts of the Capybara DSL are available inside component tests, if the
+gem is installed.
+
+Component template:
+
+```html
+<table>
+  <caption>Content</caption>
+  <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>Value</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+Component test:
+
+```ruby
+require "test_helper"
+
+class TableComponentTest < ViewComponent::TestCase
+  def table
+    @table ||= find("table")
+  end
+
+  def test_table
+    render_inline(TableComponent.new)
+
+    assert has_table?("Content")
+  end
+
+  def test_table_header
+    render_inline(TableComponent.new)
+
+    within(table.find("thead")) do
+      within(first("tr")) do
+        assert_selector("th", text: "Name")
+      end
+    end
+  end
+
+  def test_table_body
+    render_inline(TableComponent.new)
+
+    within(table.find("tbody")) do
+      within(first("tr")) do
+        assert_selector("td", text: "Value")
+      end
+    end
+  end
+end
+```
+
+The available Capybara DSL methods are:
+
+* [`all`](https://rubydoc.info/github/teamcapybara/capybara/Capybara%2FNode%2FFinders:all)
+* [`first`](https://rubydoc.info/github/teamcapybara/capybara/Capybara%2FNode%2FFinders:first)
+* [`text`](https://rubydoc.info/github/teamcapybara/capybara/Capybara%2FNode%2FSimple:text)
+* [`find`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FFinders:find)
+* [`find_all`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FFinders:find_all)
+* [`find_button`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FFinders:find_button)
+* [`find_by_id`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FFinders:find_by_id)
+* [`find_field`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FFinders:find_field)
+* [`find_link`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FFinders:find_link)
+* [`has_content?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_content%3F)
+* [`has_text?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_text%3F)
+* [`has_css?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_css%3F)
+* [`has_no_content?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_content%3F)
+* [`has_no_text?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_text%3F)
+* [`has_no_css?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_css%3F)
+* [`has_no_xpath?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_xpath%3F)
+* [`has_xpath?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_xpath%3F)
+* [`has_link?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_link%3F)
+* [`has_no_link?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_link%3F)
+* [`has_button?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_button%3F)
+* [`has_no_button?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_button%3F)
+* [`has_field?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_field%3F)
+* [`has_no_field?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_field%3F)
+* [`has_checked_field?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_checked_field%3F)
+* [`has_unchecked_field?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_unchecked_field%3F)
+* [`has_no_table?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_table%3F)
+* [`has_table?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_table%3F)
+* [`has_select?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_select%3F)
+* [`has_no_select?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_select%3F)
+* [`has_selector?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_selector%3F)
+* [`has_no_selector?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_selector%3F)
+* [`has_no_checked_field?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_checked_field%3F)
+* [`has_no_unchecked_field?`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FNode%2FMatchers:has_no_unchecked_field%3F)
+* [`within`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within)
+* [`within_element`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within)
+* [`within_fieldset`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_fieldset)
+* [`within_table`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_table)
+
+
 ## (Experimental) Previews as test cases
 
 Use `render_preview(name)` to render previews in ViewComponent unit tests:
