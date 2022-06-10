@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.57.0
+
 * Add missing `require` for `Translatable` module in `Base`.
 
     *Hans Lemuet*
