@@ -96,10 +96,10 @@ main() {
   echo "Prerequisite Checks"
   echo "==================="
 
-  # if ! working_tree_is_clean; then
-  #   echo "Error: unclean working tree"
-  #   exit 1
-  # fi
+  if ! working_tree_is_clean; then
+    echo "Error: unclean working tree"
+    exit 1
+  fi
 
   if [ "$(branch_name)" != "main" ]; then
     echo "Error: can only make a release on the main branch"
