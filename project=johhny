@@ -1,0 +1,12 @@
+Where should I put the security.txt file?
+For websites, the security.txt file should be placed under the /.well-known/ path 
+(/.well-known/security.txt) [RFC8615]. It can also be placed in the root directory
+<<< (/security.txt) of a website, especially if the /.well-known/ directory cannot be used for technical reasons, or simply as a fallback. 
+The file can be placed in both locations of a website at the same time.
+
+Are there any settings I should apply to the file?
+The security.txt file should have an Internet Media Type of text/plain and must be served over HTTPS.
+
+Will adding an email address expose me to spam bots?
+The email value is an optional field. If you are worried about spam, you can set a URI as the value and link to your security policy
+100.71.114.14fe80::1:1:249d:82fb
