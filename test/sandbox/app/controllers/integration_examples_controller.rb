@@ -47,4 +47,12 @@ class IntegrationExamplesController < ActionController::Base
 
     render(ProductComponent.with_collection(products, notice: "Today only"))
   end
+
+  def inherited_sidecar
+    render(InheritedSidecarComponent.new)
+  end
+
+  def inherited_from_uncompilable_component
+    render(InheritedFromUncompilableComponent.new)
+  end
 end

@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Re-compile updated, inherited templates when class caching is disabled.
+
+    *Patrick Arnett*
+
 * Include polymorphic slots in `ViewComponent::Base` by default.
 * Add per-component config option for stripping newlines from templates before compilation.
 
