@@ -3,6 +3,7 @@ layout: default
 title: Changelog
 ---
 
+<!-- vale proselint.GenderBias = NO -->
 <!-- Add unreleased changes under the "main" heading. -->
 
 # Changelog
@@ -27,13 +28,13 @@ title: Changelog
 
 * Restore removed `rendered_component`, marking it for deprecation in v3.0.0.
 
-    *Tyson Gach*, *Richard Macklin*, *Joel Hawksley*
+    *Tyson Gach, Richard Macklin, Joel Hawksley*
 
 ## 2.56.1
 
 * Rename private accessor `rendered_component` to `rendered_content`.
 
-    *Yoshiyuki Hirano*, *Simon Dawson*
+    *Yoshiyuki Hirano, Simon Dawson*
 
 ## 2.56.0
 
@@ -124,7 +125,7 @@ title: Changelog
 
 * Skip Rails 5.2 in local test environment if using incompatible Ruby version.
 
-    *Cameron Dutro*, *Blake Williams*, *Joel Hawksley*
+    *Cameron Dutro, Blake Williams, Joel Hawksley*
 
 * Improve landing page documentation.
 
@@ -150,7 +151,7 @@ title: Changelog
 
 * Add the option to use a "global" output buffer so `form_for` and friends can be used with view components.
 
-    *Cameron Dutro*, *Blake Williams*
+    *Cameron Dutro, Blake Williams*
 
 * Fix fragment caching in partials when global output buffer is enabled.
 * Fix template inheritance when eager loading is disabled.
@@ -287,7 +288,7 @@ title: Changelog
 
 * Add generators to support `tailwindcss-rails`.
 
-    *Dino Maric*, *Hans Lemuet*
+    *Dino Maric, Hans Lemuet*
 
 * Add a namespaced component example to docs.
 
@@ -468,7 +469,7 @@ title: Changelog
 
 * Rename internal accessor to use private naming.
 
-    *Joel Hawksley*, *Blake Williams*, *Cameron Dutro*
+    *Joel Hawksley, Blake Williams, Cameron Dutro*
 
 * Add Github repo link to docs website header.
 
@@ -536,7 +537,7 @@ title: Changelog
 
 * Add support for `image_path` helper in previews.
 
-    *Tobias Ahlin*, *Joel Hawksley*
+    *Tobias Ahlin, Joel Hawksley*
 
 * Add section to docs listing users of ViewComponent. Please submit a PR to add your team to the list!
 
@@ -574,7 +575,7 @@ title: Changelog
 
 * Fix bug where `helpers` would instantiate and use a new `view_context` in each component.
 
-    *Blake Williams*, *Ian C. Anderson*
+    *Blake Williams, Ian C. Anderson*
 
 * Implement polymorphic slots as experimental feature. See the Slots documentation to learn more.
 
@@ -601,7 +602,7 @@ title: Changelog
 
 * Fix bug where `with_collection_parameter` didn't inherit from parent component.
 
-    *Will Drexler*, *Christian Campoli*
+    *Will Drexler, Christian Campoli*
 
 * Allow query parameters in `with_request_url` test helper.
 
@@ -641,7 +642,7 @@ title: Changelog
 
 * Clarify documentation of `with_variant` as an override of Action Pack.
 
-    *Blake Williams*, *Cameron Dutro*, *Joel Hawksley*
+    *Blake Williams, Cameron Dutro, Joel Hawksley*
 
 * Update docs page to be called Javascript and CSS, rename Building ViewComponents to Guide.
 
@@ -666,7 +667,7 @@ title: Changelog
 
 * Clarify slots example in docs to reduce naming confusion.
 
-    *Joel Hawksley*, *Blake Williams*
+    *Joel Hawksley, Blake Williams*
 
 * Fix error in documentation for `render_many` passthrough slots.
 
@@ -1128,7 +1129,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Add support for templates as ViewComponent::Preview examples.
 
-    *Juan Manuel Ramallo
+    *Juan Manuel Ramallo*
 
 ## 2.14.1
 
@@ -1507,9 +1508,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Fix edge case issue with extracting variants from less conventional source_locations.
 
-<!-- vale proselint.GenderBias = NO -->
     *Ryan Workman*
-<!-- vale proselint.GenderBias = YES -->
 
 ## v1.6.0
 
@@ -1527,7 +1526,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Template-less variants fall back to default template.
 
-    *Asger Behncke Jacobsen*, *Cesario Uy*
+    *Asger Behncke Jacobsen, Cesario Uy*
 
 * Generated tests use new naming convention.
 
@@ -1545,9 +1544,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Add support for RSpec to generators.
 
-<!-- vale proselint.GenderBias = NO -->
     *Dylan Clark, Ryan Workman*
-<!-- vale proselint.GenderBias = YES -->
 
 * Require controllers as part of setting autoload paths.
 
@@ -1571,9 +1568,7 @@ Note: `actionview-component` is now loaded by requiring `actionview/component`, 
 
 * Fix issue with generating component method signatures.
 
-<!-- vale proselint.GenderBias = NO -->
     *Ryan Workman, Dylan Clark*
-<!-- vale proselint.GenderBias = YES -->
 
 * Create component generator.
 
