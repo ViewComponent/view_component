@@ -9,7 +9,13 @@ title: Known issues
 
 ViewComponent [isn't compatible](https://github.com/github/view_component/issues/241) with `form_for` helpers by default.
 
-### Using a Global Output Buffer (Experimental)
+### Using a Global Output Buffer
+
+Added in 2.52.0
+{: .label }
+
+Experimental
+{: .label .label-yellow }
 
 One possible solution to the form helpers problem is to use a single, global output buffer. For details, please refer to [this pull request](https://github.com/github/view_component/pull/1307).
 

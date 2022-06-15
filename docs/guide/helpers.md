@@ -24,6 +24,11 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
+## Proxy
+
+Added in 1.5.0
+{: .label }
+
 Or, access helpers through the `helpers` proxy:
 
 ```ruby

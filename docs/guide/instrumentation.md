@@ -6,6 +6,9 @@ parent: Guide
 
 # Instrumentation
 
+Added in 2.34.0
+{: .label }
+
 To enable ActiveSupport notifications, use the `instrumentation_enabled` option:
 
 ```ruby
