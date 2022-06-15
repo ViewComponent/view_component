@@ -74,10 +74,29 @@ Entrypoint for rendering components.
 
 Returns HTML that has been escaped by the respective template handler.
 
+### #render_parent
+
+Subclass components that call `super` inside their template code will cause a
+double render if they accidentally emit the result:
+
+    <%= super %> # double-renders
+    <% super %> # does not double-render
+
+Calls `super`, returning `nil` to avoid rendering the result twice.
+
 ### #request → [ActionDispatch::Request]
 
 The current request. Use sparingly as doing so introduces coupling that
 inhibits encapsulation & reuse, often making testing difficult.
+
+### #set_original_view_context(view_context) → [void]
+
+Components render in their own view context. Helpers and other functionality
+require a reference to the original Rails view context, an instance of
+`ActionView::Base`. Use this method to set a reference to the original
+view context. Objects that implement this method will render in the component's
+view context, while objects that do not will render in the original view context
+so helpers, etc work as expected.
 
 ### #with_variant(variant) → [self] (Deprecated)
 
@@ -211,6 +230,19 @@ Defaults to `app/components`.
 
 ## ViewComponent::TestHelpers
 
+### #render_in_view_context(&block)
+
+Execute the given block in the view context. Internally sets `page` to be a
+`Capybara::Node::Simple`, allowing for Capybara assertions to be used:
+
+```ruby
+render_in_view_context do
+  render(MyComponent.new)
+end
+
+assert_text("Hello, World!")
+```
+
 ### #render_inline(component, **args, &block) → [Nokogiri::HTML]
 
 Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
@@ -220,6 +252,10 @@ allowing for Capybara assertions to be used:
 render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
+
+### #rendered_component
+
+
 
 ### #with_controller_class(klass)
 

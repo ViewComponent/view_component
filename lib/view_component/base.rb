@@ -33,6 +33,15 @@ module ViewComponent
 
     attr_accessor :__vc_original_view_context
 
+    # Components render in their own view context. Helpers and other functionality
+    # require a reference to the original Rails view context, an instance of
+    # `ActionView::Base`. Use this method to set a reference to the original
+    # view context. Objects that implement this method will render in the component's
+    # view context, while objects that do not will render in the original view context
+    # so helpers, etc work as expected.
+    #
+    # @param view_context [ActionView::Base] The original view context.
+    # @return [void]
     def set_original_view_context(view_context)
       self.__vc_original_view_context = view_context
     end
@@ -118,6 +127,7 @@ module ViewComponent
       @current_template = old_current_template
     end
 
+    # @private
     def perform_render
       render_template_for(@__vc_variant).to_s + _output_postamble
     end
@@ -125,17 +135,17 @@ module ViewComponent
     # Subclass components that call `super` inside their template code will cause a
     # double render if they accidentally emit the result:
     #
-    # <%= super %> # double-renders
+    #     <%= super %> # double-renders
+    #     <% super %> # does not double-render
     #
-    # <% super %> # does not double-render
-    #
-    # Calls `super`, returning nil to avoid rendering the result twice.
+    # Calls `super`, returning `nil` to avoid rendering the result twice.
     def render_parent
       mtd = @__vc_variant ? "call_#{@__vc_variant}" : "call"
       method(mtd).super_method.call
       nil
     end
 
+    # @private
     # :nocov:
     def render_template_for(variant = nil)
       # Force compilation here so the compiler always redefines render_template_for.
