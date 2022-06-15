@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Fix issue causing `NoMethodError`s when calling helper methods from components rendered as part of a collection.
+
+    *Cameron Dutro*
+
 ## 2.57.0
 
 * Add missing `require` for `Translatable` module in `Base`.
