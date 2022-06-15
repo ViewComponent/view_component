@@ -37,7 +37,7 @@ module ViewComponent
     # require a reference to the original Rails view context, an instance of
     # `ActionView::Base`. Use this method to set a reference to the original
     # view context. Objects that implement this method will render in the component's
-    # view context, while objects that do not will render in the original view context
+    # view context, while objects that don't will render in the original view context
     # so helpers, etc work as expected.
     #
     # @param view_context [ActionView::Base] The original view context.
@@ -133,7 +133,7 @@ module ViewComponent
     end
 
     # Subclass components that call `super` inside their template code will cause a
-    # double render if they accidentally emit the result:
+    # double render if they emit the result:
     #
     #     <%= super %> # double-renders
     #     <% super %> # does not double-render
