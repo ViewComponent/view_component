@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Fix syntax error in the ERB example in the polymorphic slots docs.
+
+    *Cameron Dutro*
+
 ## 2.57.0
 
 * Add missing `require` for `Translatable` module in `Base`.
