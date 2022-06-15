@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Improve the docs: add the versions various features were introduced in.
+
+    *Hans Lemuet*
+
 ## 2.57.0
 
 * Add missing `require` for `Translatable` module in `Base`.
