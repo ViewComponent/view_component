@@ -1053,4 +1053,16 @@ class ViewComponentTest < ViewComponent::TestCase
       "Component-like object was not rendered in the parent component's view context"
     )
   end
+
+  def test_renders_nested_collection
+    items = %w(foo bar baz boo)
+    render_inline(NestedCollectionWrapperComponent.new(items: items))
+
+    index = 0
+
+    assert_selector(".nested", count: 4) do |node|
+      assert "#{items[index]}, Hello helper method" == node.text
+      index += 1
+    end
+  end
 end
