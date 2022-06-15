@@ -10,6 +10,7 @@ title: Changelog
 ## main
 
 * Fix issue causing `NoMethodError`s when calling helper methods from components rendered as part of a collection.
+* Fix syntax error in the ERB example in the polymorphic slots docs.
 
     *Cameron Dutro*
 
