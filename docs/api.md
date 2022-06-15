@@ -253,10 +253,6 @@ render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
 
-### #rendered_component
-
-
-
 ### #with_controller_class(klass)
 
 Set the controller to be used while executing the given block,
