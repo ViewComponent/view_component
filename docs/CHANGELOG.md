@@ -3,7 +3,6 @@ layout: default
 title: Changelog
 ---
 
-<!-- vale proselint.GenderBias = NO -->
 <!-- Add unreleased changes under the "main" heading. -->
 
 # Changelog
@@ -1508,7 +1507,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Fix edge case issue with extracting variants from less conventional source_locations.
 
-    *Ryan Workman*
+    <!-- vale proselint.GenderBias = NO --> *Ryan Workman* <!-- vale proselint.GenderBias = YES -->
 
 ## v1.6.0
 
@@ -1544,7 +1543,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Add support for RSpec to generators.
 
-    *Dylan Clark, Ryan Workman*
+    <!-- vale proselint.GenderBias = NO --> *Dylan Clark, Ryan Workman* <!-- vale proselint.GenderBias = YES -->
 
 * Require controllers as part of setting autoload paths.
 
@@ -1568,7 +1567,7 @@ Note: `actionview-component` is now loaded by requiring `actionview/component`, 
 
 * Fix issue with generating component method signatures.
 
-    *Ryan Workman, Dylan Clark*
+    <!-- vale proselint.GenderBias = NO --> *Ryan Workman, Dylan Clark* <!-- vale proselint.GenderBias = YES -->
 
 * Create component generator.
 
