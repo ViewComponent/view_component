@@ -4,7 +4,7 @@ title: Overview
 nav_order: 1
 ---
 
-# ViewComponent
+# ViewComponent (v{{ site.data.library.version }})
 
 A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
