@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Include polymorphic slots in `ViewComponent::Base` by default.
+
+    *Cameron Dutro*
+
 ## 2.57.1
 
 * Fix issue causing `NoMethodError`s when calling helper methods from components rendered as part of a collection.
