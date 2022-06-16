@@ -6,12 +6,14 @@ module ViewComponent
     # Module#prepend and class methods.
     def self.included(base)
       if base != ViewComponent::Base
+        # :nocov:
         location = Kernel.caller_locations(1, 1)[0]
 
         warn(
           "warning: ViewComponent::PolymorphicSlots is now included in ViewComponent::Base by default "\
           "and can be removed from #{location.path}:#{location.lineno}"
         )
+        # :nocov:
       end
 
       base.singleton_class.prepend(ClassMethods)
