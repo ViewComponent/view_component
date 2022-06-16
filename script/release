@@ -123,8 +123,11 @@ main() {
   do
     if [ "$bump" == "Major" ]; then
       major=$((major + 1))
+      minor=0
+      patch=0
     elif [ "$bump" == "Minor" ]; then
       minor=$((minor + 1))
+      patch=0
     elif [ "$bump" == "Patch" ]; then
       patch=$((patch + 1))
     else

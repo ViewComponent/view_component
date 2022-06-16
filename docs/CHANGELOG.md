@@ -13,9 +13,26 @@ title: Changelog
 
     *Cameron Dutro*
 
+## 2.57.1
+
+* Fix issue causing `NoMethodError`s when calling helper methods from components rendered as part of a collection.
+* Fix syntax error in the ERB example in the polymorphic slots docs.
+
+    *Cameron Dutro*
+
+## 2.57.0
+
 * Add missing `require` for `Translatable` module in `Base`.
 
     *Hans Lemuet*
+
+* Allow anything that responds to `#render_in` to be rendered in the parent component's view context.
+
+    *Cameron Dutro*
+
+* Fix script/release so it honors semver.
+
+    *Cameron Dutro*
 
 ## 2.56.2
 

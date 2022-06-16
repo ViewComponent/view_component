@@ -10,8 +10,15 @@ module ViewComponent
     delegate :format, to: :component
     delegate :size, to: :@collection
 
+    attr_accessor :__vc_original_view_context
+
+    def set_original_view_context(view_context)
+      self.__vc_original_view_context = view_context
+    end
+
     def render_in(view_context, &block)
       components.map do |component|
+        component.set_original_view_context(self.__vc_original_view_context)
         component.render_in(view_context, &block)
       end.join.html_safe # rubocop:disable Rails/OutputSafety
     end

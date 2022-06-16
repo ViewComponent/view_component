@@ -73,10 +73,6 @@ _Use `#generate.stimulus_controller` instead. Will be removed in v3.0.0._
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
 
-### #perform_render
-
-
-
 ### #render? → [Boolean]
 
 Override to determine whether the ViewComponent should render.
@@ -95,20 +91,24 @@ Returns HTML that has been escaped by the respective template handler.
 Subclass components that call `super` inside their template code will cause a
 double render if they emit the result:
 
-<%= super %> # double-renders
+    <%= super %> # double-renders
+    <% super %> # does not double-render
 
-<% super %> # doesn't double-render
-
-Calls `super`, returning nil to avoid rendering the result twice.
-
-### #render_template_for(variant = nil)
-
-:nocov:
+Calls `super`, returning `nil` to avoid rendering the result twice.
 
 ### #request → [ActionDispatch::Request]
 
 The current request. Use sparingly as doing so introduces coupling that
 inhibits encapsulation & reuse, often making testing difficult.
+
+### #set_original_view_context(view_context) → [void]
+
+Components render in their own view context. Helpers and other functionality
+require a reference to the original Rails view context, an instance of
+`ActionView::Base`. Use this method to set a reference to the original
+view context. Objects that implement this method will render in the component's
+view context, while objects that don't will render in the original view context
+so helpers, etc work as expected.
 
 ### #with_variant(variant) → [self] (Deprecated)
 
