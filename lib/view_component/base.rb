@@ -31,9 +31,9 @@ module ViewComponent
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
-    # Config option that strips trailing newlines in templates before compiling them.
-    class_attribute :__vc_strip_trailing_newlines, instance_accessor: false, instance_predicate: false
-    self.__vc_strip_trailing_newlines = false # class_attribute:default doesn't work until Rails 5.2
+    # Config option that strips trailing whitespace in templates before compiling them.
+    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
+    self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
 
     attr_accessor :__vc_original_view_context
 
@@ -529,22 +529,22 @@ module ViewComponent
         @provided_collection_parameter = parameter
       end
 
-      # Strips trailing newlines in templates before compiling them.
+      # Strips trailing whitespace from templates before compiling them.
       #
       #     class MyComponent < ViewComponent::Base
-      #       strip_trailing_newlines true
+      #       strip_trailing_whitespace
       #     end
       #
       # @param value [Boolean] Whether or not to strip newlines.
-      def strip_trailing_newlines(value = true)
-        self.__vc_strip_trailing_newlines = value
+      def strip_trailing_whitespace(value = true)
+        self.__vc_strip_trailing_whitespace = value
       end
 
-      # Whether trailing newlines will be stripped before compilation.
+      # Whether trailing whitespace will be stripped before compilation.
       #
       # @return [Boolean]
-      def strip_trailing_newlines?
-        self.__vc_strip_trailing_newlines
+      def strip_trailing_whitespace?
+        self.__vc_strip_trailing_whitespace
       end
 
       # Ensure the component initializer accepts the

@@ -10,17 +10,17 @@ nav_order: 3
 
 ## Class methods
 
-### .strip_trailing_newlines(value)
+### .strip_trailing_whitespace(value = true)
 
-Strips trailing newlines in templates before compiling them.
+Strips trailing whitespace from templates before compiling them.
 
     class MyComponent < ViewComponent::Base
-      strip_trailing_newlines true
+      strip_trailing_whitespace
     end
 
-### .strip_trailing_newlines? → [Boolean]
+### .strip_trailing_whitespace? → [Boolean]
 
-Whether trailing newlines will be stripped before compilation.
+Whether trailing whitespace will be stripped before compilation.
 
 ### .with_collection(collection, **args)
 

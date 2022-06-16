@@ -1040,14 +1040,14 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
-  def test_component_renders_without_trailing_newline
-    template = File.read(Rails.root.join("app/components/trailing_newline_component.html.erb"))
-    assert template.end_with?("\n"), "Template does not contain a trailing newline"
+  def test_component_renders_without_trailing_whitespace
+    template = File.read(Rails.root.join("app/components/trailing_whitespace_component.html.erb"))
+    assert template =~ /\s+\z/, "Template does not contain any trailing whitespace"
 
     without_template_annotations do
-      render_inline(TrailingNewlineComponent.new)
+      render_inline(TrailingWhitespaceComponent.new)
     end
 
-    refute @rendered_content.end_with?("\n"), "Rendered component contains a trailing newline"
+    refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
   end
 end
