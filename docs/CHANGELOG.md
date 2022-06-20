@@ -13,6 +13,10 @@ title: Changelog
 
     *Cameron Dutro*
 
+* Add link to article by Matouš Borák.
+
+    *Joel Hawksley*
+
 ## 2.57.1
 
 * Fix issue causing `NoMethodError`s when calling helper methods from components rendered as part of a collection.
