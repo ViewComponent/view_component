@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Update docs to reflect lack of block content support in controllers.
+
+    *Joel Hawksley*
+
 * Add link to article by Matouš Borák.
 
     *Joel Hawksley*
