@@ -94,7 +94,7 @@ def show
 end
 ```
 
-_Note: Content cannot be passed to a component via a block in controllers; use `with_content` instead. In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout._
+_Note: Content can't be passed to a component via a block in controllers. Instead, use `with_content`. In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout._
 
 ### Rendering ViewComponents to strings inside controller actions
 
