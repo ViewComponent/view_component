@@ -13,6 +13,10 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Include polymorphic slots in `ViewComponent::Base` by default.
+
+    *Cameron Dutro*
+
 * Add per-component config option for stripping newlines from templates before compilation.
 
     *Cameron Dutro*
