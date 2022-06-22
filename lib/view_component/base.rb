@@ -16,6 +16,7 @@ module ViewComponent
   class Base < ActionView::Base
     include ActiveSupport::Configurable
     include ViewComponent::ContentAreas
+    include ViewComponent::PolymorphicSlots
     include ViewComponent::Previewable
     include ViewComponent::SlotableV2
     include ViewComponent::Translatable
