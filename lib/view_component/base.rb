@@ -32,6 +32,10 @@ module ViewComponent
     class_attribute :content_areas
     self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
+    # Config option that strips trailing whitespace in templates before compiling them.
+    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
+    self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
+
     attr_accessor :__vc_original_view_context
 
     # Components render in their own view context. Helpers and other functionality
@@ -136,8 +140,10 @@ module ViewComponent
     # Subclass components that call `super` inside their template code will cause a
     # double render if they emit the result:
     #
-    #     <%= super %> # double-renders
-    #     <% super %> # does not double-render
+    # ```erb
+    # <%= super %> # double-renders
+    # <% super %> # does not double-render
+    # ```
     #
     # Calls `super`, returning `nil` to avoid rendering the result twice.
     def render_parent
@@ -316,7 +322,9 @@ module ViewComponent
 
     # Set the controller used for testing components:
     #
-    #     config.view_component.test_controller = "MyTestController"
+    # ```ruby
+    # config.view_component.test_controller = "MyTestController"
+    # ```
     #
     # Defaults to ApplicationController. Can also be configured on a per-test
     # basis using `with_controller_class`.
@@ -326,13 +334,17 @@ module ViewComponent
 
     # Set if render monkey patches should be included or not in Rails <6.1:
     #
-    #     config.view_component.render_monkey_patch_enabled = false
+    # ```ruby
+    # config.view_component.render_monkey_patch_enabled = false
+    # ```
     #
     mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
     # Path for component files
     #
-    #     config.view_component.view_component_path = "app/my_components"
+    # ```ruby
+    # config.view_component.view_component_path = "app/my_components"
+    # ```
     #
     # Defaults to `app/components`.
     #
@@ -340,7 +352,9 @@ module ViewComponent
 
     # Parent class for generated components
     #
-    #     config.view_component.component_parent_class = "MyBaseComponent"
+    # ```ruby
+    # config.view_component.component_parent_class = "MyBaseComponent"
+    # ```
     #
     # Defaults to nil. If this is falsy, generators will use
     # "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
@@ -356,25 +370,33 @@ module ViewComponent
     #
     # Always generate a component with a sidecar directory:
     #
-    #     config.view_component.generate.sidecar = true
+    # ```ruby
+    # config.view_component.generate.sidecar = true
+    # ```
     #
     # #### #stimulus_controller
     #
     # Always generate a Stimulus controller alongside the component:
     #
-    #     config.view_component.generate.stimulus_controller = true
+    # ```ruby
+    # config.view_component.generate.stimulus_controller = true
+    # ```
     #
     # #### #locale
     #
     # Always generate translations file alongside the component:
     #
-    #     config.view_component.generate.locale = true
+    # ```ruby
+    # config.view_component.generate.locale = true
+    # ```
     #
     # #### #distinct_locale_files
     #
     # Always generate as many translations files as available locales:
     #
-    #     config.view_component.generate.distinct_locale_files = true
+    # ```ruby
+    # config.view_component.generate.distinct_locale_files = true
+    # ```
     #
     # One file will be generated for each configured `I18n.available_locales`,
     # falling back to `[:en]` when no `available_locales` is defined.
@@ -383,7 +405,9 @@ module ViewComponent
     #
     # Always generate preview alongside the component:
     #
-    #      config.view_component.generate.preview = true
+    # ```ruby
+    # config.view_component.generate.preview = true
+    # ```
     #
     #  Defaults to `false`.
     mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new(false)
@@ -437,7 +461,9 @@ module ViewComponent
 
       # Render a component for each element in a collection ([documentation](/guide/collections)):
       #
-      #     render(ProductsComponent.with_collection(@products, foo: :bar))
+      # ```ruby
+      # render(ProductsComponent.with_collection(@products, foo: :bar))
+      # ```
       #
       # @param collection [Enumerable] A list of items to pass the ViewComponent one at a time.
       # @param args [Arguments] Arguments to pass to the ViewComponent every time.
@@ -533,11 +559,33 @@ module ViewComponent
 
       # Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
       #
-      #     with_collection_parameter :item
+      # ```ruby
+      # with_collection_parameter :item
+      # ```
       #
       # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
       def with_collection_parameter(parameter)
         @provided_collection_parameter = parameter
+      end
+
+      # Strips trailing whitespace from templates before compiling them.
+      #
+      # ```ruby
+      # class MyComponent < ViewComponent::Base
+      #   strip_trailing_whitespace
+      # end
+      # ```
+      #
+      # @param value [Boolean] Whether or not to strip newlines.
+      def strip_trailing_whitespace(value = true)
+        self.__vc_strip_trailing_whitespace = value
+      end
+
+      # Whether trailing whitespace will be stripped before compilation.
+      #
+      # @return [Boolean]
+      def strip_trailing_whitespace?
+        self.__vc_strip_trailing_whitespace
       end
 
       # Ensure the component initializer accepts the

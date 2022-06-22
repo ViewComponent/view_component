@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ViewComponentTest < ViewComponent::TestCase
+class RenderingTest < ViewComponent::TestCase
   def test_render_inline
     render_inline(MyComponent.new)
 
@@ -1038,6 +1038,17 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector(".derived-component", count: 1) do
       assert_selector(".base-component", count: 1)
     end
+  end
+
+  def test_component_renders_without_trailing_whitespace
+    template = File.read(Rails.root.join("app/components/trailing_whitespace_component.html.erb"))
+    assert template =~ /\s+\z/, "Template does not contain any trailing whitespace"
+
+    without_template_annotations do
+      render_inline(TrailingWhitespaceComponent.new)
+    end
+
+    refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
   end
 
   def test_renders_objects_in_component_view_context
