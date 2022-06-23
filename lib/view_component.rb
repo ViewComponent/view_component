@@ -10,6 +10,8 @@ module ViewComponent
   autoload :Compiler
   autoload :CompileCache
   autoload :ComponentError
+  autoload :DelegatedRender
+  autoload :DelegatedSlots
   autoload :Deprecation
   autoload :GlobalOutputBuffer
   autoload :Instrumentation
