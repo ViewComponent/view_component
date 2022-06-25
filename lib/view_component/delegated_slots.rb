@@ -103,7 +103,7 @@ module ViewComponent
           target_obj = instance_eval(slot_target.target.to_s)
           target_obj.send(slot_target.singular_name, *mod_args, &slot_block)
         }
-        callback_block.send(:ruby2_keywords)
+        callback_block.send(:ruby2_keywords) if callback_block.respond_to?(:ruby2_keywords, true)
 
         slot_target.block.call(*args, &callback_block)
       end
