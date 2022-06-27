@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Ensure side-effects in `content` are consistently evaluated before components are rendered.
+
+    *Blake Williams*
+
 * Include polymorphic slots in `ViewComponent::Base` by default.
 * Add per-component config option for stripping newlines from templates before compilation.
 
