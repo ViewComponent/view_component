@@ -27,6 +27,18 @@ class CapybaraDslTest < ViewComponent::TestCase
     assert_match(/table/, page.native.serialize)
   end
 
+  test "within_fieldset" do
+    within_fieldset "Account" do
+      assert_selector("#username")
+    end
+  end
+
+  test "within_table" do
+    within_table "Content" do
+      assert_selector("tbody")
+    end
+  end
+
   test "text" do
     assert_includes text, "Name"
   end
