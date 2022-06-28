@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add support for `render_preview` in RSpec tests.
+
+    *Thomas Hutterer*
+
 ## 2.59.0
 
 * Expose Capybara DSL methods directly inside tests.

@@ -11,15 +11,27 @@ module ViewComponent
     # ```
     #
     # Note: `#rendered_preview` expects a preview to be defined with the same class
-    # name as the calling test, but with `Test` replaced with `Preview`:
+    # name as the calling test, but with "Test" replaced with "Preview":
     #
     # MyComponentTest -> MyComponentPreview etc.
+    #
+    # With RSpec it uses `described_class` plus "Preview" as the class name.
     #
     # @param preview [String] The name of the preview to be rendered.
     # @return [Nokogiri::HTML]
     def render_preview(name)
       begin
-        preview_klass = self.class.name.gsub("Test", "Preview")
+        preview_klass = if respond_to?(:described_class)
+          # :nocov:
+          if described_class.nil?
+            raise "`render_preview` expected a described_class, but it is nil."
+          end
+
+          "#{described_class}Preview"
+          # :nocov:
+        else
+          self.class.name.gsub("Test", "Preview")
+        end
         preview_klass = preview_klass.constantize
       rescue NameError
         raise NameError.new(
