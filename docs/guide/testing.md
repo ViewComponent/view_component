@@ -128,7 +128,6 @@ The available Capybara DSL methods are:
 * [`within_fieldset`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_fieldset)
 * [`within_table`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_table)
 
-
 ## (Experimental) Previews as test cases
 
 Use `render_preview(name)` to render previews in ViewComponent unit tests:
