@@ -61,6 +61,10 @@ title: Changelog
 
     *Jacob Carlborg*
 
+* Add FreeAgent to list of companies using ViewComponent.
+
+    *Simon Fish*
+
 * Include polymorphic slots in `ViewComponent::Base` by default.
 * Add per-component config option for stripping newlines from templates before compilation.
 
