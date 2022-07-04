@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ViewComponentTest < ViewComponent::TestCase
+class RenderingTest < ViewComponent::TestCase
   def test_render_inline
     render_inline(MyComponent.new)
 
@@ -1040,6 +1040,17 @@ class ViewComponentTest < ViewComponent::TestCase
     end
   end
 
+  def test_component_renders_without_trailing_whitespace
+    template = File.read(Rails.root.join("app/components/trailing_whitespace_component.html.erb"))
+    assert template =~ /\s+\z/, "Template does not contain any trailing whitespace"
+
+    without_template_annotations do
+      render_inline(TrailingWhitespaceComponent.new)
+    end
+
+    refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
+  end
+
   def test_renders_objects_in_component_view_context
     not_a_component = RendersNonComponent::NotAComponent.new
     component = RendersNonComponent.new(not_a_component: not_a_component)
@@ -1052,5 +1063,17 @@ class ViewComponentTest < ViewComponent::TestCase
       not_a_component.render_in_view_context == component,
       "Component-like object was not rendered in the parent component's view context"
     )
+  end
+
+  def test_renders_nested_collection
+    items = %w(foo bar baz boo)
+    render_inline(NestedCollectionWrapperComponent.new(items: items))
+
+    index = 0
+
+    assert_selector(".nested", count: 4) do |node|
+      assert "#{items[index]}, Hello helper method" == node.text
+      index += 1
+    end
   end
 end

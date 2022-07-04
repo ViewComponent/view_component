@@ -250,17 +250,12 @@ _To view documentation for content_areas (deprecated) and the original implement
 Added in 2.42.0
 {: .label }
 
-Experimental
-{: .label .label-yellow }
-
-Polymorphic slots can render one of several possible slots. To use this experimental feature, include `ViewComponent::PolymorphicSlots`.
+Polymorphic slots can render one of several possible slots.
 
 For example, consider this list item component that can be rendered with either an icon or an avatar visual. The `visual` slot is passed a hash mapping types to slot definitions:
 
 ```ruby
 class ListItemComponent < ViewComponent::Base
-  include ViewComponent::PolymorphicSlots
-
   renders_one :visual, types: {
     icon: IconComponent,
     avatar: lambda { |**system_arguments|
@@ -276,12 +271,12 @@ Filling in the `visual` slot is done by calling the appropriate slot method:
 
 ```erb
 <%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") %>
+  <% c.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") do %>
     Profile
   <% end >
 <% end %>
 <%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_icon(icon: :key) %>
+  <% c.with_visual_icon(icon: :key) do %>
     Security Settings
   <% end >
 <% end %>

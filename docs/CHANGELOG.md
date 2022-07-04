@@ -14,6 +14,26 @@ title: Changelog
 
     *Hans Lemuet*
 
+* Add FreeAgent to list of companies using ViewComponent.
+
+    *Simon Fish*
+
+* Include polymorphic slots in `ViewComponent::Base` by default.
+* Add per-component config option for stripping newlines from templates before compilation.
+
+    *Cameron Dutro*
+
+* Add link to article by Matouš Borák.
+
+    *Joel Hawksley*
+
+## 2.57.1
+
+* Fix issue causing `NoMethodError`s when calling helper methods from components rendered as part of a collection.
+* Fix syntax error in the ERB example in the polymorphic slots docs.
+
+    *Cameron Dutro*
+
 ## 2.57.0
 
 * Add missing `require` for `Translatable` module in `Base`.

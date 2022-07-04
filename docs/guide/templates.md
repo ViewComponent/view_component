@@ -115,3 +115,19 @@ To render a parent component's template from a subclass, call `render_parent`:
   <% render_parent %>
 </div>
 ```
+
+## Trailing whitespace
+
+Code editors commonly add a trailing newline character to source files in keeping with the Unix standard. Including trailing whitespace in component templates can result in unwanted whitespace in the HTML, eg. if the component is rendered before the period at the end of a sentence.
+
+To strip trailing whitespace from component templates, use the `strip_trailing_whitespace` class method.
+
+```ruby
+class MyComponent < ViewComponent::Base
+  # do strip whitespace
+  strip_trailing_whitespace
+
+  # don't strip whitespace
+  strip_trailing_whitespace(false)
+end
+```
