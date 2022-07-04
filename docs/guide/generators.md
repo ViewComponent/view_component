@@ -70,7 +70,7 @@ bin/rails generate component Example title --test-framework rspec
 
 ### Generate a [preview](/guide/previews.html)
 
-Added in 2.25.0
+Since 2.25.0
 {: .label }
 
 ```console
@@ -87,7 +87,7 @@ bin/rails generate component Example title --preview
 
 ### Generate a [Stimulus controller](/guide/javascript_and_css.html#stimulus)
 
-Added in 2.38.0
+Since 2.38.0
 {: .label }
 
 ```console
@@ -106,7 +106,7 @@ To always generate a Stimulus controller, set `config.view_component.generate_st
 
 ### Generate [locale files](/guide/translations.html)
 
-Added in 2.47.0
+Since 2.47.0
 {: .label }
 
 ```console
@@ -127,7 +127,7 @@ To generate translations in distinct locale files, set `config.view_component.ge
 
 ### Place the view in a sidecar directory
 
-Added in 2.16.0
+Since 2.16.0
 {: .label }
 
 ```console
@@ -144,7 +144,7 @@ To always generate in the sidecar directory, set `config.view_component.generate
 
 ### Use [inline rendering](/guide/templates.html#inline) (no template file)
 
-Added in 2.24.0
+Since 2.24.0
 {: .label }
 
 ```console
@@ -158,7 +158,7 @@ bin/rails generate component Example title --inline
 
 ### Specify the parent class
 
-Added in 2.41.0
+Since 2.41.0
 {: .label }
 
 By default, `ApplicationComponent` is used if defined, `ViewComponent::Base` otherwise.

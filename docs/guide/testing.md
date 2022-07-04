@@ -28,7 +28,7 @@ _Note: `assert_selector` only matches on visible elements by default. To match o
 
 ## Previews as test cases
 
-Added in 2.56.0
+Since 2.56.0
 {: .label }
 
 Experimental
@@ -104,7 +104,7 @@ end
 
 ## Configuring the controller used in tests
 
-Added in 2.27.0
+Since 2.27.0
 {: .label }
 
 Component tests assume the existence of an `ApplicationController` class, which can be configured globally using the `test_controller` option:
@@ -137,7 +137,7 @@ end
 
 ## Setting `request.path_parameters`
 
-Added in 2.31.0
+Since 2.31.0
 {: .label }
 
 Some Rails helpers won't work unless `request.path_parameters` are set correctly, resulting in an `ActionController::UrlGenerationError`.
@@ -157,7 +157,7 @@ end
 
 ### Query parameters
 
-Added in 2.41.0
+Since 2.41.0
 {: .label }
 
 It's also possible to set query parameters:

@@ -11,7 +11,7 @@ ViewComponent [isn't compatible](https://github.com/github/view_component/issues
 
 ### Using a Global Output Buffer
 
-Added in 2.52.0
+Since 2.52.0
 {: .label }
 
 Experimental

@@ -17,7 +17,7 @@ ViewComponent is tested against ERB, Haml, and Slim, but it should support most 
 
 ## Disabling the render monkey patch (Rails < 6.1)
 
-Added in 2.13.0
+Since 2.13.0
 {: .label }
 
 To [avoid conflicts](https://github.com/github/view_component/issues/288) between ViewComponent and other gems that also monkey patch the `render` method, it's possible to configure ViewComponent to not include the render monkey patch:

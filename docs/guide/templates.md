@@ -22,7 +22,7 @@ app/components
 
 ## Subdirectory
 
-Added in 2.7.0
+Since 2.7.0
 {: .label }
 
 As an alternative, views and other assets can be placed in a subdirectory with the same name as the component:
@@ -48,7 +48,7 @@ bin/rails generate component Example title --sidecar
 
 ## Inline
 
-Added in 1.16.0
+Since 1.16.0
 {: .label }
 
 ViewComponents can render without a template file, by defining a `call` method:
@@ -90,7 +90,7 @@ To override the `variant` set by the request, use `with_variant`:
 
 ## Inherited
 
-Added in 2.19.0
+Since 2.19.0
 {: .label }
 
 Component subclasses inherit the parent component's template if they don't define their own template.
@@ -104,7 +104,7 @@ end
 
 ### Rendering parent templates
 
-Added in 2.55.0
+Since 2.55.0
 {: .label }
 
 To render a parent component's template from a subclass, call `render_parent`:

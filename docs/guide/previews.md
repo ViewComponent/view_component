@@ -34,7 +34,7 @@ _For a more interactive experience, consider using [Lookbook](https://github.com
 
 ## Previews as test cases
 
-Added in 2.56.0
+Since 2.56.0
 {: .label }
 
 Experimental
