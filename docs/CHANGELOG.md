@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add @boardfish and @spone to core team.
+
+    *Joel Hawksley*, *Cameron Dutro*, *Blake Williams*
+
 * Update docs to reflect lack of block content support in controllers.
 
     *Joel Hawksley*

@@ -94,31 +94,20 @@ To run the Vale prose linter locally, `brew install vale` and `vale docs/`.
 
 ## Governance
 
-ViewComponent is built by over a hundred members of the community. Project membership has three levels:
-
-### Triage
-
-ViewComponent triagers are able to manage issues and pull request by assigning owners and labels, closing issues and marking duplicates.
-
-After helping with the project by participating in issues, pull requests, and/or discussions, members of the community are welcome to request triage access by opening a pull request to update this list:
-
-The triagers team is @andrewmcodes, @bbugh, @boardfish, @cesariouy, @dark-panda, @dylnclrk, @g13ydson, @horacio, @jcoyne, @johannesengl, @kaspermeyer, @mellowfish, @metade, @nashby, @rainerborene, @rdavid1099, @spdawson, @yhirano55, and @vinistock.
-
-Committers and maintainers may also nominate triagers by opening a pull request to update this list.
+ViewComponent is built by over a hundred members of the community. Project membership has two levels:
 
 ### Commit
 
-ViewComponent committers have `write` access, enabling them to push directly to the repository (and thus not needing to contribute via forks) and approve/merge pull requests. Committers often have implicit ownership over a particular area of the project, such as previews, generators, or translations.
+ViewComponent committers have `write` access, enabling them to push directly to the repository and merge pull requests, thus removing the need to contribute via a fork. Committers often have implicit (or even explicit, via CODEOWNERS) ownership over a particular area of the project, such as previews, generators, or translations.
 
-Triagers are invited to become committers by having an existing committer or maintainer open a pull request on the repository to update this list of committers:
+After helping with the project by participating in issues, pull requests, and/or discussions, community members are welcome to request commit access by opening a pull request to update this list:
 
-The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, @spone, @dylanatsmith, and @boardfish.
+The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, and @dylanatsmith.
 
 ### Maintain
 
-ViewComponent maintainers have `admin` access, enabling them to manage repository settings including access levels. They also have ownership of `view_component` on RubyGems and are required to have 2FA enabled for their GitHub and RubyGems accounts.
+ViewComponent maintainers have `admin` access, enabling them to manage repository settings including access levels. They also have ownership of `view_component` on RubyGems. Maintainers are required to have 2FA enabled for their GitHub and RubyGems accounts.
 
-Maintainership is open by invitation only at this time.
+Committers are welcome to request maintainership access by opening a pull request to update this list:
 
-The maintainers team is @camertron, @blakewilliams, @joelhawksley, @jonrohan, and @manuelpuyol.
 The maintainers team is @boardfish, @spone, @camertron, @blakewilliams, and @joelhawksley.
