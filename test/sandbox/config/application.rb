@@ -17,6 +17,10 @@ require "jbuilder"
 module Sandbox
   class Application < Rails::Application
     config.action_controller.asset_host = "http://assets.example.com"
+
+    # Prepare test_set_no_duplicate_autoload_paths
+    config.autoload_paths.push("#{config.root}/my/components/previews")
+    config.view_component.preview_paths << "#{config.root}/my/components/previews"
   end
 end
 
