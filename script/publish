@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Update version info in data
+version=$(ruby ./lib/view_component/version.rb)
+echo "version: $version" >> docs/_data/library.yml
+
 # Publish gem
 bundle exec rake release
 

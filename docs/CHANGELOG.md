@@ -9,6 +9,11 @@ title: Changelog
 
 ## main
 
+* Add the latest version to the docs index.
+* Improve the docs: add the versions various features were introduced in.
+
+    *Hans Lemuet*
+
 * Update docs to reflect lack of block content support in controllers.
 
     *Joel Hawksley*

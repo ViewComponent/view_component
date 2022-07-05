@@ -6,6 +6,9 @@ parent: Guide
 
 # Collections
 
+Since 2.1.0
+{: .label }
+
 Like [Rails partials](https://guides.rubyonrails.org/layouts_and_rendering.html#rendering-collections), it's possible to render a collection with ViewComponents, using `with_collection`:
 
 ```erb
@@ -70,6 +73,9 @@ end
 
 ## Collection counter
 
+Since 2.5.0
+{: .label }
+
 ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
 
 ```ruby
@@ -90,6 +96,9 @@ end
 ```
 
 ## Collection iteration context
+
+Since 2.33.0
+{: .label }
 
 ViewComponent defines an iteration variable matching the parameter name above, followed by `_iteration`. This gives contextual information about the iteration to components within the collection (`#size`, `#index`, `#first?`, and `#last?`).
 
