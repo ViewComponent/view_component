@@ -4,7 +4,7 @@ title: Overview
 nav_order: 1
 ---
 
-# ViewComponent
+# ViewComponent (v{{ site.data.library.version }})
 
 A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
@@ -170,6 +170,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/nicolas-brousse?s=64" alt="nicolas-brousse" width="32" />
 <img src="https://avatars.githubusercontent.com/nielsslot?s=64" alt="nshki" width="32" />
 <img src="https://avatars.githubusercontent.com/nshki?s=64" alt="nshki" width="32" />
+<img src="https://avatars.githubusercontent.com/patrickarnett?s=64" alt="patrickarnett" width="32" />
 <img src="https://avatars.githubusercontent.com/rainerborene?s=64" alt="rainerborene" width="32" />
 <img src="https://avatars.githubusercontent.com/rdavid1099?s=64" alt="rdavid1099" width="32" />
 <img src="https://avatars.githubusercontent.com/richardmarbach?s=64" alt="richardmarbach" width="32" />
