@@ -94,7 +94,15 @@ To run the Vale prose linter locally, `brew install vale` and `vale docs/`.
 
 ## Governance
 
-ViewComponent is built by over a hundred members of the community. Project membership has two levels:
+ViewComponent is built by over a hundred members of the community. Project membership has several levels:
+
+### Triage
+
+ViewComponent triagers are able to manage issues and pull request by assigning owners and labels, closing issues and marking duplicates.
+
+After helping with the project by participating in issues, pull requests, and/or discussions, members of the community are welcome to request triage access by opening a pull request to update this list:
+
+_All triagers have become committers or maintainers!_
 
 ### Commit
 
