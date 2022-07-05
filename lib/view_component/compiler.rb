@@ -31,6 +31,8 @@ module ViewComponent
       return if compiled? && !force
       return if component_class == ViewComponent::Base
 
+      component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
+
       with_lock do
         subclass_instance_methods = component_class.instance_methods(false)
 
@@ -259,6 +261,15 @@ module ViewComponent
       else
         "call"
       end
+    end
+
+    def should_compile_superclass?
+      development? &&
+        templates.empty? &&
+        !(
+          component_class.instance_methods(false).include?(:call) ||
+            component_class.private_instance_methods(false).include?(:call)
+        )
     end
   end
 end

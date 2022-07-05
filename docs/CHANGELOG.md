@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Re-compile updated, inherited templates when class caching is disabled.
+
+    *Patrick Arnett*
+
 * Add the latest version to the docs index.
 * Improve the docs: add the versions various features were introduced in.
 

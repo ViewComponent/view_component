@@ -29,4 +29,6 @@ Sandbox::Application.routes.draw do
   get :link_to_helper, to: "integration_examples#link_to_helper"
   get :cached_capture, to: "integration_examples#cached_capture"
   get :cached_partial, to: "integration_examples#cached_partial"
+  get :inherited_sidecar, to: "integration_examples#inherited_sidecar"
+  get :inherited_from_uncompilable_component, to: "integration_examples#inherited_from_uncompilable_component"
 end
