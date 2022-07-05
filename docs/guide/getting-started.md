@@ -76,6 +76,9 @@ Returning:
 
 ## `#with_content`
 
+Since 2.31.0
+{: .label }
+
 String content can also be passed to a ViewComponent by calling `#with_content`:
 
 ```erb
