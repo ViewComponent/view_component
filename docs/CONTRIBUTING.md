@@ -108,7 +108,7 @@ _All triagers have become committers or maintainers!_
 
 ViewComponent committers have `write` access, enabling them to push directly to the repository and merge pull requests, thus removing the need to contribute via a fork. Committers often have implicit (or even explicit, via CODEOWNERS) ownership over a particular area of the project, such as previews, generators, or translations.
 
-After helping with the project by participating in issues, pull requests, and/or discussions, community members are welcome to request commit access by opening a pull request to update this list:
+Triagers are welcome to request commit access by opening a pull request to update this list:
 
 The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, and @dylanatsmith.
 
