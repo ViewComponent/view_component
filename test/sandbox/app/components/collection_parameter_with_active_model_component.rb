@@ -7,5 +7,6 @@ class CollectionParameterWithActiveModelComponent < ViewComponent::Base
 
   with_collection_parameter :name
 
-  def call; end
+  def call
+  end
 end

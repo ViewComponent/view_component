@@ -79,7 +79,7 @@ jobs:
       run: |
         bundle config path vendor/bundle
         bundle update
-        bundle exec rubocop
+        bundle exec standardrb
         bundle exec erblint **/*.html.erb
       env:
         RAILS_VERSION: '~> 7.0.0'

@@ -8,7 +8,8 @@ class Performance::InlineComponent < ViewComponent::Base
 
     def call
       # rubocop:disable Rails/OutputSafety
-      content = "<p>nested hello #{@name}</p>".html_safe
+      "<p>nested hello #{@name}</p>".html_safe
+      # rubocop:enable Rails/OutputSafety
     end
   end
 

@@ -22,13 +22,13 @@ class TranslatableTest < ViewComponent::TestCase
       [
         "Hello from sidecar translations!",
         "This is coming from the sidecar",
-        "This is coming from Rails",
+        "This is coming from Rails"
       ],
       translate(
         [
           ".hello",
           ".from.sidecar",
-          "from.rails",
+          "from.rails"
         ]
       )
     )

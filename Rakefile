@@ -52,10 +52,10 @@ namespace :docs do
     registry.load!(".yardoc")
 
     meths =
-      registry.
-      get("ViewComponent::Base").
-      meths.
-      select do |method|
+      registry
+        .get("ViewComponent::Base")
+        .meths
+        .select do |method|
         !method.tag(:private) &&
           method.path.include?("ViewComponent::Base") &&
           method.visibility == :public &&
@@ -67,11 +67,11 @@ namespace :docs do
     configuration_methods_to_document = registry.get("ViewComponent::Base").meths.select { |method|
       method[:mattr_accessor]
     }
-    test_helper_methods_to_document = registry.
-                                      get("ViewComponent::TestHelpers").
-                                      meths.
-                                      sort_by { |method| method[:name] }.
-                                      select do |method|
+    test_helper_methods_to_document = registry
+      .get("ViewComponent::TestHelpers")
+      .meths
+      .sort_by { |method| method[:name] }
+      .select do |method|
       !method.tag(:private) &&
         method.visibility == :public
     end

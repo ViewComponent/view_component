@@ -10,9 +10,9 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       "/tilda~/component/test_component.html.haml"
     ]
     expected = [
-      { variant: :phone, handler: "erb" },
-      { variant: :desktop, handler: "slim" },
-      { variant: nil, handler: "haml" }
+      {variant: :phone, handler: "erb"},
+      {variant: :desktop, handler: "slim"},
+      {variant: nil, handler: "haml"}
     ]
 
     compiler = ViewComponent::Compiler.new(ViewComponent::Base)
@@ -54,7 +54,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       [
         "#{root}/app/components/template_and_sidecar_directory_template_component.html.erb",
         "#{root}/app/components/template_and_sidecar_directory_template_component/" \
-        "template_and_sidecar_directory_template_component.html.erb",
+        "template_and_sidecar_directory_template_component.html.erb"
       ],
       TemplateAndSidecarDirectoryTemplateComponent._sidecar_files(["erb"])
     )
@@ -62,7 +62,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     assert_equal(
       [
         "#{root}/app/components/css_sidecar_file_component.css",
-        "#{root}/app/components/css_sidecar_file_component.html.erb",
+        "#{root}/app/components/css_sidecar_file_component.html.erb"
       ],
       CssSidecarFileComponent._sidecar_files(["css", "erb"])
     )
