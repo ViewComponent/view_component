@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add BootrAils article to resources.
+
+    *Joel Hawksley*
+
 * Add @boardfish and @spone as maintainers.
 
     *Joel Hawksley*, *Cameron Dutro*, *Blake Williams*
