@@ -13,6 +13,10 @@ title: Changelog
 
     *Joel Hawksley*
 
+* Add @boardfish and @spone as maintainers.
+
+    *Joel Hawksley*, *Cameron Dutro*, *Blake Williams*
+
 * Re-compile updated, inherited templates when class caching is disabled.
 
     *Patrick Arnett*
