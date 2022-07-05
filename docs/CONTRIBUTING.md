@@ -11,7 +11,7 @@ Hi there! We're thrilled that you'd like to contribute to ViewComponent. Your he
 
 If you have any substantial changes that you would like to make, please [open an issue](http://github.com/github/view_component/issues/new) first to discuss them with us.
 
-Core team members tend to focus on areas of the project that are useful to them and their employers, but we're happy to pair with members of the community to enable work on other parts.
+Maintainers tend to focus on areas of the project that are useful to them and their employers, but we're happy to pair with members of the community to enable work on other parts.
 
 Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [MIT license](https://github.com/github/view_component/blob/main/LICENSE.txt).
 
