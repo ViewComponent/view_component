@@ -77,7 +77,8 @@ module ViewComponent
       options = app.config.view_component
 
       if options.show_previews && !options.preview_paths.empty?
-        ActiveSupport::Dependencies.autoload_paths.concat(options.preview_paths)
+        paths_to_add = options.preview_paths - ActiveSupport::Dependencies.autoload_paths
+        ActiveSupport::Dependencies.autoload_paths.concat(paths_to_add) if paths_to_add.any?
       end
     end
 
