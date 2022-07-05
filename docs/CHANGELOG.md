@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add BootrAils article to resources.
+
+    *Joel Hawksley*
+
 * Update docs to reflect lack of block content support in controllers.
 
     *Joel Hawksley*
