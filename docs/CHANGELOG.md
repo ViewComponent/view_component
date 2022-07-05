@@ -13,7 +13,27 @@ title: Changelog
 
     *Patrick Arnett*
 
+* Add the latest version to the docs index.
+* Improve the docs: add the versions various features were introduced in.
+
+    *Hans Lemuet*
+
+* Update docs to reflect lack of block content support in controllers.
+
+    *Joel Hawksley*
+
+* Prevent adding duplicates to `autoload_paths`.
+
+    *Thomas Hutterer*
+
+* Add FreeAgent to list of companies using ViewComponent.
+
+    *Simon Fish*
+
 * Include polymorphic slots in `ViewComponent::Base` by default.
+
+    *Cameron Dutro*
+
 * Add per-component config option for stripping newlines from templates before compilation.
 
     *Cameron Dutro*
