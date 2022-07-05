@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Update docs to reflect lack of block content support in controllers.
+
+    *Joel Hawksley*
+
 * Prevent adding duplicates to `autoload_paths`.
 
     *Thomas Hutterer*
@@ -18,6 +22,9 @@ title: Changelog
     *Simon Fish*
 
 * Include polymorphic slots in `ViewComponent::Base` by default.
+
+    *Cameron Dutro*
+
 * Add per-component config option for stripping newlines from templates before compilation.
 
     *Cameron Dutro*
