@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Add @boardfish and @spone to core team.
+* Add @boardfish and @spone as maintainers.
 
     *Joel Hawksley*, *Cameron Dutro*, *Blake Williams*
 
