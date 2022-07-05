@@ -60,7 +60,7 @@ TEST="test/view_component/YOUR_COMPONENT_test.rb" bundle exec appraisal rake
 
 ### Running tests for a specific version of Rails
 
-Specify one of the supported versions, listed in [Appraisal](https://github.com/github/view_component/blob/main/Appraisals):
+Specify one of the supported versions listed in [Appraisals](https://github.com/github/view_component/blob/main/Appraisals):
 
 ```command
 bundle exec appraisal rails-5.2 rake
