@@ -134,10 +134,10 @@ module ViewComponent
 
     initializer "compiler mode" do |app|
       ViewComponent::Compiler.mode = if Rails.env.development? || Rails.env.test?
-                                       ViewComponent::Compiler::DEVELOPMENT_MODE
-                                     else
-                                       ViewComponent::Compiler::PRODUCTION_MODE
-                                     end
+        ViewComponent::Compiler::DEVELOPMENT_MODE
+      else
+        ViewComponent::Compiler::PRODUCTION_MODE
+      end
     end
 
     config.after_initialize do |app|

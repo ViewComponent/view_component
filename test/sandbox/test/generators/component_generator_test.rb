@@ -190,7 +190,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   end
 
   def test_component_with_legacy_stimulus_and_sidecar
-    with_package_json({ dependencies: { "stimulus": "0.0.0" } }) do
+    with_package_json({dependencies: {stimulus: "0.0.0"}}) do
       run_generator %w[user --stimulus --sidecar]
 
       assert_file "app/components/user_component/user_component_controller.js" do |file|

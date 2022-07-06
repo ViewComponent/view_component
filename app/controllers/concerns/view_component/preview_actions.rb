@@ -37,21 +37,24 @@ module ViewComponent
         opts = {}
         opts[:layout] = layout if layout.present? || layout == false
         opts[:locals] = locals if locals.present?
-        render "view_components/preview", opts # rubocop:disable GitHub/RailsControllerRenderLiteral
+        render "view_components/preview", opts
       end
     end
 
     private
 
-    def default_preview_layout # :doc:
+    # :doc:
+    def default_preview_layout
       ViewComponent::Base.default_preview_layout
     end
 
-    def show_previews? # :doc:
+    # :doc:
+    def show_previews?
       ViewComponent::Base.show_previews
     end
 
-    def find_preview # :doc:
+    # :doc:
+    def find_preview
       candidates = []
       params[:path].to_s.scan(%r{/|$}) { candidates << $` }
       preview = candidates.detect { |candidate| ViewComponent::Preview.exists?(candidate) }

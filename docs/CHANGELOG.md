@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Switch to `standardrb`.
+
+    *Joel Hawksley*
+
 * Add BootrAils article to resources.
 
     *Joel Hawksley*

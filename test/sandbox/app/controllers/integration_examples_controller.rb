@@ -19,13 +19,13 @@ class IntegrationExamplesController < ActionController::Base
   end
 
   def controller_inline_baseline
-    render("integration_examples/_controller_inline", locals: { message: "bar" })
+    render("integration_examples/_controller_inline", locals: {message: "bar"})
   end
 
   def controller_to_string
     # Ensures render_to_string_monkey_patch.rb correctly calls `super` when
     # not rendering a component:
-    render_to_string("integration_examples/_controller_inline", locals: { message: "bar" })
+    render_to_string("integration_examples/_controller_inline", locals: {message: "bar"})
 
     render(plain: render_to_string(ControllerInlineComponent.new(message: "bar")))
   end

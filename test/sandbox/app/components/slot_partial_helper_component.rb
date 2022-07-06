@@ -6,9 +6,9 @@ class SlotPartialHelperComponent < ViewComponent::Base
   def call
     content_tag :h1 do
       safe_join([
-                  helpers.expensive_message,
-                  header.to_s
-                ])
+        helpers.expensive_message,
+        header.to_s
+      ])
     end
   end
 end

@@ -37,9 +37,7 @@ module ViewComponent
     end
 
     def safe_concat(arg)
-      # rubocop:disable Rails/OutputSafety
       @current_buffer.safe_concat(arg)
-      # rubocop:enable Rails/OutputSafety
     end
 
     def length
