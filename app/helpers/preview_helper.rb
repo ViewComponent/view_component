@@ -7,7 +7,7 @@ module PreviewHelper
   def preview_source
     return if @render_args.nil?
 
-    render "preview_source" # rubocop:disable GitHub/RailsViewRenderPathsExist
+    render "preview_source"
   end
 
   def find_template_data(lookup_context:, template_identifier:)

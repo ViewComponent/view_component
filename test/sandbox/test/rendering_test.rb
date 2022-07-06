@@ -289,9 +289,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_content_areas_template_can_wrap_render_arguments
     render_inline(ContentAreasComponent.new(title: "Hello!", footer: "Bye!")) do |component|
-      # rubocop:disable Rails/OutputSafety
       component.with(:title) { "<strong>#{component.title}</strong>".html_safe }
-      # rubocop:enable Rails/OutputSafety
       component.with(:body) { "Have a nice day." }
     end
 

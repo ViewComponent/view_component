@@ -123,9 +123,7 @@ module ViewComponent
       slot_instance = args.present? ? slot_class.new(**args) : slot_class.new
 
       # Capture block and assign to slot_instance#content
-      # rubocop:disable Rails/OutputSafety
       slot_instance.content = view_context.capture(&block).to_s.strip.html_safe if block
-      # rubocop:enable Rails/OutputSafety
 
       if slot[:collection]
         # Initialize instance variable as an empty array

@@ -37,7 +37,7 @@ module ViewComponent
         opts = {}
         opts[:layout] = layout if layout.present? || layout == false
         opts[:locals] = locals if locals.present?
-        render "view_components/preview", opts # rubocop:disable GitHub/RailsControllerRenderLiteral
+        render "view_components/preview", opts
       end
     end
 

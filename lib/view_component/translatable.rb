@@ -108,7 +108,7 @@ module ViewComponent
         # It's assumed here that objects loaded by the i18n backend will respond to `#html_safe?`.
         # It's reasonable that if we're in Rails, `active_support/core_ext/string/output_safety.rb`
         # will provide this to `Object`.
-        translation.html_safe # rubocop:disable Rails/OutputSafety
+        translation.html_safe
       end
     end
 

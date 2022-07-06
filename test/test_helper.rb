@@ -100,13 +100,13 @@ ensure
 end
 
 def with_new_cache
-    old_cache = ViewComponent::CompileCache.cache
-    ViewComponent::CompileCache.cache = Set.new
-    old_cache_template_loading = ActionView::Base.cache_template_loading
-    ActionView::Base.cache_template_loading = false
-    reset_render_template_methods
+  old_cache = ViewComponent::CompileCache.cache
+  ViewComponent::CompileCache.cache = Set.new
+  old_cache_template_loading = ActionView::Base.cache_template_loading
+  ActionView::Base.cache_template_loading = false
+  reset_render_template_methods
 
-    yield
+  yield
 ensure
   ActionView::Base.cache_template_loading = old_cache_template_loading
   ViewComponent::CompileCache.cache = old_cache

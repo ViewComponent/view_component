@@ -20,7 +20,7 @@ module ViewComponent
       components.map do |component|
         component.set_original_view_context(__vc_original_view_context)
         component.render_in(view_context, &block)
-      end.join.html_safe # rubocop:disable Rails/OutputSafety
+      end.join.html_safe
     end
 
     def components
