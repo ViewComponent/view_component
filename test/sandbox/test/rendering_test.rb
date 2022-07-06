@@ -776,32 +776,32 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_component_with_invalid_parameter_names
-      old_cache = ViewComponent::CompileCache.cache
-      ViewComponent::CompileCache.cache = Set.new
+    old_cache = ViewComponent::CompileCache.cache
+    ViewComponent::CompileCache.cache = Set.new
 
-      exception =
-        assert_raises ViewComponent::ComponentError do
-          InvalidParametersComponent.compile(raise_errors: true)
-        end
+    exception =
+      assert_raises ViewComponent::ComponentError do
+        InvalidParametersComponent.compile(raise_errors: true)
+      end
 
-      assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
+    assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
   ensure
     ViewComponent::CompileCache.cache = old_cache
   end
 
   def test_component_with_invalid_named_parameter_names
-      old_cache = ViewComponent::CompileCache.cache
-      ViewComponent::CompileCache.cache = Set.new
+    old_cache = ViewComponent::CompileCache.cache
+    ViewComponent::CompileCache.cache = Set.new
 
-      exception =
-        assert_raises ViewComponent::ComponentError do
-          InvalidNamedParametersComponent.compile(raise_errors: true)
-        end
+    exception =
+      assert_raises ViewComponent::ComponentError do
+        InvalidNamedParametersComponent.compile(raise_errors: true)
+      end
 
-      assert_match(
-        /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
-        exception.message
-      )
+    assert_match(
+      /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
+      exception.message
+    )
   ensure
     ViewComponent::CompileCache.cache = old_cache
   end
@@ -883,7 +883,7 @@ class RenderingTest < ViewComponent::TestCase
       end
 
     # Necessary because anonymous classes don't have a `name` property
-    Object.const_set("MY_COMPONENT", dynamic_component)
+    Object.const_set(:MY_COMPONENT, dynamic_component)
 
     render_inline MY_COMPONENT.new
     assert_selector "h1", text: "hello world"
@@ -892,7 +892,7 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector "h1", text: "hello world"
     assert_selector "h1", text: "hello view component"
   ensure
-    Object.send(:remove_const, "MY_COMPONENT")
+    Object.send(:remove_const, :MY_COMPONENT)
   end
 
   def test_with_request_url
