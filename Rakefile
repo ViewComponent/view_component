@@ -83,15 +83,23 @@ namespace :docs do
     docs = ActionController::Base.new.render_to_string(
       ViewComponent::DocsBuilderComponent.new(
         sections: [
-          ViewComponent::DocsBuilderComponent::Section.new(heading: "Class methods",
-                                                           methods: class_methods_to_document),
-          ViewComponent::DocsBuilderComponent::Section.new(heading: "Instance methods",
-                                                           methods: instance_methods_to_document),
-          ViewComponent::DocsBuilderComponent::Section.new(heading: "Configuration",
-                                                           methods: configuration_methods_to_document,
-                                                           show_types: false),
-          ViewComponent::DocsBuilderComponent::Section.new(heading: "ViewComponent::TestHelpers",
-                                                           methods: test_helper_methods_to_document)
+          ViewComponent::DocsBuilderComponent::Section.new(
+            heading: "Class methods",
+            methods: class_methods_to_document
+          ),
+          ViewComponent::DocsBuilderComponent::Section.new(
+            heading: "Instance methods",
+            methods: instance_methods_to_document
+          ),
+          ViewComponent::DocsBuilderComponent::Section.new(
+            heading: "Configuration",
+            methods: configuration_methods_to_document,
+            show_types: false
+          ),
+          ViewComponent::DocsBuilderComponent::Section.new(
+            heading: "ViewComponent::TestHelpers",
+            methods: test_helper_methods_to_document
+          )
         ]
       )
     ).chomp
