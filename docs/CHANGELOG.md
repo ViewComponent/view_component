@@ -49,10 +49,10 @@ title: Changelog
 
 * Add support for `within*` Capybara DLS methods:
 
-    * [`within`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within)
-    * [`within_element`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within)
-    * [`within_fieldset`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_fieldset)
-    * [`within_table`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_table)
+  * [`within`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within)
+  * [`within_element`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within)
+  * [`within_fieldset`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_fieldset)
+  * [`within_table`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_table)
 
     *Jacob Carlborg*
 
