@@ -56,6 +56,8 @@ title: Changelog
 
     *Jacob Carlborg*
 
+## 2.58.0
+
 * Switch to `standardrb`.
 
     *Joel Hawksley*
