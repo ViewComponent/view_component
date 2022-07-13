@@ -8,6 +8,9 @@ parent: Guide
 
 ## `#before_render`
 
+Since 2.8.0
+{: .label }
+
 Define a `before_render` method to be called before a component is rendered, when `helpers` is able to be used:
 
 ```ruby

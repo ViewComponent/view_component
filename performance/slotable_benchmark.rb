@@ -10,9 +10,9 @@ ENV["RAILS_ENV"] = "production"
 require File.expand_path("../test/sandbox/config/environment.rb", __dir__)
 
 module Performance
-  require_relative "components/slot_component.rb"
-  require_relative "components/slots_v2_component.rb"
-  require_relative "components/content_areas_component.rb"
+  require_relative "components/slot_component"
+  require_relative "components/slots_v2_component"
+  require_relative "components/content_areas_component"
 end
 
 class BenchmarksController < ActionController::Base

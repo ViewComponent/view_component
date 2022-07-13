@@ -5,7 +5,7 @@ class TestMailer < ActionMailer::Base
     mail(
       from: "no-reply@example.com",
       to: "test@example.com",
-      subject: "Testing ViewComponent in ActionMailer",
+      subject: "Testing ViewComponent in ActionMailer"
     )
   end
 end

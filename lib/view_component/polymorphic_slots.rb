@@ -72,7 +72,7 @@ module ViewComponent
           ruby2_keywords(:"with_#{setter_name}") if respond_to?(:ruby2_keywords, true)
         end
 
-        self.registered_slots[slot_name] = {
+        registered_slots[slot_name] = {
           collection: collection,
           renderable_hash: renderable_hash
         }
