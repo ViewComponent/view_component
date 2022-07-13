@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.59.0
+
 * Expose Capybara DSL methods directly inside tests.
 
     The following Capybara methods are now available directly without having to use the `page` method:
