@@ -22,73 +22,11 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
-(Capybara matchers are available if the gem is installed)
-
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
-## Capybara DSL
+## Capybara helpers
 
-Some parts of the Capybara DSL are available inside component tests, if the
-gem is installed.
-
-Component template:
-
-```html
-<table>
-  <caption>Content</caption>
-  <thead>
-    <tr>
-      <th>Name</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td>Value</td>
-    </tr>
-  </tbody>
-</table>
-```
-
-Component test:
-
-```ruby
-require "test_helper"
-
-class TableComponentTest < ViewComponent::TestCase
-  def table
-    @table ||= find("table")
-  end
-
-  def test_table
-    render_inline(TableComponent.new)
-
-    assert has_table?("Content")
-  end
-
-  def test_table_header
-    render_inline(TableComponent.new)
-
-    within(table.find("thead")) do
-      within(first("tr")) do
-        assert_selector("th", text: "Name")
-      end
-    end
-  end
-
-  def test_table_body
-    render_inline(TableComponent.new)
-
-    within(table.find("tbody")) do
-      within(first("tr")) do
-        assert_selector("td", text: "Value")
-      end
-    end
-  end
-end
-```
-
-The available Capybara DSL methods are:
+The following Capybara helpers are available if `capybara` is installed:
 
 * [`all`](https://rubydoc.info/github/teamcapybara/capybara/Capybara%2FNode%2FFinders:all)
 * [`first`](https://rubydoc.info/github/teamcapybara/capybara/Capybara%2FNode%2FFinders:first)
@@ -128,7 +66,7 @@ The available Capybara DSL methods are:
 * [`within_fieldset`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_fieldset)
 * [`within_table`](https://rubydoc.info/github/teamcapybara/capybara/master/Capybara%2FSession:within_table)
 
-## (Experimental) Previews as test cases
+## Previews as test cases
 
 Since 2.56.0
 {: .label }
