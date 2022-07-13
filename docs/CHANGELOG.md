@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.58.0
+
 * Switch to `standardrb`.
 
     *Joel Hawksley*
