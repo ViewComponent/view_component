@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "view_component/render_preview_helper"
+require "view_component/capybara_simple_session"
 
 module ViewComponent
   module TestHelpers
