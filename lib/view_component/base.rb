@@ -198,7 +198,8 @@ module ViewComponent
     end
 
     # @private
-    def initialize(*); end
+    def initialize(*)
+    end
 
     # Re-use original view_context if we're not rendering a component.
     #
@@ -589,7 +590,7 @@ module ViewComponent
       #
       # @return [Boolean]
       def strip_trailing_whitespace?
-        self.__vc_strip_trailing_whitespace
+        __vc_strip_trailing_whitespace
       end
 
       # Ensure the component initializer accepts the
@@ -639,11 +640,7 @@ module ViewComponent
 
       # @private
       def collection_parameter
-        if provided_collection_parameter
-          provided_collection_parameter
-        else
-          name && name.demodulize.underscore.chomp("_component").to_sym
-        end
+        provided_collection_parameter || name && name.demodulize.underscore.chomp("_component").to_sym
       end
 
       # @private

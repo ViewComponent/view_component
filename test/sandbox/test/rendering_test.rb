@@ -289,7 +289,6 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_content_areas_template_can_wrap_render_arguments
     render_inline(ContentAreasComponent.new(title: "Hello!", footer: "Bye!")) do |component|
-      # rubocop:disable Rails/OutputSafety
       component.with(:title) { "<strong>#{component.title}</strong>".html_safe }
       component.with(:body) { "Have a nice day." }
     end
@@ -614,7 +613,7 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(ExceptionInTemplateComponent.new)
       end
 
-    assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
+    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[0]
   end
 
   def test_render_collection
@@ -644,10 +643,10 @@ class RenderingTest < ViewComponent::TestCase
     ]
     render_inline(CollectionCounterComponent.with_collection(photos))
 
-    assert_selector("figure[data-index=0]", { count: 1 })
+    assert_selector("figure[data-index=0]", {count: 1})
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
-    assert_selector("figure[data-index=1]", { count: 1 })
+    assert_selector("figure[data-index=1]", {count: 1})
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
@@ -658,10 +657,10 @@ class RenderingTest < ViewComponent::TestCase
     ]
     render_inline(CollectionIterationComponent.with_collection(photos))
 
-    assert_selector("figure.first[data-index=0]", { count: 1 })
+    assert_selector("figure.first[data-index=0]", {count: 1})
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
-    assert_selector("figure[data-index=1]:not(.first)", { count: 1 })
+    assert_selector("figure[data-index=1]:not(.first)", {count: 1})
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
@@ -672,10 +671,10 @@ class RenderingTest < ViewComponent::TestCase
     ]
     render_inline(CollectionIterationExtendComponent.with_collection(photos))
 
-    assert_selector("figure.first[data-index=0]", { count: 1 })
+    assert_selector("figure.first[data-index=0]", {count: 1})
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
-    assert_selector("figure[data-index=1]:not(.first)", { count: 1 })
+    assert_selector("figure[data-index=1]:not(.first)", {count: 1})
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
@@ -686,10 +685,10 @@ class RenderingTest < ViewComponent::TestCase
     ]
     render_inline(CollectionIterationExtendOverrideComponent.with_collection(photos))
 
-    assert_selector("figure.first[data-index=0]", { count: 1 })
+    assert_selector("figure.first[data-index=0]", {count: 1})
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
-    assert_selector("figure[data-index=1]:not(.first)", { count: 1 })
+    assert_selector("figure[data-index=1]:not(.first)", {count: 1})
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
@@ -777,38 +776,34 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_component_with_invalid_parameter_names
-    begin
-      old_cache = ViewComponent::CompileCache.cache
-      ViewComponent::CompileCache.cache = Set.new
+    old_cache = ViewComponent::CompileCache.cache
+    ViewComponent::CompileCache.cache = Set.new
 
-      exception =
-        assert_raises ViewComponent::ComponentError do
-          InvalidParametersComponent.compile(raise_errors: true)
-        end
+    exception =
+      assert_raises ViewComponent::ComponentError do
+        InvalidParametersComponent.compile(raise_errors: true)
+      end
 
-      assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
-    ensure
-      ViewComponent::CompileCache.cache = old_cache
-    end
+    assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
+  ensure
+    ViewComponent::CompileCache.cache = old_cache
   end
 
   def test_component_with_invalid_named_parameter_names
-    begin
-      old_cache = ViewComponent::CompileCache.cache
-      ViewComponent::CompileCache.cache = Set.new
+    old_cache = ViewComponent::CompileCache.cache
+    ViewComponent::CompileCache.cache = Set.new
 
-      exception =
-        assert_raises ViewComponent::ComponentError do
-          InvalidNamedParametersComponent.compile(raise_errors: true)
-        end
+    exception =
+      assert_raises ViewComponent::ComponentError do
+        InvalidNamedParametersComponent.compile(raise_errors: true)
+      end
 
-      assert_match(
-        /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
-        exception.message
-      )
-    ensure
-      ViewComponent::CompileCache.cache = old_cache
-    end
+    assert_match(
+      /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
+      exception.message
+    )
+  ensure
+    ViewComponent::CompileCache.cache = old_cache
   end
 
   def test_collection_component_with_trailing_comma_attr_reader
@@ -888,7 +883,7 @@ class RenderingTest < ViewComponent::TestCase
       end
 
     # Necessary because anonymous classes don't have a `name` property
-    Object.const_set("MY_COMPONENT", dynamic_component)
+    Object.const_set(:MY_COMPONENT, dynamic_component)
 
     render_inline MY_COMPONENT.new
     assert_selector "h1", text: "hello world"
@@ -897,7 +892,7 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector "h1", text: "hello world"
     assert_selector "h1", text: "hello view component"
   ensure
-    Object.send(:remove_const, "MY_COMPONENT")
+    Object.send(:remove_const, :MY_COMPONENT)
   end
 
   def test_with_request_url
@@ -937,7 +932,7 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey[mynestedkey]=myvalue" do
-      assert_equal({ "mynestedkey" => "myvalue" }, request.parameters["mykey"])
+      assert_equal({"mynestedkey" => "myvalue"}, request.parameters["mykey"])
     end
   end
 
@@ -1066,7 +1061,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_renders_nested_collection
-    items = %w(foo bar baz boo)
+    items = %w[foo bar baz boo]
     render_inline(NestedCollectionWrapperComponent.new(items: items))
 
     index = 0

@@ -4,7 +4,10 @@ title: Javascript and CSS
 parent: Guide
 ---
 
-# Javascript and CSS (experimental)
+# Javascript and CSS
+
+Experimental
+{: .label .label-yellow }
 
 While ViewComponent doesn't provide any built-in tooling to do so, it’s possible to include Javascript and CSS alongside components.
 

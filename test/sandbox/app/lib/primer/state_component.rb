@@ -6,12 +6,12 @@ module Primer
       default: "",
       green: "State--green",
       red: "State--red",
-      purple: "State--purple",
+      purple: "State--purple"
     }.freeze
 
     attr_reader :color, :title
 
-    def initialize(color: :default, title:)
+    def initialize(title:, color: :default)
       @color, @title = color, title
     end
   end

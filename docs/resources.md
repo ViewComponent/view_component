@@ -47,6 +47,7 @@ _Is this page missing a link? Open a PR!_
 
 ## Articles
 
+- [Ruby-on-Rails ViewComponents tutorial and examples](https://www.bootrails.com/blog/ruby-on-rails-viewcomponents-tutorial-and-examples/)
 - [From partials to ViewComponents: writing reusable front-end code in Rails](https://dev.to/nejremeslnici/from-partials-to-viewcomponents-writing-reusable-front-end-code-in-rails-1c9o)
 - [Snapshot testing ViewComponents with RSpec](https://www.bearer.com/blog/snapshot-testing-viewcomponents-with-rspec)
 - [Don't Cloud Your View With Logic.](https://www.beflagrant.com/blog/dont-cloud-view-with-logic)
