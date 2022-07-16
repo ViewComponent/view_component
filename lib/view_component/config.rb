@@ -8,7 +8,7 @@ module ViewComponent
       # `new` without any arguments initializes the default configuration, but
       # it's important to differentiate in case that's no longer the case in
       # future.
-      alias default new
+      alias_method :default, :new
 
       def defaults
         {
@@ -150,7 +150,7 @@ module ViewComponent
     end
 
     def preview_path
-      self.preview_paths
+      preview_paths
     end
 
     def preview_path=(new_value)
