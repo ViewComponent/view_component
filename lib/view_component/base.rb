@@ -124,6 +124,10 @@ module ViewComponent
       before_render
 
       if render?
+        # preload content to support slot delegation and to consistently perform
+        # side-effects that may exist in the block
+        content
+
         perform_render
       else
         ""

@@ -271,7 +271,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slots_without_render_block
     render_inline(SlotsV2WithoutContentBlockComponent.new) do |component|
-      component.title(title: "This is my title!")
+      component.title("This is my title!")
     end
 
     assert_selector("h1", text: "This is my title!")
@@ -578,5 +578,13 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
 
     assert_selector("h1.some-class", text: "This is a header!")
+  end
+
+  def test_composable_slots
+    render_inline ComposableSlotsComponent.new do |c|
+      c.title("The truth is out there")
+    end
+
+    assert_selector("div h1", text: "The truth is out there")
   end
 end
