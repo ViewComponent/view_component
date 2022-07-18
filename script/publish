@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
+# Publish gem
+bundle exec rake release
+
 # Update version info in data
 version=$(ruby ./lib/view_component/version.rb)
 echo "version: $version" >> docs/_data/library.yml
-
-# Publish gem
-bundle exec rake release
 
 # Publish updated docs
 git branch -D gh-pages
