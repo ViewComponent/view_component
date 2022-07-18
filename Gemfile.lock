@@ -286,7 +286,7 @@ DEPENDENCIES
   pry (~> 0.13)
   rails (~> 7.0.0)
   rake (~> 13.0)
-  rspec-rails (~> 5.1)
+  rspec-rails (~> 5)
   simplecov (~> 0.18.0)
   simplecov-console (~> 0.7.2)
   slim (~> 4.0)
