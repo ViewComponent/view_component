@@ -11,6 +11,12 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList["test/**/*_test.rb"]
 end
 
+begin
+  require "rspec/core/rake_task"
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError
+end
+
 desc "Runs benchmarks against components"
 task :partial_benchmark do
   ruby "./performance/partial_benchmark.rb"

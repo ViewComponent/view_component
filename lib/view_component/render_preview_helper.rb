@@ -15,11 +15,21 @@ module ViewComponent
     #
     # MyComponentTest -> MyComponentPreview etc.
     #
+    # In RSpec, `Preview` is appended to `described_class`.
+    #
     # @param preview [String] The name of the preview to be rendered.
     # @return [Nokogiri::HTML]
     def render_preview(name)
       begin
-        preview_klass = self.class.name.gsub("Test", "Preview")
+        preview_klass = if respond_to?(:described_class)
+          if described_class.nil?
+            raise "`render_preview` expected a described_class, but it is nil."
+          end
+
+          "#{described_class}Preview"
+        else
+          self.class.name.gsub("Test", "Preview")
+        end
         preview_klass = preview_klass.constantize
       rescue NameError
         raise NameError.new(
