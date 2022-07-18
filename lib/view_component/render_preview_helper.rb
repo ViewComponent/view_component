@@ -22,13 +22,11 @@ module ViewComponent
     def render_preview(name)
       begin
         preview_klass = if respond_to?(:described_class)
-          # :nocov:
           if described_class.nil?
             raise "`render_preview` expected a described_class, but it is nil."
           end
 
           "#{described_class}Preview"
-          # :nocov:
         else
           self.class.name.gsub("Test", "Preview")
         end

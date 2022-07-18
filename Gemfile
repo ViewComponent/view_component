@@ -7,6 +7,7 @@ rails_version = (ENV["RAILS_VERSION"] || "~> 7.0.0").to_s
 
 gem "capybara", "~> 3"
 gem "rails", rails_version == "main" ? {git: "https://github.com/rails/rails", ref: "main"} : rails_version
+gem "rspec-rails", "~> 5.1"
 
 if RUBY_VERSION >= "3.1"
   gem "net-imap", require: false
