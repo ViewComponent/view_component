@@ -11,7 +11,7 @@ module ViewComponent
     # ```
     #
     # Note: `#rendered_preview` expects a preview to be defined with the same class
-    # name as the calling test, but with "Test" replaced with "Preview":
+    # name as the calling test, but with `Test` replaced with `Preview`:
     #
     # MyComponentTest -> MyComponentPreview etc.
     #
