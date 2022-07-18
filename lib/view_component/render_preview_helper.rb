@@ -15,7 +15,7 @@ module ViewComponent
     #
     # MyComponentTest -> MyComponentPreview etc.
     #
-    # With RSpec it uses `described_class` plus "Preview" as the class name.
+    # In RSpec, `Preview` is appended to `described_class`.
     #
     # @param preview [String] The name of the preview to be rendered.
     # @return [Nokogiri::HTML]
