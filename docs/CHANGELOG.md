@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.60.0
+
 * Add support for `render_preview` in RSpec tests.
 
     *Thomas Hutterer*
