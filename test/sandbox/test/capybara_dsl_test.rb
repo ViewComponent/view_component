@@ -92,4 +92,8 @@ class CapybaraDslTest < ViewComponent::TestCase
       assert send(method, argument)
     end
   end
+
+  test "assert_link" do
+    assert_link "My link"
+  end
 end
