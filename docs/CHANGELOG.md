@@ -9,6 +9,9 @@ title: Changelog
 
 ## main
 
+* Pin `rails` `main` dependency due to incompatibility with Global Output Buffer.
+
+    *Joel Hawksley*
 
 ## 2.61.0
 
