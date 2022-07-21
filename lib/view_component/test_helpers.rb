@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "view_component/render_preview_helper"
-require "view_component/capybara_simple_session"
 
 module ViewComponent
   module TestHelpers
@@ -10,28 +9,8 @@ module ViewComponent
 
       include Capybara::Minitest::Assertions
 
-      CapybaraSimpleSession::DSL_METHODS.each do |method|
-        if RUBY_VERSION >= "2.7"
-          class_eval <<~METHOD, __FILE__, __LINE__ + 1
-            def #{method}(...)
-              page.method("#{method}").call(...)
-            end
-          METHOD
-        else
-          define_method method do |*args, &block|
-            page.send method, *args, &block
-          end
-        end
-      end
-
-      def self.included(mod)
-        Capybara::Node::Simple.send(:define_method, :to_capybara_node) do
-          self
-        end
-      end
-
       def page
-        @page ||= CapybaraSimpleSession.new(rendered_content)
+        @page ||= Capybara::Node::Simple.new(rendered_content)
       end
 
       def refute_component_rendered

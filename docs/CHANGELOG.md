@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Revert `Expose Capybara DSL methods directly inside tests.` This change unintentionally broke other Capybara methods and thus introduced a regression. We are not confident that we can fail forward so we have decided to revert this change.
+
+    *Joel Hawksley*, *Blake Williams*
+
 ## 2.61.0
 
 * Ensure side-effects in `content` are consistently evaluated before components are rendered. This change effectively means that `content` is evaluated for every component render where `render?` returns true. As a result, code that is passed to a component via a block/content will now always be evaluated, before `#call`, which can reveal bugs in existing components.
