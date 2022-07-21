@@ -86,10 +86,12 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, &block)
+      self.class.compile(raise_errors: true)
+
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
-      @output_buffer = ActionView::OutputBuffer.new unless defined?(@global_buffer_in_use) && @global_buffer_in_use
+      @output_buffer = ActionView::OutputBuffer.new
 
       @lookup_context ||= view_context.lookup_context
 
@@ -128,17 +130,12 @@ module ViewComponent
         # side-effects that may exist in the block
         content
 
-        perform_render
+        render_template_for(@__vc_variant).to_s + _output_postamble
       else
         ""
       end
     ensure
       @current_template = old_current_template
-    end
-
-    # @private
-    def perform_render
-      render_template_for(@__vc_variant).to_s + _output_postamble
     end
 
     # Subclass components that call `super` inside their template code will cause a
@@ -155,17 +152,6 @@ module ViewComponent
       method(mtd).super_method.call
       nil
     end
-
-    # @private
-    # :nocov:
-    def render_template_for(variant = nil)
-      # Force compilation here so the compiler always redefines render_template_for.
-      # This is mostly a safeguard to prevent infinite recursion.
-      self.class.compile(raise_errors: true, force: true)
-      # .compile replaces this method; call the new one
-      render_template_for(variant)
-    end
-    # :nocov:
 
     # EXPERIMENTAL: Optional content to be returned after the rendered template.
     #
