@@ -9,6 +9,7 @@ title: Changelog
 
 ## main
 
+
 ## 2.61.0
 
 * Ensure side-effects in `content` are consistently evaluated before components are rendered. This change effectively means that `content` is evaluated for every component render where `render?` returns true. As a result, code that is passed to a component via a block/content will now always be evaluated, before `#call`, which can reveal bugs in existing components.
