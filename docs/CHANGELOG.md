@@ -11,6 +11,23 @@ title: Changelog
 
 * Remove the experimental global output buffer feature.
 * Restore functionality that used to attempt to compile templates on each call to `#render_in`.
+* Un-pin `rails` `main` dependency.
+
+    *Cameron Dutro*
+
+## 2.61.1
+
+* Revert `Expose Capybara DSL methods directly inside tests.` This change unintentionally broke other Capybara methods and thus introduced a regression. We aren't confident that we can fail forward so we have decided to revert this change.
+
+    *Joel Hawksley*, *Blake Williams*
+
+* Revert change making content evaluation consistent.
+
+    *Blake Williams*
+
+* Pin `rails` `main` dependency due to incompatibility with Global Output Buffer.
+
+    *Joel Hawksley*
 
 ## 2.61.0
 

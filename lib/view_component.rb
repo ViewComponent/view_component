@@ -7,7 +7,6 @@ module ViewComponent
   extend ActiveSupport::Autoload
 
   autoload :Base
-  autoload :CapybaraSimpleSession
   autoload :Compiler
   autoload :CompileCache
   autoload :ComponentError
