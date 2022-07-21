@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Revert change making content evaluation consistent.
+
+    *Blake Williams*
+
 * Pin `rails` `main` dependency due to incompatibility with Global Output Buffer.
 
     *Joel Hawksley*
