@@ -61,7 +61,7 @@ class TranslatableTest < ViewComponent::TestCase
   def test_translate_with_html_suffix_escapes_interpolated_arguments
     translation = translate(".interpolated_html", horse_count: "<script type='text/javascript'>alert('foo');</script>")
     assert_equal(
-      "There are &lt;script type=&#39;text/javascript&#39;&gt;alert(&#39;foo&#39;);&lt;/script&gt; horses in the "\
+      "There are &lt;script type=&#39;text/javascript&#39;&gt;alert(&#39;foo&#39;);&lt;/script&gt; horses in the " \
         "<strong>barn</strong>!",
       translation
     )

@@ -10,7 +10,7 @@ module ViewComponent
         location = Kernel.caller_locations(1, 1)[0]
 
         warn(
-          "warning: ViewComponent::PolymorphicSlots is now included in ViewComponent::Base by default "\
+          "warning: ViewComponent::PolymorphicSlots is now included in ViewComponent::Base by default " \
           "and can be removed from #{location.path}:#{location.lineno}"
         )
         # :nocov:
@@ -58,7 +58,7 @@ module ViewComponent
 
           define_method(setter_name) do |*args, &block|
             ViewComponent::Deprecation.warn(
-              "polymorphic slot setters like `#{setter_name}` are deprecated and will be removed in"\
+              "polymorphic slot setters like `#{setter_name}` are deprecated and will be removed in" \
               "ViewComponent v3.0.0.\n\nUse `with_#{setter_name}` instead."
             )
 
