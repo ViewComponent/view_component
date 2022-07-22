@@ -30,7 +30,7 @@ module ViewComponent
 
         slot_names.each do |slot_name|
           # Ensure slot_name isn't already declared
-          if self.slots.key?(slot_name)
+          if slots.key?(slot_name)
             raise ArgumentError.new("#{slot_name} slot declared multiple times")
           end
 
@@ -73,7 +73,7 @@ module ViewComponent
           class_name = "ViewComponent::Slot" unless class_name.present?
 
           # Register the slot on the component
-          self.slots[slot_name] = {
+          slots[slot_name] = {
             class_name: class_name,
             instance_variable_name: instance_variable_name,
             collection: collection
@@ -84,7 +84,7 @@ module ViewComponent
       def inherited(child)
         # Clone slot configuration into child class
         # see #test_slots_pollution
-        child.slots = self.slots.clone
+        child.slots = slots.clone
 
         super
       end
@@ -106,7 +106,7 @@ module ViewComponent
     #
     def slot(slot_name, **args, &block)
       # Raise ArgumentError if `slot` doesn't exist
-      unless slots.keys.include?(slot_name)
+      unless slots.key?(slot_name)
         raise ArgumentError.new "Unknown slot '#{slot_name}' - expected one of '#{slots.keys}'"
       end
 
@@ -123,8 +123,7 @@ module ViewComponent
       slot_instance = args.present? ? slot_class.new(**args) : slot_class.new
 
       # Capture block and assign to slot_instance#content
-      # rubocop:disable Rails/OutputSafety
-      slot_instance.content = view_context.capture(&block).to_s.strip.html_safe if block_given?
+      slot_instance.content = view_context.capture(&block).to_s.strip.html_safe if block
 
       if slot[:collection]
         # Initialize instance variable as an empty array

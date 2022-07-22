@@ -9,7 +9,7 @@ module ViewComponent
 
     RESERVED_NAMES = {
       singular: %i[content render].freeze,
-      plural: %i[contents renders].freeze,
+      plural: %i[contents renders].freeze
     }.freeze
 
     # Setup component slot state
@@ -190,20 +190,20 @@ module ViewComponent
       # Clone slot configuration into child class
       # see #test_slots_pollution
       def inherited(child)
-        child.registered_slots = self.registered_slots.clone
+        child.registered_slots = registered_slots.clone
         super
       end
 
       private
 
       def register_slot(slot_name, **kwargs)
-        self.registered_slots[slot_name] = define_slot(slot_name, **kwargs)
+        registered_slots[slot_name] = define_slot(slot_name, **kwargs)
       end
 
       def define_slot(slot_name, collection:, callable:)
         # Setup basic slot data
         slot = {
-          collection: collection,
+          collection: collection
         }
         return slot unless callable
 
@@ -254,7 +254,7 @@ module ViewComponent
       end
 
       def raise_if_slot_registered(slot_name)
-        if self.registered_slots.key?(slot_name)
+        if registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
           raise ArgumentError.new(
             "#{self} declares the #{slot_name} slot multiple times.\n\n" \
@@ -266,8 +266,8 @@ module ViewComponent
       def raise_if_slot_ends_with_question_mark(slot_name)
         if slot_name.to_s.ends_with?("?")
           raise ArgumentError.new(
-            "#{self} declares a slot named #{slot_name}, which ends with a question mark.\n\n"\
-            "This is not allowed because the ViewComponent framework already provides predicate "\
+            "#{self} declares a slot named #{slot_name}, which ends with a question mark.\n\n" \
+            "This is not allowed because the ViewComponent framework already provides predicate " \
             "methods ending in `?`.\n\n" \
             "To fix this issue, choose a different name."
           )
@@ -287,8 +287,6 @@ module ViewComponent
 
       if slot[:collection]
         []
-      else
-        nil
       end
     end
 
@@ -305,7 +303,7 @@ module ViewComponent
       # 2. Since we've to pass block content to components when calling
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
-      slot.__vc_content_block = block if block_given?
+      slot.__vc_content_block = block if block
 
       # If class
       if slot_definition[:renderable]
@@ -321,7 +319,7 @@ module ViewComponent
         # methods like `content_tag` as well as parent component state.
         renderable_function = slot_definition[:renderable_function].bind(self)
         renderable_value =
-          if block_given?
+          if block
             renderable_function.call(*args) do |*rargs|
               view_context.capture(*rargs, &block)
             end

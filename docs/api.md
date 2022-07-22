@@ -10,17 +10,35 @@ nav_order: 3
 
 ## Class methods
 
+### .strip_trailing_whitespace(value = true)
+
+Strips trailing whitespace from templates before compiling them.
+
+```ruby
+class MyComponent < ViewComponent::Base
+  strip_trailing_whitespace
+end
+```
+
+### .strip_trailing_whitespace? → [Boolean]
+
+Whether trailing whitespace will be stripped before compilation.
+
 ### .with_collection(collection, **args)
 
 Render a component for each element in a collection ([documentation](/guide/collections)):
 
-    render(ProductsComponent.with_collection(@products, foo: :bar))
+```ruby
+render(ProductsComponent.with_collection(@products, foo: :bar))
+```
 
 ### .with_collection_parameter(parameter)
 
 Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
 
-    with_collection_parameter :item
+```ruby
+with_collection_parameter :item
+```
 
 ## Instance methods
 
@@ -79,8 +97,10 @@ Returns HTML that has been escaped by the respective template handler.
 Subclass components that call `super` inside their template code will cause a
 double render if they emit the result:
 
-    <%= super %> # double-renders
-    <% super %> # does not double-render
+```erb
+<%= super %> # double-renders
+<% super %> # does not double-render
+```
 
 Calls `super`, returning `nil` to avoid rendering the result twice.
 
@@ -110,7 +130,9 @@ _Will be removed in v3.0.0._
 
 Parent class for generated components
 
-    config.view_component.component_parent_class = "MyBaseComponent"
+```ruby
+config.view_component.component_parent_class = "MyBaseComponent"
+```
 
 Defaults to nil. If this is falsy, generators will use
 "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
@@ -132,25 +154,33 @@ stated.
 
 Always generate a component with a sidecar directory:
 
-    config.view_component.generate.sidecar = true
+```ruby
+config.view_component.generate.sidecar = true
+```
 
 #### #stimulus_controller
 
 Always generate a Stimulus controller alongside the component:
 
-    config.view_component.generate.stimulus_controller = true
+```ruby
+config.view_component.generate.stimulus_controller = true
+```
 
 #### #locale
 
 Always generate translations file alongside the component:
 
-    config.view_component.generate.locale = true
+```ruby
+config.view_component.generate.locale = true
+```
 
 #### #distinct_locale_files
 
 Always generate as many translations files as available locales:
 
-    config.view_component.generate.distinct_locale_files = true
+```ruby
+config.view_component.generate.distinct_locale_files = true
+```
 
 One file will be generated for each configured `I18n.available_locales`,
 falling back to `[:en]` when no `available_locales` is defined.
@@ -159,7 +189,9 @@ falling back to `[:en]` when no `available_locales` is defined.
 
 Always generate preview alongside the component:
 
-     config.view_component.generate.preview = true
+```ruby
+config.view_component.generate.preview = true
+```
 
  Defaults to `false`.
 
@@ -193,7 +225,9 @@ Defaults to `/rails/view_components` when `show_previews` is enabled.
 
 Set if render monkey patches should be included or not in Rails <6.1:
 
-    config.view_component.render_monkey_patch_enabled = false
+```ruby
+config.view_component.render_monkey_patch_enabled = false
+```
 
 ### #show_previews
 
@@ -215,7 +249,9 @@ Defaults to `false`.
 
 Set the controller used for testing components:
 
-    config.view_component.test_controller = "MyTestController"
+```ruby
+config.view_component.test_controller = "MyTestController"
+```
 
 Defaults to ApplicationController. Can also be configured on a per-test
 basis using `with_controller_class`.
@@ -224,7 +260,9 @@ basis using `with_controller_class`.
 
 Path for component files
 
-    config.view_component.view_component_path = "app/my_components"
+```ruby
+config.view_component.view_component_path = "app/my_components"
+```
 
 Defaults to `app/components`.
 
@@ -252,6 +290,10 @@ allowing for Capybara assertions to be used:
 render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
+
+### #rendered_component → [String]
+
+Returns the result of a render_inline call.
 
 ### #with_controller_class(klass)
 

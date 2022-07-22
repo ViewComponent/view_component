@@ -10,8 +10,8 @@ ENV["RAILS_ENV"] = "production"
 require File.expand_path("../test/sandbox/config/environment.rb", __dir__)
 
 module Performance
-  require_relative "components/global_i18n_component.rb"
-  require_relative "components/translatable_component.rb"
+  require_relative "components/global_i18n_component"
+  require_relative "components/translatable_component"
 end
 
 class BenchmarksController < ActionController::Base

@@ -7,14 +7,14 @@ module PreviewHelper
   def preview_source
     return if @render_args.nil?
 
-    render "preview_source" # rubocop:disable GitHub/RailsViewRenderPathsExist
+    render "preview_source"
   end
 
   def find_template_data(lookup_context:, template_identifier:)
     template = lookup_context.find_template(template_identifier)
 
     if Rails.version.to_f >= 6.1 || template.source.present?
-      return {
+      {
         source: template.source,
         prism_language_name: prism_language_name_by_template(template: template)
       }
@@ -40,7 +40,7 @@ module PreviewHelper
       template_source = File.read(template_file_path)
       prism_language_name = prism_language_name_by_template_path(template_file_path: template_file_path)
 
-      return {
+      {
         source: template_source,
         prism_language_name: prism_language_name
       }

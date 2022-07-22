@@ -34,13 +34,14 @@ module ViewComponent
     def with_output_buffer(buf = nil)
       unless buf
         buf = ActionView::OutputBuffer.new
+        # rubocop:disable Style/SafeNavigation
         if output_buffer && output_buffer.respond_to?(:encoding)
           buf.force_encoding(output_buffer.encoding)
         end
+        # rubocop:enable Style/SafeNavigation
       end
 
       output_buffer.push(buf)
-      result = nil
 
       begin
         yield
@@ -65,12 +66,12 @@ module ViewComponent
       def with_output_buffer(buf = nil)
         unless buf
           buf = ActionView::OutputBuffer.new
+          # rubocop:disable Style/SafeNavigation
           if @output_buffer && @output_buffer.respond_to?(:encoding)
             buf.force_encoding(@output_buffer.encoding)
           end
+          # rubocop:enable Style/SafeNavigation
         end
-
-        result = nil
 
         if @output_buffer.is_a?(OutputBufferStack)
           @output_buffer.push(buf)

@@ -6,6 +6,6 @@ class VariantIvarComponent < ViewComponent::Base
   end
 
   def call
-    "#{@variant}"
+    @variant.to_s
   end
 end

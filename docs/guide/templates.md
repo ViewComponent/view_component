@@ -22,6 +22,9 @@ app/components
 
 ## Subdirectory
 
+Since 2.7.0
+{: .label }
+
 As an alternative, views and other assets can be placed in a subdirectory with the same name as the component:
 
 ```console
@@ -44,6 +47,9 @@ bin/rails generate component Example title --sidecar
 ```
 
 ## Inline
+
+Since 1.16.0
+{: .label }
 
 ViewComponents can render without a template file, by defining a `call` method:
 
@@ -84,6 +90,9 @@ To override the `variant` set by the request, use `with_variant`:
 
 ## Inherited
 
+Since 2.19.0
+{: .label }
+
 Component subclasses inherit the parent component's template if they don't define their own template.
 
 ```ruby
@@ -95,6 +104,9 @@ end
 
 ### Rendering parent templates
 
+Since 2.55.0
+{: .label }
+
 To render a parent component's template from a subclass, call `render_parent`:
 
 ```erb
@@ -102,4 +114,20 @@ To render a parent component's template from a subclass, call `render_parent`:
 <div class="base-component-template">
   <% render_parent %>
 </div>
+```
+
+## Trailing whitespace
+
+Code editors commonly add a trailing newline character to source files in keeping with the Unix standard. Including trailing whitespace in component templates can result in unwanted whitespace in the HTML, eg. if the component is rendered before the period at the end of a sentence.
+
+To strip trailing whitespace from component templates, use the `strip_trailing_whitespace` class method.
+
+```ruby
+class MyComponent < ViewComponent::Base
+  # do strip whitespace
+  strip_trailing_whitespace
+
+  # don't strip whitespace
+  strip_trailing_whitespace(false)
+end
 ```

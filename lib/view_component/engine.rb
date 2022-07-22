@@ -77,7 +77,8 @@ module ViewComponent
       options = app.config.view_component
 
       if options.show_previews && !options.preview_paths.empty?
-        ActiveSupport::Dependencies.autoload_paths.concat(options.preview_paths)
+        paths_to_add = options.preview_paths - ActiveSupport::Dependencies.autoload_paths
+        ActiveSupport::Dependencies.autoload_paths.concat(paths_to_add) if paths_to_add.any?
       end
     end
 
@@ -133,10 +134,10 @@ module ViewComponent
 
     initializer "compiler mode" do |app|
       ViewComponent::Compiler.mode = if Rails.env.development? || Rails.env.test?
-                                       ViewComponent::Compiler::DEVELOPMENT_MODE
-                                     else
-                                       ViewComponent::Compiler::PRODUCTION_MODE
-                                     end
+        ViewComponent::Compiler::DEVELOPMENT_MODE
+      else
+        ViewComponent::Compiler::PRODUCTION_MODE
+      end
     end
 
     config.after_initialize do |app|

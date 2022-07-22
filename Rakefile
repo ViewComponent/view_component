@@ -11,6 +11,12 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList["test/**/*_test.rb"]
 end
 
+begin
+  require "rspec/core/rake_task"
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError
+end
+
 desc "Runs benchmarks against components"
 task :partial_benchmark do
   ruby "./performance/partial_benchmark.rb"
@@ -52,10 +58,10 @@ namespace :docs do
     registry.load!(".yardoc")
 
     meths =
-      registry.
-      get("ViewComponent::Base").
-      meths.
-      select do |method|
+      registry
+        .get("ViewComponent::Base")
+        .meths
+        .select do |method|
         !method.tag(:private) &&
           method.path.include?("ViewComponent::Base") &&
           method.visibility == :public &&
@@ -67,11 +73,11 @@ namespace :docs do
     configuration_methods_to_document = registry.get("ViewComponent::Base").meths.select { |method|
       method[:mattr_accessor]
     }
-    test_helper_methods_to_document = registry.
-                                      get("ViewComponent::TestHelpers").
-                                      meths.
-                                      sort_by { |method| method[:name] }.
-                                      select do |method|
+    test_helper_methods_to_document = registry
+      .get("ViewComponent::TestHelpers")
+      .meths
+      .sort_by { |method| method[:name] }
+      .select do |method|
       !method.tag(:private) &&
         method.visibility == :public
     end
@@ -83,15 +89,23 @@ namespace :docs do
     docs = ActionController::Base.new.render_to_string(
       ViewComponent::DocsBuilderComponent.new(
         sections: [
-          ViewComponent::DocsBuilderComponent::Section.new(heading: "Class methods",
-                                                           methods: class_methods_to_document),
-          ViewComponent::DocsBuilderComponent::Section.new(heading: "Instance methods",
-                                                           methods: instance_methods_to_document),
-          ViewComponent::DocsBuilderComponent::Section.new(heading: "Configuration",
-                                                           methods: configuration_methods_to_document,
-                                                           show_types: false),
-          ViewComponent::DocsBuilderComponent::Section.new(heading: "ViewComponent::TestHelpers",
-                                                           methods: test_helper_methods_to_document)
+          ViewComponent::DocsBuilderComponent::Section.new(
+            heading: "Class methods",
+            methods: class_methods_to_document
+          ),
+          ViewComponent::DocsBuilderComponent::Section.new(
+            heading: "Instance methods",
+            methods: instance_methods_to_document
+          ),
+          ViewComponent::DocsBuilderComponent::Section.new(
+            heading: "Configuration",
+            methods: configuration_methods_to_document,
+            show_types: false
+          ),
+          ViewComponent::DocsBuilderComponent::Section.new(
+            heading: "ViewComponent::TestHelpers",
+            methods: test_helper_methods_to_document
+          )
         ]
       )
     ).chomp

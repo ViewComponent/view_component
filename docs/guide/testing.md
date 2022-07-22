@@ -26,7 +26,13 @@ end
 
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
-## (Experimental) Previews as test cases
+## Previews as test cases
+
+Since 2.56.0
+{: .label }
+
+Experimental
+{: .label .label-yellow }
 
 Use `render_preview(name)` to render previews in ViewComponent unit tests:
 
@@ -98,6 +104,9 @@ end
 
 ## Configuring the controller used in tests
 
+Since 2.27.0
+{: .label }
+
 Component tests assume the existence of an `ApplicationController` class, which can be configured globally using the `test_controller` option:
 
 ```ruby
@@ -128,6 +137,9 @@ end
 
 ## Setting `request.path_parameters`
 
+Since 2.31.0
+{: .label }
+
 Some Rails helpers won't work unless `request.path_parameters` are set correctly, resulting in an `ActionController::UrlGenerationError`.
 
 To set `request.path_parameters` for a test case, use `with_request_url` from `ViewComponent::TestHelpers`:
@@ -142,6 +154,11 @@ class ExampleComponentTest < ViewComponent::TestCase
   end
 end
 ```
+
+### Query parameters
+
+Since 2.41.0
+{: .label }
 
 It's also possible to set query parameters:
 

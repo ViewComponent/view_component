@@ -193,12 +193,12 @@ class SlotsV2sTest < ViewComponent::TestCase
       end
     end
 
-    assert_equal component.items.first.method_with_kwargs(**{ foo: :bar }), { foo: :bar }
+    assert_equal component.items.first.method_with_kwargs(**{foo: :bar}), {foo: :bar}
   end
 
   def test_slot_with_collection
     render_inline SlotsV2DelegateComponent.new do |component|
-      component.items([{ highlighted: false }, { highlighted: true }, { highlighted: false }]) do
+      component.items([{highlighted: false}, {highlighted: true}, {highlighted: false}]) do
         "My Item"
       end
     end
@@ -210,8 +210,8 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_collection_returns_slots
     render_inline SlotsV2DelegateComponent.new do |component|
-      component.items([{ highlighted: false }, { highlighted: true }, { highlighted: false }]).
-        each_with_index do |slot, index|
+      component.items([{highlighted: false}, {highlighted: true}, {highlighted: false}])
+        .each_with_index do |slot, index|
           slot.with_content("My Item #{index + 1}")
         end
     end
@@ -295,7 +295,7 @@ class SlotsV2sTest < ViewComponent::TestCase
       table_card.header(
         "regular_argument",
         class_names: "table__header extracted_kwarg",
-        data: { splatted_kwarg: "splatted_keyword_argument" }
+        data: {splatted_kwarg: "splatted_keyword_argument"}
       ) do |header|
         header.cell { "Cell1" }
         header.cell(class_names: "-has-sort") { "Cell2" }
@@ -471,7 +471,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_supports_with_setters_plural
     render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
-      component.with_items([{ highlighted: true }, { highlighted: false }])
+      component.with_items([{highlighted: true}, {highlighted: false}])
     end
 
     assert_selector(".item", count: 2)
@@ -492,7 +492,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_supports_with_collection_setter
     render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
-      component.with_items([{}, { highlighted: true }, {}])
+      component.with_items([{}, {highlighted: true}, {}])
     end
 
     assert_selector(".item", count: 3)

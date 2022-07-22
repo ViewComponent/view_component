@@ -6,10 +6,11 @@ module ViewComponent
   module TestHelpers
     begin
       require "capybara/minitest"
+
       include Capybara::Minitest::Assertions
 
       def page
-        Capybara::Node::Simple.new(@rendered_content)
+        @page ||= Capybara::Node::Simple.new(rendered_content)
       end
 
       def refute_component_rendered
@@ -32,6 +33,9 @@ module ViewComponent
     # @private
     attr_reader :rendered_content
 
+    # Returns the result of a render_inline call.
+    #
+    # @return [String]
     def rendered_component
       ViewComponent::Deprecation.warn(
         "`rendered_component` is deprecated and will be removed in v3.0.0. " \
@@ -52,6 +56,7 @@ module ViewComponent
     # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
     # @return [Nokogiri::HTML]
     def render_inline(component, **args, &block)
+      @page = nil
       @rendered_content =
         if Rails.version.to_f >= 6.1
           controller.view_context.render(component, args, &block)
@@ -73,6 +78,7 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     def render_in_view_context(&block)
+      @page = nil
       @rendered_content = controller.view_context.instance_exec(&block)
       Nokogiri::HTML.fragment(@rendered_content)
     end

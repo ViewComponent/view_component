@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require "test_helper"
+# rubocop:disable Style/MixinUsage
 include PreviewHelper
-
+# rubocop:enable Style/MixinUsage
 class PreviewHelperTest < ActiveSupport::TestCase
   def test_returns_template_data_with_no_template
     template_identifier = "preview/no_template"

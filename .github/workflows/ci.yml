@@ -61,7 +61,7 @@ jobs:
       run: |
         bundle config path vendor/bundle
         bundle update
-        bundle exec rake
+        bundle exec rake test spec
       env:
         RAISE_ON_WARNING: 1
         MEASURE_COVERAGE: true

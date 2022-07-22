@@ -31,6 +31,8 @@ module ViewComponent
       return if compiled? && !force
       return if component_class == ViewComponent::Base
 
+      component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
+
       with_lock do
         subclass_instance_methods = component_class.instance_methods(false)
 
@@ -68,11 +70,13 @@ module ViewComponent
             component_class.send(:remove_method, method_name.to_sym)
           end
 
+          # rubocop:disable Style/EvalWithLocation
           component_class.class_eval <<-RUBY, template[:path], 0
           def #{method_name}
             #{compiled_template(template[:path])}
           end
           RUBY
+          # rubocop:enable Style/EvalWithLocation
         end
 
         define_render_template_for
@@ -151,15 +155,15 @@ module ViewComponent
           end
 
           invalid_variants =
-            templates.
-            group_by { |template| template[:variant] }.
-            map { |variant, grouped| variant if grouped.length > 1 }.
-            compact.
-            sort
+            templates
+              .group_by { |template| template[:variant] }
+              .map { |variant, grouped| variant if grouped.length > 1 }
+              .compact
+              .sort
 
           unless invalid_variants.empty?
             errors <<
-              "More than one template found for #{'variant'.pluralize(invalid_variants.count)} " \
+              "More than one template found for #{"variant".pluralize(invalid_variants.count)} " \
               "#{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
               "There can only be one template file per variant."
           end
@@ -177,8 +181,8 @@ module ViewComponent
             count = duplicate_template_file_and_inline_variant_calls.count
 
             errors <<
-              "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} " \
-              "found for #{'variant'.pluralize(count)} " \
+              "Template #{"file".pluralize(count)} and inline render #{"method".pluralize(count)} " \
+              "found for #{"variant".pluralize(count)} " \
               "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \
               "in #{component_class}. " \
               "There can only be a template file or inline render method per variant."
@@ -236,8 +240,9 @@ module ViewComponent
     end
 
     def compiled_template(file_path)
-      handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
+      handler = ActionView::Template.handler_for_extension(File.extname(file_path).delete("."))
       template = File.read(file_path)
+      template.rstrip! if component_class.strip_trailing_whitespace?
 
       if handler.method(:call).parameters.length > 1
         handler.call(component_class, template)
@@ -258,6 +263,15 @@ module ViewComponent
       else
         "call"
       end
+    end
+
+    def should_compile_superclass?
+      development? &&
+        templates.empty? &&
+        !(
+          component_class.instance_methods(false).include?(:call) ||
+            component_class.private_instance_methods(false).include?(:call)
+        )
     end
   end
 end

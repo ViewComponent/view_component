@@ -67,6 +67,7 @@ add_changed_files() {
   git add \
     docs/api.md \
     docs/CHANGELOG.md \
+    docs/_data/library.yml \
     Gemfile.lock \
     lib/view_component/version.rb
 }
@@ -157,6 +158,7 @@ main() {
     update_readme $major $minor $patch
     update_ruby_version $major $minor $patch
     update_gemfiles $major $minor $patch
+    echo "version: $major.$minor.$patch" > docs/_data/library.yml
     add_changed_files $major $minor $patch
     commit $major $minor $patch
     push $major $minor $patch
