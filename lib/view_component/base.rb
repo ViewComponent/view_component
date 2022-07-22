@@ -126,10 +126,6 @@ module ViewComponent
       before_render
 
       if render?
-        # preload content to support slot delegation and to consistently perform
-        # side-effects that may exist in the block
-        content
-
         render_template_for(@__vc_variant).to_s + _output_postamble
       else
         ""
