@@ -25,6 +25,10 @@ title: Changelog
 
     *Josh Clayton*
 
+* Add predicate method support to polymorphic slots.
+
+    *Graham Rogers*
+
 ## 2.61.1
 
 * Revert `Expose Capybara DSL methods directly inside tests.` This change unintentionally broke other Capybara methods and thus introduced a regression. We aren't confident that we can fail forward so we have decided to revert this change.
