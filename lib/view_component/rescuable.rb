@@ -33,7 +33,7 @@ module ViewComponent
       def rescue_with_handler(exception, object: self, visited_exceptions: [])
         visited_exceptions << exception
 
-        if handler = handler_for_rescue(exception, object: object)
+        if (handler = handler_for_rescue(exception, object: object))
           handler.call(exception) || true
         elsif exception
           if visited_exceptions.include?(exception.cause)

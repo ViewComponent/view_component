@@ -130,7 +130,6 @@ module ViewComponent
       else
         ""
       end
-
     rescue Exception => exception # rubocop:disable Lint/RescueException
       rescue_with_handler(exception) || raise
     ensure
