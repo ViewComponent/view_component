@@ -9,7 +9,7 @@ module ViewComponent
 
     module ClassMethods
       # Shamelessly copied and adapted from:
-      # https://github.com/rails/rails/blob/589dd0f/activesupport/lib/active_support/rescuable.rb#L88
+      # https://github.com/rails/rails/blob/97f13c2/activesupport/lib/active_support/rescuable.rb#L88
       #
       # The original version returns the exception itself, or nil (if
       # unhandled). This version, instead, returns whatever was returned

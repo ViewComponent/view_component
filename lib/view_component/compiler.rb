@@ -119,6 +119,7 @@ module ViewComponent
         #{variant_elsifs}
         else
           call
+        end
       rescue Exception => exception
         rescue_with_handler(exception) || raise
       RUBY
