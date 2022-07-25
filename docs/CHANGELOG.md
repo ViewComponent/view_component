@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.62.0
+
 * Remove the experimental global output buffer feature.
 * Restore functionality that used to attempt to compile templates on each call to `#render_in`.
 * Un-pin `rails` `main` dependency.
