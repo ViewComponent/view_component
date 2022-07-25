@@ -15,6 +15,10 @@ title: Changelog
 
     *Cameron Dutro*
 
+* Add blank space between "in" and "ViewComponent" in a deprecation warning.
+
+    *Vikram Dighe*
+
 * Add HappyCo to list of companies using ViewComponent.
 
     *Josh Clayton*
