@@ -9,6 +9,12 @@ title: Changelog
 
 ## main
 
+* Remove the experimental global output buffer feature.
+* Restore functionality that used to attempt to compile templates on each call to `#render_in`.
+* Un-pin `rails` `main` dependency.
+
+    *Cameron Dutro*
+
 * Add blank space between "in" and "ViewComponent" in a deprecation warning.
 
     *Vikram Dighe*
