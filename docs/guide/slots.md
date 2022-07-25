@@ -9,6 +9,7 @@ parent: Guide
 Since 2.12.0
 {: .label }
 
+
 In addition to the `content` accessor, ViewComponents can accept content through slots. Think of slots as a way to render multiple blocks of content, including other components.
 
 Slots are defined with `renders_one` and `renders_many`:
@@ -64,6 +65,8 @@ Returning:
 <a href="/blog/first-post">First post</a>
 <a href="/blog/second-post">Second post</a>
 ```
+
+_Note: It is also possible to set slots without the `with_` prefix. This functionality will be removed in v3.0.0. To preview this change, add `raise_on_deprecated_slot_setter`._
 
 ## Predicate methods
 

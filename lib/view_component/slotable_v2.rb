@@ -17,9 +17,19 @@ module ViewComponent
       # Hash of registered Slots
       class_attribute :registered_slots
       self.registered_slots = {}
+
+      class_attribute :_raise_on_deprecated_slot_setter
+      self._raise_on_deprecated_slot_setter = false
     end
 
     class_methods do
+      ##
+      # Enables deprecations coming to the Slots API in ViewComponent v3
+      #
+      def raise_on_deprecated_slot_setter
+        self._raise_on_deprecated_slot_setter = true
+      end
+
       ##
       # Registers a sub-component
       #
@@ -81,7 +91,11 @@ module ViewComponent
             get_slot(slot_name)
           else
             # Deprecated: Will remove in 3.0
-            set_slot(slot_name, nil, *args, &block)
+            if _raise_on_deprecated_slot_setter
+              raise NoMethodError.new("#{self.class.name}##{slot_name} has been deprecated and will be removed in ViewComponent v3.0.0. Use `#with_#{slot_name}` instead <3")
+            else
+              set_slot(slot_name, nil, *args, &block)
+            end
           end
         end
         ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
@@ -141,7 +155,11 @@ module ViewComponent
         #
         # Deprecated: Will remove in 3.0
         define_method singular_name do |*args, &block|
-          set_slot(slot_name, nil, *args, &block)
+          if _raise_on_deprecated_slot_setter
+            raise NoMethodError.new("#{self.class.name}##{singular_name} has been deprecated and will be removed in ViewComponent v3.0.0. Use `#with_#{singular_name}` instead <3")
+          else
+            set_slot(slot_name, nil, *args, &block)
+          end
         end
         ruby2_keywords(singular_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
@@ -162,9 +180,13 @@ module ViewComponent
           if collection_args.nil? && block.nil?
             get_slot(slot_name)
           else
-            # Deprecated: Will remove in 3.0
-            collection_args.map do |args|
-              set_slot(slot_name, nil, **args, &block)
+            if _raise_on_deprecated_slot_setter
+              raise NoMethodError.new("#{self.class.name}##{slot_name}has been deprecated and will be removed in ViewComponent v3.0.0. Use `#with_#{slot_name}` instead <3")
+            else
+              # Deprecated: Will remove in 3.0
+              collection_args.map do |args|
+                set_slot(slot_name, nil, **args, &block)
+              end
             end
           end
         end

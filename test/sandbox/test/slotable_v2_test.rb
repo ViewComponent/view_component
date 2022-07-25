@@ -579,4 +579,30 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_selector("h1.some-class", text: "This is a header!")
   end
+
+  def test_v3_deprection_config
+    error = assert_raises NoMethodError do
+      render_inline(SlotsV3DeprecationComponent.new) do |c|
+        c.label { "foo" }
+      end
+    end
+
+    assert_includes error.message, "Use `#with_label` instead"
+
+    error = assert_raises NoMethodError do
+      render_inline(SlotsV3DeprecationComponent.new) do |c|
+        c.item { "foo" }
+      end
+    end
+
+    assert_includes error.message, "Use `#with_item` instead"
+
+    error = assert_raises NoMethodError do
+      render_inline(SlotsV3DeprecationComponent.new) do |c|
+        c.items { "foo" }
+      end
+    end
+
+    assert_includes error.message, "Use `#with_items` instead"
+  end
 end

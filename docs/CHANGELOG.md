@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add `raise_on_deprecated_slot_setter` macro to raise if deprecated non-`with_*` API for slots is used. We recommend adding this macro to your components ahead of the coming v3.0.0 release <3.
+
+    *Joel Hawksley*
+
 ## 2.62.0
 
 * Remove the experimental global output buffer feature.
