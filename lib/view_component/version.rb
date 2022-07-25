@@ -3,8 +3,8 @@
 module ViewComponent
   module VERSION
     MAJOR = 2
-    MINOR = 61
-    PATCH = 1
+    MINOR = 62
+    PATCH = 0
 
     STRING = [MAJOR, MINOR, PATCH].join(".")
   end
