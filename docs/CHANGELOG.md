@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Fix issue causing helper methods to not be available in nested components when the render monkey patch is disabled and `render_component` is used.
+
+    *Daniel Scheffknecht*
+
 ## 2.62.0
 
 * Remove the experimental global output buffer feature.
