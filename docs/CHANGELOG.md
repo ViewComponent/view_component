@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Improve the docs: add information about working with turbo-rails.
+
+    *Matheus Poli Camilo*
+
 ## 2.62.0
 
 * Remove the experimental global output buffer feature.

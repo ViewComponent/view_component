@@ -99,6 +99,9 @@ end
 
 _Note: Content can't be passed to a component via a block in controllers. Instead, use `with_content`. In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout._
 
+_Note: If you are working with [turbo-rails](https://github.com/hotwired/turbo-rails), don't forget to set the
+`content_type` as `text/html`._
+
 ### Rendering ViewComponents to strings inside controller actions
 
 When rendering the same component multiple times for later reuse, use `render_in`:
