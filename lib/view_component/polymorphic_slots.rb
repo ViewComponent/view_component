@@ -42,6 +42,10 @@ module ViewComponent
           define_method(getter_name) do
             get_slot(slot_name)
           end
+
+          define_method("#{getter_name}?") do
+            get_slot(slot_name).present?
+          end
         end
 
         renderable_hash = types.each_with_object({}) do |(poly_type, poly_callable), memo|

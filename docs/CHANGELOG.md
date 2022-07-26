@@ -13,6 +13,10 @@ title: Changelog
 
     *Matheus Poli Camilo*
 
+* Fix issue causing helper methods to not be available in nested components when the render monkey patch is disabled and `render_component` is used.
+
+    *Daniel Scheffknecht*
+
 ## 2.62.0
 
 * Remove the experimental global output buffer feature.
@@ -28,6 +32,10 @@ title: Changelog
 * Add HappyCo to list of companies using ViewComponent.
 
     *Josh Clayton*
+
+* Add predicate method support to polymorphic slots.
+
+    *Graham Rogers*
 
 ## 2.61.1
 

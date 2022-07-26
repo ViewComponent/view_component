@@ -490,6 +490,15 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector("div .bar.custom-bar:last")
   end
 
+  def test_polymorphic_slot_predicate
+    render_inline(PolymorphicSlotComponent.new) do |component|
+      component.with_item_foo(class_names: "custom-foo")
+      component.with_item_bar(class_names: "custom-bar")
+    end
+
+    assert_no_selector("div#header")
+  end
+
   def test_supports_with_collection_setter
     render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
       component.with_items([{}, {highlighted: true}, {}])
