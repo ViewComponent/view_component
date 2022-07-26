@@ -87,6 +87,46 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_inherited_template_changes_are_reflected_on_new_request_when_cache_template_loading_is_false
+    with_new_cache do
+      get "/inherited_sidecar"
+      assert_select "div", "hello,world!"
+      assert_response :success
+
+      modify_file "app/components/my_component.html.erb", "<div>Goodbye world!</div>" do
+        get "/inherited_sidecar"
+        assert_select "div", "Goodbye world!"
+        assert_response :success
+      end
+
+      get "/inherited_sidecar"
+      assert_select "div", "hello,world!"
+      assert_response :success
+    end
+  end
+
+  def test_inherited_component_with_call_method_does_not_recompile_superclass
+    with_new_cache do
+      get "/inherited_from_uncompilable_component"
+      assert_select "div", "hello world"
+      assert_response :success
+
+      compile_method_lines = UncompilableComponent.method(:compile).source.split("\n")
+      compile_method_lines.insert(1, 'raise "this should not happen" if self.name == "UncompilableComponent"')
+      UncompilableComponent.instance_eval compile_method_lines.join("\n")
+
+      modify_file "app/components/uncompilable_component.html.erb", "<div>Goodbye world!</div>" do
+        get "/inherited_from_uncompilable_component"
+        assert_select "div", "hello world"
+        assert_response :success
+      end
+
+      get "/inherited_from_uncompilable_component"
+      assert_select "div", "hello world"
+      assert_response :success
+    end
+  end
+
   def test_rendering_component_in_a_controller_using_render_to_string
     get "/controller_inline_baseline"
 
@@ -528,7 +568,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_an_inline_component_preview_using_a_haml_template
-    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+    skip if Rails::VERSION::STRING < "6.1"
 
     get "/rails/view_components/inline_component/with_haml"
     assert_select "h1", "Some HAML here"
@@ -542,7 +582,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_mix_of_haml_and_erb
-    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+    skip if Rails::VERSION::STRING < "6.1"
 
     get "/nested_haml"
     assert_response :success
@@ -558,7 +598,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_preview_template_using_haml_params_from_url_custom_template_and_locals
-    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+    skip if Rails::VERSION::STRING < "6.1"
 
     get "/rails/view_components/inline_component/with_several_options?form_title=Title from params"
 

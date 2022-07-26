@@ -19,13 +19,13 @@ class IntegrationExamplesController < ActionController::Base
   end
 
   def controller_inline_baseline
-    render("integration_examples/_controller_inline", locals: { message: "bar" })
+    render("integration_examples/_controller_inline", locals: {message: "bar"})
   end
 
   def controller_to_string
     # Ensures render_to_string_monkey_patch.rb correctly calls `super` when
     # not rendering a component:
-    render_to_string("integration_examples/_controller_inline", locals: { message: "bar" })
+    render_to_string("integration_examples/_controller_inline", locals: {message: "bar"})
 
     render(plain: render_to_string(ControllerInlineComponent.new(message: "bar")))
   end
@@ -46,5 +46,13 @@ class IntegrationExamplesController < ActionController::Base
     products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
 
     render(ProductComponent.with_collection(products, notice: "Today only"))
+  end
+
+  def inherited_sidecar
+    render(InheritedSidecarComponent.new)
+  end
+
+  def inherited_from_uncompilable_component
+    render(InheritedFromUncompilableComponent.new)
   end
 end

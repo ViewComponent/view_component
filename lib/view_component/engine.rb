@@ -20,7 +20,6 @@ module ViewComponent
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
       options.preview_route ||= ViewComponent::Base.preview_route
       options.preview_controller ||= ViewComponent::Base.preview_controller
-      options.use_global_output_buffer = false if options.use_global_output_buffer.nil?
 
       if options.show_previews
         options.preview_paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?(
@@ -58,26 +57,12 @@ module ViewComponent
       end
     end
 
-    initializer "view_component.enable_global_output_buffer" do |app|
-      ActiveSupport.on_load(:view_component) do
-        env_use_gob = ENV.fetch("VIEW_COMPONENT_USE_GLOBAL_OUTPUT_BUFFER", "false") == "true"
-        config_use_gob = app.config.view_component.use_global_output_buffer
-
-        if config_use_gob || env_use_gob
-          # :nocov:
-          app.config.view_component.use_global_output_buffer = true
-          ViewComponent::Base.prepend(ViewComponent::GlobalOutputBuffer)
-          ActionView::Base.prepend(ViewComponent::GlobalOutputBuffer::ActionViewMods)
-          # :nocov:
-        end
-      end
-    end
-
     initializer "view_component.set_autoload_paths" do |app|
       options = app.config.view_component
 
       if options.show_previews && !options.preview_paths.empty?
-        ActiveSupport::Dependencies.autoload_paths.concat(options.preview_paths)
+        paths_to_add = options.preview_paths - ActiveSupport::Dependencies.autoload_paths
+        ActiveSupport::Dependencies.autoload_paths.concat(paths_to_add) if paths_to_add.any?
       end
     end
 
@@ -133,10 +118,10 @@ module ViewComponent
 
     initializer "compiler mode" do |app|
       ViewComponent::Compiler.mode = if Rails.env.development? || Rails.env.test?
-                                       ViewComponent::Compiler::DEVELOPMENT_MODE
-                                     else
-                                       ViewComponent::Compiler::PRODUCTION_MODE
-                                     end
+        ViewComponent::Compiler::DEVELOPMENT_MODE
+      else
+        ViewComponent::Compiler::PRODUCTION_MODE
+      end
     end
 
     config.after_initialize do |app|

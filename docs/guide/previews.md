@@ -32,7 +32,13 @@ Then access the resulting previews at:
 
 _For a more interactive experience, consider using [Lookbook](https://github.com/allmarkedup/lookbook) or [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)._
 
-## (Experimental) Previews as test cases
+## Previews as test cases
+
+Since 2.56.0
+{: .label }
+
+Experimental
+{: .label .label-yellow }
 
 Use `render_preview(name)` to render previews in ViewComponent unit tests:
 

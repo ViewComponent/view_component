@@ -6,6 +6,9 @@ parent: Guide
 
 # Conditional rendering
 
+Since 1.8.0
+{: .label }
+
 Components can implement a `#render?` method to be called after initialization to determine if the component should render.
 
 Traditionally, the logic for whether to render a view could go in either the component template:

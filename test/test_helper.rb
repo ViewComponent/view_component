@@ -85,7 +85,7 @@ ensure
 end
 
 def with_application_component_class
-  Object.const_set("ApplicationComponent", Class.new(Object))
+  Object.const_set(:ApplicationComponent, Class.new(Object))
   yield
 ensure
   Object.send(:remove_const, :ApplicationComponent)
@@ -100,25 +100,15 @@ ensure
 end
 
 def with_new_cache
-  begin
-    old_cache = ViewComponent::CompileCache.cache
-    ViewComponent::CompileCache.cache = Set.new
-    old_cache_template_loading = ActionView::Base.cache_template_loading
-    ActionView::Base.cache_template_loading = false
-    reset_render_template_methods
+  old_cache = ViewComponent::CompileCache.cache
+  ViewComponent::CompileCache.cache = Set.new
+  old_cache_template_loading = ActionView::Base.cache_template_loading
+  ActionView::Base.cache_template_loading = false
 
-    yield
-  ensure
-    ActionView::Base.cache_template_loading = old_cache_template_loading
-    ViewComponent::CompileCache.cache = old_cache
-    reset_render_template_methods
-  end
-end
-
-def reset_render_template_methods
-  ViewComponent::Base.descendants.each do |klass|
-    klass.compiler.reset_render_template_for
-  end
+  yield
+ensure
+  ActionView::Base.cache_template_loading = old_cache_template_loading
+  ViewComponent::CompileCache.cache = old_cache
 end
 
 def without_template_annotations

@@ -20,11 +20,10 @@ module ViewComponent
 
     def invalidate_class!(klass)
       cache.delete(klass)
-      klass.compiler.reset_render_template_for
     end
 
     def invalidate!
-      cache.each { |klass| invalidate_class!(klass) }
+      cache.clear
     end
   end
 end

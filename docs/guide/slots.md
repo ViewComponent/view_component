@@ -6,6 +6,9 @@ parent: Guide
 
 # Slots
 
+Since 2.12.0
+{: .label }
+
 In addition to the `content` accessor, ViewComponents can accept content through slots. Think of slots as a way to render multiple blocks of content, including other components.
 
 Slots are defined with `renders_one` and `renders_many`:
@@ -63,6 +66,9 @@ Returning:
 ```
 
 ## Predicate methods
+
+Since 2.50.0
+{: .label }
 
 To test whether a slot has been passed to the component, use the provided `#{slot_name}?` method.
 
@@ -187,6 +193,9 @@ end
 
 ## Rendering collections
 
+Since 2.23.0
+{: .label }
+
 `renders_many` slots can also be passed a collection, using the plural setter (`links` in this example):
 
 ```ruby
@@ -223,6 +232,9 @@ end
 
 ## `#with_content`
 
+Since 2.31.0
+{: .label }
+
 Slot content can also be set using `#with_content`:
 
 ```erb
@@ -233,16 +245,17 @@ Slot content can also be set using `#with_content`:
 
 _To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
 
-## Polymorphic slots (Experimental)
+## Polymorphic slots
 
-Polymorphic slots can render one of several possible slots. To use this experimental feature, include `ViewComponent::PolymorphicSlots`.
+Since 2.42.0
+{: .label }
+
+Polymorphic slots can render one of several possible slots.
 
 For example, consider this list item component that can be rendered with either an icon or an avatar visual. The `visual` slot is passed a hash mapping types to slot definitions:
 
 ```ruby
 class ListItemComponent < ViewComponent::Base
-  include ViewComponent::PolymorphicSlots
-
   renders_one :visual, types: {
     icon: IconComponent,
     avatar: lambda { |**system_arguments|
@@ -258,13 +271,23 @@ Filling in the `visual` slot is done by calling the appropriate slot method:
 
 ```erb
 <%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") %>
+  <% c.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") do %>
     Profile
   <% end >
 <% end %>
 <%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_icon(icon: :key) %>
+  <% c.with_visual_icon(icon: :key) do %>
     Security Settings
   <% end >
+<% end %>
+```
+
+To see whether a polymorphic slot has been passed to the component, use the `#{slot_name}?` method.
+
+```erb
+<% if visual? %>
+  <%= visual %>
+<% else %>
+  <span class="visual-placeholder">N/A</span>
 <% end %>
 ```

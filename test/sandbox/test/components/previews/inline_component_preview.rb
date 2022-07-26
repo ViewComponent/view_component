@@ -12,7 +12,7 @@ class InlineComponentPreview < ViewComponent::Preview
   end
 
   def with_params(form_title: "Default Form Title")
-    render_with_template(locals: { form_title: form_title })
+    render_with_template(locals: {form_title: form_title})
   end
 
   def with_non_standard_template
