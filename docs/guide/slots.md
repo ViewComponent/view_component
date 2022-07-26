@@ -282,7 +282,7 @@ Filling in the `visual` slot is done by calling the appropriate slot method:
 <% end %>
 ```
 
-To test whether a polymorphic slot has been passed to the component, use the provided `#{slot_name}?` method.
+To see whether a polymorphic slot has been passed to the component, use the `#{slot_name}?` method.
 
 ```erb
 <% if visual? %>

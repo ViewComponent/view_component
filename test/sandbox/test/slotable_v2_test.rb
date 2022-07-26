@@ -490,7 +490,7 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector("div .bar.custom-bar:last")
   end
 
-  def test_polymorphic_slot_question_mark
+  def test_polymorphic_slot_predicate
     render_inline(PolymorphicSlotComponent.new) do |component|
       component.with_item_foo(class_names: "custom-foo")
       component.with_item_bar(class_names: "custom-bar")
