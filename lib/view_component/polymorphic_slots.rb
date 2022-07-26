@@ -42,6 +42,10 @@ module ViewComponent
           define_method(getter_name) do
             get_slot(slot_name)
           end
+
+          define_method("#{getter_name}?") do
+            get_slot(slot_name).present?
+          end
         end
 
         renderable_hash = types.each_with_object({}) do |(poly_type, poly_callable), memo|
@@ -58,7 +62,7 @@ module ViewComponent
 
           define_method(setter_name) do |*args, &block|
             ViewComponent::Deprecation.warn(
-              "polymorphic slot setters like `#{setter_name}` are deprecated and will be removed in" \
+              "polymorphic slot setters like `#{setter_name}` are deprecated and will be removed in " \
               "ViewComponent v3.0.0.\n\nUse `with_#{setter_name}` instead."
             )
 

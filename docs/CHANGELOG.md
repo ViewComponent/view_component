@@ -13,6 +13,26 @@ title: Changelog
 
     *Daniel Scheffknecht*
 
+## 2.62.0
+
+* Remove the experimental global output buffer feature.
+* Restore functionality that used to attempt to compile templates on each call to `#render_in`.
+* Un-pin `rails` `main` dependency.
+
+    *Cameron Dutro*
+
+* Add blank space between "in" and "ViewComponent" in a deprecation warning.
+
+    *Vikram Dighe*
+
+* Add HappyCo to list of companies using ViewComponent.
+
+    *Josh Clayton*
+
+* Add predicate method support to polymorphic slots.
+
+    *Graham Rogers*
+
 ## 2.61.1
 
 * Revert `Expose Capybara DSL methods directly inside tests.` This change unintentionally broke other Capybara methods and thus introduced a regression. We aren't confident that we can fail forward so we have decided to revert this change.

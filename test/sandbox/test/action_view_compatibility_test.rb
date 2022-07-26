@@ -4,7 +4,7 @@ require "test_helper"
 
 class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
   def test_renders_form_for_labels_with_block_correctly
-    skip unless Rails.application.config.view_component.use_global_output_buffer
+    skip
 
     render_inline(FormForComponent.new)
 
@@ -13,7 +13,7 @@ class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
   end
 
   def test_renders_form_with_labels_with_block_correctly
-    skip unless Rails.application.config.view_component.use_global_output_buffer
+    skip
 
     render_inline(FormWithComponent.new)
 
@@ -22,7 +22,7 @@ class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
   end
 
   def test_form_without_compatibility_does_not_raise
-    skip unless Rails.application.config.view_component.use_global_output_buffer
+    skip
 
     render_inline(IncompatibleFormComponent.new)
 
@@ -31,7 +31,7 @@ class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
   end
 
   def test_helper_with_content_tag
-    skip unless Rails.application.config.view_component.use_global_output_buffer
+    skip
 
     render_inline(ContentTagComponent.new)
     assert_selector("div > p")

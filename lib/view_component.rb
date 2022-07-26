@@ -11,9 +11,7 @@ module ViewComponent
   autoload :CompileCache
   autoload :ComponentError
   autoload :Deprecation
-  autoload :GlobalOutputBuffer
   autoload :Instrumentation
-  autoload :OutputBufferStack
   autoload :Preview
   autoload :PreviewTemplateError
   autoload :TestHelpers

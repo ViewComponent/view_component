@@ -212,6 +212,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [FreeAgent](https://www.freeagent.com)
 * [G2](https://www.g2.com/) (200+ components)
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
+* [HappyCo](https://happy.co)
 * [Litmus](https://litmus.engineering/)
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
