@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add documentation about working with `turbo-rails`.
+
+    *Matheus Poli Camilo*
+
 * Fix issue causing helper methods to not be available in nested components when the render monkey patch is disabled and `render_component` is used.
 
     *Daniel Scheffknecht*
