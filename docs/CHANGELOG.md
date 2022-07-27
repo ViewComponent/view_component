@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Improve the docs: add information about working with turbo-rails.
+* Add documentation about working with `turbo-rails`.
 
     *Matheus Poli Camilo*
 
