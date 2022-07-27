@@ -99,7 +99,7 @@ end
 
 _Note: Content can't be passed to a component via a block in controllers. Instead, use `with_content`. In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout._
 
-When using [turbo-rails](https://github.com/hotwired/turbo-rails) be sure to set `content_type` as `text/html`:
+When using [turbo-rails](https://github.com/hotwired/turbo-rails), if you want to update a **turbo frame**, be sure to set `content_type` as `text/html`:
 
 ```ruby
 # app/controllers/home_controller.rb
