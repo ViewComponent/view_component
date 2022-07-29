@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Fixed typo in `renders_many` documentation
+* Fixed typo in `renders_many` documentation.
 
     *Graham Rogers*
 
