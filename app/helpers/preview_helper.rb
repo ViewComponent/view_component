@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module PreviewHelper
-  AVAILABLE_PRISM_LANGUAGES = ["ruby", "erb", "haml"]
+  AVAILABLE_PRISM_LANGUAGES = %w[ruby erb haml]
   FALLBACK_LANGUAGE = "ruby"
 
   def preview_source
@@ -22,7 +22,7 @@ module PreviewHelper
       # Fetch template source via finding it through preview paths
       # to accomodate source view when exclusively using templates
       # for previews for Rails < 6.1.
-      all_template_paths = ViewComponent::Base.preview_paths.map do |preview_path|
+      all_template_paths = Rails.application.config.view_component.preview_paths.map do |preview_path|
         Dir.glob("#{preview_path}/**/*")
       end.flatten
 

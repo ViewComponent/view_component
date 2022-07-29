@@ -5,7 +5,7 @@ require "view_component/base"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ViewComponent::Base.config
+    config.view_component = ViewComponent::Config.new
 
     rake_tasks do
       load "view_component/rails/tasks/view_component.rake"
@@ -79,7 +79,7 @@ module ViewComponent
       end
     end
 
-    initializer "view_component.include_render_component" do |app|
+    initializer "view_component.include_render_component" do |_app|
       next if Rails.version.to_f >= 6.1
 
       ActiveSupport.on_load(:action_view) do
@@ -101,7 +101,7 @@ module ViewComponent
       end
     end
 
-    initializer "compiler mode" do |app|
+    initializer "compiler mode" do |_app|
       ViewComponent::Compiler.mode = if Rails.env.development? || Rails.env.test?
         ViewComponent::Compiler::DEVELOPMENT_MODE
       else
@@ -145,7 +145,7 @@ unless defined?(ViewComponent::Base)
 
   ViewComponent::Deprecation.warn(
     "This manually engine loading is deprecated and will be removed in v3.0.0. " \
-    "Remove `require \"view_component/engine\"`."
+    'Remove `require "view_component/engine"`.'
   )
 
   require "view_component"

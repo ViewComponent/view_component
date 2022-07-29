@@ -35,19 +35,24 @@ ENV["RAILS_ENV"] = "test"
 require "view_component/deprecation"
 ViewComponent::Deprecation.behavior = :silence
 
-require File.expand_path("../sandbox/config/environment.rb", __FILE__)
+require File.expand_path("sandbox/config/environment.rb", __dir__)
 require "rails/test_help"
+
+def with_config_option(option_name, new_value)
+  old_value = Rails.application.config.view_component.public_send(option_name)
+  Rails.application.config.view_component.public_send("#{option_name}=", new_value)
+  yield
+ensure
+  Rails.application.config.view_component.public_send("#{option_name}=", old_value)
+end
 
 # Sets custom preview paths in tests.
 #
 # @param new_value [Array<String>] List of preview paths
 # @yield Test code to run
 # @return [void]
-def with_preview_paths(new_value)
-  old_value = Rails.application.config.view_component.preview_paths
-  Rails.application.config.view_component.preview_paths = new_value
-  yield
-  Rails.application.config.view_component.preview_paths = old_value
+def with_preview_paths(new_value, &block)
+  with_config_option(:preview_paths, new_value, &block)
 end
 
 def with_preview_route(new_value)
@@ -55,6 +60,7 @@ def with_preview_route(new_value)
   Rails.application.config.view_component.preview_route = new_value
   app.reloader.reload!
   yield
+ensure
   Rails.application.config.view_component.preview_route = old_value
   app.reloader.reload!
 end
@@ -64,24 +70,17 @@ def with_preview_controller(new_value)
   Rails.application.config.view_component.preview_controller = new_value
   app.reloader.reload!
   yield
+ensure
   Rails.application.config.view_component.preview_controller = old_value
   app.reloader.reload!
 end
 
-def with_custom_component_path(new_value)
-  old_value = ViewComponent::Base.view_component_path
-  ViewComponent::Base.view_component_path = new_value
-  yield
-ensure
-  ViewComponent::Base.view_component_path = old_value
+def with_custom_component_path(new_value, &block)
+  with_config_option(:view_component_path, new_value, &block)
 end
 
-def with_custom_component_parent_class(new_value)
-  old_value = ViewComponent::Base.component_parent_class
-  ViewComponent::Base.component_parent_class = new_value
-  yield
-ensure
-  ViewComponent::Base.component_parent_class = old_value
+def with_custom_component_parent_class(new_value, &block)
+  with_config_option(:component_parent_class, new_value, &block)
 end
 
 def with_application_component_class
@@ -92,11 +91,11 @@ ensure
 end
 
 def with_generate_option(config_option, value)
-  old_value = ViewComponent::Base.generate[config_option]
-  ViewComponent::Base.generate[config_option] = value
+  old_value = Rails.application.config.view_component.generate[config_option]
+  Rails.application.config.view_component.generate[config_option] = value
   yield
 ensure
-  ViewComponent::Base.generate[config_option] = old_value
+  Rails.application.config.view_component.generate[config_option] = old_value
 end
 
 def with_generate_sidecar(enabled, &block)
@@ -115,15 +114,13 @@ ensure
   ViewComponent::CompileCache.cache = old_cache
 end
 
-def without_template_annotations
+def without_template_annotations(&block)
   if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
     old_value = ActionView::Base.annotate_rendered_view_with_filenames
     ActionView::Base.annotate_rendered_view_with_filenames = false
     app.reloader.reload! if defined?(app)
 
-    with_new_cache do
-      yield
-    end
+    with_new_cache(&block)
 
     ActionView::Base.annotate_rendered_view_with_filenames = old_value
     app.reloader.reload! if defined?(app)
@@ -143,19 +140,12 @@ def modify_file(file, content)
   end
 end
 
-def with_default_preview_layout(layout)
-  old_value = ViewComponent::Base.default_preview_layout
-  ViewComponent::Base.default_preview_layout = layout
-  yield
-  ViewComponent::Base.default_preview_layout = old_value
+def with_default_preview_layout(layout, &block)
+  with_config_option(:default_preview_layout, layout, &block)
 end
 
-def with_render_monkey_patch_config(enabled)
-  old_default = ViewComponent::Base.render_monkey_patch_enabled
-  ViewComponent::Base.render_monkey_patch_enabled = enabled
-  yield
-ensure
-  ViewComponent::Base.render_monkey_patch_enabled = old_default
+def with_render_monkey_patch_config(enabled, &block)
+  with_config_option(:render_monkey_patch_enabled, enabled, &block)
 end
 
 def with_compiler_mode(mode)
