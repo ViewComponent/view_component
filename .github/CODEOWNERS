@@ -26,7 +26,6 @@
 /app/**/* @juanmanuelramallo
 /docs/guide/previews.md @juanmanuelramallo
 /lib/view_component/preview.rb @juanmanuelramallo
-/lib/view_component/previewable.rb @juanmanuelramallo
 /lib/view_component/preview_template_error.rb @juanmanuelramallo
 /test/sandbox/test/components/previews/preview_source_from_layout_component_preview.rb @juanmanuelramallo
 /test/view_component/default_preview_layout_integration_test.rb @juanmanuelramallo
