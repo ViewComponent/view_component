@@ -21,7 +21,6 @@ module ViewComponent
           view_component_path: "app/components",
           component_parent_class: nil,
           show_previews: Rails.env.development? || Rails.env.test?,
-          use_global_output_buffer: false,
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
           default_preview_layout: nil
@@ -110,13 +109,6 @@ module ViewComponent
       # @return [Boolean]
       # Whether component previews are enabled.
       # Defaults to `true` in development and test environments.
-
-      # @!attribute use_global_output_buffer
-      # @return [Boolean]
-      # Whether to use the experimental global output buffer for all components.
-      # It can be used on a per-component basis with `prepend
-      # ViewComponent::GlobalOutputBuffer.`
-      # Defaults to `false`.
 
       # @!attribute preview_paths
       # @return [Array<String>]
