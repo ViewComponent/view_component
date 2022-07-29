@@ -98,11 +98,11 @@ module ViewComponent
       #
       # = Example
       #
-      #   render_many :items, -> (name:) { ItemComponent.new(name: name }
+      #   renders_many :items, -> (name:) { ItemComponent.new(name: name }
       #
       #   # OR
       #
-      #   render_many :items, ItemComponent
+      #   renders_many :items, ItemComponent
       #
       # = Rendering sub-components
       #
