@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Fixed typo in `renders_many` documentation.
+
+    *Graham Rogers*
+
 * Add documentation about working with `turbo-rails`.
 
     *Matheus Poli Camilo*
