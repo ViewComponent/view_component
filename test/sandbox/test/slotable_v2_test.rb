@@ -592,7 +592,7 @@ class SlotsV2sTest < ViewComponent::TestCase
   def test_composable_slots_with_consistent_render
     with_consistent_render do
       render_inline ComposableSlotsComponent.new do |c|
-        c.title(title: "The truth is out there")
+        c.title("The truth is out there")
       end
 
       assert_selector("div h1", text: "The truth is out there")
