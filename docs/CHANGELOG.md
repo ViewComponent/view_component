@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.63.0
+
 * Fixed typo in `renders_many` documentation.
 
     *Graham Rogers*
