@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add [`m`](https://rubygems.org/gems/m) to development environment.
+
+    *Joel Hawksley*
+
 * Fix potential deadlock scenario in the compiler's development mode.
 
     *Blake Williams*
