@@ -101,11 +101,7 @@ module ViewComponent
     end
 
     def with_read_lock(&block)
-      if development?
-        __vc_compiler_lock.with_read_lock(&block)
-      else
-        block.call
-      end
+      __vc_compiler_lock.with_read_lock(&block)
     end
 
     private
