@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'concurrent-ruby'
+require "concurrent-ruby"
 
 module ViewComponent
   class Compiler
