@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add [`m`](https://rubygems.org/gems/m) to development environment.
+
+    *Joel Hawksley*
+
 ## 2.63.0
 
 * Fixed typo in `renders_many` documentation.

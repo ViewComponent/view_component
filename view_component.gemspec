@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "erb_lint", "~> 0.0.37"
   spec.add_development_dependency "haml", "~> 5"
   spec.add_development_dependency "jbuilder", "~> 2"
+  spec.add_development_dependency "m", "~> 1"
   spec.add_development_dependency "minitest", "= 5.6.0"
   spec.add_development_dependency "pry", "~> 0.13"
   spec.add_development_dependency "rake", "~> 13.0"
