@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Fix potential deadlock scenario in the compiler's development mode.
+
+    *Blake Williams*
+
 ## 2.63.0
 
 * Fixed typo in `renders_many` documentation.
