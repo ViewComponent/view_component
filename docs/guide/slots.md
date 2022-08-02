@@ -291,3 +291,15 @@ To see whether a polymorphic slot has been passed to the component, use the `#{s
   <span class="visual-placeholder">N/A</span>
 <% end %>
 ```
+
+## Migrating from previous Slots implementations
+
+In [v2.54.0](https://viewcomponent.org/CHANGELOG.html#2540), the Slots API was updated to require the `with_*` prefix for setting Slots. The non-`with_*` setters will be deprecated in a coming version and removed in `v3.0`.
+
+To enable the coming deprecation warning, add `warn_on_deprecated_slot_setter`:
+
+```ruby
+class DeprecatedSlotsSetterComponent < ViewComponent::Base
+  warn_on_deprecated_slot_setter
+end
+```

@@ -1078,4 +1078,28 @@ class RenderingTest < ViewComponent::TestCase
       index += 1
     end
   end
+
+  def test_deprecated_slot_setter_warning_collection_singular
+    assert_deprecated(/with_item`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.item { "foo" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_collection_multiple
+    assert_deprecated(/with_items`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.items([{ foo: "bar" }])
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_singular
+    assert_deprecated(/with_header`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.header { "hi!" }
+      end
+    end
+  end
 end
