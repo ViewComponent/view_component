@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'concurrent-ruby'
+
 module ViewComponent
   class Compiler
     # Lock required to be obtained before compiling the component
@@ -16,7 +18,7 @@ module ViewComponent
 
     def initialize(component_class)
       @component_class = component_class
-      @__vc_compiler_lock = Monitor.new
+      @__vc_compiler_lock = Concurrent::ReadWriteLock.new
     end
 
     def compiled?
@@ -33,7 +35,7 @@ module ViewComponent
 
       component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
 
-      with_lock do
+      with_write_lock do
         CompileCache.invalidate_class!(component_class)
 
         subclass_instance_methods = component_class.instance_methods(false)
@@ -90,9 +92,17 @@ module ViewComponent
       end
     end
 
-    def with_lock(&block)
+    def with_write_lock(&block)
       if development?
-        __vc_compiler_lock.synchronize(&block)
+        __vc_compiler_lock.with_write_lock(&block)
+      else
+        block.call
+      end
+    end
+
+    def with_read_lock(&block)
+      if development?
+        __vc_compiler_lock.with_read_lock(&block)
       else
         block.call
       end
@@ -123,7 +133,7 @@ module ViewComponent
       if development?
         component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil)
-          self.class.compiler.with_lock do
+          self.class.compiler.with_read_lock do
             #{body}
           end
         end

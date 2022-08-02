@@ -1078,4 +1078,31 @@ class RenderingTest < ViewComponent::TestCase
       index += 1
     end
   end
+
+  def test_concurrency_deadlock
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
+        mutex1 = Mutex.new
+        mutex2 = Mutex.new
+
+        t1 = Thread.new do
+          mutex1.synchronize do
+            sleep 0.02
+            render_inline(ContentEvalComponent.new)
+          end
+        end
+
+        t = Thread.new do
+          render_inline(ContentEvalComponent.new) do
+            mutex1.synchronize do
+              sleep 0.01
+            end
+          end
+        end
+
+        t1.join
+        t.join
+      end
+    end
+  end
 end
