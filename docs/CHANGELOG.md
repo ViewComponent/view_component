@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.64.0
+
 * Add `warn_on_deprecated_slot_setter` flag to opt-in to deprecation warning.
 
     In [v2.54.0](https://viewcomponent.org/CHANGELOG.html#2540), the Slots API was updated to require the `with_*` prefix for setting Slots. The non-`with_*` setters will be deprecated in a coming version and removed in `v3.0`.
