@@ -1079,6 +1079,46 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_deprecated_slot_setter_warning_collection_singular
+    assert_deprecated(/with_item`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.item { "foo" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_collection
+    assert_deprecated(/with_items`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.items([{foo: "bar"}])
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_singular
+    assert_deprecated(/with_header`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.header { "hi!" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_polymorphic_singular
+    assert_deprecated(/with_header_standard`/, ViewComponent::Deprecation) do
+      render_inline(PolymorphicSlotComponent.new) do |c|
+        c.header_standard { "hi!" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_polymorphic_collection
+    assert_deprecated(/with_item_foo`/, ViewComponent::Deprecation) do
+      render_inline(PolymorphicSlotComponent.new) do |c|
+        c.item_foo { "hi!" }
+      end
+    end
+  end
+
   def test_concurrency_deadlock
     with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
       with_new_cache do
