@@ -1090,7 +1090,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_deprecated_slot_setter_warning_collection
     assert_deprecated(/with_items`/, ViewComponent::Deprecation) do
       render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.items([{ foo: "bar" }])
+        c.items([{foo: "bar"}])
       end
     end
   end

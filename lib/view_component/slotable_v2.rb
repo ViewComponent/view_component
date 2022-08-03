@@ -90,10 +90,12 @@ module ViewComponent
           if args.empty? && block.nil?
             get_slot(slot_name)
           else
-            ViewComponent::Deprecation.warn(
-              "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
-              "Use `#with_#{slot_name}` to set the slot instead."
-            ) if _warn_on_deprecated_slot_setter
+            if _warn_on_deprecated_slot_setter
+              ViewComponent::Deprecation.warn(
+                "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
+                "Use `#with_#{slot_name}` to set the slot instead."
+              )
+            end
 
             set_slot(slot_name, nil, *args, &block)
           end
@@ -154,10 +156,12 @@ module ViewComponent
         # `component.tabs` and setting a tab with `component.tab`
 
         define_method singular_name do |*args, &block|
-          ViewComponent::Deprecation.warn(
-            "Setting a slot with `##{singular_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
-            "Use `#with_#{singular_name}` to set the slot instead."
-          ) if _warn_on_deprecated_slot_setter
+          if _warn_on_deprecated_slot_setter
+            ViewComponent::Deprecation.warn(
+              "Setting a slot with `##{singular_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
+              "Use `#with_#{singular_name}` to set the slot instead."
+            )
+          end
 
           set_slot(slot_name, nil, *args, &block)
         end
@@ -180,10 +184,12 @@ module ViewComponent
           if collection_args.nil? && block.nil?
             get_slot(slot_name)
           else
-            ViewComponent::Deprecation.warn(
-              "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
-              "Use `#with_#{slot_name}` to set the slot instead."
-            ) if _warn_on_deprecated_slot_setter
+            if _warn_on_deprecated_slot_setter
+              ViewComponent::Deprecation.warn(
+                "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
+                "Use `#with_#{slot_name}` to set the slot instead."
+              )
+            end
 
             collection_args.map do |args|
               set_slot(slot_name, nil, **args, &block)
