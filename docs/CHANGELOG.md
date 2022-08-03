@@ -13,7 +13,7 @@ title: Changelog
 
     *Josh Clayton*
 
-* Use ActiveSupport::Rescuable to handle exceptions while rendering.
+* Use `ActiveSupport::Rescuable` to handle exceptions while rendering.
 
     *Francesco Boffa*
 
