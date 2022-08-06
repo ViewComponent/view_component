@@ -3,7 +3,7 @@
 require "view_component/deprecation"
 
 module ViewComponent
-  class Config < ActiveSupport::InheritableOptions
+  class Config
     class << self
       # `new` without any arguments initializes the default configuration, but
       # it's important to differentiate in case that's no longer the case in
@@ -11,7 +11,7 @@ module ViewComponent
       alias_method :default, :new
 
       def defaults
-        {
+        ActiveSupport::OrderedOptions.new.merge!({
           generate: ActiveSupport::OrderedOptions.new(false),
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
@@ -24,7 +24,7 @@ module ViewComponent
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
           default_preview_layout: nil
-        }
+        })
       end
 
       # @!attribute generate
@@ -137,8 +137,8 @@ module ViewComponent
       end
     end
 
-    def initialize(parent = nil)
-      super.merge!(self.class.defaults)
+    def initialize
+      @config = self.class.defaults
     end
 
     def preview_path
@@ -149,5 +149,11 @@ module ViewComponent
       ViewComponent::Deprecation.warn("`preview_path` will be removed in v3.0.0. Use `preview_paths` instead.")
       self.preview_paths = Array.wrap(new_value)
     end
+
+    delegate_missing_to :config
+
+    private
+
+    attr_reader :config
   end
 end

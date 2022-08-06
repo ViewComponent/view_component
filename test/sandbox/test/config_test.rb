@@ -38,12 +38,14 @@ module ViewComponent
       Rake::Task["yard"].execute
       configuration_methods_to_document = YARD::RegistryStore.new.tap do |store|
         store.load!(".yardoc")
-      end.get("ViewComponent::Config").meths.select(&:reader?)
+      end.get("ViewComponent::Config").meths.select(&:reader?).reject { |meth| meth.name == :config }
       default_options = ViewComponent::Config.defaults.keys
-      accessors = ViewComponent::Config.instance_methods(false).reject { |method_name| method_name.to_s.end_with?("=") }
+      accessors = ViewComponent::Config.instance_methods(false).reject do |method_name|
+        method_name.to_s.end_with?("=") || method_name == :method_missing
+      end
       options_defined_on_instance = Set[*default_options, *accessors]
       assert options_defined_on_instance.subset?(Set[*configuration_methods_to_document.map(&:name)]),
-        "Not all configuration options are documented."
+        "Not all configuration options are documented: #{configuration_methods_to_document.map(&:name) - options_defined_on_instance.to_a}"
       assert configuration_methods_to_document.map(&:docstring).all?(&:present?),
         "Configuration options are missing docstrings."
     end

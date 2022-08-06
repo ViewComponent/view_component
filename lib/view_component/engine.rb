@@ -5,7 +5,7 @@ require "view_component/base"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ViewComponent::Config.new
+    config.view_component = ViewComponent::Config.default
 
     rake_tasks do
       load "view_component/rails/tasks/view_component.rake"
