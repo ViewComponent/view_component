@@ -52,10 +52,10 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 
 ### Running a subset of tests
 
-Supply a file glob to the test command:
+Use [`m`](https://rubygems.org/gems/m):
 
 ```command
-TEST="test/view_component/YOUR_COMPONENT_test.rb" bundle exec appraisal rake
+m test/view_component/YOUR_COMPONENT_test.rb:line_number
 ```
 
 ### Running tests for a specific version of Rails

@@ -588,4 +588,26 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_selector("h1.some-class", text: "This is a header!")
   end
+
+  def test_raises_error_on_conflicting_slot_names
+    error = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_one :conflicting_item
+        renders_many :conflicting_items
+      end
+    end
+
+    assert_includes error.message, "conflicting_item slot multiple times"
+  end
+
+  def test_raises_error_on_conflicting_slot_names_in_reverse_order
+    error = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_many :conflicting_items
+        renders_one :conflicting_item
+      end
+    end
+
+    assert_includes error.message, "conflicting_items slot multiple times"
+  end
 end
