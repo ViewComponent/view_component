@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add link to [View Component Attributes](https://github.com/amba-Health/view_component_attributes) in Resources section of docs.
+
+    *Romaric Pascal*
+
 ## 2.66.0
 
 * Add missing `generate.sidecar`, `generate.stimulus_controller`, `generate.locale`, `generate.distinct_locale_files`, `generate.preview` config options to `config.view_component`.
