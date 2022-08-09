@@ -38,8 +38,6 @@ Use `render_preview(name)` to render previews in ViewComponent unit tests:
 
 ```ruby
 class ExampleComponentTest < ViewComponent::TestCase
-  include ViewComponent::RenderPreviewHelper
-
   def test_render_preview
     render_preview(:with_default_title)
 
