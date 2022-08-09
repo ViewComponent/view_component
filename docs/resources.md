@@ -24,6 +24,7 @@ _Is this page missing a link? Open a PR!_
 - [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)
 - [ViewComponent Contrib](https://github.com/palkan/view_component-contrib)
 - [Lookbook](https://github.com/allmarkedup/lookbook)
+- [ViewComponentAttributes](https://github.com/Amba-Health/view_component_attributes)
 
 ## Podcasts
 
