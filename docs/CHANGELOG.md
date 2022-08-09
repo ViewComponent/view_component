@@ -9,6 +9,27 @@ title: Changelog
 
 ## main
 
+## 2.66.0
+
+* Add missing `generate.sidecar`, `generate.stimulus_controller`, `generate.locale`, `generate.distinct_locale_files`, `generate.preview` config options to `config.view_component`.
+
+    *Simon Fish*
+
+## 2.65.0
+
+* Raise `ArgumentError` when conflicting Slots are defined.
+
+    Before this change it was possible to define Slots with conflicting names, for example:
+
+    ```ruby
+    class MyComponent < ViewComponent::Base
+      renders_one :item
+      renders_many :items
+    end
+    ```
+
+    *Joel Hawksley*
+
 ## 2.64.0
 
 * Add `warn_on_deprecated_slot_setter` flag to opt-in to deprecation warning.

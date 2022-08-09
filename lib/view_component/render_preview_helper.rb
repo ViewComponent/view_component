@@ -22,9 +22,7 @@ module ViewComponent
     def render_preview(name)
       begin
         preview_klass = if respond_to?(:described_class)
-          if described_class.nil?
-            raise "`render_preview` expected a described_class, but it is nil."
-          end
+          raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
 
           "#{described_class}Preview"
         else
@@ -32,12 +30,10 @@ module ViewComponent
         end
         preview_klass = preview_klass.constantize
       rescue NameError
-        raise NameError.new(
-          "`render_preview` expected to find #{preview_klass}, but it does not exist."
-        )
+        raise NameError, "`render_preview` expected to find #{preview_klass}, but it does not exist."
       end
 
-      previews_controller = build_controller(ViewComponent::Base.preview_controller.constantize)
+      previews_controller = build_controller(Rails.application.config.view_component.preview_controller.constantize)
       previews_controller.request.params[:path] = "#{preview_klass.preview_name}/#{name}"
       previews_controller.response = ActionDispatch::Response.new
       result = previews_controller.previews

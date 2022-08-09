@@ -80,6 +80,7 @@ module ViewComponent
       #   <% end %>
       def renders_one(slot_name, callable = nil)
         validate_singular_slot_name(slot_name)
+        validate_plural_slot_name(ActiveSupport::Inflector.pluralize(slot_name).to_sym)
 
         define_method :"with_#{slot_name}" do |*args, &block|
           set_slot(slot_name, nil, *args, &block)
@@ -147,9 +148,9 @@ module ViewComponent
       #     <% end %>
       #   <% end %>
       def renders_many(slot_name, callable = nil)
-        validate_plural_slot_name(slot_name)
-
         singular_name = ActiveSupport::Inflector.singularize(slot_name)
+        validate_plural_slot_name(slot_name)
+        validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
 
         # Define setter for singular names
         # for example `renders_many :items` allows fetching all tabs with
