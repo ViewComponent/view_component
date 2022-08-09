@@ -598,7 +598,7 @@ class SlotsV2sTest < ViewComponent::TestCase
       assert_selector("div h1", text: "The truth is out there")
     end
   end
-  
+
   def test_raises_error_on_conflicting_slot_names
     error = assert_raises ArgumentError do
       Class.new(ViewComponent::Base) do
