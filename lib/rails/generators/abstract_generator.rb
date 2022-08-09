@@ -3,9 +3,7 @@
 module ViewComponent
   module AbstractGenerator
     def copy_view_file
-      unless options["inline"]
-        template "component.html.#{engine_name}", destination
-      end
+      template "component.html.#{engine_name}", destination unless options["inline"]
     end
 
     private
@@ -31,7 +29,7 @@ module ViewComponent
     end
 
     def component_path
-      ViewComponent::Base.view_component_path
+      Rails.application.config.view_component.view_component_path
     end
 
     def stimulus_controller
@@ -44,7 +42,7 @@ module ViewComponent
     end
 
     def sidecar?
-      options["sidecar"] || ViewComponent::Base.generate.sidecar
+      options["sidecar"] || Rails.application.config.view_component.generate.sidecar
     end
   end
 end

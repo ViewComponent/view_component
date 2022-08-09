@@ -10,9 +10,7 @@ module ViewComponent
       around_action :set_locale, only: :previews
       before_action :require_local!, unless: :show_previews?
 
-      if respond_to?(:content_security_policy)
-        content_security_policy(false)
-      end
+      content_security_policy(false) if respond_to?(:content_security_policy)
     end
 
     def index
@@ -45,18 +43,18 @@ module ViewComponent
 
     # :doc:
     def default_preview_layout
-      ViewComponent::Base.default_preview_layout
+      Rails.application.config.view_component.default_preview_layout
     end
 
     # :doc:
     def show_previews?
-      ViewComponent::Base.show_previews
+      Rails.application.config.view_component.show_previews
     end
 
     # :doc:
     def find_preview
       candidates = []
-      params[:path].to_s.scan(%r{/|$}) { candidates << $` }
+      params[:path].to_s.scan(%r{/|$}) { candidates << Regexp.last_match.pre_match }
       preview = candidates.detect { |candidate| ViewComponent::Preview.exists?(candidate) }
 
       if preview
@@ -66,10 +64,8 @@ module ViewComponent
       end
     end
 
-    def set_locale
-      I18n.with_locale(params[:locale] || I18n.default_locale) do
-        yield
-      end
+    def set_locale(&block)
+      I18n.with_locale(params[:locale] || I18n.default_locale, &block)
     end
 
     # Returns either {} or {layout: value} depending on configuration

@@ -10,6 +10,7 @@ module ViewComponent
   autoload :Compiler
   autoload :CompileCache
   autoload :ComponentError
+  autoload :Config
   autoload :Deprecation
   autoload :Instrumentation
   autoload :Preview

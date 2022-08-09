@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add missing `generate.sidecar`, `generate.stimulus_controller`, `generate.locale`, `generate.distinct_locale_files`, `generate.preview` config options to `config.view_component`.
+
+    *Simon Fish*
+
 ## 2.65.0
 
 * Raise `ArgumentError` when conflicting Slots are defined.

@@ -94,7 +94,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
 
         mock = Minitest::Mock.new
         mock.expect :map, [expected_template_path]
-        ViewComponent::Base.stub(:preview_paths, mock) do
+        Rails.application.config.view_component.stub(:preview_paths, mock) do
           File.stub(:read, expected_source, [expected_template_path]) do
             template_data = PreviewHelper.find_template_data(
               lookup_context: lookup_context,
@@ -120,7 +120,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
 
       mock = Minitest::Mock.new
       mock.expect :map, []
-      ViewComponent::Base.stub :preview_paths, mock do
+      Rails.application.config.view_component.stub :preview_paths, mock do
         exception = assert_raises RuntimeError do
           PreviewHelper.find_template_data(
             lookup_context: lookup_context,
@@ -144,7 +144,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
 
       mock = Minitest::Mock.new
       mock.expect :map, [template_identifier + ".html.haml", template_identifier + ".html.erb"]
-      ViewComponent::Base.stub :preview_paths, mock do
+      Rails.application.config.view_component.stub :preview_paths, mock do
         exception = assert_raises RuntimeError do
           PreviewHelper.find_template_data(
             lookup_context: lookup_context,
