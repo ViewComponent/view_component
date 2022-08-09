@@ -3,8 +3,6 @@
 require "test_helper"
 
 class WithoutPreviewComponentTest < ViewComponent::TestCase
-  include ViewComponent::RenderPreviewHelper
-
   def test_render_preview
     error = assert_raises NameError do
       render_preview(:default)

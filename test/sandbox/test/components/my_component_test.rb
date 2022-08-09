@@ -3,8 +3,6 @@
 require "test_helper"
 
 class MyComponentTest < ViewComponent::TestCase
-  include ViewComponent::RenderPreviewHelper
-
   def setup
     ViewComponent::Preview.load_previews
   end
