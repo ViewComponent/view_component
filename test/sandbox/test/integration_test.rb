@@ -666,4 +666,19 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     ActionController::Base.perform_caching = false
     Rails.cache.clear
   end
+
+  def test_config_options_shared_between_base_and_engine
+    Rails.application.config.view_component.yield_self do |config|
+      {
+        generate: config.generate.dup.tap { |c| c.sidecar = true },
+        preview_controller: "SomeOtherController",
+        preview_route: "/some/other/route",
+        show_previews_source: true
+      }.each do |option, value|
+        with_config_option(option, value) do
+          assert_equal(config.public_send(option), ViewComponent::Base.public_send(option))
+        end
+      end
+    end
+  end
 end

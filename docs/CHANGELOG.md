@@ -13,6 +13,57 @@ title: Changelog
 
 ## main
 
+## 2.66.0
+
+* Add missing `generate.sidecar`, `generate.stimulus_controller`, `generate.locale`, `generate.distinct_locale_files`, `generate.preview` config options to `config.view_component`.
+
+    *Simon Fish*
+
+## 2.65.0
+
+* Raise `ArgumentError` when conflicting Slots are defined.
+
+    Before this change it was possible to define Slots with conflicting names, for example:
+
+    ```ruby
+    class MyComponent < ViewComponent::Base
+      renders_one :item
+      renders_many :items
+    end
+    ```
+
+    *Joel Hawksley*
+
+## 2.64.0
+
+* Add `warn_on_deprecated_slot_setter` flag to opt-in to deprecation warning.
+
+    In [v2.54.0](https://viewcomponent.org/CHANGELOG.html#2540), the Slots API was updated to require the `with_*` prefix for setting Slots. The non-`with_*` setters will be deprecated in a coming version and removed in `v3.0`.
+
+    To enable the coming deprecation warning, add `warn_on_deprecated_slot_setter`:
+
+    ```ruby
+    class DeprecatedSlotsSetterComponent < ViewComponent::Base
+      warn_on_deprecated_slot_setter
+    end
+    ```
+
+    *Joel Hawksley*
+
+* Add [`m`](https://rubygems.org/gems/m) to development environment.
+
+    *Joel Hawksley*
+
+* Fix potential deadlock scenario in the compiler's development mode.
+
+    *Blake Williams*
+
+## 2.63.0
+
+* Fixed typo in `renders_many` documentation.
+
+    *Graham Rogers*
+
 * Add documentation about working with `turbo-rails`.
 
     *Matheus Poli Camilo*
