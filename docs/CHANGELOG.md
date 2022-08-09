@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Add link to [View Component Attributes](https://github.com/amba-Health/view_component_attributes) in Resources section of docs.
+* Add link to [ViewComponentAttributes](https://github.com/amba-Health/view_component_attributes) in Resources section of docs.
 
     *Romaric Pascal*
     
