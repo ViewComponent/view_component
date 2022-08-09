@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.65.0
+
 * Raise `ArgumentError` when conflicting Slots are defined.
 
     Before this change it was possible to define Slots with conflicting names, for example:
