@@ -190,10 +190,11 @@ module ViewComponent
       old_request_query_string = request.query_string
       old_controller = defined?(@controller) && @controller
 
+      path, query = path.split("?", 2)
       request.path_info = path
       request.path_parameters = Rails.application.routes.recognize_path(path)
-      request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(path.split("?")[1]))
-      request.set_header(Rack::QUERY_STRING, path.split("?")[1])
+      request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
+      request.set_header(Rack::QUERY_STRING, query)
       yield
     ensure
       request.path_info = old_request_path_info
