@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Fix `#with_request_url` (when used with query string) resulting in incorrect `request.path` and `request.fullpath`.
+* Fix bug where `#with_request_url`, when used with query string, set the incorrect `request.path` and `request.fullpath`.
 
     *Franz Liedke*
 

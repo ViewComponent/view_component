@@ -190,9 +190,6 @@ module ViewComponent
       old_request_query_string = request.query_string
       old_controller = defined?(@controller) && @controller
 
-      # Started in https://github.com/github/view_component/pull/1058
-      # Broken in https://github.com/github/view_component/pull/1221
-
       path, query = path.split("?", 2)
       request.path_info = path
       request.path_parameters = Rails.application.routes.recognize_path(path)
