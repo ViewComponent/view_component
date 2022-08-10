@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Fix `#with_request_url` (when used with query string) resulting in incorrect `request.path` and `request.fullpath`.
+
+    *Franz Liedke*
+
 * Add link to [ViewComponentAttributes](https://github.com/amba-Health/view_component_attributes) in Resources section of docs.
 
     *Romaric Pascal*

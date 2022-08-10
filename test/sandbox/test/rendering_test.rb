@@ -935,7 +935,9 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
+      assert_equal "/products", request.path
       assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
+      assert_equal "/products?mykey=myvalue&otherkey=othervalue", request.fullpath
     end
 
     with_request_url "/products?mykey[mynestedkey]=myvalue" do
