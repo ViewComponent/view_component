@@ -5,6 +5,14 @@ class PreviewComponentPreview < ViewComponent::Preview
     render(PreviewComponent.new(cta: "Click me!", title: "Lorem Ipsum"))
   end
 
+  def multiple
+    components = [
+      PreviewComponent.new(cta: "Click me!", title: "Lorem Ipsum"),
+      PreviewComponent.new(cta: "Find me!", title: "Super search")
+    ]
+    render components
+  end
+
   def without_cta
     render(PreviewComponent.new(title: "More lorem..."))
   end

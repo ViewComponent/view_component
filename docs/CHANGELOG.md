@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Added support for multiple component rendering options in a single preview.
+
+  *Ermolaev Andrey*
+
 * Fix bug where `#with_request_url`, when used with query string, set the incorrect `request.path` and `request.fullpath`.
 
     *Franz Liedke*

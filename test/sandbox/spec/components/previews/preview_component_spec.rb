@@ -8,6 +8,14 @@ describe PreviewComponent do
 
     expect(page).to have_css "h1", text: "Lorem Ipsum"
   end
+
+  it "multiple renders the preview" do
+    render_preview(:multiple)
+
+    expect(page).to have_css ".preview-component", count: 2
+    expect(page).to have_css "h1", text: "Lorem Ipsum"
+    expect(page).to have_css "h1", text: "Super search"
+  end
 end
 
 describe "PreviewComponent" do
