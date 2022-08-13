@@ -677,7 +677,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
           preview_route: '/some/other/route',
           show_previews_source: true
         }.each do |option, value|
-          with_config_option(option, value) do
+          with_config_option(option, value, config_entrypoint: config) do
             assert_equal(config.public_send(option), config_entrypoints.second.public_send(option))
           end
         end

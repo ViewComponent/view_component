@@ -38,12 +38,12 @@ ViewComponent::Deprecation.behavior = :silence
 require File.expand_path("sandbox/config/environment.rb", __dir__)
 require "rails/test_help"
 
-def with_config_option(option_name, new_value)
-  old_value = Rails.application.config.view_component.public_send(option_name)
-  Rails.application.config.view_component.public_send("#{option_name}=", new_value)
+def with_config_option(option_name, new_value, config_entrypoint: Rails.application.config.view_component)
+  old_value = config_entrypoint.public_send(option_name)
+  config_entrypoint.public_send("#{option_name}=", new_value)
   yield
 ensure
-  Rails.application.config.view_component.public_send("#{option_name}=", old_value)
+  config_entrypoint.public_send("#{option_name}=", old_value)
 end
 
 # Sets custom preview paths in tests.
