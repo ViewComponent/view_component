@@ -673,8 +673,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       config_entrypoints.first.yield_self do |config|
         {
           generate: config.generate.dup.tap { |c| c.sidecar = true },
-          preview_controller: 'SomeOtherController',
-          preview_route: '/some/other/route',
+          preview_controller: "SomeOtherController",
+          preview_route: "/some/other/route",
           show_previews_source: true
         }.each do |option, value|
           with_config_option(option, value, config_entrypoint: config) do
