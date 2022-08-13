@@ -18,7 +18,7 @@ module ViewComponent
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
       def config
-        Rails.application.config.view_component
+        @config ||= ViewComponent::Config.defaults
       end
     end
 
@@ -496,7 +496,7 @@ module ViewComponent
 
         # Removes the first part of the path and the extension.
         child.virtual_path = child.source_location.gsub(
-          /(.*#{Regexp.quote(Rails.application.config.view_component.view_component_path)})|(\.rb)/, ""
+          /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
         )
 
         # Set collection parameter to the extended component
