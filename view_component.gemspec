@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.version = ViewComponent::VERSION::STRING
   spec.author = "ViewComponent Team"
 
-  spec.summary = "View components for Rails"
+  spec.summary = "A framework for building reusable, testable & encapsulated view components in Ruby on Rails."
   spec.homepage = "https://viewcomponent.org"
   spec.license = "MIT"
 
