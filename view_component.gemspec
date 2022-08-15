@@ -7,11 +7,10 @@ require "view_component/version"
 Gem::Specification.new do |spec|
   spec.name = "view_component"
   spec.version = ViewComponent::VERSION::STRING
-  spec.authors = ["GitHub Open Source"]
-  spec.email = ["opensource+view_component@github.com"]
+  spec.author = "ViewComponent Team"
 
   spec.summary = "View components for Rails"
-  spec.homepage = "https://github.com/github/view_component"
+  spec.homepage = "https://viewcomponent.org"
   spec.license = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
