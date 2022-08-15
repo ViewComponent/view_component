@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Update `gemspec` author to be ViewComponent team.
+
+    *Joel Hawksley*
+
 ## 2.67.0
 
 * Use ViewComponent::Base.config as the internal endpoint for config.
