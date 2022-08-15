@@ -29,7 +29,7 @@ module ViewComponent
     end
 
     def component_path
-      Rails.application.config.view_component.view_component_path
+      ViewComponent::Base.config.view_component_path
     end
 
     def stimulus_controller
@@ -42,7 +42,7 @@ module ViewComponent
     end
 
     def sidecar?
-      options["sidecar"] || Rails.application.config.view_component.generate.sidecar
+      options["sidecar"] || ViewComponent::Base.config.generate.sidecar
     end
   end
 end

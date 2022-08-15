@@ -9,7 +9,7 @@ module Preview
       check_class_collision suffix: "ComponentPreview"
 
       def create_preview_file
-        preview_paths = Rails.application.config.view_component.preview_paths
+        preview_paths = ViewComponent::Base.config.preview_paths
         return if preview_paths.count > 1
 
         path_prefix = preview_paths.one? ? preview_paths.first : "test/components/previews"

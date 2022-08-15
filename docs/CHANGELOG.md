@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Use ViewComponent::Base.config as the internal endpoint for config.
+
+    *Simon Fish*
+
 * Fix bug where `#with_request_url`, when used with query string, set the incorrect `request.path` and `request.fullpath`.
 
     *Franz Liedke*
