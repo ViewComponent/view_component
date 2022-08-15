@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.67.0
+
 * Use ViewComponent::Base.config as the internal endpoint for config.
 
     *Simon Fish*
