@@ -60,7 +60,7 @@ jobs:
       - name: echo changed files
         run: |
           if [[ ! "${{needs.changedfiles.outputs.markdown}}" == *"CHANGELOG.md"* ]]; then
-            echo "::error file=CHANGELOG.md,line=1,col=1::Please make sure that you add a docs/CHANGELOG.md entry to describe the changes in this pull request."
+            echo "::error file=CHANGELOG.md,line=1,col=1::Please make sure that you add a docs/about/CHANGELOG.md entry to describe the changes in this pull request."
             exit 1
           fi
   lint:

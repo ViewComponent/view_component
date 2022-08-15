@@ -36,7 +36,7 @@ update_readme() {
   \\
 \\
 ## $1.$2.$3
-  }" docs/CHANGELOG.md
+  }" docs/about/CHANGELOG.md
 }
 
 update_ruby_version() {
@@ -66,7 +66,7 @@ build_docs() {
 add_changed_files() {
   git add \
     docs/api.md \
-    docs/CHANGELOG.md \
+    docs/about/CHANGELOG.md \
     docs/_data/library.yml \
     Gemfile.lock \
     lib/view_component/version.rb
@@ -82,7 +82,7 @@ push() {
   echo "####################################################"
   echo "Now, open a PR with this branch and merge it to main"
   echo "Then, run script/publish on main to release the gem"
-  echo "Finally, create a GitHub release https://github.com/github/view_component/releases/new with the changes from docs/CHANGELOG"
+  echo "Finally, create a GitHub release https://github.com/github/view_component/releases/new with the changes from docs/about/CHANGELOG"
   echo "####################################################"
 }
 

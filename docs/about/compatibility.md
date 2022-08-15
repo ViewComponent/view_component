@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Compatibility
+parent: About the project
 ---
 
 # Compatibility

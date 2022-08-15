@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Code of conduct
+parent: About the project
 ---
 
 # Contributor Covenant Code of Conduct

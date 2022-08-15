@@ -1,12 +1,12 @@
 ---
 layout: default
-title: ViewComponents in practice
-nav_order: 4
+title: ViewComponents at GitHub
+nav_order: 6
 ---
 
-# ViewComponents in practice
+# ViewComponents at GitHub
 
-_GitHub's internal guide to building component-driven UI in Rails. Consider it to be more opinion than fact._
+_GitHub's internal guide to building component-driven UI in Rails. More opinion than fact._
 
 ## Why we use ViewComponents
 

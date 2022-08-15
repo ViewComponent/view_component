@@ -1,6 +1,12 @@
-# 2. Naming conventions for ViewComponents
+---
+layout: default
+title: 2. Naming conventions for ViewComponents
+parent: Architectural decisions
+---
 
-Date: 2021/07/13
+## Date
+
+2021/07/13
 
 ## Status
 

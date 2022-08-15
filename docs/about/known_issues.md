@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Known issues
+parent: About the project
 ---
 
 # Known issues

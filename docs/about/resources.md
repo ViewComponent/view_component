@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Resources
+parent: About the project
 ---
 
 # Resources

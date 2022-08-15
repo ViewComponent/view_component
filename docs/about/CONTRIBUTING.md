@@ -1,11 +1,12 @@
 ---
 layout: default
 title: Contributing
+parent: About the project
 ---
 
 # Contributing
 
-_ViewComponent is intended to be a safe, welcoming space for collaboration. By participating you agree to abide by the [Contributor Code of Conduct](CODE_OF_CONDUCT.md)._
+_ViewComponent is intended to be a safe, welcoming space for collaboration. By participating you agree to abide by the [Contributor Code of Conduct](about/CODE_OF_CONDUCT.md)._
 
 Hi there! We're thrilled that you'd like to contribute to ViewComponent. Your help is essential for keeping it great.
 
@@ -45,7 +46,7 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 2. Make sure the tests pass: `bundle exec appraisal rake` (see below for specific cases).
 3. Create a new branch: `git checkout -b my-branch-name`.
 4. Add tests, make the change, and make sure the tests still pass.
-5. Add an entry to the top of `docs/CHANGELOG.md` for the changes, no matter how small.
+5. Add an entry to the top of `docs/about/CHANGELOG.md` for the changes, no matter how small.
 6. If it's your first time contributing, add yourself to `docs/index.md`.
 7. Push to the fork and [submit a pull request](https://github.com/github/view_component/compare).
 8. Wait for the pull request to be reviewed and merged.

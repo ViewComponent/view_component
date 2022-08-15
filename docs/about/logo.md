@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Logo
+parent: About the project
 ---
 
 # Logo
@@ -13,7 +14,7 @@ title: Logo
 
 Full logo for light backgrounds ([SVG](logo/viewcomponent-color-logo.svg) • [PNG](logo/viewcomponent-color-logo.png))
 
-<img src="/logo/viewcomponent-color-logo-inverse.svg" alt="Full ViewComponent logo in red and white" class="bg-grey-dk-200 p-1 mt-2 mbn-2" style="margin-bottom: -1rem">
+<img src="logo/viewcomponent-color-logo-inverse.svg" alt="Full ViewComponent logo in red and white" class="bg-grey-dk-200 p-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Full logo for dark backgrounds ([SVG](logo/viewcomponent-color-logo-inverse.svg) • [PNG](logo/viewcomponent-color-logo-inverse.png))
 
@@ -33,11 +34,11 @@ Logomark for light backgrounds ([SVG](logo/viewcomponent-black-logomark.svg) •
 
 ### White
 
-<img src="/logo/viewcomponent-white-logo.svg" alt="Full ViewComponent logo in white" class="bg-grey-dk-200 p-1 mt-2 mbn-2" style="margin-bottom: -1rem">
+<img src="logo/viewcomponent-white-logo.svg" alt="Full ViewComponent logo in white" class="bg-grey-dk-200 p-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Full logo for dark backgrounds ([SVG](logo/viewcomponent-white-logo.svg) • [PNG](logo/viewcomponent-white-logo.png))
 
-<img src="/logo/viewcomponent-white-logomark.svg" alt="ViewComponent logomark in white" class="bg-grey-dk-200 p-1 mt-2 mbn-2" style="margin-bottom: -1rem">
+<img src="logo/viewcomponent-white-logomark.svg" alt="ViewComponent logomark in white" class="bg-grey-dk-200 p-1 mt-2 mbn-2" style="margin-bottom: -1rem">
 
 Logomark for dark backgrounds ([SVG](logo/viewcomponent-white-logomark.svg) • [PNG](logo/viewcomponent-white-logomark.png))
 

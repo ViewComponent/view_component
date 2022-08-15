@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Translations
-parent: Guide
+parent: How-to guide
 ---
 
 # Translations

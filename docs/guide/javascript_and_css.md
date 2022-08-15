@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Javascript and CSS
-parent: Guide
+parent: How-to guide
 ---
 
 # Javascript and CSS

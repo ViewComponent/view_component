@@ -1,6 +1,12 @@
-# 1. Record architecture decisions
+---
+layout: default
+title: 1. Record architecture decisions
+parent: Architectural decisions
+---
 
-Date: 2021/02/19
+## Date
+
+2021/02/19
 
 ## Status
 

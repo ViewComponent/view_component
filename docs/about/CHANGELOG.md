@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Changelog
+parent: About the project
 ---
 
 <!-- Add unreleased changes under the "main" heading. -->
@@ -8,6 +9,10 @@ title: Changelog
 # Changelog
 
 ## main
+
+* Reorganize documentation site to include architectural decisions.
+
+    *Joel Hawksley*
 
 ## 2.67.0
 

@@ -1,6 +1,12 @@
-# 3. Polymorphic slots
+---
+layout: default
+title: 3. Polymorphic slots
+parent: Architectural decisions
+---
 
-Date: 2021/09/29
+## Date
+
+2021/09/29
 
 ## Author
 
