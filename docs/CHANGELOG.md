@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Fix bug where `ViewComponent::Compiler` wasn't required.
+
+    *Joel Hawksley*
+
 ## 2.67.0
 
 * Use ViewComponent::Base.config as the internal endpoint for config.
