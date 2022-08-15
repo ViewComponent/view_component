@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Update `gemspec` author to be ViewComponent team.
+
+    *Joel Hawksley*
+
 * Fix bug where `ViewComponent::Compiler` wasn't required.
 
     *Joel Hawksley*
