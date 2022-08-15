@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
-* Fix bug where `ViewComponent::Compiler` was not properly required.
+* Fix bug where `ViewComponent::Compiler` wasn't required.
 
     *Joel Hawksley*
 
