@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    view_component (2.67.0)
+    view_component (2.68.0)
       activesupport (>= 5.0.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
@@ -285,7 +285,7 @@ DEPENDENCIES
   appraisal (~> 2.4)
   benchmark-ips (~> 2.8.2)
   better_html (~> 1)
-  bundler (>= 1.15.0)
+  bundler (~> 2)
   capybara (~> 3)
   erb_lint (~> 0.0.37)
   haml (~> 5)
@@ -303,7 +303,7 @@ DEPENDENCIES
   standard (~> 1)
   view_component!
   yard (~> 0.9.25)
-  yard-activesupport-concern
+  yard-activesupport-concern (~> 0.0.1)
 
 BUNDLED WITH
    2.2.33

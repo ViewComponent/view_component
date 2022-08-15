@@ -9,6 +9,8 @@ title: Changelog
 
 ## main
 
+## 2.68.0
+
 * Update `gemspec` author to be ViewComponent team.
 
     *Joel Hawksley*
