@@ -21,6 +21,10 @@ title: Changelog
 
     *Thomas Hutterer*
 
+* Corrects the deprecation warning for named slots to show the file and line where the slot is called.
+
+    *River Bailey*
+
 ## 2.68.0
 
 * Update `gemspec` author to be ViewComponent team.
