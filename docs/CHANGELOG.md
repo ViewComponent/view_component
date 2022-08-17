@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Update Prism to version 1.28.0.
+
+    *Thomas Hutterer*
+
 ## 2.68.0
 
 * Update `gemspec` author to be ViewComponent team.
