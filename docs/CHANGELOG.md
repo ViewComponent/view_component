@@ -17,6 +17,8 @@ title: Changelog
 
 ## main
 
+## 2.69.0
+
 * Update Prism to version 1.28.0.
 
     *Thomas Hutterer*
