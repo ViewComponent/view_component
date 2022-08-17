@@ -1081,9 +1081,26 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
-  def test_deprecated_slot_setter_warning_collection_singular
+  def test_deprecated_slot_setter_warning_stack_trace_singular
     line_num = __LINE__ + 3 # offset because `c.item`, below, is the line that causes the deprecation warning
     assert_deprecated(/with_item`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.item { "foo" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_stack_trace_collection
+    line_num = __LINE__ + 3 # offset because `c.item`, below, is the line that causes the deprecation warning
+    assert_deprecated(/with_items`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.items([{foo: "bar"}])
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_collection_singular
+    assert_deprecated(/with_item`/, ViewComponent::Deprecation) do
       render_inline(DeprecatedSlotsSetterComponent.new) do |c|
         c.item { "foo" }
       end
