@@ -9,9 +9,23 @@ title: Changelog
 
 ## main
 
+## 2.69.0
+
+* Add missing `require` to fix `pvc` build.
+
+    *Joel Hawksley*
+
+* Add `config.view_component.use_consistent_rendering_lifecycle` to ensure side-effects in `content` are consistently evaluated before components are rendered. This change effectively means that `content` is evaluated for every component render where `render?` returns true. As a result, code that's passed to a component via a block/content will now always be evaluated, before `#call`, which can reveal bugs in existing components. This configuration option defaults to `false` but will be enabled in 3.0 and the old behavior will be removed.
+
+    *Blake Williams*
+
 * Update Prism to version 1.28.0.
 
     *Thomas Hutterer*
+
+* Corrects the deprecation warning for named slots to show the file and line where the slot is called.
+
+    *River Bailey*
 
 ## 2.68.0
 
