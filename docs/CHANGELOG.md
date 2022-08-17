@@ -13,8 +13,7 @@ title: Changelog
 
     *Thomas Hutterer*
 
-* Corrects the deprecation warning for named slots to show the file and line
-  where the slot is called
+* Corrects the deprecation warning for named slots to show the file and line where the slot is called.
 
     *River Bailey*
 
