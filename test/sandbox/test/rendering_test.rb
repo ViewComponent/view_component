@@ -1091,7 +1091,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_deprecated_slot_setter_warning_stack_trace_collection
-    line_num = __LINE__ + 3 # offset because `c.item`, below, is the line that causes the deprecation warning
+    line_num = __LINE__ + 3 # offset because `c.items`, below, is the line that causes the deprecation warning
     assert_deprecated(/with_items`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
       render_inline(DeprecatedSlotsSetterComponent.new) do |c|
         c.items([{foo: "bar"}])
