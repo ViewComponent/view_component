@@ -8,6 +8,7 @@ require "view_component/compiler"
 require "view_component/config"
 require "view_component/content_areas"
 require "view_component/polymorphic_slots"
+require "view_component/preview"
 require "view_component/slotable"
 require "view_component/slotable_v2"
 require "view_component/translatable"
@@ -131,6 +132,11 @@ module ViewComponent
       before_render
 
       if render?
+        # Ensure `content` is evaluated before rendering the template, this is
+        # needed so slots and other side-effects are performed before the
+        # component template is evaluated.
+        content if self.class.use_consistent_rendering_lifecycle
+
         render_template_for(@__vc_variant).to_s + _output_postamble
       else
         ""
@@ -335,6 +341,18 @@ module ViewComponent
     #
     # Defaults to `nil`. If this is falsy, `app/components` is used.
     #
+
+    # Evaluate `#content` before `#call` to ensure side-effects are present
+    # during component renders. This will be the default behavior in a future
+    # release.
+    #
+    # ```ruby
+    # config.view_component.use_consistent_rendering_lifecycle = true
+    # ```
+    #
+    # Defaults to `false`
+    #
+    mattr_accessor :use_consistent_rendering_lifecycle, instance_writer: false, default: false
 
     # Parent class for generated components
     #
