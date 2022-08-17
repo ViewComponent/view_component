@@ -92,10 +92,11 @@ module ViewComponent
             get_slot(slot_name)
           else
             if _warn_on_deprecated_slot_setter
-              ViewComponent::Deprecation.warn(
-                "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
+              stack = caller_locations(3)
+              msg = "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
                 "Use `#with_#{slot_name}` to set the slot instead."
-              )
+
+              ViewComponent::Deprecation.warn(msg, stack)
             end
 
             set_slot(slot_name, nil, *args, &block)
