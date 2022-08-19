@@ -9,7 +9,7 @@ title: Changelog
 
 ## main
 
- * Add WIP to list of companies using ViewComponent.
+* Add WIP to list of companies using ViewComponent.
 
      *Marc Köhlbrugge*
 
