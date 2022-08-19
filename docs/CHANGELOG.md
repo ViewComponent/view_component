@@ -13,7 +13,6 @@ title: Changelog
 
      *Matt Swanson*
 
-
 * Add WIP to list of companies using ViewComponent.
 
      *Marc Köhlbrugge*
