@@ -205,6 +205,7 @@ ViewComponent is built by over a hundred members of the community, including:
 
 ## Who uses ViewComponent?
 
+* [Arrows](https://arrows.to/)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [City of Paris](https://www.paris.fr/)

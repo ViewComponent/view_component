@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add Arrows to list of companies using ViewComponent.
+
+     *Matt Swanson*
+
 * Add WIP to list of companies using ViewComponent.
 
      *Marc Köhlbrugge*
