@@ -223,6 +223,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [QuickNode](https://www.quicknode.com/)
 * [Shogun](https://getshogun.com/)
 * [Wecasa](https://www.wecasa.fr/)
+* [WIP](https://wip.co/)
 * [Within3](https://www.within3.com/)
 * [Wrapbook](https://wrapbook.com/)
 
