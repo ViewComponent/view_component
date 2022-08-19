@@ -66,4 +66,4 @@ _Is this page missing a link? Open a PR!_
 
 ## Etcetera
 
-- [Demo repository, view-component-demo](https://github.com/joelhawksley/view-component-demo)
+- [Demo repository, view-component-demo](https://github.com/viewcomponent/demo)
