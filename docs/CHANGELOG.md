@@ -9,6 +9,10 @@ title: Changelog
 
 ## main
 
+* Add WIP to list of companies using ViewComponent.
+
+     *Marc Köhlbrugge*
+
 ## 2.69.0
 
 * Add missing `require` to fix `pvc` build.
