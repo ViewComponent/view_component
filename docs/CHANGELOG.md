@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Changelog
+nav_order: 5
 ---
 
 <!-- Add unreleased changes under the "main" heading. -->

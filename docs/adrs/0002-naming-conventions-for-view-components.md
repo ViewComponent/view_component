@@ -1,3 +1,10 @@
+---
+layout: default
+title: 2. Naming conventions for ViewComponents
+parent: Architectural decisions
+nav_order: 2
+---
+
 # 2. Naming conventions for ViewComponents
 
 Date: 2021/07/13

@@ -1,6 +1,7 @@
 ---
 layout: default
 title: History
+nav_order: 8
 ---
 
 # History
