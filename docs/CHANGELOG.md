@@ -9,13 +9,17 @@ title: Changelog
 
 ## main
 
+* Clarify documentation on testability of Rails views.
+
+    *Joel Hawksley
+
 * Add Arrows to list of companies using ViewComponent.
 
-     *Matt Swanson*
+    *Matt Swanson*
 
 * Add WIP to list of companies using ViewComponent.
 
-     *Marc Köhlbrugge*
+    *Marc Köhlbrugge*
 
 ## 2.69.0
 
