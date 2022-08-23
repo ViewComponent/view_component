@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Previews
-parent: Guide
+parent: How-to guide
 ---
 
 # Previews

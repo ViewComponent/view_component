@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Conditional rendering
-parent: Guide
+parent: How-to guide
 ---
 
 # Conditional rendering

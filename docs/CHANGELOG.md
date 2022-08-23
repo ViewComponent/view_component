@@ -10,9 +10,13 @@ nav_order: 5
 
 ## main
 
+* Add architectural decisions to documentation and rename sidebar sections.
+
+    *Joel Hawksley*
+
 * Clarify documentation on testability of Rails views.
 
-    *Joel Hawksley
+    *Joel Hawksley*
 
 * Add Arrows to list of companies using ViewComponent.
 

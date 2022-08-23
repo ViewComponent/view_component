@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Helpers
-parent: Guide
+parent: How-to guide
 ---
 
 # Helpers

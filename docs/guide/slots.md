@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Slots
-parent: Guide
+parent: How-to guide
 ---
 
 # Slots

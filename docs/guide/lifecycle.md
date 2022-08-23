@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Lifecycle
-parent: Guide
+parent: How-to guide
 ---
 
 # Lifecycle

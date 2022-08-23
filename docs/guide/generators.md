@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Generators
-parent: Guide
+parent: How-to guide
 ---
 
 # Generators

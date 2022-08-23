@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Instrumentation
-parent: Guide
+parent: How-to guide
 ---
 
 # Instrumentation
