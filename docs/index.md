@@ -53,7 +53,7 @@ ViewComponent methods are implemented within the scope of the template, encapsul
 
 ### Testing
 
-ViewComponents are meant to be unit tested. In the GitHub codebase, ViewComponent unit tests are over 100x faster than similar controller tests.
+ViewComponent was designed with the intention that all components should be unit tested. In the GitHub codebase, ViewComponent unit tests are over 100x faster than similar controller tests.
 
 With ViewComponent, integration tests can be reserved for end-to-end assertions, with permutations covered at the unit level.
 
