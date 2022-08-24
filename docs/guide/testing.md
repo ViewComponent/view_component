@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Testing
-parent: Guide
+parent: How-to guide
 ---
 
 # Testing

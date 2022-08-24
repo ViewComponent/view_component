@@ -1,3 +1,10 @@
+---
+layout: default
+title: 1. Record architecture decisions
+parent: Architectural decisions
+nav_order: 1
+---
+
 # 1. Record architecture decisions
 
 Date: 2021/02/19

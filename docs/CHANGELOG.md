@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Changelog
+nav_order: 5
 ---
 
 <!-- Add unreleased changes under the "main" heading. -->
@@ -9,9 +10,13 @@ title: Changelog
 
 ## main
 
+* Add architectural decisions to documentation and rename sidebar sections.
+
+    *Joel Hawksley*
+
 * Clarify documentation on testability of Rails views.
 
-    *Joel Hawksley
+    *Joel Hawksley*
 
 * Add Arrows to list of companies using ViewComponent.
 

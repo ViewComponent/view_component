@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Compatibility
+nav_order: 6
 ---
 
 # Compatibility
