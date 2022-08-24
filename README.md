@@ -1,5 +1,7 @@
-![ViewComponent logo](/docs/logo/readme-light.svg#gh-light-mode-only)
-![ViewComponent logo](/docs/logo/readme-dark.svg#gh-dark-mode-only)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="/docs/logo/readme-dark.svg">
+  <img alt="ViewComponent logo comprised of a red diamond to the left of rightward negative space and red arrows, together forming a hexagon" src="/docs/logo/readme-light.svg">
+</picture>
 
 A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
 
