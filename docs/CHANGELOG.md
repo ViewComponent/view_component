@@ -26,6 +26,10 @@ nav_order: 5
 
     *Marc Köhlbrugge*
 
+* Fix potential deadlock scenario in the compiler's development mode.
+
+  *Paul-Henri Leobon*
+
 ## 2.69.0
 
 * Add missing `require` to fix `pvc` build.

@@ -1166,20 +1166,26 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_cache_cannot_be_emptied_while_rendering
+    t1_ready = false
+    t2_ready = false
+    t3_ready = false
+    mutex = Mutex.new
+    start = ConditionVariable.new
+    start_rendering = ConditionVariable.new
+    stop_rendering = ConditionVariable.new
+
+    start_invalidate = ConditionVariable.new
+    invalidate_done = ConditionVariable.new
+
+    invalidated = false
+
+
     with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
       with_new_cache do
-        mutex = Mutex.new
-        start_rendering = ConditionVariable.new
-        stop_rendering = ConditionVariable.new
-
-        start_invalidate = ConditionVariable.new
-        invalidate_done = ConditionVariable.new
-
-        invalidated = false
-
         # Wait for rendering to be started then call the invalidate method.
         t1 = Thread.new do
           mutex.synchronize do
+            t1_ready = true
             start_rendering.wait(mutex)
 
             Thread.new do
@@ -1194,6 +1200,9 @@ class RenderingTest < ViewComponent::TestCase
         # Start rendering and then signal that rendering has started.
         t2 = Thread.new do
           mutex.synchronize do
+            t2_ready = true
+            start.wait(mutex)
+
             render_inline(ContentEvalComponent.new) do
               start_rendering.signal
               stop_rendering.wait(mutex)
@@ -1205,6 +1214,8 @@ class RenderingTest < ViewComponent::TestCase
         # got through until rendering is done.
         t3 = Thread.new do
           mutex.synchronize do
+            t3_ready = true
+
             start_invalidate.wait(mutex)
             sleep 0.1
             assert_not invalidated
@@ -1214,6 +1225,12 @@ class RenderingTest < ViewComponent::TestCase
             assert invalidated
           end
         end
+
+        until t1_ready && t2_ready && t3_ready
+          # Waiting for all threads to be ready before starting
+        end
+
+        start.signal
 
         t1.join
         t2.join
