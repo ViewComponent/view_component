@@ -5,6 +5,16 @@ title: Known issues
 
 # Known issues
 
+## turbo_frame_tag double rendering or messed up HTML structure
+
+When using `turbo_frame_tag` inside a ViewComponent, it will sometime render the template within the component twice. Depending on your component's HTML complexity, it can also mess up its DOM structure.
+
+See [this issue](https://github.com/github/view_component/issues/1099) for additional information.
+
+To fix this, you can use `tag.turbo_frame` instead of `turbo_frame_tag`. There is a caveat and that is:
+
+To keep the same functionality `turbo_frame_tag(my_model)` provides, you need to write `tag.turbo_frame(id: dom_id(my_model))` instead.
+
 ## form_for compatibility
 
 ViewComponent [isn't compatible](https://github.com/github/view_component/issues/241) with `form_for` helpers by default.
