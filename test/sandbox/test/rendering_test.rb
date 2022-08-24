@@ -1164,4 +1164,61 @@ class RenderingTest < ViewComponent::TestCase
       end
     end
   end
+
+  def test_cache_cannot_be_emptied_while_rendering
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
+        mutex = Mutex.new
+        start_rendering = ConditionVariable.new
+        stop_rendering = ConditionVariable.new
+
+        start_invalidate = ConditionVariable.new
+        invalidate_done = ConditionVariable.new
+
+        invalidated = false
+
+        # Wait for rendering to be started then call the invalidate method.
+        t1 = Thread.new do
+          mutex.synchronize do
+            start_rendering.wait(mutex)
+
+            Thread.new do
+              start_invalidate.signal
+              ViewComponent::CompileCache.invalidate!
+              invalidated = true
+              invalidate_done.signal
+            end
+          end
+        end
+
+        # Start rendering and then signal that rendering has started.
+        t2 = Thread.new do
+          mutex.synchronize do
+            render_inline(ContentEvalComponent.new) do
+              start_rendering.signal
+              stop_rendering.wait(mutex)
+            end
+          end
+        end
+
+        # Wait for invalidate to be called then asserts that invalidation has not
+        # got through until rendering is done.
+        t3 = Thread.new do
+          mutex.synchronize do
+            start_invalidate.wait(mutex)
+            sleep 0.1
+            assert_not invalidated
+
+            stop_rendering.signal
+            invalidate_done.wait(mutex)
+            assert invalidated
+          end
+        end
+
+        t1.join
+        t2.join
+        t3.join
+      end
+    end
+  end
 end

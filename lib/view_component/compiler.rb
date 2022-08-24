@@ -130,7 +130,9 @@ module ViewComponent
         component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil)
           self.class.compiler.with_read_lock do
-            #{body}
+              CompileCache.with_read_lock do
+                #{body}
+              end
           end
         end
         RUBY

@@ -8,6 +8,10 @@ module ViewComponent
       Set.new
     end
 
+    mattr_accessor :lock, instance_reader: false, instance_accessor: false do
+      Concurrent::ReadWriteLock.new
+    end
+
     module_function
 
     def register(klass)
@@ -23,7 +27,11 @@ module ViewComponent
     end
 
     def invalidate!
-      cache.clear
+      lock.with_write_lock { cache.clear }
+    end
+
+    def with_read_lock(&block)
+      lock.with_read_lock(&block)
     end
   end
 end
