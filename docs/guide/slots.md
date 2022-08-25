@@ -147,7 +147,7 @@ end
 
 ## Referencing slots
 
-As the content passed to slots is registered after a component is initialized, it referenced in an initializer. One way to reference slots is using the `before_render` [lifecycle method](./lifecycle.md):
+As the content passed to slots is registered after a component is initialized, it cannot referenced in an initializer. One way to reference slot content is using the `before_render` [lifecycle method](./lifecycle.md):
 
 ```ruby
 # blog_component.rb
