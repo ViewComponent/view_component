@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "view_component/compile_cache_lock"
+
 module ViewComponent
   # Keeps track of which templates have already been compiled
   # This isn't part of the public API
@@ -9,7 +11,7 @@ module ViewComponent
     end
 
     mattr_accessor :lock, instance_reader: false, instance_accessor: false do
-      Concurrent::ReadWriteLock.new
+      ViewComponent::Lock.new
     end
 
     module_function
