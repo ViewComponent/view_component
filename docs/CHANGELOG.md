@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+**ViewComponent has moved to a new organization: https://github.com/viewcomponent/view_component. See [https://github.com/github/view_component/issues/1424](https://github.com/github/view_component/issues/1424) for more details.**
+
 * Add architectural decisions to documentation and rename sidebar sections.
 
     *Joel Hawksley*

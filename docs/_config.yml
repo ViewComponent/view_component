@@ -30,7 +30,7 @@ color_scheme: custom
 logo: "/logo/viewcomponent-color-logo.svg"
 aux_links:
   "ViewComponent on GitHub":
-    - "https://github.com/github/view_component"
+    - "https://github.com/viewcomponent/view_component"
 aux_links_new_tab: true
 
 # Exclude from processing.
@@ -56,7 +56,7 @@ aux_links_new_tab: true
 # Footer "Edit this page on GitHub" link text
 gh_edit_link: true # show or hide edit this page link
 gh_edit_link_text: "Edit this page on GitHub"
-gh_edit_repository: "https://github.com/github/view_component" # the github URL for your repo
+gh_edit_repository: "https://github.com/viewcomponent/view_component" # the github URL for your repo
 gh_edit_branch: "main" # the branch that your docs is served from
 gh_edit_source: docs # the source that your files originate from
 gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately

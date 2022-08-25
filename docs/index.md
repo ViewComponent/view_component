@@ -81,7 +81,7 @@ ViewComponents use a standard Ruby initializer that clearly defines what's neede
 
 ### Performance
 
-Based on several [benchmarks](https://github.com/github/view_component/blob/main/performance/benchmark.rb), ViewComponents are ~10x faster than partials in real-world use-cases.
+Based on several [benchmarks](https://github.com/viewcomponent/view_component/blob/main/performance/benchmark.rb), ViewComponents are ~10x faster than partials in real-world use-cases.
 
 The primary optimization is pre-compiling all ViewComponent templates at application boot, instead of at runtime like traditional Rails views.
 
@@ -229,8 +229,8 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Within3](https://www.within3.com/)
 * [Wrapbook](https://wrapbook.com/)
 
-Using ViewComponent? [Send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to update this list!
-You can also check out [how various projects use ViewComponent](https://github.com/github/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
+Using ViewComponent? [Send a pull request](https://github.com/viewcomponent/view_component/edit/main/docs/index.md) to update this list!
+You can also check out [how various projects use ViewComponent](https://github.com/viewcomponent/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
 
 <hr />
 
