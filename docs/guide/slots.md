@@ -145,6 +145,51 @@ end
 <% end %>
 ```
 
+## Referencing slots
+
+You can access the instance of a slot in your ruby file by using the `before_render` [lifecycle method](./lifecycle.md). 
+
+```ruby
+# blog_component.rb
+class BlogComponent < ViewComponent::Base
+  renders_one :header
+  renders_one :image
+  renders_many :posts
+  
+  def initialize(**system_arguments)
+    @system_arguments = system_arguments
+    
+    @post_container_classes = class_names(
+      "PostContainer",
+      system_arguments[:classes]
+    )
+  end
+  
+  def before_render
+    @post_container_classes = class_names(
+      {
+        "PostBody--hasImage": image.present?
+      },
+      @post_container_classes
+    )
+  end
+end
+```
+
+```erb
+<%# blog_component.html.erb %>
+<h1><%= header %></h1>
+
+<% posts.each do |post| %>
+  <div class="<%= @post_container_classes =%>">
+    <% if image? %>
+      <%= image %>
+    <% end %>
+    <%= post %>
+  </div>
+<% end %>
+```
+
 ## Lambda slots
 
 It's also possible to define a slot as a lambda that returns content to be rendered (either a string or a ViewComponent instance). Lambda slots are useful in cases where writing another component may be unnecessary, such as working with helpers like `content_tag` or as wrappers for another ViewComponent with specific default values:
