@@ -147,37 +147,24 @@ end
 
 ## Referencing slots
 
-You can access the instance of a slot in your component class by using the `before_render` [lifecycle method](./lifecycle.md).
+As the content passed to slots is registered after a component is initialized, it referenced in an initializer. One way to reference slots is using the `before_render` [lifecycle method](./lifecycle.md):
 
 ```ruby
 # blog_component.rb
 class BlogComponent < ViewComponent::Base
-  renders_one :header
   renders_one :image
   renders_many :posts
 
-  def initialize(classes: [])
-    @post_container_classes = class_names("post-container", classes)
-    )
-  end
-
   def before_render
-    @post_container_classes = class_names(
-      {
-        "PostContainer--hasImage": image.present?
-      },
-      @post_container_classes
-    )
+    "PostContainer--hasImage" if image.present?
   end
 end
 ```
 
 ```erb
 <%# blog_component.html.erb %>
-<h1><%= header %></h1>
-
 <% posts.each do |post| %>
-  <div class="<%= @post_container_classes =%>">
+  <div class="<%= @post_container_classes %>">
     <% if image? %>
       <%= image %>
     <% end %>
