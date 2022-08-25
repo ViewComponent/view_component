@@ -1,21 +1,20 @@
 <div data-test-selector='just-joshing-repro-component'>
-  <span>Component</span>
+  <span data-test-selector='just-joshing-repro-component-heading'>Component</span>
 
     <% if slot1? %>
-      <span> -> Slot1: </span>
+      <span data-test-selector='just-joshing-repro-component-slot-1'> -> Slot1: </span>
       <%= slot1 %>
     <% end %>
 
     <% if slot2? %>
-      <span> -> Slot2: </span>
+      <span data-test-selector='just-joshing-repro-component-slot-2'> -> Slot2: </span>
       <%= slot2 %>
     <% end %>
 
     <% unless content.blank? %>
-      <span> -> Content: </span>
+      <span data-test-selector='just-joshing-repro-component-content'> -> Content: </span>
       <%= content %>
     <% end %>
 
   </span>
-
 </div>
