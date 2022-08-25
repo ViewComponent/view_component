@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix docs typos.
+
+    *Joel Hawksley*
+
 * Add architectural decisions to documentation and rename sidebar sections.
 
     *Joel Hawksley*
