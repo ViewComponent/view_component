@@ -156,7 +156,7 @@ class BlogComponent < ViewComponent::Base
   renders_many :posts
 
   def before_render
-    "PostContainer--hasImage" if image.present?
+    @post_container_classes = "PostContainer--hasImage" if image.present?
   end
 end
 ```
