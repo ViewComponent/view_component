@@ -147,7 +147,7 @@ end
 
 ## Referencing slots
 
-You can access the instance of a slot in your ruby file by using the `before_render` [lifecycle method](./lifecycle.md).
+You can access the instance of a slot in your component class by using the `before_render` [lifecycle method](./lifecycle.md).
 
 ```ruby
 # blog_component.rb
