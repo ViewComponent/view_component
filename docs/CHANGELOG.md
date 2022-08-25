@@ -26,6 +26,10 @@ nav_order: 5
 
     *Marc Köhlbrugge*
 
+* Add Clio to list of companies using ViewComponent.
+
+    *Mike Buckley*
+
 ## 2.69.0
 
 * Add missing `require` to fix `pvc` build.
