@@ -168,7 +168,7 @@ class BlogComponent < ViewComponent::Base
   def before_render
     @post_container_classes = class_names(
       {
-        "PostBody--hasImage": image.present?
+        "PostContainer--hasImage": image.present?
       },
       @post_container_classes
     )
