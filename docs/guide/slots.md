@@ -165,9 +165,7 @@ end
 <%# blog_component.html.erb %>
 <% posts.each do |post| %>
   <div class="<%= @post_container_classes %>">
-    <% if image? %>
-      <%= image %>
-    <% end %>
+    <%= image if image? %>
     <%= post %>
   </div>
 <% end %>
