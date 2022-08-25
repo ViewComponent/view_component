@@ -26,6 +26,10 @@ nav_order: 5
 
     *Marc Köhlbrugge*
 
+* Update slots documentation to include how to reference slots.
+
+    *Brittany Ellich*
+
 * Add Clio to list of companies using ViewComponent.
 
     *Mike Buckley*
