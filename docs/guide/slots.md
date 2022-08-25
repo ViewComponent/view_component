@@ -156,12 +156,8 @@ class BlogComponent < ViewComponent::Base
   renders_one :image
   renders_many :posts
 
-  def initialize(**system_arguments)
-    @system_arguments = system_arguments
-
-    @post_container_classes = class_names(
-      "PostContainer",
-      system_arguments[:classes]
+  def initialize(classes: [])
+    @post_container_classes = class_names("post-container", classes)
     )
   end
 
