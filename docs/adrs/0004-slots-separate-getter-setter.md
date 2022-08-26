@@ -1,4 +1,11 @@
-# Separate Slot Getters and Setters
+---
+layout: default
+title: 4. Separate Slot Getters and Setters
+parent: Architectural decisions
+nav_order: 4
+---
+
+# 4. Separate Slot Getters and Setters
 
 Date: 2022/03/22
 

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Collections
-parent: Guide
+parent: How-to guide
 ---
 
 # Collections

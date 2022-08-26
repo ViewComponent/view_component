@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Changelog
+nav_order: 5
 ---
 
 <!-- Add unreleased changes under the "main" heading. -->
@@ -9,9 +10,17 @@ title: Changelog
 
 ## main
 
+* Fix docs typos.
+
+    *Joel Hawksley*
+
+* Add architectural decisions to documentation and rename sidebar sections.
+
+    *Joel Hawksley*
+
 * Clarify documentation on testability of Rails views.
 
-    *Joel Hawksley
+    *Joel Hawksley*
 
 * Add Arrows to list of companies using ViewComponent.
 
@@ -20,6 +29,14 @@ title: Changelog
 * Add WIP to list of companies using ViewComponent.
 
     *Marc Köhlbrugge*
+
+* Update slots documentation to include how to reference slots.
+
+    *Brittany Ellich*
+
+* Add Clio to list of companies using ViewComponent.
+
+    *Mike Buckley*
 
 ## 2.69.0
 

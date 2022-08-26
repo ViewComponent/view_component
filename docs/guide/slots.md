@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Slots
-parent: Guide
+parent: How-to guide
 ---
 
 # Slots
@@ -142,6 +142,32 @@ end
   <% c.with_post(title: "Another post!") do %>
     Blog every day.
   <% end %>
+<% end %>
+```
+
+## Referencing slots
+
+As the content passed to slots is registered after a component is initialized, it cannot referenced in an initializer. One way to reference slot content is using the `before_render` [lifecycle method](/guide/lifecycle):
+
+```ruby
+# blog_component.rb
+class BlogComponent < ViewComponent::Base
+  renders_one :image
+  renders_many :posts
+
+  def before_render
+    @post_container_classes = "PostContainer--hasImage" if image.present?
+  end
+end
+```
+
+```erb
+<%# blog_component.html.erb %>
+<% posts.each do |post| %>
+  <div class="<%= @post_container_classes %>">
+    <%= image if image? %>
+    <%= post %>
+  </div>
 <% end %>
 ```
 

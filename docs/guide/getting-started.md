@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Getting started
-parent: Guide
+parent: How-to guide
 nav_order: 1
 ---
 
