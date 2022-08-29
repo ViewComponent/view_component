@@ -10,7 +10,7 @@ _ViewComponent is intended to be a safe, welcoming space for collaboration. By p
 
 Hi there! We're thrilled that you'd like to contribute to ViewComponent. Your help is essential for keeping it great.
 
-If you have any substantial changes that you would like to make, please [open an issue](http://github.com/viewcomponent/view_componentmponent/issues/new) first to discuss them with us.
+If you have any substantial changes that you would like to make, please [open an issue](http://github.com/viewcomponent/view_component/issues/new) first to discuss them with us.
 
 Maintainers tend to focus on areas of the project that are useful to them and their employers, but we're happy to pair with members of the community to enable work on other parts.
 
