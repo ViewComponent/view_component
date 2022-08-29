@@ -37,9 +37,6 @@ _For a more interactive experience, consider using [Lookbook](https://github.com
 Since 2.56.0
 {: .label }
 
-Experimental
-{: .label .label-yellow }
-
 Use `render_preview(name)` to render previews in ViewComponent unit tests:
 
 ```ruby
