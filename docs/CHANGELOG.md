@@ -12,6 +12,10 @@ nav_order: 5
 
 **ViewComponent has moved to a new organization: https://github.com/viewcomponent/view_component. See [https://github.com/github/view_component/issues/1424](https://github.com/github/view_component/issues/1424) for more details.**
 
+* Fix docs typos.
+
+    *Joel Hawksley*
+
 * Add architectural decisions to documentation and rename sidebar sections.
 
     *Joel Hawksley*
@@ -27,6 +31,10 @@ nav_order: 5
 * Add WIP to list of companies using ViewComponent.
 
     *Marc Köhlbrugge*
+
+* Update slots documentation to include how to reference slots.
+
+    *Brittany Ellich*
 
 * Add Clio to list of companies using ViewComponent.
 

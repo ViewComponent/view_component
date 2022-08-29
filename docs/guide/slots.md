@@ -145,6 +145,32 @@ end
 <% end %>
 ```
 
+## Referencing slots
+
+As the content passed to slots is registered after a component is initialized, it cannot referenced in an initializer. One way to reference slot content is using the `before_render` [lifecycle method](/guide/lifecycle):
+
+```ruby
+# blog_component.rb
+class BlogComponent < ViewComponent::Base
+  renders_one :image
+  renders_many :posts
+
+  def before_render
+    @post_container_classes = "PostContainer--hasImage" if image.present?
+  end
+end
+```
+
+```erb
+<%# blog_component.html.erb %>
+<% posts.each do |post| %>
+  <div class="<%= @post_container_classes %>">
+    <%= image if image? %>
+    <%= post %>
+  </div>
+<% end %>
+```
+
 ## Lambda slots
 
 It's also possible to define a slot as a lambda that returns content to be rendered (either a string or a ViewComponent instance). Lambda slots are useful in cases where writing another component may be unnecessary, such as working with helpers like `content_tag` or as wrappers for another ViewComponent with specific default values:
