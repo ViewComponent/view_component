@@ -32,6 +32,21 @@ Then access the resulting previews at:
 
 _For a more interactive experience, consider using [Lookbook](https://github.com/allmarkedup/lookbook) or [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)._
 
+## Passing parameters
+
+Set dynamic values from URL parameters by setting them as arguments:
+
+```ruby
+# test/components/previews/example_component_preview.rb
+class ExampleComponentPreview < ViewComponent::Preview
+  def with_dynamic_title(title: "Example component default")
+    render(ExampleComponent.new(title: title))
+  end
+end
+```
+
+Then pass in a value: `/rails/view_components/example_component/with_dynamic_title?title=Custom+title`.
+
 ## Previews as test cases
 
 Since 2.56.0
@@ -48,21 +63,6 @@ class ExampleComponentTest < ViewComponent::TestCase
   end
 end
 ```
-
-## Passing parameters
-
-Set dynamic values from URL parameters by setting them as arguments:
-
-```ruby
-# test/components/previews/example_component_preview.rb
-class ExampleComponentPreview < ViewComponent::Preview
-  def with_dynamic_title(title: "Example component default")
-    render(ExampleComponent.new(title: title))
-  end
-end
-```
-
-Then pass in a value: `/rails/view_components/example_component/with_dynamic_title?title=Custom+title`.
 
 ## Helpers
 
