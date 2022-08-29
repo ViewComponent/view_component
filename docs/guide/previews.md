@@ -64,6 +64,18 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+Parameters can also be passed:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_render_preview
+    render_preview(:with_default_title, params: { message: "Hello, world!" })
+
+    assert_text("Hello, world!")
+  end
+end
+```
+
 ## Helpers
 
 The `ViewComponent::Preview` base class includes

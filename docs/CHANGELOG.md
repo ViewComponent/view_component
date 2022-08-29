@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* `render_preview` can pass parameters to preview.
+
+    *Joel Hawksley*
+
 * Fix docs typos.
 
     *Joel Hawksley*
