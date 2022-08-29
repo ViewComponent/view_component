@@ -14,7 +14,7 @@ class MyComponentTest < ViewComponent::TestCase
   end
 
   def test_render_preview_with_args
-    render_preview(:with_content, params: { content: "foo"})
+    render_preview(:with_content, params: {content: "foo"})
 
     assert_text("foo")
   end
