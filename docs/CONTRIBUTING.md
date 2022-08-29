@@ -56,7 +56,7 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 Use [`m`](https://rubygems.org/gems/m):
 
 ```command
-m test/view_component/YOUR_COMPONENT_test.rb:line_number
+bundle exec m test/view_component/YOUR_COMPONENT_test.rb:line_number
 ```
 
 ### Running tests for a specific version of Rails
