@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 2.71.0
+
 **ViewComponent has moved to a new organization: [https://github.com/viewcomponent/view_component](https://github.com/viewcomponent/view_component). See [https://github.com/viewcomponent/view_component/issues/1424](https://github.com/viewcomponent/view_component/issues/1424) for more details.**
 
 ## 2.70.0
