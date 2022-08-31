@@ -127,6 +127,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/cpjmcquillan?s=64" alt="cpjmcquillan" width="32" />
 <img src="https://avatars.githubusercontent.com/czj?s=64" alt="czj" width="32" />
 <img src="https://avatars.githubusercontent.com/dani-sc?s=64" alt="dani-sc" width="32" />
+<img src="https://avatars.githubusercontent.com/danieldiekmeier?s=64" alt="danieldiekmeier" width="32" />
 <img src="https://avatars.githubusercontent.com/dark-panda?s=64" alt="dark-panda" width="32" />
 <img src="https://avatars.githubusercontent.com/davekaro?s=64" alt="davekaro" width="32" />
 <img src="https://avatars.githubusercontent.com/dixpac?s=64" alt="dixpac" width="32" />
