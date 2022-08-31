@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add special exception message for `renders_one :content` explaining that content passed as a block will be assigned to the `content` accessor without having to create an explicit slot.
+
+    *Daniel Diekmeier*
+
 ## 2.71.0
 
 **ViewComponent has moved to a new organization: [https://github.com/viewcomponent/view_component](https://github.com/viewcomponent/view_component). See [https://github.com/viewcomponent/view_component/issues/1424](https://github.com/viewcomponent/view_component/issues/1424) for more details.**
