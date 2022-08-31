@@ -8,7 +8,7 @@ bundle config local.view_component $(pwd)
 rails new --minimal replicate-bug
 cd replicate-bug
 # Add our local copy of ViewComponent
-bundle add view_component --git https://github.com/github/view_component --branch $branch_name
+bundle add view_component --git https://github.com/viewcomponent/view_component --branch $branch_name
 # Generate a controller
 rails g controller Home index
 # Generate ApplicationComponent, assuming most folks use it.

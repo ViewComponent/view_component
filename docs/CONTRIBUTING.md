@@ -10,11 +10,11 @@ _ViewComponent is intended to be a safe, welcoming space for collaboration. By p
 
 Hi there! We're thrilled that you'd like to contribute to ViewComponent. Your help is essential for keeping it great.
 
-If you have any substantial changes that you would like to make, please [open an issue](http://github.com/github/view_component/issues/new) first to discuss them with us.
+If you have any substantial changes that you would like to make, please [open an issue](http://github.com/viewcomponent/view_component/issues/new) first to discuss them with us.
 
 Maintainers tend to focus on areas of the project that are useful to them and their employers, but we're happy to pair with members of the community to enable work on other parts.
 
-Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [MIT license](https://github.com/github/view_component/blob/main/LICENSE.txt).
+Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [MIT license](https://github.com/viewcomponent/view_component/blob/main/LICENSE.txt).
 
 ## Reporting bugs
 
@@ -41,14 +41,14 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 
 ## Submitting a pull request
 
-1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
+1. [Fork](https://github.com/viewcomponent/view_component/fork) and clone the repository.
 1. Configure and install the dependencies: `bundle exec appraisal install`.
 2. Make sure the tests pass: `bundle exec appraisal rake` (see below for specific cases).
 3. Create a new branch: `git checkout -b my-branch-name`.
 4. Add tests, make the change, and make sure the tests still pass.
 5. Add an entry to the top of `docs/CHANGELOG.md` for the changes, no matter how small.
 6. If it's your first time contributing, add yourself to `docs/index.md`.
-7. Push to the fork and [submit a pull request](https://github.com/github/view_component/compare).
+7. Push to the fork and [submit a pull request](https://github.com/viewcomponent/view_component/compare).
 8. Wait for the pull request to be reviewed and merged.
 
 ### Running a subset of tests
@@ -61,7 +61,7 @@ bundle exec m test/view_component/YOUR_COMPONENT_test.rb:line_number
 
 ### Running tests for a specific version of Rails
 
-Specify one of the supported versions listed in [Appraisals](https://github.com/github/view_component/blob/main/Appraisals):
+Specify one of the supported versions listed in [Appraisals](https://github.com/viewcomponent/view_component/blob/main/Appraisals):
 
 ```command
 bundle exec appraisal rails-5.2 rake
