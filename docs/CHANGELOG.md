@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add source_code_uri to gemspec.
+* Add `source_code_uri` to gemspec.
 
     *Yoshiyuki Hirano*
 
