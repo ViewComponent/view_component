@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add source_code_uri to gemspec.
+
+    *Yoshiyuki Hirano*
+
 ## 2.71.0
 
 **ViewComponent has moved to a new organization: [https://github.com/viewcomponent/view_component](https://github.com/viewcomponent/view_component). See [https://github.com/viewcomponent/view_component/issues/1424](https://github.com/viewcomponent/view_component/issues/1424) for more details.**
