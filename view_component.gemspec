@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
     spec.metadata["allowed_push_host"] = "https://rubygems.org"
+    spec.metadata["source_code_uri"] = "https://github.com/viewcomponent/view_component"
   else
     raise "RubyGems 2.0 or newer is required to protect against " \
       "public gem pushes."
