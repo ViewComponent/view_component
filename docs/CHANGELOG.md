@@ -14,6 +14,10 @@ nav_order: 5
 
     *Yoshiyuki Hirano*
 
+* Update link to benchmark script.
+
+    *Daniel Diekmeier*
+
 ## 2.71.0
 
 **ViewComponent has moved to a new organization: [https://github.com/viewcomponent/view_component](https://github.com/viewcomponent/view_component). See [https://github.com/viewcomponent/view_component/issues/1424](https://github.com/viewcomponent/view_component/issues/1424) for more details.**
