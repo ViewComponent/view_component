@@ -14,7 +14,7 @@ nav_order: 5
 
     *Yoshiyuki Hirano*
 
-* Update link to benchmark script.
+* Update link to benchmark script in docs.
 
     *Daniel Diekmeier*
 
