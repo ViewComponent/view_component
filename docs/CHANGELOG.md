@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `changelog_uri` to gemspec.
+
+    *Joel Hawksley*
+
 * Add `source_code_uri` to gemspec.
 
     *Yoshiyuki Hirano*
