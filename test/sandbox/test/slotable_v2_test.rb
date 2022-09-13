@@ -333,7 +333,7 @@ class SlotsV2sTest < ViewComponent::TestCase
     refute_selector("div.table div.table__header span", text: "Selectable")
   end
 
-  def test_component_raises_when_given_invalid_slot_name
+  def test_component_raises_when_given_content_slot_name
     exception =
       assert_raises ArgumentError do
         Class.new(ViewComponent::Base) do
@@ -342,6 +342,18 @@ class SlotsV2sTest < ViewComponent::TestCase
       end
 
     assert_includes exception.message, "declares a slot named content"
+    assert_includes exception.message, "without having to create"
+  end
+
+  def test_component_raises_when_given_invalid_slot_name
+    exception =
+      assert_raises ArgumentError do
+        Class.new(ViewComponent::Base) do
+          renders_one :render
+        end
+      end
+
+    assert_includes exception.message, "declares a slot named render"
   end
 
   def test_component_raises_when_given_one_slot_name_ending_with_question_mark

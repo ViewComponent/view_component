@@ -272,6 +272,14 @@ module ViewComponent
       end
 
       def validate_singular_slot_name(slot_name)
+        if slot_name.to_sym == :content
+          raise ArgumentError.new(
+            "#{self} declares a slot named content, which is a reserved word in ViewComponent.\n\n" \
+            "Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.\n\n" \
+            "To fix this issue, either use the `content` accessor directly or choose a different slot name."
+          )
+        end
+
         if RESERVED_NAMES[:singular].include?(slot_name.to_sym)
           raise ArgumentError.new(
             "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
