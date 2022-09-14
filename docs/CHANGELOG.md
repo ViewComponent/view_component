@@ -10,9 +10,17 @@ nav_order: 5
 
 ## main
 
-* Deprecate support for Ruby < 2.7.
+* Deprecate support for Ruby < 2.7 for removal in v3.0.0.
 
     *Joel Hawksley*
+
+* Link to `CHANGELOG.md` instead of symlink.
+
+    *Joel Hawksley.
+
+* Add Aluuno to list of companies using ViewComponent.
+
+    *Daniel Naves de Carvalho*
 
 * Add `source_code_uri` to gemspec.
 

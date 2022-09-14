@@ -128,6 +128,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/czj?s=64" alt="czj" width="32" />
 <img src="https://avatars.githubusercontent.com/dani-sc?s=64" alt="dani-sc" width="32" />
 <img src="https://avatars.githubusercontent.com/danieldiekmeier?s=64" alt="danieldiekmeier" width="32" />
+<img src="https://avatars.githubusercontent.com/danielnc?s=64" alt="danielnc" width="32" />
 <img src="https://avatars.githubusercontent.com/dark-panda?s=64" alt="dark-panda" width="32" />
 <img src="https://avatars.githubusercontent.com/davekaro?s=64" alt="davekaro" width="32" />
 <img src="https://avatars.githubusercontent.com/dixpac?s=64" alt="dixpac" width="32" />
@@ -207,6 +208,7 @@ ViewComponent is built by over a hundred members of the community, including:
 ## Who uses ViewComponent?
 
 * [Arrows](https://arrows.to/)
+* [Aluuno](https://aluuno.com/)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [City of Paris](https://www.paris.fr/)
