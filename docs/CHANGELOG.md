@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Link to `CHANGELOG.md` instead of symlink.
+
+    *Joel Hawksley.
+
 * Add `source_code_uri` to gemspec.
 
     *Yoshiyuki Hirano*
