@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Link to `CHANGELOG.md` instead of symlink.
+
+    *Joel Hawksley.
+
 * Add Aluuno to list of companies using ViewComponent.
 
     *Daniel Naves de Carvalho*
