@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Deprecate support for Ruby < 2.7 for removal in v3.0.0.
+
+    *Joel Hawksley*
+
 * Add `changelog_uri` to gemspec.
 
     *Joel Hawksley*
