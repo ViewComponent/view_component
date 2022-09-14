@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 2.72.0
+
 * Deprecate support for Ruby < 2.7 for removal in v3.0.0.
 
     *Joel Hawksley*
