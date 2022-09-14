@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PolymorphicSlotComponent < ViewComponent::Base
-  include ViewComponent::PolymorphicSlots
+  warn_on_deprecated_slot_setter
 
   renders_one :header, types: {
     standard: lambda { |&block| content_tag(:div, class: "standard", &block) },

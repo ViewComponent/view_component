@@ -4,10 +4,11 @@ module ViewComponent
   module TestHelpers
     begin
       require "capybara/minitest"
+
       include Capybara::Minitest::Assertions
 
       def page
-        Capybara::Node::Simple.new(@rendered_component)
+        @page ||= Capybara::Node::Simple.new(rendered_content)
       end
 
       def refute_component_rendered
@@ -28,7 +29,19 @@ module ViewComponent
     end
 
     # @private
-    attr_reader :rendered_component
+    attr_reader :rendered_content
+
+    # Returns the result of a render_inline call.
+    #
+    # @return [String]
+    def rendered_component
+      ViewComponent::Deprecation.warn(
+        "`rendered_component` is deprecated and will be removed in v3.0.0. " \
+        "Use `page` instead."
+      )
+
+      rendered_content
+    end
 
     # Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
     # allowing for Capybara assertions to be used:
@@ -41,14 +54,64 @@ module ViewComponent
     # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
     # @return [Nokogiri::HTML]
     def render_inline(component, **args, &block)
-      @rendered_component =
+      @page = nil
+      @rendered_content =
         if Rails.version.to_f >= 6.1
           controller.view_context.render(component, args, &block)
         else
           controller.view_context.render_component(component, &block)
         end
 
-      Nokogiri::HTML.fragment(@rendered_component)
+      Nokogiri::HTML.fragment(@rendered_content)
+    end
+
+    # Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
+    # allowing for Capybara assertions to be used:
+    #
+    # ```ruby
+    # render_preview(:default)
+    # assert_text("Hello, World!")
+    # ```
+    #
+    # Note: `#rendered_preview` expects a preview to be defined with the same class
+    # name as the calling test, but with `Test` replaced with `Preview`:
+    #
+    # MyComponentTest -> MyComponentPreview etc.
+    #
+    # In RSpec, `Preview` is appended to `described_class`.
+    #
+    # @param name [String] The name of the preview to be rendered.
+    # @param params [Hash] Parameters to be passed to the preview.
+    # @return [Nokogiri::HTML]
+    def render_preview(name, params: {})
+      begin
+        preview_klass = if respond_to?(:described_class)
+          raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
+
+          "#{described_class}Preview"
+        else
+          self.class.name.gsub("Test", "Preview")
+        end
+        preview_klass = preview_klass.constantize
+      rescue NameError
+        raise NameError, "`render_preview` expected to find #{preview_klass}, but it does not exist."
+      end
+
+      previews_controller = build_controller(Rails.application.config.view_component.preview_controller.constantize)
+
+      # From what I can tell, it's not possible to overwrite all request parameters
+      # at once, so we set them individually here.
+      params.each do |k, v|
+        previews_controller.request.params[k] = v
+      end
+
+      previews_controller.request.params[:path] = "#{preview_klass.preview_name}/#{name}"
+      previews_controller.response = ActionDispatch::Response.new
+      result = previews_controller.previews
+
+      @rendered_content = result
+
+      Nokogiri::HTML.fragment(@rendered_content)
     end
 
     # Execute the given block in the view context. Internally sets `page` to be a
@@ -62,8 +125,9 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     def render_in_view_context(&block)
-      @rendered_component = controller.view_context.instance_exec(&block)
-      Nokogiri::HTML.fragment(@rendered_component)
+      @page = nil
+      @rendered_content = controller.view_context.instance_exec(&block)
+      Nokogiri::HTML.fragment(@rendered_content)
     end
 
     # @private
@@ -134,10 +198,11 @@ module ViewComponent
       old_request_query_string = request.query_string
       old_controller = defined?(@controller) && @controller
 
+      path, query = path.split("?", 2)
       request.path_info = path
       request.path_parameters = Rails.application.routes.recognize_path(path)
-      request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_query(path.split("?")[1]))
-      request.set_header(Rack::QUERY_STRING, path.split("?")[1])
+      request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
+      request.set_header(Rack::QUERY_STRING, query)
       yield
     ensure
       request.path_info = old_request_path_info

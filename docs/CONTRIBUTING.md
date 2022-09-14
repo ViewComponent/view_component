@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Contributing
+nav_order: 7
 ---
 
 # Contributing
@@ -9,11 +10,11 @@ _ViewComponent is intended to be a safe, welcoming space for collaboration. By p
 
 Hi there! We're thrilled that you'd like to contribute to ViewComponent. Your help is essential for keeping it great.
 
-If you have any substantial changes that you would like to make, please [open an issue](http://github.com/github/view_component/issues/new) first to discuss them with us.
+If you have any substantial changes that you would like to make, please [open an issue](http://github.com/viewcomponent/view_component/issues/new) first to discuss them with us.
 
-GitHub engineers tend to focus on areas of the project that are useful to GitHub, but we're happy to pair with members of the community to enable work on other parts. Just let us know in an issue.
+Maintainers tend to focus on areas of the project that are useful to them and their employers, but we're happy to pair with members of the community to enable work on other parts.
 
-Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [MIT license](https://github.com/github/view_component/blob/main/LICENSE.txt).
+Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [MIT license](https://github.com/viewcomponent/view_component/blob/main/LICENSE.txt).
 
 ## Reporting bugs
 
@@ -40,27 +41,27 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 
 ## Submitting a pull request
 
-1. [Fork](https://github.com/github/view_component/fork) and clone the repository.
+1. [Fork](https://github.com/viewcomponent/view_component/fork) and clone the repository.
 1. Configure and install the dependencies: `bundle exec appraisal install`.
 2. Make sure the tests pass: `bundle exec appraisal rake` (see below for specific cases).
 3. Create a new branch: `git checkout -b my-branch-name`.
 4. Add tests, make the change, and make sure the tests still pass.
 5. Add an entry to the top of `docs/CHANGELOG.md` for the changes, no matter how small.
 6. If it's your first time contributing, add yourself to `docs/index.md`.
-7. Push to the fork and [submit a pull request](https://github.com/github/view_component/compare).
+7. Push to the fork and [submit a pull request](https://github.com/viewcomponent/view_component/compare).
 8. Wait for the pull request to be reviewed and merged.
 
 ### Running a subset of tests
 
-Supply a file glob to the test command:
+Use [`m`](https://rubygems.org/gems/m):
 
 ```command
-TEST="test/view_component/YOUR_COMPONENT_test.rb" bundle exec appraisal rake
+bundle exec m test/view_component/YOUR_COMPONENT_test.rb:line_number
 ```
 
 ### Running tests for a specific version of Rails
 
-Specify one of the supported versions, listed in [Appraisal](https://github.com/github/view_component/blob/main/Appraisals):
+Specify one of the supported versions listed in [Appraisals](https://github.com/viewcomponent/view_component/blob/main/Appraisals):
 
 ```command
 bundle exec appraisal rails-5.2 rake
@@ -94,7 +95,7 @@ To run the Vale prose linter locally, `brew install vale` and `vale docs/`.
 
 ## Governance
 
-ViewComponent is built by over a hundred members of the community. Project membership has three levels:
+ViewComponent is built by over a hundred members of the community. Project membership has several levels:
 
 ### Triage
 
@@ -102,22 +103,20 @@ ViewComponent triagers are able to manage issues and pull request by assigning o
 
 After helping with the project by participating in issues, pull requests, and/or discussions, members of the community are welcome to request triage access by opening a pull request to update this list:
 
-The triagers team is @andrewmcodes, @bbugh, @boardfish, @cesariouy, @dark-panda, @dylnclrk, @g13ydson, @horacio, @jcoyne, @johannesengl, @kaspermeyer, @mellowfish, @metade, @nashby, @rainerborene, @rdavid1099, @spdawson, @yhirano55, and @vinistock.
-
-Committers and maintainers may also nominate triagers by opening a pull request to update this list.
+_All triagers have become committers or maintainers!_
 
 ### Commit
 
-ViewComponent committers have `write` access, enabling them to push directly to the repository (and thus not needing to contribute via forks) and approve/merge pull requests. Committers often have implicit ownership over a particular area of the project, such as previews, generators, or translations.
+ViewComponent committers have `write` access, enabling them to push directly to the repository and merge pull requests, thus removing the need to contribute via a fork. Committers often have implicit (or even explicit, via CODEOWNERS) ownership over a particular area of the project, such as previews, generators, or translations.
 
-Triagers are invited to become committers by having an existing committer or maintainer open a pull request on the repository to update this list of committers:
+Triagers are welcome to request commit access by opening a pull request to update this list:
 
-The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, @spone, @dylanatsmith, and @boardfish.
+The committers team is @elia, @jonspalmer, @juanmanuelramallo, @rmacklin, and @dylanatsmith.
 
 ### Maintain
 
-ViewComponent maintainers have `admin` access, enabling them to manage repository settings including access levels. They also have ownership of `view_component` on RubyGems and are required to have 2FA enabled for their GitHub and RubyGems accounts.
+ViewComponent maintainers have `admin` access, enabling them to manage repository settings including access levels. They also have ownership of `view_component` on RubyGems. Maintainers are required to have 2FA enabled for their GitHub and RubyGems accounts.
 
-Maintainership is open by invitation only at this time.
+Committers are welcome to request maintainership access by opening a pull request to update this list:
 
-The maintainers team is @camertron, @blakewilliams, @joelhawksley, @jonrohan, and @manuelpuyol.
+The maintainers team is @boardfish, @spone, @camertron, @blakewilliams, and @joelhawksley.

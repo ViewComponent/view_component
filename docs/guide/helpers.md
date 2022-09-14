@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Helpers
-parent: Guide
+parent: How-to guide
 ---
 
 # Helpers
@@ -23,6 +23,11 @@ class UserComponent < ViewComponent::Base
   end
 end
 ```
+
+## Proxy
+
+Since 1.5.0
+{: .label }
 
 Or, access helpers through the `helpers` proxy:
 

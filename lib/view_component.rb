@@ -10,10 +10,9 @@ module ViewComponent
   autoload :Compiler
   autoload :CompileCache
   autoload :ComponentError
+  autoload :Config
   autoload :Deprecation
-  autoload :GlobalOutputBuffer
   autoload :Instrumentation
-  autoload :OutputBufferStack
   autoload :Preview
   autoload :PreviewTemplateError
   autoload :TestHelpers

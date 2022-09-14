@@ -14,7 +14,7 @@ module ViewComponent # :nodoc:
         block: block,
         component: component,
         locals: {},
-        template: "view_components/preview",
+        template: "view_components/preview"
       }
     end
 
@@ -30,7 +30,8 @@ module ViewComponent # :nodoc:
     class << self
       # Returns all component preview classes.
       def all
-        load_previews if descendants.empty?
+        load_previews
+
         descendants
       end
 
@@ -65,10 +66,12 @@ module ViewComponent # :nodoc:
         name.chomp("Preview").underscore
       end
 
+      # rubocop:disable Style/TrivialAccessors
       # Setter for layout name.
       def layout(layout_name)
         @layout = layout_name
       end
+      # rubocop:enable Style/TrivialAccessors
 
       # Returns the relative path (from preview_path) to the preview example template if the template exists
       def preview_example_template_path(example)
@@ -86,25 +89,25 @@ module ViewComponent # :nodoc:
         end
 
         path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
-        Pathname.new(path).
-          relative_path_from(Pathname.new(preview_path)).
-          to_s.
-          sub(/\..*$/, "")
+        Pathname.new(path)
+          .relative_path_from(Pathname.new(preview_path))
+          .to_s
+          .sub(/\..*$/, "")
       end
 
       # Returns the method body for the example from the preview file.
       def preview_source(example)
-        source = self.instance_method(example.to_sym).source.split("\n")
+        source = instance_method(example.to_sym).source.split("\n")
         source[1...(source.size - 1)].join("\n")
       end
-
-      private
 
       def load_previews
         Array(preview_paths).each do |preview_path|
           Dir["#{preview_path}/**/*_preview.rb"].sort.each { |file| require_dependency file }
         end
       end
+
+      private
 
       def preview_paths
         Base.preview_paths

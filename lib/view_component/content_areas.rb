@@ -21,7 +21,7 @@ module ViewComponent
         )
       end
 
-      if block_given?
+      if block
         content = view_context.capture(&block)
       end
 

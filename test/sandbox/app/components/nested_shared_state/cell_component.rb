@@ -7,7 +7,7 @@ module NestedSharedState
     end
 
     def call
-      content_tag(:div, content, { class: @class_names })
+      content_tag(:div, content, {class: @class_names})
     end
   end
 end

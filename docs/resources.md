@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Resources
+nav_order: 12
 ---
 
 # Resources
@@ -24,6 +25,7 @@ _Is this page missing a link? Open a PR!_
 - [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)
 - [ViewComponent Contrib](https://github.com/palkan/view_component-contrib)
 - [Lookbook](https://github.com/allmarkedup/lookbook)
+- [ViewComponentAttributes](https://github.com/Amba-Health/view_component_attributes)
 
 ## Podcasts
 
@@ -47,6 +49,8 @@ _Is this page missing a link? Open a PR!_
 
 ## Articles
 
+- [Ruby-on-Rails ViewComponents tutorial and examples](https://www.bootrails.com/blog/ruby-on-rails-viewcomponents-tutorial-and-examples/)
+- [From partials to ViewComponents: writing reusable front-end code in Rails](https://dev.to/nejremeslnici/from-partials-to-viewcomponents-writing-reusable-front-end-code-in-rails-1c9o)
 - [Snapshot testing ViewComponents with RSpec](https://www.bearer.com/blog/snapshot-testing-viewcomponents-with-rspec)
 - [Don't Cloud Your View With Logic.](https://www.beflagrant.com/blog/dont-cloud-view-with-logic)
 - [The problem that ViewComponent solves for me](https://www.codewithjason.com/the-problem-that-viewcomponent-solves-for-me/)
@@ -63,4 +67,4 @@ _Is this page missing a link? Open a PR!_
 
 ## Etcetera
 
-- [Demo repository, view-component-demo](https://github.com/joelhawksley/view-component-demo)
+- [Demo repository, view-component-demo](https://github.com/viewcomponent/demo)

@@ -4,7 +4,7 @@ class SlotsV2WithoutContentBlockComponent < ViewComponent::Base
   renders_one :title, "MyTitleComponent"
 
   class MyTitleComponent < ViewComponent::Base
-    def initialize(title:)
+    def initialize(title)
       @title = title
     end
 

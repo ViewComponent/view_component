@@ -35,7 +35,7 @@ ENV["RAILS_ENV"] = "test"
 require "view_component/deprecation"
 ViewComponent::Deprecation.behavior = :silence
 
-require File.expand_path("../sandbox/config/environment.rb", __FILE__)
+require File.expand_path("sandbox/config/environment.rb", __dir__)
 require "rails/test_help"
 
 require "capybara/cuprite"
@@ -45,16 +45,21 @@ Capybara.server = :puma, { Silent: true }
 # Increase the max wait time to appease test failures due to timeouts.
 Capybara.default_max_wait_time = 4
 
+def with_config_option(option_name, new_value, config_entrypoint: Rails.application.config.view_component)
+  old_value = config_entrypoint.public_send(option_name)
+  config_entrypoint.public_send("#{option_name}=", new_value)
+  yield
+ensure
+  config_entrypoint.public_send("#{option_name}=", old_value)
+end
+
 # Sets custom preview paths in tests.
 #
 # @param new_value [Array<String>] List of preview paths
 # @yield Test code to run
 # @return [void]
-def with_preview_paths(new_value)
-  old_value = Rails.application.config.view_component.preview_paths
-  Rails.application.config.view_component.preview_paths = new_value
-  yield
-  Rails.application.config.view_component.preview_paths = old_value
+def with_preview_paths(new_value, &block)
+  with_config_option(:preview_paths, new_value, &block)
 end
 
 def with_preview_route(new_value)
@@ -62,6 +67,7 @@ def with_preview_route(new_value)
   Rails.application.config.view_component.preview_route = new_value
   app.reloader.reload!
   yield
+ensure
   Rails.application.config.view_component.preview_route = old_value
   app.reloader.reload!
 end
@@ -71,72 +77,65 @@ def with_preview_controller(new_value)
   Rails.application.config.view_component.preview_controller = new_value
   app.reloader.reload!
   yield
+ensure
   Rails.application.config.view_component.preview_controller = old_value
   app.reloader.reload!
 end
 
-def with_custom_component_path(new_value)
-  old_value = ViewComponent::Base.view_component_path
-  ViewComponent::Base.view_component_path = new_value
-  yield
-ensure
-  ViewComponent::Base.view_component_path = old_value
+def with_custom_component_path(new_value, &block)
+  with_config_option(:view_component_path, new_value, &block)
 end
 
-def with_custom_component_parent_class(new_value)
-  old_value = ViewComponent::Base.component_parent_class
-  ViewComponent::Base.component_parent_class = new_value
-  yield
-ensure
-  ViewComponent::Base.component_parent_class = old_value
+def with_custom_component_parent_class(new_value, &block)
+  with_config_option(:component_parent_class, new_value, &block)
 end
 
 def with_application_component_class
-  Object.const_set("ApplicationComponent", Class.new(Object))
+  Object.const_set(:ApplicationComponent, Class.new(Object))
   yield
 ensure
   Object.send(:remove_const, :ApplicationComponent)
 end
 
-def with_generate_sidecar(enabled)
-  old_value = ViewComponent::Base.generate.sidecar
-  ViewComponent::Base.generate.sidecar = enabled
+def with_generate_option(config_option, value)
+  old_value = Rails.application.config.view_component.generate[config_option]
+  Rails.application.config.view_component.generate[config_option] = value
   yield
 ensure
-  ViewComponent::Base.generate.sidecar = old_value
+  Rails.application.config.view_component.generate[config_option] = old_value
+end
+
+def with_generate_sidecar(enabled, &block)
+  with_generate_option(:sidecar, enabled, &block)
 end
 
 def with_new_cache
-  begin
-    old_cache = ViewComponent::CompileCache.cache
-    ViewComponent::CompileCache.cache = Set.new
-    old_cache_template_loading = ActionView::Base.cache_template_loading
-    ActionView::Base.cache_template_loading = false
-    reset_render_template_methods
+  old_cache = ViewComponent::CompileCache.cache
+  ViewComponent::CompileCache.cache = Set.new
+  old_cache_template_loading = ActionView::Base.cache_template_loading
+  ActionView::Base.cache_template_loading = false
 
-    yield
-  ensure
-    ActionView::Base.cache_template_loading = old_cache_template_loading
-    ViewComponent::CompileCache.cache = old_cache
-    reset_render_template_methods
-  end
+  yield
+ensure
+  ActionView::Base.cache_template_loading = old_cache_template_loading
+  ViewComponent::CompileCache.cache = old_cache
 end
 
-def reset_render_template_methods
-  ViewComponent::Base.descendants.each do |klass|
-    klass.compiler.reset_render_template_for
-  end
+def with_consistent_render
+  old_value = ViewComponent::Base.use_consistent_rendering_lifecycle
+  ViewComponent::Base.use_consistent_rendering_lifecycle = true
+  yield
+ensure
+  ViewComponent::Base.use_consistent_rendering_lifecycle = old_value
 end
 
-def without_template_annotations
+def without_template_annotations(&block)
   if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
     old_value = ActionView::Base.annotate_rendered_view_with_filenames
     ActionView::Base.annotate_rendered_view_with_filenames = false
     app.reloader.reload! if defined?(app)
 
-    with_new_cache do
-      yield
-    end
+    with_new_cache(&block)
 
     ActionView::Base.annotate_rendered_view_with_filenames = old_value
     app.reloader.reload! if defined?(app)
@@ -156,19 +155,12 @@ def modify_file(file, content)
   end
 end
 
-def with_default_preview_layout(layout)
-  old_value = ViewComponent::Base.default_preview_layout
-  ViewComponent::Base.default_preview_layout = layout
-  yield
-  ViewComponent::Base.default_preview_layout = old_value
+def with_default_preview_layout(layout, &block)
+  with_config_option(:default_preview_layout, layout, &block)
 end
 
-def with_render_monkey_patch_config(enabled)
-  old_default = ViewComponent::Base.render_monkey_patch_enabled
-  ViewComponent::Base.render_monkey_patch_enabled = enabled
-  yield
-ensure
-  ViewComponent::Base.render_monkey_patch_enabled = old_default
+def with_render_monkey_patch_config(enabled, &block)
+  with_config_option(:render_monkey_patch_enabled, enabled, &block)
 end
 
 def with_compiler_mode(mode)

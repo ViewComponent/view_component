@@ -9,7 +9,7 @@ module ViewComponent
 
     RESERVED_NAMES = {
       singular: %i[content render].freeze,
-      plural: %i[contents renders].freeze,
+      plural: %i[contents renders].freeze
     }.freeze
 
     # Setup component slot state
@@ -17,9 +17,19 @@ module ViewComponent
       # Hash of registered Slots
       class_attribute :registered_slots
       self.registered_slots = {}
+
+      class_attribute :_warn_on_deprecated_slot_setter
+      self._warn_on_deprecated_slot_setter = false
     end
 
     class_methods do
+      ##
+      # Enables deprecations coming to the Slots API in ViewComponent v3
+      #
+      def warn_on_deprecated_slot_setter
+        self._warn_on_deprecated_slot_setter = true
+      end
+
       ##
       # Registers a sub-component
       #
@@ -70,6 +80,7 @@ module ViewComponent
       #   <% end %>
       def renders_one(slot_name, callable = nil)
         validate_singular_slot_name(slot_name)
+        validate_plural_slot_name(ActiveSupport::Inflector.pluralize(slot_name).to_sym)
 
         define_method :"with_#{slot_name}" do |*args, &block|
           set_slot(slot_name, nil, *args, &block)
@@ -80,7 +91,14 @@ module ViewComponent
           if args.empty? && block.nil?
             get_slot(slot_name)
           else
-            # Deprecated: Will remove in 3.0
+            if _warn_on_deprecated_slot_setter
+              stack = caller_locations(3)
+              msg = "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
+                "Use `#with_#{slot_name}` to set the slot instead."
+
+              ViewComponent::Deprecation.warn(msg, stack)
+            end
+
             set_slot(slot_name, nil, *args, &block)
           end
         end
@@ -98,11 +116,11 @@ module ViewComponent
       #
       # = Example
       #
-      #   render_many :items, -> (name:) { ItemComponent.new(name: name }
+      #   renders_many :items, -> (name:) { ItemComponent.new(name: name }
       #
       #   # OR
       #
-      #   render_many :items, ItemComponent
+      #   renders_many :items, ItemComponent
       #
       # = Rendering sub-components
       #
@@ -131,16 +149,22 @@ module ViewComponent
       #     <% end %>
       #   <% end %>
       def renders_many(slot_name, callable = nil)
-        validate_plural_slot_name(slot_name)
-
         singular_name = ActiveSupport::Inflector.singularize(slot_name)
+        validate_plural_slot_name(slot_name)
+        validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
 
         # Define setter for singular names
         # for example `renders_many :items` allows fetching all tabs with
         # `component.tabs` and setting a tab with `component.tab`
-        #
-        # Deprecated: Will remove in 3.0
+
         define_method singular_name do |*args, &block|
+          if _warn_on_deprecated_slot_setter
+            ViewComponent::Deprecation.warn(
+              "Setting a slot with `##{singular_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
+              "Use `#with_#{singular_name}` to set the slot instead."
+            )
+          end
+
           set_slot(slot_name, nil, *args, &block)
         end
         ruby2_keywords(singular_name.to_sym) if respond_to?(:ruby2_keywords, true)
@@ -162,7 +186,13 @@ module ViewComponent
           if collection_args.nil? && block.nil?
             get_slot(slot_name)
           else
-            # Deprecated: Will remove in 3.0
+            if _warn_on_deprecated_slot_setter
+              ViewComponent::Deprecation.warn(
+                "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
+                "Use `#with_#{slot_name}` to set the slot instead."
+              )
+            end
+
             collection_args.map do |args|
               set_slot(slot_name, nil, **args, &block)
             end
@@ -190,20 +220,20 @@ module ViewComponent
       # Clone slot configuration into child class
       # see #test_slots_pollution
       def inherited(child)
-        child.registered_slots = self.registered_slots.clone
+        child.registered_slots = registered_slots.clone
         super
       end
 
       private
 
       def register_slot(slot_name, **kwargs)
-        self.registered_slots[slot_name] = define_slot(slot_name, **kwargs)
+        registered_slots[slot_name] = define_slot(slot_name, **kwargs)
       end
 
       def define_slot(slot_name, collection:, callable:)
         # Setup basic slot data
         slot = {
-          collection: collection,
+          collection: collection
         }
         return slot unless callable
 
@@ -242,6 +272,14 @@ module ViewComponent
       end
 
       def validate_singular_slot_name(slot_name)
+        if slot_name.to_sym == :content
+          raise ArgumentError.new(
+            "#{self} declares a slot named content, which is a reserved word in ViewComponent.\n\n" \
+            "Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.\n\n" \
+            "To fix this issue, either use the `content` accessor directly or choose a different slot name."
+          )
+        end
+
         if RESERVED_NAMES[:singular].include?(slot_name.to_sym)
           raise ArgumentError.new(
             "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
@@ -254,7 +292,7 @@ module ViewComponent
       end
 
       def raise_if_slot_registered(slot_name)
-        if self.registered_slots.key?(slot_name)
+        if registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
           raise ArgumentError.new(
             "#{self} declares the #{slot_name} slot multiple times.\n\n" \
@@ -266,8 +304,8 @@ module ViewComponent
       def raise_if_slot_ends_with_question_mark(slot_name)
         if slot_name.to_s.ends_with?("?")
           raise ArgumentError.new(
-            "#{self} declares a slot named #{slot_name}, which ends with a question mark.\n\n"\
-            "This is not allowed because the ViewComponent framework already provides predicate "\
+            "#{self} declares a slot named #{slot_name}, which ends with a question mark.\n\n" \
+            "This is not allowed because the ViewComponent framework already provides predicate " \
             "methods ending in `?`.\n\n" \
             "To fix this issue, choose a different name."
           )
@@ -287,8 +325,6 @@ module ViewComponent
 
       if slot[:collection]
         []
-      else
-        nil
       end
     end
 
@@ -305,7 +341,7 @@ module ViewComponent
       # 2. Since we've to pass block content to components when calling
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
-      slot.__vc_content_block = block if block_given?
+      slot.__vc_content_block = block if block
 
       # If class
       if slot_definition[:renderable]
@@ -321,7 +357,7 @@ module ViewComponent
         # methods like `content_tag` as well as parent component state.
         renderable_function = slot_definition[:renderable_function].bind(self)
         renderable_value =
-          if block_given?
+          if block
             renderable_function.call(*args) do |*rargs|
               view_context.capture(*rargs, &block)
             end

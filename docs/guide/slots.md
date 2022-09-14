@@ -1,10 +1,13 @@
 ---
 layout: default
 title: Slots
-parent: Guide
+parent: How-to guide
 ---
 
 # Slots
+
+Since 2.12.0
+{: .label }
 
 In addition to the `content` accessor, ViewComponents can accept content through slots. Think of slots as a way to render multiple blocks of content, including other components.
 
@@ -63,6 +66,9 @@ Returning:
 ```
 
 ## Predicate methods
+
+Since 2.50.0
+{: .label }
 
 To test whether a slot has been passed to the component, use the provided `#{slot_name}?` method.
 
@@ -139,6 +145,32 @@ end
 <% end %>
 ```
 
+## Referencing slots
+
+As the content passed to slots is registered after a component is initialized, it can't be referenced in an initializer. One way to reference slot content is using the `before_render` [lifecycle method](/guide/lifecycle):
+
+```ruby
+# blog_component.rb
+class BlogComponent < ViewComponent::Base
+  renders_one :image
+  renders_many :posts
+
+  def before_render
+    @post_container_classes = "PostContainer--hasImage" if image.present?
+  end
+end
+```
+
+```erb
+<%# blog_component.html.erb %>
+<% posts.each do |post| %>
+  <div class="<%= @post_container_classes %>">
+    <%= image if image? %>
+    <%= post %>
+  </div>
+<% end %>
+```
+
 ## Lambda slots
 
 It's also possible to define a slot as a lambda that returns content to be rendered (either a string or a ViewComponent instance). Lambda slots are useful in cases where writing another component may be unnecessary, such as working with helpers like `content_tag` or as wrappers for another ViewComponent with specific default values:
@@ -187,6 +219,9 @@ end
 
 ## Rendering collections
 
+Since 2.23.0
+{: .label }
+
 `renders_many` slots can also be passed a collection, using the plural setter (`links` in this example):
 
 ```ruby
@@ -223,6 +258,9 @@ end
 
 ## `#with_content`
 
+Since 2.31.0
+{: .label }
+
 Slot content can also be set using `#with_content`:
 
 ```erb
@@ -233,16 +271,17 @@ Slot content can also be set using `#with_content`:
 
 _To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
 
-## Polymorphic slots (Experimental)
+## Polymorphic slots
 
-Polymorphic slots can render one of several possible slots. To use this experimental feature, include `ViewComponent::PolymorphicSlots`.
+Since 2.42.0
+{: .label }
+
+Polymorphic slots can render one of several possible slots.
 
 For example, consider this list item component that can be rendered with either an icon or an avatar visual. The `visual` slot is passed a hash mapping types to slot definitions:
 
 ```ruby
 class ListItemComponent < ViewComponent::Base
-  include ViewComponent::PolymorphicSlots
-
   renders_one :visual, types: {
     icon: IconComponent,
     avatar: lambda { |**system_arguments|
@@ -258,13 +297,35 @@ Filling in the `visual` slot is done by calling the appropriate slot method:
 
 ```erb
 <%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") %>
+  <% c.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") do %>
     Profile
   <% end >
 <% end %>
 <%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_icon(icon: :key) %>
+  <% c.with_visual_icon(icon: :key) do %>
     Security Settings
   <% end >
 <% end %>
+```
+
+To see whether a polymorphic slot has been passed to the component, use the `#{slot_name}?` method.
+
+```erb
+<% if visual? %>
+  <%= visual %>
+<% else %>
+  <span class="visual-placeholder">N/A</span>
+<% end %>
+```
+
+## Migrating from previous Slots implementations
+
+In [v2.54.0](https://viewcomponent.org/CHANGELOG.html#2540), the Slots API was updated to require the `with_*` prefix for setting Slots. The non-`with_*` setters will be deprecated in a coming version and removed in `v3.0`.
+
+To enable the coming deprecation warning, add `warn_on_deprecated_slot_setter`:
+
+```ruby
+class DeprecatedSlotsSetterComponent < ViewComponent::Base
+  warn_on_deprecated_slot_setter
+end
 ```

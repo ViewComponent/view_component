@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ViewComponentTest < ViewComponent::TestCase
+class RenderingTest < ViewComponent::TestCase
   def test_render_inline
     render_inline(MyComponent.new)
 
@@ -17,6 +17,12 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_render_inline_returns_nokogiri_fragment
     assert_includes render_inline(MyComponent.new).css("div").to_html, "hello,world!"
+  end
+
+  def test_render_inline_sets_rendered_content
+    render_inline(MyComponent.new)
+
+    assert_includes rendered_content, "hello,world!"
   end
 
   def test_render_inline_sets_rendered_component
@@ -109,7 +115,7 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_renders_haml_with_html_formatted_slot
-    skip if Rails.application.config.view_component.use_global_output_buffer && Rails::VERSION::STRING < "6.1"
+    skip if Rails::VERSION::STRING < "6.1"
 
     render_inline(HamlHtmlFormattedSlotComponent.new)
 
@@ -283,7 +289,6 @@ class ViewComponentTest < ViewComponent::TestCase
 
   def test_renders_content_areas_template_can_wrap_render_arguments
     render_inline(ContentAreasComponent.new(title: "Hello!", footer: "Bye!")) do |component|
-      # rubocop:disable Rails/OutputSafety
       component.with(:title) { "<strong>#{component.title}</strong>".html_safe }
       component.with(:body) { "Have a nice day." }
     end
@@ -333,6 +338,13 @@ class ViewComponentTest < ViewComponent::TestCase
     render_inline(ContainerComponent.new)
 
     assert_text("Hello helper method")
+  end
+
+  def test_renders_helper_method_within_nested_component_with_disabled_monkey_patch
+    with_render_monkey_patch_config(false) do
+      render_inline(ContainerComponent.new)
+      assert_text("Hello helper method")
+    end
   end
 
   def test_renders_path_helper
@@ -608,7 +620,7 @@ class ViewComponentTest < ViewComponent::TestCase
         render_inline(ExceptionInTemplateComponent.new)
       end
 
-    assert_match %r[app/components/exception_in_template_component\.html\.erb:2], error.backtrace[0]
+    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[0]
   end
 
   def test_render_collection
@@ -638,10 +650,10 @@ class ViewComponentTest < ViewComponent::TestCase
     ]
     render_inline(CollectionCounterComponent.with_collection(photos))
 
-    assert_selector("figure[data-index=0]", { count: 1 })
+    assert_selector("figure[data-index=0]", {count: 1})
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
-    assert_selector("figure[data-index=1]", { count: 1 })
+    assert_selector("figure[data-index=1]", {count: 1})
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
@@ -652,10 +664,10 @@ class ViewComponentTest < ViewComponent::TestCase
     ]
     render_inline(CollectionIterationComponent.with_collection(photos))
 
-    assert_selector("figure.first[data-index=0]", { count: 1 })
+    assert_selector("figure.first[data-index=0]", {count: 1})
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
-    assert_selector("figure[data-index=1]:not(.first)", { count: 1 })
+    assert_selector("figure[data-index=1]:not(.first)", {count: 1})
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
@@ -666,10 +678,10 @@ class ViewComponentTest < ViewComponent::TestCase
     ]
     render_inline(CollectionIterationExtendComponent.with_collection(photos))
 
-    assert_selector("figure.first[data-index=0]", { count: 1 })
+    assert_selector("figure.first[data-index=0]", {count: 1})
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
-    assert_selector("figure[data-index=1]:not(.first)", { count: 1 })
+    assert_selector("figure[data-index=1]:not(.first)", {count: 1})
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
@@ -680,10 +692,10 @@ class ViewComponentTest < ViewComponent::TestCase
     ]
     render_inline(CollectionIterationExtendOverrideComponent.with_collection(photos))
 
-    assert_selector("figure.first[data-index=0]", { count: 1 })
+    assert_selector("figure.first[data-index=0]", {count: 1})
     assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
 
-    assert_selector("figure[data-index=1]:not(.first)", { count: 1 })
+    assert_selector("figure[data-index=1]:not(.first)", {count: 1})
     assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
   end
 
@@ -754,7 +766,7 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     assert_match(
-      "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, "\
+      "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, " \
       "which is required in order to render it as a collection.\n\n" \
       "To fix this issue, update the initializer to accept `name`.\n\n" \
       "See https://viewcomponent.org/guide/collections.html for more information on rendering collections.",
@@ -771,38 +783,34 @@ class ViewComponentTest < ViewComponent::TestCase
   end
 
   def test_component_with_invalid_parameter_names
-    begin
-      old_cache = ViewComponent::CompileCache.cache
-      ViewComponent::CompileCache.cache = Set.new
+    old_cache = ViewComponent::CompileCache.cache
+    ViewComponent::CompileCache.cache = Set.new
 
-      exception =
-        assert_raises ViewComponent::ComponentError do
-          InvalidParametersComponent.compile(raise_errors: true)
-        end
+    exception =
+      assert_raises ViewComponent::ComponentError do
+        InvalidParametersComponent.compile(raise_errors: true)
+      end
 
-      assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
-    ensure
-      ViewComponent::CompileCache.cache = old_cache
-    end
+    assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
+  ensure
+    ViewComponent::CompileCache.cache = old_cache
   end
 
   def test_component_with_invalid_named_parameter_names
-    begin
-      old_cache = ViewComponent::CompileCache.cache
-      ViewComponent::CompileCache.cache = Set.new
+    old_cache = ViewComponent::CompileCache.cache
+    ViewComponent::CompileCache.cache = Set.new
 
-      exception =
-        assert_raises ViewComponent::ComponentError do
-          InvalidNamedParametersComponent.compile(raise_errors: true)
-        end
+    exception =
+      assert_raises ViewComponent::ComponentError do
+        InvalidNamedParametersComponent.compile(raise_errors: true)
+      end
 
-      assert_match(
-        /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
-        exception.message
-      )
-    ensure
-      ViewComponent::CompileCache.cache = old_cache
-    end
+    assert_match(
+      /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
+      exception.message
+    )
+  ensure
+    ViewComponent::CompileCache.cache = old_cache
   end
 
   def test_collection_component_with_trailing_comma_attr_reader
@@ -882,7 +890,7 @@ class ViewComponentTest < ViewComponent::TestCase
       end
 
     # Necessary because anonymous classes don't have a `name` property
-    Object.const_set("MY_COMPONENT", dynamic_component)
+    Object.const_set(:MY_COMPONENT, dynamic_component)
 
     render_inline MY_COMPONENT.new
     assert_selector "h1", text: "hello world"
@@ -891,7 +899,7 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector "h1", text: "hello world"
     assert_selector "h1", text: "hello view component"
   ensure
-    Object.send(:remove_const, "MY_COMPONENT")
+    Object.send(:remove_const, :MY_COMPONENT)
   end
 
   def test_with_request_url
@@ -927,7 +935,13 @@ class ViewComponentTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
+      assert_equal "/products", request.path
       assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
+      assert_equal "/products?mykey=myvalue&otherkey=othervalue", request.fullpath
+    end
+
+    with_request_url "/products?mykey[mynestedkey]=myvalue" do
+      assert_equal({"mynestedkey" => "myvalue"}, request.parameters["mykey"])
     end
   end
 
@@ -1027,6 +1041,127 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_selector(".base-component", count: 1)
     assert_selector(".derived-component", count: 1) do
       assert_selector(".base-component", count: 1)
+    end
+  end
+
+  def test_component_renders_without_trailing_whitespace
+    template = File.read(Rails.root.join("app/components/trailing_whitespace_component.html.erb"))
+    assert template =~ /\s+\z/, "Template does not contain any trailing whitespace"
+
+    without_template_annotations do
+      render_inline(TrailingWhitespaceComponent.new)
+    end
+
+    refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
+  end
+
+  def test_renders_objects_in_component_view_context
+    not_a_component = RendersNonComponent::NotAComponent.new
+    component = RendersNonComponent.new(not_a_component: not_a_component)
+
+    render_inline(component)
+
+    assert_selector "span", text: "I'm not a component"
+
+    assert(
+      not_a_component.render_in_view_context == component,
+      "Component-like object was not rendered in the parent component's view context"
+    )
+  end
+
+  def test_renders_nested_collection
+    items = %w[foo bar baz boo]
+    render_inline(NestedCollectionWrapperComponent.new(items: items))
+
+    index = 0
+
+    assert_selector(".nested", count: 4) do |node|
+      assert "#{items[index]}, Hello helper method" == node.text
+      index += 1
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_stack_trace_singular
+    line_num = __LINE__ + 3 # offset because `c.item`, below, is the line that causes the deprecation warning
+    assert_deprecated(/with_item`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.item { "foo" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_stack_trace_collection
+    line_num = __LINE__ + 3 # offset because `c.items`, below, is the line that causes the deprecation warning
+    assert_deprecated(/with_items`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.items([{foo: "bar"}])
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_collection_singular
+    assert_deprecated(/with_item`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.item { "foo" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_collection
+    assert_deprecated(/with_items`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.items([{foo: "bar"}])
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_singular
+    assert_deprecated(/with_header`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.header { "hi!" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_polymorphic_singular
+    assert_deprecated(/with_header_standard`/, ViewComponent::Deprecation) do
+      render_inline(PolymorphicSlotComponent.new) do |c|
+        c.header_standard { "hi!" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_polymorphic_collection
+    assert_deprecated(/with_item_foo`/, ViewComponent::Deprecation) do
+      render_inline(PolymorphicSlotComponent.new) do |c|
+        c.item_foo { "hi!" }
+      end
+    end
+  end
+
+  def test_concurrency_deadlock
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
+        mutex = Mutex.new
+
+        t1 = Thread.new do
+          mutex.synchronize do
+            sleep 0.02
+            render_inline(ContentEvalComponent.new)
+          end
+        end
+
+        t = Thread.new do
+          render_inline(ContentEvalComponent.new) do
+            mutex.synchronize do
+              sleep 0.01
+            end
+          end
+        end
+
+        t1.join
+        t.join
+      end
     end
   end
 end

@@ -1,10 +1,13 @@
 ---
 layout: default
 title: Conditional rendering
-parent: Guide
+parent: How-to guide
 ---
 
 # Conditional rendering
+
+Since 1.8.0
+{: .label }
 
 Components can implement a `#render?` method to be called after initialization to determine if the component should render.
 

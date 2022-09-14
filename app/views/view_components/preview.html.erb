@@ -1,7 +1,7 @@
 <% @render_args ||= render_args %>
 
 <% if @render_args[:component] %>
-  <% if ViewComponent::Base.render_monkey_patch_enabled || Rails.version.to_f >= 6.1 %>
+  <% if ViewComponent::Base.config.render_monkey_patch_enabled || Rails.version.to_f >= 6.1 %>
     <%= render(@render_args[:component], @render_args[:args], &@render_args[:block]) %>
   <% else %>
     <%= render_component(@render_args[:component], &@render_args[:block]) %>
@@ -10,6 +10,6 @@
   <%= render template: @render_args[:template], locals: @render_args[:locals] || {} %>
 <% end %>
 
-<% if ViewComponent::Base.show_previews_source && !@render_args[:hide_preview_source] %>
+<% if ViewComponent::Base.config.show_previews_source && !@render_args[:hide_preview_source] %>
   <%= preview_source %>
 <% end %>

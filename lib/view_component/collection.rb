@@ -10,10 +10,17 @@ module ViewComponent
     delegate :format, to: :component
     delegate :size, to: :@collection
 
+    attr_accessor :__vc_original_view_context
+
+    def set_original_view_context(view_context)
+      self.__vc_original_view_context = view_context
+    end
+
     def render_in(view_context, &block)
       components.map do |component|
+        component.set_original_view_context(__vc_original_view_context)
         component.render_in(view_context, &block)
-      end.join.html_safe # rubocop:disable Rails/OutputSafety
+      end.join.html_safe
     end
 
     def components
@@ -54,7 +61,7 @@ module ViewComponent
     end
 
     def component_options(item, iterator)
-      item_options = { component.collection_parameter => item }
+      item_options = {component.collection_parameter => item}
       item_options[component.collection_counter_parameter] = iterator.index + 1 if component.counter_argument_present?
       item_options[component.collection_iteration_parameter] = iterator.dup if component.iteration_argument_present?
 

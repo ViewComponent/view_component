@@ -1,10 +1,13 @@
 ---
 layout: default
 title: Collections
-parent: Guide
+parent: How-to guide
 ---
 
 # Collections
+
+Since 2.1.0
+{: .label }
 
 Like [Rails partials](https://guides.rubyonrails.org/layouts_and_rendering.html#rendering-collections), it's possible to render a collection with ViewComponents, using `with_collection`:
 
@@ -22,7 +25,7 @@ class ProductComponent < ViewComponent::Base
 end
 ```
 
-[By default](https://github.com/github/view_component/blob/89f8fab4609c1ef2467cf434d283864b3c754473/lib/view_component/base.rb#L249), the component name is used to define the parameter passed into the component from the collection.
+[By default](https://github.com/viewcomponent/view_component/blob/89f8fab4609c1ef2467cf434d283864b3c754473/lib/view_component/base.rb#L249), the component name is used to define the parameter passed into the component from the collection.
 
 ## `with_collection_parameter`
 
@@ -70,6 +73,9 @@ end
 
 ## Collection counter
 
+Since 2.5.0
+{: .label }
+
 ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
 
 ```ruby
@@ -90,6 +96,9 @@ end
 ```
 
 ## Collection iteration context
+
+Since 2.33.0
+{: .label }
 
 ViewComponent defines an iteration variable matching the parameter name above, followed by `_iteration`. This gives contextual information about the iteration to components within the collection (`#size`, `#index`, `#first?`, and `#last?`).
 

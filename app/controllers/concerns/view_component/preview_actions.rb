@@ -8,12 +8,9 @@ module ViewComponent
       prepend_view_path File.expand_path("../../../views", __dir__)
 
       around_action :set_locale, only: :previews
-      before_action :find_preview, only: :previews
       before_action :require_local!, unless: :show_previews?
 
-      if respond_to?(:content_security_policy)
-        content_security_policy(false)
-      end
+      content_security_policy(false) if respond_to?(:content_security_policy)
     end
 
     def index
@@ -23,6 +20,8 @@ module ViewComponent
     end
 
     def previews
+      find_preview
+
       if params[:path] == @preview.preview_name
         @page_title = "Component Previews for #{@preview.preview_name}"
         render "view_components/previews", **determine_layout
@@ -36,23 +35,26 @@ module ViewComponent
         opts = {}
         opts[:layout] = layout if layout.present? || layout == false
         opts[:locals] = locals if locals.present?
-        render "view_components/preview", opts # rubocop:disable GitHub/RailsControllerRenderLiteral
+        render "view_components/preview", opts
       end
     end
 
     private
 
-    def default_preview_layout # :doc:
-      ViewComponent::Base.default_preview_layout
+    # :doc:
+    def default_preview_layout
+      ViewComponent::Base.config.default_preview_layout
     end
 
-    def show_previews? # :doc:
-      ViewComponent::Base.show_previews
+    # :doc:
+    def show_previews?
+      ViewComponent::Base.config.show_previews
     end
 
-    def find_preview # :doc:
+    # :doc:
+    def find_preview
       candidates = []
-      params[:path].to_s.scan(%r{/|$}) { candidates << $` }
+      params[:path].to_s.scan(%r{/|$}) { candidates << Regexp.last_match.pre_match }
       preview = candidates.detect { |candidate| ViewComponent::Preview.exists?(candidate) }
 
       if preview
@@ -62,10 +64,8 @@ module ViewComponent
       end
     end
 
-    def set_locale
-      I18n.with_locale(params[:locale] || I18n.default_locale) do
-        yield
-      end
+    def set_locale(&block)
+      I18n.with_locale(params[:locale] || I18n.default_locale, &block)
     end
 
     # Returns either {} or {layout: value} depending on configuration

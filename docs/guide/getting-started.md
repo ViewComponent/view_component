@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Getting started
-parent: Guide
+parent: How-to guide
 nav_order: 1
 ---
 
@@ -76,6 +76,9 @@ Returning:
 
 ## `#with_content`
 
+Since 2.31.0
+{: .label }
+
 String content can also be passed to a ViewComponent by calling `#with_content`:
 
 ```erb
@@ -90,11 +93,20 @@ It's also possible to render ViewComponents in controllers:
 ```ruby
 # app/controllers/home_controller.rb
 def show
-  render(ExampleComponent.new(title: "My Title")) { "Hello, World!" }
+  render(ExampleComponent.new(title: "My Title"))
 end
 ```
 
-_In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout._
+_Note: Content can't be passed to a component via a block in controllers. Instead, use `with_content`. In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout._
+
+When using turbo frames with [turbo-rails](https://github.com/hotwired/turbo-rails), set `content_type` as `text/html`:
+
+```ruby
+# app/controllers/home_controller.rb
+def create
+  render(ExampleComponent.new, content_type: "text/html")
+end
+```
 
 ### Rendering ViewComponents to strings inside controller actions
 

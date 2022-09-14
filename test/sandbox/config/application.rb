@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path("../boot", __FILE__)
+require File.expand_path("boot", __dir__)
 
 require "active_model/railtie"
 require "action_controller/railtie"
@@ -17,6 +17,10 @@ require "jbuilder"
 module Sandbox
   class Application < Rails::Application
     config.action_controller.asset_host = "http://assets.example.com"
+
+    # Prepare test_set_no_duplicate_autoload_paths
+    config.autoload_paths.push("#{config.root}/my/components/previews")
+    config.view_component.preview_paths << "#{config.root}/my/components/previews"
   end
 end
 
