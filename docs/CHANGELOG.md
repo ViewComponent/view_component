@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Deprecate support for Ruby < 2.7.
+
+    *Joel Hawksley*
+
 * Add `source_code_uri` to gemspec.
 
     *Yoshiyuki Hirano*
