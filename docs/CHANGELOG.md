@@ -14,6 +14,14 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Link to `CHANGELOG.md` instead of symlink.
+
+    *Joel Hawksley.
+
+* Add Aluuno to list of companies using ViewComponent.
+
+    *Daniel Naves de Carvalho*
+
 * Add `source_code_uri` to gemspec.
 
     *Yoshiyuki Hirano*
