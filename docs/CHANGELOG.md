@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `changelog_uri` to gemspec.
+
+    *Joel Hawksley*
+
 * Link to `CHANGELOG.md` instead of symlink.
 
     *Joel Hawksley.
