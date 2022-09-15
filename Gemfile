@@ -10,10 +10,12 @@ gem "rails", rails_version == "main" ? {git: "https://github.com/rails/rails", r
 
 gem "rspec-rails", "~> 5"
 
-# Utilize to test interactions
-gem "cuprite", "~> 0.13"
-gem "puma", "~> 5.4"
-gem "selenium-webdriver"
+group :test do
+  # Utilize to test UI interactions
+  gem "cuprite", "~> 0.13"
+  gem "puma", "~> 5.4"
+  gem "selenium-webdriver"
+end
 
 if RUBY_VERSION >= "3.1"
   gem "net-imap", require: false
