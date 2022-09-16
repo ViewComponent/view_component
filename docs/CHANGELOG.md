@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Correctly document `generate.sidecar` config option
+* Correctly document `generate.sidecar` config option.
 
     *Ruben Smit*
 
