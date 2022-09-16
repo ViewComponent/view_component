@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Correctly document `generate.sidecar` config option
+
+    *Ruben Smit*
+
 ## 2.72.0
 
 * Deprecate support for Ruby < 2.7 for removal in v3.0.0.
