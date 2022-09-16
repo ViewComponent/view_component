@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Simplify CI configuration to a single build per Ruby/Rails version.
+
+    *Joel Hawksley*
+
 * Correctly document `generate.sidecar` config option.
 
     *Ruben Smit*
