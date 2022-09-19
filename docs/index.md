@@ -225,6 +225,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
 * [Orbit](https://orbit.love)
 * [Podia](https://www.podia.com/)
+* [PrintReleaf](https://www.printreleaf.com/)
 * [QuickNode](https://www.quicknode.com/)
 * [Shogun](https://getshogun.com/)
 * [Wecasa](https://www.wecasa.fr/)
