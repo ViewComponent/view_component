@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add PrintReleaf to list of companies using ViewComponent.
+
+    *Ry Kulp*
+
 * Simplify CI configuration to a single build per Ruby/Rails version.
 
     *Joel Hawksley*
