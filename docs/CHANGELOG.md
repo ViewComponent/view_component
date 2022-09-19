@@ -18,6 +18,10 @@ nav_order: 5
 
     *Ruben Smit*
 
+* Add Yobbers to list of companies using ViewComponent.
+
+    *Anton Prins*
+
 ## 2.72.0
 
 * Deprecate support for Ruby < 2.7 for removal in v3.0.0.
