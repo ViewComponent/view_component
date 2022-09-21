@@ -856,6 +856,10 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_after_compile
+    assert_deprecated(/_after_compile/, ViewComponent::Deprecation) do
+      AfterCompileComponent.compile(force: true)
+    end
+
     assert_equal AfterCompileComponent.compiled_value, "Hello, World!"
 
     render_inline(AfterCompileComponent.new)

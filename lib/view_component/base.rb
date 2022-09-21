@@ -59,12 +59,10 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
-    # EXPERIMENTAL: This API is experimental and may be removed at any time.
-    # Hook for allowing components to do work as part of the compilation process.
+    # Called after a component is compiled. Allows components to do work as part of the compilation process.
     #
-    # For example, one might compile component-specific assets at this point.
-    # @private TODO: add documentation
-    def self._after_compile
+    # @return [void]
+    def self.after_compile
       # noop
     end
 

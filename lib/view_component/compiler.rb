@@ -90,7 +90,13 @@ module ViewComponent
         define_render_template_for
 
         component_class.build_i18n_backend
-        component_class._after_compile
+        component_class.after_compile
+
+        if component_class.methods.include? :_after_compile
+          ViewComponent::Deprecation.warn("`._after_compile` has been renamed to `.after_compile`. `._after_compile` will be removed in v3.0.0.")
+
+          component_class._after_compile
+        end
 
         CompileCache.register(component_class)
       end
