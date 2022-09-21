@@ -18,6 +18,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Add PrintReleaf to list of companies using ViewComponent.
+
+    *Ry Kulp*
+
 * Simplify CI configuration to a single build per Ruby/Rails version.
 
     *Joel Hawksley*
@@ -25,6 +29,10 @@ nav_order: 5
 * Correctly document `generate.sidecar` config option.
 
     *Ruben Smit*
+
+* Add Yobbers to list of companies using ViewComponent.
+
+    *Anton Prins*
 
 ## 2.72.0
 
