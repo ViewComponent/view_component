@@ -206,7 +206,6 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/matheuspolicamilo?s=64" alt="matheuspolicamilo" width="32" />
 <img src="https://avatars.githubusercontent.com/danigonza?s=64" alt="danigonza" width="32" />
 
-
 ## Who uses ViewComponent?
 
 * [Arrows](https://arrows.to/)
