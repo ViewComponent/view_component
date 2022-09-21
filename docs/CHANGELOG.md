@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Remove experimental labels from docs.
+
+    *Joel Hawksley*
+
 * Simplify CI configuration to a single build per Ruby/Rails version.
 
     *Joel Hawksley*
