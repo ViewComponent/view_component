@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Rename `_after_compile` to `after_compile`. `_after_compile` is deprecated and will be removed in `v3.0.0`.
+* Rename experimental `_after_compile` to `after_compile`. `_after_compile` is deprecated and will be removed in `v3.0.0`.
 
     *Joel Hawksley*
 
