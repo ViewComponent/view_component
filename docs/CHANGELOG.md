@@ -7,7 +7,7 @@ title: Changelog
 
 ## main
 
-* Don't add ActionDispatch::Static middleware, if rails does not serve static files
+* Don't add ActionDispatch::Static middleware unless `public_file_server.enabled`.
 
     *Daniel Gonzalez*
 
