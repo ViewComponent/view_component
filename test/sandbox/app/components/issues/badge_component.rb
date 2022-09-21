@@ -5,12 +5,12 @@ module Issues
     STATES = {
       open: {
         color: :green,
-        label: "Open",
+        label: "Open"
       },
       closed: {
         color: :red,
-        label: "Closed",
-      },
+        label: "Closed"
+      }
     }.freeze
 
     def initialize(state:)

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Templates
-parent: Guide
+parent: How-to guide
 ---
 
 # Templates
@@ -21,6 +21,9 @@ app/components
 ```
 
 ## Subdirectory
+
+Since 2.7.0
+{: .label }
 
 As an alternative, views and other assets can be placed in a subdirectory with the same name as the component:
 
@@ -45,6 +48,9 @@ bin/rails generate component Example title --sidecar
 
 ## Inline
 
+Since 1.16.0
+{: .label }
+
 ViewComponents can render without a template file, by defining a `call` method:
 
 ```ruby
@@ -60,7 +66,7 @@ class InlineComponent < ViewComponent::Base
 end
 ```
 
-It is also possible to define methods for Action Pack variants (`phone` in this case):
+It's also possible to define methods for Action Pack variants (`phone` in this case):
 
 ```ruby
 class InlineVariantComponent < ViewComponent::Base
@@ -84,11 +90,44 @@ To override the `variant` set by the request, use `with_variant`:
 
 ## Inherited
 
+Since 2.19.0
+{: .label }
+
 Component subclasses inherit the parent component's template if they don't define their own template.
 
 ```ruby
-# If MyLinkComponent does not define a template,
+# If MyLinkComponent doesn't define a template,
 # it will fall back to the `LinkComponent` template.
 class MyLinkComponent < LinkComponent
+end
+```
+
+### Rendering parent templates
+
+Since 2.55.0
+{: .label }
+
+To render a parent component's template from a subclass, call `render_parent`:
+
+```erb
+<%# my_link_component.html.erb %>
+<div class="base-component-template">
+  <% render_parent %>
+</div>
+```
+
+## Trailing whitespace
+
+Code editors commonly add a trailing newline character to source files in keeping with the Unix standard. Including trailing whitespace in component templates can result in unwanted whitespace in the HTML, eg. if the component is rendered before the period at the end of a sentence.
+
+To strip trailing whitespace from component templates, use the `strip_trailing_whitespace` class method.
+
+```ruby
+class MyComponent < ViewComponent::Base
+  # do strip whitespace
+  strip_trailing_whitespace
+
+  # don't strip whitespace
+  strip_trailing_whitespace(false)
 end
 ```

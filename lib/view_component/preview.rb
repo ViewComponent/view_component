@@ -5,6 +5,7 @@ require "active_support/descendants_tracker"
 module ViewComponent # :nodoc:
   class Preview
     include ActionView::Helpers::TagHelper
+    include ActionView::Helpers::AssetTagHelper
     extend ActiveSupport::DescendantsTracker
 
     def render(component, **args, &block)
@@ -13,7 +14,7 @@ module ViewComponent # :nodoc:
         block: block,
         component: component,
         locals: {},
-        template: "view_components/preview",
+        template: "view_components/preview"
       }
     end
 
@@ -29,7 +30,8 @@ module ViewComponent # :nodoc:
     class << self
       # Returns all component preview classes.
       def all
-        load_previews if descendants.empty?
+        load_previews
+
         descendants
       end
 
@@ -64,46 +66,48 @@ module ViewComponent # :nodoc:
         name.chomp("Preview").underscore
       end
 
+      # rubocop:disable Style/TrivialAccessors
       # Setter for layout name.
       def layout(layout_name)
         @layout = layout_name
       end
+      # rubocop:enable Style/TrivialAccessors
 
       # Returns the relative path (from preview_path) to the preview example template if the template exists
       def preview_example_template_path(example)
         preview_path =
-          Array(preview_paths).detect do |preview_path|
-            Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
+          Array(preview_paths).detect do |path|
+            Dir["#{path}/#{preview_name}_preview/#{example}.html.*"].first
           end
 
         if preview_path.nil?
           raise(
             PreviewTemplateError,
-            "A preview template for example #{example} does not exist.\n\n" \
+            "A preview template for example #{example} doesn't exist.\n\n" \
             "To fix this issue, create a template for the example."
           )
         end
 
         path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
-        Pathname.new(path).
-          relative_path_from(Pathname.new(preview_path)).
-          to_s.
-          sub(/\..*$/, "")
+        Pathname.new(path)
+          .relative_path_from(Pathname.new(preview_path))
+          .to_s
+          .sub(/\..*$/, "")
       end
 
       # Returns the method body for the example from the preview file.
       def preview_source(example)
-        source = self.instance_method(example.to_sym).source.split("\n")
+        source = instance_method(example.to_sym).source.split("\n")
         source[1...(source.size - 1)].join("\n")
       end
-
-      private
 
       def load_previews
         Array(preview_paths).each do |preview_path|
           Dir["#{preview_path}/**/*_preview.rb"].sort.each { |file| require_dependency file }
         end
       end
+
+      private
 
       def preview_paths
         Base.preview_paths

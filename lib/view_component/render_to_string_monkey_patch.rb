@@ -4,7 +4,7 @@ module ViewComponent
   module RenderToStringMonkeyPatch # :nodoc:
     def render_to_string(options = {}, args = {})
       if options.respond_to?(:render_in)
-        options.render_in(self.view_context)
+        options.render_in(view_context)
       else
         super
       end

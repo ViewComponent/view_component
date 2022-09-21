@@ -23,18 +23,18 @@ module ViewComponent
       #   class_name: "Header" # class name string, used to instantiate Slot
       # )
       def with_slot(*slot_names, collection: false, class_name: nil)
-        ActiveSupport::Deprecation.warn(
+        ViewComponent::Deprecation.warn(
           "`with_slot` is deprecated and will be removed in ViewComponent v3.0.0.\n" \
           "Use the new slots API (https://viewcomponent.org/guide/slots.html) instead."
         )
 
         slot_names.each do |slot_name|
-          # Ensure slot_name is not already declared
-          if self.slots.key?(slot_name)
+          # Ensure slot_name isn't already declared
+          if slots.key?(slot_name)
             raise ArgumentError.new("#{slot_name} slot declared multiple times")
           end
 
-          # Ensure slot name is not :content
+          # Ensure slot name isn't :content
           if slot_name == :content
             raise ArgumentError.new ":content is a reserved slot name. Please use another name, such as ':body'"
           end
@@ -73,7 +73,7 @@ module ViewComponent
           class_name = "ViewComponent::Slot" unless class_name.present?
 
           # Register the slot on the component
-          self.slots[slot_name] = {
+          slots[slot_name] = {
             class_name: class_name,
             instance_variable_name: instance_variable_name,
             collection: collection
@@ -84,7 +84,7 @@ module ViewComponent
       def inherited(child)
         # Clone slot configuration into child class
         # see #test_slots_pollution
-        child.slots = self.slots.clone
+        child.slots = slots.clone
 
         super
       end
@@ -105,8 +105,8 @@ module ViewComponent
     # <% end %>
     #
     def slot(slot_name, **args, &block)
-      # Raise ArgumentError if `slot` does not exist
-      unless slots.keys.include?(slot_name)
+      # Raise ArgumentError if `slot` doesn't exist
+      unless slots.key?(slot_name)
         raise ArgumentError.new "Unknown slot '#{slot_name}' - expected one of '#{slots.keys}'"
       end
 
@@ -123,8 +123,7 @@ module ViewComponent
       slot_instance = args.present? ? slot_class.new(**args) : slot_class.new
 
       # Capture block and assign to slot_instance#content
-      # rubocop:disable Rails/OutputSafety
-      slot_instance.content = view_context.capture(&block).to_s.strip.html_safe if block_given?
+      slot_instance.content = view_context.capture(&block).to_s.strip.html_safe if block
 
       if slot[:collection]
         # Initialize instance variable as an empty array
@@ -140,7 +139,7 @@ module ViewComponent
         instance_variable_set(slot[:instance_variable_name], slot_instance)
       end
 
-      # Return nil, as this method should not output anything to the view itself.
+      # Return nil, as this method shouldn't output anything to the view itself.
       nil
     end
   end

@@ -21,7 +21,7 @@ module ViewComponent
         )
       end
 
-      if block_given?
+      if block
         content = view_context.capture(&block)
       end
 
@@ -31,7 +31,7 @@ module ViewComponent
 
     class_methods do
       def with_content_areas(*areas)
-        ActiveSupport::Deprecation.warn(
+        ViewComponent::Deprecation.warn(
           "`with_content_areas` is deprecated and will be removed in ViewComponent v3.0.0.\n\n" \
           "Use slots (https://viewcomponent.org/guide/slots.html) instead."
         )

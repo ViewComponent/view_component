@@ -46,6 +46,12 @@ update_ruby_version() {
       -e "s/MINOR = [0-9]+/MINOR = $2/g" \
       -e "s/PATCH = [0-9]+/PATCH = $3/g" \
       lib/view_component/version.rb
+
+  # Update deprecation horizon version
+  major=$1
+  sed -E -i '' \
+      -e "s/DEPRECATION_HORIZON = [0-9]+/DEPRECATION_HORIZON = $((major + 1))/g" \
+      lib/view_component/deprecation.rb
 }
 
 update_gemfiles() {
@@ -53,9 +59,15 @@ update_gemfiles() {
   bundle
 }
 
+build_docs() {
+  bundle exec rake docs:build
+}
+
 add_changed_files() {
   git add \
+    docs/api.md \
     docs/CHANGELOG.md \
+    docs/_data/library.yml \
     Gemfile.lock \
     lib/view_component/version.rb
 }
@@ -70,7 +82,7 @@ push() {
   echo "####################################################"
   echo "Now, open a PR with this branch and merge it to main"
   echo "Then, run script/publish on main to release the gem"
-  echo "Finally, create a GitHub release https://github.com/github/view_component/releases/new with the changes from docs/CHANGELOG"
+  echo "Finally, create a GitHub release https://github.com/viewcomponent/view_component/releases/new with the changes from docs/CHANGELOG"
   echo "####################################################"
 }
 
@@ -112,14 +124,17 @@ main() {
   do
     if [ "$bump" == "Major" ]; then
       major=$((major + 1))
+      minor=0
+      patch=0
     elif [ "$bump" == "Minor" ]; then
       minor=$((minor + 1))
+      patch=0
     elif [ "$bump" == "Patch" ]; then
       patch=$((patch + 1))
     else
       read -p "What version? (Currently $major.$minor.$patch): " new_version
       if [ "$new_version" == "$major.$minor.$patch" ]; then
-        echo "Error: Cannot be the same version"
+        echo "Error: Can't be the same version"
         exit 1
       fi
 
@@ -143,6 +158,7 @@ main() {
     update_readme $major $minor $patch
     update_ruby_version $major $minor $patch
     update_gemfiles $major $minor $patch
+    echo "version: $major.$minor.$patch" > docs/_data/library.yml
     add_changed_files $major $minor $patch
     commit $major $minor $patch
     push $major $minor $patch

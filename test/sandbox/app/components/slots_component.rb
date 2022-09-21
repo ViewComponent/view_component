@@ -10,8 +10,6 @@ class SlotsComponent < ViewComponent::Base
   with_slot :item, collection: true, class_name: "Item"
 
   class Title < ViewComponent::Slot
-    def initialize
-    end
   end
 
   class Item < ViewComponent::Slot

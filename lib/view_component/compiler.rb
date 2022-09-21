@@ -1,67 +1,111 @@
 # frozen_string_literal: true
 
+require "concurrent-ruby"
+
 module ViewComponent
   class Compiler
+    # Lock required to be obtained before compiling the component
+    attr_reader :__vc_compiler_lock
+
+    # Compiler mode. Can be either:
+    # * development (a blocking mode which ensures thread safety when redefining the `call` method for components,
+    #                default in Rails development and test mode)
+    # * production (a non-blocking mode, default in Rails production mode)
+    DEVELOPMENT_MODE = :development
+    PRODUCTION_MODE = :production
+
+    class_attribute :mode, default: PRODUCTION_MODE
+
     def initialize(component_class)
       @component_class = component_class
+      @__vc_compiler_lock = Concurrent::ReadWriteLock.new
     end
 
     def compiled?
       CompileCache.compiled?(component_class)
     end
 
-    def compile(raise_errors: false)
-      return if compiled?
+    def development?
+      self.class.mode == DEVELOPMENT_MODE
+    end
 
-      subclass_instance_methods = component_class.instance_methods(false)
+    def compile(raise_errors: false, force: false)
+      return if compiled? && !force
+      return if component_class == ViewComponent::Base
 
-      if subclass_instance_methods.include?(:with_content) && raise_errors
-        raise ViewComponent::ComponentError.new(
-          "#{component_class} implements a reserved method, `#with_content`.\n\n" \
-          "To fix this issue, change the name of the method."
-        )
+      if RUBY_VERSION < "2.7.0"
+        ViewComponent::Deprecation.warn("Support for Ruby versions < 2.7.0 will be removed in v3.0.0.")
       end
 
-      if template_errors.present?
-        raise ViewComponent::TemplateError.new(template_errors) if raise_errors
+      component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
 
-        return false
-      end
+      with_write_lock do
+        CompileCache.invalidate_class!(component_class)
 
-      if subclass_instance_methods.include?(:before_render_check)
-        ActiveSupport::Deprecation.warn(
-          "`#before_render_check` will be removed in v3.0.0.\n\n" \
-          "To fix this issue, use `#before_render` instead."
-        )
-      end
+        subclass_instance_methods = component_class.instance_methods(false)
 
-      if raise_errors
-        component_class.validate_initialization_parameters!
-        component_class.validate_collection_parameter!
-      end
-
-      templates.each do |template|
-        # Remove existing compiled template methods,
-        # as Ruby warns when redefining a method.
-        method_name = call_method_name(template[:variant])
-
-        if component_class.instance_methods.include?(method_name.to_sym)
-          component_class.send(:undef_method, method_name.to_sym)
+        if subclass_instance_methods.include?(:with_content) && raise_errors
+          raise ViewComponent::ComponentError.new(
+            "#{component_class} implements a reserved method, `#with_content`.\n\n" \
+            "To fix this issue, change the name of the method."
+          )
         end
 
-        component_class.class_eval <<-RUBY, template[:path], -1
+        if template_errors.present?
+          raise ViewComponent::TemplateError.new(template_errors) if raise_errors
+
+          return false
+        end
+
+        if subclass_instance_methods.include?(:before_render_check)
+          ViewComponent::Deprecation.warn(
+            "`#before_render_check` will be removed in v3.0.0.\n\n" \
+            "To fix this issue, use `#before_render` instead."
+          )
+        end
+
+        if raise_errors
+          component_class.validate_initialization_parameters!
+          component_class.validate_collection_parameter!
+        end
+
+        templates.each do |template|
+          # Remove existing compiled template methods,
+          # as Ruby warns when redefining a method.
+          method_name = call_method_name(template[:variant])
+
+          if component_class.instance_methods.include?(method_name.to_sym)
+            component_class.send(:undef_method, method_name.to_sym)
+          end
+
+          # rubocop:disable Style/EvalWithLocation
+          component_class.class_eval <<-RUBY, template[:path], 0
           def #{method_name}
-            @output_buffer = ActionView::OutputBuffer.new
             #{compiled_template(template[:path])}
           end
-        RUBY
+          RUBY
+          # rubocop:enable Style/EvalWithLocation
+        end
+
+        define_render_template_for
+
+        component_class.build_i18n_backend
+        component_class._after_compile
+
+        CompileCache.register(component_class)
       end
+    end
 
-      define_render_template_for
+    def with_write_lock(&block)
+      if development?
+        __vc_compiler_lock.with_write_lock(&block)
+      else
+        block.call
+      end
+    end
 
-      component_class._after_compile
-
-      CompileCache.register(component_class)
+    def with_read_lock(&block)
+      __vc_compiler_lock.with_read_lock(&block)
     end
 
     private
@@ -77,16 +121,30 @@ module ViewComponent
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
       end.join("\n")
 
-      component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
-          if variant.nil?
-            call
-          #{variant_elsifs}
-          else
-            call
-          end
+      body = <<-RUBY
+        if variant.nil?
+          call
+        #{variant_elsifs}
+        else
+          call
         end
       RUBY
+
+      if development?
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil)
+          self.class.compiler.with_read_lock do
+            #{body}
+          end
+        end
+        RUBY
+      else
+        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil)
+          #{body}
+        end
+        RUBY
+      end
     end
 
     def template_errors
@@ -95,7 +153,7 @@ module ViewComponent
           errors = []
 
           if (templates + inline_calls).empty?
-            errors << "Could not find a template file or inline render method for #{component_class}."
+            errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
           if templates.count { |template| template[:variant].nil? } > 1
@@ -105,15 +163,15 @@ module ViewComponent
           end
 
           invalid_variants =
-            templates.
-            group_by { |template| template[:variant] }.
-            map { |variant, grouped| variant if grouped.length > 1 }.
-            compact.
-            sort
+            templates
+              .group_by { |template| template[:variant] }
+              .map { |variant, grouped| variant if grouped.length > 1 }
+              .compact
+              .sort
 
           unless invalid_variants.empty?
             errors <<
-              "More than one template found for #{'variant'.pluralize(invalid_variants.count)} " \
+              "More than one template found for #{"variant".pluralize(invalid_variants.count)} " \
               "#{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
               "There can only be one template file per variant."
           end
@@ -131,8 +189,8 @@ module ViewComponent
             count = duplicate_template_file_and_inline_variant_calls.count
 
             errors <<
-              "Template #{'file'.pluralize(count)} and inline render #{'method'.pluralize(count)} " \
-              "found for #{'variant'.pluralize(count)} " \
+              "Template #{"file".pluralize(count)} and inline render #{"method".pluralize(count)} " \
+              "found for #{"variant".pluralize(count)} " \
               "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \
               "in #{component_class}. " \
               "There can only be a template file or inline render method per variant."
@@ -190,8 +248,9 @@ module ViewComponent
     end
 
     def compiled_template(file_path)
-      handler = ActionView::Template.handler_for_extension(File.extname(file_path).gsub(".", ""))
+      handler = ActionView::Template.handler_for_extension(File.extname(file_path).delete("."))
       template = File.read(file_path)
+      template.rstrip! if component_class.strip_trailing_whitespace?
 
       if handler.method(:call).parameters.length > 1
         handler.call(component_class, template)
@@ -212,6 +271,15 @@ module ViewComponent
       else
         "call"
       end
+    end
+
+    def should_compile_superclass?
+      development? &&
+        templates.empty? &&
+        !(
+          component_class.instance_methods(false).include?(:call) ||
+            component_class.private_instance_methods(false).include?(:call)
+        )
     end
   end
 end

@@ -1,10 +1,13 @@
 ---
 layout: default
 title: Conditional rendering
-parent: Guide
+parent: How-to guide
 ---
 
 # Conditional rendering
+
+Since 1.8.0
+{: .label }
 
 Components can implement a `#render?` method to be called after initialization to determine if the component should render.
 
@@ -50,4 +53,4 @@ end
 <%= render(ConfirmEmailComponent.new(user: current_user)) %>
 ```
 
-_To assert that a component has not been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`._
+_To assert that a component hasn't been rendered, use `refute_component_rendered` from `ViewComponent::TestHelpers`._

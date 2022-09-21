@@ -1,10 +1,13 @@
 ---
 layout: default
 title: Instrumentation
-parent: Guide
+parent: How-to guide
 ---
 
 # Instrumentation
+
+Since 2.34.0
+{: .label }
 
 To enable ActiveSupport notifications, use the `instrumentation_enabled` option:
 
