@@ -20,8 +20,9 @@ module ViewComponent
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
       def config
-        @config ||= ViewComponent::Config.defaults
+        @config ||= ActiveSupport::OrderedOptions.new
       end
+      attr_writer :config
     end
 
     include ViewComponent::ContentAreas
