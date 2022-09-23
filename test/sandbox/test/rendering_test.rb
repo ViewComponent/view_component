@@ -855,14 +855,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("foo")
   end
 
-  def test_after_compile
-    assert_equal AfterCompileComponent.compiled_value, "Hello, World!"
-
-    render_inline(AfterCompileComponent.new)
-
-    assert_text "Hello, World!"
-  end
-
   def test_does_not_render_passed_in_content_if_render_is_false
     start_time = Time.now
 

@@ -59,15 +59,6 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
-    # EXPERIMENTAL: This API is experimental and may be removed at any time.
-    # Hook for allowing components to do work as part of the compilation process.
-    #
-    # For example, one might compile component-specific assets at this point.
-    # @private TODO: add documentation
-    def self._after_compile
-      # noop
-    end
-
     # @!macro [attach] deprecated_generate_mattr_accessor
     #   @method generate_$1
     #   @deprecated Use `#generate.$1` instead. Will be removed in v3.0.0.

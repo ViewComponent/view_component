@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Remove experimental `_after_compile` lifecycle method.
+
+    *Joel Hawksley*
+
 * Fix capitalization of JavaScript in docs.
 
     *Erinna Chen*
