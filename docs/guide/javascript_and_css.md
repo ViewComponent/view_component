@@ -6,9 +6,6 @@ parent: How-to guide
 
 # JavaScript and CSS
 
-Experimental
-{: .label .label-yellow }
-
 While ViewComponent doesn't provide any built-in tooling to do so, it’s possible to include JavaScript and CSS alongside components.
 
 To use the Webpacker gem to compile assets located in `app/components`:
