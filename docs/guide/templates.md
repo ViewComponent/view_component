@@ -192,3 +192,42 @@ class MyComponent < ViewComponent::Base
   strip_trailing_whitespace(false)
 end
 ```
+
+## Sub-templates
+
+Since 2.73.0
+{: .label }
+
+Experimental
+{: .label .label-yellow }
+
+ViewComponents can render sub-templates defined in the sidecar directory:
+
+```text
+app/components
+├── ...
+├── test_component.rb
+├── test_component
+|   ├── list.html.erb
+|   └── summary.html.erb
+├── ...
+```
+
+Templates are compiled to private methods in the format `render_#{template_basename}_template`:
+
+```ruby
+class TestComponent < ViewComponent::Base
+  def initialize(mode:)
+    @mode = mode
+  end
+
+  def call
+    case @mode
+    when :list
+      render_list_template
+    when :summary
+      render_summary_template
+    end
+  end
+end
+```

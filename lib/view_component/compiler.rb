@@ -68,7 +68,18 @@ module ViewComponent
         end
       else
         templates.each do |template|
-          method_name = call_method_name(template[:variant])
+          pieces = File.basename(template[:path]).split(".")
+  
+          method_name =
+            # If the template matches the name of the component,
+            # set the method name with call_method_name
+            if pieces.first == component_class.name.demodulize.underscore
+              call_method_name(template[:variant])
+            # Otherwise, append the name of the template to
+            # call_method_name
+            else
+              "#{call_method_name(template[:variant])}_#{pieces.first.to_sym}"
+            end
           @variants_rendering_templates << template[:variant]
 
           redefinition_lock.synchronize do
@@ -141,27 +152,28 @@ module ViewComponent
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
-          if templates.count { |template| template[:variant].nil? } > 1
-            errors <<
-              "More than one template found for #{component_class}. " \
-              "There can only be one default template file per component."
-          end
-
-          invalid_variants =
+          invalid_templates =
             templates
               .group_by { |template| template[:variant] }
               .map { |variant, grouped| variant if grouped.length > 1 }
               .compact
               .sort
 
-          unless invalid_variants.empty?
+          unless invalid_templates.empty?
             errors <<
-              "More than one template found for #{"variant".pluralize(invalid_variants.count)} " \
-              "#{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
+              "More than one template found for #{"variant".pluralize(invalid_templates.count)} " \
+              "#{invalid_templates.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
               "There can only be one template file per variant."
           end
 
-          if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
+          default_template_exists =
+            templates.find do |template|
+              pieces = File.basename(template[:path]).split(".")
+
+              template[:variant].nil? && pieces.first == component_class.name.demodulize.underscore
+            end
+
+          if default_template_exists && inline_calls_defined_on_self.include?(:call)
             errors <<
               "Template file and inline render method found for #{component_class}. " \
               "There can only be a template file or inline render method per component."
@@ -207,6 +219,7 @@ module ViewComponent
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
+              base_name: pieces.first,
               variant: pieces[1..-2].join(".").split("+").second&.to_sym,
               handler: pieces.last
             }

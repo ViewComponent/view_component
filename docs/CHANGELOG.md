@@ -790,6 +790,10 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Anton Prins*
 
+* Add experimental support for sub-templates.
+
+    *Felipe Sateler*, *Rob Sterner*, *Joel Hawksley*
+
 ## 2.72.0
 
 * Deprecate support for Ruby < 2.7 for removal in v3.0.0.
