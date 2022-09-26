@@ -12,7 +12,7 @@ When using `turbo_frame_tag` inside a ViewComponent, it may render the template 
 
 As a workaround, use `tag.turbo_frame` instead of `turbo_frame_tag`.
 
-Note: To keep the same functionality `turbo_frame_tag(my_model)`, write `tag.turbo_frame(id: dom_id(my_model))`.
+Note: For the same functionality as `turbo_frame_tag(my_model)`, use `tag.turbo_frame(id: dom_id(my_model))`.
 
 ## form_for compatibility
 
