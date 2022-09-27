@@ -14,6 +14,8 @@ nav_order: 5
 
     *Joel Hawksley*
 
+## 2.73.0
+
 * Remove experimental `_after_compile` lifecycle method.
 
     *Joel Hawksley*
