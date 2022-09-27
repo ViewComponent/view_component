@@ -128,7 +128,7 @@ module ViewComponent
         # component template is evaluated.
         content if self.class.use_consistent_rendering_lifecycle
 
-        render_template_for(@__vc_variant).to_s + _output_postamble
+        render_template_for(@__vc_variant).to_s + output_postamble
       else
         ""
       end
@@ -151,10 +151,10 @@ module ViewComponent
       nil
     end
 
-    # EXPERIMENTAL: Optional content to be returned after the rendered template.
+    # Optional content to be returned after the rendered template.
     #
     # @return [String]
-    def _output_postamble
+    def output_postamble
       ""
     end
 

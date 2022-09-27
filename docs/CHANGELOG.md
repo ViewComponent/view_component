@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Promote experimental `_output_postamble` method to public API as `output_postamble`.
+
+    *Joel Hawksley*
+
 * Promote experimental `_sidecar_files` method to public API as `sidecar_files`.
 
     *Joel Hawksley*
