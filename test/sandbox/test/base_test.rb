@@ -17,7 +17,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
 
     compiler = ViewComponent::Compiler.new(ViewComponent::Base)
 
-    ViewComponent::Base.stub(:_sidecar_files, file_path) do
+    ViewComponent::Base.stub(:sidecar_files, file_path) do
       templates = compiler.send(:templates)
 
       templates.each_with_index do |template, index|
@@ -56,7 +56,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
         "#{root}/app/components/template_and_sidecar_directory_template_component/" \
         "template_and_sidecar_directory_template_component.html.erb"
       ],
-      TemplateAndSidecarDirectoryTemplateComponent._sidecar_files(["erb"])
+      TemplateAndSidecarDirectoryTemplateComponent.sidecar_files(["erb"])
     )
 
     assert_equal(
@@ -64,17 +64,17 @@ class ViewComponent::Base::UnitTest < Minitest::Test
         "#{root}/app/components/css_sidecar_file_component.css",
         "#{root}/app/components/css_sidecar_file_component.html.erb"
       ],
-      CssSidecarFileComponent._sidecar_files(["css", "erb"])
+      CssSidecarFileComponent.sidecar_files(["css", "erb"])
     )
 
     assert_equal(
       ["#{root}/app/components/css_sidecar_file_component.css"],
-      CssSidecarFileComponent._sidecar_files(["css"])
+      CssSidecarFileComponent.sidecar_files(["css"])
     )
 
     assert_equal(
       ["#{root}/app/components/translatable_component.yml"],
-      TranslatableComponent._sidecar_files(["yml"])
+      TranslatableComponent.sidecar_files(["yml"])
     )
   end
 
