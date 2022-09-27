@@ -10,6 +10,14 @@ nav_order: 5
 
 ## main
 
+* Promote experimental `_output_postamble` method to public API as `output_postamble`.
+
+    *Joel Hawksley*
+
+* Promote experimental `_sidecar_files` method to public API as `sidecar_files`.
+
+    *Joel Hawksley*
+
 ## 2.73.0
 
 * Remove experimental `_after_compile` lifecycle method.

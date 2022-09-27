@@ -204,7 +204,7 @@ module ViewComponent
         begin
           extensions = ActionView::Template.template_handler_extensions
 
-          component_class._sidecar_files(extensions).each_with_object([]) do |path, memo|
+          component_class.sidecar_files(extensions).each_with_object([]) do |path, memo|
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
