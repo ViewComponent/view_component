@@ -409,15 +409,14 @@ module ViewComponent
       # @private
       attr_accessor :source_location, :virtual_path
 
-      # EXPERIMENTAL: This API is experimental and may be removed at any time.
       # Find sidecar files for the given extensions.
       #
       # The provided array of extensions is expected to contain
       # strings starting without the "dot", example: `["erb", "haml"]`.
       #
       # For example, one might collect sidecar CSS files that need to be compiled.
-      # @private TODO: add documentation
-      def _sidecar_files(extensions)
+      # @param extensions [Array<String>] Extensions of which to return matching sidecar files.
+      def sidecar_files(extensions)
         return [] unless source_location
 
         extensions = extensions.join(",")

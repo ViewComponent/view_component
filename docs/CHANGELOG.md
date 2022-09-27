@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Promote experimental `_sidecar_files` method to public API as `sidecar_files`.
+
+    *Joel Hawksley*
+
 * Remove experimental `_after_compile` lifecycle method.
 
     *Joel Hawksley*
