@@ -9,7 +9,7 @@ module ViewComponent
       Capybara.current_session
     end
 
-    def visit_rendered_component_in_browser(component, **options)
+    def with_rendered_component_in_browser(component, **options, &block)
       layout = options[:layout] || false
 
       opts = {
@@ -34,10 +34,10 @@ module ViewComponent
       file.rewind
 
       filename = file.path.split("/").last
+      path = "/view_components_system_test_entrypoint?file=#{filename}"
 
-      # Visit the file that contains the HTML
-      visit "/view_components_system_test_entrypoint?file=#{filename}"
-
+      yield path
+    ensure
       # Erase temporary file
       file.unlink
     end
