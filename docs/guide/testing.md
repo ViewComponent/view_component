@@ -31,9 +31,6 @@ _Note: `assert_selector` only matches on visible elements by default. To match o
 Since 2.56.0
 {: .label }
 
-Experimental
-{: .label .label-yellow }
-
 Use `render_preview(name)` to render previews in ViewComponent unit tests:
 
 ```ruby
