@@ -14,6 +14,44 @@ nav_order: 5
 
     *Edwin Mak*
 
+* Fix capitalization of JavaScript in docs.
+
+    *Erinna Chen*
+
+* Add PrintReleaf to list of companies using ViewComponent.
+
+    *Ry Kulp*
+
+* Simplify CI configuration to a single build per Ruby/Rails version.
+
+    *Joel Hawksley*
+
+* Correctly document `generate.sidecar` config option.
+
+    *Ruben Smit*
+
+* Add Yobbers to list of companies using ViewComponent.
+
+    *Anton Prins*
+
+## 2.72.0
+
+* Deprecate support for Ruby < 2.7 for removal in v3.0.0.
+
+    *Joel Hawksley*
+
+* Add `changelog_uri` to gemspec.
+
+    *Joel Hawksley*
+
+* Link to `CHANGELOG.md` instead of symlink.
+
+    *Joel Hawksley.
+
+* Add Aluuno to list of companies using ViewComponent.
+
+    *Daniel Naves de Carvalho*
+
 * Add `source_code_uri` to gemspec.
 
     *Yoshiyuki Hirano*
