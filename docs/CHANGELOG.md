@@ -30,7 +30,7 @@ nav_order: 5
 
     *Anton Prins*
 
-* `with_request_url` test helper supports Devise router constraint.
+* `with_request_url` test helper supports router constraints (such as Devise).
 
      *Aotokitsuruya*
 
