@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 2.74.0
+
 * Add Avo to list of companies using ViewComponent.
 
     *Adrian Marin*
