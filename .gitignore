@@ -16,6 +16,7 @@
 /test/sandbox/tmp/*
 /test/sandbox/log/*
 /test/tmp/*
+/tmp/
 /.yardoc
 /_yardoc/
 
