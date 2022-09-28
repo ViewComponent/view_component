@@ -48,6 +48,10 @@ nav_order: 5
 
     *Anton Prins*
 
+* `with_request_url` test helper supports router constraints (such as Devise).
+
+     *Aotokitsuruya*
+
 ## 2.72.0
 
 * Deprecate support for Ruby < 2.7 for removal in v3.0.0.
