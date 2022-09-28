@@ -18,7 +18,7 @@ nav_order: 5
 
     *Joel Hawksley*
 
-* Fix `show_previews` regression introcuded in 2.73.0.
+* Fix `show_previews` regression introduced in 2.73.0.
 
     *Andy Baranov*
 
