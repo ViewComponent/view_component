@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add note about system testing components with previews.
+
+    *Joel Hawksley*
+
 ## 2.74.0
 
 * Add Avo to list of companies using ViewComponent.
