@@ -28,6 +28,10 @@ nav_order: 5
 
     *Andy Baranov*
 
+* `with_request_url` test helper supports router constraints (such as Devise).
+
+     *Aotokitsuruya*
+
 ## 2.73.0
 
 * Remove experimental `_after_compile` lifecycle method.
@@ -53,10 +57,6 @@ nav_order: 5
 * Add Yobbers to list of companies using ViewComponent.
 
     *Anton Prins*
-
-* `with_request_url` test helper supports router constraints (such as Devise).
-
-     *Aotokitsuruya*
 
 ## 2.72.0
 
