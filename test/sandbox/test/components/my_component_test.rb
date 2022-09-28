@@ -12,4 +12,10 @@ class MyComponentTest < ViewComponent::TestCase
 
     assert_selector("div", text: "hello,world!")
   end
+
+  def test_render_preview_with_args
+    render_preview(:with_content, params: {content: "foo"})
+
+    assert_text("foo")
+  end
 end

@@ -14,6 +14,84 @@ nav_order: 5
 
     *Vlad Radulescu*
 
+* Promote experimental `_output_postamble` method to public API as `output_postamble`.
+
+    *Joel Hawksley*
+
+* Promote experimental `_sidecar_files` method to public API as `sidecar_files`.
+
+    *Joel Hawksley*
+
+## 2.73.0
+
+* Remove experimental `_after_compile` lifecycle method.
+
+    *Joel Hawksley*
+
+* Fix capitalization of JavaScript in docs.
+
+    *Erinna Chen*
+
+* Add PrintReleaf to list of companies using ViewComponent.
+
+    *Ry Kulp*
+
+* Simplify CI configuration to a single build per Ruby/Rails version.
+
+    *Joel Hawksley*
+
+* Correctly document `generate.sidecar` config option.
+
+    *Ruben Smit*
+
+* Add Yobbers to list of companies using ViewComponent.
+
+    *Anton Prins*
+
+* `with_request_url` test helper supports router constraints (such as Devise).
+
+     *Aotokitsuruya*
+
+## 2.72.0
+
+* Deprecate support for Ruby < 2.7 for removal in v3.0.0.
+
+    *Joel Hawksley*
+
+* Add `changelog_uri` to gemspec.
+
+    *Joel Hawksley*
+
+* Link to `CHANGELOG.md` instead of symlink.
+
+    *Joel Hawksley.
+
+* Add Aluuno to list of companies using ViewComponent.
+
+    *Daniel Naves de Carvalho*
+
+* Add `source_code_uri` to gemspec.
+
+    *Yoshiyuki Hirano*
+
+* Update link to benchmark script in docs.
+
+    *Daniel Diekmeier*
+
+* Add special exception message for `renders_one :content` explaining that content passed as a block will be assigned to the `content` accessor without having to create an explicit slot.
+
+    *Daniel Diekmeier*
+
+## 2.71.0
+
+**ViewComponent has moved to a new organization: [https://github.com/viewcomponent/view_component](https://github.com/viewcomponent/view_component). See [https://github.com/viewcomponent/view_component/issues/1424](https://github.com/viewcomponent/view_component/issues/1424) for more details.**
+
+## 2.70.0
+
+* `render_preview` can pass parameters to preview.
+
+    *Joel Hawksley*
+
 * Fix docs typos.
 
     *Joel Hawksley*

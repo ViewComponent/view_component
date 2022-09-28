@@ -12,7 +12,7 @@ By default, slots can be rendered once per component. They provide an accessor w
 
 Slots declared with `collection: true` can be rendered multiple times. They provide an accessor with the pluralized name of the slot (`#rows`), which is an Array of `ViewComponent::Slot` instances.
 
-To learn more about the design of the Slots API, see [#348](https://github.com/github/view_component/pull/348) and [#325](https://github.com/github/view_component/discussions/325).
+To learn more about the design of the Slots API, see [#348](https://github.com/viewcomponent/view_component/pull/348) and [#325](https://github.com/viewcomponent/view_component/discussions/325).
 
 ## Defining Slots
 

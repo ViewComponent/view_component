@@ -81,7 +81,7 @@ ViewComponents use a standard Ruby initializer that clearly defines what's neede
 
 ### Performance
 
-Based on several [benchmarks](https://github.com/github/view_component/blob/main/performance/benchmark.rb), ViewComponents are ~10x faster than partials in real-world use-cases.
+Based on several [benchmarks](https://github.com/viewcomponent/view_component/blob/main/performance/partial_benchmark.rb), ViewComponents are ~10x faster than partials in real-world use-cases.
 
 The primary optimization is pre-compiling all ViewComponent templates at application boot, instead of at runtime like traditional Rails views.
 
@@ -127,6 +127,8 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/cpjmcquillan?s=64" alt="cpjmcquillan" width="32" />
 <img src="https://avatars.githubusercontent.com/czj?s=64" alt="czj" width="32" />
 <img src="https://avatars.githubusercontent.com/dani-sc?s=64" alt="dani-sc" width="32" />
+<img src="https://avatars.githubusercontent.com/danieldiekmeier?s=64" alt="danieldiekmeier" width="32" />
+<img src="https://avatars.githubusercontent.com/danielnc?s=64" alt="danielnc" width="32" />
 <img src="https://avatars.githubusercontent.com/dark-panda?s=64" alt="dark-panda" width="32" />
 <img src="https://avatars.githubusercontent.com/davekaro?s=64" alt="davekaro" width="32" />
 <img src="https://avatars.githubusercontent.com/dixpac?s=64" alt="dixpac" width="32" />
@@ -202,10 +204,12 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 <img src="https://avatars.githubusercontent.com/yykamei?s=64" alt="yykamei" width="32" />
 <img src="https://avatars.githubusercontent.com/matheuspolicamilo?s=64" alt="matheuspolicamilo" width="32" />
+<img src="https://avatars.githubusercontent.com/erinnachen?s=64" alt="erinnachen" width="32" />
 
 ## Who uses ViewComponent?
 
 * [Arrows](https://arrows.to/)
+* [Aluuno](https://aluuno.com/)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [City of Paris](https://www.paris.fr/)
@@ -222,15 +226,17 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
 * [Orbit](https://orbit.love)
 * [Podia](https://www.podia.com/)
+* [PrintReleaf](https://www.printreleaf.com/)
 * [QuickNode](https://www.quicknode.com/)
 * [Shogun](https://getshogun.com/)
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
 * [Within3](https://www.within3.com/)
 * [Wrapbook](https://wrapbook.com/)
+* [Yobbers](https://www.yobbers.com/)
 
-Using ViewComponent? [Send a pull request](https://github.com/github/view_component/edit/main/docs/index.md) to update this list!
-You can also check out [how various projects use ViewComponent](https://github.com/github/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
+Using ViewComponent? [Send a pull request](https://github.com/viewcomponent/view_component/edit/main/docs/index.md) to update this list!
+You can also check out [how various projects use ViewComponent](https://github.com/viewcomponent/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
 
 <hr />
 

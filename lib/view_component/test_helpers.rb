@@ -80,9 +80,10 @@ module ViewComponent
     #
     # In RSpec, `Preview` is appended to `described_class`.
     #
-    # @param preview [String] The name of the preview to be rendered.
+    # @param name [String] The name of the preview to be rendered.
+    # @param params [Hash] Parameters to be passed to the preview.
     # @return [Nokogiri::HTML]
-    def render_preview(name)
+    def render_preview(name, params: {})
       begin
         preview_klass = if respond_to?(:described_class)
           raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
@@ -97,6 +98,13 @@ module ViewComponent
       end
 
       previews_controller = build_controller(Rails.application.config.view_component.preview_controller.constantize)
+
+      # From what I can tell, it's not possible to overwrite all request parameters
+      # at once, so we set them individually here.
+      params.each do |k, v|
+        previews_controller.request.params[k] = v
+      end
+
       previews_controller.request.params[:path] = "#{preview_klass.preview_name}/#{name}"
       previews_controller.response = ActionDispatch::Response.new
       result = previews_controller.previews
@@ -192,7 +200,7 @@ module ViewComponent
 
       path, query = path.split("?", 2)
       request.path_info = path
-      request.path_parameters = Rails.application.routes.recognize_path(path)
+      request.path_parameters = Rails.application.routes.recognize_path_with_request(request, path, {})
       request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
       request.set_header(Rack::QUERY_STRING, query)
       yield
