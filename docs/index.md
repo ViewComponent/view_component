@@ -204,11 +204,13 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 <img src="https://avatars.githubusercontent.com/yykamei?s=64" alt="yykamei" width="32" />
 <img src="https://avatars.githubusercontent.com/matheuspolicamilo?s=64" alt="matheuspolicamilo" width="32" />
+<img src="https://avatars.githubusercontent.com/erinnachen?s=64" alt="erinnachen" width="32" />
 
 ## Who uses ViewComponent?
 
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
+* [Avo](https://avohq.io/)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [City of Paris](https://www.paris.fr/)

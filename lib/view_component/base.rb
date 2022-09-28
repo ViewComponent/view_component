@@ -60,15 +60,6 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
-    # EXPERIMENTAL: This API is experimental and may be removed at any time.
-    # Hook for allowing components to do work as part of the compilation process.
-    #
-    # For example, one might compile component-specific assets at this point.
-    # @private TODO: add documentation
-    def self._after_compile
-      # noop
-    end
-
     # @!macro [attach] deprecated_generate_mattr_accessor
     #   @method generate_$1
     #   @deprecated Use `#generate.$1` instead. Will be removed in v3.0.0.
@@ -138,7 +129,7 @@ module ViewComponent
         # component template is evaluated.
         content if self.class.use_consistent_rendering_lifecycle
 
-        render_template_for(@__vc_variant).to_s + _output_postamble
+        render_template_for(@__vc_variant).to_s + output_postamble
       else
         ""
       end
@@ -161,10 +152,10 @@ module ViewComponent
       nil
     end
 
-    # EXPERIMENTAL: Optional content to be returned after the rendered template.
+    # Optional content to be returned after the rendered template.
     #
     # @return [String]
-    def _output_postamble
+    def output_postamble
       ""
     end
 
@@ -419,15 +410,14 @@ module ViewComponent
       # @private
       attr_accessor :source_location, :virtual_path
 
-      # EXPERIMENTAL: This API is experimental and may be removed at any time.
       # Find sidecar files for the given extensions.
       #
       # The provided array of extensions is expected to contain
       # strings starting without the "dot", example: `["erb", "haml"]`.
       #
       # For example, one might collect sidecar CSS files that need to be compiled.
-      # @private TODO: add documentation
-      def _sidecar_files(extensions)
+      # @param extensions [Array<String>] Extensions of which to return matching sidecar files.
+      def sidecar_files(extensions)
         return [] unless source_location
 
         extensions = extensions.join(",")

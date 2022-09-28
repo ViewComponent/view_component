@@ -23,7 +23,7 @@ module ViewComponent
       def build_i18n_backend
         return if CompileCache.compiled? self
 
-        self.i18n_backend = if (translation_files = _sidecar_files(%w[yml yaml])).any?
+        self.i18n_backend = if (translation_files = sidecar_files(%w[yml yaml])).any?
           # Returning nil cleans up if translations file has been removed since the last compilation
 
           I18nBackend.new(
