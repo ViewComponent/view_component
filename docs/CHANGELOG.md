@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Avoid loading ActionView::Base during Rails initialization
+* Avoid loading ActionView::Base during Rails initialization.
 
     *Jonathan del Strother*
 
