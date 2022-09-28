@@ -22,6 +22,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Fix `show_previews` regression introduced in 2.73.0.
+
+    *Andy Baranov*
+
 ## 2.73.0
 
 * Remove experimental `_after_compile` lifecycle method.
