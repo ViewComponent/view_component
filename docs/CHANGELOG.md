@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add Avo to list of companies using ViewComponent.
+
+    *Adrian Marin*
+
 * Promote experimental `_output_postamble` method to public API as `output_postamble`.
 
     *Joel Hawksley*
