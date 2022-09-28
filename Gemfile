@@ -14,7 +14,7 @@ group :test do
   # For testing UI interactions
   gem "cuprite", "~> 0.13"
   gem "puma", "~> 5.4"
-  gem "selenium-webdriver"
+  gem "selenium-webdriver", "~> 4.1"
 end
 
 if RUBY_VERSION >= "3.1"
