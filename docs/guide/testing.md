@@ -53,6 +53,8 @@ class MyComponentSystemTest < ActionDispatch::SystemTestCase
     visit("/rails/view_components/my_component/default")
 
     click_on("Open dialog")
+
+    assert_text("Test Dialog")
   end
 end
 ```
