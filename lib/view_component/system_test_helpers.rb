@@ -26,15 +26,17 @@ module ViewComponent
       # Write to temporary file to contain fully rendered component
       # within a browser
       file = Tempfile.new(["rendered_#{component.class.name}", ".html"], "tmp/")
-      file.write(html)
-      file.rewind
+      begin
+        file.write(html)
+        file.rewind
 
-      filename = file.path.split("/").last
-      path = "/system_test_entrypoint?file=#{filename}"
+        filename = file.path.split("/").last
+        path = "/system_test_entrypoint?file=#{filename}"
 
-      yield path
-    ensure
-      file.unlink
+        block.call(path)
+      ensure
+        file.unlink
+      end
     end
   end
 end
