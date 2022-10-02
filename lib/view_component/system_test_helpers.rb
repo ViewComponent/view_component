@@ -38,7 +38,6 @@ module ViewComponent
 
       yield path
     ensure
-      # Erase temporary file
       file.unlink
     end
   end
