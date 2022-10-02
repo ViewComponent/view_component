@@ -34,7 +34,7 @@ module ViewComponent
       file.rewind
 
       filename = file.path.split("/").last
-      path = "/view_components_system_test_entrypoint?file=#{filename}"
+      path = "/system_test_entrypoint?file=#{filename}"
 
       yield path
     ensure

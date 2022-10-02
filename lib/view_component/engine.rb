@@ -123,10 +123,8 @@ module ViewComponent
           )
 
           if Rails.env.test?
-            # This route is used by the system test to render the preview
-            # and allow for assertions against interactivity.
             get(
-              "view_components_system_test_entrypoint",
+              "system_test_entrypoint",
               to: "#{preview_controller}#system_test_entrypoint",
               internal: true
             )
@@ -135,8 +133,7 @@ module ViewComponent
           get(
             "#{options.preview_route}/*path",
             to: "#{preview_controller}#previews",
-            as: :preview_view_component,
-            internal: true
+            as: :preview_view_component
           )
         end
       end
