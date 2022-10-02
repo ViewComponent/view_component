@@ -43,6 +43,22 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+## Testing components with behaviors
+
+To test ViewComponents with behaviors, visit a preview in a system test:
+
+```ruby
+class MyComponentSystemTest < ActionDispatch::SystemTestCase
+  def test_default_preview
+    visit("/rails/view_components/my_component/default")
+
+    click_on("Open dialog")
+
+    assert_text("Test Dialog")
+  end
+end
+```
+
 ## Best practices
 
 Prefer testing the rendered output over individual methods:
