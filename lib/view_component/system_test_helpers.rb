@@ -17,7 +17,6 @@ module ViewComponent
         locals: {
           render_args: {
             component: component,
-            template: "view_components/preview",
             hide_preview_source: true
           }
         }
