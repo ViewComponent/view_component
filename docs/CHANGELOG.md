@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add a known issue for usage with `turbo_frame_tag` to the documentation.
+
+    *Vlad Radulescu*
+
 * Add note about system testing components with previews.
 
     *Joel Hawksley*
