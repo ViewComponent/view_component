@@ -210,6 +210,7 @@ ViewComponent is built by over a hundred members of the community, including:
 
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
+* [Avo](https://avohq.io/)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [City of Paris](https://www.paris.fr/)
