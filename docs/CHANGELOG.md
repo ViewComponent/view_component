@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add more users of ViewComponent to docs.
+
+    *Joel Hawksley*
+
 * Add a known issue for usage with `turbo_frame_tag` to the documentation.
 
     *Vlad Radulescu*
