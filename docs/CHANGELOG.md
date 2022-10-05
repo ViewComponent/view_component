@@ -14,6 +14,14 @@ nav_order: 5
 
     *Jonathan del Strother*
 
+* Add more users of ViewComponent to docs.
+
+    *Joel Hawksley*
+
+* Add a known issue for usage with `turbo_frame_tag` to the documentation.
+
+    *Vlad Radulescu*
+
 * Add note about system testing components with previews.
 
     *Joel Hawksley*
