@@ -959,10 +959,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("Hello, World!")
   end
 
-  def test_each_component_has_a_different_lock
-    assert_not_equal(MyComponent.compiler.__vc_compiler_lock, AnotherComponent.compiler.__vc_compiler_lock)
-  end
-
   def test_compilation_in_development_mode
     with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
       with_new_cache do
