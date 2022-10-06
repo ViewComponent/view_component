@@ -153,8 +153,17 @@ module ViewComponent
     # <% super %> # does not double-render
     # ```
     #
-    # Calls `super`, returning `nil` to avoid rendering the result twice.
+    # Calls `super`, returning `nil` to avoid rendering the result twice. Accepts a
+    # block that will be called with self, which can be used to define slots, eg:
+    #
+    # <%= render_parent do |c| %>
+    #   <% c.with_some_slot(...) %>
+    # <% end %>
+    #
     def render_parent
+      # yield the component here to make defining slots more ergonomic
+      yield self if block_given?
+
       mtd = @__vc_variant ? "call_#{@__vc_variant}" : "call"
       method(mtd).super_method.call
       nil

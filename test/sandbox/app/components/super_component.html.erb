@@ -1,3 +1,5 @@
 <div class="derived-component">
-  <%= render_parent %>
+  <%= render_parent do |c| %>
+    <% c.with_parent_slot(text: "Foo") %>
+  <% end %>
 </div>
