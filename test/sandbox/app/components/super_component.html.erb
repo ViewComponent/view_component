@@ -1,5 +1,9 @@
 <div class="derived-component">
   <%= render_parent do |c| %>
-    <% c.with_parent_slot(text: "Foo") %>
+    <% c.with_parent_slot do %>
+      <%= render(TitleComponent.new) do |c| %>
+        <% c.with_body { "Foo" } %>
+      <% end %>
+    <% end %>
   <% end %>
 </div>

@@ -1041,7 +1041,7 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector(".base-component", count: 1)
     assert_selector(".derived-component", count: 1) do
       assert_selector(".base-component", count: 1) do
-        assert_selector("p", text: "Foo")
+        assert_selector("h1", text: "Foo", count: 1)
       end
     end
   end
