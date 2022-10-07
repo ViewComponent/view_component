@@ -81,7 +81,7 @@ class TranslatableTest < ViewComponent::TestCase
     ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)
 
     ViewComponent::Base.stub(
-      :_sidecar_files,
+      :sidecar_files,
       ->(exts) { exts.include?("yml") ? [] : TranslatableComponent.__minitest_stub___sidecar_files(exts) }
     ) do
       assert_equal "MISSING", translate(".hello", default: "MISSING")

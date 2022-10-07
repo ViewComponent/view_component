@@ -6,6 +6,14 @@ nav_order: 9
 
 # Known issues
 
+## turbo_frame_tag double rendering or scrambled HTML structure
+
+When using `turbo_frame_tag` inside a ViewComponent, it may render the template within the component twice, potentially with out-of-order elements: [https://github.com/github/view_component/issues/1099](https://github.com/github/view_component/issues/1099).
+
+As a workaround, use `tag.turbo_frame` instead of `turbo_frame_tag`.
+
+Note: For the same functionality as `turbo_frame_tag(my_model)`, use `tag.turbo_frame(id: dom_id(my_model))`.
+
 ## form_for compatibility
 
 ViewComponent [isn't compatible](https://github.com/viewcomponent/view_component/issues/241) with `form_for` helpers by default.

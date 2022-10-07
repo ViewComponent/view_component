@@ -10,6 +10,46 @@ nav_order: 5
 
 ## main
 
+* Add more users of ViewComponent to docs.
+
+    *Joel Hawksley*
+
+* Add a known issue for usage with `turbo_frame_tag` to the documentation.
+
+    *Vlad Radulescu*
+
+* Add note about system testing components with previews.
+
+    *Joel Hawksley*
+
+## 2.74.0
+
+* Add Avo to list of companies using ViewComponent.
+
+    *Adrian Marin*
+
+* Promote experimental `_output_postamble` method to public API as `output_postamble`.
+
+    *Joel Hawksley*
+
+* Promote experimental `_sidecar_files` method to public API as `sidecar_files`.
+
+    *Joel Hawksley*
+
+* Fix `show_previews` regression introduced in 2.73.0.
+
+    *Andy Baranov*
+
+* `with_request_url` test helper supports router constraints (such as Devise).
+
+     *Aotokitsuruya*
+
+## 2.73.0
+
+* Remove experimental `_after_compile` lifecycle method.
+
+    *Joel Hawksley*
+
 * Fix capitalization of JavaScript in docs.
 
     *Erinna Chen*
