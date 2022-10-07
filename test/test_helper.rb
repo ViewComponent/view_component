@@ -21,6 +21,8 @@ if ENV["RAISE_ON_WARNING"]
     PROJECT_ROOT = File.expand_path("..", __dir__).freeze
 
     def self.warn(message)
+      return super if $VERBOSE.nil? # indicates silence_warnings is in use
+
       called_by = caller_locations(1, 1).first.path
       return super unless called_by&.start_with?(PROJECT_ROOT) && !called_by.start_with?("#{PROJECT_ROOT}/vendor")
 
