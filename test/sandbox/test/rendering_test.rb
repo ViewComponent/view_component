@@ -992,6 +992,17 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_concurrency_deadlock_cache
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
+        render_inline(ContentEvalComponent.new) do
+          ViewComponent::CompileCache.invalidate!
+          render_inline(ContentEvalComponent.new)
+        end
+      end
+    end
+  end
+
   def test_multiple_inline_renders_of_the_same_component
     component = ErbComponent.new(message: "foo")
     render_inline(InlineRenderComponent.new(items: [component, component]))
