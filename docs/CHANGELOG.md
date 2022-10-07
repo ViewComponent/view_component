@@ -22,6 +22,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Remove locking mechanisms from the compiler.
+
+    *Cameron Dutro*
+
 ## 2.74.0
 
 * Add Avo to list of companies using ViewComponent.
