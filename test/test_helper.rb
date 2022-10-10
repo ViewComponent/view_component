@@ -44,8 +44,8 @@ if ENV["RAISE_ON_WARNING"]
       called_by = caller_locations(1, 1).first.path
       return super unless called_by&.start_with?(PROJECT_ROOT) && !called_by.start_with?("#{PROJECT_ROOT}/vendor")
 
-      unless self.method_redefinitions_silenced_for.empty?
-        silence = self.method_redefinitions_silenced_for.any? do |method_name|
+      unless method_redefinitions_silenced_for.empty?
+        silence = method_redefinitions_silenced_for.any? do |method_name|
           message.include?("method redefined; discarding old #{method_name}") || message.include?("previous definition of #{method_name} was here")
         end
 
