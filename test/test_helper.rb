@@ -20,9 +20,37 @@ if ENV["RAISE_ON_WARNING"]
   module Warning
     PROJECT_ROOT = File.expand_path("..", __dir__).freeze
 
+    def self.method_redefinitions_silenced_for
+      if Thread.current[:method_redefinitions_silenced_for].nil?
+        Thread.current[:method_redefinitions_silenced_for] = []
+      end
+
+      Thread.current[:method_redefinitions_silenced_for]
+    end
+
+    def self.method_redefinitions_silenced_for=(method_names)
+      Thread.current[:method_redefinitions_silenced_for] = method_names
+    end
+
+    def self.silence_redefinition_of_methods(*method_names)
+      old_method_names = method_redefinitions_silenced_for
+      self.method_redefinitions_silenced_for = method_names
+      yield
+    ensure
+      self.method_redefinitions_silenced_for = old_method_names
+    end
+
     def self.warn(message)
       called_by = caller_locations(1, 1).first.path
       return super unless called_by&.start_with?(PROJECT_ROOT) && !called_by.start_with?("#{PROJECT_ROOT}/vendor")
+
+      unless self.method_redefinitions_silenced_for.empty?
+        silence = self.method_redefinitions_silenced_for.any? do |method_name|
+          message.include?("method redefined; discarding old #{method_name}") || message.include?("previous definition of #{method_name} was here")
+        end
+
+        return if silence
+      end
 
       raise "Warning: #{message}"
     end
