@@ -66,14 +66,13 @@ module ViewComponent
         # as Ruby warns when redefining a method.
         method_name = call_method_name(template[:variant])
         component_class.silence_redefinition_of_method(method_name)
-          # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, template[:path], 0
-          def #{method_name}
-            #{compiled_template(template[:path])}
-          end
-          RUBY
-          # rubocop:enable Style/EvalWithLocation
+        # rubocop:disable Style/EvalWithLocation
+        component_class.class_eval <<-RUBY, template[:path], 0
+        def #{method_name}
+          #{compiled_template(template[:path])}
         end
+        RUBY
+        # rubocop:enable Style/EvalWithLocation
       end
 
       define_render_template_for
@@ -101,13 +100,12 @@ module ViewComponent
         end
       RUBY
 
-      silence_warnings do
-        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
-          #{body}
-        end
-        RUBY
+      component_class.silence_redefinition_of_method(:render_template_for)
+      component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      def render_template_for(variant = nil)
+        #{body}
       end
+      RUBY
     end
 
     def template_errors
