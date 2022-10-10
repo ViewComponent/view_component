@@ -90,7 +90,7 @@ module ViewComponent
 
     def silence_redefinition_of_methods(*args, &block)
       # only available in the test environment
-      return super unless Warning.respond_to?(:silence_redefinition_of_methods)
+      return block.call unless Warning.respond_to?(:silence_redefinition_of_methods)
 
       Warning.silence_redefinition_of_methods(*args, &block)
     end
