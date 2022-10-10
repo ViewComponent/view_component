@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 2.74.1
+
 * Add more users of ViewComponent to docs.
 
     *Joel Hawksley*
