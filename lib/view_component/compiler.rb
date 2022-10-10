@@ -65,8 +65,7 @@ module ViewComponent
         # Remove existing compiled template methods,
         # as Ruby warns when redefining a method.
         method_name = call_method_name(template[:variant])
-
-        silence_warnings do
+        component_class.silence_redefinition_of_method(method_name)
           # rubocop:disable Style/EvalWithLocation
           component_class.class_eval <<-RUBY, template[:path], 0
           def #{method_name}
