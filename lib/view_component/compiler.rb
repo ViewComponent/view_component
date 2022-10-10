@@ -15,6 +15,7 @@ module ViewComponent
 
     def initialize(component_class)
       @component_class = component_class
+      @redefinition_lock = Mutex.new
     end
 
     def compiled?
@@ -66,7 +67,8 @@ module ViewComponent
         # as Ruby warns when redefining a method.
         method_name = call_method_name(template[:variant])
 
-        silence_redefinition_of_methods(method_name) do
+        redefinition_lock.synchronize do
+          component_class.silence_redefinition_of_method(method_name)
           # rubocop:disable Style/EvalWithLocation
           component_class.class_eval <<-RUBY, template[:path], 0
           def #{method_name}
@@ -86,14 +88,7 @@ module ViewComponent
 
     private
 
-    attr_reader :component_class
-
-    def silence_redefinition_of_methods(*args, &block)
-      # only available in the test environment
-      return block.call unless Warning.respond_to?(:silence_redefinition_of_methods)
-
-      Warning.silence_redefinition_of_methods(*args, &block)
-    end
+    attr_reader :component_class, :redefinition_lock
 
     def define_render_template_for
       variant_elsifs = variants.compact.uniq.map do |variant|
@@ -109,7 +104,8 @@ module ViewComponent
         end
       RUBY
 
-      silence_redefinition_of_methods(:render_template_for) do
+      redefinition_lock.synchronize do
+        component_class.silence_redefinition_of_method(:render_template_for)
         component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil)
           #{body}
