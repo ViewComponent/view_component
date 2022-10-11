@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Avoid loading ActionView::Base during Rails initialization.
+
+    *Jonathan del Strother*
+
 ## 2.74.1
 
 * Add more users of ViewComponent to docs.
