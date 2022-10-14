@@ -14,6 +14,10 @@ nav_order: 5
 
     *Jonathan del Strother*
 
+* Mention lambda slots rendering returned values lazily in the guide
+
+    *Graham Rogers*
+
 ## 2.74.1
 
 * Add more users of ViewComponent to docs.
