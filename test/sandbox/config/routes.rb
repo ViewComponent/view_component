@@ -32,7 +32,7 @@ Sandbox::Application.routes.draw do
   get :inherited_sidecar, to: "integration_examples#inherited_sidecar"
   get :inherited_from_uncompilable_component, to: "integration_examples#inherited_from_uncompilable_component"
 
-  constraints(lambda { |request| request.env["warden"].authenticate! }) do
+  constraints(lambda { |request| Thread.current[:constrained_route_enabled] }) do
     get :constraints_with_env, to: "integration_examples#index"
   end
 end

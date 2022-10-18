@@ -759,6 +759,8 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_collection_component_missing_custom_parameter_name_with_activemodel
+    skip if Rails::VERSION::STRING < "5.2"
+
     exception = assert_raises ArgumentError do
       render_inline(
         MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
@@ -775,6 +777,8 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_collection_component_present_custom_parameter_name_with_activemodel
+    skip if Rails::VERSION::STRING < "5.2"
+
     assert_nothing_raised do
       render_inline(
         CollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])

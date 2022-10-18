@@ -20,10 +20,7 @@ class TestHelperTest < ViewComponent::TestCase
   end
 
   def test_with_request_url_under_constraint
-    warden = Minitest::Mock.new
-    warden.expect(:authenticate!, true)
-
-    request.env["warden"] = warden
+    Thread.current[:constrained_route_enabled] = true
 
     with_request_url "/constraints_with_env" do
       render_inline(ControllerInlineComponent.new(message: "request.env is valid"))

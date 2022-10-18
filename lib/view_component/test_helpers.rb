@@ -200,7 +200,7 @@ module ViewComponent
 
       path, query = path.split("?", 2)
       request.path_info = path
-      request.path_parameters = Rails.application.routes.recognize_path_with_request(request, path, {})
+      request.path_parameters = Rails.application.routes.recognize_path(path, request.env)
       request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
       request.set_header(Rack::QUERY_STRING, query)
       yield

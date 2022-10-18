@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
 require "rails"
+
+unless Module.instance_methods.include?(:delegate_missing_to)
+  require "view_component/delegate_missing_to_monkey_patch"
+
+  class Module
+    include ViewComponent::DelegateMissingToMonkeyPatch
+  end
+end
+
+unless Module.instance_methods.include?(:silence_redefinition_of_method)
+  require "view_component/silence_redefinition_of_method_monkey_patch"
+
+  class Module
+    include ViewComponent::SilenceRedefinitionOfMethodMonkeyPatch
+  end
+end
+
 require "view_component/config"
 
 module ViewComponent

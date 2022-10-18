@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Officially drop support for Rails versions <= 5.1.
+* Support Rails versions >= 5.0.
 
     *Cameron Dutro*
 
