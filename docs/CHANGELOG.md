@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Officially drop support for Rails versions <= 5.1.
+
+    *Cameron Dutro*
+
 * Avoid loading ActionView::Base during Rails initialization.
 
     *Jonathan del Strother*
