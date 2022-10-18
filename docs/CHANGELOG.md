@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Require Rails 5.2+ in gemspec and update documentation.
+
+    *Drew Bragg*
+
 * Avoid loading ActionView::Base during Rails initialization.
 
     *Jonathan del Strother*
