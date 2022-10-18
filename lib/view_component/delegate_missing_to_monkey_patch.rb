@@ -2,13 +2,13 @@
 
 module ViewComponent
   module DelegateMissingToMonkeyPatch
-    RUBY_RESERVED_KEYWORDS = %w(__ENCODING__ __LINE__ __FILE__ alias and BEGIN begin break
+    RUBY_RESERVED_KEYWORDS = %w[__ENCODING__ __LINE__ __FILE__ alias and BEGIN begin break
       case class def defined? do else elsif END end ensure false for if in module next nil
-      not or redo rescue retry return self super then true undef unless until when while yield)
-      DELEGATION_RESERVED_KEYWORDS = %w(_ arg args block)
-      DELEGATION_RESERVED_METHOD_NAMES = Set.new(
-        RUBY_RESERVED_KEYWORDS + DELEGATION_RESERVED_KEYWORDS
-      ).freeze
+      not or redo rescue retry return self super then true undef unless until when while yield]
+    DELEGATION_RESERVED_KEYWORDS = %w[_ arg args block]
+    DELEGATION_RESERVED_METHOD_NAMES = Set.new(
+      RUBY_RESERVED_KEYWORDS + DELEGATION_RESERVED_KEYWORDS
+    ).freeze
 
     def delegate_missing_to(target, allow_nil: nil)
       target = target.to_s
