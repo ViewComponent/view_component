@@ -14,7 +14,7 @@ nav_order: 5
 
     *Jonathan del Strother*
 
-* Mention lambda slots rendering returned values lazily in the guide
+* Mention lambda slots rendering returned values lazily in the guide.
 
     *Graham Rogers*
 

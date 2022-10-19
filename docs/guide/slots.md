@@ -217,7 +217,7 @@ class BlogComponent < ViewComponent::Base
 end
 ```
 
-Note that while the lambda is called when the `with_*` method is called, if an object that responds to `render_in` is returned (like a component) then it won't be fully rendered until it is first used.
+_Note: While a lambda is called when the `with_*` method is called, a returned component is not rendered until first use._
 
 ## Rendering collections
 
