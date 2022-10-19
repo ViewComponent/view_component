@@ -149,14 +149,14 @@ module ViewComponent
 
           invalid_templates =
             templates
-              .group_by { |template| template[:variant] }
-              .map { |variant, grouped| variant if grouped.length > 1 }
+              .group_by { |template| template[:variant].present? ? "#{template[:base_name]}+#{template[:variant]}" : template[:base_name] }
+              .map { |template, grouped| template if grouped.length > 1 }
               .compact
               .sort
 
           unless invalid_templates.empty?
             errors <<
-              "More than one template found for #{"variant".pluralize(invalid_templates.count)} " \
+              "More than one template+variant found for #{"template".pluralize(invalid_templates.count)} " \
               "#{invalid_templates.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
               "There can only be one template file per variant."
           end
