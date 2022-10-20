@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add support for experimental inline templates.
+
+    *Blake Williams*
+
 * Added example of a custom preview controller.
 
     *Graham Rogers*
