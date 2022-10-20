@@ -4,9 +4,6 @@ require "concurrent-ruby"
 
 module ViewComponent
   class Compiler
-    # Lock required to be obtained before compiling the component
-    attr_reader :__vc_compiler_lock
-
     # Compiler mode. Can be either:
     # * development (a blocking mode which ensures thread safety when redefining the `call` method for components,
     #                default in Rails development and test mode)
@@ -18,7 +15,7 @@ module ViewComponent
 
     def initialize(component_class)
       @component_class = component_class
-      @__vc_compiler_lock = Concurrent::ReadWriteLock.new
+      @redefinition_lock = Mutex.new
     end
 
     def compiled?
@@ -38,46 +35,40 @@ module ViewComponent
       end
 
       component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
+      subclass_instance_methods = component_class.instance_methods(false)
 
-      with_write_lock do
-        CompileCache.invalidate_class!(component_class)
+      if subclass_instance_methods.include?(:with_content) && raise_errors
+        raise ViewComponent::ComponentError.new(
+          "#{component_class} implements a reserved method, `#with_content`.\n\n" \
+          "To fix this issue, change the name of the method."
+        )
+      end
 
-        subclass_instance_methods = component_class.instance_methods(false)
+      if template_errors.present?
+        raise ViewComponent::TemplateError.new(template_errors) if raise_errors
 
-        if subclass_instance_methods.include?(:with_content) && raise_errors
-          raise ViewComponent::ComponentError.new(
-            "#{component_class} implements a reserved method, `#with_content`.\n\n" \
-            "To fix this issue, change the name of the method."
-          )
-        end
+        return false
+      end
 
-        if template_errors.present?
-          raise ViewComponent::TemplateError.new(template_errors) if raise_errors
+      if subclass_instance_methods.include?(:before_render_check)
+        ViewComponent::Deprecation.warn(
+          "`#before_render_check` will be removed in v3.0.0.\n\n" \
+          "To fix this issue, use `#before_render` instead."
+        )
+      end
 
-          return false
-        end
+      if raise_errors
+        component_class.validate_initialization_parameters!
+        component_class.validate_collection_parameter!
+      end
 
-        if subclass_instance_methods.include?(:before_render_check)
-          ViewComponent::Deprecation.warn(
-            "`#before_render_check` will be removed in v3.0.0.\n\n" \
-            "To fix this issue, use `#before_render` instead."
-          )
-        end
+      templates.each do |template|
+        # Remove existing compiled template methods,
+        # as Ruby warns when redefining a method.
+        method_name = call_method_name(template[:variant])
 
-        if raise_errors
-          component_class.validate_initialization_parameters!
-          component_class.validate_collection_parameter!
-        end
-
-        templates.each do |template|
-          # Remove existing compiled template methods,
-          # as Ruby warns when redefining a method.
-          method_name = call_method_name(template[:variant])
-
-          if component_class.instance_methods.include?(method_name.to_sym)
-            component_class.send(:undef_method, method_name.to_sym)
-          end
-
+        redefinition_lock.synchronize do
+          component_class.silence_redefinition_of_method(method_name)
           # rubocop:disable Style/EvalWithLocation
           component_class.class_eval <<-RUBY, template[:path], 0
           def #{method_name}
@@ -86,36 +77,20 @@ module ViewComponent
           RUBY
           # rubocop:enable Style/EvalWithLocation
         end
-
-        define_render_template_for
-
-        component_class.build_i18n_backend
-
-        CompileCache.register(component_class)
       end
-    end
 
-    def with_write_lock(&block)
-      if development?
-        __vc_compiler_lock.with_write_lock(&block)
-      else
-        block.call
-      end
-    end
+      define_render_template_for
 
-    def with_read_lock(&block)
-      __vc_compiler_lock.with_read_lock(&block)
+      component_class.build_i18n_backend
+
+      CompileCache.register(component_class)
     end
 
     private
 
-    attr_reader :component_class
+    attr_reader :component_class, :redefinition_lock
 
     def define_render_template_for
-      if component_class.instance_methods.include?(:render_template_for)
-        component_class.send(:undef_method, :render_template_for)
-      end
-
       variant_elsifs = variants.compact.uniq.map do |variant|
         "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
       end.join("\n")
@@ -129,15 +104,8 @@ module ViewComponent
         end
       RUBY
 
-      if development?
-        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
-          self.class.compiler.with_read_lock do
-            #{body}
-          end
-        end
-        RUBY
-      else
+      redefinition_lock.synchronize do
+        component_class.silence_redefinition_of_method(:render_template_for)
         component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil)
           #{body}

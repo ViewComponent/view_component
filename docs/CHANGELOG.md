@@ -14,9 +14,28 @@ nav_order: 5
 
     *Edwin Mak*
 
+* Avoid loading ActionView::Base during Rails initialization.
+
+    *Jonathan del Strother*
+
+## 2.74.1
+
+* Add more users of ViewComponent to docs.
+
+    *Joel Hawksley*
+
+* Add a known issue for usage with `turbo_frame_tag` to the documentation.
+
+    *Vlad Radulescu*
+
+
 * Add note about system testing components with previews.
 
     *Joel Hawksley*
+
+* Remove locking mechanisms from the compiler.
+
+    *Cameron Dutro*
 
 ## 2.74.0
 
