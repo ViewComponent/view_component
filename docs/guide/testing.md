@@ -236,27 +236,25 @@ config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 
 ## Testing Interactive Components
 
-Use the `with_rendered_component_path` helper method in your system tests to test interactivity of components.
+Use `with_rendered_component_path` in system tests to test interactive components:
 
 ```rb
-require "test_helper"
-
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
   def test_simple_js_interaction_in_browser_without_layout
-    with_rendered_component_path(SimpleJavascriptInteractionWithJsIncludedComponent.new) do |page|
-      visit page
+    with_rendered_component_path(SimpleJavascriptInteractionWithJsIncludedComponent.new) do |path|
+      visit(path)
 
-      assert find("[data-hidden-field]", visible: false)
+      assert(find("[data-hidden-field]", visible: false))
       find("[data-button]", text: "Click Me To Reveal Something Cool").click
-      assert find("[data-hidden-field]", visible: true)
+      assert(find("[data-hidden-field]", visible: true))
     end
   end
 end
 ```
 
-### Handling components without JS included
+### Testing components with external JavaScript
 
 A common pattern is to include assets in a layout rather than directly inside the component. In those cases, you can define a `layout` in the `visit_rendered_component_in_browser` so that the component is rendered with those assets:
 
@@ -267,12 +265,12 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
   def test_simple_js_interaction_in_browser_with_layout
-    with_rendered_component_path(SimpleJavascriptInteractionWithoutJsIncludedComponent.new, layout: 'application') do |page|
-      visit page
+    with_rendered_component_path(SimpleJavascriptInteractionWithoutJsIncludedComponent.new, layout: 'application') do |path|
+      visit(path)
 
-      assert find("[data-hidden-field]", visible: false)
+      assert(find("[data-hidden-field]", visible: false))
       find("[data-button]", text: "Click Me To Reveal Something Cool").click
-      assert find("[data-hidden-field]", visible: true)
+      assert(find("[data-hidden-field]", visible: true))
     end
   end
 end
