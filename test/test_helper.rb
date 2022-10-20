@@ -40,6 +40,12 @@ require "rails/test_help"
 
 require "capybara/cuprite"
 
+Capybara.register_driver(:cuprite) do |app|
+  # Add the process_timeout option to prevent failures due to the browser
+  # taking too long to start up.
+  Capybara::Cuprite::Driver.new(app, {process_timeout: 30})
+end
+
 # Reduce extra logs produced by puma booting up
 Capybara.server = :puma, {Silent: true}
 # Increase the max wait time to appease test failures due to timeouts.
