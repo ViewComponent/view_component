@@ -7,7 +7,7 @@ class ViewComponentsController < Rails::ApplicationController # :nodoc:
 
   if Rails.env.test?
     def system_test_entrypoint
-      render file: "./tmp/view_components/#{params.permit(:file)[:file]}", status: 200
+      render file: "./tmp/view_components/#{params.permit(:file)[:file]}"
     end
   end
 end
