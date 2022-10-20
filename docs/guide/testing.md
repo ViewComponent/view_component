@@ -256,7 +256,7 @@ end
 
 ### Testing components with external JavaScript
 
-A common pattern is to include assets in a layout rather than directly inside the component. In those cases, you can define a `layout` in the `visit_rendered_component_in_browser` so that the component is rendered with those assets:
+For components that depend on JavaScript provided by a layout, provide the `layout` argument:
 
 ```rb
 require "test_helper"
