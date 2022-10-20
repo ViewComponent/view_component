@@ -259,8 +259,6 @@ end
 For components that depend on JavaScript provided by a layout, provide the `layout` argument:
 
 ```rb
-require "test_helper"
-
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
