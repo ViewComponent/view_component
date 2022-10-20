@@ -236,7 +236,7 @@ config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 
 ## Testing Interactive Components
 
-Use the `with_rendered_component_in_browser` helper method in your system tests to test interactivity of components.
+Use the `with_rendered_component_path` helper method in your system tests to test interactivity of components.
 
 ```rb
 require "test_helper"
@@ -245,7 +245,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
   def test_simple_js_interaction_in_browser_without_layout
-    with_rendered_component_in_browser(SimpleJavascriptInteractionWithJsIncludedComponent.new) do |page|
+    with_rendered_component_path(SimpleJavascriptInteractionWithJsIncludedComponent.new) do |page|
       visit page
 
       assert find("[data-hidden-field]", visible: false)
@@ -267,7 +267,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
   def test_simple_js_interaction_in_browser_with_layout
-    with_rendered_component_in_browser(SimpleJavascriptInteractionWithoutJsIncludedComponent.new, layout: 'application') do |page|
+    with_rendered_component_path(SimpleJavascriptInteractionWithoutJsIncludedComponent.new, layout: 'application') do |page|
       visit page
 
       assert find("[data-hidden-field]", visible: false)

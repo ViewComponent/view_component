@@ -9,7 +9,7 @@ module ViewComponent
       Capybara.current_session
     end
 
-    def with_rendered_component_in_browser(component, **options, &block)
+    def with_rendered_component_path(component, **options, &block)
       layout = options[:layout] || false
 
       opts = {
