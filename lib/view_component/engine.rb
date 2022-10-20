@@ -128,7 +128,8 @@ module ViewComponent
           get(
             "#{options.preview_route}/*path",
             to: "#{preview_controller}#previews",
-            as: :preview_view_component
+            as: :preview_view_component,
+            internal: true
           )
         end
       end
