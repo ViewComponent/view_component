@@ -13,7 +13,13 @@ gem "rspec-rails", "~> 5"
 group :test do
   gem "cuprite", "~> 0.8"
   gem "puma", "~> 5"
-  gem "selenium-webdriver", "~> 4"
+
+  if RUBY_VERSION >= "2.6"
+    gem "selenium-webdriver", "~> 4"
+  else
+    # Selenium 4 requires Ruby 2.6+
+    gem "selenium-webdriver", "~> 3"
+  end
 end
 
 if RUBY_VERSION >= "3.1"
