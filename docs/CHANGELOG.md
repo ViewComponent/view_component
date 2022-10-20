@@ -28,7 +28,6 @@ nav_order: 5
 
     *Vlad Radulescu*
 
-
 * Add note about system testing components with previews.
 
     *Joel Hawksley*
