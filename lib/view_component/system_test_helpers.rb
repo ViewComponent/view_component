@@ -3,11 +3,6 @@
 module ViewComponent
   module SystemTestHelpers
     include TestHelpers
-    include Capybara::DSL
-
-    def page
-      Capybara.current_session
-    end
 
     def with_rendered_component_path(component, **options, &block)
       layout = options[:layout] || false
