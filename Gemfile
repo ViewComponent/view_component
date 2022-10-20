@@ -11,7 +11,6 @@ gem "rails", rails_version == "main" ? {git: "https://github.com/rails/rails", r
 gem "rspec-rails", "~> 5"
 
 group :test do
-  # For testing UI interactions
   gem "cuprite"
   gem "puma"
   gem "selenium-webdriver"
