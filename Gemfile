@@ -11,9 +11,9 @@ gem "rails", rails_version == "main" ? {git: "https://github.com/rails/rails", r
 gem "rspec-rails", "~> 5"
 
 group :test do
-  gem "cuprite"
-  gem "puma"
-  gem "selenium-webdriver"
+  gem "cuprite", "~> 0.8"
+  gem "puma", "~> 5"
+  gem "selenium-webdriver", "~> 4"
 end
 
 if RUBY_VERSION >= "3.1"
