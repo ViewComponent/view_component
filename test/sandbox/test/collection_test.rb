@@ -8,7 +8,9 @@ module ViewComponent
       def initialize(**kwargs)
       end
 
-      def call = ""
+      def call
+        ""
+      end
     end
 
     def setup
