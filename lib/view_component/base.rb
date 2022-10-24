@@ -591,7 +591,7 @@ module ViewComponent
         parameter = validate_default ? collection_parameter : provided_collection_parameter
 
         return unless parameter
-        return if initialize_parameter_names.include?(parameter)
+        return if initialize_parameter_names.include?(parameter) || initialize_parameter_names.include?(:kwargs)
 
         # If Ruby can't parse the component class, then the initalize
         # parameters will be empty and ViewComponent will not be able to render
