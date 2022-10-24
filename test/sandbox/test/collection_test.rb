@@ -5,8 +5,10 @@ require "test_helper"
 module ViewComponent
   class CollectionTest < TestCase
     class ComponentWithKeywordArgs < ViewComponent::Base
-      def initialize(**kwargs); end
-      def call; ""; end
+      def initialize(**kwargs)
+      end
+
+      def call = ""
     end
 
     def setup
