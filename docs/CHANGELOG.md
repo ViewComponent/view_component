@@ -10,6 +10,9 @@ nav_order: 5
 
 ## main
 
+* `Component.with_collection` supports Components whose initialize takes Keyword Arguments
+    *Zee Spencer*
+
 * Avoid loading ActionView::Base during Rails initialization.
 
     *Jonathan del Strother*
