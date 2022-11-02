@@ -114,14 +114,6 @@ ensure
   ViewComponent::CompileCache.cache = old_cache
 end
 
-def with_consistent_render
-  old_value = ViewComponent::Base.use_consistent_rendering_lifecycle
-  ViewComponent::Base.use_consistent_rendering_lifecycle = true
-  yield
-ensure
-  ViewComponent::Base.use_consistent_rendering_lifecycle = old_value
-end
-
 def without_template_annotations(&block)
   if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
     old_value = ActionView::Base.annotate_rendered_view_with_filenames
