@@ -14,6 +14,10 @@ nav_order: 5
 
     *Jonathan del Strother*
 
+* Add "ViewComponent In The Wild" articles to resources.
+
+    *Alexander Baygeldin*
+
 ## 2.74.1
 
 * Add more users of ViewComponent to docs.
