@@ -14,6 +14,10 @@ nav_order: 5
 
     *Jonathan del Strother*
 
+* Mention lambda slots rendering returned values lazily in the guide.
+
+    *Graham Rogers*
+
 * Add "ViewComponent In The Wild" articles to resources.
 
     *Alexander Baygeldin*

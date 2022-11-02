@@ -217,6 +217,8 @@ class BlogComponent < ViewComponent::Base
 end
 ```
 
+_Note: While a lambda is called when the `with_*` method is called, a returned component is not rendered until first use._
+
 ## Rendering collections
 
 Since 2.23.0
