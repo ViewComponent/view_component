@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add with_rendered_component_path method to enable testing JS interactions in components.
+* Add `with_rendered_component_path` method to enable testing JS interactions in components.
 
     *Edwin Mak*
 

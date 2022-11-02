@@ -16,7 +16,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_simple_js_interaction_in_browser_with_layout
-    with_rendered_component_path(SimpleJavascriptInteractionWithJsIncludedComponent.new, layout: "application") do |page|
+    with_rendered_component_path(SimpleJavascriptInteractionWithoutJsIncludedComponent.new, layout: "application") do |page|
       visit page
 
       assert find("[data-hidden-field]", visible: false)

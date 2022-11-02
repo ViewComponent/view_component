@@ -240,8 +240,6 @@ Use `with_rendered_component_path` in system tests to test interactive component
 
 ```rb
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
-  driven_by :cuprite
-
   def test_simple_js_interaction_in_browser_without_layout
     with_rendered_component_path(SimpleJavascriptInteractionWithJsIncludedComponent.new) do |path|
       visit(path)
@@ -260,8 +258,6 @@ For components that depend on JavaScript provided by a layout, provide the `layo
 
 ```rb
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
-  driven_by :cuprite
-
   def test_simple_js_interaction_in_browser_with_layout
     with_rendered_component_path(SimpleJavascriptInteractionWithoutJsIncludedComponent.new, layout: 'application') do |path|
       visit(path)
