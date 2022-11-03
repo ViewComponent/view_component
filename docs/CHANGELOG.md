@@ -20,9 +20,11 @@ nav_order: 5
 
     *Jonathan del Strother*
 
+<!-- vale off -->
 * Mention lambda slots rendering returned values lazily in the guide.
 
     *Graham Rogers*
+<!-- vale on -->
 
 * Add "ViewComponent In The Wild" articles to resources.
 
