@@ -24,4 +24,13 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
       assert find("[data-hidden-field]", visible: true)
     end
   end
+
+  def test_component_with_params
+    with_rendered_component_path(TitleWrapperComponent.new(title: "awesome-title")) do |page|
+      visit page
+
+      assert find('div', text: 'awesome-title')
+    end
+  end
+
 end
