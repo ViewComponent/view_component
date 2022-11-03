@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Run PVC's accessibility tests in a single process to avoid resource contention in CI.
+
+    *Cameron Dutro*
+
 ## 2.75.0
 
 * Avoid loading ActionView::Base during Rails initialization.
