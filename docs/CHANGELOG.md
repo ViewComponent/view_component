@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add Startup Jobs to list of companies using ViewComponent.
+
+    *Marc Köhlbrugge*
+
 * Run PVC's accessibility tests in a single process to avoid resource contention in CI.
 
     *Cameron Dutro*
