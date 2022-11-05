@@ -194,6 +194,14 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_renders_component_with_variant_containing_a_dash
+    with_variant :"mini-watch" do
+      render_inline(VariantsComponent.new)
+
+      assert_text("Mini Watch")
+    end
+  end
+
   def test_renders_default_template_when_variant_template_is_not_present
     with_variant :variant_without_template do
       render_inline(VariantsComponent.new)
@@ -583,6 +591,35 @@ class RenderingTest < ViewComponent::TestCase
       error.message,
       "Template file and inline render method found for variant 'phone' in " \
       "VariantTemplateAndInlineVariantTemplateComponent."
+    )
+  end
+
+  def test_raise_error_when_variant_template_file_and_inline_variant_collide
+    error =
+      assert_raises ViewComponent::TemplateError do
+        with_variant :"mini-watch" do
+          render_inline(VariantTemplateAndInlineVariantCollisionComponent.new)
+        end
+      end
+
+    assert_includes(
+      error.message,
+      "Colliding templates 'mini-watch' and 'mini__watch' found in " \
+      "VariantTemplateAndInlineVariantCollisionComponent."
+    )
+  end
+
+  def test_raise_error_when_variant_template_files_collide
+    error =
+      assert_raises ViewComponent::TemplateError do
+        with_variant :"mini-watch" do
+          render_inline(VariantTemplatesCollisionComponent.new)
+        end
+      end
+
+    assert_includes(
+      error.message,
+      "Colliding templates 'mini-watch' and 'mini__watch' found in VariantTemplatesCollisionComponent." \
     )
   end
 
