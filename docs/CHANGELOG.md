@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix empty VC::Base.config during initialization.
+
+    *Jonathan del Strother*
+
 * Add Startup Jobs to list of companies using ViewComponent.
 
     *Marc Köhlbrugge*
