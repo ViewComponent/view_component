@@ -208,18 +208,16 @@ module ViewComponent
     private
 
     def preview_klass
-      begin
-        result = if respond_to?(:described_class)
-          raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
+      result = if respond_to?(:described_class)
+        raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
 
-          "#{described_class}Preview"
-        else
-          self.class.name.gsub("Test", "Preview")
-        end
-        result = result.constantize
-      rescue NameError
-        raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
+        "#{described_class}Preview"
+      else
+        self.class.name.gsub("Test", "Preview")
       end
+      result = result.constantize
+    rescue NameError
+      raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
     end
   end
 end
