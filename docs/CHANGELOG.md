@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add ability to pass in the preview class to `render_preview`.
+
+    *Jon Rohan*
+
 * Add Startup Jobs to list of companies using ViewComponent.
 
     *Marc Köhlbrugge*
