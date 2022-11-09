@@ -4,10 +4,11 @@ require "test_helper"
 
 module ViewComponent
   class CollectionTest < TestCase
-    class ComponentWithKeywordArgs < ViewComponent::Base
+    class ProductComponent < ViewComponent::Base
       attr_accessor :product
+
       def initialize(**kwargs)
-        self.product = product
+        self.product = kwargs[:product]
       end
 
       def call
@@ -30,7 +31,7 @@ module ViewComponent
     end
 
     def test_supports_components_with_keyword_args
-      render_inline(ComponentWithKeywordArgs.with_collection(@products))
+      render_inline(ProductComponent.with_collection(@products))
       assert_selector("*[data-name='#{@products.first.name}']", text: @products.first.name)
       assert_selector("*[data-name='#{@products.last.name}']", text: @products.last.name)
     end
