@@ -22,6 +22,8 @@ nav_order: 5
 
     *Cameron Dutro*
 
+## 2.75.0
+
 * Avoid loading ActionView::Base during Rails initialization.
 
     *Jonathan del Strother*
