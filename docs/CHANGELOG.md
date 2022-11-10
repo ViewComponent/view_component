@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Prevent polymorphic slots from calculating `content` when setting a slot.
+
+    *Blake Williams*
+
 * Add Startup Jobs to list of companies using ViewComponent.
 
     *Marc Köhlbrugge*
@@ -17,8 +21,6 @@ nav_order: 5
 * Run PVC's accessibility tests in a single process to avoid resource contention in CI.
 
     *Cameron Dutro*
-
-## 2.75.0
 
 * Avoid loading ActionView::Base during Rails initialization.
 
