@@ -81,10 +81,10 @@ module ViewComponent
     # In RSpec, `Preview` is appended to `described_class`.
     #
     # @param name [String] The name of the preview to be rendered.
-    # @param klass [ViewComponent::Preview] The class of the preview to be rendered.
+    # @param from [ViewComponent::Preview] The class of the preview to be rendered.
     # @param params [Hash] Parameters to be passed to the preview.
     # @return [Nokogiri::HTML]
-    def render_preview(name, klass: preview_klass, params: {})
+    def render_preview(name, from: preview_class, params: {})
       previews_controller = build_controller(Rails.application.config.view_component.preview_controller.constantize)
 
       # From what I can tell, it's not possible to overwrite all request parameters
@@ -93,7 +93,7 @@ module ViewComponent
         previews_controller.request.params[k] = v
       end
 
-      previews_controller.request.params[:path] = "#{klass.preview_name}/#{name}"
+      previews_controller.request.params[:path] = "#{from.preview_name}/#{name}"
       previews_controller.response = ActionDispatch::Response.new
       result = previews_controller.previews
 
@@ -207,7 +207,7 @@ module ViewComponent
 
     private
 
-    def preview_klass
+    def preview_class
       result = if respond_to?(:described_class)
         raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
 

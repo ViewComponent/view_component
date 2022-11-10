@@ -76,12 +76,12 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
-By default, the name of the preview to be rendered is inferred from the name of the current test file. Use `klass` to explicitly set the preview to be rendered:
+By default, the name of the preview to be rendered is inferred from the name of the current test file. Use `from` to explicitly set the preview to be rendered:
 
 ```ruby
 class ExampleTest < ViewComponent::TestCase
   def test_render_preview
-    render_preview(:with_default_title, klass: ExampleComponentPreview)
+    render_preview(:with_default_title, from: ExampleComponentPreview)
 
     assert_text("Hello, world!")
   end
