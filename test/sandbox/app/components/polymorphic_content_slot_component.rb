@@ -3,7 +3,7 @@
 class PolymorphicContentSlotComponent < ViewComponent::Base
   renders_one :leading_visual, types: {
     icon: lambda { |title|
-      content_tag('h1') do
+      content_tag("h1") do
         title
       end
     }

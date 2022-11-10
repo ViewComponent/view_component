@@ -7,8 +7,8 @@ class PolymorphicWrapperComponent < ViewComponent::Base
 
   def section
     s = PolymorphicContentSlotComponent.new
-    s.with_content('the truth is out there')
-    s.with_leading_visual_icon('wow')
+    s.with_content("the truth is out there")
+    s.with_leading_visual_icon("wow")
 
     @sections << s
   end
