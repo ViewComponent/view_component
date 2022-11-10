@@ -76,7 +76,7 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
-By default, the name of the preview to be rendered is inferred from the name of the current test file. Use `from` to explicitly set the preview to be rendered:
+By default, the preview class is inferred from the name of the current test file. Use `from` to set it explicitly:
 
 ```ruby
 class ExampleTest < ViewComponent::TestCase
