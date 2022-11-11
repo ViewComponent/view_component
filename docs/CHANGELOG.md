@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* `Component.with_collection` supports components that accept keyword arguments.
+* `Component.with_collection` supports components that accept splatted keyword arguments.
 
     *Zee Spencer*
 
