@@ -7,8 +7,8 @@ module ViewComponent
     class ProductComponent < ViewComponent::Base
       attr_accessor :product
 
-      def initialize(**kwargs)
-        self.product = kwargs[:product]
+      def initialize(**attributes)
+        self.product = attributes[:product]
       end
 
       def call
