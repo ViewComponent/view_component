@@ -76,6 +76,18 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+By default, the preview class is inferred from the name of the current test file. Use `from` to set it explicitly:
+
+```ruby
+class ExampleTest < ViewComponent::TestCase
+  def test_render_preview
+    render_preview(:with_default_title, from: ExampleComponentPreview)
+
+    assert_text("Hello, world!")
+  end
+end
+```
+
 ## Helpers
 
 The `ViewComponent::Preview` base class includes
