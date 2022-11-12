@@ -301,7 +301,7 @@ nav_order: 5
 
 * Revert `Expose Capybara DSL methods directly inside tests.` This change unintentionally broke other Capybara methods and thus introduced a regression. We aren't confident that we can fail forward so we have decided to revert this change.
 
-    *Joel Hawksley*, *Blake Williams*
+    *Joel Hawksley, Blake Williams*
 
 * Revert change making content evaluation consistent.
 
@@ -384,7 +384,7 @@ nav_order: 5
 
 * Add @boardfish and @spone as maintainers.
 
-    *Joel Hawksley*, *Cameron Dutro*, *Blake Williams*
+    *Joel Hawksley, Cameron Dutro, Blake Williams*
 
 * Re-compile updated, inherited templates when class caching is disabled.
 
