@@ -1,6 +1,6 @@
 ---
 layout: default
-title: API reference
+title: API
 nav_order: 3
 ---
 
@@ -9,6 +9,23 @@ nav_order: 3
 # API
 
 ## Class methods
+
+### .config
+
+
+
+### .config=(value)
+
+Sets the attribute config
+
+### .sidecar_files(extensions)
+
+Find sidecar files for the given extensions.
+
+The provided array of extensions is expected to contain
+strings starting without the "dot", example: `["erb", "haml"]`.
+
+For example, one might collect sidecar CSS files that need to be compiled.
 
 ### .strip_trailing_whitespace(value = true)
 
@@ -79,6 +96,10 @@ _Use `#generate.stimulus_controller` instead. Will be removed in v3.0.0._
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
 
+### #output_postamble → [String]
+
+Optional content to be returned after the rendered template.
+
 ### #render? → [Boolean]
 
 Override to determine whether the ViewComponent should render.
@@ -126,26 +147,25 @@ _Will be removed in v3.0.0._
 
 ## Configuration
 
-### #component_parent_class
+### .component_parent_class → [String]
 
-Parent class for generated components
+The parent class from which generated components will inherit.
+Defaults to `nil`. If this is falsy, generators will use
+`"ApplicationComponent"` if defined, `"ViewComponent::Base"` otherwise.
 
-```ruby
-config.view_component.component_parent_class = "MyBaseComponent"
-```
+### #config
 
-Defaults to nil. If this is falsy, generators will use
-"ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+Returns the value of attribute config.
 
-### #default_preview_layout
+### .default_preview_layout → [String]
 
-Set a custom default layout used for preview index and individual previews:
+A custom default layout used for the previews index page and individual
+previews.
+Defaults to `nil`. If this is falsy, `"component_preview"` is used.
 
-    config.view_component.default_preview_layout = "component_preview"
+### .generate → [ActiveSupport::OrderedOptions]
 
-### #generate
-
-Configuration for generators.
+The subset of configuration options relating to generators.
 
 All options under this namespace default to `false` unless otherwise
 stated.
@@ -154,117 +174,86 @@ stated.
 
 Always generate a component with a sidecar directory:
 
-```ruby
-config.view_component.generate.sidecar = true
-```
+    config.view_component.generate.sidecar = true
 
 #### #stimulus_controller
 
 Always generate a Stimulus controller alongside the component:
 
-```ruby
-config.view_component.generate.stimulus_controller = true
-```
+    config.view_component.generate.stimulus_controller = true
 
 #### #locale
 
 Always generate translations file alongside the component:
 
-```ruby
-config.view_component.generate.locale = true
-```
+    config.view_component.generate.locale = true
 
 #### #distinct_locale_files
 
 Always generate as many translations files as available locales:
 
-```ruby
-config.view_component.generate.distinct_locale_files = true
-```
+    config.view_component.generate.distinct_locale_files = true
 
 One file will be generated for each configured `I18n.available_locales`,
 falling back to `[:en]` when no `available_locales` is defined.
 
 #### #preview
 
-Always generate preview alongside the component:
+Always generate a preview alongside the component:
 
-```ruby
-config.view_component.generate.preview = true
-```
+     config.view_component.generate.preview = true
 
- Defaults to `false`.
+### .instrumentation_enabled → [Boolean]
 
-### #preview_controller
-
-Set the controller used for previewing components:
-
-    config.view_component.preview_controller = "MyPreviewController"
-
-Defaults to `ViewComponentsController`.
-
-### #preview_path (Deprecated)
-
-_Use `preview_paths` instead. Will be removed in v3.0.0._
-
-### #preview_paths
-
-Set the location of component previews:
-
-    config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
-
-### #preview_route
-
-Set the entry route for component previews:
-
-    config.view_component.preview_route = "/previews"
-
-Defaults to `/rails/view_components` when `show_previews` is enabled.
-
-### #render_monkey_patch_enabled
-
-Set if render monkey patches should be included or not in Rails <6.1:
-
-```ruby
-config.view_component.render_monkey_patch_enabled = false
-```
-
-### #show_previews
-
-Enable or disable component previews:
-
-    config.view_component.show_previews = true
-
-Defaults to `true` in development.
-
-### #show_previews_source
-
-Enable or disable source code previews in component previews:
-
-    config.view_component.show_previews_source = true
-
+Whether ActiveSupport notifications are enabled.
 Defaults to `false`.
 
-### #test_controller
+### .preview_controller → [String]
 
-Set the controller used for testing components:
+The controller used for previewing components.
+Defaults to `ViewComponentsController`.
 
-```ruby
-config.view_component.test_controller = "MyTestController"
-```
+### .preview_path (Deprecated)
 
-Defaults to ApplicationController. Can also be configured on a per-test
-basis using `with_controller_class`.
+_Use #preview_paths instead. Will be removed in v3.0.0._
 
-### #view_component_path
+### .preview_paths → [Array<String>]
 
-Path for component files
+The locations in which component previews will be looked up.
+Defaults to `['test/component/previews']` relative to your Rails root.
 
-```ruby
-config.view_component.view_component_path = "app/my_components"
-```
+### .preview_route → [String]
 
-Defaults to `app/components`.
+The entry route for component previews.
+Defaults to `"/rails/view_components"`.
+
+### .render_monkey_patch_enabled → [Boolean]
+
+If this is disabled, use `#render_component` or
+`#render_component_to_string` instead.
+Defaults to `true`.
+
+### .show_previews → [Boolean]
+
+Whether component previews are enabled.
+Defaults to `true` in development and test environments.
+
+### .show_previews_source → [Boolean]
+
+Whether to display source code previews in component previews.
+Defaults to `false`.
+
+### .test_controller → [String]
+
+The controller used for testing components.
+Can also be configured on a per-test basis using `#with_controller_class`.
+Defaults to `ApplicationController`.
+
+### .view_component_path → [String]
+
+The path in which components, their templates, and their sidecars should
+be stored.
+Defaults to `"app/components"`.
 
 ## ViewComponent::TestHelpers
 
@@ -290,6 +279,23 @@ allowing for Capybara assertions to be used:
 render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
+
+### #render_preview(name, from: preview_class, params: {}) → [Nokogiri::HTML]
+
+Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
+allowing for Capybara assertions to be used:
+
+```ruby
+render_preview(:default)
+assert_text("Hello, World!")
+```
+
+Note: `#rendered_preview` expects a preview to be defined with the same class
+name as the calling test, but with `Test` replaced with `Preview`:
+
+MyComponentTest -> MyComponentPreview etc.
+
+In RSpec, `Preview` is appended to `described_class`.
 
 ### #rendered_component → [String]
 
