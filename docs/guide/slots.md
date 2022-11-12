@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Slots
-parent: Guide
+parent: How-to guide
 ---
 
 # Slots
@@ -145,6 +145,32 @@ end
 <% end %>
 ```
 
+## Referencing slots
+
+As the content passed to slots is registered after a component is initialized, it can't be referenced in an initializer. One way to reference slot content is using the `before_render` [lifecycle method](/guide/lifecycle):
+
+```ruby
+# blog_component.rb
+class BlogComponent < ViewComponent::Base
+  renders_one :image
+  renders_many :posts
+
+  def before_render
+    @post_container_classes = "PostContainer--hasImage" if image.present?
+  end
+end
+```
+
+```erb
+<%# blog_component.html.erb %>
+<% posts.each do |post| %>
+  <div class="<%= @post_container_classes %>">
+    <%= image if image? %>
+    <%= post %>
+  </div>
+<% end %>
+```
+
 ## Lambda slots
 
 It's also possible to define a slot as a lambda that returns content to be rendered (either a string or a ViewComponent instance). Lambda slots are useful in cases where writing another component may be unnecessary, such as working with helpers like `content_tag` or as wrappers for another ViewComponent with specific default values:
@@ -190,6 +216,8 @@ class BlogComponent < ViewComponent::Base
   end
 end
 ```
+
+_Note: While a lambda is called when the `with_*` method is called, a returned component isn't rendered until first use._
 
 ## Rendering collections
 
@@ -290,4 +318,16 @@ To see whether a polymorphic slot has been passed to the component, use the `#{s
 <% else %>
   <span class="visual-placeholder">N/A</span>
 <% end %>
+```
+
+## Migrating from previous Slots implementations
+
+In [v2.54.0](https://viewcomponent.org/CHANGELOG.html#2540), the Slots API was updated to require the `with_*` prefix for setting Slots. The non-`with_*` setters will be deprecated in a coming version and removed in `v3.0`.
+
+To enable the coming deprecation warning, add `warn_on_deprecated_slot_setter`:
+
+```ruby
+class DeprecatedSlotsSetterComponent < ViewComponent::Base
+  warn_on_deprecated_slot_setter
+end
 ```

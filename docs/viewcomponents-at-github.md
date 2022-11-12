@@ -1,10 +1,10 @@
 ---
 layout: default
-title: ViewComponents in practice
+title: ViewComponents at GitHub
 nav_order: 4
 ---
 
-# ViewComponents in practice
+# ViewComponents at GitHub
 
 _GitHub's internal guide to building component-driven UI in Rails. Consider it to be more opinion than fact._
 
@@ -36,7 +36,7 @@ General-purpose ViewComponents implement common UI patterns. At GitHub, we open-
 
 App-specific ViewComponents translate a domain object (often an ActiveRecord model) into one or more general-purpose components.
 
-For example: we've a `User::AvatarComponent` that accepts a `User` ActiveRecord object and renders a `Primer::AvatarComponent`.
+For example, `User::AvatarComponent` accepts a `User` ActiveRecord object and renders a `Primer::AvatarComponent`.
 
 ## Organization
 
@@ -76,9 +76,9 @@ ViewComponents have less value in single-use cases like replacing a `show` view.
 
 When migrating an entire route to use ViewComponents, we've had our best luck doing so from the bottom up, extracting portions of the page into ViewComponents first.
 
-### Integrating Javascript behaviors
+### Integrating JavaScript behaviors
 
-Write ViewComponents that wrap Web Components, writing any custom Javascript with [Catalyst](https://github.github.io/catalyst/).
+Write ViewComponents that wrap Web Components, writing any custom JavaScript with [Catalyst](https://github.github.io/catalyst/).
 
 ### Prefer tests against rendered content, not instance methods
 

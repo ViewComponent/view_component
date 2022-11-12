@@ -855,14 +855,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("foo")
   end
 
-  def test_after_compile
-    assert_equal AfterCompileComponent.compiled_value, "Hello, World!"
-
-    render_inline(AfterCompileComponent.new)
-
-    assert_text "Hello, World!"
-  end
-
   def test_does_not_render_passed_in_content_if_render_is_false
     start_time = Time.now
 
@@ -935,7 +927,9 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
+      assert_equal "/products", request.path
       assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
+      assert_equal "/products?mykey=myvalue&otherkey=othervalue", request.fullpath
     end
 
     with_request_url "/products?mykey[mynestedkey]=myvalue" do
@@ -955,10 +949,6 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")
-  end
-
-  def test_each_component_has_a_different_lock
-    assert_not_equal(MyComponent.compiler.__vc_compiler_lock, AnotherComponent.compiler.__vc_compiler_lock)
   end
 
   def test_compilation_in_development_mode
@@ -991,6 +981,17 @@ class RenderingTest < ViewComponent::TestCase
       end
 
       threads.map(&:join)
+    end
+  end
+
+  def test_concurrency_deadlock_cache
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
+        render_inline(ContentEvalComponent.new) do
+          ViewComponent::CompileCache.invalidate!
+          render_inline(ContentEvalComponent.new)
+        end
+      end
     end
   end
 
@@ -1076,6 +1077,90 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector(".nested", count: 4) do |node|
       assert "#{items[index]}, Hello helper method" == node.text
       index += 1
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_stack_trace_singular
+    line_num = __LINE__ + 3 # offset because `c.item`, below, is the line that causes the deprecation warning
+    assert_deprecated(/with_item`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.item { "foo" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_stack_trace_collection
+    line_num = __LINE__ + 3 # offset because `c.items`, below, is the line that causes the deprecation warning
+    assert_deprecated(/with_items`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.items([{foo: "bar"}])
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_collection_singular
+    assert_deprecated(/with_item`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.item { "foo" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_collection
+    assert_deprecated(/with_items`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.items([{foo: "bar"}])
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_warning_singular
+    assert_deprecated(/with_header`/, ViewComponent::Deprecation) do
+      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
+        c.header { "hi!" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_polymorphic_singular
+    assert_deprecated(/with_header_standard`/, ViewComponent::Deprecation) do
+      render_inline(PolymorphicSlotComponent.new) do |c|
+        c.header_standard { "hi!" }
+      end
+    end
+  end
+
+  def test_deprecated_slot_setter_polymorphic_collection
+    assert_deprecated(/with_item_foo`/, ViewComponent::Deprecation) do
+      render_inline(PolymorphicSlotComponent.new) do |c|
+        c.item_foo { "hi!" }
+      end
+    end
+  end
+
+  def test_concurrency_deadlock
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
+        mutex = Mutex.new
+
+        t1 = Thread.new do
+          mutex.synchronize do
+            sleep 0.02
+            render_inline(ContentEvalComponent.new)
+          end
+        end
+
+        t = Thread.new do
+          render_inline(ContentEvalComponent.new) do
+            mutex.synchronize do
+              sleep 0.01
+            end
+          end
+        end
+
+        t1.join
+        t.join
+      end
     end
   end
 end

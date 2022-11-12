@@ -31,4 +31,8 @@ Sandbox::Application.routes.draw do
   get :cached_partial, to: "integration_examples#cached_partial"
   get :inherited_sidecar, to: "integration_examples#inherited_sidecar"
   get :inherited_from_uncompilable_component, to: "integration_examples#inherited_from_uncompilable_component"
+
+  constraints(lambda { |request| request.env["warden"].authenticate! }) do
+    get :constraints_with_env, to: "integration_examples#index"
+  end
 end

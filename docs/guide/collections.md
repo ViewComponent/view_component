@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Collections
-parent: Guide
+parent: How-to guide
 ---
 
 # Collections
@@ -25,7 +25,7 @@ class ProductComponent < ViewComponent::Base
 end
 ```
 
-[By default](https://github.com/github/view_component/blob/89f8fab4609c1ef2467cf434d283864b3c754473/lib/view_component/base.rb#L249), the component name is used to define the parameter passed into the component from the collection.
+[By default](https://github.com/viewcomponent/view_component/blob/89f8fab4609c1ef2467cf434d283864b3c754473/lib/view_component/base.rb#L249), the component name is used to define the parameter passed into the component from the collection.
 
 ## `with_collection_parameter`
 

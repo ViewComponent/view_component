@@ -333,7 +333,7 @@ class SlotsV2sTest < ViewComponent::TestCase
     refute_selector("div.table div.table__header span", text: "Selectable")
   end
 
-  def test_component_raises_when_given_invalid_slot_name
+  def test_component_raises_when_given_content_slot_name
     exception =
       assert_raises ArgumentError do
         Class.new(ViewComponent::Base) do
@@ -342,6 +342,18 @@ class SlotsV2sTest < ViewComponent::TestCase
       end
 
     assert_includes exception.message, "declares a slot named content"
+    assert_includes exception.message, "without having to create"
+  end
+
+  def test_component_raises_when_given_invalid_slot_name
+    exception =
+      assert_raises ArgumentError do
+        Class.new(ViewComponent::Base) do
+          renders_one :render
+        end
+      end
+
+    assert_includes exception.message, "declares a slot named render"
   end
 
   def test_component_raises_when_given_one_slot_name_ending_with_question_mark
@@ -587,5 +599,37 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
 
     assert_selector("h1.some-class", text: "This is a header!")
+  end
+
+  def test_composable_slots_with_consistent_render
+    with_consistent_render do
+      render_inline ComposableSlotsComponent.new do |c|
+        c.title("The truth is out there")
+      end
+
+      assert_selector("div h1", text: "The truth is out there")
+    end
+  end
+
+  def test_raises_error_on_conflicting_slot_names
+    error = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_one :conflicting_item
+        renders_many :conflicting_items
+      end
+    end
+
+    assert_includes error.message, "conflicting_item slot multiple times"
+  end
+
+  def test_raises_error_on_conflicting_slot_names_in_reverse_order
+    error = assert_raises ArgumentError do
+      Class.new(ViewComponent::Base) do
+        renders_many :conflicting_items
+        renders_one :conflicting_item
+      end
+    end
+
+    assert_includes error.message, "conflicting_items slot multiple times"
   end
 end

@@ -1,6 +1,4 @@
 describe PreviewComponent do
-  include ViewComponent::RenderPreviewHelper
-
   before do
     ViewComponent::Preview.load_previews
   end
@@ -13,8 +11,6 @@ describe PreviewComponent do
 end
 
 describe "PreviewComponent" do
-  include ViewComponent::RenderPreviewHelper
-
   before do
     ViewComponent::Preview.load_previews
   end

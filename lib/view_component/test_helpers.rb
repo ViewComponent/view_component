@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "view_component/render_preview_helper"
-
 module ViewComponent
   module TestHelpers
     begin
@@ -63,6 +61,43 @@ module ViewComponent
         else
           controller.view_context.render_component(component, &block)
         end
+
+      Nokogiri::HTML.fragment(@rendered_content)
+    end
+
+    # Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
+    # allowing for Capybara assertions to be used:
+    #
+    # ```ruby
+    # render_preview(:default)
+    # assert_text("Hello, World!")
+    # ```
+    #
+    # Note: `#rendered_preview` expects a preview to be defined with the same class
+    # name as the calling test, but with `Test` replaced with `Preview`:
+    #
+    # MyComponentTest -> MyComponentPreview etc.
+    #
+    # In RSpec, `Preview` is appended to `described_class`.
+    #
+    # @param name [String] The name of the preview to be rendered.
+    # @param from [ViewComponent::Preview] The class of the preview to be rendered.
+    # @param params [Hash] Parameters to be passed to the preview.
+    # @return [Nokogiri::HTML]
+    def render_preview(name, from: preview_class, params: {})
+      previews_controller = build_controller(Rails.application.config.view_component.preview_controller.constantize)
+
+      # From what I can tell, it's not possible to overwrite all request parameters
+      # at once, so we set them individually here.
+      params.each do |k, v|
+        previews_controller.request.params[k] = v
+      end
+
+      previews_controller.request.params[:path] = "#{from.preview_name}/#{name}"
+      previews_controller.response = ActionDispatch::Response.new
+      result = previews_controller.previews
+
+      @rendered_content = result
 
       Nokogiri::HTML.fragment(@rendered_content)
     end
@@ -151,10 +186,11 @@ module ViewComponent
       old_request_query_string = request.query_string
       old_controller = defined?(@controller) && @controller
 
+      path, query = path.split("?", 2)
       request.path_info = path
-      request.path_parameters = Rails.application.routes.recognize_path(path)
-      request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(path.split("?")[1]))
-      request.set_header(Rack::QUERY_STRING, path.split("?")[1])
+      request.path_parameters = Rails.application.routes.recognize_path_with_request(request, path, {})
+      request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
+      request.set_header(Rack::QUERY_STRING, query)
       yield
     ensure
       request.path_info = old_request_path_info
@@ -167,6 +203,21 @@ module ViewComponent
     # @private
     def build_controller(klass)
       klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)
+    end
+
+    private
+
+    def preview_class
+      result = if respond_to?(:described_class)
+        raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
+
+        "#{described_class}Preview"
+      else
+        self.class.name.gsub("Test", "Preview")
+      end
+      result = result.constantize
+    rescue NameError
+      raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
     end
   end
 end

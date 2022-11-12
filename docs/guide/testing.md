@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Testing
-parent: Guide
+parent: How-to guide
 ---
 
 # Testing
@@ -31,19 +31,30 @@ _Note: `assert_selector` only matches on visible elements by default. To match o
 Since 2.56.0
 {: .label }
 
-Experimental
-{: .label .label-yellow }
-
 Use `render_preview(name)` to render previews in ViewComponent unit tests:
 
 ```ruby
 class ExampleComponentTest < ViewComponent::TestCase
-  include ViewComponent::RenderPreviewHelper
-
   def test_render_preview
     render_preview(:with_default_title)
 
     assert_text("Example component default")
+  end
+end
+```
+
+## Testing components with behaviors
+
+To test ViewComponents with behaviors, visit a preview in a system test:
+
+```ruby
+class MyComponentSystemTest < ActionDispatch::SystemTestCase
+  def test_default_preview
+    visit("/rails/view_components/my_component/default")
+
+    click_on("Open dialog")
+
+    assert_text("Test Dialog")
   end
 end
 ```

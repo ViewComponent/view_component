@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Previews
-parent: Guide
+parent: How-to guide
 ---
 
 # Previews
@@ -32,28 +32,6 @@ Then access the resulting previews at:
 
 _For a more interactive experience, consider using [Lookbook](https://github.com/allmarkedup/lookbook) or [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)._
 
-## Previews as test cases
-
-Since 2.56.0
-{: .label }
-
-Experimental
-{: .label .label-yellow }
-
-Use `render_preview(name)` to render previews in ViewComponent unit tests:
-
-```ruby
-class ExampleComponentTest < ViewComponent::TestCase
-  include ViewComponent::RenderPreviewHelper
-
-  def test_render_preview
-    render_preview(:with_default_title)
-
-    assert_text("Example component default")
-  end
-end
-```
-
 ## Passing parameters
 
 Set dynamic values from URL parameters by setting them as arguments:
@@ -68,6 +46,47 @@ end
 ```
 
 Then pass in a value: `/rails/view_components/example_component/with_dynamic_title?title=Custom+title`.
+
+## Previews as test cases
+
+Since 2.56.0
+{: .label }
+
+Use `render_preview(name)` to render previews in ViewComponent unit tests:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_render_preview
+    render_preview(:with_default_title)
+
+    assert_text("Example component default")
+  end
+end
+```
+
+Parameters can also be passed:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_render_preview
+    render_preview(:with_default_title, params: { message: "Hello, world!" })
+
+    assert_text("Hello, world!")
+  end
+end
+```
+
+By default, the preview class is inferred from the name of the current test file. Use `from` to set it explicitly:
+
+```ruby
+class ExampleTest < ViewComponent::TestCase
+  def test_render_preview
+    render_preview(:with_default_title, from: ExampleComponentPreview)
+
+    assert_text("Hello, world!")
+  end
+end
+```
 
 ## Helpers
 

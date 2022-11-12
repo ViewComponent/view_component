@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Getting started
-parent: Guide
+parent: How-to guide
 nav_order: 1
 ---
 
@@ -98,6 +98,15 @@ end
 ```
 
 _Note: Content can't be passed to a component via a block in controllers. Instead, use `with_content`. In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout._
+
+When using turbo frames with [turbo-rails](https://github.com/hotwired/turbo-rails), set `content_type` as `text/html`:
+
+```ruby
+# app/controllers/home_controller.rb
+def create
+  render(ExampleComponent.new, content_type: "text/html")
+end
+```
 
 ### Rendering ViewComponents to strings inside controller actions
 

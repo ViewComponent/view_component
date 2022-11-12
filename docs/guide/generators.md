@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Generators
-parent: Guide
+parent: How-to guide
 ---
 
 # Generators
@@ -140,7 +140,7 @@ bin/rails generate component Example title --sidecar
       create    app/components/example_component/example_component.html.erb
 ```
 
-To always generate in the sidecar directory, set `config.view_component.generate_sidecar = true`.
+To always generate in the sidecar directory, set `config.view_component.generate.sidecar = true`.
 
 ### Use [inline rendering](/guide/templates.html#inline) (no template file)
 

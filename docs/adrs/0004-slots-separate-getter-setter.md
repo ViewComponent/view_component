@@ -1,4 +1,11 @@
-# Separate Slot Getters and Setters
+---
+layout: default
+title: 4. Separate Slot Getters and Setters
+parent: Architectural decisions
+nav_order: 4
+---
+
+# 4. Separate Slot Getters and Setters
 
 Date: 2022/03/22
 
@@ -37,7 +44,7 @@ end
 c = MyComponent.new
 
 # c.header returns nil because the getter path is being executed due to having
-# no arguments and no block passed: https://github.com/github/view_component/blob/main/lib/view_component/slotable_v2.rb#L70-L74
+# no arguments and no block passed: https://github.com/viewcomponent/view_component/blob/main/lib/view_component/slotable_v2.rb#L70-L74
 #
 c.header.with_content("Hello world!") # undefined method `with_content' for nil:NilClass (NoMethodError)
 ```

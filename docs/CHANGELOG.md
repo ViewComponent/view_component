@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Changelog
+nav_order: 5
 ---
 
 <!-- Add unreleased changes under the "main" heading. -->
@@ -8,6 +9,269 @@ title: Changelog
 # Changelog
 
 ## main
+
+* Add ability to pass in the preview class to `render_preview`.
+
+    *Jon Rohan*
+
+* Add Startup Jobs to list of companies using ViewComponent.
+
+    *Marc Köhlbrugge*
+
+* Run PVC's accessibility tests in a single process to avoid resource contention in CI.
+
+    *Cameron Dutro*
+
+## 2.75.0
+
+* Avoid loading ActionView::Base during Rails initialization.
+
+    *Jonathan del Strother*
+
+<!-- vale off -->
+* Mention lambda slots rendering returned values lazily in the guide.
+
+    *Graham Rogers*
+<!-- vale on -->
+
+* Add "ViewComponent In The Wild" articles to resources.
+
+    *Alexander Baygeldin*
+
+## 2.74.1
+
+* Add more users of ViewComponent to docs.
+
+    *Joel Hawksley*
+
+* Add a known issue for usage with `turbo_frame_tag` to the documentation.
+
+    *Vlad Radulescu*
+
+* Add note about system testing components with previews.
+
+    *Joel Hawksley*
+
+* Remove locking mechanisms from the compiler.
+
+    *Cameron Dutro*
+
+## 2.74.0
+
+* Add Avo to list of companies using ViewComponent.
+
+    *Adrian Marin*
+
+* Promote experimental `_output_postamble` method to public API as `output_postamble`.
+
+    *Joel Hawksley*
+
+* Promote experimental `_sidecar_files` method to public API as `sidecar_files`.
+
+    *Joel Hawksley*
+
+* Fix `show_previews` regression introduced in 2.73.0.
+
+    *Andy Baranov*
+
+* `with_request_url` test helper supports router constraints (such as Devise).
+
+     *Aotokitsuruya*
+
+## 2.73.0
+
+* Remove experimental `_after_compile` lifecycle method.
+
+    *Joel Hawksley*
+
+* Fix capitalization of JavaScript in docs.
+
+    *Erinna Chen*
+
+* Add PrintReleaf to list of companies using ViewComponent.
+
+    *Ry Kulp*
+
+* Simplify CI configuration to a single build per Ruby/Rails version.
+
+    *Joel Hawksley*
+
+* Correctly document `generate.sidecar` config option.
+
+    *Ruben Smit*
+
+* Add Yobbers to list of companies using ViewComponent.
+
+    *Anton Prins*
+
+## 2.72.0
+
+* Deprecate support for Ruby < 2.7 for removal in v3.0.0.
+
+    *Joel Hawksley*
+
+* Add `changelog_uri` to gemspec.
+
+    *Joel Hawksley*
+
+* Link to `CHANGELOG.md` instead of symlink.
+
+    *Joel Hawksley.
+
+* Add Aluuno to list of companies using ViewComponent.
+
+    *Daniel Naves de Carvalho*
+
+* Add `source_code_uri` to gemspec.
+
+    *Yoshiyuki Hirano*
+
+* Update link to benchmark script in docs.
+
+    *Daniel Diekmeier*
+
+* Add special exception message for `renders_one :content` explaining that content passed as a block will be assigned to the `content` accessor without having to create an explicit slot.
+
+    *Daniel Diekmeier*
+
+## 2.71.0
+
+**ViewComponent has moved to a new organization: [https://github.com/viewcomponent/view_component](https://github.com/viewcomponent/view_component). See [https://github.com/viewcomponent/view_component/issues/1424](https://github.com/viewcomponent/view_component/issues/1424) for more details.**
+
+## 2.70.0
+
+* `render_preview` can pass parameters to preview.
+
+    *Joel Hawksley*
+
+* Fix docs typos.
+
+    *Joel Hawksley*
+
+* Add architectural decisions to documentation and rename sidebar sections.
+
+    *Joel Hawksley*
+
+* Clarify documentation on testability of Rails views.
+
+    *Joel Hawksley*
+
+* Add Arrows to list of companies using ViewComponent.
+
+    *Matt Swanson*
+
+* Add WIP to list of companies using ViewComponent.
+
+    *Marc Köhlbrugge*
+
+* Update slots documentation to include how to reference slots.
+
+    *Brittany Ellich*
+
+* Add Clio to list of companies using ViewComponent.
+
+    *Mike Buckley*
+
+## 2.69.0
+
+* Add missing `require` to fix `pvc` build.
+
+    *Joel Hawksley*
+
+* Add `config.view_component.use_consistent_rendering_lifecycle` to ensure side-effects in `content` are consistently evaluated before components are rendered. This change effectively means that `content` is evaluated for every component render where `render?` returns true. As a result, code that's passed to a component via a block/content will now always be evaluated, before `#call`, which can reveal bugs in existing components. This configuration option defaults to `false` but will be enabled in 3.0 and the old behavior will be removed.
+
+    *Blake Williams*
+
+* Update Prism to version 1.28.0.
+
+    *Thomas Hutterer*
+
+* Corrects the deprecation warning for named slots to show the file and line where the slot is called.
+
+    *River Bailey*
+
+## 2.68.0
+
+* Update `gemspec` author to be ViewComponent team.
+
+    *Joel Hawksley*
+
+* Fix bug where `ViewComponent::Compiler` wasn't required.
+
+    *Joel Hawksley*
+
+## 2.67.0
+
+* Use ViewComponent::Base.config as the internal endpoint for config.
+
+    *Simon Fish*
+
+* Fix bug where `#with_request_url`, when used with query string, set the incorrect `request.path` and `request.fullpath`.
+
+    *Franz Liedke*
+
+* Add link to [ViewComponentAttributes](https://github.com/amba-Health/view_component_attributes) in Resources section of docs.
+
+    *Romaric Pascal*
+
+* `render_preview` test helper is available by default. It is no longer necessary to include `ViewComponent::RenderPreviewHelper`.
+
+    *Joel Hawksley*
+
+## 2.66.0
+
+* Add missing `generate.sidecar`, `generate.stimulus_controller`, `generate.locale`, `generate.distinct_locale_files`, `generate.preview` config options to `config.view_component`.
+
+    *Simon Fish*
+
+## 2.65.0
+
+* Raise `ArgumentError` when conflicting Slots are defined.
+
+    Before this change it was possible to define Slots with conflicting names, for example:
+
+    ```ruby
+    class MyComponent < ViewComponent::Base
+      renders_one :item
+      renders_many :items
+    end
+    ```
+
+    *Joel Hawksley*
+
+## 2.64.0
+
+* Add `warn_on_deprecated_slot_setter` flag to opt-in to deprecation warning.
+
+    In [v2.54.0](https://viewcomponent.org/CHANGELOG.html#2540), the Slots API was updated to require the `with_*` prefix for setting Slots. The non-`with_*` setters will be deprecated in a coming version and removed in `v3.0`.
+
+    To enable the coming deprecation warning, add `warn_on_deprecated_slot_setter`:
+
+    ```ruby
+    class DeprecatedSlotsSetterComponent < ViewComponent::Base
+      warn_on_deprecated_slot_setter
+    end
+    ```
+
+    *Joel Hawksley*
+
+* Add [`m`](https://rubygems.org/gems/m) to development environment.
+
+    *Joel Hawksley*
+
+* Fix potential deadlock scenario in the compiler's development mode.
+
+    *Blake Williams*
+
+## 2.63.0
+
+* Fixed typo in `renders_many` documentation.
+
+    *Graham Rogers*
+
+* Add documentation about working with `turbo-rails`.
+
+    *Matheus Poli Camilo*
 
 * Fix issue causing helper methods to not be available in nested components when the render monkey patch is disabled and `render_component` is used.
 

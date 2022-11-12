@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Templates
-parent: Guide
+parent: How-to guide
 ---
 
 # Templates

@@ -4,9 +4,11 @@ require "action_view"
 require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
+require "view_component/compiler"
+require "view_component/config"
 require "view_component/content_areas"
 require "view_component/polymorphic_slots"
-require "view_component/previewable"
+require "view_component/preview"
 require "view_component/slotable"
 require "view_component/slotable_v2"
 require "view_component/translatable"
@@ -14,10 +16,17 @@ require "view_component/with_content_helper"
 
 module ViewComponent
   class Base < ActionView::Base
-    include ActiveSupport::Configurable
+    class << self
+      delegate(*ViewComponent::Config.defaults.keys, to: :config)
+
+      def config
+        @config ||= ActiveSupport::OrderedOptions.new
+      end
+      attr_writer :config
+    end
+
     include ViewComponent::ContentAreas
     include ViewComponent::PolymorphicSlots
-    include ViewComponent::Previewable
     include ViewComponent::SlotableV2
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
@@ -49,15 +58,6 @@ module ViewComponent
     # @return [void]
     def set_original_view_context(view_context)
       self.__vc_original_view_context = view_context
-    end
-
-    # EXPERIMENTAL: This API is experimental and may be removed at any time.
-    # Hook for allowing components to do work as part of the compilation process.
-    #
-    # For example, one might compile component-specific assets at this point.
-    # @private TODO: add documentation
-    def self._after_compile
-      # noop
     end
 
     # @!macro [attach] deprecated_generate_mattr_accessor
@@ -113,11 +113,9 @@ module ViewComponent
       @current_template = self
 
       if block && defined?(@__vc_content_set_by_with_content)
-        raise ArgumentError.new(
-          "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
+        raise ArgumentError, "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
           "which means that ViewComponent doesn't know which content to use.\n\n" \
           "To fix this issue, use either `with_content` or a block."
-        )
       end
 
       @__vc_content_evaluated = false
@@ -126,7 +124,12 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@__vc_variant).to_s + _output_postamble
+        # Ensure `content` is evaluated before rendering the template, this is
+        # needed so slots and other side-effects are performed before the
+        # component template is evaluated.
+        content if self.class.use_consistent_rendering_lifecycle
+
+        render_template_for(@__vc_variant).to_s + output_postamble
       else
         ""
       end
@@ -149,10 +152,10 @@ module ViewComponent
       nil
     end
 
-    # EXPERIMENTAL: Optional content to be returned after the rendered template.
+    # Optional content to be returned after the rendered template.
     #
     # @return [String]
-    def _output_postamble
+    def output_postamble
       ""
     end
 
@@ -262,9 +265,7 @@ module ViewComponent
     # @private
     def format
       # Ruby 2.6 throws a warning without checking `defined?`, 2.7 doesn't
-      if defined?(@__vc_variant)
-        @__vc_variant
-      end
+      @__vc_variant if defined?(@__vc_variant)
     end
 
     # Use the provided variant instead of the one determined by the current request.
@@ -313,11 +314,9 @@ module ViewComponent
     # config.view_component.test_controller = "MyTestController"
     # ```
     #
-    # Defaults to ApplicationController. Can also be configured on a per-test
-    # basis using `with_controller_class`.
+    # Defaults to `nil`. If this is falsy, `"ApplicationController"` is used. Can also be
+    # configured on a per-test basis using `with_controller_class`.
     #
-    mattr_accessor :test_controller
-    @@test_controller = "ApplicationController"
 
     # Set if render monkey patches should be included or not in Rails <6.1:
     #
@@ -325,7 +324,6 @@ module ViewComponent
     # config.view_component.render_monkey_patch_enabled = false
     # ```
     #
-    mattr_accessor :render_monkey_patch_enabled, instance_writer: false, default: true
 
     # Path for component files
     #
@@ -333,9 +331,20 @@ module ViewComponent
     # config.view_component.view_component_path = "app/my_components"
     # ```
     #
-    # Defaults to `app/components`.
+    # Defaults to `nil`. If this is falsy, `app/components` is used.
     #
-    mattr_accessor :view_component_path, instance_writer: false, default: "app/components"
+
+    # Evaluate `#content` before `#call` to ensure side-effects are present
+    # during component renders. This will be the default behavior in a future
+    # release.
+    #
+    # ```ruby
+    # config.view_component.use_consistent_rendering_lifecycle = true
+    # ```
+    #
+    # Defaults to `false`
+    #
+    mattr_accessor :use_consistent_rendering_lifecycle, instance_writer: false, default: false
 
     # Parent class for generated components
     #
@@ -346,7 +355,6 @@ module ViewComponent
     # Defaults to nil. If this is falsy, generators will use
     # "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
     #
-    mattr_accessor :component_parent_class, instance_writer: false
 
     # Configuration for generators.
     #
@@ -397,21 +405,19 @@ module ViewComponent
     # ```
     #
     #  Defaults to `false`.
-    mattr_accessor :generate, instance_writer: false, default: ActiveSupport::OrderedOptions.new(false)
 
     class << self
       # @private
       attr_accessor :source_location, :virtual_path
 
-      # EXPERIMENTAL: This API is experimental and may be removed at any time.
       # Find sidecar files for the given extensions.
       #
       # The provided array of extensions is expected to contain
       # strings starting without the "dot", example: `["erb", "haml"]`.
       #
       # For example, one might collect sidecar CSS files that need to be compiled.
-      # @private TODO: add documentation
-      def _sidecar_files(extensions)
+      # @param extensions [Array<String>] Extensions of which to return matching sidecar files.
+      def sidecar_files(extensions)
         return [] unless source_location
 
         extensions = extensions.join(",")
@@ -489,8 +495,8 @@ module ViewComponent
 
         # If Rails application is loaded, add application url_helpers to the component context
         # we need to check this to use this gem as a dependency
-        if defined?(Rails) && Rails.application
-          child.include Rails.application.routes.url_helpers unless child < Rails.application.routes.url_helpers
+        if defined?(Rails) && Rails.application && !(child < Rails.application.routes.url_helpers)
+          child.include Rails.application.routes.url_helpers
         end
 
         # Derive the source location of the component Ruby file from the call stack.
@@ -500,7 +506,7 @@ module ViewComponent
 
         # Removes the first part of the path and the extension.
         child.virtual_path = child.source_location.gsub(
-          %r{(.*#{Regexp.quote(ViewComponent::Base.view_component_path)})|(\.rb)}, ""
+          /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
         )
 
         # Set collection parameter to the extended component
@@ -591,20 +597,16 @@ module ViewComponent
         # parameters will be empty and ViewComponent will not be able to render
         # the component.
         if initialize_parameters.empty?
-          raise ArgumentError.new(
-            "The #{self} initializer is empty or invalid." \
+          raise ArgumentError, "The #{self} initializer is empty or invalid." \
             "It must accept the parameter `#{parameter}` to render it as a collection.\n\n" \
             "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
             "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
-          )
         end
 
-        raise ArgumentError.new(
-          "The initializer for #{self} doesn't accept the parameter `#{parameter}`, " \
+        raise ArgumentError, "The initializer for #{self} doesn't accept the parameter `#{parameter}`, " \
           "which is required in order to render it as a collection.\n\n" \
           "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
           "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
-        )
       end
 
       # Ensure the component initializer doesn't define
@@ -614,10 +616,8 @@ module ViewComponent
       def validate_initialization_parameters!
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
-        raise ViewComponent::ComponentError.new(
-          "#{self} initializer can't accept the parameter `#{RESERVED_PARAMETER}`, as it will override a " \
+        raise ViewComponent::ComponentError, "#{self} initializer can't accept the parameter `#{RESERVED_PARAMETER}`, as it will override a " \
           "public ViewComponent method. To fix this issue, rename the parameter."
-        )
       end
 
       # @private
