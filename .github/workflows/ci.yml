@@ -94,7 +94,12 @@ jobs:
         bundle config path vendor/bundle
         bundle install
         bundle exec rake docs:preview
-        bundle exec rake
+      env:
+        VIEW_COMPONENT_PATH: ../view_component
+        RAILS_VERSION: '~> 6.1.0'
+        PARALLEL_WORKERS: '1'
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
       env:
         VIEW_COMPONENT_PATH: ../view_component
         RAILS_VERSION: '~> 6.1.0'
