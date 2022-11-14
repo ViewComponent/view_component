@@ -647,7 +647,8 @@ module ViewComponent
 
       # @private
       def splatted_keyword_argument_present?
-        initialize_parameters.flatten.include?(:keyrest)
+        initialize_parameters.flatten.include?(:keyrest) &&
+          !initialize_parameters.include?([:keyrest, :**]) # Un-named splatted keyword args don't count!
       end
 
       private
