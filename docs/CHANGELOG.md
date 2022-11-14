@@ -14,6 +14,10 @@ nav_order: 5
 
     *Blake Williams*
 
+* Fix issue causing PVC tests to fail in CI.
+
+    *Cameron Dutro*
+
 * Add ability to pass in the preview class to `render_preview`.
 
     *Jon Rohan*
