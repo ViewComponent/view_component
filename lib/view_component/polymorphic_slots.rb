@@ -89,7 +89,7 @@ module ViewComponent
       def set_polymorphic_slot(slot_name, poly_type = nil, *args, &block)
         slot_definition = self.class.registered_slots[slot_name]
 
-        if !slot_definition[:collection] && get_slot(slot_name)
+        if !slot_definition[:collection] && (defined?(@__vc_set_slots) && @__vc_set_slots[slot_name])
           raise ArgumentError, "content for slot '#{slot_name}' has already been provided"
         end
 
