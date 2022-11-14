@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix YARD docs build task.
+
+    *Hans Lemuet*
+
 * Add ability to pass in the preview class to `render_preview`.
 
     *Jon Rohan*
