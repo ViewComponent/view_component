@@ -98,6 +98,7 @@ jobs:
       env:
         VIEW_COMPONENT_PATH: ../view_component
         RAILS_VERSION: '~> 6.1.0'
+        PARALLEL_WORKERS: '1'
   coverage:
     needs: test
     runs-on: ubuntu-latest

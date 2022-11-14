@@ -10,9 +10,29 @@ nav_order: 5
 
 ## main
 
+* Add ability to pass in the preview class to `render_preview`.
+
+    *Jon Rohan*
+
+* Add Startup Jobs to list of companies using ViewComponent.
+
+    *Marc Köhlbrugge*
+
+* Run PVC's accessibility tests in a single process to avoid resource contention in CI.
+
+    *Cameron Dutro*
+
+## 2.75.0
+
 * Avoid loading ActionView::Base during Rails initialization.
 
     *Jonathan del Strother*
+
+<!-- vale off -->
+* Mention lambda slots rendering returned values lazily in the guide.
+
+    *Graham Rogers*
+<!-- vale on -->
 
 * Add "ViewComponent In The Wild" articles to resources.
 
