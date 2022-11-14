@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Prevent polymorphic slots from calculating `content` when setting a slot.
+
+    *Blake Williams*
+
 * Fix issue causing PVC tests to fail in CI.
 
     *Cameron Dutro*
