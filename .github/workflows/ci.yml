@@ -79,18 +79,18 @@ jobs:
         ruby-version: 2.7
     - uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: 16
     - uses: actions/cache@v2
       with:
         path: |
           node_modules
           vendor/bundle
-        key: gems-build-pvc-${{ hashFiles('**/Gemfile.lock') }}-${{ hashFiles('**/yarn.lock') }}
+        key: gems-build-pvc-${{ hashFiles('**/Gemfile.lock') }}-${{ hashFiles('**/package-json.lock') }}
     - name: Build and test with Rake
       run: |
         cd primer_view_components
-        yarn
-        cd demo && yarn && cd ..
+        npm ci
+        cd demo && npm ci && cd ..
         bundle config path vendor/bundle
         bundle install
         bundle exec rake docs:preview
