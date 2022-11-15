@@ -645,13 +645,12 @@ module ViewComponent
         initialize_parameter_names.include?(collection_iteration_parameter)
       end
 
-      # @private
+      private
+
       def splatted_keyword_argument_present?
         initialize_parameters.flatten.include?(:keyrest) &&
           !initialize_parameters.include?([:keyrest, :**]) # Un-named splatted keyword args don't count!
       end
-
-      private
 
       def initialize_parameter_names
         return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
