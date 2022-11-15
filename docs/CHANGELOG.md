@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix YARD docs build task.
+
+    *Hans Lemuet*
+
 * Prevent polymorphic slots from calculating `content` when setting a slot.
 
     *Blake Williams*
