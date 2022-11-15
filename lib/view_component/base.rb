@@ -19,9 +19,15 @@ module ViewComponent
     class << self
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
+      # Returns the current config.
+      #
+      # @return [ViewComponent::Config]
       def config
         @config ||= ActiveSupport::OrderedOptions.new
       end
+
+      # Replaces the entire config. You shouldn't need to use this directly
+      # unless you're building a `ViewComponent::Config` elsewhere.
       attr_writer :config
     end
 
@@ -413,7 +419,7 @@ module ViewComponent
       # Find sidecar files for the given extensions.
       #
       # The provided array of extensions is expected to contain
-      # strings starting without the "dot", example: `["erb", "haml"]`.
+      # strings starting without the dot, example: `["erb", "haml"]`.
       #
       # For example, one might collect sidecar CSS files that need to be compiled.
       # @param extensions [Array<String>] Extensions of which to return matching sidecar files.
