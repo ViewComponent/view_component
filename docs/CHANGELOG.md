@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Remove `config.view_component.use_consistent_rendering_lifecycle` since it is no longer planned for 3.0.
+
+    *Blake Williams*
+
 * Fix YARD docs build task.
 
     *Hans Lemuet*
