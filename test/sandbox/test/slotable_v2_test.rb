@@ -622,4 +622,12 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_includes error.message, "conflicting_items slot multiple times"
   end
+
+  def test_slots_dont_interfere_with_content
+    render_inline(PolymorphicWrapperComponent.new) do |c|
+      c.section
+    end
+
+    assert_selector(".label", text: "the truth is out there")
+  end
 end

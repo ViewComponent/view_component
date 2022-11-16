@@ -57,7 +57,7 @@ module ViewComponent
 
       def call
         <<~DOCS.chomp
-          #{separator}#{signature_or_name}#{types}#{suffix}
+          `#{separator}#{signature_or_name}`#{types}#{suffix}
 
           #{docstring_and_deprecation_text}
         DOCS

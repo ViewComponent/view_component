@@ -12,7 +12,6 @@ if ENV["MEASURE_COVERAGE"]
 end
 
 require "bundler/setup"
-require "pp"
 require "pathname"
 require "minitest/autorun"
 
