@@ -544,7 +544,10 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(TooManySidecarFilesComponent.new)
       end
 
-    assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
+    assert_includes(
+      error.message,
+      "More than one template+variant found for template 'too_many_sidecar_files_component' in TooManySidecarFilesComponent."
+    )
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
@@ -555,7 +558,9 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_includes(
       error.message,
-      "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
+      "More than one template+variant found for templates " \
+      "'too_many_sidecar_files_for_variant_component+test' and 'too_many_sidecar_files_for_variant_component+testing' " \
+      "in TooManySidecarFilesForVariantComponent"
     )
   end
 
@@ -594,7 +599,7 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_includes(
       error.message,
-      "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
+      "More than one template+variant found for template 'template_and_sidecar_directory_template_component' in TemplateAndSidecarDirectoryTemplateComponent."
     )
   end
 
@@ -822,6 +827,34 @@ class RenderingTest < ViewComponent::TestCase
       end
 
     assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
+  end
+
+  def test_render_sub_templates
+    render_inline(SubTemplatesComponent.new(number: 5, string: "parameter string"))
+
+    assert_selector("div.container") do
+      assert_selector("div", text: "The items are: Apple, Banana, and Pear, parameter string")
+      assert_selector("ul[data-number=5]") do
+        assert_selector("li", text: "Apple")
+        assert_selector("li", text: "Banana")
+        assert_selector("li", text: "Pear")
+      end
+    end
+  end
+
+  def test_render_sub_templates_variant
+    with_variant :ordered do
+      render_inline(SubTemplatesComponent.new(number: 5, string: "parameter string"))
+    end
+
+    assert_selector("div.container") do
+      assert_selector("div", text: "The items are: Apple, Banana, and Pear, parameter string")
+      assert_selector("ol[data-number=5]") do
+        assert_selector("li", text: "Apple")
+        assert_selector("li", text: "Banana")
+        assert_selector("li", text: "Pear")
+      end
+    end
   end
 
   def test_renders_component_using_rails_config

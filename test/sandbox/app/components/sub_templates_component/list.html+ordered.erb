@@ -1,0 +1,6 @@
+<%# locals: (number:) %>
+<ol data-number="<%= number %>">
+  <% @items.each do |item| %>
+    <li><%= item %></li>
+  <% end %>
+</ol>
