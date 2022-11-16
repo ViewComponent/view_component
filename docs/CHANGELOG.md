@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* `Component.with_collection` supports components that accept splatted keyword arguments.
+
+    *Zee Spencer*
+
 * Remove `config.view_component.use_consistent_rendering_lifecycle` since it is no longer planned for 3.0.
 
     *Blake Williams*

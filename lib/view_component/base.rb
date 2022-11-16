@@ -580,7 +580,7 @@ module ViewComponent
         parameter = validate_default ? collection_parameter : provided_collection_parameter
 
         return unless parameter
-        return if initialize_parameter_names.include?(parameter)
+        return if initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
 
         # If Ruby can't parse the component class, then the initalize
         # parameters will be empty and ViewComponent will not be able to render
@@ -635,6 +635,11 @@ module ViewComponent
       end
 
       private
+
+      def splatted_keyword_argument_present?
+        initialize_parameters.flatten.include?(:keyrest) &&
+          !initialize_parameters.include?([:keyrest, :**]) # Un-named splatted keyword args don't count!
+      end
 
       def initialize_parameter_names
         return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
