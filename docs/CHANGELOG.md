@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Support variants with dashes in their names.
+
+    *Javi Martín*
+
 ## 2.76.0
 
 * `Component.with_collection` supports components that accept splatted keyword arguments.
