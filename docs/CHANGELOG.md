@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Support variants with dots in their names.
+
+    *Javi Martín*
+
 ## 2.77.0
 
 * Support variants with dashes in their names.
