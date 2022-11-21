@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 2.77.0
+
 * Support variants with dashes in their names.
 
     *Javi Martín*
