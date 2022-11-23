@@ -189,7 +189,7 @@ module ViewComponent
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
-              variant: pieces.second.split("+").second&.to_sym,
+              variant: pieces[1..-2].join(".").split("+").second&.to_sym,
               handler: pieces.last
             }
           end
@@ -254,7 +254,7 @@ module ViewComponent
     end
 
     def normalized_variant_name(variant)
-      variant.to_s.gsub("-", "__")
+      variant.to_s.gsub("-", "__").gsub(".", "___")
     end
 
     def should_compile_superclass?

@@ -198,7 +198,15 @@ class RenderingTest < ViewComponent::TestCase
     with_variant :"mini-watch" do
       render_inline(VariantsComponent.new)
 
-      assert_text("Mini Watch")
+      assert_text("Mini Watch with dash")
+    end
+  end
+
+  def test_renders_component_with_variant_containing_a_dot
+    with_variant :"mini.watch" do
+      render_inline(VariantsComponent.new)
+
+      assert_text("Mini Watch with dot")
     end
   end
 
