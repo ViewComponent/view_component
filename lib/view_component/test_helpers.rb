@@ -81,22 +81,10 @@ module ViewComponent
     # In RSpec, `Preview` is appended to `described_class`.
     #
     # @param name [String] The name of the preview to be rendered.
+    # @param from [ViewComponent::Preview] The class of the preview to be rendered.
     # @param params [Hash] Parameters to be passed to the preview.
     # @return [Nokogiri::HTML]
-    def render_preview(name, params: {})
-      begin
-        preview_klass = if respond_to?(:described_class)
-          raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
-
-          "#{described_class}Preview"
-        else
-          self.class.name.gsub("Test", "Preview")
-        end
-        preview_klass = preview_klass.constantize
-      rescue NameError
-        raise NameError, "`render_preview` expected to find #{preview_klass}, but it does not exist."
-      end
-
+    def render_preview(name, from: preview_class, params: {})
       previews_controller = build_controller(Rails.application.config.view_component.preview_controller.constantize)
 
       # From what I can tell, it's not possible to overwrite all request parameters
@@ -105,7 +93,7 @@ module ViewComponent
         previews_controller.request.params[k] = v
       end
 
-      previews_controller.request.params[:path] = "#{preview_klass.preview_name}/#{name}"
+      previews_controller.request.params[:path] = "#{from.preview_name}/#{name}"
       previews_controller.response = ActionDispatch::Response.new
       result = previews_controller.previews
 
@@ -215,6 +203,21 @@ module ViewComponent
     # @private
     def build_controller(klass)
       klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)
+    end
+
+    private
+
+    def preview_class
+      result = if respond_to?(:described_class)
+        raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
+
+        "#{described_class}Preview"
+      else
+        self.class.name.gsub("Test", "Preview")
+      end
+      result = result.constantize
+    rescue NameError
+      raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
     end
   end
 end

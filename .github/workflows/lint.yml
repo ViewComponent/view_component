@@ -78,7 +78,7 @@ jobs:
     - name: Lint with Rubocop and ERB Lint
       run: |
         bundle config path vendor/bundle
-        bundle update
+        bundle install
         bundle exec standardrb
         bundle exec erblint **/*.html.erb
       env:

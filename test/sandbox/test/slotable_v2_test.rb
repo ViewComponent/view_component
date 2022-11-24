@@ -601,16 +601,6 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_selector("h1.some-class", text: "This is a header!")
   end
 
-  def test_composable_slots_with_consistent_render
-    with_consistent_render do
-      render_inline ComposableSlotsComponent.new do |c|
-        c.title("The truth is out there")
-      end
-
-      assert_selector("div h1", text: "The truth is out there")
-    end
-  end
-
   def test_raises_error_on_conflicting_slot_names
     error = assert_raises ArgumentError do
       Class.new(ViewComponent::Base) do
@@ -631,5 +621,13 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
 
     assert_includes error.message, "conflicting_items slot multiple times"
+  end
+
+  def test_slots_dont_interfere_with_content
+    render_inline(PolymorphicWrapperComponent.new) do |c|
+      c.section
+    end
+
+    assert_selector(".label", text: "the truth is out there")
   end
 end

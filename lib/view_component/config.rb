@@ -34,25 +34,25 @@ module ViewComponent
       # All options under this namespace default to `false` unless otherwise
       # stated.
       #
-      # #### #sidecar
+      # #### `#sidecar`
       #
       # Always generate a component with a sidecar directory:
       #
       #     config.view_component.generate.sidecar = true
       #
-      # #### #stimulus_controller
+      # #### `#stimulus_controller`
       #
       # Always generate a Stimulus controller alongside the component:
       #
       #     config.view_component.generate.stimulus_controller = true
       #
-      # #### #locale
+      # #### `#locale`
       #
       # Always generate translations file alongside the component:
       #
       #     config.view_component.generate.locale = true
       #
-      # #### #distinct_locale_files
+      # #### `#distinct_locale_files`
       #
       # Always generate as many translations files as available locales:
       #
@@ -61,7 +61,7 @@ module ViewComponent
       # One file will be generated for each configured `I18n.available_locales`,
       # falling back to `[:en]` when no `available_locales` is defined.
       #
-      # #### #preview
+      # #### `#preview`
       #
       # Always generate a preview alongside the component:
       #

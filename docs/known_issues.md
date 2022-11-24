@@ -8,7 +8,7 @@ nav_order: 9
 
 ## turbo_frame_tag double rendering or scrambled HTML structure
 
-When using `turbo_frame_tag` inside a ViewComponent, it may render the template within the component twice, potentially with out-of-order elements: [https://github.com/github/view_component/issues/1099](https://github.com/github/view_component/issues/1099).
+When using `turbo_frame_tag` inside a ViewComponent, the template may be rendered twice. See [https://github.com/github/view_component/issues/1099](https://github.com/github/view_component/issues/1099).
 
 As a workaround, use `tag.turbo_frame` instead of `turbo_frame_tag`.
 
