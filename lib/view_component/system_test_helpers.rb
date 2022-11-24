@@ -4,7 +4,12 @@ module ViewComponent
   module SystemTestHelpers
     include TestHelpers
 
-
+    #
+    # Returns a block that can be used to visit the path of the inline rendered
+    # component.
+    # @param fragment [Nokogiri::Fragment] The fragment of the inline rendered component.
+    # @param layout [String] The layout to use for the inline rendered component.
+    # @return [Proc] A block that can be used to visit the path of the inline rendered component.
     def with_rendered_component_path(fragment, **options, &block)
       layout = options[:layout] || false
 

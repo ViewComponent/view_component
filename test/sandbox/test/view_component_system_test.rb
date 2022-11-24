@@ -6,9 +6,9 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
   def test_simple_js_interaction_in_browser_without_layout
-    fragment = render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)
+    inline_component = render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)
 
-    with_rendered_component_path(fragment) do |path|
+    with_inline_rendered_component_path(inline_component) do |path|
       visit path
 
       assert find("[data-hidden-field]", visible: false)
@@ -18,9 +18,9 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_simple_js_interaction_in_browser_with_layout
-    fragment = render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new)
+    inline_component = render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new)
     
-    with_rendered_component_path(fragment, layout: 'application') do |path|
+    with_inline_rendered_component_path(inline_component, layout: 'application') do |path|
       visit path
 
       assert find("[data-hidden-field]", visible: false)
@@ -30,9 +30,9 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_component_with_params
-    fragment = render_inline(TitleWrapperComponent.new(title: "awesome-title"))
+    inline_component = render_inline(TitleWrapperComponent.new(title: "awesome-title"))
 
-    with_rendered_component_path(fragment) do |path|
+    with_inline_rendered_component_path(inline_component) do |path|
       visit path
 
       assert find('div', text: 'awesome-title')
@@ -40,13 +40,13 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_components_with_slots
-    fragment = render_inline(SlotsV2Component.new) do |component|
+    inline_component = render_inline(SlotsV2Component.new) do |component|
       component.title do
         "This is my title!"
       end
     end
 
-    with_rendered_component_path(fragment) do |path|
+    with_inline_rendered_component_path(inline_component) do |path|
       visit path
 
       find('.title', text: 'This is my title!')
