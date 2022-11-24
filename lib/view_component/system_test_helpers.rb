@@ -43,6 +43,5 @@ module ViewComponent
         file.unlink
       end
     end
-
   end
 end

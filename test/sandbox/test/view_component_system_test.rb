@@ -20,7 +20,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   def test_simple_js_interaction_in_browser_with_layout
     inline_component = render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new)
 
-    with_inline_rendered_component_path(inline_component, layout: 'application') do |path|
+    with_inline_rendered_component_path(inline_component, layout: "application") do |path|
       visit path
 
       assert find("[data-hidden-field]", visible: false)
@@ -35,7 +35,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
     with_inline_rendered_component_path(inline_component) do |path|
       visit path
 
-      assert find('div', text: 'awesome-title')
+      assert find("div", text: "awesome-title")
     end
   end
 
@@ -49,7 +49,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
     with_inline_rendered_component_path(inline_component) do |path|
       visit path
 
-      find('.title', text: 'This is my title!')
+      find(".title", text: "This is my title!")
     end
   end
 end
