@@ -14,6 +14,10 @@ nav_order: 5
 
     *Javi Martín*
 
+* Add documentation for testing component behaviors and POROs as input
+
+    *Nicolò Rebughini*
+
 ## 2.77.0
 
 * Support variants with dashes in their names.

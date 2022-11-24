@@ -233,3 +233,42 @@ To use component previews:
 # config/application.rb
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 ```
+
+If you need to test ViewComponents with behaviors taking POROs or ActiveRecord objects (even with unpersisted attributes) as input:
+
+```ruby
+module Helpers
+  module ViewComponentSystemSpecHelpers
+    def with_spec_preview(&preview_proc)
+      preview_class.define_method(:test_preview, &preview_proc)
+    end
+  end
+end
+
+class Post
+  attr_reader :title, :body
+
+  def initialize(title:, body:)
+    @title = title
+    @body = body
+  end
+end
+
+RSpec.describe PostComponent do
+  it "expands the body when clicking the button" do
+    post = Post.new(title: "My post title", body: "A long form text here")
+    with_spec_preview do
+      render(PostComponent.new(post: post))
+    end
+    visit "/rails/view_components/#{described_class.to_s.underscore}/test_preview"
+
+    expect(page).to have_text("My post title")
+    expect(page).not_to have_text("A long form text here")
+
+    click_button "Show More"
+
+    expect(page).to have_text("My post title")
+    expect(page).to have_text("A long form text here")
+  end
+end
+```
