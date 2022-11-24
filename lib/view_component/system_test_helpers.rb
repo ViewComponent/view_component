@@ -4,18 +4,20 @@ module ViewComponent
   module SystemTestHelpers
     include TestHelpers
 
-    def with_rendered_component_path(component, **options, &block)
+
+    def with_rendered_component_path(fragment, **options, &block)
       layout = options[:layout] || false
 
       opts = {
         layout: layout,
         locals: {
           render_args: {
-            component: component,
+            fragment: fragment,
             hide_preview_source: true
           }
         }
       }
+
       html = controller.render_to_string("view_components/preview", opts)
 
       # Add './tmp/view_components/' directory if it doesn't exist to store the rendered component html
@@ -23,7 +25,7 @@ module ViewComponent
 
       # Write to temporary file to contain fully rendered component
       # within a browser
-      file = Tempfile.new(["rendered_#{component.class.name}", ".html"], "tmp/view_components/")
+      file = Tempfile.new(["rendered_#{fragment.class.name}", ".html"], "tmp/view_components/")
       begin
         file.write(html)
         file.rewind
@@ -36,5 +38,6 @@ module ViewComponent
         file.unlink
       end
     end
+
   end
 end

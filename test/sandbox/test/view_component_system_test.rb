@@ -6,8 +6,10 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
   def test_simple_js_interaction_in_browser_without_layout
-    with_rendered_component_path(SimpleJavascriptInteractionWithJsIncludedComponent.new) do |page|
-      visit page
+    fragment = render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)
+
+    with_rendered_component_path(fragment) do |path|
+      visit path
 
       assert find("[data-hidden-field]", visible: false)
       find("[data-button]", text: "Click Me To Reveal Something Cool").click
@@ -16,8 +18,10 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_simple_js_interaction_in_browser_with_layout
-    with_rendered_component_path(SimpleJavascriptInteractionWithoutJsIncludedComponent.new, layout: "application") do |page|
-      visit page
+    fragment = render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new)
+    
+    with_rendered_component_path(fragment, layout: 'application') do |path|
+      visit path
 
       assert find("[data-hidden-field]", visible: false)
       find("[data-button]", text: "Click Me To Reveal Something Cool").click
@@ -26,11 +30,26 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_component_with_params
-    with_rendered_component_path(TitleWrapperComponent.new(title: "awesome-title")) do |page|
-      visit page
+    fragment = render_inline(TitleWrapperComponent.new(title: "awesome-title"))
+
+    with_rendered_component_path(fragment) do |path|
+      visit path
 
       assert find('div', text: 'awesome-title')
     end
   end
 
+  def test_components_with_slots
+    fragment = render_inline(SlotsV2Component.new) do |component|
+      component.title do
+        "This is my title!"
+      end
+    end
+
+    with_rendered_component_path(fragment) do |path|
+      visit path
+
+      find('.title', text: 'This is my title!')
+    end
+  end
 end
