@@ -19,7 +19,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
 
   def test_simple_js_interaction_in_browser_with_layout
     inline_component = render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new)
-    
+
     with_inline_rendered_component_path(inline_component, layout: 'application') do |path|
       visit path
 
