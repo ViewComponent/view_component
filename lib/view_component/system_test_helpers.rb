@@ -17,7 +17,7 @@ module ViewComponent
         layout: layout,
         locals: {
           render_args: {
-            fragment: fragment,
+            fragment: fragment.to_html.html_safe,
             hide_preview_source: true
           }
         }
