@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Require Rails 5.2+ in gemspec and update documentation.
+
+    *Drew Bragg*
+
 ## 2.78.0
 
 * Support variants with dots in their names.
