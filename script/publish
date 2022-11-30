@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Publish gem
+bundle exec rake release
+
+# Publish updated docs
+git branch -D gh-pages
+git checkout -b gh-pages main
+git push origin gh-pages --force
+git checkout main

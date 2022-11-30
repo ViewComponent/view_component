@@ -1,0 +1,5 @@
+<h1>hello <%= @name %></h1>
+
+<% 50.times do %>
+  <%= render Performance::NestedNameComponent.new(name: @name) %>
+<% end %>

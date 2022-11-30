@@ -1,0 +1,13 @@
+en:
+  hello: Hello from Rails translations!
+  from:
+    rails: This is coming from Rails
+  translations_component:
+    title: Lorem ipsum
+    subtitle: More lorem ipsum
+
+  translatable_component:
+    relative_rails_key: Relative key from Rails
+
+  editorb_component:
+    title: Editorb!

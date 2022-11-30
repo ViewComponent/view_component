@@ -1,0 +1,42 @@
+<div class="card <%= @classes %>">
+  <% if title? %>
+  <div class="title">
+    <%= title %>
+  </div>
+  <% end %>
+  <% if subtitle? %>
+  <div class="subtitle">
+    <%= subtitle %>
+  </div>
+  <% end %>
+  <div class="nav">
+    <% if tabs? %>
+      <% tabs.each do |tab| %>
+        <div class="tab">
+          <%= tab %>
+        </div>
+      <% end %>
+    <% else %>
+      No tabs provided
+    <% end %>
+  </div>
+  <div class="body">
+    <% if items? %>
+      <% items.each do |item| %>
+        <div class="item <%= item.classes %>">
+          <%= item %>
+        </div>
+      <% end %>
+    <% else %>
+      No items provided
+    <% end %>
+  </div>
+
+  <% if extra? %>
+    <div class="extra">
+      <%= extra %>
+    </div>
+  <% end %>
+
+  <%= footer %>
+</div>

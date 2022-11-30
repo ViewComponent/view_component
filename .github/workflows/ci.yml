@@ -1,0 +1,123 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
+    - name: Run benchmarks
+      run: |
+        bundle config path vendor/bundle
+        bundle update
+        bundle exec rake partial_benchmark
+        bundle exec rake translatable_benchmark
+        bundle exec rake slotable_benchmark
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rails_version: "5.2.6"
+            ruby_version: "2.5"
+          - rails_version: "6.0.4.4"
+            ruby_version: "2.6"
+          - rails_version: "6.1.4.4"
+            ruby_version: "2.7"
+          - rails_version: "7.0.2.3"
+            ruby_version: "3.0"
+          - rails_version: "main"
+            ruby_version: "3.1"
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby_version }}
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: gems-build-rails-${{ matrix.rails_version }}-ruby-${{ matrix.ruby_version }}-${{ hashFiles('**/Gemfile.lock') }}
+    - name: Build and test with Rake
+      run: |
+        bundle config path vendor/bundle
+        bundle update
+        bundle exec rake test spec
+      env:
+        RAISE_ON_WARNING: 1
+        MEASURE_COVERAGE: true
+        RAILS_VERSION: ${{ matrix.rails_version }}
+    - name: Upload coverage results
+      uses: actions/upload-artifact@master
+      if: always()
+      with:
+        name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}
+        path: coverage
+  pvc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        repository: 'primer/view_components'
+        path: 'primer_view_components'
+    - uses: actions/checkout@master
+      with:
+        path: 'view_component'
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 16
+    - uses: actions/cache@v2
+      with:
+        path: |
+          node_modules
+          vendor/bundle
+        key: gems-build-pvc-${{ hashFiles('**/Gemfile.lock') }}-${{ hashFiles('**/package-json.lock') }}
+    - name: Build and test with Rake
+      run: |
+        cd primer_view_components
+        npm ci
+        cd demo && npm ci && cd ..
+        bundle config path vendor/bundle
+        bundle install
+        bundle exec rake docs:preview
+        bundle exec rake
+      env:
+        VIEW_COMPONENT_PATH: ../view_component
+        RAILS_VERSION: '~> 6.1.0'
+        PARALLEL_WORKERS: '1'
+  coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+    - name: Download coverage results
+      uses: actions/download-artifact@v2
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
+    - name: Collate simplecov
+      run: |
+        bundle config path vendor/bundle
+        bundle update
+        bundle exec rake coverage:report
+      env:
+        RAILS_VERSION: '~> 7.0.0'

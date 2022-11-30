@@ -5,16 +5,17 @@ require "rails/generators/erb/component_generator"
 module Haml
   module Generators
     class ComponentGenerator < Erb::Generators::ComponentGenerator
-      source_root File.expand_path("templates", __dir__)
+      include ViewComponent::AbstractGenerator
 
-      def copy_view_file
-        template "component.html.haml", File.join("app/components", class_path, "#{file_name}_component.html.haml")
+      source_root File.expand_path("templates", __dir__)
+      class_option :sidecar, type: :boolean, default: false
+
+      def engine_name
+        "haml"
       end
 
-      private
-
-      def file_name
-        @_file_name ||= super.sub(/_component\z/i, "")
+      def copy_view_file
+        super
       end
     end
   end

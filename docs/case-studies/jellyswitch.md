@@ -1,3 +1,9 @@
+---
+nav_exclude: true
+---
+
+# Jellyswitch
+
 Name: Dave Paola
 
 Github Handle: [@dpaola2](https://github.com/dpaola2)
@@ -28,7 +34,7 @@ class OnOffSwitch < ApplicationComponent
   private
 
   attr_reader :predicate, :path, :disabled, :label
-  
+
   def icon_class
     if predicate
       "fas fa-toggle-on"
@@ -69,8 +75,8 @@ end
 
 Here is an example of how this looks:
 
-<img width="653" alt="Screenshot 2020-02-26 08 34 07" src="https://user-images.githubusercontent.com/150509/75365920-cbfb9500-5872-11ea-8234-f1343629a462.png">
+<img width="653" src="https://user-images.githubusercontent.com/150509/75365920-cbfb9500-5872-11ea-8234-f1343629a462.png">
 
-I have found that refactoring complex views is made easier and faster by first putting them into a component, extracting the conditionals and other logic into private methods and proceeding from there. And I wind up with a very nice set of well-factored components and sub-components, with argument lists and validations and so on. I think the rails community is really going to benefit from this library, and I'm hugely appreciative of y'all's efforts on it!
+I have found that refactoring complex views is made easier and faster by first putting them into a component, extracting the conditionals and other logic into private methods and proceeding from there. And I wind up with a nice set of well-factored components and sub-components, with argument lists and validations. I think the rails community is going to benefit from this library, and I'm hugely appreciative of y'all's efforts on it!
 
 I plan to release an early version of the bootstrap components we've developed at some point in the near future. I would love to collaborate and learn the most appropriate way to structure that contribution.

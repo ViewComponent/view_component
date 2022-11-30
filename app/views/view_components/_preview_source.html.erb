@@ -1,0 +1,17 @@
+<link href="<%= asset_path('prism.css', skip_pipeline: true) %>" media="screen" rel="stylesheet" type="text/css">
+<div class="view-component-source-example">
+  <h2>Source:</h2>
+  <pre class="source">
+    <% if @render_args[:component] %>
+      <code class="language-ruby">
+        <%= h @preview.preview_source(@example_name) %>
+      </code>
+    <% else %>
+      <% template_data = find_template_data(lookup_context: @view_renderer.lookup_context, template_identifier: @render_args[:template]) %>
+      <code class="language-<%= template_data[:prism_language_name] %>">
+        <%= h template_data[:source] %>
+      </code>
+    <% end %>
+  </pre>
+</div>
+<script type="text/javascript" src="<%= asset_path('prism.min.js', skip_pipeline: true) %>"></script>

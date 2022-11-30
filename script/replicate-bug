@@ -1,0 +1,21 @@
+#!/bin/bash
+# Exit if repo already exists
+[ -d "replicate-bug" ] && echo "Sample repo exists. Rename or remove it to begin." && exit
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+# Ensure that when we install view_component in the repo, we install this copy.
+bundle config local.view_component $(pwd)
+# Create and enter a minimal example repo
+rails new --minimal replicate-bug
+cd replicate-bug
+# Add our local copy of ViewComponent
+bundle add view_component --git https://github.com/viewcomponent/view_component --branch $branch_name
+# Generate a controller
+rails g controller Home index
+# Generate ApplicationComponent, assuming most folks use it.
+rails g component ApplicationComponent --template_engine=no_template
+# Root to the index action on HomeController
+cat << 'ROUTES' > 'config/routes.rb'
+Rails.application.routes.draw do
+  root to: 'home#index'
+end
+ROUTES
