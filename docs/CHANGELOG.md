@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated `config.preview_path` in favor of `config.preview_paths`.
+
+    *Joel Hawksley*
+
 * BREAKING: Support Ruby 2.7+ instead of 2.4+
 
     *Joel Hawksley*
