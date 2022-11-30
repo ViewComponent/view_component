@@ -165,14 +165,6 @@ module ViewComponent
     #
     # @return [void]
     def before_render
-      before_render_check
-    end
-
-    # Called after rendering the component.
-    #
-    # @deprecated Use `#before_render` instead. Will be removed in v3.0.0.
-    # @return [void]
-    def before_render_check
       # noop
     end
 

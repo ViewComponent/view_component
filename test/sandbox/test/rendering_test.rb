@@ -518,16 +518,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_equal "Validation failed: Content can't be blank", exception.message
   end
 
-  # TODO: Remove in v3.0.0
-  def test_before_render_check
-    exception =
-      assert_raises ActiveModel::ValidationError do
-        render_inline(OldValidationsComponent.new)
-      end
-
-    assert_equal "Validation failed: Content can't be blank", exception.message
-  end
-
   def test_compiles_unrendered_component
     assert UnreferencedComponent.compiled?
   end

@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated `before_render_check`.
+
+    *Joel Hawksley*
+
 * BREAKING: Change counter variable to start iterating from `0` instead of `1`.
 
     *Frank S*

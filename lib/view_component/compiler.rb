@@ -50,13 +50,6 @@ module ViewComponent
         return false
       end
 
-      if subclass_instance_methods.include?(:before_render_check)
-        ViewComponent::Deprecation.warn(
-          "`#before_render_check` will be removed in v3.0.0.\n\n" \
-          "To fix this issue, use `#before_render` instead."
-        )
-      end
-
       if raise_errors
         component_class.validate_initialization_parameters!
         component_class.validate_collection_parameter!
