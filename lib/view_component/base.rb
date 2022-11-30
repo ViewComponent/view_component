@@ -257,7 +257,7 @@ module ViewComponent
     #
     # @private
     def format
-      @__vc_variant
+      @__vc_variant if defined?(@__vc_variant)
     end
 
     # Use the provided variant instead of the one determined by the current request.
