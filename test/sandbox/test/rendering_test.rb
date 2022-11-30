@@ -676,8 +676,8 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("h2.first", text: "Radio clock")
     assert_selector("h2:not(.first)", text: "Mints")
     assert_selector("p", text: "On sale", count: 2)
-    assert_selector("p", text: "Radio clock counter: 1")
-    assert_selector("p", text: "Mints counter: 2")
+    assert_selector("p", text: "Radio clock counter: 0")
+    assert_selector("p", text: "Mints counter: 1")
   end
 
   def test_render_collection_custom_collection_parameter_name
@@ -1207,17 +1207,5 @@ class RenderingTest < ViewComponent::TestCase
         t.join
       end
     end
-  end
-
-  def test_render_collection
-    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
-    render_inline(ProductComponent.with_collection(products, notice: "On sale"))
-
-    assert_selector("h1", text: "Product", count: 2)
-    assert_selector("h2", text: "Radio clock")
-    assert_selector("h2", text: "Mints")
-    assert_selector("p", text: "On sale", count: 2)
-    assert_selector("p", text: "Radio clock counter: 0")
-    assert_selector("p", text: "Mints counter: 1")
   end
 end

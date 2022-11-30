@@ -10,9 +10,13 @@ nav_order: 5
 
 ## main
 
-* Change counter variable to start iterating from `0` instead of `1`.
+* BREAKING: Change counter variable to start iterating from `0` instead of `1`.
 
     *Frank S*
+
+* Require Rails 5.2+ in gemspec and update documentation.
+
+    *Drew Bragg*
 
 ## 2.78.0
 
