@@ -676,8 +676,8 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("h2.first", text: "Radio clock")
     assert_selector("h2:not(.first)", text: "Mints")
     assert_selector("p", text: "On sale", count: 2)
-    assert_selector("p", text: "Radio clock counter: 1")
-    assert_selector("p", text: "Mints counter: 2")
+    assert_selector("p", text: "Radio clock counter: 0")
+    assert_selector("p", text: "Mints counter: 1")
   end
 
   def test_render_collection_custom_collection_parameter_name
@@ -696,10 +696,10 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(CollectionCounterComponent.with_collection(photos))
 
     assert_selector("figure[data-index=0]", {count: 1})
-    assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
+    assert_selector("figcaption", text: "Photo.0 - Yellow flowers")
 
     assert_selector("figure[data-index=1]", {count: 1})
-    assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
+    assert_selector("figcaption", text: "Photo.1 - Mountains at sunset")
   end
 
   def test_render_collection_custom_collection_parameter_name_iteration

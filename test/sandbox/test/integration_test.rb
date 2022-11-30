@@ -392,8 +392,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("h2", text: "Radio clock")
     assert_select("h2", text: "Mints")
     assert_select("p", text: "Today only", count: 2)
-    assert_select("p", text: "Radio clock counter: 1")
-    assert_select("p", text: "Mints counter: 2")
+    assert_select("p", text: "Radio clock counter: 0")
+    assert_select("p", text: "Mints counter: 1")
   end
 
   def test_renders_inline_collections
@@ -403,8 +403,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("h2", text: "Radio clock")
     assert_select("h2", text: "Mints")
     assert_select("p", text: "Today only", count: 2)
-    assert_select("p", text: "Radio clock counter: 1")
-    assert_select("p", text: "Mints counter: 2")
+    assert_select("p", text: "Radio clock counter: 0")
+    assert_select("p", text: "Mints counter: 1")
   end
 
   def test_renders_the_previews_in_the_configured_route
