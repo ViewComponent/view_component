@@ -30,10 +30,6 @@ module ViewComponent
       return if compiled? && !force
       return if component_class == ViewComponent::Base
 
-      if RUBY_VERSION < "2.7.0"
-        ViewComponent::Deprecation.warn("Support for Ruby versions < 2.7.0 will be removed in v3.0.0.")
-      end
-
       component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
       subclass_instance_methods = component_class.instance_methods(false)
 

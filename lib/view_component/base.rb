@@ -257,8 +257,7 @@ module ViewComponent
     #
     # @private
     def format
-      # Ruby 2.6 throws a warning without checking `defined?`, 2.7 doesn't
-      @__vc_variant if defined?(@__vc_variant)
+      @__vc_variant
     end
 
     # Use the provided variant instead of the one determined by the current request.

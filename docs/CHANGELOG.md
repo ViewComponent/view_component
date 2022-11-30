@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Support Ruby 2.7+ instead of 2.4+
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated `before_render_check`.
 
     *Joel Hawksley*
