@@ -14,17 +14,43 @@ nav_order: 5
 
     *Drew Bragg*
 
+## 2.78.0
+
+* Support variants with dots in their names.
+
+    *Javi Martín*
+
+## 2.77.0
+
+* Support variants with dashes in their names.
+
+    *Javi Martín*
+
+## 2.76.0
+
+* `Component.with_collection` supports components that accept splatted keyword arguments.
+
+    *Zee Spencer*
+
+* Remove `config.view_component.use_consistent_rendering_lifecycle` since it is no longer planned for 3.0.
+
+    *Blake Williams*
+
 * Prevent polymorphic slots from calculating `content` when setting a slot.
 
     *Blake Williams*
+
+* Add ability to pass in the preview class to `render_preview`.
+
+    *Jon Rohan*
 
 * Fix issue causing PVC tests to fail in CI.
 
     *Cameron Dutro*
 
-* Add ability to pass in the preview class to `render_preview`.
+* Fix YARD docs build task.
 
-    *Jon Rohan*
+    *Hans Lemuet*
 
 * Add Startup Jobs to list of companies using ViewComponent.
 

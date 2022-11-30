@@ -10,7 +10,25 @@ nav_order: 3
 
 ## Class methods
 
-### .strip_trailing_whitespace(value = true)
+### `.config` → [ViewComponent::Config]
+
+Returns the current config.
+
+### `.config=(value)`
+
+Replaces the entire config. You shouldn't need to use this directly
+unless you're building a `ViewComponent::Config` elsewhere.
+
+### `.sidecar_files(extensions)`
+
+Find sidecar files for the given extensions.
+
+The provided array of extensions is expected to contain
+strings starting without the dot, example: `["erb", "haml"]`.
+
+For example, one might collect sidecar CSS files that need to be compiled.
+
+### `.strip_trailing_whitespace(value = true)`
 
 Strips trailing whitespace from templates before compiling them.
 
@@ -20,11 +38,11 @@ class MyComponent < ViewComponent::Base
 end
 ```
 
-### .strip_trailing_whitespace? → [Boolean]
+### `.strip_trailing_whitespace?` → [Boolean]
 
 Whether trailing whitespace will be stripped before compilation.
 
-### .with_collection(collection, **args)
+### `.with_collection(collection, **args)`
 
 Render a component for each element in a collection ([documentation](/guide/collections)):
 
@@ -32,7 +50,7 @@ Render a component for each element in a collection ([documentation](/guide/coll
 render(ProductsComponent.with_collection(@products, foo: :bar))
 ```
 
-### .with_collection_parameter(parameter)
+### `.with_collection_parameter(parameter)`
 
 Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
 
@@ -42,48 +60,52 @@ with_collection_parameter :item
 
 ## Instance methods
 
-### #before_render → [void]
+### `#before_render` → [void]
 
 Called before rendering the component. Override to perform operations that
 depend on having access to the view context, such as helpers.
 
-### #before_render_check → [void] (Deprecated)
+### `#before_render_check` → [void] (Deprecated)
 
 Called after rendering the component.
 
 _Use `#before_render` instead. Will be removed in v3.0.0._
 
-### #controller → [ActionController::Base]
+### `#controller` → [ActionController::Base]
 
 The current controller. Use sparingly as doing so introduces coupling
 that inhibits encapsulation & reuse, often making testing difficult.
 
-### #generate_distinct_locale_files (Deprecated)
+### `#generate_distinct_locale_files` (Deprecated)
 
 _Use `#generate.distinct_locale_files` instead. Will be removed in v3.0.0._
 
-### #generate_locale (Deprecated)
+### `#generate_locale` (Deprecated)
 
 _Use `#generate.locale` instead. Will be removed in v3.0.0._
 
-### #generate_sidecar (Deprecated)
+### `#generate_sidecar` (Deprecated)
 
 _Use `#generate.sidecar` instead. Will be removed in v3.0.0._
 
-### #generate_stimulus_controller (Deprecated)
+### `#generate_stimulus_controller` (Deprecated)
 
 _Use `#generate.stimulus_controller` instead. Will be removed in v3.0.0._
 
-### #helpers → [ActionView::Base]
+### `#helpers` → [ActionView::Base]
 
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
 
-### #render? → [Boolean]
+### `#output_postamble` → [String]
+
+Optional content to be returned after the rendered template.
+
+### `#render?` → [Boolean]
 
 Override to determine whether the ViewComponent should render.
 
-### #render_in(view_context, &block) → [String]
+### `#render_in(view_context, &block)` → [String]
 
 Entrypoint for rendering components.
 
@@ -92,7 +114,7 @@ Entrypoint for rendering components.
 
 Returns HTML that has been escaped by the respective template handler.
 
-### #render_parent
+### `#render_parent`
 
 Subclass components that call `super` inside their template code will cause a
 double render if they emit the result:
@@ -104,12 +126,12 @@ double render if they emit the result:
 
 Calls `super`, returning `nil` to avoid rendering the result twice.
 
-### #request → [ActionDispatch::Request]
+### `#request` → [ActionDispatch::Request]
 
 The current request. Use sparingly as doing so introduces coupling that
 inhibits encapsulation & reuse, often making testing difficult.
 
-### #set_original_view_context(view_context) → [void]
+### `#set_original_view_context(view_context)` → [void]
 
 Components render in their own view context. Helpers and other functionality
 require a reference to the original Rails view context, an instance of
@@ -118,7 +140,7 @@ view context. Objects that implement this method will render in the component's
 view context, while objects that don't will render in the original view context
 so helpers, etc work as expected.
 
-### #with_variant(variant) → [self] (Deprecated)
+### `#with_variant(variant)` → [self] (Deprecated)
 
 Use the provided variant instead of the one determined by the current request.
 
@@ -126,149 +148,117 @@ _Will be removed in v3.0.0._
 
 ## Configuration
 
-### #component_parent_class
+### `.component_parent_class` → [String]
 
-Parent class for generated components
+The parent class from which generated components will inherit.
+Defaults to `nil`. If this is falsy, generators will use
+`"ApplicationComponent"` if defined, `"ViewComponent::Base"` otherwise.
 
-```ruby
-config.view_component.component_parent_class = "MyBaseComponent"
-```
+### `#config`
 
-Defaults to nil. If this is falsy, generators will use
-"ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+Returns the value of attribute config.
 
-### #default_preview_layout
+### `.default_preview_layout` → [String]
 
-Set a custom default layout used for preview index and individual previews:
+A custom default layout used for the previews index page and individual
+previews.
+Defaults to `nil`. If this is falsy, `"component_preview"` is used.
 
-    config.view_component.default_preview_layout = "component_preview"
+### `.generate` → [ActiveSupport::OrderedOptions]
 
-### #generate
-
-Configuration for generators.
+The subset of configuration options relating to generators.
 
 All options under this namespace default to `false` unless otherwise
 stated.
 
-#### #sidecar
+#### `#sidecar`
 
 Always generate a component with a sidecar directory:
 
-```ruby
-config.view_component.generate.sidecar = true
-```
+    config.view_component.generate.sidecar = true
 
-#### #stimulus_controller
+#### `#stimulus_controller`
 
 Always generate a Stimulus controller alongside the component:
 
-```ruby
-config.view_component.generate.stimulus_controller = true
-```
+    config.view_component.generate.stimulus_controller = true
 
-#### #locale
+#### `#locale`
 
 Always generate translations file alongside the component:
 
-```ruby
-config.view_component.generate.locale = true
-```
+    config.view_component.generate.locale = true
 
-#### #distinct_locale_files
+#### `#distinct_locale_files`
 
 Always generate as many translations files as available locales:
 
-```ruby
-config.view_component.generate.distinct_locale_files = true
-```
+    config.view_component.generate.distinct_locale_files = true
 
 One file will be generated for each configured `I18n.available_locales`,
 falling back to `[:en]` when no `available_locales` is defined.
 
-#### #preview
+#### `#preview`
 
-Always generate preview alongside the component:
+Always generate a preview alongside the component:
 
-```ruby
-config.view_component.generate.preview = true
-```
+     config.view_component.generate.preview = true
 
- Defaults to `false`.
+### `.instrumentation_enabled` → [Boolean]
 
-### #preview_controller
-
-Set the controller used for previewing components:
-
-    config.view_component.preview_controller = "MyPreviewController"
-
-Defaults to `ViewComponentsController`.
-
-### #preview_path (Deprecated)
-
-_Use `preview_paths` instead. Will be removed in v3.0.0._
-
-### #preview_paths
-
-Set the location of component previews:
-
-    config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
-
-### #preview_route
-
-Set the entry route for component previews:
-
-    config.view_component.preview_route = "/previews"
-
-Defaults to `/rails/view_components` when `show_previews` is enabled.
-
-### #render_monkey_patch_enabled
-
-Set if render monkey patches should be included or not in Rails <6.1:
-
-```ruby
-config.view_component.render_monkey_patch_enabled = false
-```
-
-### #show_previews
-
-Enable or disable component previews:
-
-    config.view_component.show_previews = true
-
-Defaults to `true` in development.
-
-### #show_previews_source
-
-Enable or disable source code previews in component previews:
-
-    config.view_component.show_previews_source = true
-
+Whether ActiveSupport notifications are enabled.
 Defaults to `false`.
 
-### #test_controller
+### `.preview_controller` → [String]
 
-Set the controller used for testing components:
+The controller used for previewing components.
+Defaults to `ViewComponentsController`.
 
-```ruby
-config.view_component.test_controller = "MyTestController"
-```
+### `.preview_path` (Deprecated)
 
-Defaults to ApplicationController. Can also be configured on a per-test
-basis using `with_controller_class`.
+_Use #preview_paths instead. Will be removed in v3.0.0._
 
-### #view_component_path
+### `.preview_paths` → [Array<String>]
 
-Path for component files
+The locations in which component previews will be looked up.
+Defaults to `['test/component/previews']` relative to your Rails root.
 
-```ruby
-config.view_component.view_component_path = "app/my_components"
-```
+### `.preview_route` → [String]
 
-Defaults to `app/components`.
+The entry route for component previews.
+Defaults to `"/rails/view_components"`.
+
+### `.render_monkey_patch_enabled` → [Boolean]
+
+If this is disabled, use `#render_component` or
+`#render_component_to_string` instead.
+Defaults to `true`.
+
+### `.show_previews` → [Boolean]
+
+Whether component previews are enabled.
+Defaults to `true` in development and test environments.
+
+### `.show_previews_source` → [Boolean]
+
+Whether to display source code previews in component previews.
+Defaults to `false`.
+
+### `.test_controller` → [String]
+
+The controller used for testing components.
+Can also be configured on a per-test basis using `#with_controller_class`.
+Defaults to `ApplicationController`.
+
+### `.view_component_path` → [String]
+
+The path in which components, their templates, and their sidecars should
+be stored.
+Defaults to `"app/components"`.
 
 ## ViewComponent::TestHelpers
 
-### #render_in_view_context(&block)
+### `#render_in_view_context(&block)`
 
 Execute the given block in the view context. Internally sets `page` to be a
 `Capybara::Node::Simple`, allowing for Capybara assertions to be used:
@@ -281,7 +271,7 @@ end
 assert_text("Hello, World!")
 ```
 
-### #render_inline(component, **args, &block) → [Nokogiri::HTML]
+### `#render_inline(component, **args, &block)` → [Nokogiri::HTML]
 
 Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
 allowing for Capybara assertions to be used:
@@ -291,11 +281,28 @@ render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
 
-### #rendered_component → [String]
+### `#render_preview(name, from: preview_class, params: {})` → [Nokogiri::HTML]
+
+Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
+allowing for Capybara assertions to be used:
+
+```ruby
+render_preview(:default)
+assert_text("Hello, World!")
+```
+
+Note: `#rendered_preview` expects a preview to be defined with the same class
+name as the calling test, but with `Test` replaced with `Preview`:
+
+MyComponentTest -> MyComponentPreview etc.
+
+In RSpec, `Preview` is appended to `described_class`.
+
+### `#rendered_component` → [String]
 
 Returns the result of a render_inline call.
 
-### #with_controller_class(klass)
+### `#with_controller_class(klass)`
 
 Set the controller to be used while executing the given block,
 allowing access to controller-specific methods:
@@ -306,7 +313,7 @@ with_controller_class(UsersController) do
 end
 ```
 
-### #with_request_url(path)
+### `#with_request_url(path)`
 
 Set the URL of the current request (such as when using request-dependent path helpers):
 
@@ -316,7 +323,7 @@ with_request_url("/users/42") do
 end
 ```
 
-### #with_variant(variant)
+### `#with_variant(variant)`
 
 Set the Action Pack request variant for the given block:
 
