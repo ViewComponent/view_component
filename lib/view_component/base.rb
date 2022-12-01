@@ -66,18 +66,6 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
-    # @!macro [attach] deprecated_generate_mattr_accessor
-    #   @method generate_$1
-    #   @deprecated Use `#generate.$1` instead. Will be removed in v3.0.0.
-    def self._deprecated_generate_mattr_accessor(name)
-      define_singleton_method("generate_#{name}".to_sym) do
-        generate.public_send(name)
-      end
-      define_singleton_method("generate_#{name}=".to_sym) do |value|
-        generate.public_send("#{name}=".to_sym, value)
-      end
-    end
-
     _deprecated_generate_mattr_accessor :distinct_locale_files
     _deprecated_generate_mattr_accessor :locale
     _deprecated_generate_mattr_accessor :sidecar

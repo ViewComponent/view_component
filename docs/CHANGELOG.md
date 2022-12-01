@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated `generate_*` methods. Use `generate.*` instead.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated `with_variant` method.
 
     *Joel Hawksley*
