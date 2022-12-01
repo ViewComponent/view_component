@@ -421,8 +421,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_renders_singular_and_collection_slots_with_arguments
     get "/slots"
 
-    assert_select(".card.mt-4")
-
     assert_select(".title p", text: "This is my title!")
 
     assert_select(".subtitle small", text: "This is my subtitle!")
@@ -435,21 +433,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select(".item.normal", count: 2)
 
     assert_select(".footer.text-blue h3", text: "This is the footer")
-
-    title_node = Nokogiri::HTML.fragment(response.body).css(".title").to_html
-    expected_title_html = "<div class=\"title\">\n    <p>This is my title!</p>\n  </div>"
-
-    assert_equal(title_node, expected_title_html)
   end
 
   def test_renders_empty_slot_without_error
     get "/empty_slot"
-
-    assert_response :success
-  end
-
-  def test_renders_empty_slot_v2_with_slim_without_error
-    get "/empty_slot_v2_with_slim"
 
     assert_response :success
   end

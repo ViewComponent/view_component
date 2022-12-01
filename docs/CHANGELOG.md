@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated `content_areas` feature. Use Slots instead.
 
     *Joel Hawksley*
