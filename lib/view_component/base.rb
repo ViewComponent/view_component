@@ -66,11 +66,6 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
-    _deprecated_generate_mattr_accessor :distinct_locale_files
-    _deprecated_generate_mattr_accessor :locale
-    _deprecated_generate_mattr_accessor :sidecar
-    _deprecated_generate_mattr_accessor :stimulus_controller
-
     # Entrypoint for rendering components.
     #
     # - `view_context`: ActionView context from calling view

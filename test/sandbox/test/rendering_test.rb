@@ -1017,21 +1017,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "foo", count: 2)
   end
 
-  def test_deprecated_generate_mattr_accessor
-    ViewComponent::Base._deprecated_generate_mattr_accessor(:test_accessor)
-    assert(ViewComponent::Base.respond_to?(:generate_test_accessor))
-    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
-    ViewComponent::Base.generate_test_accessor = "changed"
-    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
-    ViewComponent::Base.generate.test_accessor = "changed again"
-    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
-  ensure
-    ViewComponent::Base.class_eval do
-      singleton_class.undef_method :generate_test_accessor
-      singleton_class.undef_method :generate_test_accessor=
-    end
-  end
-
   def test_inherited_component_renders_when_lazy_loading
     # Simulate lazy loading by manually removing the classes in question. This will completely
     # undo the changes made by self.class.compile and friends, forcing a compile the next time
