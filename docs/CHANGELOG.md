@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated `with_variant` method.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated `rendered_component` in favor of `rendered_content`.
 
     *Joel Hawksley*

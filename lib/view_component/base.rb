@@ -260,18 +260,6 @@ module ViewComponent
       @__vc_variant if defined?(@__vc_variant)
     end
 
-    # Use the provided variant instead of the one determined by the current request.
-    #
-    # @deprecated Will be removed in v3.0.0.
-    # @param variant [Symbol] The variant to be used by the component.
-    # @return [self]
-    def with_variant(variant)
-      @__vc_variant = variant
-
-      self
-    end
-    deprecate :with_variant, deprecator: ViewComponent::Deprecation
-
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.
     #
