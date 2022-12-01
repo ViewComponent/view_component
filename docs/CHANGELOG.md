@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated support for loading ViewComponent engine manually.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated `generate_*` methods. Use `generate.*` instead.
 
     *Joel Hawksley*
