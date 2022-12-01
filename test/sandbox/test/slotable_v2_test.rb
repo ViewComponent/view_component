@@ -116,7 +116,7 @@ class SlotsV2sTest < ViewComponent::TestCase
     assert_text "No items provided"
   end
 
-  def test_renders_slots_template_raise_with_unknown_content_areas
+  def test_renders_slots_template_raise_with_unknown_slot
     assert_raises NoMethodError do
       render_inline(SlotsV2Component.new) do |component|
         component.foo { "Hello!" }

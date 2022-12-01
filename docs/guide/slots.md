@@ -271,8 +271,6 @@ Slot content can also be set using `#with_content`:
 <% end %>
 ```
 
-_To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
-
 ## Polymorphic slots
 
 Since 2.42.0

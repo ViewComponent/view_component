@@ -127,7 +127,7 @@ class SlotableTest < ViewComponent::TestCase
     assert_text "No items provided"
   end
 
-  def test_renders_slots_template_raise_with_unknown_content_areas
+  def test_renders_slots_template_raise_with_unknown_slot
     exception =
       assert_raises ArgumentError do
         render_inline(SlotsComponent.new) do |component|

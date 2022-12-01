@@ -6,7 +6,6 @@ require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
-require "view_component/content_areas"
 require "view_component/polymorphic_slots"
 require "view_component/preview"
 require "view_component/slotable"
@@ -31,7 +30,6 @@ module ViewComponent
       attr_writer :config
     end
 
-    include ViewComponent::ContentAreas
     include ViewComponent::PolymorphicSlots
     include ViewComponent::SlotableV2
     include ViewComponent::Translatable
@@ -43,9 +41,6 @@ module ViewComponent
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
-
-    class_attribute :content_areas
-    self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
