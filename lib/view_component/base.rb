@@ -165,14 +165,6 @@ module ViewComponent
     #
     # @return [void]
     def before_render
-      before_render_check
-    end
-
-    # Called after rendering the component.
-    #
-    # @deprecated Use `#before_render` instead. Will be removed in v3.0.0.
-    # @return [void]
-    def before_render_check
       # noop
     end
 
@@ -265,7 +257,6 @@ module ViewComponent
     #
     # @private
     def format
-      # Ruby 2.6 throws a warning without checking `defined?`, 2.7 doesn't
       @__vc_variant if defined?(@__vc_variant)
     end
 

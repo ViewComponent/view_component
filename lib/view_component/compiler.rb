@@ -30,10 +30,6 @@ module ViewComponent
       return if compiled? && !force
       return if component_class == ViewComponent::Base
 
-      if RUBY_VERSION < "2.7.0"
-        ViewComponent::Deprecation.warn("Support for Ruby versions < 2.7.0 will be removed in v3.0.0.")
-      end
-
       component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
       subclass_instance_methods = component_class.instance_methods(false)
 
@@ -48,13 +44,6 @@ module ViewComponent
         raise ViewComponent::TemplateError.new(template_errors) if raise_errors
 
         return false
-      end
-
-      if subclass_instance_methods.include?(:before_render_check)
-        ViewComponent::Deprecation.warn(
-          "`#before_render_check` will be removed in v3.0.0.\n\n" \
-          "To fix this issue, use `#before_render` instead."
-        )
       end
 
       if raise_errors

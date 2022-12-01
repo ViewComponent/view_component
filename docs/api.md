@@ -214,10 +214,6 @@ Defaults to `false`.
 The controller used for previewing components.
 Defaults to `ViewComponentsController`.
 
-### `.preview_path` (Deprecated)
-
-_Use #preview_paths instead. Will be removed in v3.0.0._
-
 ### `.preview_paths` → [Array<String>]
 
 The locations in which component previews will be looked up.
