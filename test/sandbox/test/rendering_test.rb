@@ -81,13 +81,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
-  def test_render_without_template_variant
-    render_inline(InlineComponent.new.with_variant(:email))
-
-    assert_predicate InlineComponent, :compiled?
-    assert_selector("input[type='text'][name='email']")
-  end
-
   def test_render_child_without_template
     render_inline(InlineChildComponent.new)
 
@@ -172,12 +165,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("input[type='hidden'][name='authenticity_token']", visible: false)
 
     ActionController::Base.allow_forgery_protection = old_value
-  end
-
-  def test_renders_component_with_variant_method
-    render_inline(VariantsComponent.new.with_variant(:phone))
-
-    assert_text("Phone")
   end
 
   def test_renders_component_with_variant
