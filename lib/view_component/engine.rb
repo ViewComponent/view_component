@@ -136,16 +136,3 @@ module ViewComponent
     end
   end
 end
-
-# :nocov:
-unless defined?(ViewComponent::Base)
-  require "view_component/deprecation"
-
-  ViewComponent::Deprecation.warn(
-    "This manually engine loading is deprecated and will be removed in v3.0.0. " \
-    'Remove `require "view_component/engine"`.'
-  )
-
-  require "view_component"
-end
-# :nocov:

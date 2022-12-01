@@ -66,23 +66,6 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
-    # @!macro [attach] deprecated_generate_mattr_accessor
-    #   @method generate_$1
-    #   @deprecated Use `#generate.$1` instead. Will be removed in v3.0.0.
-    def self._deprecated_generate_mattr_accessor(name)
-      define_singleton_method("generate_#{name}".to_sym) do
-        generate.public_send(name)
-      end
-      define_singleton_method("generate_#{name}=".to_sym) do |value|
-        generate.public_send("#{name}=".to_sym, value)
-      end
-    end
-
-    _deprecated_generate_mattr_accessor :distinct_locale_files
-    _deprecated_generate_mattr_accessor :locale
-    _deprecated_generate_mattr_accessor :sidecar
-    _deprecated_generate_mattr_accessor :stimulus_controller
-
     # Entrypoint for rendering components.
     #
     # - `view_context`: ActionView context from calling view
@@ -259,18 +242,6 @@ module ViewComponent
     def format
       @__vc_variant if defined?(@__vc_variant)
     end
-
-    # Use the provided variant instead of the one determined by the current request.
-    #
-    # @deprecated Will be removed in v3.0.0.
-    # @param variant [Symbol] The variant to be used by the component.
-    # @return [self]
-    def with_variant(variant)
-      @__vc_variant = variant
-
-      self
-    end
-    deprecate :with_variant, deprecator: ViewComponent::Deprecation
 
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.

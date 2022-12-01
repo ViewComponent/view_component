@@ -25,12 +25,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_includes rendered_content, "hello,world!"
   end
 
-  def test_render_inline_sets_rendered_component
-    render_inline(MyComponent.new)
-
-    assert_includes rendered_component, "hello,world!"
-  end
-
   def test_child_component
     render_inline(ChildComponent.new)
 
@@ -85,13 +79,6 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_predicate InlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
-  end
-
-  def test_render_without_template_variant
-    render_inline(InlineComponent.new.with_variant(:email))
-
-    assert_predicate InlineComponent, :compiled?
-    assert_selector("input[type='text'][name='email']")
   end
 
   def test_render_child_without_template
@@ -178,12 +165,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("input[type='hidden'][name='authenticity_token']", visible: false)
 
     ActionController::Base.allow_forgery_protection = old_value
-  end
-
-  def test_renders_component_with_variant_method
-    render_inline(VariantsComponent.new.with_variant(:phone))
-
-    assert_text("Phone")
   end
 
   def test_renders_component_with_variant
@@ -1034,21 +1015,6 @@ class RenderingTest < ViewComponent::TestCase
     component = ErbComponent.new(message: "foo")
     render_inline(InlineRenderComponent.new(items: [component, component]))
     assert_selector("div", text: "foo", count: 2)
-  end
-
-  def test_deprecated_generate_mattr_accessor
-    ViewComponent::Base._deprecated_generate_mattr_accessor(:test_accessor)
-    assert(ViewComponent::Base.respond_to?(:generate_test_accessor))
-    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
-    ViewComponent::Base.generate_test_accessor = "changed"
-    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
-    ViewComponent::Base.generate.test_accessor = "changed again"
-    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
-  ensure
-    ViewComponent::Base.class_eval do
-      singleton_class.undef_method :generate_test_accessor
-      singleton_class.undef_method :generate_test_accessor=
-    end
   end
 
   def test_inherited_component_renders_when_lazy_loading

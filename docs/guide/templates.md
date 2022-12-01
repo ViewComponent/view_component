@@ -82,12 +82,6 @@ end
 
 _**Note**: `call_*` methods must be public._
 
-To override the `variant` set by the request, use `with_variant`:
-
-```erb
-<%= render InlineVariantComponent.new.with_variant(:phone) %>
-```
-
 ## Inherited
 
 Since 2.19.0

@@ -10,6 +10,22 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated support for loading ViewComponent engine manually. Make sure `require "view_component/engine"` is removed from `Gemfile`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `generate_*` methods. Use `generate.*` instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `with_variant` method.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `rendered_component` in favor of `rendered_content`.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated `config.preview_path` in favor of `config.preview_paths`.
 
     *Joel Hawksley*

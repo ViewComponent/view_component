@@ -21,13 +21,4 @@ module ViewComponent
   autoload :Translatable
 end
 
-# :nocov:
-if defined?(ViewComponent::Engine)
-  ViewComponent::Deprecation.warn(
-    "Manually loading the engine is deprecated and will be removed in v3.0.0. " \
-    "Remove `require \"view_component/engine\"`."
-  )
-elsif defined?(Rails::Engine)
-  require "view_component/engine"
-end
-# :nocov:
+require "view_component/engine" if defined?(Rails::Engine)
