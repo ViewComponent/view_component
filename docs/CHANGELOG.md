@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* BREAKING: Remove deprecated support for loading ViewComponent engine manually.
+* BREAKING: Remove deprecated support for loading ViewComponent engine manually. Make sure you removed `require "view_component/engine"` from your `Gemfile`.
 
     *Joel Hawksley*
 
