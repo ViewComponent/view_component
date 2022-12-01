@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated `rendered_component` in favor of `rendered_content`.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated `config.preview_path` in favor of `config.preview_paths`.
 
     *Joel Hawksley*
