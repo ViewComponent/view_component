@@ -81,7 +81,6 @@ end
 ```
 
 _**Note**: `call_*` methods must be public._
-```
 
 ## Inherited
 
