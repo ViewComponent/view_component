@@ -21,7 +21,6 @@ jobs:
         bundle update
         bundle exec rake partial_benchmark
         bundle exec rake translatable_benchmark
-        bundle exec rake slotable_benchmark
   test:
     runs-on: ubuntu-latest
     strategy:

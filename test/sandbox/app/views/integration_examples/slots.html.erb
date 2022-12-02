@@ -1,29 +1,29 @@
-<%= render(SlotsComponent.new(class_names: "mt-4")) do |component| %>
-  <% component.slot(:title) do %>
+<%= render(SlotsV2Component.new) do |component| %>
+  <% component.with_title do %>
     <p>This is my title!</p>
   <% end %>
-  <% component.slot(:subtitle) do %>
+  <% component.with_subtitle do %>
     <small>This is my subtitle!</small>
   <% end %>
 
-  <% component.slot(:tab) do %>
+  <% component.with_tab do %>
     <h1>Tab A</h1>
   <% end %>
-  <% component.slot(:tab) do %>
+  <% component.with_tab do %>
     <h3>Tab B</h3>
   <% end %>
 
-  <% component.slot(:item) do %>
+  <% component.with_item do %>
     <h1>Item A</h1>
   <% end %>
-  <% component.slot(:item, highlighted: true) do %>
+  <% component.with_item(highlighted: true) do %>
     <h3>Item B</h3>
   <% end %>
-  <% component.slot(:item) do %>
+  <% component.with_item do %>
     <h2>Item C</h2>
   <% end %>
 
-  <% component.slot(:footer, class_names: "text-blue") do %>
+  <% component.with_footer(classes: "text-blue") do %>
     <h3>This is the footer</h3>
   <% end %>
 <% end %>
