@@ -17,19 +17,9 @@ module ViewComponent
       # Hash of registered Slots
       class_attribute :registered_slots
       self.registered_slots = {}
-
-      class_attribute :_warn_on_deprecated_slot_setter
-      self._warn_on_deprecated_slot_setter = false
     end
 
     class_methods do
-      ##
-      # Enables deprecations coming to the Slots API in ViewComponent v3
-      #
-      def warn_on_deprecated_slot_setter
-        self._warn_on_deprecated_slot_setter = true
-      end
-
       ##
       # Registers a sub-component
       #
@@ -88,19 +78,7 @@ module ViewComponent
         ruby2_keywords(:"with_#{slot_name}") if respond_to?(:ruby2_keywords, true)
 
         define_method slot_name do |*args, &block|
-          if args.empty? && block.nil?
-            get_slot(slot_name)
-          else
-            if _warn_on_deprecated_slot_setter
-              stack = caller_locations(3)
-              msg = "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
-                "Use `#with_#{slot_name}` to set the slot instead."
-
-              ViewComponent::Deprecation.warn(msg, stack)
-            end
-
-            set_slot(slot_name, nil, *args, &block)
-          end
+          get_slot(slot_name)
         end
         ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
@@ -153,22 +131,6 @@ module ViewComponent
         validate_plural_slot_name(slot_name)
         validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
 
-        # Define setter for singular names
-        # for example `renders_many :items` allows fetching all tabs with
-        # `component.tabs` and setting a tab with `component.tab`
-
-        define_method singular_name do |*args, &block|
-          if _warn_on_deprecated_slot_setter
-            ViewComponent::Deprecation.warn(
-              "Setting a slot with `##{singular_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
-              "Use `#with_#{singular_name}` to set the slot instead."
-            )
-          end
-
-          set_slot(slot_name, nil, *args, &block)
-        end
-        ruby2_keywords(singular_name.to_sym) if respond_to?(:ruby2_keywords, true)
-
         define_method :"with_#{singular_name}" do |*args, &block|
           set_slot(slot_name, nil, *args, &block)
         end
@@ -183,20 +145,7 @@ module ViewComponent
         # Instantiates and and adds multiple slots forwarding the first
         # argument to each slot constructor
         define_method slot_name do |collection_args = nil, &block|
-          if collection_args.nil? && block.nil?
-            get_slot(slot_name)
-          else
-            if _warn_on_deprecated_slot_setter
-              ViewComponent::Deprecation.warn(
-                "Setting a slot with `##{slot_name}` is deprecated and will be removed in ViewComponent v3.0.0. " \
-                "Use `#with_#{slot_name}` to set the slot instead."
-              )
-            end
-
-            collection_args.map do |args|
-              set_slot(slot_name, nil, **args, &block)
-            end
-          end
+          get_slot(slot_name)
         end
 
         define_method "#{slot_name}?" do

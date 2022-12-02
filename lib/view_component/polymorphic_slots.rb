@@ -60,18 +60,6 @@ module ViewComponent
               "#{slot_name}_#{poly_type}"
             end
 
-          define_method(setter_name) do |*args, &block|
-            if _warn_on_deprecated_slot_setter
-              ViewComponent::Deprecation.warn(
-                "polymorphic slot setters like `#{setter_name}` are deprecated and will be removed in " \
-                "ViewComponent v3.0.0.\n\nUse `with_#{setter_name}` instead."
-              )
-            end
-
-            set_polymorphic_slot(slot_name, poly_type, *args, &block)
-          end
-          ruby2_keywords(setter_name.to_sym) if respond_to?(:ruby2_keywords, true)
-
           define_method("with_#{setter_name}") do |*args, &block|
             set_polymorphic_slot(slot_name, poly_type, *args, &block)
           end

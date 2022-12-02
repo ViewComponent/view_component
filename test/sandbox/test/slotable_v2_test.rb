@@ -5,31 +5,31 @@ require "test_helper"
 class SlotsV2sTest < ViewComponent::TestCase
   def test_renders_slots
     render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
-      component.title do
+      component.with_title do
         "This is my title!"
       end
-      component.subtitle do
+      component.with_subtitle do
         "This is my subtitle!"
       end
 
-      component.tab do
+      component.with_tab do
         "Tab A"
       end
-      component.tab do
+      component.with_tab do
         "Tab B"
       end
 
-      component.item do
+      component.with_item do
         "Item A"
       end
-      component.item(highlighted: true) do
+      component.with_item(highlighted: true) do
         "Item B"
       end
-      component.item do
+      component.with_item do
         "Item C"
       end
 
-      component.footer(classes: "text-blue") do
+      component.with_footer(classes: "text-blue") do
         "This is the footer"
       end
     end
@@ -52,31 +52,31 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_renders_slots_in_inherited_components
     render_inline(InheritedSlotsV2Component.new(classes: "mt-4")) do |component|
-      component.title do
+      component.with_title do
         "This is my title!"
       end
-      component.subtitle do
+      component.with_subtitle do
         "This is my subtitle!"
       end
 
-      component.tab do
+      component.with_tab do
         "Tab A"
       end
-      component.tab do
+      component.with_tab do
         "Tab B"
       end
 
-      component.item do
+      component.with_item do
         "Item A"
       end
-      component.item(highlighted: true) do
+      component.with_item(highlighted: true) do
         "Item B"
       end
-      component.item do
+      component.with_item do
         "Item C"
       end
 
-      component.footer(classes: "text-blue") do
+      component.with_footer(classes: "text-blue") do
         "This is the footer"
       end
     end
@@ -135,7 +135,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_sub_component_with_positional_args
     render_inline(SlotsV2WithPosArgComponent.new(classes: "mt-4")) do |component|
-      component.item("my item", classes: "hello") { "My rad item" }
+      component.with_item("my item", classes: "hello") { "My rad item" }
     end
 
     assert_selector(".item", text: "my item")
@@ -144,8 +144,8 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_sub_component_template_rendering
     render_inline(Nested::SlotsV2Component.new) do |component|
-      component.item do |sub_component|
-        sub_component.thing do
+      component.with_item do |sub_component|
+        sub_component.with_thing do
           "My rad thing"
         end
       end
@@ -156,13 +156,13 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_component_delegate
     render_inline SlotsV2DelegateComponent.new do |component|
-      component.item do
+      component.with_item do
         "Item A"
       end
-      component.item(highlighted: true) do
+      component.with_item(highlighted: true) do
         "Item B"
       end
-      component.item do
+      component.with_item do
         "Item C"
       end
     end
@@ -176,7 +176,7 @@ class SlotsV2sTest < ViewComponent::TestCase
     component = SlotsV2DelegateComponent.new
 
     render_inline component do |c|
-      c.item do
+      c.with_item do
         "Item A"
       end
     end
@@ -188,7 +188,7 @@ class SlotsV2sTest < ViewComponent::TestCase
     component = SlotsV2Component.new
 
     render_inline component do |c|
-      c.item do
+      c.with_item do
         "Item A"
       end
     end
@@ -198,7 +198,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_collection
     render_inline SlotsV2DelegateComponent.new do |component|
-      component.items([{highlighted: false}, {highlighted: true}, {highlighted: false}]) do
+      component.with_items([{highlighted: false}, {highlighted: true}, {highlighted: false}]) do
         "My Item"
       end
     end
@@ -210,7 +210,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_collection_returns_slots
     render_inline SlotsV2DelegateComponent.new do |component|
-      component.items([{highlighted: false}, {highlighted: true}, {highlighted: false}])
+      component.with_items([{highlighted: false}, {highlighted: true}, {highlighted: false}])
         .each_with_index do |slot, index|
           slot.with_content("My Item #{index + 1}")
         end
@@ -242,14 +242,14 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_renders_slots_with_before_render_hook
     render_inline(SlotsV2BeforeRenderComponent.new) do |component|
-      component.title do
+      component.with_title do
         "This is my title!"
       end
 
-      component.greeting do
+      component.with_greeting do
         "John Doe"
       end
-      component.greeting do
+      component.with_greeting do
         "Jane Doe"
       end
     end
@@ -261,7 +261,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slots_accessible_in_render_predicate
     render_inline(SlotsV2RenderPredicateComponent.new) do |component|
-      component.title do
+      component.with_title do
         "This is my title!"
       end
     end
@@ -271,7 +271,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slots_without_render_block
     render_inline(SlotsV2WithoutContentBlockComponent.new) do |component|
-      component.title(title: "This is my title!")
+      component.with_title(title: "This is my title!")
     end
 
     assert_selector("h1", text: "This is my title!")
@@ -292,13 +292,13 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_nested_blocks_content_selectable_true
     render_inline(NestedSharedState::TableComponent.new(selectable: true)) do |table_card|
-      table_card.header(
+      table_card.with_header(
         "regular_argument",
         class_names: "table__header extracted_kwarg",
         data: {splatted_kwarg: "splatted_keyword_argument"}
       ) do |header|
-        header.cell { "Cell1" }
-        header.cell(class_names: "-has-sort") { "Cell2" }
+        header.with_cell { "Cell1" }
+        header.with_cell(class_names: "-has-sort") { "Cell2" }
       end
     end
 
@@ -320,9 +320,9 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_slot_with_nested_blocks_content_selectable_false
     render_inline(NestedSharedState::TableComponent.new(selectable: false)) do |table_card|
-      table_card.header do |header|
-        header.cell { "Cell1" }
-        header.cell(class_names: "-has-sort") { "Cell2" }
+      table_card.with_header do |header|
+        header.with_cell { "Cell1" }
+        header.with_cell(class_names: "-has-sort") { "Cell2" }
       end
     end
 
@@ -390,7 +390,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_renders_pass_through_slot_using_with_content
     component = SlotsV2Component.new
-    component.title("some_argument").with_content("This is my title!")
+    component.with_title("some_argument").with_content("This is my title!")
 
     render_inline(component)
     assert_selector(".title", text: "This is my title!")
@@ -398,7 +398,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_renders_lambda_slot_using_with_content
     component = SlotsV2Component.new
-    component.item(highlighted: false).with_content("This is my item!")
+    component.with_item(highlighted: false).with_content("This is my item!")
 
     render_inline(component)
     assert_selector(".item.normal", text: "This is my item!")
@@ -406,7 +406,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_renders_component_slot_using_with_content
     component = SlotsV2Component.new
-    component.extra(message: "My message").with_content("This is my content!")
+    component.with_extra(message: "My message").with_content("This is my content!")
 
     render_inline(component)
     assert_selector(".extra") do
@@ -419,7 +419,7 @@ class SlotsV2sTest < ViewComponent::TestCase
     error =
       assert_raises ArgumentError do
         component = SlotsV2Component.new
-        slot = component.title("some_argument")
+        slot = component.with_title("some_argument")
         slot.with_content("This is my title!")
         slot.__vc_content_block = "some block"
 
@@ -431,9 +431,9 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_renders_lambda_slot_with_no_args
     render_inline(SlotsV2WithEmptyLambdaComponent.new) do |c|
-      c.item { "Item 1" }
-      c.item { "Item 2" }
-      c.item { "Item 3" }
+      c.with_item { "Item 1" }
+      c.with_item { "Item 2" }
+      c.with_item { "Item 3" }
     end
 
     assert_selector(".item") do
@@ -538,9 +538,9 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_polymorphic_slot
     render_inline(PolymorphicSlotComponent.new) do |component|
-      component.header_standard { "standard" }
-      component.item_foo(class_names: "custom-foo")
-      component.item_bar(class_names: "custom-bar")
+      component.with_header_standard { "standard" }
+      component.with_item_foo(class_names: "custom-foo")
+      component.with_item_bar(class_names: "custom-bar")
     end
 
     assert_selector("div .standard", text: "standard")
@@ -551,7 +551,7 @@ class SlotsV2sTest < ViewComponent::TestCase
   def test_polymorphic_slot_non_member
     assert_raises NoMethodError do
       render_inline(PolymorphicSlotComponent.new) do |component|
-        component.item_non_existent
+        component.with_item_non_existent
       end
     end
   end
@@ -559,8 +559,8 @@ class SlotsV2sTest < ViewComponent::TestCase
   def test_singular_polymorphic_slot_raises_on_redefinition
     error = assert_raises ArgumentError do
       render_inline(PolymorphicSlotComponent.new) do |component|
-        component.header_standard { "standard" }
-        component.header_special { "special" }
+        component.with_header_standard { "standard" }
+        component.with_header_special { "special" }
       end
     end
 
@@ -581,9 +581,9 @@ class SlotsV2sTest < ViewComponent::TestCase
     PartialHelper::State.reset
 
     assert_nothing_raised do
-      render_inline WrapperComponent.new do |w|
-        w.render(PartialSlotHelperComponent.new) do |c|
-          c.header {}
+      render_inline WrapperComponent.new do |wrapper|
+        wrapper.render(PartialSlotHelperComponent.new) do |component|
+          component.with_header {}
         end
       end
     end
@@ -592,8 +592,8 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_lambda_slot_content_can_be_provided_via_a_block
-    render_inline LambdaSlotComponent.new do |c|
-      c.header(classes: "some-class") do
+    render_inline LambdaSlotComponent.new do |component|
+      component.with_header(classes: "some-class") do
         "This is a header!"
       end
     end
