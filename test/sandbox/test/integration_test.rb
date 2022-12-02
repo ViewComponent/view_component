@@ -152,15 +152,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Open"
   end
 
-  def test_rendering_component_with_content_for
-    get "/content_areas"
-    assert_response :success
-
-    assert_select(".title h1", "Hi!")
-    assert_select(".body p", "Did you know that 1+1=2?")
-    assert_select(".footer h3", "Bye!")
-  end
-
   def test_rendering_component_with_a_partial
     get "/partial"
     assert_response :success

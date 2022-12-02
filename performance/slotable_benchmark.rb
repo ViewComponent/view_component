@@ -12,7 +12,6 @@ require File.expand_path("../test/sandbox/config/environment.rb", __dir__)
 module Performance
   require_relative "components/slot_component"
   require_relative "components/slots_v2_component"
-  require_relative "components/content_areas_component"
 end
 
 class BenchmarksController < ActionController::Base
@@ -24,26 +23,6 @@ controller_view = BenchmarksController.new.view_context
 Benchmark.ips do |x|
   x.time = 10
   x.warmup = 2
-
-  x.report("content_areas:") do
-    component = Performance::ContentAreasComponent.new(name: "Fox Mulder")
-
-    controller_view.render(component) do |c|
-      c.with(:header) do
-        c.render Performance::SlotsV2Component::HeaderComponent.new(classes: "header") do
-          "Header"
-        end
-      end
-
-      c.with(:items) do
-        ["a", "b", "c"].each do |item|
-          c.render Performance::SlotsV2Component::ItemComponent.new(classes: "header") do
-            item
-          end
-        end
-      end
-    end
-  end
 
   x.report("slot:") do
     component = Performance::SlotComponent.new(name: "Fox Mulder")

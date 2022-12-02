@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated `content_areas` feature. Use Slots instead.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated support for loading ViewComponent engine manually. Make sure `require "view_component/engine"` is removed from `Gemfile`.
 
     *Joel Hawksley*
