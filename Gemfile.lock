@@ -148,6 +148,7 @@ GEM
     matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
+    mini_portile2 (2.8.0)
     minitest (5.6.0)
     net-imap (0.3.1)
       net-protocol
@@ -158,7 +159,8 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.13.9-x86_64-darwin)
+    nokogiri (1.13.9)
+      mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     parallel (1.22.1)
     parser (3.1.2.1)
@@ -287,7 +289,7 @@ GEM
     zeitwerk (2.6.6)
 
 PLATFORMS
-  x86_64-darwin-21
+  ruby
 
 DEPENDENCIES
   appraisal (~> 2.4)
@@ -317,4 +319,4 @@ DEPENDENCIES
   yard-activesupport-concern (~> 0.0.1)
 
 BUNDLED WITH
-   2.2.32
+   2.2.33

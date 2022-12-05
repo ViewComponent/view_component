@@ -6,9 +6,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :cuprite
 
   def test_simple_js_interaction_in_browser_without_layout
-    inline_component = render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)
-
-    with_inline_rendered_component_path(inline_component) do |path|
+    with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)) do |path|
       visit path
 
       assert find("[data-hidden-field]", visible: false)
@@ -18,9 +16,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_simple_js_interaction_in_browser_with_layout
-    inline_component = render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new)
-
-    with_inline_rendered_component_path(inline_component, layout: "application") do |path|
+    with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new), layout: "application") do |path|
       visit path
 
       assert find("[data-hidden-field]", visible: false)
@@ -30,9 +26,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_component_with_params
-    inline_component = render_inline(TitleWrapperComponent.new(title: "awesome-title"))
-
-    with_inline_rendered_component_path(inline_component) do |path|
+    with_rendered_component_path(render_inline(TitleWrapperComponent.new(title: "awesome-title"))) do |path|
       visit path
 
       assert find("div", text: "awesome-title")
@@ -40,13 +34,11 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_components_with_slots
-    inline_component = render_inline(SlotsV2Component.new) do |component|
+    with_rendered_component_path(render_inline(SlotsV2Component.new) do |component|
       component.title do
         "This is my title!"
       end
-    end
-
-    with_inline_rendered_component_path(inline_component) do |path|
+    end) do |path|
       visit path
 
       find(".title", text: "This is my title!")
