@@ -14,6 +14,8 @@ nav_order: 5
 
     *Edwin Mak*
 
+## 2.78.0
+
 * Support variants with dots in their names.
 
     *Javi Martín*
