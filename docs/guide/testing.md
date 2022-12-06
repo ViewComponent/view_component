@@ -267,4 +267,3 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 end
 ```
-
