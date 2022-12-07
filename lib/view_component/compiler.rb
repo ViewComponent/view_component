@@ -92,7 +92,7 @@ module ViewComponent
 
     def define_render_template_for
       variant_elsifs = variants.compact.uniq.map do |variant|
-        "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
+        "elsif variant.to_sym == :'#{variant}'\n    #{call_method_name(variant)}"
       end.join("\n")
 
       body = <<-RUBY
@@ -163,6 +163,19 @@ module ViewComponent
               "There can only be a template file or inline render method per variant."
           end
 
+          uniq_variants = variants.compact.uniq
+          normalized_variants = uniq_variants.map { |variant| normalized_variant_name(variant) }
+
+          colliding_variants = uniq_variants.select do |variant|
+            normalized_variants.count(normalized_variant_name(variant)) > 1
+          end
+
+          unless colliding_variants.empty?
+            errors <<
+              "Colliding templates #{colliding_variants.sort.map { |v| "'#{v}'" }.to_sentence} " \
+              "found in #{component_class}."
+          end
+
           errors
         end
     end
@@ -176,7 +189,7 @@ module ViewComponent
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
-              variant: pieces.second.split("+").second&.to_sym,
+              variant: pieces[1..-2].join(".").split("+").second&.to_sym,
               handler: pieces.last
             }
           end
@@ -234,10 +247,14 @@ module ViewComponent
 
     def call_method_name(variant)
       if variant.present? && variants.include?(variant)
-        "call_#{variant}"
+        "call_#{normalized_variant_name(variant)}"
       else
         "call"
       end
+    end
+
+    def normalized_variant_name(variant)
+      variant.to_s.gsub("-", "__").gsub(".", "___")
     end
 
     def should_compile_superclass?

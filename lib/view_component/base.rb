@@ -19,9 +19,15 @@ module ViewComponent
     class << self
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
+      # Returns the current config.
+      #
+      # @return [ViewComponent::Config]
       def config
         @config ||= ViewComponent::Config.defaults
       end
+
+      # Replaces the entire config. You shouldn't need to use this directly
+      # unless you're building a `ViewComponent::Config` elsewhere.
       attr_writer :config
     end
 
@@ -124,11 +130,6 @@ module ViewComponent
       before_render
 
       if render?
-        # Ensure `content` is evaluated before rendering the template, this is
-        # needed so slots and other side-effects are performed before the
-        # component template is evaluated.
-        content if self.class.use_consistent_rendering_lifecycle
-
         render_template_for(@__vc_variant).to_s + output_postamble
       else
         ""
@@ -334,18 +335,6 @@ module ViewComponent
     # Defaults to `nil`. If this is falsy, `app/components` is used.
     #
 
-    # Evaluate `#content` before `#call` to ensure side-effects are present
-    # during component renders. This will be the default behavior in a future
-    # release.
-    #
-    # ```ruby
-    # config.view_component.use_consistent_rendering_lifecycle = true
-    # ```
-    #
-    # Defaults to `false`
-    #
-    mattr_accessor :use_consistent_rendering_lifecycle, instance_writer: false, default: false
-
     # Parent class for generated components
     #
     # ```ruby
@@ -413,7 +402,7 @@ module ViewComponent
       # Find sidecar files for the given extensions.
       #
       # The provided array of extensions is expected to contain
-      # strings starting without the "dot", example: `["erb", "haml"]`.
+      # strings starting without the dot, example: `["erb", "haml"]`.
       #
       # For example, one might collect sidecar CSS files that need to be compiled.
       # @param extensions [Array<String>] Extensions of which to return matching sidecar files.
@@ -591,7 +580,7 @@ module ViewComponent
         parameter = validate_default ? collection_parameter : provided_collection_parameter
 
         return unless parameter
-        return if initialize_parameter_names.include?(parameter)
+        return if initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
 
         # If Ruby can't parse the component class, then the initalize
         # parameters will be empty and ViewComponent will not be able to render
@@ -646,6 +635,11 @@ module ViewComponent
       end
 
       private
+
+      def splatted_keyword_argument_present?
+        initialize_parameters.flatten.include?(:keyrest) &&
+          !initialize_parameters.include?([:keyrest, :**]) # Un-named splatted keyword args don't count!
+      end
 
       def initialize_parameter_names
         return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)

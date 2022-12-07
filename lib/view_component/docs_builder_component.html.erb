@@ -1,6 +1,6 @@
 ---
 layout: default
-title: API
+title: API reference
 nav_order: 3
 ---
 

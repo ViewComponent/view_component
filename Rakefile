@@ -83,6 +83,7 @@ namespace :docs do
     require "rails"
     require "action_controller"
     require "view_component"
+    ViewComponent::Base.config.view_component_path = "view_component"
     require "view_component/docs_builder_component"
     docs = ActionController::Base.new.render_to_string(
       ViewComponent::DocsBuilderComponent.new(

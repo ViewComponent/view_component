@@ -12,7 +12,6 @@ if ENV["MEASURE_COVERAGE"]
 end
 
 require "bundler/setup"
-require "pp"
 require "pathname"
 require "minitest/autorun"
 
@@ -112,14 +111,6 @@ def with_new_cache
 ensure
   ActionView::Base.cache_template_loading = old_cache_template_loading
   ViewComponent::CompileCache.cache = old_cache
-end
-
-def with_consistent_render
-  old_value = ViewComponent::Base.use_consistent_rendering_lifecycle
-  ViewComponent::Base.use_consistent_rendering_lifecycle = true
-  yield
-ensure
-  ViewComponent::Base.use_consistent_rendering_lifecycle = old_value
 end
 
 def without_template_annotations(&block)
