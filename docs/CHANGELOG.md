@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Include gem name and deprecation horizon in every deprecation message.
+
+    *Jan Klimo*
+
 ## 2.78.0
 
 * Support variants with dots in their names.

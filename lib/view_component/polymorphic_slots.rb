@@ -62,9 +62,9 @@ module ViewComponent
 
           define_method(setter_name) do |*args, &block|
             if _warn_on_deprecated_slot_setter
-              ViewComponent::Deprecation.warn(
-                "polymorphic slot setters like `#{setter_name}` are deprecated and will be removed in " \
-                "ViewComponent v3.0.0.\n\nUse `with_#{setter_name}` instead."
+              ViewComponent::Deprecation.deprecation_warning(
+                "Using polymorphic slot setters like `#{setter_name}`",
+                :"`with_#{setter_name}`"
               )
             end
 
