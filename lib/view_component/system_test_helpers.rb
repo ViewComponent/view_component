@@ -15,15 +15,10 @@ module ViewComponent
 
       file = Tempfile.new(["rendered_#{fragment.class.name}", ".html"], "tmp/view_components/")
       begin
-        file.write(
-          controller.render_to_string(html: fragment.to_html.html_safe, layout: layout)
-        )
+        file.write(controller.render_to_string(html: fragment.to_html.html_safe, layout: layout))
         file.rewind
 
-        filename = file.path.split("/").last
-        path = "/system_test_entrypoint?file=#{filename}"
-
-        block.call(path)
+        block.call("/system_test_entrypoint?file=#{file.path.split("/").last}")
       ensure
         file.unlink
       end
