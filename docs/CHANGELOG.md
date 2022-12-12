@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add ability to pass in explicit preview_path to preview generator.
+* Add ability to pass explicit `preview_path` to preview generator.
 
     *Erinna Chen*
 
