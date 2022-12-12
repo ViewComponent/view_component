@@ -37,6 +37,19 @@ ViewComponent::Deprecation.behavior = :silence
 require File.expand_path("sandbox/config/environment.rb", __dir__)
 require "rails/test_help"
 
+require "capybara/cuprite"
+
+Capybara.register_driver(:cuprite) do |app|
+  # Add the process_timeout option to prevent failures due to the browser
+  # taking too long to start up.
+  Capybara::Cuprite::Driver.new(app, {process_timeout: 60, timeout: 30})
+end
+
+# Reduce extra logs produced by puma booting up
+Capybara.server = :puma, {Silent: true}
+# Increase the max wait time to appease test failures due to timeouts.
+Capybara.default_max_wait_time = 10
+
 def with_config_option(option_name, new_value, config_entrypoint: Rails.application.config.view_component)
   old_value = config_entrypoint.public_send(option_name)
   config_entrypoint.public_send("#{option_name}=", new_value)

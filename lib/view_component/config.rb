@@ -12,7 +12,7 @@ module ViewComponent
 
       def defaults
         ActiveSupport::OrderedOptions.new.merge!({
-          generate: ActiveSupport::OrderedOptions.new(false),
+          generate: default_generate_options,
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
           show_previews_source: false,
@@ -66,6 +66,17 @@ module ViewComponent
       # Always generate a preview alongside the component:
       #
       #      config.view_component.generate.preview = true
+      #
+      # #### #preview_path
+      #
+      # Path to generate preview:
+      #
+      #      config.view_component.generate.preview_path = "test/components/previews"
+      #
+      # Required when there is more than one path defined in preview_paths.
+      # Defaults to `""`. If this is blank, the generator will use
+      # `ViewComponent.config.preview_paths` if defined,
+      # `"test/components/previews"` otherwise
 
       # @!attribute preview_controller
       # @return [String]
@@ -131,6 +142,12 @@ module ViewComponent
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
 
         ["#{Rails.root}/test/components/previews"]
+      end
+
+      def default_generate_options
+        options = ActiveSupport::OrderedOptions.new(false)
+        options.preview_path = ""
+        options
       end
     end
 

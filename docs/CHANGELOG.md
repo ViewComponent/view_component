@@ -54,6 +54,18 @@ nav_order: 5
 
     *Drew Bragg*
 
+* Add ability to pass explicit `preview_path` to preview generator.
+
+    *Erinna Chen*
+
+* Add `with_rendered_component_path` helper for writing component system tests.
+
+    *Edwin Mak*
+
+* Include gem name and deprecation horizon in every deprecation message.
+
+    *Jan Klimo*
+
 ## 2.78.0
 
 * Support variants with dots in their names.
