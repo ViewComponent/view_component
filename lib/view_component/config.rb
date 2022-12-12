@@ -163,7 +163,7 @@ module ViewComponent
     end
 
     def preview_path=(new_value)
-      ViewComponent::Deprecation.warn("`preview_path` will be removed in v3.0.0. Use `preview_paths` instead.")
+      ViewComponent::Deprecation.deprecation_warning("`preview_path`", :"`preview_paths`")
       self.preview_paths = Array.wrap(new_value)
     end
 

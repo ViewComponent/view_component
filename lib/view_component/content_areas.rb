@@ -31,9 +31,8 @@ module ViewComponent
 
     class_methods do
       def with_content_areas(*areas)
-        ViewComponent::Deprecation.warn(
-          "`with_content_areas` is deprecated and will be removed in ViewComponent v3.0.0.\n\n" \
-          "Use slots (https://viewcomponent.org/guide/slots.html) instead."
+        ViewComponent::Deprecation.deprecation_warning(
+          "`with_content_areas`", "use slots (https://viewcomponent.org/guide/slots.html) instead"
         )
 
         if areas.include?(:content)

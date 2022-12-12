@@ -16,16 +16,18 @@ module ViewComponent
   autoload :Preview
   autoload :PreviewTemplateError
   autoload :TestHelpers
+  autoload :SystemTestHelpers
   autoload :TestCase
+  autoload :SystemTestCase
   autoload :TemplateError
   autoload :Translatable
 end
 
 # :nocov:
 if defined?(ViewComponent::Engine)
-  ViewComponent::Deprecation.warn(
-    "Manually loading the engine is deprecated and will be removed in v3.0.0. " \
-    "Remove `require \"view_component/engine\"`."
+  ViewComponent::Deprecation.deprecation_warning(
+    "Manually loading the engine",
+    "remove `require \"view_component/engine\"`"
   )
 elsif defined?(Rails::Engine)
   require "view_component/engine"
