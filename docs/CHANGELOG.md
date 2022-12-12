@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add ability to pass explicit `preview_path` to preview generator.
+
+    *Erinna Chen*
+
 * Add `with_rendered_component_path` helper for writing component system tests.
 
     *Edwin Mak*
