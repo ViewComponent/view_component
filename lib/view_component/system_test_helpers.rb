@@ -18,7 +18,7 @@ module ViewComponent
         file.write(controller.render_to_string(html: fragment.to_html.html_safe, layout: layout))
         file.rewind
 
-        block.call("/system_test_entrypoint?file=#{file.path.split("/").last}")
+        block.call("/_system_test_entrypoint?file=#{file.path.split("/").last}")
       ensure
         file.unlink
       end

@@ -122,7 +122,7 @@ module ViewComponent
           )
 
           if Rails.env.test?
-            get("system_test_entrypoint", to: "#{preview_controller}#system_test_entrypoint")
+            get("_system_test_entrypoint", to: "#{preview_controller}#system_test_entrypoint")
           end
 
           get(
