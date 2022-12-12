@@ -258,8 +258,6 @@ For components that depend on a layout, provide the `layout` argument:
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
   def test_simple_js_interaction_in_browser_with_layout
     with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new), layout: 'application') do |path|
-      visit(path)
-
       # ...
     end
   end
