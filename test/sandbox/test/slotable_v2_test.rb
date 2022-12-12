@@ -99,15 +99,15 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_renders_slots_with_empty_collections
     render_inline(SlotsV2Component.new) do |component|
-      component.title do
+      component.with_title do
         "This is my title!"
       end
 
-      component.subtitle do
+      component.with_subtitle do
         "This is my subtitle!"
       end
 
-      component.footer do
+      component.with_footer do
         "This is the footer"
       end
     end
@@ -119,7 +119,7 @@ class SlotsV2sTest < ViewComponent::TestCase
   def test_renders_slots_template_raise_with_unknown_slot
     assert_raises NoMethodError do
       render_inline(SlotsV2Component.new) do |component|
-        component.foo { "Hello!" }
+        component.with_foo { "Hello!" }
       end
     end
   end
@@ -286,7 +286,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_lambda_slot_with_missing_block
     render_inline(SlotsV2Component.new(classes: "mt-4")) do |component|
-      component.footer(classes: "text-blue")
+      component.with_footer(classes: "text-blue")
     end
   end
 
@@ -430,10 +430,10 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_renders_lambda_slot_with_no_args
-    render_inline(SlotsV2WithEmptyLambdaComponent.new) do |c|
-      c.with_item { "Item 1" }
-      c.with_item { "Item 2" }
-      c.with_item { "Item 3" }
+    render_inline(SlotsV2WithEmptyLambdaComponent.new) do |component|
+      component.with_item { "Item 1" }
+      component.with_item { "Item 2" }
+      component.with_item { "Item 3" }
     end
 
     assert_selector(".item") do
