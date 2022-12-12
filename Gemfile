@@ -10,6 +10,18 @@ gem "rails", (rails_version == "main") ? {git: "https://github.com/rails/rails",
 
 gem "rspec-rails", "~> 5"
 
+group :test do
+  gem "cuprite", "~> 0.8"
+  gem "puma", "~> 5"
+
+  if RUBY_VERSION >= "2.6"
+    gem "selenium-webdriver", "~> 4"
+  else
+    # Selenium 4 requires Ruby 2.6+
+    gem "selenium-webdriver", "~> 3"
+  end
+end
+
 if RUBY_VERSION >= "3.1"
   gem "net-imap", require: false
   gem "net-pop", require: false
