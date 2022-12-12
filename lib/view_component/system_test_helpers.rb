@@ -9,20 +9,8 @@ module ViewComponent
     # @param fragment [Nokogiri::Fragment] The fragment returned from `render_inline`.
     # @param layout [String] The (optional) layout to use.
     # @return [Proc] A block that can be used to visit the path of the inline rendered component.
-    def with_rendered_component_path(fragment, **options, &block)
-      layout = options[:layout] || false
-
-      opts = {
-        layout: layout,
-        locals: {
-          render_args: {
-            fragment: fragment.to_html.html_safe,
-            hide_preview_source: true
-          }
-        }
-      }
-
-      html = controller.render_to_string("view_components/preview", opts)
+    def with_rendered_component_path(fragment, layout: false, &block)
+      html = controller.render_to_string(html: fragment.to_html.html_safe, layout: layout)
 
       # Add './tmp/view_components/' directory if it doesn't exist to store the rendered component html
       FileUtils.mkdir_p("./tmp/view_components/") unless Dir.exist?("./tmp/view_components/")
