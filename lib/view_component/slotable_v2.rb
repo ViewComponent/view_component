@@ -131,6 +131,22 @@ module ViewComponent
         validate_plural_slot_name(slot_name)
         validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
 
+        # Define setter for singular names
+        # for example `renders_many :items` allows fetching all tabs with
+        # `component.tabs` and setting a tab with `component.tab`
+
+        define_method singular_name do |*args, &block|
+          if _warn_on_deprecated_slot_setter
+            ViewComponent::Deprecation.deprecation_warning(
+              "Setting a slot with `##{singular_name}`",
+              "use `#with_#{singular_name}` to set the slot instead"
+            )
+          end
+
+          set_slot(slot_name, nil, *args, &block)
+        end
+        ruby2_keywords(singular_name.to_sym) if respond_to?(:ruby2_keywords, true)
+
         define_method :"with_#{singular_name}" do |*args, &block|
           set_slot(slot_name, nil, *args, &block)
         end
@@ -142,8 +158,6 @@ module ViewComponent
           end
         end
 
-        # Instantiates and and adds multiple slots forwarding the first
-        # argument to each slot constructor
         define_method slot_name do |collection_args = nil, &block|
           get_slot(slot_name)
         end
