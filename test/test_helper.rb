@@ -42,7 +42,7 @@ require "capybara/cuprite"
 Capybara.register_driver(:cuprite) do |app|
   # Add the process_timeout option to prevent failures due to the browser
   # taking too long to start up.
-  Capybara::Cuprite::Driver.new(app, {process_timeout: 30, timeout: 30})
+  Capybara::Cuprite::Driver.new(app, {process_timeout: 60, timeout: 30})
 end
 
 # Reduce extra logs produced by puma booting up
