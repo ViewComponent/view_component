@@ -35,10 +35,7 @@ module ViewComponent
     #
     # @return [String]
     def rendered_component
-      ViewComponent::Deprecation.warn(
-        "`rendered_component` is deprecated and will be removed in v3.0.0. " \
-        "Use `page` instead."
-      )
+      ViewComponent::Deprecation.deprecation_warning("`rendered_component`", :"`page`")
 
       rendered_content
     end

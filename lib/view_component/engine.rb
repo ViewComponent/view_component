@@ -145,9 +145,9 @@ end
 unless defined?(ViewComponent::Base)
   require "view_component/deprecation"
 
-  ViewComponent::Deprecation.warn(
-    "This manually engine loading is deprecated and will be removed in v3.0.0. " \
-    'Remove `require "view_component/engine"`.'
+  ViewComponent::Deprecation.deprecation_warning(
+    "Manually loading the engine",
+    "remove `require \"view_component/engine\"`"
   )
 
   require "view_component"

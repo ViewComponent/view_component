@@ -10,9 +10,13 @@ nav_order: 5
 
 ## main
 
-* Add `with_rendered_component_path` for writing component system tests.
+* Add `with_rendered_component_path` helper for writing component system tests.
 
     *Edwin Mak*
+
+* Include gem name and deprecation horizon in every deprecation message.
+
+    *Jan Klimo*
 
 ## 2.78.0
 
