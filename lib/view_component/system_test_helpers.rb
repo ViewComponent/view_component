@@ -5,10 +5,9 @@ module ViewComponent
     include TestHelpers
 
     #
-    # Returns a block that can be used to visit the path of the inline rendered
-    # component.
-    # @param fragment [Nokogiri::Fragment] The fragment returned from `render_inline` on instance of a view component.
-    # @param layout [String] The layout to use for the inline rendered component.
+    # Returns a block that can be used to visit the path of the inline rendered component.
+    # @param fragment [Nokogiri::Fragment] The fragment returned from `render_inline`.
+    # @param layout [String] The (optional) layout to use.
     # @return [Proc] A block that can be used to visit the path of the inline rendered component.
     def with_rendered_component_path(fragment, **options, &block)
       layout = options[:layout] || false
@@ -28,8 +27,6 @@ module ViewComponent
       # Add './tmp/view_components/' directory if it doesn't exist to store the rendered component html
       FileUtils.mkdir_p("./tmp/view_components/") unless Dir.exist?("./tmp/view_components/")
 
-      # Write to temporary file to contain fully rendered component
-      # within a browser
       file = Tempfile.new(["rendered_#{fragment.class.name}", ".html"], "tmp/view_components/")
       begin
         file.write(html)

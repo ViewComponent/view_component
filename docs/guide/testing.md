@@ -234,9 +234,9 @@ To use component previews:
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
 ```
 
-## Testing Interactive Components
+## Component system tests
 
-Use `with_rendered_component_path` with `render_inline` in system tests to test interactive components:
+Use `with_rendered_component_path` with `render_inline` to system test components:
 
 ```rb
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
@@ -252,7 +252,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
 end
 ```
 
-For components that depend on JavaScript provided by a layout, provide the `layout` argument:
+For components that depend on a layout, provide the `layout` argument:
 
 ```rb
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
@@ -260,9 +260,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
     with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new), layout: 'application') do |path|
       visit(path)
 
-      assert(find("[data-hidden-field]", visible: false))
-      find("[data-button]", text: "Click Me To Reveal Something Cool").click
-      assert(find("[data-hidden-field]", visible: true))
+      # ...
     end
   end
 end
