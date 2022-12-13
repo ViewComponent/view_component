@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add missing documentation to use `with_rendered_component_path` with RSpec.
+
+    *Edwin Mak*
+
 ## 2.79.0
 
 * Add ability to pass explicit `preview_path` to preview generator.
