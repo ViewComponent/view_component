@@ -195,6 +195,7 @@ require "capybara/rspec"
 
 RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
+  config.include ViewComponent::SystemTestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
 end
 ```
@@ -232,4 +233,34 @@ To use component previews:
 ```ruby
 # config/application.rb
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+```
+
+## Component system tests
+
+Use `with_rendered_component_path` with `render_inline` to system test components:
+
+```rb
+class ViewComponentSystemTest < ViewComponent::SystemTestCase
+  def test_simple_js_interaction_in_browser_without_layout
+    with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)) do |path|
+      visit(path)
+
+      assert(find("[data-hidden-field]", visible: false))
+      find("[data-button]", text: "Click Me To Reveal Something Cool").click
+      assert(find("[data-hidden-field]", visible: true))
+    end
+  end
+end
+```
+
+For components that depend on a layout, provide the `layout` argument:
+
+```rb
+class ViewComponentSystemTest < ViewComponent::SystemTestCase
+  def test_simple_js_interaction_in_browser_with_layout
+    with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new), layout: 'application') do |path|
+      # ...
+    end
+  end
+end
 ```
