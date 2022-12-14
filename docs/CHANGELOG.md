@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Require Rails 5.2+ in gemspec and update documentation.
+
+    *Drew Bragg*
+
 * Add documentation for using `with_rendered_component_path` with RSpec.
 
     *Edwin Mak*

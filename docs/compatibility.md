@@ -8,9 +8,9 @@ nav_order: 6
 
 ## Ruby & Rails
 
-ViewComponent is [supported natively](https://edgeguides.rubyonrails.org/layouts_and_rendering.html#rendering-objects) in Rails 6.1, and compatible with Rails 5.0+ via an included [monkey patch](https://github.com/viewcomponent/view_component/blob/main/lib/view_component/render_monkey_patch.rb).
+ViewComponent is [supported natively](https://edgeguides.rubyonrails.org/layouts_and_rendering.html#rendering-objects) in Rails 6.1, and compatible with Rails 5.2+ via an included [monkey patch](https://github.com/viewcomponent/view_component/blob/main/lib/view_component/render_monkey_patch.rb).
 
-ViewComponent is tested for compatibility [with combinations of](https://github.com/viewcomponent/view_component/blob/22e3d4ccce70d8f32c7375e5a5ccc3f70b22a703/.github/workflows/ruby_on_rails.yml#L10-L11) Ruby v2.5+ and Rails v5+. Ruby 2.4 is likely compatible, but is no longer tested.
+ViewComponent is tested for compatibility [with combinations of](https://github.com/viewcomponent/view_component/blob/22e3d4ccce70d8f32c7375e5a5ccc3f70b22a703/.github/workflows/ruby_on_rails.yml#L10-L11) Ruby v2.5+ and Rails v5.2+. Ruby 2.4 is likely compatible, but is no longer tested.
 
 ## Template languages
 
