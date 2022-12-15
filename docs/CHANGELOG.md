@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Display Ruby 2.7 deprecation notice only once, when starting the application.
+
+    *Henrik Hauge Bjørnskov*
+
 * Require Rails 5.2+ in gemspec and update documentation.
 
     *Drew Bragg*

@@ -141,6 +141,10 @@ module ViewComponent
   end
 end
 
+if RUBY_VERSION < "2.7.0"
+  ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 2.7.0")
+end
+
 # :nocov:
 unless defined?(ViewComponent::Base)
   require "view_component/deprecation"
