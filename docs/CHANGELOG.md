@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Move Ruby 2.7 deprecation notice to engine.
+
+    *Henrik Hauge Bjørnskov*
+
 * Require Rails 5.2+ in gemspec and update documentation.
 
     *Drew Bragg*
