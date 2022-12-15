@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Move Ruby 2.7 deprecation notice to engine.
+* Display Ruby 2.7 deprecation notice only once, when starting the application.
 
     *Henrik Hauge Bjørnskov*
 
