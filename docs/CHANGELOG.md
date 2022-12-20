@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Move system test endpoint out of the unrelated previews controller
+* Move system test endpoint out of the unrelated previews controller.
 
     *Edwin Mak*
 
