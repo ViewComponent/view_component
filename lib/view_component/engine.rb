@@ -121,16 +121,18 @@ module ViewComponent
             internal: true
           )
 
-          if Rails.env.test?
-            get("_system_test_entrypoint", to: "#{preview_controller}#system_test_entrypoint")
-          end
-
           get(
             "#{options.preview_route}/*path",
             to: "#{preview_controller}#previews",
             as: :preview_view_component,
             internal: true
           )
+        end
+      end
+
+      if Rails.env.test?
+        app.routes.prepend do
+          get("_system_test_entrypoint", to: "view_components_system_test#system_test_entrypoint")
         end
       end
 
