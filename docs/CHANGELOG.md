@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Remove deprecated slots setter methods. Use `with_SLOT_NAME` instead.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
 
     *Joel Hawksley*
