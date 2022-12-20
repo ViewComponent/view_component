@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Move system test endpoint out of the unrelated previews controller.
+
+    *Edwin Mak*
+
 * Display Ruby 2.7 deprecation notice only once, when starting the application.
 
     *Henrik Hauge Bjørnskov*
