@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+## 3.0.0
+
+1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0! This release makes the following breaking changes, many of which have long been deprecated:
+
 * BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
 
     *Joel Hawksley*
