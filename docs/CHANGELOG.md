@@ -18,6 +18,10 @@ We're so grateful for all of the work of community members to get us to this rel
 
 This release makes the following breaking changes, many of which have long been deprecated:
 
+* BREAKING: Remove deprecated slots setter methods. Use `with_SLOT_NAME` instead.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
 
     *Joel Hawksley*
@@ -57,10 +61,23 @@ This release makes the following breaking changes, many of which have long been 
 * BREAKING: Change counter variable to start iterating from `0` instead of `1`.
 
     *Frank S*
+* Move system test endpoint out of the unrelated previews controller.
+
+    *Edwin Mak*
+
+* Display Ruby 2.7 deprecation notice only once, when starting the application.
+
+    *Henrik Hauge Bjørnskov*
 
 * Require Rails 5.2+ in gemspec and update documentation.
 
     *Drew Bragg*
+
+* Add documentation for using `with_rendered_component_path` with RSpec.
+
+    *Edwin Mak*
+
+## 2.79.0
 
 * Add ability to pass explicit `preview_path` to preview generator.
 

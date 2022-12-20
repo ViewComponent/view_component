@@ -116,10 +116,10 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_slim_with_many_slots
     render_inline(SlimRendersManyComponent.new) do |c|
-      c.slim_component(message: "Bar A") do
+      c.with_slim_component(message: "Bar A") do
         "Foo A "
       end
-      c.slim_component(message: "Bar B") do
+      c.with_slim_component(message: "Bar B") do
         "Foo B "
       end
     end
@@ -997,64 +997,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector(".nested", count: 4) do |node|
       assert "#{items[index]}, Hello helper method" == node.text
       index += 1
-    end
-  end
-
-  def test_deprecated_slot_setter_warning_stack_trace_singular
-    line_num = __LINE__ + 3 # offset because `c.item`, below, is the line that causes the deprecation warning
-    assert_deprecated(/with_item`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.item { "foo" }
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_warning_stack_trace_collection
-    line_num = __LINE__ + 3 # offset because `c.items`, below, is the line that causes the deprecation warning
-    assert_deprecated(/with_items`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.items([{foo: "bar"}])
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_warning_collection_singular
-    assert_deprecated(/with_item`/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.item { "foo" }
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_warning_collection
-    assert_deprecated(/with_items`/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.items([{foo: "bar"}])
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_warning_singular
-    assert_deprecated(/with_header`/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.header { "hi!" }
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_polymorphic_singular
-    assert_deprecated(/with_header_standard`/, ViewComponent::Deprecation) do
-      render_inline(PolymorphicSlotComponent.new) do |c|
-        c.header_standard { "hi!" }
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_polymorphic_collection
-    assert_deprecated(/with_item_foo`/, ViewComponent::Deprecation) do
-      render_inline(PolymorphicSlotComponent.new) do |c|
-        c.item_foo { "hi!" }
-      end
     end
   end
 
