@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Modify the `render_in_view_context` test helper to forward its args to the block.
+
+    *Cameron Dutro*
+
 ## 2.80.0
 
 * Move system test endpoint out of the unrelated previews controller.
