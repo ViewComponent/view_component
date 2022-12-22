@@ -61,6 +61,9 @@ This release makes the following breaking changes, many of which have long been 
 * BREAKING: Change counter variable to start iterating from `0` instead of `1`.
 
     *Frank S*
+
+## 2.80.0
+
 * Move system test endpoint out of the unrelated previews controller.
 
     *Edwin Mak*
