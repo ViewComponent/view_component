@@ -83,6 +83,18 @@ module ViewComponent
     _deprecated_generate_mattr_accessor :sidecar
     _deprecated_generate_mattr_accessor :stimulus_controller
 
+    # In order for translations to work in an initializer,
+    # ActionView requires @virtual_path to be set. To set it,
+    # we allocate the component, set @virtual_path, then
+    # call the component's initializer. This is either terrible,
+    # brilliant, or both.
+    def self.new(...)
+      precursor = self.allocate
+      precursor.instance_variable_set(:@virtual_path, virtual_path)
+      precursor.send(:initialize, ...)
+      precursor
+    end
+
     # Entrypoint for rendering components.
     #
     # - `view_context`: ActionView context from calling view
@@ -106,9 +118,6 @@ module ViewComponent
 
       # For content_for
       @view_flow ||= view_context.view_flow
-
-      # For i18n
-      @virtual_path ||= virtual_path
 
       # For template variants (+phone, +desktop, etc.)
       @__vc_variant ||= @lookup_context.variants.first

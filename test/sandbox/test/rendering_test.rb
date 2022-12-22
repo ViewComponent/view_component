@@ -462,6 +462,13 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("h2", text: I18n.t("translations_component.subtitle"))
   end
 
+  def test_renders_component_with_initializer_translations
+    render_inline(InitializerTranslationsComponent.new)
+
+    assert_text(I18n.t("initializer_translations_component.title"))
+    assert_text(I18n.t("initializer_translations_component.subtitle"))
+  end
+
   def test_renders_component_with_rb_in_its_name
     render_inline(EditorbComponent.new)
 

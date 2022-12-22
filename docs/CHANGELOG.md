@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add support for relative translations in initializer.
+
+    *Joel Hawksley*
+
 * Move system test endpoint out of the unrelated previews controller.
 
     *Edwin Mak*
