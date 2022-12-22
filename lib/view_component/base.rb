@@ -89,7 +89,7 @@ module ViewComponent
     # call the component's initializer. This is either terrible,
     # brilliant, or both.
     def self.new(...)
-      precursor = self.allocate
+      precursor = allocate
       precursor.instance_variable_set(:@virtual_path, virtual_path)
       precursor.send(:initialize, ...)
       precursor
