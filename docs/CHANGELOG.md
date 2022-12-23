@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix tests using `with_rendered_component_path` with custom layouts.
+
+    *Ian Hollander*
+
 ## 2.80.0
 
 * Move system test endpoint out of the unrelated previews controller.
