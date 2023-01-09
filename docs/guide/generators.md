@@ -97,7 +97,7 @@ bin/rails generate component Example title --stimulus
       invoke  test_unit
       create    test/components/example_component_test.rb
       invoke  stimulus
-      create    test/components/example_component_controller.js
+      create    app/components/example_component_controller.js
       invoke  erb
       create    app/components/example_component.html.erb
 ```
