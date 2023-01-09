@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 2.81.0
+
 * Fix typo in "Generate a Stimulus controller" documentation.
 
     *Ben Trewern*
