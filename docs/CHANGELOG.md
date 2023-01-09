@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix typo in "Generate a Stimulus controller" documentation.
+
+    *Ben Trewern*
+
 * Modify the `render_in_view_context` test helper to forward its args to the block.
 
     *Cameron Dutro*
