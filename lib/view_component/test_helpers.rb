@@ -91,7 +91,7 @@ module ViewComponent
       end
 
       previews_controller.request.params[:path] = "#{from.preview_name}/#{name}"
-      previews_controller.response = ActionDispatch::Response.new
+      previews_controller.set_response!(ActionDispatch::Response.new)
       result = previews_controller.previews
 
       @rendered_content = result

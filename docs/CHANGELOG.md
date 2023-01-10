@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Adjust the way response objects are set on the preview controller to work around a recent change in Rails main.
+
+    *Cameron Dutro*
+
 * Fix typo in "Generate a Stimulus controller" documentation.
 
     *Ben Trewern*
