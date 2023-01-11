@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Revert "Avoid loading ActionView::Base during initialization (#1528)"
+
+    *Jon Rohan*
+
 * Fix tests using `with_rendered_component_path` with custom layouts.
 
     *Ian Hollander*
