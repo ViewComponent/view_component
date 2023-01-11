@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 2.82.0
+
 * Revert "Avoid loading ActionView::Base during initialization (#1528)"
 
     *Jon Rohan*
