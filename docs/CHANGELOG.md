@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix tests using `with_rendered_component_path` with custom layouts.
+
+    *Ian Hollander*
+
 ## 2.81.0
 
 * Adjust the way response objects are set on the preview controller to work around a recent change in Rails main.
