@@ -62,6 +62,20 @@ This release makes the following breaking changes, many of which have long been 
 
     *Frank S*
 
+## 2.81.0
+
+* Adjust the way response objects are set on the preview controller to work around a recent change in Rails main.
+
+    *Cameron Dutro*
+
+* Fix typo in "Generate a Stimulus controller" documentation.
+
+    *Ben Trewern*
+
+* Modify the `render_in_view_context` test helper to forward its args to the block.
+
+    *Cameron Dutro*
+
 ## 2.80.0
 
 * Move system test endpoint out of the unrelated previews controller.

@@ -82,7 +82,7 @@ module ViewComponent
       end
 
       previews_controller.request.params[:path] = "#{from.preview_name}/#{name}"
-      previews_controller.response = ActionDispatch::Response.new
+      previews_controller.set_response!(ActionDispatch::Response.new)
       result = previews_controller.previews
 
       @rendered_content = result
@@ -90,21 +90,23 @@ module ViewComponent
       Nokogiri::HTML.fragment(@rendered_content)
     end
 
-    # Execute the given block in the view context. Internally sets `page` to be a
-    # `Capybara::Node::Simple`, allowing for Capybara assertions to be used:
+    # Execute the given block in the view context (using `instance_exec`).
+    # Internally sets `page` to be a `Capybara::Node::Simple`, allowing for
+    # Capybara assertions to be used. All arguments are forwarded to the block.
     #
     # ```ruby
-    # render_in_view_context do
-    #   render(MyComponent.new)
+    # render_in_view_context(arg1, arg2:) do |arg1, arg2:|
+    #   render(MyComponent.new(arg1, arg2))
     # end
     #
     # assert_text("Hello, World!")
     # ```
-    def render_in_view_context(&block)
+    def render_in_view_context(*args, &block)
       @page = nil
-      @rendered_content = controller.view_context.instance_exec(&block)
+      @rendered_content = controller.view_context.instance_exec(*args, &block)
       Nokogiri::HTML.fragment(@rendered_content)
     end
+    ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
 
     # @private
     def controller

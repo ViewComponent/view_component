@@ -15,6 +15,17 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
+  def test_render_in_view_context_forwards_arguments
+    @foo = "foo"
+    @bar = "bar"
+
+    render_in_view_context(@foo, bar: @bar) do |foo, bar:|
+      render(MyComponent.new) { foo + bar }
+    end
+
+    assert_text "hello,world!\nfoobar"
+  end
+
   def test_render_inline_returns_nokogiri_fragment
     assert_includes render_inline(MyComponent.new).css("div").to_html, "hello,world!"
   end
