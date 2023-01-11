@@ -10,6 +10,118 @@ nav_order: 5
 
 ## main
 
+* Fix tests using `with_rendered_component_path` with custom layouts.
+
+    *Ian Hollander*
+
+## 2.81.0
+
+* Adjust the way response objects are set on the preview controller to work around a recent change in Rails main.
+
+    *Cameron Dutro*
+
+* Fix typo in "Generate a Stimulus controller" documentation.
+
+    *Ben Trewern*
+
+* Modify the `render_in_view_context` test helper to forward its args to the block.
+
+    *Cameron Dutro*
+
+## 2.80.0
+
+* Move system test endpoint out of the unrelated previews controller.
+
+    *Edwin Mak*
+
+* Display Ruby 2.7 deprecation notice only once, when starting the application.
+
+    *Henrik Hauge Bjørnskov*
+
+* Require Rails 5.2+ in gemspec and update documentation.
+
+    *Drew Bragg*
+
+* Add documentation for using `with_rendered_component_path` with RSpec.
+
+    *Edwin Mak*
+
+## 2.79.0
+
+* Add ability to pass explicit `preview_path` to preview generator.
+
+    *Erinna Chen*
+
+* Add `with_rendered_component_path` helper for writing component system tests.
+
+    *Edwin Mak*
+
+* Include gem name and deprecation horizon in every deprecation message.
+
+    *Jan Klimo*
+
+## 2.78.0
+
+* Support variants with dots in their names.
+
+    *Javi Martín*
+
+## 2.77.0
+
+* Support variants with dashes in their names.
+
+    *Javi Martín*
+
+## 2.76.0
+
+* `Component.with_collection` supports components that accept splatted keyword arguments.
+
+    *Zee Spencer*
+
+* Remove `config.view_component.use_consistent_rendering_lifecycle` since it is no longer planned for 3.0.
+
+    *Blake Williams*
+
+* Prevent polymorphic slots from calculating `content` when setting a slot.
+
+    *Blake Williams*
+
+* Add ability to pass in the preview class to `render_preview`.
+
+    *Jon Rohan*
+
+* Fix issue causing PVC tests to fail in CI.
+
+    *Cameron Dutro*
+
+* Fix YARD docs build task.
+
+    *Hans Lemuet*
+
+* Add Startup Jobs to list of companies using ViewComponent.
+
+    *Marc Köhlbrugge*
+
+* Run PVC's accessibility tests in a single process to avoid resource contention in CI.
+
+    *Cameron Dutro*
+
+## 2.75.0
+
+* Avoid loading ActionView::Base during Rails initialization.
+
+    *Jonathan del Strother*
+
+<!-- vale off -->
+* Mention lambda slots rendering returned values lazily in the guide.
+
+    *Graham Rogers*
+<!-- vale on -->
+
+* Add "ViewComponent In The Wild" articles to resources.
+
+    *Alexander Baygeldin*
+
 ## 2.74.1
 
 * Add more users of ViewComponent to docs.
