@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Added simple example of a custom preview controller
+
+    *Graham Rogers*
+
 ## 2.82.0
 
 * Revert "Avoid loading ActionView::Base during initialization (#1528)"
