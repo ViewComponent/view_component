@@ -31,15 +31,6 @@ module ViewComponent
     # @private
     attr_reader :rendered_content
 
-    # Returns the result of a render_inline call.
-    #
-    # @return [String]
-    def rendered_component
-      ViewComponent::Deprecation.deprecation_warning("`rendered_component`", :"`page`")
-
-      rendered_content
-    end
-
     # Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
     # allowing for Capybara assertions to be used:
     #

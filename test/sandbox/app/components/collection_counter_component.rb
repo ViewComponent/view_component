@@ -6,6 +6,6 @@ class CollectionCounterComponent < ViewComponent::Base
   def initialize(item:, item_counter:)
     @item = item
     @counter = item_counter
-    @index = @counter - 1
+    @index = @counter
   end
 end

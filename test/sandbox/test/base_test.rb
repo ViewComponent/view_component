@@ -82,10 +82,10 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     skip unless Rails::VERSION::MAJOR >= 7
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
-      rendered_component = Array.new(2) {
+      rendered_output = Array.new(2) {
         DisplayInlineComponent.new.render_in(ActionController::Base.new.view_context)
       }.join
-      assert_includes rendered_component, "<span>Hello, world!</span><span>Hello, world!</span>"
+      assert_includes rendered_output, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   ensure
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7

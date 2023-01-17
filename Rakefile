@@ -22,11 +22,6 @@ task :partial_benchmark do
   ruby "./performance/partial_benchmark.rb"
 end
 
-desc "Runs benchmarks against component content area/ slot implementations"
-task :slotable_benchmark do
-  ruby "./performance/slotable_benchmark.rb"
-end
-
 task :translatable_benchmark do
   ruby "./performance/translatable_benchmark.rb"
 end

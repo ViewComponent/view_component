@@ -143,20 +143,3 @@ module ViewComponent
     end
   end
 end
-
-if RUBY_VERSION < "2.7.0"
-  ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 2.7.0")
-end
-
-# :nocov:
-unless defined?(ViewComponent::Base)
-  require "view_component/deprecation"
-
-  ViewComponent::Deprecation.deprecation_warning(
-    "Manually loading the engine",
-    "remove `require \"view_component/engine\"`"
-  )
-
-  require "view_component"
-end
-# :nocov:

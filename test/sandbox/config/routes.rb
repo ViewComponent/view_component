@@ -2,10 +2,8 @@
 
 Sandbox::Application.routes.draw do
   root to: "integration_examples#index"
-  get :content_areas, to: "integration_examples#content_areas"
   get :slots, to: "integration_examples#slots"
   get :empty_slot, to: "integration_examples#empty_slot"
-  get :empty_slot_v2_with_slim, to: "integration_examples#empty_slot_v2_with_slim"
   get :partial, to: "integration_examples#partial"
   get :content, to: "integration_examples#content"
   get :variants, to: "integration_examples#variants"

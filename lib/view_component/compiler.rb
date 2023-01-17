@@ -46,12 +46,6 @@ module ViewComponent
         return false
       end
 
-      if subclass_instance_methods.include?(:before_render_check)
-        ViewComponent::Deprecation.deprecation_warning(
-          "`before_render_check`", :"`before_render`"
-        )
-      end
-
       if raise_errors
         component_class.validate_initialization_parameters!
         component_class.validate_collection_parameter!
