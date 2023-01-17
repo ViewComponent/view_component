@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-## 3.0.0
+## 3.0.0.rc1
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
 
@@ -61,6 +61,8 @@ This release makes the following breaking changes, many of which have long been 
 * BREAKING: Change counter variable to start iterating from `0` instead of `1`.
 
     *Frank S*
+
+Run into an issue with this release? Let us know here: https://github.com/ViewComponent/view_component/issues/1629.
 
 ## 2.82.0
 
