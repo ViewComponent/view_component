@@ -44,4 +44,13 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
       find(".title", text: "This is my title!")
     end
   end
+
+  def test_layout_is_not_nested
+    with_rendered_component_path(render_inline(MyComponent.new), layout: "application") do |path|
+      visit path
+
+      assert find("div", text: "hello,world!")
+      assert_no_selector "body > title", visible: false
+    end
+  end
 end

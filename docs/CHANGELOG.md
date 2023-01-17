@@ -62,6 +62,16 @@ This release makes the following breaking changes, many of which have long been 
 
     *Frank S*
 
+## 2.82.0
+
+* Revert "Avoid loading ActionView::Base during initialization (#1528)"
+
+    *Jon Rohan*
+
+* Fix tests using `with_rendered_component_path` with custom layouts.
+
+    *Ian Hollander*
+
 ## 2.81.0
 
 * Adjust the way response objects are set on the preview controller to work around a recent change in Rails main.
