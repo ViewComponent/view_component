@@ -62,7 +62,7 @@ This release makes the following breaking changes, many of which have long been 
 
     *Frank S*
 
-Run into an issue with this release? Let us know here: https://github.com/ViewComponent/view_component/issues/1629.
+Run into an issue with this release? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
 
 ## 2.82.0
 
