@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Added simple example of a custom preview controller
+* Added example of a custom preview controller.
 
     *Graham Rogers*
 
