@@ -357,11 +357,13 @@ class RenderingTest < ViewComponent::TestCase
     assert_kind_of Integer, ::ViewComponent::VERSION::MINOR
     refute_nil ::ViewComponent::VERSION::PATCH
     assert_kind_of Integer, ::ViewComponent::VERSION::PATCH
+    refute_nil ::ViewComponent::VERSION::PRE
 
     version_string = [
       ::ViewComponent::VERSION::MAJOR,
       ::ViewComponent::VERSION::MINOR,
-      ::ViewComponent::VERSION::PATCH
+      ::ViewComponent::VERSION::PATCH,
+      ::ViewComponent::VERSION::PRE
     ].join(".")
     assert_equal version_string, ::ViewComponent::VERSION::STRING
   end
