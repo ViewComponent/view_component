@@ -19,18 +19,6 @@ module ViewComponent
       assert_equal @config.preview_paths, ["#{Rails.root}/test/components/previews"]
     end
 
-    def test_preview_path_alias
-      @config.preview_path << "some/new/path"
-      assert_equal @config.preview_paths, @config.preview_path
-    end
-
-    def test_preview_path_setter_alias
-      old_value = @config.preview_path
-      @config.preview_path = "some/new/path"
-      assert_equal @config.preview_path, ["some/new/path"]
-      @config.preview_path = old_value
-    end
-
     def test_all_methods_are_documented
       require "yard"
       require "rake"

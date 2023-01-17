@@ -35,7 +35,7 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
 
   def test_components_with_slots
     with_rendered_component_path(render_inline(SlotsV2Component.new) do |component|
-      component.title do
+      component.with_title do
         "This is my title!"
       end
     end) do |path|

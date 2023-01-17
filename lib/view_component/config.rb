@@ -126,9 +126,6 @@ module ViewComponent
       # The locations in which component previews will be looked up.
       # Defaults to `['test/component/previews']` relative to your Rails root.
 
-      # @!attribute preview_path
-      # @deprecated Use #preview_paths instead. Will be removed in v3.0.0.
-
       # @!attribute test_controller
       # @return [String]
       # The controller used for testing components.
@@ -156,15 +153,6 @@ module ViewComponent
 
     def initialize
       @config = self.class.defaults
-    end
-
-    def preview_path
-      preview_paths
-    end
-
-    def preview_path=(new_value)
-      ViewComponent::Deprecation.deprecation_warning("`preview_path`", :"`preview_paths`")
-      self.preview_paths = Array.wrap(new_value)
     end
 
     delegate_missing_to :config

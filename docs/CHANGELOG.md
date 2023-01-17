@@ -14,6 +14,60 @@ nav_order: 5
 
     *Graham Rogers*
 
+## 3.0.0.rc1
+
+1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
+
+We're so grateful for all of the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
+
+This release makes the following breaking changes, many of which have long been deprecated:
+
+* BREAKING: Remove deprecated slots setter methods. Use `with_SLOT_NAME` instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `content_areas` feature. Use Slots instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated support for loading ViewComponent engine manually. Make sure `require "view_component/engine"` is removed from `Gemfile`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `generate_*` methods. Use `generate.*` instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `with_variant` method.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `rendered_component` in favor of `rendered_content`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `config.preview_path` in favor of `config.preview_paths`.
+
+    *Joel Hawksley*
+
+* BREAKING: Support Ruby 2.7+ instead of 2.4+
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `before_render_check`.
+
+    *Joel Hawksley*
+
+* BREAKING: Change counter variable to start iterating from `0` instead of `1`.
+
+    *Frank S*
+
+Run into an issue with this release? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
 ## 2.82.0
 
 * Revert "Avoid loading ActionView::Base during initialization (#1528)"

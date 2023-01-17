@@ -1,5 +1,5 @@
-<%= render TitleComponent.new do |c| %>
-  <% c.body do %>
+<%= render TitleComponent.new do |component| %>
+  <% component.with_body do %>
     <%= @title %>
   <% end %>
 <% end %>
