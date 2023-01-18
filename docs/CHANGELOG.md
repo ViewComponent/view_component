@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Added example of a custom preview controller.
+
+    *Graham Rogers*
+
 ## 3.0.0.rc1
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!

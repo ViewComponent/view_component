@@ -193,6 +193,14 @@ Extend previews to add authentication, authorization, before actions, etc. using
 config.view_component.preview_controller = "MyPreviewController"
 ```
 
+Then include `PreviewActions` in the controller:
+
+```ruby
+class MyPreviewController < ActionController::Base
+  include ViewComponent::PreviewActions
+end
+```
+
 ## Enabling previews
 
 Previews are enabled by default in test and development environments. To enable or disable previews, use the `show_previews` option:
