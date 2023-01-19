@@ -13,6 +13,10 @@ nav_order: 5
 * Added example of a custom preview controller.
 
     *Graham Rogers*
+    
+* Add Krystal to list of companies using ViewComponent.
+
+     *Matt Bearman*
 
 ## 3.0.0.rc1
 
