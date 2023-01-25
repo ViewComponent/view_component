@@ -83,7 +83,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
     assert_selector(".card.mt-4")
 
-    assert_selector(".title", text: "This is my title!")
+    assert_selector(".title", text: "title override")
 
     assert_selector(".subtitle", text: "This is my subtitle!")
 
@@ -125,7 +125,7 @@ class SlotsV2sTest < ViewComponent::TestCase
   end
 
   def test_sub_component_overrides_slot
-    render_inline(SlotsV2Component.new)
+    render_inline(SlotsV2Component.new.with_title)
 
     assert_selector(".card", text: "title override" )
   end
