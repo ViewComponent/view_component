@@ -124,13 +124,10 @@ class SlotsV2sTest < ViewComponent::TestCase
     end
   end
 
-  def test_sub_component_raise_with_duplicate_slot_name
-    exception =
-      assert_raises ArgumentError do
-        SlotsV2Component.renders_one :title
-      end
+  def test_sub_component_overrides_slot
+    render_inline(SlotsV2Component.new)
 
-    assert_includes exception.message, "declares the title slot multiple times"
+    assert_selector(".card", text: "title override" )
   end
 
   def test_sub_component_with_positional_args
