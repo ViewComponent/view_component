@@ -167,7 +167,11 @@ module ViewComponent
       # Clone slot configuration into child class
       # see #test_slots_pollution
       def inherited(child)
-        child.registered_slots = registered_slots.clone
+        cloned_slots = registered_slots.clone
+        cloned_slots.keys.each do |slot_name|
+          cloned_slots[slot_name][:_inherited] = true
+        end
+        child.registered_slots = cloned_slots
         super
       end
 
@@ -239,7 +243,7 @@ module ViewComponent
       end
 
       def raise_if_slot_registered(slot_name)
-        if registered_slots.key?(slot_name)
+        if registered_slots.key?(slot_name) && !registered_slots.dig(slot_name, :_inherited)
           # TODO remove? This breaks overriding slots when slots are inherited
           raise ArgumentError.new(
             "#{self} declares the #{slot_name} slot multiple times.\n\n" \
