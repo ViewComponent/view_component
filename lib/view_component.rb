@@ -12,6 +12,8 @@ module ViewComponent
   autoload :ComponentError
   autoload :Config
   autoload :Deprecation
+  autoload :FormBuilder
+  autoload :FormBuilderMixin
   autoload :Instrumentation
   autoload :Preview
   autoload :PreviewTemplateError

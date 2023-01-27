@@ -45,7 +45,7 @@ module ViewComponent
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
     self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
 
-    attr_accessor :__vc_original_view_context
+    attr_accessor :__vc_original_view_context, :__vc_render_stack
 
     # Components render in their own view context. Helpers and other functionality
     # require a reference to the original Rails view context, an instance of
@@ -69,10 +69,13 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, &block)
+      self.__vc_original_view_context ||= view_context
+      self.__vc_render_stack = view_context.respond_to?(:__vc_render_stack) ? view_context.__vc_render_stack || [] : []
+      self.__vc_render_stack.push(self)
+
       self.class.compile(raise_errors: true)
 
       @view_context = view_context
-      self.__vc_original_view_context ||= view_context
 
       @output_buffer = ActionView::OutputBuffer.new
 
@@ -112,6 +115,7 @@ module ViewComponent
         ""
       end
     ensure
+      self.__vc_render_stack.pop
       @current_template = old_current_template
     end
 
@@ -243,6 +247,18 @@ module ViewComponent
     # @return [ActionDispatch::Request]
     def request
       @request ||= controller.request if controller.respond_to?(:request)
+    end
+
+    # A wrapper around Rails' `form_with` helper that uses a custom form builder to maximize
+    # compatibility. See the Rails docs for more information.
+    def form_with(*args, builder: nil, **kwargs, &block)
+      return super(*args, builder: builder || ViewComponent::FormBuilder, **kwargs, &block)
+    end
+
+    # A wrapper around Rails' `form_for` helper that uses a custom form builder to maximize
+    # compatibility. See the Rails docs for more information.
+    def form_for(*args, builder: nil, **kwargs, &block)
+      return super(*args, builder: builder || ViewComponent::FormBuilder, **kwargs, &block)
     end
 
     private
