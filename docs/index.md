@@ -222,6 +222,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Framework](https://frame.work/)
 * [FreeAgent](https://www.freeagent.com)
 * [G2](https://www.g2.com/) (200+ components)
+* [Getblock](https://getblock.io/) 
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
@@ -244,7 +245,6 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Within3](https://www.within3.com/)
 * [Wrapbook](https://wrapbook.com/)
 * [Yobbers](https://www.yobbers.com/)
-* [Getblock](https://getblock.io/)
 
 Using ViewComponent? [Send a pull request](https://github.com/viewcomponent/view_component/edit/main/docs/index.md) to update this list!
 You can also check out [how various projects use ViewComponent](https://github.com/viewcomponent/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
