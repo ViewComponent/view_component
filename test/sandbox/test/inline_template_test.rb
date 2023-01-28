@@ -57,6 +57,18 @@ class InlineErbTest < ViewComponent::TestCase
   class InheritedInlineSlimComponent < InlineSlimComponent
   end
 
+  class SlotsInlineComponent < ViewComponent::Base
+    include ViewComponent::InlineTemplate
+
+    renders_one :greeting, InlineErbComponent
+
+    erb_template <<~ERB
+      <div class="greeting-container">
+        <%= greeting %>
+      </div>
+    ERB
+  end
+
   test "renders inline templates" do
     render_inline(InlineErbComponent.new("Fox Mulder"))
 
@@ -110,5 +122,13 @@ class InlineErbTest < ViewComponent::TestCase
         erb_template "omg", "wow"
       end
     end
+  end
+
+  test "works with slots" do
+    render_inline SlotsInlineComponent.new do |c|
+      c.with_greeting("Fox Mulder")
+    end
+
+    assert_selector(".greeting-container h1", text: "Hello, Fox Mulder!")
   end
 end
