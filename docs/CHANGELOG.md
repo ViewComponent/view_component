@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Improve documentation of known incompatibilities with Rails form helpers.
+
+    *Tobias L. Maier*
+
 * Add Mon Ami to list of companies using ViewComponent.
 
     *Ethan Lee-Tyson*
