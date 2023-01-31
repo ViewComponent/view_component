@@ -8,7 +8,7 @@ module ViewComponent
       include Capybara::Minitest::Assertions
 
       def page
-        @page ||= Capybara::Node::Simple.new(rendered_content)
+        @page ||= Capybara::Node::Simple.new(_view_component_private.rendered_content)
       end
 
       def refute_component_rendered
@@ -28,9 +28,6 @@ module ViewComponent
       # :nocov:
     end
 
-    # @private
-    attr_reader :rendered_content
-
     # Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
     # allowing for Capybara assertions to be used:
     #
@@ -43,14 +40,14 @@ module ViewComponent
     # @return [Nokogiri::HTML]
     def render_inline(component, **args, &block)
       @page = nil
-      @rendered_content =
+      _view_component_private.rendered_content =
         if Rails.version.to_f >= 6.1
-          controller.view_context.render(component, args, &block)
+          _view_component_private.controller.view_context.render(component, args, &block)
         else
-          controller.view_context.render_component(component, &block)
+          _view_component_private.controller.view_context.render_component(component, &block)
         end
 
-      Nokogiri::HTML.fragment(@rendered_content)
+      Nokogiri::HTML.fragment(_view_component_private.rendered_content)
     end
 
     # Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
@@ -72,8 +69,10 @@ module ViewComponent
     # @param from [ViewComponent::Preview] The class of the preview to be rendered.
     # @param params [Hash] Parameters to be passed to the preview.
     # @return [Nokogiri::HTML]
-    def render_preview(name, from: preview_class, params: {})
-      previews_controller = build_controller(Rails.application.config.view_component.preview_controller.constantize)
+    def render_preview(name, from: _view_component_private.preview_class(self), params: {})
+      previews_controller = _view_component_private.build_controller(
+        Rails.application.config.view_component.preview_controller.constantize
+      )
 
       # From what I can tell, it's not possible to overwrite all request parameters
       # at once, so we set them individually here.
@@ -85,9 +84,9 @@ module ViewComponent
       previews_controller.set_response!(ActionDispatch::Response.new)
       result = previews_controller.previews
 
-      @rendered_content = result
+      _view_component_private.rendered_content = result
 
-      Nokogiri::HTML.fragment(@rendered_content)
+      Nokogiri::HTML.fragment(_view_component_private.rendered_content)
     end
 
     # Execute the given block in the view context (using `instance_exec`).
@@ -103,25 +102,12 @@ module ViewComponent
     # ```
     def render_in_view_context(*args, &block)
       @page = nil
-      @rendered_content = controller.view_context.instance_exec(*args, &block)
-      Nokogiri::HTML.fragment(@rendered_content)
+      _view_component_private.rendered_content = _view_component_private
+        .controller
+        .view_context.instance_exec(*args, &block)
+      Nokogiri::HTML.fragment(_view_component_private.rendered_content)
     end
     ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
-
-    # @private
-    def controller
-      @controller ||= build_controller(Base.test_controller.constantize)
-    end
-
-    # @private
-    def request
-      @request ||=
-        begin
-          request = ActionDispatch::TestRequest.create
-          request.session = ActionController::TestSession.new
-          request
-        end
-    end
 
     # Set the Action Pack request variant for the given block:
     #
@@ -133,12 +119,12 @@ module ViewComponent
     #
     # @param variant [Symbol] The variant to be set for the provided block.
     def with_variant(variant)
-      old_variants = controller.view_context.lookup_context.variants
+      old_variants = _view_component_private.controller.view_context.lookup_context.variants
 
-      controller.view_context.lookup_context.variants = variant
+      _view_component_private.controller.view_context.lookup_context.variants = variant
       yield
     ensure
-      controller.view_context.lookup_context.variants = old_variants
+      _view_component_private.controller.view_context.lookup_context.variants = old_variants
     end
 
     # Set the controller to be used while executing the given block,
@@ -152,12 +138,12 @@ module ViewComponent
     #
     # @param klass [ActionController::Base] The controller to be used.
     def with_controller_class(klass)
-      old_controller = defined?(@controller) && @controller
+      old_controller = _view_component_private.cached_controller
 
-      @controller = build_controller(klass)
+      _view_component_private.controller = _view_component_private.build_controller(klass)
       yield
     ensure
-      @controller = old_controller
+      _view_component_private.controller = old_controller
     end
 
     # Set the URL of the current request (such as when using request-dependent path helpers):
@@ -170,11 +156,12 @@ module ViewComponent
     #
     # @param path [String] The path to set for the current request.
     def with_request_url(path)
+      request = _view_component_private.request
       old_request_path_info = request.path_info
       old_request_path_parameters = request.path_parameters
       old_request_query_parameters = request.query_parameters
       old_request_query_string = request.query_string
-      old_controller = defined?(@controller) && @controller
+      old_controller = _view_component_private.cached_controller
 
       path, query = path.split("?", 2)
       request.path_info = path
@@ -187,27 +174,57 @@ module ViewComponent
       request.path_parameters = old_request_path_parameters
       request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
       request.set_header(Rack::QUERY_STRING, old_request_query_string)
-      @controller = old_controller
-    end
-
-    # @private
-    def build_controller(klass)
-      klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)
+      _view_component_private.controller = old_controller
     end
 
     private
 
-    def preview_class
-      result = if respond_to?(:described_class)
-        raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
+    # All the private API is stored in this object. Keeping everything enclosed
+    # inside an object reduces the number of methods that will be added to the
+    # class this module is included in. Reducing the API surface reduces the
+    # risk of the user of this module to define methods with conflicting names.
+    # Making the method name ugly on purpose also reduces the risk of
+    # conflicting names. Finally, using an anonymous class also reduces the risk
+    # of conflicting names and reduces the API surface.
+    def _view_component_private
+      @_view_component_private ||= Class.new do
+        attr_accessor :rendered_content
+        attr_writer :controller
 
-        "#{described_class}Preview"
-      else
-        self.class.name.gsub("Test", "Preview")
-      end
-      result = result.constantize
-    rescue NameError
-      raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
+        def controller
+          @controller ||= build_controller(Base.test_controller.constantize)
+        end
+
+        def cached_controller
+          defined?(@controller) && @controller
+        end
+
+        def request
+          @request ||=
+            begin
+              request = ActionDispatch::TestRequest.create
+              request.session = ActionController::TestSession.new
+              request
+            end
+        end
+
+        def build_controller(klass)
+          klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)
+        end
+
+        def preview_class(context)
+          result = if context.respond_to?(:described_class)
+            raise "`render_preview` expected a described_class, but it is nil." if context.described_class.nil?
+
+            "#{context.described_class}Preview"
+          else
+            context.class.name.gsub("Test", "Preview")
+          end
+          result = result.constantize
+        rescue NameError
+          raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
+        end
+      end.new
     end
   end
 end

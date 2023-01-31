@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fixed conflict with private API in TestHelpers ([#1646](https://github.com/ViewComponent/view_component/pull/1646))
+
+    *Jacob Carlborg*
+
 * Added example of a custom preview controller.
 
     *Graham Rogers*

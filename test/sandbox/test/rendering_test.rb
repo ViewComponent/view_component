@@ -33,7 +33,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_render_inline_sets_rendered_content
     render_inline(MyComponent.new)
 
-    assert_includes rendered_content, "hello,world!"
+    assert_includes _view_component_private.rendered_content, "hello,world!"
   end
 
   def test_child_component
@@ -408,7 +408,7 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_text("Rendered")
 
-    controller.view_context.cookies[:shown] = true
+    _view_component_private.controller.view_context.cookies[:shown] = true
 
     render_inline(RenderCheckComponent.new)
 
@@ -854,7 +854,7 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products" do
-      assert_equal "/products", request.path
+      assert_equal "/products", _view_component_private.request.path
     end
   end
 
@@ -875,13 +875,13 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
-      assert_equal "/products", request.path
-      assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
-      assert_equal "/products?mykey=myvalue&otherkey=othervalue", request.fullpath
+      assert_equal "/products", _view_component_private.request.path
+      assert_equal "mykey=myvalue&otherkey=othervalue", _view_component_private.request.query_string
+      assert_equal "/products?mykey=myvalue&otherkey=othervalue", _view_component_private.request.fullpath
     end
 
     with_request_url "/products?mykey[mynestedkey]=myvalue" do
-      assert_equal({"mynestedkey" => "myvalue"}, request.parameters["mykey"])
+      assert_equal({"mynestedkey" => "myvalue"}, _view_component_private.request.parameters["mykey"])
     end
   end
 
@@ -984,7 +984,7 @@ class RenderingTest < ViewComponent::TestCase
       render_inline(TrailingWhitespaceComponent.new)
     end
 
-    refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
+    refute _view_component_private.rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
   end
 
   def test_renders_objects_in_component_view_context
