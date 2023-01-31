@@ -18,8 +18,8 @@ Note: For the same functionality as `turbo_frame_tag(my_model)`, use `tag.turbo_
 
 ViewComponent [isn't compatible](https://github.com/viewcomponent/view_component/issues/241) with `form_for` helpers by default.
 
-This means that it isn't supported to pass a form object to a view component.
-It won't render as expected. Some content will be rendered twice.
+Passing a form object reference (usually `f`) to a view component works for simple cases, like `f.text_field :name`.
+Content will be ill-ordered or duplicated in complex cases (such as passing blocks to form helpers or when nesting components).
 
 Consider following options:
 
