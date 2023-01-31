@@ -25,11 +25,11 @@ Consider following options:
 
 - Render a form end-to-end within one view component
 - Render a [classical view partial](https://guides.rubyonrails.org/layouts_and_rendering.html#using-partials) within the view component, which includes the form
-- Use [FormBuilder](https://guides.rubyonrails.org/form_helpers.html#customizing-form-builders) to create reusable form components.
+- Use `[FormBuilder](https://guides.rubyonrails.org/form_helpers.html#customizing-form-builders)` to create reusable form components.
   Note: There are multiple approaches how to implement a FormBuilder:
   - Classic approach (without ViewComponent)
-  - Using a lightweight implementation of ViewComponent (for example, [`ActsAsComponent`](https://github.com/primer/view_components/blob/main/lib/primer/forms/acts_as_component.rb) at [Primer ViewComponents](https://github.com/primer/view_components))
   - Using ViewComponent (for example, [view_component-form gem](https://github.com/pantographe/view_component-form))
+  - Using a lightweight implementation of ViewComponent. For example, [Primer ViewComponents](https://github.com/primer/view_components) implemented with [`ActsAsComponent`](https://github.com/primer/view_components/blob/main/lib/primer/forms/acts_as_component.rb) a lightweight version, which they use in the context of `FormBuilder`.
 
 ## Inconsistent controller rendering behavior between Rails versions
 
