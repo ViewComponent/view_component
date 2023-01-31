@@ -6,6 +6,7 @@ require "active_support/dependencies/autoload"
 module ViewComponent
   extend ActiveSupport::Autoload
 
+  autoload :ActionViewFormHelperCompatibility
   autoload :Base
   autoload :Compiler
   autoload :CompileCache
@@ -14,6 +15,7 @@ module ViewComponent
   autoload :Deprecation
   autoload :FormBuilder
   autoload :FormBuilderMixin
+  autoload :FormHelperCompatibility
   autoload :Instrumentation
   autoload :Preview
   autoload :PreviewTemplateError

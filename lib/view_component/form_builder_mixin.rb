@@ -2,7 +2,7 @@
 
 module ViewComponent
   module FormBuilderMixin
-    def initialize(...)
+    def initialize(*args)
       super
 
       @render_stack = @template.__vc_render_stack
