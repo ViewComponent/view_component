@@ -2,23 +2,24 @@
 
 module ViewComponent
   module CaptureCompatibility
-    def capture(*args, &block)
-      value = nil
-      block_context = block.binding.receiver
 
-      buffer = if block_context.respond_to?(:render_in) && block_context.respond_to?(:with_output_buffer)
-        block_context.with_output_buffer { value = yield(*args) }
-      else
-        with_output_buffer { value = yield(*args) }
+    def self.included(base)
+      base.class_eval do
+        alias_method :original_capture, :capture
       end
 
-      case string = buffer.presence || value
-      when ActionView::OutputBuffer
-        string.to_s
-      when ActiveSupport::SafeBuffer
-        string
-      when String
-        ERB::Util.html_escape(string)
+      base.prepend(Methods)
+    end
+
+    module Methods
+      def capture(*args, &block)
+        block_context = block.binding.receiver
+
+        if block_context.respond_to?(:render_in) && block_context.respond_to?(:with_output_buffer)
+          block_context.original_capture(*args, &block)
+        else
+          original_capture(*args, &block)
+        end
       end
     end
   end

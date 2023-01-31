@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class FormForComponent < ViewComponent::Base
-  prepend ViewComponent::CaptureCompatibility
+  include ViewComponent::CaptureCompatibility
 end
