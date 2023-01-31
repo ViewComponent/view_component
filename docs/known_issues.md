@@ -14,7 +14,7 @@ As a workaround, use `tag.turbo_frame` instead of `turbo_frame_tag`.
 
 Note: For the same functionality as `turbo_frame_tag(my_model)`, use `tag.turbo_frame(id: dom_id(my_model))`.
 
-## `form_for` compatibility
+## Compatibility with Rails form helpers
 
 ViewComponent [isn't compatible](https://github.com/viewcomponent/view_component/issues/241) with `form_for` helpers by default.
 
