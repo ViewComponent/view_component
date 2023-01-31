@@ -31,11 +31,7 @@ Consider following options:
   - Using ViewComponent (for example, [view_component-form gem](https://github.com/pantographe/view_component-form))
   - Using a lightweight implementation of ViewComponent. For example, [Primer ViewComponents](https://github.com/primer/view_components) implemented with [`ActsAsComponent`](https://github.com/primer/view_components/blob/main/lib/primer/forms/acts_as_component.rb) a lightweight version, which they use in the context of `FormBuilder`.
 
-## Inconsistent controller rendering behavior between Rails versions
-
-In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout.
-
-## Forms don't use the default form builder
+## Forms don't use the default `FormBuilder`
 
 Calls to form helpers such as `form_with` in ViewComponents [don't use the default form builder](https://github.com/viewcomponent/view_component/pull/1090#issue-753331927). This is by design, as it allows global state to change the rendered output of a component. Instead, consider passing a form builder into form helpers via the `builder` argument:
 
@@ -44,3 +40,7 @@ Calls to form helpers such as `form_with` in ViewComponents [don't use the defau
   <%= f.text_field :name %>
 <% end %>
 ```
+
+## Inconsistent controller rendering behavior between Rails versions
+
+In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout.
