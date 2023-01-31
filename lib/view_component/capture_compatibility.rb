@@ -12,8 +12,13 @@ module ViewComponent
         with_output_buffer { value = yield(*args) }
       end
 
-      if (string = buffer.presence || value) && string.is_a?(String)
-        ERB::Util.html_escape string
+      case string = buffer.presence || value
+      when OutputBuffer
+        string.to_s
+      when ActiveSupport::SafeBuffer
+        string
+      when String
+        ERB::Util.html_escape(string)
       end
     end
   end
