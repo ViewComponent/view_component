@@ -13,7 +13,7 @@ module ViewComponent
       end
 
       case string = buffer.presence || value
-      when OutputBuffer
+      when ActionView::OutputBuffer
         string.to_s
       when ActiveSupport::SafeBuffer
         string
