@@ -245,20 +245,38 @@ module ViewComponent
       @request ||= controller.request if controller.respond_to?(:request)
     end
 
-    private
-
-    attr_reader :view_context
-
+    # The content passed to the component instance as a block.
+    #
+    # @return [String]
     def content
       @__vc_content_evaluated = true
       return @__vc_content if defined?(@__vc_content)
 
       @__vc_content =
-        if @view_context && @__vc_render_in_block
+        if __vc_render_in_block_provided?
           view_context.capture(self, &@__vc_render_in_block)
-        elsif defined?(@__vc_content_set_by_with_content)
+        elsif __vc_content_set_by_with_content_defined?
           @__vc_content_set_by_with_content
         end
+    end
+
+    # Whether `content` has been passed to the component.
+    #
+    # @return [Boolean]
+    def content?
+      __vc_render_in_block_provided? || __vc_content_set_by_with_content_defined?
+    end
+
+    private
+
+    attr_reader :view_context
+
+    def __vc_render_in_block_provided?
+      @view_context && @__vc_render_in_block
+    end
+
+    def __vc_content_set_by_with_content_defined?
+      defined?(@__vc_content_set_by_with_content)
     end
 
     def content_evaluated?

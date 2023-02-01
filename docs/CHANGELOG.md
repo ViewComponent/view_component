@@ -14,6 +14,10 @@ nav_order: 5
 
     *Blake Williams*
 
+* Add `#content?` method that indicates if content has been passed to component.
+
+    *Joel Hawksley*
+
 * Added example of a custom preview controller.
 
     *Graham Rogers*
