@@ -260,6 +260,15 @@ module ViewComponent
         end
     end
 
+    # Whether `content` has been passed to the component.
+    #
+    # @return [Boolean]
+    def content?
+      content unless content_evaluated? # ensure content is loaded
+
+      @__vc_content.present?
+    end
+
     private
 
     attr_reader :view_context
