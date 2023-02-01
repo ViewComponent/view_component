@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `capture_compatibility_patch_enabled` configuration option to enable an experimental patch that resolves rendering issues related to forms, capture, turbo frames, and more.
+
+    *Blake Williams*
+
 * Added example of a custom preview controller.
 
     *Graham Rogers*
