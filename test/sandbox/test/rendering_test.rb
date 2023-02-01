@@ -1038,4 +1038,16 @@ class RenderingTest < ViewComponent::TestCase
       end
     end
   end
+
+  def test_content_predicate_false
+    render_inline(ContentPredicateComponent.new)
+
+    assert_text("Default")
+  end
+
+  def test_content_predicate_true
+    render_inline(ContentPredicateComponent.new.with_content("foo"))
+
+    assert_text("foo")
+  end
 end
