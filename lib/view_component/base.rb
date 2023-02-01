@@ -245,10 +245,9 @@ module ViewComponent
       @request ||= controller.request if controller.respond_to?(:request)
     end
 
-    private
-
-    attr_reader :view_context
-
+    # The content passed to the component instance as a block.
+    #
+    # @return [String]
     def content
       @__vc_content_evaluated = true
       return @__vc_content if defined?(@__vc_content)
@@ -260,6 +259,10 @@ module ViewComponent
           @__vc_content_set_by_with_content
         end
     end
+
+    private
+
+    attr_reader :view_context
 
     def content_evaluated?
       @__vc_content_evaluated
