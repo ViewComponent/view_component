@@ -253,9 +253,9 @@ module ViewComponent
       return @__vc_content if defined?(@__vc_content)
 
       @__vc_content =
-        if @view_context && @__vc_render_in_block
+        if __vc_render_in_block_provided?
           view_context.capture(self, &@__vc_render_in_block)
-        elsif defined?(@__vc_content_set_by_with_content)
+        elsif __vc_content_set_by_with_content_defined?
           @__vc_content_set_by_with_content
         end
     end
@@ -264,14 +264,20 @@ module ViewComponent
     #
     # @return [Boolean]
     def content?
-      content unless content_evaluated? # ensure content is loaded
-
-      @__vc_content.present?
+      __vc_render_in_block_provided? || __vc_content_set_by_with_content_defined?
     end
 
     private
 
     attr_reader :view_context
+
+    def __vc_render_in_block_provided?
+      @view_context && @__vc_render_in_block
+    end
+
+    def __vc_content_set_by_with_content_defined?
+      defined?(@__vc_content_set_by_with_content)
+    end
 
     def content_evaluated?
       @__vc_content_evaluated
