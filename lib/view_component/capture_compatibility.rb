@@ -28,7 +28,7 @@ module ViewComponent
       def capture(*args, &block)
         block_context = block.binding.receiver
 
-        if block_context.respond_to?(:render_in) && block_context.respond_to?(:with_output_buffer)
+        if block_context.class < ActionView::Base && block_context != self
           block_context.original_capture(*args, &block)
         else
           original_capture(*args, &block)
