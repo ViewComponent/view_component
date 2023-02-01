@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `#content?` method that indicates if content has been passed to component.
+
+    *Joel Hawksley*
+
 ## 3.0.0.rc1
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
