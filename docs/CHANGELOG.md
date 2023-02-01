@@ -14,6 +14,14 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Added example of a custom preview controller.
+
+    *Graham Rogers*
+
+* Add Krystal to list of companies using ViewComponent.
+
+     *Matt Bearman*
+
 ## 3.0.0.rc1
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
