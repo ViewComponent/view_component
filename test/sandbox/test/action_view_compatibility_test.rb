@@ -27,6 +27,14 @@ class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
     refute_selector("form > div > input")
   end
 
+  def test_form_with_partial_render_works
+    skip unless ENV["CAPTURE_PATCH_ENABLED"] == "true"
+    render_inline(FormPartialComponent.new)
+
+    # Bad selector should be present, at least until fixed upstream or included by default
+    refute_selector("form > div > input")
+  end
+
   def test_helper_with_content_tag
     skip unless ENV["CAPTURE_PATCH_ENABLED"] == "true"
     render_inline(ContentTagComponent.new)
