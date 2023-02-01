@@ -26,6 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        capture_patch_enabled: [true, false]
         include:
           - rails_version: "5.2.6"
             ruby_version: "2.7"
@@ -56,6 +57,7 @@ jobs:
         RAISE_ON_WARNING: 1
         MEASURE_COVERAGE: true
         RAILS_VERSION: ${{ matrix.rails_version }}
+        CAPTURE_PATCH_ENABLED: ${{ matrix.output_buffer == 'capture_patch_enabled' && 'true' || 'false' }}
     - name: Upload coverage results
       uses: actions/upload-artifact@master
       if: always()
