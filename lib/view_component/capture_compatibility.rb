@@ -2,7 +2,6 @@
 
 module ViewComponent
   module CaptureCompatibility
-
     def self.included(base)
       base.class_eval do
         alias_method :original_capture, :capture
