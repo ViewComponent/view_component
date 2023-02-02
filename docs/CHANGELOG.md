@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add `capture_compatibility_patch_enabled` configuration option to enable an experimental patch that resolves rendering issues related to forms, capture, turbo frames, and more.
+* Add experimental `config.view_component.capture_compatibility_patch_enabled` option resolving rendering issues related to forms, capture, turbo frames, etc.
 
     *Blake Williams*
 
