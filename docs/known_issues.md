@@ -18,17 +18,17 @@ Note: For the same functionality as `turbo_frame_tag(my_model)`, use `tag.turbo_
 
 ViewComponent [isn't compatible](https://github.com/viewcomponent/view_component/issues/241) with `form_for` helpers by default.
 
-Passing a form object reference (usually `f`) to a view component works for simple cases, like `f.text_field :name`.
+Passing a form object reference (usually `f`) to a ViewComponent works for simple cases, like `f.text_field :name`.
 Content will be ill-ordered or duplicated in complex cases (such as passing blocks to form helpers or when nesting components).
 
 Consider following options:
 
-- Render a form end-to-end within one view component
-- Render a [classical view partial](https://guides.rubyonrails.org/layouts_and_rendering.html#using-partials) within the view component, which includes the form
-- Use `[FormBuilder](https://guides.rubyonrails.org/form_helpers.html#customizing-form-builders)` to create reusable form components.
+- Render a form end-to-end within one ViewComponent
+- Render a [classical view partial](https://guides.rubyonrails.org/layouts_and_rendering.html#using-partials) within the ViewComponent, which includes the form
+- Use a [custom `FormBuilder`](https://guides.rubyonrails.org/form_helpers.html#customizing-form-builders) to create reusable form components.
   Note: There are multiple approaches how to implement a FormBuilder:
   - Classic approach (without ViewComponent)
-  - Using ViewComponent (for example, [view_component-form gem](https://github.com/pantographe/view_component-form))
+  - Using a FormBuilder that overrides all field helpers to render a ViewComponent, so that you can customize each field individually (for example, [view_component-form gem](https://github.com/pantographe/view_component-form))
   - Using a lightweight implementation of ViewComponent. For example, [Primer ViewComponents](https://github.com/primer/view_components) implemented with [`ActsAsComponent`](https://github.com/primer/view_components/blob/main/lib/primer/forms/acts_as_component.rb) a lightweight version, which they use in the context of `FormBuilder`.
 
 ## Forms don't use the default `FormBuilder`
