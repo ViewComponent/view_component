@@ -21,10 +21,10 @@ module ViewComponent
         alias_method :original_capture, :capture
       end
 
-      base.prepend(Methods)
+      base.prepend(InstanceMethods)
     end
 
-    module Methods
+    module InstanceMethods
       def capture(*args, &block)
         block_context = block.binding.receiver
 
