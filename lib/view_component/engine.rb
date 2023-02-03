@@ -47,6 +47,14 @@ module ViewComponent
       end
     end
 
+    # :nocov:
+    initializer "view_component.enable_capture_patch" do |app|
+      ActiveSupport.on_load(:view_component) do
+        ActionView::Base.include(ViewComponent::CaptureCompatibility) if app.config.view_component.capture_compatibility_patch_enabled
+      end
+    end
+    # :nocov:
+
     initializer "view_component.set_autoload_paths" do |app|
       options = app.config.view_component
 

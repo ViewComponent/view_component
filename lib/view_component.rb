@@ -7,6 +7,7 @@ module ViewComponent
   extend ActiveSupport::Autoload
 
   autoload :Base
+  autoload :CaptureCompatibility
   autoload :Compiler
   autoload :CompileCache
   autoload :ComponentError

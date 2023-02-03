@@ -14,6 +14,14 @@ nav_order: 5
 
     *Blake Williams*
 
+* Add experimental `config.view_component.capture_compatibility_patch_enabled` option resolving rendering issues related to forms, capture, turbo frames, etc.
+
+    *Blake Williams*
+
+* Add `#content?` method that indicates if content has been passed to component.
+
+    *Joel Hawksley*
+
 * Added example of a custom preview controller.
 
     *Graham Rogers*
