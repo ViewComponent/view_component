@@ -26,9 +26,12 @@ module ViewComponent
 
     module InstanceMethods
       def capture(*args, &block)
+        # Handle blocks that originate from C code and raise, such as `&:method`
+        return original_capture(*args, &block) if block.source_location.nil?
+
         block_context = block.binding.receiver
 
-        if block_context.class < ActionView::Base && block_context != self
+        if block_context != self && block_context.class < ActionView::Base
           block_context.original_capture(*args, &block)
         else
           original_capture(*args, &block)
