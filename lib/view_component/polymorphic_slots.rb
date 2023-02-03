@@ -57,7 +57,8 @@ module ViewComponent
 
           setter_name =
             if collection
-              prefix ? "#{ActiveSupport::Inflector.singularize(slot_name)}_#{poly_type}" : "#{poly_type}_#{ActiveSupport::Inflector.singularize(slot_name)}"
+              singular_slot_name = ActiveSupport::Inflector.singularize(slot_name)
+              prefix ? "#{singular_slot_name}_#{poly_type}" : "#{poly_type}_#{singular_slot_name}"
             else
               poly_slot_name
             end
