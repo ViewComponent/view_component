@@ -25,17 +25,17 @@ module ViewComponent
         return super unless callable.is_a?(Hash) && callable.key?(:types)
 
         validate_singular_slot_name(slot_name)
-        register_polymorphic_slot(slot_name, callable[:types], collection: false)
+        register_polymorphic_slot(slot_name, callable[:types], collection: false, prefix: callable[:prefix] || false)
       end
 
       def renders_many(slot_name, callable = nil)
         return super unless callable.is_a?(Hash) && callable.key?(:types)
 
         validate_plural_slot_name(slot_name)
-        register_polymorphic_slot(slot_name, callable[:types], collection: true)
+        register_polymorphic_slot(slot_name, callable[:types], collection: true, prefix: callable[:prefix] || false)
       end
 
-      def register_polymorphic_slot(slot_name, types, collection:)
+      def register_polymorphic_slot(slot_name, types, collection:, prefix:)
         unless types.empty?
           getter_name = slot_name
 
@@ -49,15 +49,17 @@ module ViewComponent
         end
 
         renderable_hash = types.each_with_object({}) do |(poly_type, poly_callable), memo|
+          poly_slot_name = prefix ? "#{slot_name}_#{poly_type}" : "#{poly_type}_#{slot_name}"
+
           memo[poly_type] = define_slot(
-            "#{slot_name}_#{poly_type}", collection: collection, callable: poly_callable
+            poly_slot_name, collection: collection, callable: poly_callable
           )
 
           setter_name =
             if collection
-              "#{ActiveSupport::Inflector.singularize(slot_name)}_#{poly_type}"
+              prefix ? "#{ActiveSupport::Inflector.singularize(slot_name)}_#{poly_type}" : "#{poly_type}_#{ActiveSupport::Inflector.singularize(slot_name)}"
             else
-              "#{slot_name}_#{poly_type}"
+              poly_slot_name
             end
 
           define_method("with_#{setter_name}") do |*args, &block|

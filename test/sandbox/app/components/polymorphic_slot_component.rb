@@ -6,7 +6,7 @@ class PolymorphicSlotComponent < ViewComponent::Base
     special: lambda { |&block| content_tag(:div, class: "special", &block) }
   }
 
-  renders_many :items, types: {
+  renders_many :items, prefix: true, types: {
     foo: "FooItem",
     bar: lambda { |class_names: "", **_system_arguments|
       classes = (class_names.split(" ") + ["bar"]).join(" ")

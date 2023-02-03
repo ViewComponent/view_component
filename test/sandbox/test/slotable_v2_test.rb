@@ -492,7 +492,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_polymorphic_slot_with_setters
     render_inline(PolymorphicSlotComponent.new) do |component|
-      component.with_header_standard { "standard" }
+      component.with_standard_header { "standard" }
       component.with_item_foo(class_names: "custom-foo")
       component.with_item_bar(class_names: "custom-bar")
     end
@@ -538,7 +538,7 @@ class SlotsV2sTest < ViewComponent::TestCase
 
   def test_polymorphic_slot
     render_inline(PolymorphicSlotComponent.new) do |component|
-      component.with_header_standard { "standard" }
+      component.with_standard_header { "standard" }
       component.with_item_foo(class_names: "custom-foo")
       component.with_item_bar(class_names: "custom-bar")
     end
@@ -559,8 +559,8 @@ class SlotsV2sTest < ViewComponent::TestCase
   def test_singular_polymorphic_slot_raises_on_redefinition
     error = assert_raises ArgumentError do
       render_inline(PolymorphicSlotComponent.new) do |component|
-        component.with_header_standard { "standard" }
-        component.with_header_special { "special" }
+        component.with_standard_header { "standard" }
+        component.with_special_header { "special" }
       end
     end
 
