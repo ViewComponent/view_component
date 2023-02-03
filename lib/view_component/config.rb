@@ -140,7 +140,7 @@ module ViewComponent
       # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
       #
       # @!attribute capture_compatibility_patch_enabled
-      # @return [String]
+      # @return [Boolean]
       # Enables the experimental capture compatibility patch that makes ViewComponent
       # compatible with forms, capture, and other built-ins.
       # previews.
