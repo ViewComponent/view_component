@@ -138,6 +138,13 @@ module ViewComponent
       # A custom default layout used for the previews index page and individual
       # previews.
       # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
+      #
+      # @!attribute capture_compatibility_patch_enabled
+      # @return [String]
+      # Enables the experimental capture compatibility patch that makes ViewComponent
+      # compatible with forms, capture, and other built-ins.
+      # previews.
+      # Defaults to `false`.
 
       def default_preview_paths
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
