@@ -23,7 +23,8 @@ module ViewComponent
           show_previews: Rails.env.development? || Rails.env.test?,
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
-          default_preview_layout: nil
+          default_preview_layout: nil,
+          capture_compatibility_patch_enabled: false
         })
       end
 
