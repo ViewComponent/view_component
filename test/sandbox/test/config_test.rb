@@ -37,5 +37,13 @@ module ViewComponent
       assert configuration_methods_to_document.map(&:docstring).all?(&:present?),
         "Configuration options are missing docstrings."
     end
+
+    def test_compatibility_module_included
+      if ENV["CAPTURE_PATCH_ENABLED"] == "true"
+        assert ActionView::Base < ViewComponent::CaptureCompatibility
+      else
+        refute ActionView::Base < ViewComponent::CaptureCompatibility
+      end
+    end
   end
 end
