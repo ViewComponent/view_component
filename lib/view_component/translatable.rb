@@ -73,10 +73,9 @@ module ViewComponent
 
       locale = options.delete(:locale) || ::I18n.locale
       key = self.class.i18n_key(key, options.delete(:scope))
+      as_html = HTML_SAFE_TRANSLATION_KEY.match?(key)
 
-      if HTML_SAFE_TRANSLATION_KEY.match?(key)
-        html_escape_translation_options!(options)
-      end
+      html_escape_translation_options!(options) if as_html
 
       if key.start_with?(i18n_scope + ".")
         translated =
@@ -89,10 +88,7 @@ module ViewComponent
           return super(key, locale: locale, **options)
         end
 
-        if HTML_SAFE_TRANSLATION_KEY.match?(key)
-          translated = html_safe_translation(translated)
-        end
-
+        translated = html_safe_translation(translated) if as_html
         translated
       else
         super(key, locale: locale, **options)
