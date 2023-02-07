@@ -32,6 +32,14 @@ module ViewComponent
           )
         end
       end
+
+      def i18n_key(key, scope = nil)
+        scope = scope.join(".") if scope.is_a? Array
+        key = key&.to_s unless key.is_a?(String)
+        key = "#{scope}.#{key}" if scope
+        key = "#{i18n_scope}#{key}" if key.start_with?(".")
+        key
+      end
     end
 
     class I18nBackend < ::I18n::Backend::Simple
@@ -123,7 +131,7 @@ module ViewComponent
     end
 
     def i18n_option?(name)
-      (@i18n_option_names ||= I18n::RESERVED_KEYS.to_set).include?(name)
+      ::I18n.reserved_keys_pattern.match?(name)
     end
   end
 end
