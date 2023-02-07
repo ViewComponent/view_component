@@ -40,6 +40,17 @@ module ViewComponent
         key = "#{i18n_scope}#{key}" if key.start_with?(".")
         key
       end
+
+      def translate(key = nil, **options)
+        return key.map { |k| translate(k, **options) } if key.is_a?(Array)
+
+        locale = options.delete(:locale) || ::I18n.locale
+        key = i18n_key(key, options.delete(:scope))
+
+        i18n_backend.translate(locale, key, options)
+      end
+
+      alias_method :t, :translate
     end
 
     class I18nBackend < ::I18n::Backend::Simple

@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Expose `translate` and `t` I18n methods on component classes.
+
+    *Elia Schito*
+
 * Add experimental `config.view_component.capture_compatibility_patch_enabled` option resolving rendering issues related to forms, capture, turbo frames, etc.
 
     *Blake Williams*
