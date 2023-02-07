@@ -101,6 +101,8 @@ module ViewComponent
       self.class.i18n_scope
     end
 
+    private
+
     def html_safe_translation(translation)
       if translation.respond_to?(:map)
         translation.map { |element| html_safe_translation(element) }
@@ -111,8 +113,6 @@ module ViewComponent
         translation.html_safe
       end
     end
-
-    private
 
     def html_escape_translation_options!(options)
       options.each do |name, value|
