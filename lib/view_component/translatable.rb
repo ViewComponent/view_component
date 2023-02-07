@@ -116,14 +116,11 @@ module ViewComponent
 
     def html_escape_translation_options!(options)
       options.each do |name, value|
-        unless i18n_option?(name) || (name == :count && value.is_a?(Numeric))
-          options[name] = ERB::Util.html_escape(value.to_s)
-        end
-      end
-    end
+        next if ::I18n.reserved_keys_pattern.match?(name)
+        next if name == :count && value.is_a?(Numeric)
 
-    def i18n_option?(name)
-      ::I18n.reserved_keys_pattern.match?(name)
+        options[name] = ERB::Util.html_escape(value.to_s)
+      end
     end
   end
 end
