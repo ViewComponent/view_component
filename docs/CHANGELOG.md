@@ -9,6 +9,7 @@ nav_order: 5
 # Changelog
 
 ## main
+
 * Remove dependency on environment task from view_component:statsetup
 
     *Svetlin Simonyan*
