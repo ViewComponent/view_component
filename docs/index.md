@@ -229,6 +229,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Litmus](https://litmus.engineering/)
 * [Login.gov](https://github.com/18F/identity-idp)
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
+* [Mon Ami](https://www.monami.io)
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
 * [openSUSE Open Build Service](https://openbuildservice.org/)
 * [Orbit](https://orbit.love)
