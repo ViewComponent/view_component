@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Improve documentation of known incompatibilities with Rails form helpers.
+
+    *Tobias L. Maier*
+
 * Remove dependency on environment task from `view_component:statsetup`.
 
     *Svetlin Simonyan*
