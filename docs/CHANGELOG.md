@@ -14,6 +14,10 @@ nav_order: 5
 
     *Svetlin Simonyan*
 
+* Add Mon Ami to list of companies using ViewComponent.
+
+    *Ethan Lee-Tyson*
+
 * Add experimental `config.view_component.capture_compatibility_patch_enabled` option resolving rendering issues related to forms, capture, turbo frames, etc.
 
     *Blake Williams*
