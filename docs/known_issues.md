@@ -18,16 +18,16 @@ Note: For the same functionality as `turbo_frame_tag(my_model)`, use `tag.turbo_
 
 ViewComponent [isn't compatible](https://github.com/viewcomponent/view_component/issues/241) with `form_for` helpers by default.
 
-Passing a form object reference (often `f`) to a ViewComponent works for simple cases, like `f.text_field :name`. Content may be ill-ordered or duplicated in complex cases, such as passing blocks to form helpers or when nesting components.
+Passing a form object (often `f`) to a ViewComponent works for simple cases like `f.text_field :name`. Content may be ill-ordered or duplicated in complex cases, such as passing blocks to form helpers or when nesting components.
 
 Some workarounds include:
 
 - Render an entire form within a single ViewComponent.
 - Render a [partial](https://guides.rubyonrails.org/layouts_and_rendering.html#using-partials) within the ViewComponent which includes the form.
 - Use a [custom `FormBuilder`](https://guides.rubyonrails.org/form_helpers.html#customizing-form-builders) to create reusable form components:
-  - Using FormBuilder the default way. This means to [use Action View helpers](https://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html) to create the desired output
-  - Using a FormBuilder that overrides all field helpers to render a ViewComponent, so that each field can be customized individually (for example, [view_component-form](https://github.com/pantographe/view_component-form))
-  - Using a lightweight implementation of ViewComponent. For example, [Primer ViewComponents](https://github.com/primer/view_components) implemented [`ActsAsComponent`](https://github.com/primer/view_components/blob/main/lib/primer/forms/acts_as_component.rb) which is used in the context of `FormBuilder`.
+  - Using FormBuilder with [Action View helpers](https://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html).
+  - Using a FormBuilder overriding all field helpers to render a ViewComponent so each field can be customized individually (for example, [view_component-form](https://github.com/pantographe/view_component-form)).
+  - Using a lightweight re-implementation of ViewComponent. For example, [Primer ViewComponents](https://github.com/primer/view_components) implemented [`ActsAsComponent`](https://github.com/primer/view_components/blob/main/lib/primer/forms/acts_as_component.rb) which is used in the context of `FormBuilder`.
 
 ## Forms don't use the default `FormBuilder`
 
