@@ -14,6 +14,10 @@ nav_order: 5
 
     *Tobias L. Maier*
 
+* Remove dependency on environment task from `view_component:statsetup`.
+
+    *Svetlin Simonyan*
+
 * Add Mon Ami to list of companies using ViewComponent.
 
     *Ethan Lee-Tyson*
