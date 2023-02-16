@@ -21,7 +21,7 @@ module ViewComponent
       #
       # @return [ViewComponent::Config]
       def config
-        @config ||= ViewComponent::Config.defaults
+        @config ||= ActiveSupport::OrderedOptions.new
       end
 
       # Replaces the entire config. You shouldn't need to use this directly
