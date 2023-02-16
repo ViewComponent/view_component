@@ -10,6 +10,18 @@ nav_order: 5
 
 ## main
 
+* Improve documentation of known incompatibilities with Rails form helpers.
+
+    *Tobias L. Maier*
+
+* Remove dependency on environment task from `view_component:statsetup`.
+
+    *Svetlin Simonyan*
+
+* Add Mon Ami to list of companies using ViewComponent.
+
+    *Ethan Lee-Tyson*
+
 * Add experimental `config.view_component.capture_compatibility_patch_enabled` option resolving rendering issues related to forms, capture, turbo frames, etc.
 
     *Blake Williams*
