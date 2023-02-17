@@ -15,7 +15,7 @@ module ViewComponent
 
       file = Tempfile.new(["rendered_#{fragment.class.name}", ".html"], "tmp/view_components/")
       begin
-        file.write(controller.render_to_string(html: fragment.to_html.html_safe, layout: layout))
+        file.write(__vc_test_helpers_controller.render_to_string(html: fragment.to_html.html_safe, layout: layout))
         file.rewind
 
         block.call("/_system_test_entrypoint?file=#{file.path.split("/").last}")

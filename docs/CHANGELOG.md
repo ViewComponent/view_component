@@ -18,6 +18,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they was easily accessible in tests. As such, we're cautiously considering this to be a breaking change.
+
+    *Joel Hawksley*
+
 * Avoid loading ActionView::Base during Rails initialization. Originally submitted in #1528.
 
     *Jonathan del Strother*

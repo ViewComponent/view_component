@@ -214,7 +214,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Rendered"
 
-    cookies[:shown] = true
+    cookies[:hide] = true
 
     get "/render_check"
     assert_response :success
