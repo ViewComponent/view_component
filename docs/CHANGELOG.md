@@ -14,6 +14,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* BREAKING: Incorporate `PolymorphicSlots` into `Slotable`. To migrate, remove any references to `PolymorphicSlots` as they are no longer necessary.
+
+    *Joel Hawksley*
+
 * Avoid loading ActionView::Base during Rails initialization. Originally submitted in #1528.
 
     *Jonathan del Strother*

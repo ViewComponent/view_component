@@ -70,23 +70,28 @@ module ViewComponent
       #   <% end %>
       def renders_one(slot_name, callable = nil)
         validate_singular_slot_name(slot_name)
-        validate_plural_slot_name(ActiveSupport::Inflector.pluralize(slot_name).to_sym)
 
-        define_method :"with_#{slot_name}" do |*args, &block|
-          set_slot(slot_name, nil, *args, &block)
+        if callable.is_a?(Hash) && callable.key?(:types)
+          register_polymorphic_slot(slot_name, callable[:types], collection: false)
+        else
+          validate_plural_slot_name(ActiveSupport::Inflector.pluralize(slot_name).to_sym)
+
+          define_method :"with_#{slot_name}" do |*args, &block|
+            set_slot(slot_name, nil, *args, &block)
+          end
+          ruby2_keywords(:"with_#{slot_name}") if respond_to?(:ruby2_keywords, true)
+
+          define_method slot_name do |*args, &block|
+            get_slot(slot_name)
+          end
+          ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
+
+          define_method "#{slot_name}?" do
+            get_slot(slot_name).present?
+          end
+
+          register_slot(slot_name, collection: false, callable: callable)
         end
-        ruby2_keywords(:"with_#{slot_name}") if respond_to?(:ruby2_keywords, true)
-
-        define_method slot_name do |*args, &block|
-          get_slot(slot_name)
-        end
-        ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
-
-        define_method "#{slot_name}?" do
-          get_slot(slot_name).present?
-        end
-
-        register_slot(slot_name, collection: false, callable: callable)
       end
 
       ##
@@ -127,30 +132,35 @@ module ViewComponent
       #     <% end %>
       #   <% end %>
       def renders_many(slot_name, callable = nil)
-        singular_name = ActiveSupport::Inflector.singularize(slot_name)
         validate_plural_slot_name(slot_name)
-        validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
 
-        define_method :"with_#{singular_name}" do |*args, &block|
-          set_slot(slot_name, nil, *args, &block)
-        end
-        ruby2_keywords(:"with_#{singular_name}") if respond_to?(:ruby2_keywords, true)
+        if callable.is_a?(Hash) && callable.key?(:types)
+          register_polymorphic_slot(slot_name, callable[:types], collection: true)
+        else
+          singular_name = ActiveSupport::Inflector.singularize(slot_name)
+          validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
 
-        define_method :"with_#{slot_name}" do |collection_args = nil, &block|
-          collection_args.map do |args|
-            set_slot(slot_name, nil, **args, &block)
+          define_method :"with_#{singular_name}" do |*args, &block|
+            set_slot(slot_name, nil, *args, &block)
           end
-        end
+          ruby2_keywords(:"with_#{singular_name}") if respond_to?(:ruby2_keywords, true)
 
-        define_method slot_name do |collection_args = nil, &block|
-          get_slot(slot_name)
-        end
+          define_method :"with_#{slot_name}" do |collection_args = nil, &block|
+            collection_args.map do |args|
+              set_slot(slot_name, nil, **args, &block)
+            end
+          end
 
-        define_method "#{slot_name}?" do
-          get_slot(slot_name).present?
-        end
+          define_method slot_name do |collection_args = nil, &block|
+            get_slot(slot_name)
+          end
 
-        register_slot(slot_name, collection: true, callable: callable)
+          define_method "#{slot_name}?" do
+            get_slot(slot_name).present?
+          end
+
+          register_slot(slot_name, collection: true, callable: callable)
+        end
       end
 
       def slot_type(slot_name)
@@ -169,6 +179,43 @@ module ViewComponent
       def inherited(child)
         child.registered_slots = registered_slots.clone
         super
+      end
+
+      def register_polymorphic_slot(slot_name, types, collection:)
+        unless types.empty?
+          getter_name = slot_name
+
+          define_method(getter_name) do
+            get_slot(slot_name)
+          end
+
+          define_method("#{getter_name}?") do
+            get_slot(slot_name).present?
+          end
+        end
+
+        renderable_hash = types.each_with_object({}) do |(poly_type, poly_callable), memo|
+          memo[poly_type] = define_slot(
+            "#{slot_name}_#{poly_type}", collection: collection, callable: poly_callable
+          )
+
+          setter_name =
+            if collection
+              "#{ActiveSupport::Inflector.singularize(slot_name)}_#{poly_type}"
+            else
+              "#{slot_name}_#{poly_type}"
+            end
+
+          define_method("with_#{setter_name}") do |*args, &block|
+            set_polymorphic_slot(slot_name, poly_type, *args, &block)
+          end
+          ruby2_keywords(:"with_#{setter_name}") if respond_to?(:ruby2_keywords, true)
+        end
+
+        registered_slots[slot_name] = {
+          collection: collection,
+          renderable_hash: renderable_hash
+        }
       end
 
       private
@@ -332,5 +379,18 @@ module ViewComponent
       slot
     end
     ruby2_keywords(:set_slot) if respond_to?(:ruby2_keywords, true)
+
+    def set_polymorphic_slot(slot_name, poly_type = nil, *args, &block)
+      slot_definition = self.class.registered_slots[slot_name]
+
+      if !slot_definition[:collection] && (defined?(@__vc_set_slots) && @__vc_set_slots[slot_name])
+        raise ArgumentError, "content for slot '#{slot_name}' has already been provided"
+      end
+
+      poly_def = slot_definition[:renderable_hash][poly_type]
+
+      set_slot(slot_name, poly_def, *args, &block)
+    end
+    ruby2_keywords(:set_polymorphic_slot) if respond_to?(:ruby2_keywords, true)
   end
 end
