@@ -28,7 +28,9 @@ module ViewComponent
       # :nocov:
     end
 
-    # @private
+    # Returns the result of a render_inline call.
+    #
+    # @return [ActionView::OutputBuffer]
     attr_reader :rendered_content
 
     # Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
