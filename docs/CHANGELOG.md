@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Avoid loading ActionView::Base during Rails initialization. Originally submitted in #1528.
+
+    *Jonathan del Strother*
+
 * Improve documentation of known incompatibilities with Rails form helpers.
 
     *Tobias L. Maier*
