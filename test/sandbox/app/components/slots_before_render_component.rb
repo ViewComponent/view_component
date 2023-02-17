@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SlotsV2BeforeRenderComponent < ViewComponent::Base
+class SlotsBeforeRenderComponent < ViewComponent::Base
   renders_one :title, "MyTitleComponent"
   renders_many :greetings, "MyGreetingComponent"
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SlotsV2WithEmptyLambdaComponent < ViewComponent::Base
+class SlotsWithEmptyLambdaComponent < ViewComponent::Base
   renders_many :items, -> do
     @item_count += 1
     Item.new("Title #{@item_count}")

@@ -65,32 +65,10 @@ with_collection_parameter :item
 Called before rendering the component. Override to perform operations that
 depend on having access to the view context, such as helpers.
 
-### `#before_render_check` → [void] (Deprecated)
-
-Called after rendering the component.
-
-_Use `#before_render` instead. Will be removed in v3.0.0._
-
 ### `#controller` → [ActionController::Base]
 
 The current controller. Use sparingly as doing so introduces coupling
 that inhibits encapsulation & reuse, often making testing difficult.
-
-### `#generate_distinct_locale_files` (Deprecated)
-
-_Use `#generate.distinct_locale_files` instead. Will be removed in v3.0.0._
-
-### `#generate_locale` (Deprecated)
-
-_Use `#generate.locale` instead. Will be removed in v3.0.0._
-
-### `#generate_sidecar` (Deprecated)
-
-_Use `#generate.sidecar` instead. Will be removed in v3.0.0._
-
-### `#generate_stimulus_controller` (Deprecated)
-
-_Use `#generate.stimulus_controller` instead. Will be removed in v3.0.0._
 
 ### `#helpers` → [ActionView::Base]
 
