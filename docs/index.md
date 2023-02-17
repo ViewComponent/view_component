@@ -224,7 +224,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Framework](https://frame.work/)
 * [FreeAgent](https://www.freeagent.com)
 * [G2](https://www.g2.com/) (200+ components)
-* [Getblock](https://getblock.io/) 
+* [Getblock](https://getblock.io/)
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)

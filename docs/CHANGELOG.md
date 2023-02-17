@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+## v3.0.0.rc2
+
+Run into an issue with this release? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
 * BREAKING: Rename `SlotV2` to `Slot` and `SlotableV2` to `Slotable`.
 
     *Joel Hawksley*
@@ -34,10 +38,6 @@ nav_order: 5
 
     *Svetlin Simonyan*
 
-* Add Mon Ami to list of companies using ViewComponent.
-
-    *Ethan Lee-Tyson*
-
 * Add experimental `config.view_component.capture_compatibility_patch_enabled` option resolving rendering issues related to forms, capture, turbo frames, etc.
 
     *Blake Williams*
@@ -53,6 +53,10 @@ nav_order: 5
 * Add Krystal to list of companies using ViewComponent.
 
      *Matt Bearman*
+
+* Add Mon Ami to list of companies using ViewComponent.
+
+    *Ethan Lee-Tyson*
 
 ## 3.0.0.rc1
 
