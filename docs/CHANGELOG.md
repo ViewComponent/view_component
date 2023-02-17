@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Rename `SlotV2` to `Slot` and `SlotableV2` to `Slotable`.
+
+    *Joel Hawksley*
+
 * Avoid loading ActionView::Base during Rails initialization. Originally submitted in #1528.
 
     *Jonathan del Strother*

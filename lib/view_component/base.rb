@@ -8,7 +8,7 @@ require "view_component/compiler"
 require "view_component/config"
 require "view_component/polymorphic_slots"
 require "view_component/preview"
-require "view_component/slotable_v2"
+require "view_component/slotable"
 require "view_component/translatable"
 require "view_component/with_content_helper"
 
@@ -30,7 +30,7 @@ module ViewComponent
     end
 
     include ViewComponent::PolymorphicSlots
-    include ViewComponent::SlotableV2
+    include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
 
