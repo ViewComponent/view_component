@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SlotsV2WithoutContentBlockComponent < ViewComponent::Base
+class SlotsWithoutContentBlockComponent < ViewComponent::Base
   renders_one :title, "MyTitleComponent"
 
   class MyTitleComponent < ViewComponent::Base

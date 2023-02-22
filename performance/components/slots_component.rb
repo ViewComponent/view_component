@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Performance::SlotsV2Component < ViewComponent::Base
+class Performance::SlotsComponent < ViewComponent::Base
   renders_one :header, ->(**kwargs) { HeaderComponent.new(**kwargs) }
   renders_many :items, ->(**kwargs) { ItemComponent.new(**kwargs) }
 

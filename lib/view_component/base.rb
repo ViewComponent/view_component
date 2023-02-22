@@ -6,9 +6,8 @@ require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
-require "view_component/polymorphic_slots"
 require "view_component/preview"
-require "view_component/slotable_v2"
+require "view_component/slotable"
 require "view_component/translatable"
 require "view_component/with_content_helper"
 
@@ -21,7 +20,7 @@ module ViewComponent
       #
       # @return [ViewComponent::Config]
       def config
-        @config ||= ViewComponent::Config.defaults
+        @config ||= ActiveSupport::OrderedOptions.new
       end
 
       # Replaces the entire config. You shouldn't need to use this directly
@@ -29,8 +28,7 @@ module ViewComponent
       attr_writer :config
     end
 
-    include ViewComponent::PolymorphicSlots
-    include ViewComponent::SlotableV2
+    include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
 
@@ -481,6 +479,11 @@ module ViewComponent
       # @private
       def compiled?
         compiler.compiled?
+      end
+
+      # @private
+      def ensure_compiled
+        compile unless compiled?
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.
