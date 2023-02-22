@@ -51,7 +51,7 @@ module ViewComponent
         component_class.validate_collection_parameter!
       end
 
-      if component_class.respond_to?(:inline_template) && component_class.inline_template.present?
+      if has_inline_template?
         template = component_class.inline_template
 
         redefinition_lock.synchronize do
