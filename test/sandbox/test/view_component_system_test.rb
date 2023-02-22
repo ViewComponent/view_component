@@ -53,12 +53,4 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
       assert_no_selector "body > title", visible: false
     end
   end
-
-  def test_path_traversal_raises_error
-    # Use a valid example path that the rails app has permission to read.
-    path = "../../README.md"
-    assert_raises ArgumentError do
-      visit "/_system_test_entrypoint?file=#{path}"
-    end
-  end
 end

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
-  BASE_VIEW_COMPONENT_PATH = ::File.realpath("./tmp/view_components/").freeze
-
   before_action :validate_test_env
   before_action :validate_file_path
 
@@ -19,8 +17,11 @@ class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
   # Ensure that the file path is valid and doesn't target files outside
   # the expected directory (e.g. via a path traversal or symlink attack)
   def validate_file_path
-    @path = ::File.realpath(params.permit(:file)[:file], BASE_VIEW_COMPONENT_PATH)
-    unless @path.start_with?(BASE_VIEW_COMPONENT_PATH)
+    FileUtils.mkdir_p("./tmp/view_components/")
+
+    base_path = ::File.realpath("./tmp/view_components/").freeze
+    @path = ::File.realpath(params.permit(:file)[:file], base_path)
+    unless @path.start_with?(base_path)
       raise ArgumentError, "Invalid file path"
     end
   end

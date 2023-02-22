@@ -663,4 +663,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       config_entrypoints.rotate!
     end
   end
+
+  def test_path_traversal_raises_error
+    path = "../../README.md"
+
+    assert_raises ArgumentError do
+      get "/_system_test_entrypoint?file=#{path}"
+    end
+  end
 end
