@@ -64,11 +64,11 @@ The `Item` component can then be used like this:
 
 ```html+erb
 <%= render List.new do |component| %>
-  <% component.item do |item| %>
+  <% component.with_item do |item| %>
     <% item.leading_visual_avatar(src: "assets/user/1234.png") %>
     Profile
   <% end %>
-  <% component.item do |item| %>
+  <% component.with_item do |item| %>
     <% item.leading_visual_icon(icon: :gear) %>
     Settings
   <% end %>

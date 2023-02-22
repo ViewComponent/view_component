@@ -46,6 +46,14 @@ module ViewComponent
       end
     end
 
+    # :nocov:
+    initializer "view_component.enable_capture_patch" do |app|
+      ActiveSupport.on_load(:view_component) do
+        ActionView::Base.include(ViewComponent::CaptureCompatibility) if app.config.view_component.capture_compatibility_patch_enabled
+      end
+    end
+    # :nocov:
+
     initializer "view_component.set_autoload_paths" do |app|
       options = app.config.view_component
 
@@ -142,20 +150,3 @@ module ViewComponent
     end
   end
 end
-
-if RUBY_VERSION < "2.7.0"
-  ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 2.7.0")
-end
-
-# :nocov:
-unless defined?(ViewComponent::Base)
-  require "view_component/deprecation"
-
-  ViewComponent::Deprecation.deprecation_warning(
-    "Manually loading the engine",
-    "remove `require \"view_component/engine\"`"
-  )
-
-  require "view_component"
-end
-# :nocov:

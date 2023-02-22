@@ -7,11 +7,13 @@ module ViewComponent
   extend ActiveSupport::Autoload
 
   autoload :Base
+  autoload :CaptureCompatibility
   autoload :Compiler
   autoload :CompileCache
   autoload :ComponentError
   autoload :Config
   autoload :Deprecation
+  autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview
   autoload :PreviewTemplateError
@@ -23,13 +25,4 @@ module ViewComponent
   autoload :Translatable
 end
 
-# :nocov:
-if defined?(ViewComponent::Engine)
-  ViewComponent::Deprecation.deprecation_warning(
-    "Manually loading the engine",
-    "remove `require \"view_component/engine\"`"
-  )
-elsif defined?(Rails::Engine)
-  require "view_component/engine"
-end
-# :nocov:
+require "view_component/engine" if defined?(Rails::Engine)

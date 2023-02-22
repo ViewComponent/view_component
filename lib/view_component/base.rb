@@ -6,11 +6,8 @@ require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
-require "view_component/content_areas"
-require "view_component/polymorphic_slots"
 require "view_component/preview"
 require "view_component/slotable"
-require "view_component/slotable_v2"
 require "view_component/translatable"
 require "view_component/with_content_helper"
 
@@ -32,10 +29,8 @@ module ViewComponent
     end
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
-
-    include ViewComponent::ContentAreas
-    include ViewComponent::PolymorphicSlots
-    include ViewComponent::SlotableV2
+    
+    include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
 
@@ -43,9 +38,6 @@ module ViewComponent
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
-
-    class_attribute :content_areas
-    self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
@@ -65,23 +57,6 @@ module ViewComponent
     def set_original_view_context(view_context)
       self.__vc_original_view_context = view_context
     end
-
-    # @!macro [attach] deprecated_generate_mattr_accessor
-    #   @method generate_$1
-    #   @deprecated Use `#generate.$1` instead. Will be removed in v3.0.0.
-    def self._deprecated_generate_mattr_accessor(name)
-      define_singleton_method("generate_#{name}".to_sym) do
-        generate.public_send(name)
-      end
-      define_singleton_method("generate_#{name}=".to_sym) do |value|
-        generate.public_send("#{name}=".to_sym, value)
-      end
-    end
-
-    _deprecated_generate_mattr_accessor :distinct_locale_files
-    _deprecated_generate_mattr_accessor :locale
-    _deprecated_generate_mattr_accessor :sidecar
-    _deprecated_generate_mattr_accessor :stimulus_controller
 
     # Entrypoint for rendering components.
     #
@@ -165,14 +140,6 @@ module ViewComponent
     #
     # @return [void]
     def before_render
-      before_render_check
-    end
-
-    # Called after rendering the component.
-    #
-    # @deprecated Use `#before_render` instead. Will be removed in v3.0.0.
-    # @return [void]
-    def before_render_check
       # noop
     end
 
@@ -265,21 +232,8 @@ module ViewComponent
     #
     # @private
     def format
-      # Ruby 2.6 throws a warning without checking `defined?`, 2.7 doesn't
       @__vc_variant if defined?(@__vc_variant)
     end
-
-    # Use the provided variant instead of the one determined by the current request.
-    #
-    # @deprecated Will be removed in v3.0.0.
-    # @param variant [Symbol] The variant to be used by the component.
-    # @return [self]
-    def with_variant(variant)
-      @__vc_variant = variant
-
-      self
-    end
-    deprecate :with_variant, deprecator: ViewComponent::Deprecation
 
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.
@@ -289,20 +243,38 @@ module ViewComponent
       @request ||= controller.request if controller.respond_to?(:request)
     end
 
-    private
-
-    attr_reader :view_context
-
+    # The content passed to the component instance as a block.
+    #
+    # @return [String]
     def content
       @__vc_content_evaluated = true
       return @__vc_content if defined?(@__vc_content)
 
       @__vc_content =
-        if @view_context && @__vc_render_in_block
+        if __vc_render_in_block_provided?
           view_context.capture(self, &@__vc_render_in_block)
-        elsif defined?(@__vc_content_set_by_with_content)
+        elsif __vc_content_set_by_with_content_defined?
           @__vc_content_set_by_with_content
         end
+    end
+
+    # Whether `content` has been passed to the component.
+    #
+    # @return [Boolean]
+    def content?
+      __vc_render_in_block_provided? || __vc_content_set_by_with_content_defined?
+    end
+
+    private
+
+    attr_reader :view_context
+
+    def __vc_render_in_block_provided?
+      @view_context && @__vc_render_in_block
+    end
+
+    def __vc_content_set_by_with_content_defined?
+      defined?(@__vc_content_set_by_with_content)
     end
 
     def content_evaluated?
@@ -507,6 +479,11 @@ module ViewComponent
       # @private
       def compiled?
         compiler.compiled?
+      end
+
+      # @private
+      def ensure_compiled
+        compile unless compiled?
       end
 
       # Compile templates to instance methods, assuming they haven't been compiled already.

@@ -1,9 +1,9 @@
 = render HamlRendersHtmlComponent.new do |c|
-  - c.title do
+  - c.with_title do
     %p HTML Formatted one
 
-  - c.post do
+  - c.with_post do
     %p HTML Formatted many
 
-  - c.post do
+  - c.with_post do
     %p HTML Formatted many

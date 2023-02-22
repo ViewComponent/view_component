@@ -23,7 +23,8 @@ module ViewComponent
           show_previews: Rails.env.development? || Rails.env.test?,
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
-          default_preview_layout: nil
+          default_preview_layout: nil,
+          capture_compatibility_patch_enabled: false
         })
       end
 
@@ -126,9 +127,6 @@ module ViewComponent
       # The locations in which component previews will be looked up.
       # Defaults to `['test/component/previews']` relative to your Rails root.
 
-      # @!attribute preview_path
-      # @deprecated Use #preview_paths instead. Will be removed in v3.0.0.
-
       # @!attribute test_controller
       # @return [String]
       # The controller used for testing components.
@@ -140,6 +138,13 @@ module ViewComponent
       # A custom default layout used for the previews index page and individual
       # previews.
       # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
+      #
+      # @!attribute capture_compatibility_patch_enabled
+      # @return [Boolean]
+      # Enables the experimental capture compatibility patch that makes ViewComponent
+      # compatible with forms, capture, and other built-ins.
+      # previews.
+      # Defaults to `false`.
 
       def default_preview_paths
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
@@ -156,15 +161,6 @@ module ViewComponent
 
     def initialize
       @config = self.class.defaults
-    end
-
-    def preview_path
-      preview_paths
-    end
-
-    def preview_path=(new_value)
-      ViewComponent::Deprecation.deprecation_warning("`preview_path`", :"`preview_paths`")
-      self.preview_paths = Array.wrap(new_value)
     end
 
     delegate_missing_to :config

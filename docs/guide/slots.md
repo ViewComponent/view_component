@@ -43,13 +43,13 @@ To render a `renders_many` slot, iterate over the name of the slot:
 
 ```erb
 <%# index.html.erb %>
-<%= render BlogComponent.new do |c| %>
-  <% c.with_header do %>
+<%= render BlogComponent.new do |component| %>
+  <% component.with_header do %>
     <%= link_to "My blog", root_path %>
   <% end %>
 
   <% BlogPost.all.each do |blog_post| %>
-    <% c.with_post do %>
+    <% component.with_post do %>
       <%= link_to blog_post.name, blog_post.url %>
     <% end %>
   <% end %>
@@ -130,16 +130,16 @@ end
 
 ```erb
 <%# index.html.erb %>
-<%= render BlogComponent.new do |c| %>
-  <% c.with_header(classes: "") do %>
+<%= render BlogComponent.new do |component| %>
+  <% component.with_header(classes: "") do %>
     <%= link_to "My Site", root_path %>
   <% end %>
 
-  <% c.with_post(title: "My blog post") do %>
+  <% component.with_post(title: "My blog post") do %>
     Really interesting stuff.
   <% end %>
 
-  <% c.with_post(title: "Another post!") do %>
+  <% component.with_post(title: "Another post!") do %>
     Blog every day.
   <% end %>
 <% end %>
@@ -249,8 +249,8 @@ end
 
 ```erb
 <%# index.html.erb %>
-<%= render(NavigationComponent.new) do |c| %>
-  <% c.with_links([
+<%= render(NavigationComponent.new) do |component| %>
+  <% component.with_links([
     { name: "Home", href: "/" },
     { name: "Pricing", href: "/pricing" },
     { name: "Sign Up", href: "/sign-up" },
@@ -266,12 +266,10 @@ Since 2.31.0
 Slot content can also be set using `#with_content`:
 
 ```erb
-<%= render BlogComponent.new do |c| %>
-  <% c.with_header(classes: "title").with_content("My blog") %>
+<%= render BlogComponent.new do |component| %>
+  <% component.with_header(classes: "title").with_content("My blog") %>
 <% end %>
 ```
-
-_To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
 
 ## Polymorphic slots
 
@@ -298,13 +296,13 @@ end
 Filling in the `visual` slot is done by calling the appropriate slot method:
 
 ```erb
-<%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") do %>
+<%= render ListItemComponent.new do |component| %>
+  <% component.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") do %>
     Profile
   <% end >
 <% end %>
-<%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_icon(icon: :key) do %>
+<%= render ListItemComponent.new do |component| %>
+  <% component.with_visual_icon(icon: :key) do %>
     Security Settings
   <% end >
 <% end %>
@@ -318,16 +316,4 @@ To see whether a polymorphic slot has been passed to the component, use the `#{s
 <% else %>
   <span class="visual-placeholder">N/A</span>
 <% end %>
-```
-
-## Migrating from previous Slots implementations
-
-In [v2.54.0](https://viewcomponent.org/CHANGELOG.html#2540), the Slots API was updated to require the `with_*` prefix for setting Slots. The non-`with_*` setters will be deprecated in a coming version and removed in `v3.0`.
-
-To enable the coming deprecation warning, add `warn_on_deprecated_slot_setter`:
-
-```ruby
-class DeprecatedSlotsSetterComponent < ViewComponent::Base
-  warn_on_deprecated_slot_setter
-end
 ```

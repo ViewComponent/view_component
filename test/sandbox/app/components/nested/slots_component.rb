@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Nested
-  class SlotsV2Component < ViewComponent::Base
+  class SlotsComponent < ViewComponent::Base
     renders_many :items, "MyHighlightComponent"
 
     class MyHighlightComponent < ViewComponent::Base

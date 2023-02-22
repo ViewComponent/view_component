@@ -152,15 +152,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Open"
   end
 
-  def test_rendering_component_with_content_for
-    get "/content_areas"
-    assert_response :success
-
-    assert_select(".title h1", "Hi!")
-    assert_select(".body p", "Did you know that 1+1=2?")
-    assert_select(".footer h3", "Bye!")
-  end
-
   def test_rendering_component_with_a_partial
     get "/partial"
     assert_response :success
@@ -223,7 +214,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Rendered"
 
-    cookies[:shown] = true
+    cookies[:hide] = true
 
     get "/render_check"
     assert_response :success
@@ -392,8 +383,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("h2", text: "Radio clock")
     assert_select("h2", text: "Mints")
     assert_select("p", text: "Today only", count: 2)
-    assert_select("p", text: "Radio clock counter: 1")
-    assert_select("p", text: "Mints counter: 2")
+    assert_select("p", text: "Radio clock counter: 0")
+    assert_select("p", text: "Mints counter: 1")
   end
 
   def test_renders_inline_collections
@@ -403,8 +394,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("h2", text: "Radio clock")
     assert_select("h2", text: "Mints")
     assert_select("p", text: "Today only", count: 2)
-    assert_select("p", text: "Radio clock counter: 1")
-    assert_select("p", text: "Mints counter: 2")
+    assert_select("p", text: "Radio clock counter: 0")
+    assert_select("p", text: "Mints counter: 1")
   end
 
   def test_renders_the_previews_in_the_configured_route
@@ -430,8 +421,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_renders_singular_and_collection_slots_with_arguments
     get "/slots"
 
-    assert_select(".card.mt-4")
-
     assert_select(".title p", text: "This is my title!")
 
     assert_select(".subtitle small", text: "This is my subtitle!")
@@ -444,21 +433,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select(".item.normal", count: 2)
 
     assert_select(".footer.text-blue h3", text: "This is the footer")
-
-    title_node = Nokogiri::HTML.fragment(response.body).css(".title").to_html
-    expected_title_html = "<div class=\"title\">\n    <p>This is my title!</p>\n  </div>"
-
-    assert_equal(title_node, expected_title_html)
   end
 
   def test_renders_empty_slot_without_error
     get "/empty_slot"
-
-    assert_response :success
-  end
-
-  def test_renders_empty_slot_v2_with_slim_without_error
-    get "/empty_slot_v2_with_slim"
 
     assert_response :success
   end
@@ -683,6 +661,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         end
       end
       config_entrypoints.rotate!
+    end
+  end
+
+  def test_path_traversal_raises_error
+    path = "../../README.md"
+
+    assert_raises ArgumentError do
+      get "/_system_test_entrypoint?file=#{path}"
     end
   end
 end

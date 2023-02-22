@@ -1,0 +1,22 @@
+<%= render SlotsComponent.new(classes: "mt-4") do |component| %>
+  <% component.with_title do %>
+    This is my title!
+  <% end %>
+
+  <% component.with_subtitle do %>
+    This is my subtitle!
+  <% end %>
+
+  <% component.with_tab do %>
+    Tab A
+  <% end %>
+
+  <% component.with_tab do %>
+    Tab B
+  <% end %>
+
+  <% component.with_footer(classes: "text-blue") do %>
+    <p>Footer part 1</p>
+    <p>Footer part 2</p>
+  <% end %>
+<% end %>

@@ -21,7 +21,6 @@ jobs:
         bundle update
         bundle exec rake partial_benchmark
         bundle exec rake translatable_benchmark
-        bundle exec rake slotable_benchmark
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -29,15 +28,35 @@ jobs:
       matrix:
         include:
           - rails_version: "5.2.6"
-            ruby_version: "2.5"
+            ruby_version: "2.7"
+            mode: "capture_patch_enabled"
           - rails_version: "6.0.4.4"
-            ruby_version: "2.6"
+            ruby_version: "2.7"
+            mode: "capture_patch_enabled"
           - rails_version: "6.1.4.4"
             ruby_version: "2.7"
+            mode: "capture_patch_enabled"
           - rails_version: "7.0.2.3"
             ruby_version: "3.0"
+            mode: "capture_patch_enabled"
           - rails_version: "main"
             ruby_version: "3.1"
+            mode: "capture_patch_enabled"
+          - rails_version: "5.2.6"
+            ruby_version: "2.7"
+            mode: "capture_patch_disabled"
+          - rails_version: "6.0.4.4"
+            ruby_version: "2.7"
+            mode: "capture_patch_disabled"
+          - rails_version: "6.1.4.4"
+            ruby_version: "2.7"
+            mode: "capture_patch_disabled"
+          - rails_version: "7.0.2.3"
+            ruby_version: "3.0"
+            mode: "capture_patch_disabled"
+          - rails_version: "main"
+            ruby_version: "3.1"
+            mode: "capture_patch_disabled"
     steps:
     - uses: actions/checkout@master
     - name: Setup Ruby
@@ -57,6 +76,7 @@ jobs:
         RAISE_ON_WARNING: 1
         MEASURE_COVERAGE: true
         RAILS_VERSION: ${{ matrix.rails_version }}
+        CAPTURE_PATCH_ENABLED: ${{ matrix.mode == 'capture_patch_enabled' && 'true' || 'false' }}
     - name: Upload coverage results
       uses: actions/upload-artifact@master
       if: always()

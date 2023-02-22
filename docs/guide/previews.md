@@ -157,7 +157,7 @@ end
 ```
 
 To use a different location for preview templates, pass the `template` argument:
-(the path should be relative to `config.view_component.preview_path`):
+(the path should be relative to `config.view_component.preview_paths`):
 
 ```ruby
 # test/components/previews/cell_component_preview.rb
@@ -191,6 +191,14 @@ Extend previews to add authentication, authorization, before actions, etc. using
 ```ruby
 # config/application.rb
 config.view_component.preview_controller = "MyPreviewController"
+```
+
+Then include `PreviewActions` in the controller:
+
+```ruby
+class MyPreviewController < ActionController::Base
+  include ViewComponent::PreviewActions
+end
 ```
 
 ## Enabling previews

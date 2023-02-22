@@ -14,6 +14,146 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Add support for experimental inline templates.
+
+    *Blake Williams*
+
+* Expose `translate` and `t` I18n methods on component classes.
+
+    *Elia Schito*
+
+* Protect against Arbitrary File Read edge case in `ViewComponentsSystemTestController`.
+
+    *Nick Malcolm*
+
+## v3.0.0.rc2
+
+Run into an issue with this release? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
+* BREAKING: Rename `SlotV2` to `Slot` and `SlotableV2` to `Slotable`.
+
+    *Joel Hawksley*
+
+* BREAKING: Incorporate `PolymorphicSlots` into `Slotable`. To migrate, remove any references to `PolymorphicSlots` as they are no longer necessary.
+
+    *Joel Hawksley*
+
+* BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they was easily accessible in tests. As such, we're cautiously considering this to be a breaking change.
+
+    *Joel Hawksley*
+
+* Avoid loading ActionView::Base during Rails initialization. Originally submitted in #1528.
+
+    *Jonathan del Strother*
+
+* Improve documentation of known incompatibilities with Rails form helpers.
+
+    *Tobias L. Maier*
+
+* Remove dependency on environment task from `view_component:statsetup`.
+
+    *Svetlin Simonyan*
+
+* Add experimental `config.view_component.capture_compatibility_patch_enabled` option resolving rendering issues related to forms, capture, turbo frames, etc.
+
+    *Blake Williams*
+
+* Add `#content?` method that indicates if content has been passed to component.
+
+    *Joel Hawksley*
+
+* Added example of a custom preview controller.
+
+    *Graham Rogers*
+
+* Add Krystal to list of companies using ViewComponent.
+
+     *Matt Bearman*
+
+* Add Mon Ami to list of companies using ViewComponent.
+
+    *Ethan Lee-Tyson*
+
+## 3.0.0.rc1
+
+1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
+
+We're so grateful for all of the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
+
+This release makes the following breaking changes, many of which have long been deprecated:
+
+* BREAKING: Remove deprecated slots setter methods. Use `with_SLOT_NAME` instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `content_areas` feature. Use Slots instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated support for loading ViewComponent engine manually. Make sure `require "view_component/engine"` is removed from `Gemfile`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `generate_*` methods. Use `generate.*` instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `with_variant` method.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `rendered_component` in favor of `rendered_content`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `config.preview_path` in favor of `config.preview_paths`.
+
+    *Joel Hawksley*
+
+* BREAKING: Support Ruby 2.7+ instead of 2.4+
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `before_render_check`.
+
+    *Joel Hawksley*
+
+* BREAKING: Change counter variable to start iterating from `0` instead of `1`.
+
+    *Frank S*
+
+Run into an issue with this release? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
+## 2.82.0
+
+* Revert "Avoid loading ActionView::Base during initialization (#1528)"
+
+    *Jon Rohan*
+
+* Fix tests using `with_rendered_component_path` with custom layouts.
+
+    *Ian Hollander*
+
+## 2.81.0
+
+* Adjust the way response objects are set on the preview controller to work around a recent change in Rails main.
+
+    *Cameron Dutro*
+
+* Fix typo in "Generate a Stimulus controller" documentation.
+
+    *Ben Trewern*
+
+* Modify the `render_in_view_context` test helper to forward its args to the block.
+
+    *Cameron Dutro*
+
+## 2.80.0
+
 * Move system test endpoint out of the unrelated previews controller.
 
     *Edwin Mak*
