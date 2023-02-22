@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Expose `translate` and `t` I18n methods on component classes.
+
+    *Elia Schito*
+
 * Protect against Arbitrary File Read edge case in `ViewComponentsSystemTestController`.
 
     *Nick Malcolm*

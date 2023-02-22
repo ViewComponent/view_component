@@ -131,6 +131,16 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal "This is coming from Rails", translate(:rails, scope: [:from])
   end
 
+  def test_translating_from_the_class
+    assert_equal "This is coming from the sidecar", TranslatableComponent.t(".from.sidecar")
+    assert_equal ["This is coming from the sidecar"], TranslatableComponent.t([".from.sidecar"])
+    assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.t(".from"))
+
+    assert_equal "This is coming from the sidecar", TranslatableComponent.translate(".from.sidecar")
+    assert_equal ["This is coming from the sidecar"], TranslatableComponent.translate([".from.sidecar"])
+    assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.translate(".from"))
+  end
+
   private
 
   def translate(key, **options)
