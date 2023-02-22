@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Protect against Arbitrary File Read in `ViewComponentsSystemTestController`
+* Protect against Arbitrary File Read edge case in `ViewComponentsSystemTestController`.
 
     *Nick Malcolm*
 
