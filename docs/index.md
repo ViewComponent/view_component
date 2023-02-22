@@ -206,6 +206,8 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/matheuspolicamilo?s=64" alt="matheuspolicamilo" width="32" />
 <img src="https://avatars.githubusercontent.com/erinnachen?s=64" alt="erinnachen" width="32" />
 <img src="https://avatars.githubusercontent.com/ihollander?s=64" alt="ihollander" width="32" />
+<img src="https://avatars.githubusercontent.com/svetlins?s=64" alt="svetlins" width="32" />
+<img src="https://avatars.githubusercontent.com/nickmalcolm?s=64" alt="nickmalcolm" width="32" />
 
 ## Who uses ViewComponent?
 
@@ -219,9 +221,11 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Cometeer](https://cometeer.com/)
 * [Consul](https://consulproject.org/en/)
 * [Cults.](https://cults3d.com/)
+* [Eagerworks](https://eagerworks.com/)
 * [Framework](https://frame.work/)
 * [FreeAgent](https://www.freeagent.com)
 * [G2](https://www.g2.com/) (200+ components)
+* [Getblock](https://getblock.io/)
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
@@ -229,6 +233,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Litmus](https://litmus.engineering/)
 * [Login.gov](https://github.com/18F/identity-idp)
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
+* [Mon Ami](https://www.monami.io)
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
 * [openSUSE Open Build Service](https://openbuildservice.org/)
 * [Orbit](https://orbit.love)

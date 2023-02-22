@@ -14,6 +14,38 @@ nav_order: 5
 
     *Elia Schito*
 
+* Protect against Arbitrary File Read edge case in `ViewComponentsSystemTestController`.
+
+    *Nick Malcolm*
+
+## v3.0.0.rc2
+
+Run into an issue with this release? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
+* BREAKING: Rename `SlotV2` to `Slot` and `SlotableV2` to `Slotable`.
+
+    *Joel Hawksley*
+
+* BREAKING: Incorporate `PolymorphicSlots` into `Slotable`. To migrate, remove any references to `PolymorphicSlots` as they are no longer necessary.
+
+    *Joel Hawksley*
+
+* BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they was easily accessible in tests. As such, we're cautiously considering this to be a breaking change.
+
+    *Joel Hawksley*
+
+* Avoid loading ActionView::Base during Rails initialization. Originally submitted in #1528.
+
+    *Jonathan del Strother*
+
+* Improve documentation of known incompatibilities with Rails form helpers.
+
+    *Tobias L. Maier*
+
+* Remove dependency on environment task from `view_component:statsetup`.
+
+    *Svetlin Simonyan*
+
 * Add experimental `config.view_component.capture_compatibility_patch_enabled` option resolving rendering issues related to forms, capture, turbo frames, etc.
 
     *Blake Williams*
@@ -29,6 +61,10 @@ nav_order: 5
 * Add Krystal to list of companies using ViewComponent.
 
      *Matt Bearman*
+
+* Add Mon Ami to list of companies using ViewComponent.
+
+    *Ethan Lee-Tyson*
 
 ## 3.0.0.rc1
 

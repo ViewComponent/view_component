@@ -403,19 +403,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("Content")
   end
 
-  def test_render_check
-    render_inline(RenderCheckComponent.new)
-
-    assert_text("Rendered")
-
-    controller.view_context.cookies[:shown] = true
-
-    render_inline(RenderCheckComponent.new)
-
-    assert_no_text("Rendered")
-    refute_component_rendered
-  end
-
   def test_assert_select
     render_inline(MyComponent.new)
 
@@ -854,7 +841,7 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products" do
-      assert_equal "/products", request.path
+      assert_equal "/products", __vc_test_helpers_request.path
     end
   end
 
@@ -875,13 +862,13 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
-      assert_equal "/products", request.path
-      assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
-      assert_equal "/products?mykey=myvalue&otherkey=othervalue", request.fullpath
+      assert_equal "/products", __vc_test_helpers_request.path
+      assert_equal "mykey=myvalue&otherkey=othervalue", __vc_test_helpers_request.query_string
+      assert_equal "/products?mykey=myvalue&otherkey=othervalue", __vc_test_helpers_request.fullpath
     end
 
     with_request_url "/products?mykey[mynestedkey]=myvalue" do
-      assert_equal({"mynestedkey" => "myvalue"}, request.parameters["mykey"])
+      assert_equal({"mynestedkey" => "myvalue"}, __vc_test_helpers_request.parameters["mykey"])
     end
   end
 

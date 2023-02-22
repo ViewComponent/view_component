@@ -214,7 +214,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Rendered"
 
-    cookies[:shown] = true
+    cookies[:hide] = true
 
     get "/render_check"
     assert_response :success
@@ -661,6 +661,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         end
       end
       config_entrypoints.rotate!
+    end
+  end
+
+  def test_path_traversal_raises_error
+    path = "../../README.md"
+
+    assert_raises ArgumentError do
+      get "/_system_test_entrypoint?file=#{path}"
     end
   end
 end

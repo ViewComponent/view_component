@@ -10,12 +10,12 @@ module ViewComponent
     # @param layout [String] The (optional) layout to use.
     # @return [Proc] A block that can be used to visit the path of the inline rendered component.
     def with_rendered_component_path(fragment, layout: false, &block)
-      # Add './tmp/view_components/' directory if it doesn't exist to store the rendered component HTML
-      FileUtils.mkdir_p("./tmp/view_components/") unless Dir.exist?("./tmp/view_components/")
-
-      file = Tempfile.new(["rendered_#{fragment.class.name}", ".html"], "tmp/view_components/")
+      file = Tempfile.new(
+        ["rendered_#{fragment.class.name}", ".html"],
+        ViewComponentsSystemTestController::TEMP_DIR
+      )
       begin
-        file.write(controller.render_to_string(html: fragment.to_html.html_safe, layout: layout))
+        file.write(__vc_test_helpers_controller.render_to_string(html: fragment.to_html.html_safe, layout: layout))
         file.rewind
 
         block.call("/_system_test_entrypoint?file=#{file.path.split("/").last}")

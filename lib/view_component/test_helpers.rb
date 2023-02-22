@@ -28,7 +28,9 @@ module ViewComponent
       # :nocov:
     end
 
-    # @private
+    # Returns the result of a render_inline call.
+    #
+    # @return [ActionView::OutputBuffer]
     attr_reader :rendered_content
 
     # Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
@@ -45,9 +47,9 @@ module ViewComponent
       @page = nil
       @rendered_content =
         if Rails.version.to_f >= 6.1
-          controller.view_context.render(component, args, &block)
+          __vc_test_helpers_controller.view_context.render(component, args, &block)
         else
-          controller.view_context.render_component(component, &block)
+          __vc_test_helpers_controller.view_context.render_component(component, &block)
         end
 
       Nokogiri::HTML.fragment(@rendered_content)
@@ -72,8 +74,8 @@ module ViewComponent
     # @param from [ViewComponent::Preview] The class of the preview to be rendered.
     # @param params [Hash] Parameters to be passed to the preview.
     # @return [Nokogiri::HTML]
-    def render_preview(name, from: preview_class, params: {})
-      previews_controller = build_controller(Rails.application.config.view_component.preview_controller.constantize)
+    def render_preview(name, from: __vc_test_helpers_preview_class, params: {})
+      previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.preview_controller.constantize)
 
       # From what I can tell, it's not possible to overwrite all request parameters
       # at once, so we set them individually here.
@@ -103,25 +105,10 @@ module ViewComponent
     # ```
     def render_in_view_context(*args, &block)
       @page = nil
-      @rendered_content = controller.view_context.instance_exec(*args, &block)
+      @rendered_content = __vc_test_helpers_controller.view_context.instance_exec(*args, &block)
       Nokogiri::HTML.fragment(@rendered_content)
     end
     ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
-
-    # @private
-    def controller
-      @controller ||= build_controller(Base.test_controller.constantize)
-    end
-
-    # @private
-    def request
-      @request ||=
-        begin
-          request = ActionDispatch::TestRequest.create
-          request.session = ActionController::TestSession.new
-          request
-        end
-    end
 
     # Set the Action Pack request variant for the given block:
     #
@@ -133,12 +120,12 @@ module ViewComponent
     #
     # @param variant [Symbol] The variant to be set for the provided block.
     def with_variant(variant)
-      old_variants = controller.view_context.lookup_context.variants
+      old_variants = __vc_test_helpers_controller.view_context.lookup_context.variants
 
-      controller.view_context.lookup_context.variants = variant
+      __vc_test_helpers_controller.view_context.lookup_context.variants = variant
       yield
     ensure
-      controller.view_context.lookup_context.variants = old_variants
+      __vc_test_helpers_controller.view_context.lookup_context.variants = old_variants
     end
 
     # Set the controller to be used while executing the given block,
@@ -152,12 +139,12 @@ module ViewComponent
     #
     # @param klass [ActionController::Base] The controller to be used.
     def with_controller_class(klass)
-      old_controller = defined?(@controller) && @controller
+      old_controller = defined?(@__vc_test_helpers_controller) && @__vc_test_helpers_controller
 
-      @controller = build_controller(klass)
+      @__vc_test_helpers_controller = __vc_test_helpers_build_controller(klass)
       yield
     ensure
-      @controller = old_controller
+      @__vc_test_helpers_controller = old_controller
     end
 
     # Set the URL of the current request (such as when using request-dependent path helpers):
@@ -170,34 +157,47 @@ module ViewComponent
     #
     # @param path [String] The path to set for the current request.
     def with_request_url(path)
-      old_request_path_info = request.path_info
-      old_request_path_parameters = request.path_parameters
-      old_request_query_parameters = request.query_parameters
-      old_request_query_string = request.query_string
-      old_controller = defined?(@controller) && @controller
+      old_request_path_info = __vc_test_helpers_request.path_info
+      old_request_path_parameters = __vc_test_helpers_request.path_parameters
+      old_request_query_parameters = __vc_test_helpers_request.query_parameters
+      old_request_query_string = __vc_test_helpers_request.query_string
+      old_controller = defined?(@__vc_test_helpers_controller) && @__vc_test_helpers_controller
 
       path, query = path.split("?", 2)
-      request.path_info = path
-      request.path_parameters = Rails.application.routes.recognize_path_with_request(request, path, {})
-      request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
-      request.set_header(Rack::QUERY_STRING, query)
+      __vc_test_helpers_request.path_info = path
+      __vc_test_helpers_request.path_parameters = Rails.application.routes.recognize_path_with_request(__vc_test_helpers_request, path, {})
+      __vc_test_helpers_request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
+      __vc_test_helpers_request.set_header(Rack::QUERY_STRING, query)
       yield
     ensure
-      request.path_info = old_request_path_info
-      request.path_parameters = old_request_path_parameters
-      request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
-      request.set_header(Rack::QUERY_STRING, old_request_query_string)
-      @controller = old_controller
+      __vc_test_helpers_request.path_info = old_request_path_info
+      __vc_test_helpers_request.path_parameters = old_request_path_parameters
+      __vc_test_helpers_request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
+      __vc_test_helpers_request.set_header(Rack::QUERY_STRING, old_request_query_string)
+      @__vc_test_helpers_controller = old_controller
     end
 
-    # @private
-    def build_controller(klass)
-      klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)
-    end
-
+    # Note: We prefix private methods here to prevent collisions in consumer's tests.
     private
 
-    def preview_class
+    def __vc_test_helpers_controller
+      @__vc_test_helpers_controller ||= __vc_test_helpers_build_controller(Base.test_controller.constantize)
+    end
+
+    def __vc_test_helpers_request
+      @__vc_test_helpers_request ||=
+        begin
+          out = ActionDispatch::TestRequest.create
+          out.session = ActionController::TestSession.new
+          out
+        end
+    end
+
+    def __vc_test_helpers_build_controller(klass)
+      klass.new.tap { |c| c.request = __vc_test_helpers_request }.extend(Rails.application.routes.url_helpers)
+    end
+
+    def __vc_test_helpers_preview_class
       result = if respond_to?(:described_class)
         raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
 
