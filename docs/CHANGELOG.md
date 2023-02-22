@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Raise error if translations are used in initializer.
+
+    *Joel Hawksley*
+
 * Move system test endpoint out of the unrelated previews controller.
 
     *Edwin Mak*
