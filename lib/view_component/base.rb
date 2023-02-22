@@ -483,6 +483,11 @@ module ViewComponent
         compiler.compiled?
       end
 
+      # @private
+      def ensure_compiled
+        compile unless compiled?
+      end
+
       # Compile templates to instance methods, assuming they haven't been compiled already.
       #
       # Do as much work as possible in this step, as doing so reduces the amount

@@ -132,8 +132,6 @@ class TranslatableTest < ViewComponent::TestCase
   end
 
   def test_translating_from_the_class
-    TranslatableComponent.compile
-
     assert_equal "This is coming from the sidecar", TranslatableComponent.t(".from.sidecar")
     assert_equal ["This is coming from the sidecar"], TranslatableComponent.t([".from.sidecar"])
     assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.t(".from"))
