@@ -51,24 +51,46 @@ module ViewComponent
         component_class.validate_collection_parameter!
       end
 
-      templates.each do |template|
-        # Remove existing compiled template methods,
-        # as Ruby warns when redefining a method.
-        method_name = call_method_name(template[:variant])
+      if has_inline_template?
+        template = component_class.inline_template
 
         redefinition_lock.synchronize do
-          component_class.silence_redefinition_of_method(method_name)
+          component_class.silence_redefinition_of_method("call")
           # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, template[:path], 0
-          def #{method_name}
-            #{compiled_template(template[:path])}
+          component_class.class_eval <<-RUBY, template.path, template.lineno
+          def call
+            #{compiled_inline_template(template)}
           end
           RUBY
           # rubocop:enable Style/EvalWithLocation
-        end
-      end
 
-      define_render_template_for
+          component_class.silence_redefinition_of_method("render_template_for")
+          component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def render_template_for(variant = nil)
+            call
+          end
+          RUBY
+        end
+      else
+        templates.each do |template|
+          # Remove existing compiled template methods,
+          # as Ruby warns when redefining a method.
+          method_name = call_method_name(template[:variant])
+
+          redefinition_lock.synchronize do
+            component_class.silence_redefinition_of_method(method_name)
+            # rubocop:disable Style/EvalWithLocation
+            component_class.class_eval <<-RUBY, template[:path], 0
+            def #{method_name}
+              #{compiled_template(template[:path])}
+            end
+            RUBY
+            # rubocop:enable Style/EvalWithLocation
+          end
+        end
+
+        define_render_template_for
+      end
 
       component_class.build_i18n_backend
 
@@ -103,12 +125,16 @@ module ViewComponent
       end
     end
 
+    def has_inline_template?
+      component_class.respond_to?(:inline_template) && component_class.inline_template.present?
+    end
+
     def template_errors
       @__vc_template_errors ||=
         begin
           errors = []
 
-          if (templates + inline_calls).empty?
+          if (templates + inline_calls).empty? && !has_inline_template?
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
@@ -216,9 +242,21 @@ module ViewComponent
       end
     end
 
+    def compiled_inline_template(template)
+      handler = ActionView::Template.handler_for_extension(template.language)
+      template.rstrip! if component_class.strip_trailing_whitespace?
+
+      compile_template(template.source, handler)
+    end
+
     def compiled_template(file_path)
       handler = ActionView::Template.handler_for_extension(File.extname(file_path).delete("."))
       template = File.read(file_path)
+
+      compile_template(template, handler)
+    end
+
+    def compile_template(template, handler)
       template.rstrip! if component_class.strip_trailing_whitespace?
 
       if handler.method(:call).parameters.length > 1

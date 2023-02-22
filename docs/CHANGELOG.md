@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add support for experimental inline templates.
+
+    *Blake Williams*
+
 * Expose `translate` and `t` I18n methods on component classes.
 
     *Elia Schito*
