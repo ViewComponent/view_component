@@ -3,7 +3,7 @@
 require "view_component/with_content_helper"
 
 module ViewComponent
-  class SlotV2
+  class Slot
     include ViewComponent::WithContentHelper
 
     attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content

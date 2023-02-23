@@ -21,7 +21,7 @@ module ViewComponent
       end
 
       def build_i18n_backend
-        return if CompileCache.compiled? self
+        return if compiled?
 
         self.i18n_backend = if (translation_files = sidecar_files(%w[yml yaml])).any?
           # Returning nil cleans up if translations file has been removed since the last compilation
@@ -32,6 +32,27 @@ module ViewComponent
           )
         end
       end
+
+      def i18n_key(key, scope = nil)
+        scope = scope.join(".") if scope.is_a? Array
+        key = key&.to_s unless key.is_a?(String)
+        key = "#{scope}.#{key}" if scope
+        key = "#{i18n_scope}#{key}" if key.start_with?(".")
+        key
+      end
+
+      def translate(key = nil, **options)
+        return key.map { |k| translate(k, **options) } if key.is_a?(Array)
+
+        ensure_compiled
+
+        locale = options.delete(:locale) || ::I18n.locale
+        key = i18n_key(key, options.delete(:scope))
+
+        i18n_backend.translate(locale, key, options)
+      end
+
+      alias_method :t, :translate
     end
 
     class I18nBackend < ::I18n::Backend::Simple
@@ -64,15 +85,10 @@ module ViewComponent
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
       locale = options.delete(:locale) || ::I18n.locale
-      scope = options.delete(:scope)
-      scope = scope.join(".") if scope.is_a? Array
-      key = key&.to_s unless key.is_a?(String)
-      key = "#{scope}.#{key}" if scope
-      key = "#{i18n_scope}#{key}" if key.start_with?(".")
+      key = self.class.i18n_key(key, options.delete(:scope))
+      as_html = HTML_SAFE_TRANSLATION_KEY.match?(key)
 
-      if HTML_SAFE_TRANSLATION_KEY.match?(key)
-        html_escape_translation_options!(options)
-      end
+      html_escape_translation_options!(options) if as_html
 
       if key.start_with?(i18n_scope + ".")
         translated =
@@ -85,10 +101,7 @@ module ViewComponent
           return super(key, locale: locale, **options)
         end
 
-        if HTML_SAFE_TRANSLATION_KEY.match?(key)
-          translated = html_safe_translation(translated)
-        end
-
+        translated = html_safe_translation(translated) if as_html
         translated
       else
         super(key, locale: locale, **options)
@@ -101,6 +114,8 @@ module ViewComponent
       self.class.i18n_scope
     end
 
+    private
+
     def html_safe_translation(translation)
       if translation.respond_to?(:map)
         translation.map { |element| html_safe_translation(element) }
@@ -112,18 +127,13 @@ module ViewComponent
       end
     end
 
-    private
-
     def html_escape_translation_options!(options)
       options.each do |name, value|
-        unless i18n_option?(name) || (name == :count && value.is_a?(Numeric))
-          options[name] = ERB::Util.html_escape(value.to_s)
-        end
-      end
-    end
+        next if ::I18n.reserved_keys_pattern.match?(name)
+        next if name == :count && value.is_a?(Numeric)
 
-    def i18n_option?(name)
-      (@i18n_option_names ||= I18n::RESERVED_KEYS.to_set).include?(name)
+        options[name] = ERB::Util.html_escape(value.to_s)
+      end
     end
   end
 end

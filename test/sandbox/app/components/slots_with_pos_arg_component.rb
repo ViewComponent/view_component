@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SlotsV2WithPosArgComponent < ViewComponent::Base
+class SlotsWithPosArgComponent < ViewComponent::Base
   renders_many :items, "Item"
 
   class Item < ViewComponent::Base

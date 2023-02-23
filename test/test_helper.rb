@@ -48,7 +48,7 @@ end
 # Reduce extra logs produced by puma booting up
 Capybara.server = :puma, {Silent: true}
 # Increase the max wait time to appease test failures due to timeouts.
-Capybara.default_max_wait_time = 10
+Capybara.default_max_wait_time = 30
 
 def with_config_option(option_name, new_value, config_entrypoint: Rails.application.config.view_component)
   old_value = config_entrypoint.public_send(option_name)

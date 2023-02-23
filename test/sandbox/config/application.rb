@@ -8,6 +8,24 @@ require "action_mailer/railtie"
 require "action_view/railtie"
 require "sprockets/railtie"
 
+# Track when different Rails frameworks get loaded.
+# Ideally, none of them should be loaded until after initialization is complete.
+# See config/initializers/zzz_complete_initialization.rb for the other half of this.
+RAILS_FRAMEWORKS = [
+  :action_cable,
+  :action_controller,
+  :action_mailer,
+  :action_view,
+  :active_job,
+  :active_record
+]
+FRAMEWORK_LOAD_POINTS = {}
+RAILS_FRAMEWORKS.each do |feature|
+  ActiveSupport.on_load(feature) do
+    FRAMEWORK_LOAD_POINTS[feature] = caller
+  end
+end
+
 require "view_component"
 
 require "haml"

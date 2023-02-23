@@ -46,7 +46,7 @@ bin/rails generate component Example title --sidecar
   create  app/components/example_component/example_component.html.erb
 ```
 
-## Inline
+## `#call`
 
 Since 1.16.0
 {: .label }
@@ -81,6 +81,29 @@ end
 ```
 
 _**Note**: `call_*` methods must be public._
+
+## Inline
+
+Since 3.0.0
+{: .label }
+
+To define a template inside a component, include the experimental `ViewComponent::InlineTemplate` module and call the `.TEMPLATE_HANDLER_template` macro:
+
+```ruby
+class InlineErbComponent < ViewComponent::Base
+  include ViewComponent::InlineTemplate
+
+  attr_reader :name
+
+  erb_template <<~ERB
+    <h1>Hello, <%= name %>!</h1>
+  ERB
+
+  def initialize(name)
+    @name = name
+  end
+end
+```
 
 ## Inherited
 
