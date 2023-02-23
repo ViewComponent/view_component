@@ -44,7 +44,7 @@ end
 c = MyComponent.new
 
 # c.header returns nil because the getter path is being executed due to having
-# no arguments and no block passed: https://github.com/viewcomponent/view_component/blob/main/lib/view_component/slotable_v2.rb#L70-L74
+# no arguments and no block passed: https://github.com/ViewComponent/view_component/blob/18c27adc7ec715ca05d7ad0299efcbff9f03544b/lib/view_component/slotable_v2.rb#L70-L74
 #
 c.header.with_content("Hello world!") # undefined method `with_content' for nil:NilClass (NoMethodError)
 ```
