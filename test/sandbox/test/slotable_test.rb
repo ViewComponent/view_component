@@ -630,4 +630,14 @@ class SlotableTest < ViewComponent::TestCase
 
     assert_selector(".label", text: "the truth is out there")
   end
+
+  def test_content_inside_slotted_component
+    component = SlottedContentParentComponent.new
+
+    render_inline(component) do |c|
+      c.with_child.with_content("Content")
+    end
+
+    assert_equal component.children.any?(&:has_content?), true
+  end
 end
