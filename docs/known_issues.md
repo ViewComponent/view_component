@@ -29,7 +29,6 @@ Some workarounds include:
   - Using a FormBuilder overriding all field helpers to render a ViewComponent so each field can be customized individually (for example, [view_component-form](https://github.com/pantographe/view_component-form)).
   - Using a lightweight re-implementation of ViewComponent. For example, [Primer ViewComponents](https://github.com/primer/view_components) implemented [`ActsAsComponent`](https://github.com/primer/view_components/blob/main/lib/primer/forms/acts_as_component.rb) which is used in the context of `FormBuilder`.
 - Experimental: Enable the capture compatibility patch with `config.view_component.capture_compatibility_patch_enabled = true`.
-  Note that this patch is considered experimental.
 
 ## Forms don't use the default `FormBuilder`
 
