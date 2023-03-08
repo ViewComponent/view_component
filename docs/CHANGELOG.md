@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Document `config.view_component.capture_compatibility_patch_enabled` as option for the known incompatibilities with Rails form helpers
+
+    *Tobias L. Maier*
+
 * Add support for experimental inline templates.
 
     *Blake Williams*
