@@ -31,4 +31,8 @@ class TestHelperTest < ViewComponent::TestCase
 
     assert_selector("div", text: "request.env is valid")
   end
+
+  def test_vc_test_controller_exists
+    assert vc_test_controller.is_a?(ActionController::Base)
+  end
 end

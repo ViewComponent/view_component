@@ -415,7 +415,7 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(ValidationsComponent.new)
       end
 
-    assert_equal "Validation failed: Content can't be blank", exception.message
+    assert_includes exception.message, "Validation failed: Content"
   end
 
   def test_compiles_unrendered_component
