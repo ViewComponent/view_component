@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## v3.0.0.rc3
+
 * Fix typos in generator docs.
 
     *Sascha Karnatz*
