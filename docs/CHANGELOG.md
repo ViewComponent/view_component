@@ -12,6 +12,8 @@ nav_order: 5
 
 ## v3.0.0.rc3
 
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
 * Fix typos in generator docs.
 
     *Sascha Karnatz*
