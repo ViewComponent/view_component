@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix typos in generator docs.
+
+    *Sascha Karnatz*
+
 * Add support for experimental inline templates.
 
     *Blake Williams*
