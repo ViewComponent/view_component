@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix typos in generator docs.
+
+    *Sascha Karnatz*
+
 * Add `TestHelpers#vc_test_controller`.
 
     *Joel Hawksley*
