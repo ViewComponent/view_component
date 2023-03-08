@@ -22,13 +22,13 @@ Passing a form object (often `f`) to a ViewComponent works for simple cases like
 
 Some workarounds include:
 
+- Experimental: Enable the capture compatibility patch with `config.view_component.capture_compatibility_patch_enabled = true`.
 - Render an entire form within a single ViewComponent.
 - Render a [partial](https://guides.rubyonrails.org/layouts_and_rendering.html#using-partials) within the ViewComponent which includes the form.
 - Use a [custom `FormBuilder`](https://guides.rubyonrails.org/form_helpers.html#customizing-form-builders) to create reusable form components:
   - Using FormBuilder with [Action View helpers](https://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html).
   - Using a FormBuilder overriding all field helpers to render a ViewComponent so each field can be customized individually (for example, [view_component-form](https://github.com/pantographe/view_component-form)).
   - Using a lightweight re-implementation of ViewComponent. For example, [Primer ViewComponents](https://github.com/primer/view_components) implemented [`ActsAsComponent`](https://github.com/primer/view_components/blob/main/lib/primer/forms/acts_as_component.rb) which is used in the context of `FormBuilder`.
-- Experimental: Enable the capture compatibility patch with `config.view_component.capture_compatibility_patch_enabled = true`.
 
 ## Forms don't use the default `FormBuilder`
 
