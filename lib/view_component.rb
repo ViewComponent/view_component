@@ -7,13 +7,22 @@ module ViewComponent
   extend ActiveSupport::Autoload
 
   autoload :Base
+  autoload :CaptureCompatibility
   autoload :Compiler
+  autoload :CompileCache
   autoload :ComponentError
+  autoload :Config
+  autoload :Deprecation
+  autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview
   autoload :PreviewTemplateError
   autoload :TestHelpers
+  autoload :SystemTestHelpers
   autoload :TestCase
+  autoload :SystemTestCase
   autoload :TemplateError
   autoload :Translatable
 end
+
+require "view_component/engine" if defined?(Rails::Engine)

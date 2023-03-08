@@ -1,12 +1,12 @@
 ---
 layout: default
 title: Templates
-parent: Building ViewComponents
+parent: How-to guide
 ---
 
 # Templates
 
-ViewComponent templates can be defined in several ways:
+ViewComponents wrap a template (or several, if using [variants](https://guides.rubyonrails.org/layouts_and_rendering.html#the-variants-option)), defined in one of several ways:
 
 ## Sibling file
 
@@ -21,6 +21,9 @@ app/components
 ```
 
 ## Subdirectory
+
+Since 2.7.0
+{: .label }
 
 As an alternative, views and other assets can be placed in a subdirectory with the same name as the component:
 
@@ -43,7 +46,10 @@ bin/rails generate component Example title --sidecar
   create  app/components/example_component/example_component.html.erb
 ```
 
-## Inline
+## `#call`
+
+Since 1.16.0
+{: .label }
 
 ViewComponents can render without a template file, by defining a `call` method:
 
@@ -60,7 +66,7 @@ class InlineComponent < ViewComponent::Base
 end
 ```
 
-It is also possible to define methods for variants:
+It's also possible to define methods for Action Pack variants (`phone` in this case):
 
 ```ruby
 class InlineVariantComponent < ViewComponent::Base
@@ -74,23 +80,71 @@ class InlineVariantComponent < ViewComponent::Base
 end
 ```
 
-And render them `with_variant`:
-
-```erb
-<%= render InlineVariantComponent.new.with_variant(:phone) %>
-
-# output: <%= link_to "Phone", phone_path %>
-```
-
 _**Note**: `call_*` methods must be public._
 
+## Inline
+
+Since 3.0.0
+{: .label }
+
+To define a template inside a component, include the experimental `ViewComponent::InlineTemplate` module and call the `.TEMPLATE_HANDLER_template` macro:
+
+```ruby
+class InlineErbComponent < ViewComponent::Base
+  include ViewComponent::InlineTemplate
+
+  attr_reader :name
+
+  erb_template <<~ERB
+    <h1>Hello, <%= name %>!</h1>
+  ERB
+
+  def initialize(name)
+    @name = name
+  end
+end
+```
+
 ## Inherited
+
+Since 2.19.0
+{: .label }
 
 Component subclasses inherit the parent component's template if they don't define their own template.
 
 ```ruby
-# If MyLinkComponent does not define a template,
+# If MyLinkComponent doesn't define a template,
 # it will fall back to the `LinkComponent` template.
 class MyLinkComponent < LinkComponent
+end
+```
+
+### Rendering parent templates
+
+Since 2.55.0
+{: .label }
+
+To render a parent component's template from a subclass, call `render_parent`:
+
+```erb
+<%# my_link_component.html.erb %>
+<div class="base-component-template">
+  <% render_parent %>
+</div>
+```
+
+## Trailing whitespace
+
+Code editors commonly add a trailing newline character to source files in keeping with the Unix standard. Including trailing whitespace in component templates can result in unwanted whitespace in the HTML, eg. if the component is rendered before the period at the end of a sentence.
+
+To strip trailing whitespace from component templates, use the `strip_trailing_whitespace` class method.
+
+```ruby
+class MyComponent < ViewComponent::Base
+  # do strip whitespace
+  strip_trailing_whitespace
+
+  # don't strip whitespace
+  strip_trailing_whitespace(false)
 end
 ```

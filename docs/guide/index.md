@@ -1,8 +1,8 @@
 ---
 layout: default
-title: Building ViewComponents
-nav_order: 3
+title: How-to guide
+nav_order: 2
 has_children: true
 ---
 
-# Building ViewComponents
+# How-to guide

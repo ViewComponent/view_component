@@ -1,0 +1,7 @@
+import { Controller } from "<%= stimulus_module %>";
+
+export default class extends Controller {
+  connect() {
+    console.log("Hello, Stimulus!", this.element);
+  }
+}

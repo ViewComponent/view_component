@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Testing
-parent: Building ViewComponents
+parent: How-to guide
 ---
 
 # Testing
@@ -9,7 +9,7 @@ parent: Building ViewComponents
 Unit test components using the `render_inline` test helper, asserting against the rendered output:
 
 ```ruby
-require "view_component/test_case"
+require "test_helper"
 
 class ExampleComponentTest < ViewComponent::TestCase
   def test_render_component
@@ -24,11 +24,44 @@ end
 
 (Capybara matchers are available if the gem is installed)
 
-_Note: `assert_selector` only matches on visible elements by default. To match on hidden elements, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
+_Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
-## Antipatterns
+## Previews as test cases
 
-Avoid testing ViewComponent instance methods directly. Test the rendered output to ensure the correct behavior for the consumer of the ViewComponent:
+Since 2.56.0
+{: .label }
+
+Use `render_preview(name)` to render previews in ViewComponent unit tests:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_render_preview
+    render_preview(:with_default_title)
+
+    assert_text("Example component default")
+  end
+end
+```
+
+## Testing components with behaviors
+
+To test ViewComponents with behaviors, visit a preview in a system test:
+
+```ruby
+class MyComponentSystemTest < ActionDispatch::SystemTestCase
+  def test_default_preview
+    visit("/rails/view_components/my_component/default")
+
+    click_on("Open dialog")
+
+    assert_text("Test Dialog")
+  end
+end
+```
+
+## Best practices
+
+Prefer testing the rendered output over individual methods:
 
 ```ruby
 # Good
@@ -47,16 +80,6 @@ def test_render_component
   result = render_inline(ExampleComponent.new(title: "my title")) { "Hello, World!" }
 
   assert_includes result.css("span[title='my title']").to_html, "Hello, World!"
-end
-```
-
-Alternatively, assert against the raw output of the component, which is exposed as `rendered_component`:
-
-```ruby
-def test_render_component
-  render_inline(ExampleComponent.new(title: "my title")) { "Hello, World!" }
-
-  assert_includes rendered_component, "Hello, World!"
 end
 ```
 
@@ -92,6 +115,9 @@ end
 
 ## Configuring the controller used in tests
 
+Since 2.27.0
+{: .label }
+
 Component tests assume the existence of an `ApplicationController` class, which can be configured globally using the `test_controller` option:
 
 ```ruby
@@ -122,6 +148,9 @@ end
 
 ## Setting `request.path_parameters`
 
+Since 2.31.0
+{: .label }
+
 Some Rails helpers won't work unless `request.path_parameters` are set correctly, resulting in an `ActionController::UrlGenerationError`.
 
 To set `request.path_parameters` for a test case, use `with_request_url` from `ViewComponent::TestHelpers`:
@@ -132,6 +161,24 @@ class ExampleComponentTest < ViewComponent::TestCase
     with_request_url "/products/42" do
       render_inline ExampleComponent.new # contains i.e. `link_to "French", url_for(locale: "fr")`
       assert_link "French", href: "/products/42?locale=fr"
+    end
+  end
+end
+```
+
+### Query parameters
+
+Since 2.41.0
+{: .label }
+
+It's also possible to set query parameters:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_with_request_url
+    with_request_url "/products/42?locale=en" do
+      render_inline ExampleComponent.new # contains i.e. `link_to "Recent", url_for(request.query_parameters.merge(filter: "recent"))`
+      assert_link "Recent", href: "/?locale=en&filter=recent"
     end
   end
 end
@@ -148,7 +195,20 @@ require "capybara/rspec"
 
 RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
+  config.include ViewComponent::SystemTestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
+end
+```
+
+To access Devise's controller helper methods in tests, add the following:
+
+```ruby
+RSpec.configure do |config|
+  config.include Devise::Test::ControllerHelpers, type: :component
+
+  config.before(:each, type: :component) do
+    @request = controller.request
+  end
 end
 ```
 
@@ -161,9 +221,9 @@ RSpec.describe ExampleComponent, type: :component do
   it "renders component" do
     render_inline(described_class.new(title: "my title")) { "Hello, World!" }
 
-    expect(rendered_component).to have_css "span[title='my title']", text: "Hello, World!"
+    expect(page).to have_css "span[title='my title']", text: "Hello, World!"
     # or, to just assert against the text
-    expect(rendered_component).to have_text "Hello, World!"
+    expect(page).to have_text "Hello, World!"
   end
 end
 ```
@@ -173,4 +233,34 @@ To use component previews:
 ```ruby
 # config/application.rb
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+```
+
+## Component system tests
+
+Use `with_rendered_component_path` with `render_inline` to system test components:
+
+```rb
+class ViewComponentSystemTest < ViewComponent::SystemTestCase
+  def test_simple_js_interaction_in_browser_without_layout
+    with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)) do |path|
+      visit(path)
+
+      assert(find("[data-hidden-field]", visible: false))
+      find("[data-button]", text: "Click Me To Reveal Something Cool").click
+      assert(find("[data-hidden-field]", visible: true))
+    end
+  end
+end
+```
+
+For components that depend on a layout, provide the `layout` argument:
+
+```rb
+class ViewComponentSystemTest < ViewComponent::SystemTestCase
+  def test_simple_js_interaction_in_browser_with_layout
+    with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new), layout: 'application') do |path|
+      # ...
+    end
+  end
+end
 ```

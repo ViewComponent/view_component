@@ -1,19 +1,2 @@
-inherit_gem:
-  rubocop-github:
-    - config/default.yml
-    - config/rails_edge.yml
-
-AllCops:
-  SuggestExtensions: false
-  Exclude:
-    - test/tmp/**/*
-    - vendor/bundle/**/*
-
-Gemspec/OrderedDependencies:
-  Enabled: true
-
-Layout:
-  Enabled: true
-
-Layout/DotPosition:
-  EnforcedStyle: trailing
+require:
+  - standard

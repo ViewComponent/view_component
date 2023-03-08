@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
 class EmptyComponent < ViewComponent::Base
-  def call; end
+  def call
+  end
 end

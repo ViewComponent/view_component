@@ -4,7 +4,17 @@
   <title>ViewComponent - Test</title>
   <%= stylesheet_link_tag 'application' %>
 </head>
-<body>
+<body data-layout="application">
   <%= yield %>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      let button = document.querySelector('[data-button]')
+      let hiddenField = document.querySelector('[data-hidden-field]')
+      button.addEventListener('click', function() {
+        hiddenField.style.display = "block"
+      })
+    })
+  </script>
 </body>
 </html>
