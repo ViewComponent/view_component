@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `TestHelpers#vc_test_controller`.
+
+    *Joel Hawksley*
+
 * Add support for experimental inline templates.
 
     *Blake Williams*
