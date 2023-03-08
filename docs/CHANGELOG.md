@@ -10,7 +10,11 @@ nav_order: 5
 
 ## main
 
-* Document `config.view_component.capture_compatibility_patch_enabled` as option for the known incompatibilities with Rails form helpers
+* Add `TestHelpers#vc_test_controller`.
+
+    *Joel Hawksley*
+
+* Document `config.view_component.capture_compatibility_patch_enabled` as option for the known incompatibilities with Rails form helpers.
 
     *Tobias L. Maier*
 

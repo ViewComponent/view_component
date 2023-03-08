@@ -47,9 +47,9 @@ module ViewComponent
       @page = nil
       @rendered_content =
         if Rails.version.to_f >= 6.1
-          __vc_test_helpers_controller.view_context.render(component, args, &block)
+          vc_test_controller.view_context.render(component, args, &block)
         else
-          __vc_test_helpers_controller.view_context.render_component(component, &block)
+          vc_test_controller.view_context.render_component(component, &block)
         end
 
       Nokogiri::HTML.fragment(@rendered_content)
@@ -105,7 +105,7 @@ module ViewComponent
     # ```
     def render_in_view_context(*args, &block)
       @page = nil
-      @rendered_content = __vc_test_helpers_controller.view_context.instance_exec(*args, &block)
+      @rendered_content = vc_test_controller.view_context.instance_exec(*args, &block)
       Nokogiri::HTML.fragment(@rendered_content)
     end
     ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
@@ -120,12 +120,12 @@ module ViewComponent
     #
     # @param variant [Symbol] The variant to be set for the provided block.
     def with_variant(variant)
-      old_variants = __vc_test_helpers_controller.view_context.lookup_context.variants
+      old_variants = vc_test_controller.view_context.lookup_context.variants
 
-      __vc_test_helpers_controller.view_context.lookup_context.variants = variant
+      vc_test_controller.view_context.lookup_context.variants = variant
       yield
     ensure
-      __vc_test_helpers_controller.view_context.lookup_context.variants = old_variants
+      vc_test_controller.view_context.lookup_context.variants = old_variants
     end
 
     # Set the controller to be used while executing the given block,
@@ -139,12 +139,12 @@ module ViewComponent
     #
     # @param klass [ActionController::Base] The controller to be used.
     def with_controller_class(klass)
-      old_controller = defined?(@__vc_test_helpers_controller) && @__vc_test_helpers_controller
+      old_controller = defined?(@vc_test_controller) && @vc_test_controller
 
-      @__vc_test_helpers_controller = __vc_test_helpers_build_controller(klass)
+      @vc_test_controller = __vc_test_helpers_build_controller(klass)
       yield
     ensure
-      @__vc_test_helpers_controller = old_controller
+      @vc_test_controller = old_controller
     end
 
     # Set the URL of the current request (such as when using request-dependent path helpers):
@@ -161,7 +161,7 @@ module ViewComponent
       old_request_path_parameters = __vc_test_helpers_request.path_parameters
       old_request_query_parameters = __vc_test_helpers_request.query_parameters
       old_request_query_string = __vc_test_helpers_request.query_string
-      old_controller = defined?(@__vc_test_helpers_controller) && @__vc_test_helpers_controller
+      old_controller = defined?(@vc_test_controller) && @vc_test_controller
 
       path, query = path.split("?", 2)
       __vc_test_helpers_request.path_info = path
@@ -174,15 +174,26 @@ module ViewComponent
       __vc_test_helpers_request.path_parameters = old_request_path_parameters
       __vc_test_helpers_request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
       __vc_test_helpers_request.set_header(Rack::QUERY_STRING, old_request_query_string)
-      @__vc_test_helpers_controller = old_controller
+      @vc_test_controller = old_controller
+    end
+
+    # Access the controller used by `render_inline`:
+    #
+    # ```ruby
+    # test "logged out user sees login link" do
+    #   vc_test_controller.expects(:logged_in?).at_least_once.returns(false)
+    #   render_inline(LoginComponent.new)
+    #   assert_selector("[aria-label='You must be signed in']")
+    # end
+    # ```
+    #
+    # @return [ActionController::Base]
+    def vc_test_controller
+      @vc_test_controller ||= __vc_test_helpers_build_controller(Base.test_controller.constantize)
     end
 
     # Note: We prefix private methods here to prevent collisions in consumer's tests.
     private
-
-    def __vc_test_helpers_controller
-      @__vc_test_helpers_controller ||= __vc_test_helpers_build_controller(Base.test_controller.constantize)
-    end
 
     def __vc_test_helpers_request
       @__vc_test_helpers_request ||=
