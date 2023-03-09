@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+## v3.0.0.rc4
+
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
 * Add `TestHelpers#vc_test_request`.
 
     *Joel Hawksley*
