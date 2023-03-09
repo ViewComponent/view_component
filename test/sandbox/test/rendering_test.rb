@@ -841,7 +841,7 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products" do
-      assert_equal "/products", __vc_test_helpers_request.path
+      assert_equal "/products", vc_test_request.path
     end
   end
 
@@ -862,13 +862,13 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
-      assert_equal "/products", __vc_test_helpers_request.path
-      assert_equal "mykey=myvalue&otherkey=othervalue", __vc_test_helpers_request.query_string
-      assert_equal "/products?mykey=myvalue&otherkey=othervalue", __vc_test_helpers_request.fullpath
+      assert_equal "/products", vc_test_request.path
+      assert_equal "mykey=myvalue&otherkey=othervalue", vc_test_request.query_string
+      assert_equal "/products?mykey=myvalue&otherkey=othervalue", vc_test_request.fullpath
     end
 
     with_request_url "/products?mykey[mynestedkey]=myvalue" do
-      assert_equal({"mynestedkey" => "myvalue"}, __vc_test_helpers_request.parameters["mykey"])
+      assert_equal({"mynestedkey" => "myvalue"}, vc_test_request.parameters["mykey"])
     end
   end
 

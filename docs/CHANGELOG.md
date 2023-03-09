@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `TestHelpers#vc_test_request`.
+
+    *Joel Hawksley*
+
 ## v3.0.0.rc3
 
 Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).

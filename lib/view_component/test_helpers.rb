@@ -157,23 +157,23 @@ module ViewComponent
     #
     # @param path [String] The path to set for the current request.
     def with_request_url(path)
-      old_request_path_info = __vc_test_helpers_request.path_info
-      old_request_path_parameters = __vc_test_helpers_request.path_parameters
-      old_request_query_parameters = __vc_test_helpers_request.query_parameters
-      old_request_query_string = __vc_test_helpers_request.query_string
+      old_request_path_info = vc_test_request.path_info
+      old_request_path_parameters = vc_test_request.path_parameters
+      old_request_query_parameters = vc_test_request.query_parameters
+      old_request_query_string = vc_test_request.query_string
       old_controller = defined?(@vc_test_controller) && @vc_test_controller
 
       path, query = path.split("?", 2)
-      __vc_test_helpers_request.path_info = path
-      __vc_test_helpers_request.path_parameters = Rails.application.routes.recognize_path_with_request(__vc_test_helpers_request, path, {})
-      __vc_test_helpers_request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
-      __vc_test_helpers_request.set_header(Rack::QUERY_STRING, query)
+      vc_test_request.path_info = path
+      vc_test_request.path_parameters = Rails.application.routes.recognize_path_with_request(vc_test_request, path, {})
+      vc_test_request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
+      vc_test_request.set_header(Rack::QUERY_STRING, query)
       yield
     ensure
-      __vc_test_helpers_request.path_info = old_request_path_info
-      __vc_test_helpers_request.path_parameters = old_request_path_parameters
-      __vc_test_helpers_request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
-      __vc_test_helpers_request.set_header(Rack::QUERY_STRING, old_request_query_string)
+      vc_test_request.path_info = old_request_path_info
+      vc_test_request.path_parameters = old_request_path_parameters
+      vc_test_request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
+      vc_test_request.set_header(Rack::QUERY_STRING, old_request_query_string)
       @vc_test_controller = old_controller
     end
 
@@ -192,11 +192,19 @@ module ViewComponent
       @vc_test_controller ||= __vc_test_helpers_build_controller(Base.test_controller.constantize)
     end
 
-    # Note: We prefix private methods here to prevent collisions in consumer's tests.
-    private
-
-    def __vc_test_helpers_request
-      @__vc_test_helpers_request ||=
+    # Access the request used by `render_inline`:
+    #
+    # ```ruby
+    # test "component does not render in Firefox" do
+    #   request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
+    #   render_inline(NoFirefoxComponent.new)
+    #   refute_component_rendered
+    # end
+    # ```
+    #
+    # @return [ActionDispatch::TestRequest]
+    def vc_test_request
+      @vc_test_request ||=
         begin
           out = ActionDispatch::TestRequest.create
           out.session = ActionController::TestSession.new
@@ -204,8 +212,11 @@ module ViewComponent
         end
     end
 
+    # Note: We prefix private methods here to prevent collisions in consumer's tests.
+    private
+
     def __vc_test_helpers_build_controller(klass)
-      klass.new.tap { |c| c.request = __vc_test_helpers_request }.extend(Rails.application.routes.url_helpers)
+      klass.new.tap { |c| c.request = vc_test_request }.extend(Rails.application.routes.url_helpers)
     end
 
     def __vc_test_helpers_preview_class
