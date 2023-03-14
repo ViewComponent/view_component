@@ -55,4 +55,8 @@ class IntegrationExamplesController < ActionController::Base
   def inherited_from_uncompilable_component
     render(InheritedFromUncompilableComponent.new)
   end
+
+  def request_formats
+    render(RequestFormatsComponent.new)
+  end
 end

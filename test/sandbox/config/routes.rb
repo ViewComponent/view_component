@@ -18,6 +18,7 @@ Sandbox::Application.routes.draw do
   get :render_component, to: "integration_examples#render_component"
   get :controller_inline_render_component, to: "integration_examples#controller_inline_render_component"
   get :controller_to_string_render_component, to: "integration_examples#controller_to_string_render_component"
+  get :request_formats, to: "integration_examples#request_formats"
   get :layout_default, to: "layouts#default"
   get :layout_global_for_action, to: "layouts#global_for_action"
   get :layout_explicit_in_action, to: "layouts#explicit_in_action"
