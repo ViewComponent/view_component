@@ -40,4 +40,12 @@ class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
     render_inline(ContentTagComponent.new)
     assert_selector("div > p")
   end
+
+  def test_including_compat_module_twice_does_not_blow_the_stack
+    skip unless ENV["CAPTURE_PATCH_ENABLED"] == "true"
+    ActionView::Base.include(ViewComponent::CaptureCompatibility)
+    render_inline(FormForComponent.new)
+    assert_selector("form > div > label > input")
+    refute_selector("form > div > input")
+  end
 end
