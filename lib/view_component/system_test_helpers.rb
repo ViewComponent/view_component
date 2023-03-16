@@ -12,7 +12,7 @@ module ViewComponent
     def with_rendered_component_path(fragment, layout: false, &block)
       file = Tempfile.new(
         ["rendered_#{fragment.class.name}", ".html"],
-        ViewComponentsSystemTestController::TEMP_DIR
+        ViewComponentsSystemTestController.temp_dir
       )
       begin
         file.write(vc_test_controller.render_to_string(html: fragment.to_html.html_safe, layout: layout))
