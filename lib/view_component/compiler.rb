@@ -286,7 +286,7 @@ module ViewComponent
 
     def should_compile_superclass?
       development? &&
-        templates.empty? &&
+        templates.empty? && !has_inline_template? &&
         !(
           component_class.instance_methods(false).include?(:call) ||
             component_class.private_instance_methods(false).include?(:call)
