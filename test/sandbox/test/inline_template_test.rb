@@ -18,6 +18,7 @@ class InlineErbTest < ViewComponent::TestCase
   end
 
   class ParentBaseComponent < ViewComponent::Base; end
+
   class InlineErbChildComponent < ParentBaseComponent
     include ViewComponent::InlineTemplate
 
