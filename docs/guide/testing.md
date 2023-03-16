@@ -90,8 +90,8 @@ To test components that use Slots:
 ```ruby
 def test_renders_slots_with_content
   render_inline(SlotsComponent.new(footer: "Bye!")) do |component|
-    component.title { "Hello!" }
-    component.body { "Have a nice day." }
+    component.with_title { "Hello!" }
+    component.with_body { "Have a nice day." }
   end
 
   assert_selector(".title", text: "Hello!")
