@@ -10,8 +10,7 @@ nav_order: 5
 
 ## main
 
-* Check for `inline_calls` and inline `erb_template` calls when deciding whether
-or not to compile a component's superclass.
+* Check for inline `erb_template` calls when deciding whether or not to compile a component's superclass.
 
     *Justin Kenyon*
 
