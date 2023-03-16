@@ -134,7 +134,7 @@ module ViewComponent
         begin
           errors = []
 
-          if (templates + inline_calls).empty? && !has_inline_template?
+          if !has_valid_template?
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
@@ -285,12 +285,15 @@ module ViewComponent
     end
 
     def should_compile_superclass?
-      development? &&
-        templates.empty? && !has_inline_template? &&
+      development? && !has_valid_template? &&
         !(
           component_class.instance_methods(false).include?(:call) ||
             component_class.private_instance_methods(false).include?(:call)
         )
+    end
+
+    def has_valid_template?
+      templates.any? || inline_calls.any? || has_inline_template?
     end
   end
 end
