@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix bug where `mkdir_p` failed due to incorrect permissions.
+
+    *Joel Hawksley*
+
 * Check for inline `erb_template` calls when deciding whether or not to compile a component's superclass.
 
     *Justin Kenyon*
