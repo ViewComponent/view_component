@@ -17,22 +17,6 @@ class InlineErbTest < ViewComponent::TestCase
     end
   end
 
-  class ParentBaseComponent < ViewComponent::Base; end
-
-  class InlineErbChildComponent < ParentBaseComponent
-    include ViewComponent::InlineTemplate
-
-    attr_reader :name
-
-    erb_template <<~ERB
-      <h1>Hello, <%= name %>!</h1>
-    ERB
-
-    def initialize(name)
-      @name = name
-    end
-  end
-
   class InlineRaiseErbComponent < ViewComponent::Base
     include ViewComponent::InlineTemplate
 
@@ -83,6 +67,23 @@ class InlineErbTest < ViewComponent::TestCase
         <%= greeting %>
       </div>
     ERB
+  end
+
+  class ParentBaseComponent < ViewComponent::Base
+  end
+
+  class InlineErbChildComponent < ParentBaseComponent
+    include ViewComponent::InlineTemplate
+
+    attr_reader :name
+
+    erb_template <<~ERB
+      <h1>Hello, <%= name %>!</h1>
+    ERB
+
+    def initialize(name)
+      @name = name
+    end
   end
 
   test "renders inline templates" do
