@@ -26,6 +26,23 @@ end
 
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
+## Testing Slots
+
+```ruby
+def test_render_component
+  component = ListComponent.new(title: "Fruits").tap do |c|
+    c.with_item { "Apple" }
+    c.with_item { "Orange" }
+  end
+
+  render_inline(component)
+
+  assert_selector("ul")
+  assert_selector("li", text: "Apple")
+  assert_selector("li", text: "Orange")
+end
+```
+
 ## Previews as test cases
 
 Since 2.56.0
