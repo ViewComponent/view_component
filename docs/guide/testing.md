@@ -29,21 +29,17 @@ _Note: `assert_selector` only matches on visible elements by default. To match o
 ## Testing Slots
 
 ```ruby
-require "test_helper"
-
-class ExampleComponentTest < ViewComponent::TestCase
-  def test_render_component
-    component = ListComponent.new(title: "Fruits").tap do |c|
-      c.with_item { "Apple" }
-      c.with_item { "Orange" }
-    end
-
-    render_inline(component)
-
-    assert_selector("ul")
-    assert_selector("li", text: "Apple")
-    assert_selector("li", text: "Orange")
+def test_render_component
+  component = ListComponent.new(title: "Fruits").tap do |c|
+    c.with_item { "Apple" }
+    c.with_item { "Orange" }
   end
+
+  render_inline(component)
+
+  assert_selector("ul")
+  assert_selector("li", text: "Apple")
+  assert_selector("li", text: "Orange")
 end
 ```
 
