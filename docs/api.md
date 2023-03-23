@@ -65,6 +65,14 @@ with_collection_parameter :item
 Called before rendering the component. Override to perform operations that
 depend on having access to the view context, such as helpers.
 
+### `#content` → [String]
+
+The content passed to the component instance as a block.
+
+### `#content?` → [Boolean]
+
+Whether `content` has been passed to the component.
+
 ### `#controller` → [ActionController::Base]
 
 The current controller. Use sparingly as doing so introduces coupling
@@ -118,13 +126,18 @@ view context. Objects that implement this method will render in the component's
 view context, while objects that don't will render in the original view context
 so helpers, etc work as expected.
 
-### `#with_variant(variant)` → [self] (Deprecated)
-
-Use the provided variant instead of the one determined by the current request.
-
-_Will be removed in v3.0.0._
-
 ## Configuration
+
+### `.capture_compatibility_patch_enabled` → [String]
+
+A custom default layout used for the previews index page and individual
+previews.
+Defaults to `nil`. If this is falsy, `"component_preview"` is used.
+
+Enables the experimental capture compatibility patch that makes ViewComponent
+compatible with forms, capture, and other built-ins.
+previews.
+Defaults to `false`.
 
 ### `.component_parent_class` → [String]
 
@@ -141,6 +154,11 @@ Returns the value of attribute config.
 A custom default layout used for the previews index page and individual
 previews.
 Defaults to `nil`. If this is falsy, `"component_preview"` is used.
+
+Enables the experimental capture compatibility patch that makes ViewComponent
+compatible with forms, capture, and other built-ins.
+previews.
+Defaults to `false`.
 
 ### `.generate` → [ActiveSupport::OrderedOptions]
 
@@ -181,6 +199,17 @@ falling back to `[:en]` when no `available_locales` is defined.
 Always generate a preview alongside the component:
 
      config.view_component.generate.preview = true
+
+#### #preview_path
+
+Path to generate preview:
+
+     config.view_component.generate.preview_path = "test/components/previews"
+
+Required when there is more than one path defined in preview_paths.
+Defaults to `""`. If this is blank, the generator will use
+`ViewComponent.config.preview_paths` if defined,
+`"test/components/previews"` otherwise
 
 ### `.instrumentation_enabled` → [Boolean]
 
@@ -232,14 +261,15 @@ Defaults to `"app/components"`.
 
 ## ViewComponent::TestHelpers
 
-### `#render_in_view_context(&block)`
+### `#render_in_view_context(*args, &block)`
 
-Execute the given block in the view context. Internally sets `page` to be a
-`Capybara::Node::Simple`, allowing for Capybara assertions to be used:
+Execute the given block in the view context (using `instance_exec`).
+Internally sets `page` to be a `Capybara::Node::Simple`, allowing for
+Capybara assertions to be used. All arguments are forwarded to the block.
 
 ```ruby
-render_in_view_context do
-  render(MyComponent.new)
+render_in_view_context(arg1, arg2:) do |arg1, arg2:|
+  render(MyComponent.new(arg1, arg2))
 end
 
 assert_text("Hello, World!")
@@ -255,7 +285,7 @@ render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
 
-### `#render_preview(name, from: preview_class, params: {})` → [Nokogiri::HTML]
+### `#render_preview(name, from: __vc_test_helpers_preview_class, params: {})` → [Nokogiri::HTML]
 
 Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
 allowing for Capybara assertions to be used:
@@ -272,9 +302,33 @@ MyComponentTest -> MyComponentPreview etc.
 
 In RSpec, `Preview` is appended to `described_class`.
 
-### `#rendered_component` → [String]
+### `#rendered_content` → [ActionView::OutputBuffer]
 
 Returns the result of a render_inline call.
+
+### `#vc_test_controller` → [ActionController::Base]
+
+Access the controller used by `render_inline`:
+
+```ruby
+test "logged out user sees login link" do
+  vc_test_controller.expects(:logged_in?).at_least_once.returns(false)
+  render_inline(LoginComponent.new)
+  assert_selector("[aria-label='You must be signed in']")
+end
+```
+
+### `#vc_test_request` → [ActionDispatch::TestRequest]
+
+Access the request used by `render_inline`:
+
+```ruby
+test "component does not render in Firefox" do
+  request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
+  render_inline(NoFirefoxComponent.new)
+  refute_component_rendered
+end
+```
 
 ### `#with_controller_class(klass)`
 
