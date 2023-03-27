@@ -17,6 +17,8 @@ module ViewComponent
   # the `capture` logic to the ViewComponent that created the block.
   module CaptureCompatibility
     def self.included(base)
+      return if base < InstanceMethods
+
       base.class_eval do
         alias_method :original_capture, :capture
       end
