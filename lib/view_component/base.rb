@@ -29,7 +29,7 @@ module ViewComponent
     end
 
     ViewContextCalledBeforeRenderError = Class.new(StandardError)
-    
+
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
