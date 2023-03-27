@@ -2,6 +2,6 @@
 
 class InitializerTranslationsComponent < ViewComponent::Base
   def initialize
-    @title = t('.title')
+    @title = t(".title")
   end
 end
