@@ -153,10 +153,18 @@ module ViewComponent
           singular_name = ActiveSupport::Inflector.singularize(slot_name)
           validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
 
-          define_method :"with_#{singular_name}" do |*args, &block|
+          setter_method_name = :"with_#{singular_name}"
+
+          define_method setter_method_name do |*args, &block|
             set_slot(slot_name, nil, *args, &block)
           end
-          ruby2_keywords(:"with_#{singular_name}") if respond_to?(:ruby2_keywords, true)
+          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
+
+          define_method "with_#{singular_name}_content" do |content|
+            send(setter_method_name) { content.to_s }
+
+            self
+          end
 
           define_method :"with_#{slot_name}" do |collection_args = nil, &block|
             collection_args.map do |args|

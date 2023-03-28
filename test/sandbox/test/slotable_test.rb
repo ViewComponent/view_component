@@ -121,10 +121,12 @@ class SlotableTest < ViewComponent::TestCase
       SlotsComponent.new
         .with_title_content("This is my title!")
         .with_subtitle_content("This is my subtitle!")
+        .with_tab_content("Tab A")
     )
 
     assert_selector(".title", text: "This is my title!")
     assert_selector(".subtitle", text: "This is my subtitle!")
+    assert_selector(".tab", text: "Tab A")
   end
 
   def test_renders_slots_template_raise_with_unknown_slot
