@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `with_SLOT_NAME_content` helper.
+
+    *Will Cosgrove*
+
 ## v3.0.0.rc5
 
 * Fix bug where `mkdir_p` failed due to incorrect permissions.

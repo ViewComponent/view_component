@@ -116,6 +116,17 @@ class SlotableTest < ViewComponent::TestCase
     assert_text "No items provided"
   end
 
+  def test_renders_slots_via_with_slot_content_helper
+    render_inline(
+      SlotsComponent.new
+        .with_title_content("This is my title!")
+        .with_subtitle_content("This is my subtitle!")
+    )
+
+    assert_selector(".title", text: "This is my title!")
+    assert_selector(".subtitle", text: "This is my subtitle!")
+  end
+
   def test_renders_slots_template_raise_with_unknown_slot
     assert_raises NoMethodError do
       render_inline(SlotsComponent.new) do |component|
