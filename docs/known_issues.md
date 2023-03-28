@@ -6,6 +6,8 @@ nav_order: 9
 
 # Known issues
 
+_Want to help address these issues? PRs are welcome!_
+
 ## turbo_frame_tag double rendering or scrambled HTML structure
 
 When using `turbo_frame_tag` inside a ViewComponent, the template may be rendered twice. See [https://github.com/github/view_component/issues/1099](https://github.com/github/view_component/issues/1099).
@@ -43,3 +45,7 @@ Calls to form helpers such as `form_with` in ViewComponents [don't use the defau
 ## Inconsistent controller rendering behavior between Rails versions
 
 In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout.
+
+## Lack of support for request formats
+
+ViewComponents only support rendering HTML.

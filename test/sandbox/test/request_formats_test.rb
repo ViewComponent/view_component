@@ -2,6 +2,8 @@ require "test_helper"
 
 class RequestFormatsTest < ActionDispatch::IntegrationTest
   def test_rendering_component_with_multiple_formats
+    skip
+
     get "/request_formats"
     assert_response :success
 
@@ -9,6 +11,8 @@ class RequestFormatsTest < ActionDispatch::IntegrationTest
   end
 
   def test_rendering_text_format
+    skip
+
     get "/request_formats.txt"
     assert_response :success
 

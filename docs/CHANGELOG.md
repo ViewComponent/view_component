@@ -24,6 +24,10 @@ nav_order: 5
 
     *Cameron Dutro*
 
+* Document lack of support for request formats.
+
+    *Jared Moody, Joel Hawksley*
+
 ## v3.0.0.rc4
 
 Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
