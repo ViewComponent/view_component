@@ -84,7 +84,6 @@ module ViewComponent
           define_method slot_name do
             get_slot(slot_name)
           end
-          ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
           define_method "#{slot_name}?" do
             get_slot(slot_name).present?
