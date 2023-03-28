@@ -7,6 +7,7 @@ class PolymorphicSlotComponent < ViewComponent::Base
   }
 
   renders_many :items, types: {
+    passthrough: "PassthroughItem",
     foo: "FooItem",
     bar: lambda { |class_names: "", **_system_arguments|
       classes = (class_names.split(" ") + ["bar"]).join(" ")
@@ -15,6 +16,12 @@ class PolymorphicSlotComponent < ViewComponent::Base
       end
     }
   }
+
+  class PassthroughItem < ViewComponent::Base
+    def call
+      content
+    end
+  end
 
   class FooItem < ViewComponent::Base
     def initialize(class_names: "", **_system_arguments)

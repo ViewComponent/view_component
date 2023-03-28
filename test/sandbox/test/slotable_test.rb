@@ -515,6 +515,12 @@ class SlotableTest < ViewComponent::TestCase
     assert_selector("div .bar.custom-bar:last")
   end
 
+  def test_polymorphic_slot_with_shorthand
+    render_inline(PolymorphicSlotComponent.new.with_item_passthrough_content("standard"))
+
+    assert_text("standard")
+  end
+
   def test_polymorphic_slot_predicate
     render_inline(PolymorphicSlotComponent.new) do |component|
       component.with_item_foo(class_names: "custom-foo")
