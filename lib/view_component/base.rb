@@ -28,11 +28,11 @@ module ViewComponent
       attr_writer :config
     end
 
+    class ViewContextCalledBeforeRenderError < StandardError; end
+
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
-
-    ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
     RESERVED_PARAMETER = :content
 
@@ -197,7 +197,7 @@ module ViewComponent
       if view_context.nil?
         raise(
           ViewContextCalledBeforeRenderError,
-          "`#helpers` can't be used during initialization, as it depends " \
+          "`#helpers` can't be used during initialization as it depends " \
           "on the view context that only exists once a ViewComponent is passed to " \
           "the Rails render pipeline.\n\n" \
           "It's sometimes possible to fix this issue by moving code dependent on " \
