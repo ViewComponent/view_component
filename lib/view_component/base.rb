@@ -28,7 +28,7 @@ module ViewComponent
       attr_writer :config
     end
 
-    ViewContextCalledBeforeRenderError = Class.new(StandardError)
+    class ViewContextCalledBeforeRenderError < StandardError; end
 
     include ViewComponent::Slotable
     include ViewComponent::Translatable
