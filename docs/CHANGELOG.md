@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Raise error if translations are used in initializer.
+
+    *Joel Hawksley*
+
 ## v3.0.0.rc5
 
 * Fix bug where `mkdir_p` failed due to incorrect permissions.
