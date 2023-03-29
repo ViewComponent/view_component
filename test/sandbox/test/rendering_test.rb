@@ -375,6 +375,14 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("h2", text: I18n.t("translations_component.subtitle"))
   end
 
+  def test_renders_component_with_initializer_translations
+    err =
+      assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+        render_inline(InitializerTranslationsComponent.new)
+      end
+    assert_includes err.message, "can't be used during initialization"
+  end
+
   def test_renders_component_with_rb_in_its_name
     render_inline(EditorbComponent.new)
 
@@ -415,7 +423,7 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(ValidationsComponent.new)
       end
 
-    assert_equal "Validation failed: Content can't be blank", exception.message
+    assert_includes exception.message, "Validation failed: Content"
   end
 
   def test_compiles_unrendered_component
@@ -841,7 +849,7 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products" do
-      assert_equal "/products", __vc_test_helpers_request.path
+      assert_equal "/products", vc_test_request.path
     end
   end
 
@@ -862,13 +870,13 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
-      assert_equal "/products", __vc_test_helpers_request.path
-      assert_equal "mykey=myvalue&otherkey=othervalue", __vc_test_helpers_request.query_string
-      assert_equal "/products?mykey=myvalue&otherkey=othervalue", __vc_test_helpers_request.fullpath
+      assert_equal "/products", vc_test_request.path
+      assert_equal "mykey=myvalue&otherkey=othervalue", vc_test_request.query_string
+      assert_equal "/products?mykey=myvalue&otherkey=othervalue", vc_test_request.fullpath
     end
 
     with_request_url "/products?mykey[mynestedkey]=myvalue" do
-      assert_equal({"mynestedkey" => "myvalue"}, __vc_test_helpers_request.parameters["mykey"])
+      assert_equal({"mynestedkey" => "myvalue"}, vc_test_request.parameters["mykey"])
     end
   end
 

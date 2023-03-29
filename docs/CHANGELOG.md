@@ -10,6 +10,48 @@ nav_order: 5
 
 ## main
 
+* Raise error if translations are used in initializer.
+
+    *Joel Hawksley*
+
+## v3.0.0.rc5
+
+* Fix bug where `mkdir_p` failed due to incorrect permissions.
+
+    *Joel Hawksley*
+
+* Check for inline `erb_template` calls when deciding whether or not to compile a component's superclass.
+
+    *Justin Kenyon*
+
+* Protect against `SystemStackError` if `CaptureCompatibility` module is included more than once.
+
+    *Cameron Dutro*
+
+## v3.0.0.rc4
+
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
+* Add `TestHelpers#vc_test_request`.
+
+    *Joel Hawksley*
+
+## v3.0.0.rc3
+
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
+* Fix typos in generator docs.
+
+    *Sascha Karnatz*
+
+* Add `TestHelpers#vc_test_controller`.
+
+    *Joel Hawksley*
+
+* Document `config.view_component.capture_compatibility_patch_enabled` as option for the known incompatibilities with Rails form helpers.
+
+    *Tobias L. Maier*
+
 * Add support for experimental inline templates.
 
     *Blake Williams*

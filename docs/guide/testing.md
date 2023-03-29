@@ -26,6 +26,23 @@ end
 
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
+## Testing Slots
+
+```ruby
+def test_render_component
+  component = ListComponent.new(title: "Fruits").tap do |c|
+    c.with_item { "Apple" }
+    c.with_item { "Orange" }
+  end
+
+  render_inline(component)
+
+  assert_selector("ul")
+  assert_selector("li", text: "Apple")
+  assert_selector("li", text: "Orange")
+end
+```
+
 ## Previews as test cases
 
 Since 2.56.0
@@ -90,8 +107,8 @@ To test components that use Slots:
 ```ruby
 def test_renders_slots_with_content
   render_inline(SlotsComponent.new(footer: "Bye!")) do |component|
-    component.title { "Hello!" }
-    component.body { "Have a nice day." }
+    component.with_title { "Hello!" }
+    component.with_body { "Have a nice day." }
   end
 
   assert_selector(".title", text: "Hello!")
@@ -207,7 +224,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :component
 
   config.before(:each, type: :component) do
-    @request = controller.request
+    @request = vc_test_controller.request
   end
 end
 ```
