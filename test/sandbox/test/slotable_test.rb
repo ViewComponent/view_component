@@ -193,7 +193,7 @@ class SlotableTest < ViewComponent::TestCase
       end
     end
 
-    assert_equal component.items.first.method_with_kwargs(**{foo: :bar}), {foo: :bar}
+    assert_equal component.items.first.method_with_kwargs(foo: :bar), {foo: :bar}
   end
 
   def test_slot_with_collection
