@@ -10,47 +10,15 @@ nav_order: 5
 
 ## main
 
-* BREAKING: Raise `ViewComponent::RedefinedSlotError` instead of `ArgumentError`.
+* BREAKING: Raise `SlotPredicateNameError`, `ViewComponent::RedefinedSlotError`, `ViewComponent::ReservedSingularSlotNameError`, `ViewComponent::ContentSlotNameError`, `ViewComponent::InvalidSlotDefinitionError`, `ViewComponent::ReservedPluralSlotNameError`, or `NilWithContentError` instead of `ArgumentError`.
 
     *Joel Hawksley*
 
-* BREAKING: Raise `ViewComponent::ReservedSingularSlotNameError` instead of `ArgumentError`.
-
-    *Joel Hawksley*
-
-* BREAKING: Raise `ViewComponent::ContentSlotNameError` instead of `ArgumentError`.
-
-    *Joel Hawksley*
-
-* BREAKING: Raise `ViewComponent::InvalidSlotDefinitionError` instead of `ArgumentError`.
-
-    *Joel Hawksley*
-
-* BREAKING: Raise `ViewComponent::ReservedPluralSlotNameError` instead of `ArgumentError`.
-
-    *Joel Hawksley*
-
-* BREAKING: Raise `NilWithContentError` instead of `ArgumentError`.
-
-    *Joel Hawksley*
-
-* BREAKING: Raise `TranslateCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`, removing `ViewContextCalledBeforeRenderError`.
-
-    *Joel Hawksley*
-
-* BREAKING: Raise `HelpersCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`.
+* BREAKING: Raise `TranslateCalledBeforeRenderError`, `ControllerCalledBeforeRenderError`, or `HelpersCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`.
 
     *Joel Hawksley*
 
 * Run `standardrb` against markdown in docs.
-
-    *Joel Hawksley*
-
-* BREAKING: Raise `ControllerCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`. Rename `Base::ViewContextCalledBeforeRenderError` to `ViewContextCalledBeforeRenderError`.
-
-    *Joel Hawksley*
-
-* Add docs for `ControllerCalledBeforeRenderError` to website.
 
     *Joel Hawksley*
 

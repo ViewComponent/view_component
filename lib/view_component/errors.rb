@@ -22,6 +22,18 @@ module ViewComponent
       "string, or callable (i.e. proc, lambda, etc)"
   end
 
+  class SlotPredicateNameError < StandardError
+    MESSAGE =
+      "COMPONENT declares a slot named SLOT_NAME, which ends with a question mark.\n\n" \
+      "This is not allowed because the ViewComponent framework already provides predicate " \
+      "methods ending in `?`.\n\n" \
+      "To fix this issue, choose a different name."
+
+    def initialize(klass_name, slot_name)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
   class RedefinedSlotError < StandardError
     MESSAGE =
       "COMPONENT declares the SLOT_NAME slot multiple times.\n\n" \

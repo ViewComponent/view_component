@@ -279,14 +279,7 @@ module ViewComponent
       end
 
       def raise_if_slot_ends_with_question_mark(slot_name)
-        if slot_name.to_s.ends_with?("?")
-          raise ArgumentError.new(
-            "#{self} declares a slot named #{slot_name}, which ends with a question mark.\n\n" \
-            "This is not allowed because the ViewComponent framework already provides predicate " \
-            "methods ending in `?`.\n\n" \
-            "To fix this issue, choose a different name."
-          )
-        end
+        raise SlotPredicateNameError.new(self.name, slot_name) if slot_name.to_s.ends_with?("?")
       end
     end
 

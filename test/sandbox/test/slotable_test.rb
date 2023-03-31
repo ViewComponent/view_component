@@ -358,7 +358,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_component_raises_when_given_one_slot_name_ending_with_question_mark
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::SlotPredicateNameError do
         Class.new(ViewComponent::Base) do
           renders_one :item?
         end
@@ -379,7 +379,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_component_raises_when_given_many_slot_name_ending_with_question_mark
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::SlotPredicateNameError do
         Class.new(ViewComponent::Base) do
           renders_many :items?
         end

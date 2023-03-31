@@ -411,6 +411,14 @@ COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewC
 
 To fix this issue, choose a different name.
 
+### `SlotPredicateNameError`
+
+COMPONENT declares a slot named SLOT_NAME, which ends with a question mark.
+
+This is not allowed because the ViewComponent framework already provides predicate methods ending in `?`.
+
+To fix this issue, choose a different name.
+
 ### `TranslateCalledBeforeRenderError`
 
 `#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
