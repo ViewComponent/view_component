@@ -4,6 +4,17 @@ module ViewComponent
       super(self.class::MESSAGE)
     end
   end
+
+  class ReservedPluralSlotNameError < StandardError
+    MESSAGE =
+      "COMPONENT_CLASS_NAME declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
+      "To fix this issue, choose a different name."
+
+    def initialize(klass_name, slot_name)
+      super(MESSAGE.gsub("COMPONENT_CLASS_NAME", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
   class NilWithContentError < BaseError
     MESSAGE =
       "No content provided to `#with_content` for #{self}.\n\n" \

@@ -368,7 +368,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_component_raises_when_given_invalid_slot_name_for_has_many
-    exception = assert_raises ArgumentError do
+    exception = assert_raises ViewComponent::ReservedPluralSlotNameError do
       Class.new(ViewComponent::Base) do
         renders_many :contents
       end

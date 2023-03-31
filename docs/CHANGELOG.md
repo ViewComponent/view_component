@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Raise `ViewComponent::ReservedPluralSlotNameError` instead of `ArgumentError`.
+
+    *Joel Hawksley*
+
 * BREAKING: Raise `NilWithContentError` instead of `ArgumentError`.
 
     *Joel Hawksley*

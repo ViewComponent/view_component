@@ -381,6 +381,12 @@ No content provided to `#with_content` for ViewComponent::NilWithContentError.
 
 To fix this issue, pass a value.
 
+### `ReservedPluralSlotNameError`
+
+COMPONENT_CLASS_NAME declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.
+
+To fix this issue, choose a different name.
+
 ### `TranslateCalledBeforeRenderError`
 
 `#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
