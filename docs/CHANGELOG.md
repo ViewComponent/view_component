@@ -10,6 +10,14 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Use `ControllerCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`. Rename `Base::ViewContextCalledBeforeRenderError` to `ViewContextCalledBeforeRenderError`.
+
+    *Joel Hawksley*
+
+* Add docs for `ControllerCalledBeforeRenderError` to website.
+
+    *Joel Hawksley*
+
 * BREAKING: `#SLOT_NAME` getter no longer accepts arguments. This change was missed as part of the earlier deprecation in `3.0.0.rc1`.
 
     *Joel Hawksley*

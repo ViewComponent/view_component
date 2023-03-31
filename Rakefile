@@ -80,6 +80,9 @@ namespace :docs do
     require "view_component"
     ViewComponent::Base.config.view_component_path = "view_component"
     require "view_component/docs_builder_component"
+
+    error_keys = registry.keys.select { |key| key.to_s.include?("Error::MESSAGE") }.map(&:to_s)
+
     docs = ActionController::Base.new.render_to_string(
       ViewComponent::DocsBuilderComponent.new(
         sections: [
@@ -99,6 +102,10 @@ namespace :docs do
           ViewComponent::DocsBuilderComponent::Section.new(
             heading: "ViewComponent::TestHelpers",
             methods: test_helper_methods_to_document
+          ),
+          ViewComponent::DocsBuilderComponent::Section.new(
+            heading: "Errors",
+            error_klasses: error_keys
           )
         ]
       )

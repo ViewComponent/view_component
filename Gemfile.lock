@@ -296,11 +296,11 @@ PLATFORMS
 DEPENDENCIES
   appraisal (~> 2.4)
   benchmark-ips (~> 2.8.2)
-  better_html (~> 2)
+  better_html
   bundler (~> 2)
   capybara (~> 3)
   cuprite (~> 0.8)
-  erb_lint (~> 0.4.0)
+  erb_lint
   haml (~> 5)
   jbuilder (~> 2)
   m (~> 1)
