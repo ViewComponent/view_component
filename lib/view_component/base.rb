@@ -184,16 +184,7 @@ module ViewComponent
     #
     # @return [ActionView::Base]
     def helpers
-      if view_context.nil?
-        raise(
-          ViewComponent::ViewContextCalledBeforeRenderError,
-          "`#helpers` can't be used during initialization as it depends " \
-          "on the view context that only exists once a ViewComponent is passed to " \
-          "the Rails render pipeline.\n\n" \
-          "It's sometimes possible to fix this issue by moving code dependent on " \
-          "`#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
-        )
-      end
+      raise(HelpersCalledBeforeRenderError) if view_context.nil?
 
       # Attempt to re-use the original view_context passed to the first
       # component rendered in the rendering pipeline. This prevents the

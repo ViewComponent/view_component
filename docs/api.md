@@ -268,7 +268,7 @@ Internally sets `page` to be a `Capybara::Node::Simple`, allowing for
 Capybara assertions to be used. All arguments are forwarded to the block.
 
 ```ruby
-render_in_view_context(arg1, arg2: "foo") do |arg1, arg2:|
+render_in_view_context(arg1, arg2:) do |arg1, arg2:|
   render(MyComponent.new(arg1, arg2))
 end
 
@@ -368,3 +368,9 @@ end
 `#controller` can't be used during initialization, as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
 It's sometimes possible to fix this issue by moving code dependent on `#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
+
+### `HelpersCalledBeforeRenderError`
+
+`#helpers` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
+
+It's sometimes possible to fix this issue by moving code dependent on `#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void.

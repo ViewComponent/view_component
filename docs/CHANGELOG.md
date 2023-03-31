@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Use `HelpersCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`.
+
+    *Joel Hawksley*
+
 * Run `standardrb` against markdown in docs.
 
     *Joel Hawksley*
