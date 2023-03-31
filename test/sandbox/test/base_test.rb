@@ -40,7 +40,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   def test_calling_controller_outside_render_raises
     component = ViewComponent::Base.new
     err =
-      assert_raises ViewComponent::ViewContextCalledBeforeRenderError do
+      assert_raises ViewComponent::ControllerCalledBeforeRenderError do
         component.controller
       end
 

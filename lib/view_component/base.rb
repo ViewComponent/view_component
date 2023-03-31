@@ -174,16 +174,7 @@ module ViewComponent
     #
     # @return [ActionController::Base]
     def controller
-      if view_context.nil?
-        raise(
-          ViewComponent::ViewContextCalledBeforeRenderError,
-          "`#controller` can't be used during initialization, as it depends " \
-          "on the view context that only exists once a ViewComponent is passed to " \
-          "the Rails render pipeline.\n\n" \
-          "It's sometimes possible to fix this issue by moving code dependent on " \
-          "`#controller` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
-        )
-      end
+      raise(ControllerCalledBeforeRenderError) if view_context.nil?
 
       @__vc_controller ||= view_context.controller
     end
