@@ -11,7 +11,7 @@ module ViewComponent
     end
 
     class ErrorKlassDoc < ViewComponent::Base
-      def initialize(error_klass)
+      def initialize(error_klass, _show_types)
         @error_klass = error_klass
       end
 
@@ -33,13 +33,9 @@ module ViewComponent
     end
 
     class MethodDoc < ViewComponent::Base
-      def initialize(method, section: Section.new(show_types: true))
+      def initialize(method, show_types = true)
         @method = method
-        @section = section
-      end
-
-      def show_types?
-        @section.show_types
+        @show_types = show_types
       end
 
       def deprecated?
@@ -51,7 +47,7 @@ module ViewComponent
       end
 
       def types
-        " → [#{@method.tag(:return).types.join(",")}]" if @method.tag(:return)&.types && show_types?
+        " → [#{@method.tag(:return).types.join(",")}]" if @method.tag(:return)&.types && @show_types
       end
 
       def signature_or_name

@@ -128,7 +128,7 @@ so helpers, etc work as expected.
 
 ## Configuration
 
-### `.capture_compatibility_patch_enabled` → [String]
+### `.capture_compatibility_patch_enabled`
 
 A custom default layout used for the previews index page and individual
 previews.
@@ -139,7 +139,7 @@ compatible with forms, capture, and other built-ins.
 previews.
 Defaults to `false`.
 
-### `.component_parent_class` → [String]
+### `.component_parent_class`
 
 The parent class from which generated components will inherit.
 Defaults to `nil`. If this is falsy, generators will use
@@ -149,7 +149,7 @@ Defaults to `nil`. If this is falsy, generators will use
 
 Returns the value of attribute config.
 
-### `.default_preview_layout` → [String]
+### `.default_preview_layout`
 
 A custom default layout used for the previews index page and individual
 previews.
@@ -160,7 +160,7 @@ compatible with forms, capture, and other built-ins.
 previews.
 Defaults to `false`.
 
-### `.generate` → [ActiveSupport::OrderedOptions]
+### `.generate`
 
 The subset of configuration options relating to generators.
 
@@ -211,49 +211,49 @@ Defaults to `""`. If this is blank, the generator will use
 `ViewComponent.config.preview_paths` if defined,
 `"test/components/previews"` otherwise
 
-### `.instrumentation_enabled` → [Boolean]
+### `.instrumentation_enabled`
 
 Whether ActiveSupport notifications are enabled.
 Defaults to `false`.
 
-### `.preview_controller` → [String]
+### `.preview_controller`
 
 The controller used for previewing components.
 Defaults to `ViewComponentsController`.
 
-### `.preview_paths` → [Array<String>]
+### `.preview_paths`
 
 The locations in which component previews will be looked up.
 Defaults to `['test/component/previews']` relative to your Rails root.
 
-### `.preview_route` → [String]
+### `.preview_route`
 
 The entry route for component previews.
 Defaults to `"/rails/view_components"`.
 
-### `.render_monkey_patch_enabled` → [Boolean]
+### `.render_monkey_patch_enabled`
 
 If this is disabled, use `#render_component` or
 `#render_component_to_string` instead.
 Defaults to `true`.
 
-### `.show_previews` → [Boolean]
+### `.show_previews`
 
 Whether component previews are enabled.
 Defaults to `true` in development and test environments.
 
-### `.show_previews_source` → [Boolean]
+### `.show_previews_source`
 
 Whether to display source code previews in component previews.
 Defaults to `false`.
 
-### `.test_controller` → [String]
+### `.test_controller`
 
 The controller used for testing components.
 Can also be configured on a per-test basis using `#with_controller_class`.
 Defaults to `ApplicationController`.
 
-### `.view_component_path` → [String]
+### `.view_component_path`
 
 The path in which components, their templates, and their sidecars should
 be stored.
