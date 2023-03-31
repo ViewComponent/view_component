@@ -274,10 +274,7 @@ module ViewComponent
       def raise_if_slot_registered(slot_name)
         if registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
-          raise ArgumentError.new(
-            "#{self} declares the #{slot_name} slot multiple times.\n\n" \
-            "To fix this issue, choose a different slot name."
-          )
+          raise RedefinedSlotError.new(self.name, slot_name)
         end
       end
 

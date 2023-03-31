@@ -126,7 +126,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_sub_component_raise_with_duplicate_slot_name
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::RedefinedSlotError do
         SlotsComponent.renders_one :title
       end
 
@@ -602,7 +602,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_raises_error_on_conflicting_slot_names
-    error = assert_raises ArgumentError do
+    error = assert_raises ViewComponent::RedefinedSlotError do
       Class.new(ViewComponent::Base) do
         renders_one :conflicting_item
         renders_many :conflicting_items
@@ -613,7 +613,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_raises_error_on_conflicting_slot_names_in_reverse_order
-    error = assert_raises ArgumentError do
+    error = assert_raises ViewComponent::RedefinedSlotError do
       Class.new(ViewComponent::Base) do
         renders_many :conflicting_items
         renders_one :conflicting_item

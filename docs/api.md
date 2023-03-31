@@ -393,6 +393,12 @@ No content provided to `#with_content` for ViewComponent::NilWithContentError.
 
 To fix this issue, pass a value.
 
+### `RedefinedSlotError`
+
+COMPONENT declares the SLOT_NAME slot multiple times.
+
+To fix this issue, choose a different slot name.
+
 ### `ReservedPluralSlotNameError`
 
 COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.
