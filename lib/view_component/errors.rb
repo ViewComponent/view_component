@@ -5,6 +5,17 @@ module ViewComponent
     end
   end
 
+  class ContentSlotNameError < StandardError
+    MESSAGE =
+      "COMPONENT_CLASS_NAME declares a slot named content, which is a reserved word in ViewComponent.\n\n" \
+      "Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.\n\n" \
+      "To fix this issue, either use the `content` accessor directly or choose a different slot name."
+
+    def initialize(klass_name)
+      super(MESSAGE.gsub("COMPONENT_CLASS_NAME", klass_name.to_s))
+    end
+  end
+
   class InvalidSlotDefinitionError < BaseError
     MESSAGE =
       "Invalid slot definition. Please pass a class, " \

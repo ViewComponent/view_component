@@ -363,6 +363,14 @@ end
 
 ## Errors
 
+### `ContentSlotNameError`
+
+COMPONENT_CLASS_NAME declares a slot named content, which is a reserved word in ViewComponent.
+
+Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.
+
+To fix this issue, either use the `content` accessor directly or choose a different slot name.
+
 ### `ControllerCalledBeforeRenderError`
 
 `#controller` can't be used during initialization, as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
@@ -377,7 +385,7 @@ It's sometimes possible to fix this issue by moving code dependent on `#helpers`
 
 ### `InvalidSlotDefinitionError`
 
-invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)
+Invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)
 
 ### `NilWithContentError`
 

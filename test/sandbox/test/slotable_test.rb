@@ -335,7 +335,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_component_raises_when_given_content_slot_name
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::ContentSlotNameError do
         Class.new(ViewComponent::Base) do
           renders_one :content
         end
@@ -574,7 +574,7 @@ class SlotableTest < ViewComponent::TestCase
       end
     end
 
-    assert_includes error.message, "invalid slot definition"
+    assert_includes error.message, "Invalid slot definition"
   end
 
   def test_component_delegation_slots_work_with_helpers

@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Raise `ViewComponent::ContentSlotNameError` instead of `ArgumentError`.
+
+    *Joel Hawksley*
+
 * BREAKING: Raise `ViewComponent::InvalidSlotDefinitionError` instead of `ArgumentError`.
 
     *Joel Hawksley*
