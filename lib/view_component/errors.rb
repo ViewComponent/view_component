@@ -64,6 +64,14 @@ module ViewComponent
     end
   end
 
+  class ContentAlreadySetForPolymorphicSlotError < StandardError
+    MESSAGE = "Content for slot SLOT_NAME has already been provided."
+
+    def initialize(slot_name)
+      super(MESSAGE.gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
   class NilWithContentError < BaseError
     MESSAGE =
       "No content provided to `#with_content` for #{self}.\n\n" \

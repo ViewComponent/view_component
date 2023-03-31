@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* BREAKING: Raise `SlotPredicateNameError`, `ViewComponent::RedefinedSlotError`, `ViewComponent::ReservedSingularSlotNameError`, `ViewComponent::ContentSlotNameError`, `ViewComponent::InvalidSlotDefinitionError`, `ViewComponent::ReservedPluralSlotNameError`, or `NilWithContentError` instead of `ArgumentError`.
+* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror` or `NilWithContentError` instead of `ArgumentError`.
 
     *Joel Hawksley*
 

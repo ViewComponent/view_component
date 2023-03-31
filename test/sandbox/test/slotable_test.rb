@@ -557,7 +557,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_singular_polymorphic_slot_raises_on_redefinition
-    error = assert_raises ArgumentError do
+    error = assert_raises ViewComponent::ContentAlreadySetForPolymorphicSlotError do
       render_inline(PolymorphicSlotComponent.new) do |component|
         component.with_header_standard { "standard" }
         component.with_header_special { "special" }

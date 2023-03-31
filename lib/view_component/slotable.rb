@@ -360,7 +360,7 @@ module ViewComponent
       slot_definition = self.class.registered_slots[slot_name]
 
       if !slot_definition[:collection] && (defined?(@__vc_set_slots) && @__vc_set_slots[slot_name])
-        raise ArgumentError, "content for slot '#{slot_name}' has already been provided"
+        raise ContentAlreadySetForPolymorphicSlotError.new(slot_name)
       end
 
       poly_def = slot_definition[:renderable_hash][poly_type]

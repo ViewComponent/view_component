@@ -363,6 +363,10 @@ end
 
 ## Errors
 
+### `ContentAlreadySetForPolymorphicSlotError`
+
+Content for slot SLOT_NAME has already been provided.
+
 ### `ContentSlotNameError`
 
 COMPONENT declares a slot named content, which is a reserved word in ViewComponent.
