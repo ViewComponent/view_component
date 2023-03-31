@@ -1,40 +1,39 @@
 module ViewComponent
-  class TranslateCalledBeforeRenderError < StandardError
+  class BaseError < StandardError
+    def initialize
+      super(self.class::MESSAGE)
+    end
+  end
+  class NilWithContentError < BaseError
+    MESSAGE =
+      "No content provided to `#with_content` for #{self}.\n\n" \
+      "To fix this issue, pass a value."
+  end
+
+  class TranslateCalledBeforeRenderError < BaseError
     MESSAGE =
       "`#translate` can't be used during initialization as it depends " \
       "on the view context that only exists once a ViewComponent is passed to " \
       "the Rails render pipeline.\n\n" \
       "It's sometimes possible to fix this issue by moving code dependent on " \
       "`#translate` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
-
-    def initialize
-      super(MESSAGE)
-    end
   end
 
-  class HelpersCalledBeforeRenderError < StandardError
+  class HelpersCalledBeforeRenderError < BaseError
     MESSAGE =
       "`#helpers` can't be used during initialization as it depends " \
       "on the view context that only exists once a ViewComponent is passed to " \
       "the Rails render pipeline.\n\n" \
       "It's sometimes possible to fix this issue by moving code dependent on " \
       "`#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
-
-    def initialize
-      super(MESSAGE)
-    end
   end
 
-  class ControllerCalledBeforeRenderError < StandardError
+  class ControllerCalledBeforeRenderError < BaseError
     MESSAGE =
       "`#controller` can't be used during initialization, as it depends " \
       "on the view context that only exists once a ViewComponent is passed to " \
       "the Rails render pipeline.\n\n" \
       "It's sometimes possible to fix this issue by moving code dependent on " \
       "`#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void)."
-
-    def initialize
-      super(MESSAGE)
-    end
   end
 end

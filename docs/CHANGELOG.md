@@ -10,11 +10,15 @@ nav_order: 5
 
 ## main
 
-* BREAKING: Use `TranslateCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`, removing `ViewContextCalledBeforeRenderError`.
+* BREAKING: Raise `NilWithContentError` instead of `ArgumentError`.
 
     *Joel Hawksley*
 
-* BREAKING: Use `HelpersCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`.
+* BREAKING: Raise `TranslateCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`, removing `ViewContextCalledBeforeRenderError`.
+
+    *Joel Hawksley*
+
+* BREAKING: Raise `HelpersCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`.
 
     *Joel Hawksley*
 
@@ -22,7 +26,7 @@ nav_order: 5
 
     *Joel Hawksley*
 
-* BREAKING: Use `ControllerCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`. Rename `Base::ViewContextCalledBeforeRenderError` to `ViewContextCalledBeforeRenderError`.
+* BREAKING: Raise `ControllerCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`. Rename `Base::ViewContextCalledBeforeRenderError` to `ViewContextCalledBeforeRenderError`.
 
     *Joel Hawksley*
 

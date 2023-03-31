@@ -375,6 +375,12 @@ It's sometimes possible to fix this issue by moving code dependent on `#controll
 
 It's sometimes possible to fix this issue by moving code dependent on `#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void.
 
+### `NilWithContentError`
+
+No content provided to `#with_content` for ViewComponent::NilWithContentError.
+
+To fix this issue, pass a value.
+
 ### `TranslateCalledBeforeRenderError`
 
 `#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.

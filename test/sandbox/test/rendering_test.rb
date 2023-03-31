@@ -76,9 +76,9 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("span", text: "from arg")
   end
 
-  def test_raises_error_when_with_content_is_called_withot_any_values
+  def test_raises_error_when_with_content_is_called_without_any_values
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::NilWithContentError do
         WrapperComponent.new.with_content(nil)
       end
 
