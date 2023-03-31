@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Raise `ViewComponent::ReservedSingularSlotNameError` instead of `ArgumentError`.
+
+    *Joel Hawksley*
+
 * BREAKING: Raise `ViewComponent::ContentSlotNameError` instead of `ArgumentError`.
 
     *Joel Hawksley*

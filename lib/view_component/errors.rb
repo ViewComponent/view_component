@@ -7,12 +7,12 @@ module ViewComponent
 
   class ContentSlotNameError < StandardError
     MESSAGE =
-      "COMPONENT_CLASS_NAME declares a slot named content, which is a reserved word in ViewComponent.\n\n" \
+      "COMPONENT declares a slot named content, which is a reserved word in ViewComponent.\n\n" \
       "Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.\n\n" \
       "To fix this issue, either use the `content` accessor directly or choose a different slot name."
 
     def initialize(klass_name)
-      super(MESSAGE.gsub("COMPONENT_CLASS_NAME", klass_name.to_s))
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s))
     end
   end
 
@@ -22,13 +22,24 @@ module ViewComponent
       "string, or callable (i.e. proc, lambda, etc)"
   end
 
-  class ReservedPluralSlotNameError < StandardError
+
+  class ReservedSingularSlotNameError < StandardError
     MESSAGE =
-      "COMPONENT_CLASS_NAME declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
+      "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
       "To fix this issue, choose a different name."
 
     def initialize(klass_name, slot_name)
-      super(MESSAGE.gsub("COMPONENT_CLASS_NAME", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
+  class ReservedPluralSlotNameError < StandardError
+    MESSAGE =
+      "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
+      "To fix this issue, choose a different name."
+
+    def initialize(klass_name, slot_name)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
     end
   end
 

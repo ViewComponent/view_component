@@ -365,7 +365,7 @@ end
 
 ### `ContentSlotNameError`
 
-COMPONENT_CLASS_NAME declares a slot named content, which is a reserved word in ViewComponent.
+COMPONENT declares a slot named content, which is a reserved word in ViewComponent.
 
 Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.
 
@@ -395,7 +395,13 @@ To fix this issue, pass a value.
 
 ### `ReservedPluralSlotNameError`
 
-COMPONENT_CLASS_NAME declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.
+COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.
+
+To fix this issue, choose a different name.
+
+### `ReservedSingularSlotNameError`
+
+COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.
 
 To fix this issue, choose a different name.
 

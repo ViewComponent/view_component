@@ -264,10 +264,7 @@ module ViewComponent
         end
 
         if RESERVED_NAMES[:singular].include?(slot_name.to_sym)
-          raise ArgumentError.new(
-            "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
-            "To fix this issue, choose a different name."
-          )
+          raise ReservedSingularSlotNameError.new(self.name, slot_name)
         end
 
         raise_if_slot_ends_with_question_mark(slot_name)

@@ -347,7 +347,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_component_raises_when_given_invalid_slot_name
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::ReservedSingularSlotNameError do
         Class.new(ViewComponent::Base) do
           renders_one :render
         end
