@@ -15,4 +15,8 @@ nav_order: 3
 ### <%== render ViewComponent::DocsBuilderComponent::MethodDoc.new(method) %>
 
 <% end %>
+<% section.error_klasses.each do |error_klass| %>
+### <%== render ViewComponent::DocsBuilderComponent::ErrorKlassDoc.new(error_klass) %>
+
+<% end %>
 <% end %>

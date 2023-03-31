@@ -2,10 +2,33 @@
 
 module ViewComponent
   class DocsBuilderComponent < Base
-    class Section < Struct.new(:heading, :methods, :show_types, keyword_init: true)
-      def initialize(heading: nil, methods: [], show_types: true)
+    class Section < Struct.new(:heading, :methods, :error_klasses, :show_types, keyword_init: true)
+      def initialize(heading: nil, methods: [], error_klasses: [], show_types: true)
         methods.sort_by! { |method| method[:name] }
+        error_klasses.sort!
         super
+      end
+    end
+
+    class ErrorKlassDoc < ViewComponent::Base
+      def initialize(error_klass)
+        @error_klass = error_klass
+      end
+
+      def klass_name
+        @error_klass.gsub("ViewComponent::", "").gsub("::MESSAGE", "")
+      end
+
+      def error_message
+        ViewComponent.const_get(@error_klass)
+      end
+
+      def call
+        <<~DOCS.chomp
+          `#{klass_name}`
+
+          #{error_message}
+        DOCS
       end
     end
 
