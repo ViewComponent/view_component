@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: Use `TranslateCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`, removing `ViewContextCalledBeforeRenderError`.
+
+    *Joel Hawksley*
+
 * BREAKING: Use `HelpersCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`.
 
     *Joel Hawksley*
