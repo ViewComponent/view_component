@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix broken links in documentation.
+
+    *Ellen Keal*
+
 * Run `standardrb` against markdown in docs.
 
     *Joel Hawksley*
