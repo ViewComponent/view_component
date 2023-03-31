@@ -83,12 +83,11 @@ GEM
       thor (>= 0.14.0)
     ast (2.4.2)
     benchmark-ips (2.8.4)
-    better_html (1.0.16)
-      actionview (>= 4.0)
-      activesupport (>= 4.0)
+    better_html (2.0.1)
+      actionview (>= 6.0)
+      activesupport (>= 6.0)
       ast (~> 2.0)
       erubi (~> 1.4)
-      html_tokenizer (~> 0.0.6)
       parser (>= 2.4)
       smart_properties
     builder (3.2.4)
@@ -110,10 +109,9 @@ GEM
     date (3.3.3)
     diff-lcs (1.5.0)
     docile (1.4.0)
-    erb_lint (0.0.37)
+    erb_lint (0.4.0)
       activesupport
-      better_html (~> 1.0.7)
-      html_tokenizer
+      better_html (>= 2.0.1)
       parser (>= 2.7.1.4)
       rainbow
       rubocop
@@ -129,7 +127,6 @@ GEM
     haml (5.2.2)
       temple (>= 0.8.0)
       tilt
-    html_tokenizer (0.0.7)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     jbuilder (2.11.5)
@@ -299,11 +296,11 @@ PLATFORMS
 DEPENDENCIES
   appraisal (~> 2.4)
   benchmark-ips (~> 2.8.2)
-  better_html (~> 1)
+  better_html (~> 2)
   bundler (~> 2)
   capybara (~> 3)
   cuprite (~> 0.8)
-  erb_lint (~> 0.0.37)
+  erb_lint (~> 0.4.0)
   haml (~> 5)
   jbuilder (~> 2)
   m (~> 1)
