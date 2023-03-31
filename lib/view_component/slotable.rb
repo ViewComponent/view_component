@@ -243,10 +243,7 @@ module ViewComponent
           define_method method_name, &callable
           slot[:renderable_function] = instance_method(method_name)
         else
-          raise(
-            ArgumentError,
-            "invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)"
-          )
+          raise(InvalidSlotDefinitionError)
         end
 
         slot

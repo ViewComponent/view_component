@@ -5,6 +5,12 @@ module ViewComponent
     end
   end
 
+  class InvalidSlotDefinitionError < BaseError
+    MESSAGE =
+      "Invalid slot definition. Please pass a class, " \
+      "string, or callable (i.e. proc, lambda, etc)"
+  end
+
   class ReservedPluralSlotNameError < StandardError
     MESSAGE =
       "COMPONENT_CLASS_NAME declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \

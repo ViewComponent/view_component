@@ -568,7 +568,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_invalid_slot_definition_raises_error
-    error = assert_raises ArgumentError do
+    error = assert_raises ViewComponent::InvalidSlotDefinitionError do
       Class.new(ViewComponent::Base) do
         renders_many :items, :foo
       end

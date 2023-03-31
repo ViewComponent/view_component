@@ -375,6 +375,10 @@ It's sometimes possible to fix this issue by moving code dependent on `#controll
 
 It's sometimes possible to fix this issue by moving code dependent on `#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void.
 
+### `InvalidSlotDefinitionError`
+
+invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)
+
 ### `NilWithContentError`
 
 No content provided to `#with_content` for ViewComponent::NilWithContentError.
