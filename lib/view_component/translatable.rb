@@ -83,7 +83,7 @@ module ViewComponent
     def translate(key = nil, **options)
       if view_context.nil?
         raise(
-          ViewComponent::Base::ViewContextCalledBeforeRenderError,
+          ViewComponent::ViewContextCalledBeforeRenderError,
           "`#translate` can't be used during initialization as it depends " \
           "on the view context that only exists once a ViewComponent is passed to " \
           "the Rails render pipeline.\n\n" \
