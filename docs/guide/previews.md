@@ -69,7 +69,7 @@ Parameters can also be passed:
 ```ruby
 class ExampleComponentTest < ViewComponent::TestCase
   def test_render_preview
-    render_preview(:with_default_title, params: { message: "Hello, world!" })
+    render_preview(:with_default_title, params: {message: "Hello, world!"})
 
     assert_text("Hello, world!")
   end
@@ -102,8 +102,6 @@ Previews render with the application layout by default, but can use a specific l
 # test/components/previews/example_component_preview.rb
 class ExampleComponentPreview < ViewComponent::Preview
   layout "admin"
-
-  ...
 end
 ```
 
@@ -163,7 +161,7 @@ To use a different location for preview templates, pass the `template` argument:
 # test/components/previews/cell_component_preview.rb
 class CellComponentPreview < ViewComponent::Preview
   def default
-    render_with_template(template: 'custom_cell_component_preview/my_preview_template')
+    render_with_template(template: "custom_cell_component_preview/my_preview_template")
   end
 end
 ```

@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Run `standardrb` against markdown in docs.
+
+    *Joel Hawksley*
+
 * BREAKING: Use `ControllerCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`. Rename `Base::ViewContextCalledBeforeRenderError` to `ViewContextCalledBeforeRenderError`.
 
     *Joel Hawksley*

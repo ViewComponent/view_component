@@ -105,18 +105,18 @@ In such cases, there are several viable workarounds:
 1. Provide a lambda for each polymorphic type that adds the wrapping HTML. There is the potential for code duplication here, which could be mitigated by calling a class or helper method.
 1. Manually implement a polymorphic slot using a positional `type` argument and `case` statement, as shown in the example below. This effectively replicates the behavior described in this proposal.
 
-    ```ruby
-    renders_many :items do |type, *args, **kwargs|
-      content_tag :td, class: kwargs[:table_row_classes] do
-        case type
-          when :foo
-            RowFoo.new(*args, **kwargs)
-          when :bar
-            RowBar.new(*args, **kwargs)
-        end
-      end
+```ruby
+renders_many :items do |type, *args, **kwargs|
+  content_tag :td, class: kwargs[:table_row_classes] do
+    case type
+    when :foo
+      RowFoo.new(*args, **kwargs)
+    when :bar
+      RowBar.new(*args, **kwargs)
     end
-    ```
+  end
+end
+```
 
 ### Positional Type Argument vs Method Names
 
