@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* BREAKING: Use `ControllerCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`. Rename `Base::ViewContextCalledBeforeRenderError` to ` ViewContextCalledBeforeRenderError`.
+* BREAKING: Use `ControllerCalledBeforeRenderError` in place of `ViewContextCalledBeforeRenderError`. Rename `Base::ViewContextCalledBeforeRenderError` to `ViewContextCalledBeforeRenderError`.
 
     *Joel Hawksley*
 
