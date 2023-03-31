@@ -83,7 +83,8 @@ jobs:
       with:
         name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}
         path: coverage
-  pvc:
+  primer_view_components_compatibility:
+    name: Test compatibility with Primer ViewComponents (main)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master

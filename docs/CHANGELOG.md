@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* BREAKING: `#SLOT_NAME` getter no longer accepts arguments. This change was missed as part of the earlier deprecation in `3.0.0.rc1`.
+
+    *Joel Hawksley*
+
 * Raise error if translations are used in initializer.
 
     *Joel Hawksley*

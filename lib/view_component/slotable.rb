@@ -81,10 +81,9 @@ module ViewComponent
           end
           ruby2_keywords(:"with_#{slot_name}") if respond_to?(:ruby2_keywords, true)
 
-          define_method slot_name do |*args, &block|
+          define_method slot_name do
             get_slot(slot_name)
           end
-          ruby2_keywords(slot_name.to_sym) if respond_to?(:ruby2_keywords, true)
 
           define_method "#{slot_name}?" do
             get_slot(slot_name).present?
@@ -151,7 +150,7 @@ module ViewComponent
             end
           end
 
-          define_method slot_name do |collection_args = nil, &block|
+          define_method slot_name do
             get_slot(slot_name)
           end
 
