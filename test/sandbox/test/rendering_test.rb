@@ -377,7 +377,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_component_with_initializer_translations
     err =
-      assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+      assert_raises ViewComponent::ViewContextCalledBeforeRenderError do
         render_inline(InitializerTranslationsComponent.new)
       end
     assert_includes err.message, "can't be used during initialization"
