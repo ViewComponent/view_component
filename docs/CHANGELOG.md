@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Run `standardrb` against markdown in docs.
+
+    *Joel Hawksley*
+
 * BREAKING: `#SLOT_NAME` getter no longer accepts arguments. This change was missed as part of the earlier deprecation in `3.0.0.rc1`.
 
     *Joel Hawksley*

@@ -116,12 +116,13 @@ When rendering the same component multiple times for later reuse, use `render_in
 class PagesController < ApplicationController
   def index
     # Doesn't work: triggers a `AbstractController::DoubleRenderError`
-    # @reusable_icon = render IconComponent.new('close')
+    # @reusable_icon = render IconComponent.new("close")
 
     # Doesn't work: renders the whole index view as a string
-    # @reusable_icon = render_to_string IconComponent.new('close')
+    # @reusable_icon = render_to_string IconComponent.new("close")
 
     # Works: renders the component as a string
-    @reusable_icon = IconComponent.new('close').render_in(view_context)
+    @reusable_icon = IconComponent.new("close").render_in(view_context)
   end
+end
 ```

@@ -236,6 +236,8 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.28.0)
       parser (>= 3.2.1.0)
+    rubocop-md (1.2.0)
+      rubocop (>= 1.0)
     rubocop-performance (1.16.0)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
@@ -296,11 +298,11 @@ PLATFORMS
 DEPENDENCIES
   appraisal (~> 2.4)
   benchmark-ips (~> 2.8.2)
-  better_html (~> 2)
+  better_html
   bundler (~> 2)
   capybara (~> 3)
   cuprite (~> 0.8)
-  erb_lint (~> 0.4.0)
+  erb_lint
   haml (~> 5)
   jbuilder (~> 2)
   m (~> 1)
@@ -310,6 +312,7 @@ DEPENDENCIES
   rails (~> 7.0.0)
   rake (~> 13.0)
   rspec-rails (~> 5)
+  rubocop-md (~> 1)
   selenium-webdriver (~> 4)
   simplecov (~> 0.18.0)
   simplecov-console (~> 0.7.2)

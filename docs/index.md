@@ -95,9 +95,9 @@ class MessageComponent < ViewComponent::Base
   end
 
   def call
-    @output_buffer.safe_append='<h1>Hello, '.freeze
-    @output_buffer.append=( @name )
-    @output_buffer.safe_append='!</h1>'.freeze
+    @output_buffer.safe_append = "<h1>Hello, ".freeze
+    @output_buffer.append = (@name)
+    @output_buffer.safe_append = "!</h1>".freeze
     @output_buffer.to_s
   end
 end
