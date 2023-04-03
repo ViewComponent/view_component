@@ -128,7 +128,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
           )
         end
 
-        assert_equal("found 0 matches for templates for #{template_identifier}.", exception.message)
+        assert_equal("Found 0 matches for templates for #{template_identifier}.", exception.message)
       end
     end
 
@@ -152,7 +152,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
           )
         end
 
-        assert_equal("found multiple templates for #{template_identifier}.", exception.message)
+        assert_equal("Found multiple templates for #{template_identifier}.", exception.message)
       end
     end
   end
