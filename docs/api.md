@@ -417,6 +417,12 @@ To fix this issue, update the initializer to accept `PARAMETER`.
 
 See https://viewcomponent.org/guide/collections.html for more information on rendering collections.
 
+### `MissingPreviewTemplateError`
+
+A preview template for example EXAMPLE doesn't exist.
+
+To fix this issue, create a template for the example.
+
 ### `MultipleInlineTemplatesError`
 
 Inline templates can only be defined once per-component.

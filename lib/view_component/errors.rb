@@ -9,6 +9,16 @@ module ViewComponent
     MESSAGE = "Inline templates can only be defined once per-component."
   end
 
+  class MissingPreviewTemplateError < StandardError
+    MESSAGE =
+      "A preview template for example EXAMPLE doesn't exist.\n\n" \
+      "To fix this issue, create a template for the example."
+
+    def initialize(example)
+      super(MESSAGE.gsub("EXAMPLE", example))
+    end
+  end
+
   class DuplicateContentError < StandardError
     MESSAGE =
       "It looks like a block was provided after calling `with_content` on COMPONENT, " \
