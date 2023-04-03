@@ -381,6 +381,12 @@ To fix this issue, either use the `content` accessor directly or choose a differ
 
 It's sometimes possible to fix this issue by moving code dependent on `#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
 
+### `DuplicateContentError`
+
+It looks like a block was provided after calling `with_content` on COMPONENT, which means that ViewComponent doesn't know which content to use.
+
+To fix this issue, use either `with_content` or a block.
+
 ### `HelpersCalledBeforeRenderError`
 
 `#helpers` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.

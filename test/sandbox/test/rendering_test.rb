@@ -52,7 +52,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_raise_error_when_content_already_set
     error =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::DuplicateContentError do
         render_inline(WrapperComponent.new.with_content("setter content")) do
           "block content"
         end

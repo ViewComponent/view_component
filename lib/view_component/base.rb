@@ -93,9 +93,7 @@ module ViewComponent
       @current_template = self
 
       if block && defined?(@__vc_content_set_by_with_content)
-        raise ArgumentError, "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
-          "which means that ViewComponent doesn't know which content to use.\n\n" \
-          "To fix this issue, use either `with_content` or a block."
+        raise DuplicateContentError.new(self.class.name)
       end
 
       @__vc_content_evaluated = false
