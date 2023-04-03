@@ -31,7 +31,6 @@ module ViewComponent
       return if component_class == ViewComponent::Base
 
       component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
-      subclass_instance_methods = component_class.instance_methods(false)
 
       if template_errors.present?
         raise ViewComponent::TemplateError.new(template_errors) if raise_errors
