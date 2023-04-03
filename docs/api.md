@@ -417,6 +417,10 @@ To fix this issue, update the initializer to accept `PARAMETER`.
 
 See https://viewcomponent.org/guide/collections.html for more information on rendering collections.
 
+### `MultipleInlineTemplatesError`
+
+Inline templates can only be defined once per-component.
+
 ### `MultipleMatchingTemplatesForPreviewError`
 
 Found multiple templates for TEMPLATE_IDENTIFIER.

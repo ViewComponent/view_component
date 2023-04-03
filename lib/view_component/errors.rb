@@ -5,6 +5,10 @@ module ViewComponent
     end
   end
 
+  class MultipleInlineTemplatesError < BaseError
+    MESSAGE = "Inline templates can only be defined once per-component."
+  end
+
   class DuplicateContentError < StandardError
     MESSAGE =
       "It looks like a block was provided after calling `with_content` on COMPONENT, " \
