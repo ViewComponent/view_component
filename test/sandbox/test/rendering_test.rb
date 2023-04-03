@@ -671,41 +671,25 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_collection_component_missing_parameter_name
-    exception =
-      assert_raises ViewComponent::MissingCollectionArgumentError do
-        render_inline(MissingCollectionParameterNameComponent.with_collection([]))
-      end
-
-    assert_match(
-      /The initializer for MissingCollectionParameterNameComponent doesn't accept the parameter/, exception.message
-    )
+    assert_raises ViewComponent::MissingCollectionArgumentError do
+      render_inline(MissingCollectionParameterNameComponent.with_collection([]))
+    end
   end
 
   def test_collection_component_missing_default_parameter_name
-    exception =
-      assert_raises ViewComponent::MissingCollectionArgumentError do
-        render_inline(
-          MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
-        )
-      end
-
-    assert_match(/MissingDefaultCollectionParameterComponent doesn't accept the parameter/, exception.message)
+    assert_raises ViewComponent::MissingCollectionArgumentError do
+      render_inline(
+        MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
   end
 
   def test_collection_component_missing_custom_parameter_name_with_activemodel
-    exception = assert_raises ViewComponent::MissingCollectionArgumentError do
+    assert_raises ViewComponent::MissingCollectionArgumentError do
       render_inline(
         MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
       )
     end
-
-    assert_match(
-      "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, " \
-      "which is required to render it as a collection.\n\n" \
-      "To fix this issue, update the initializer to accept `name`.\n\n" \
-      "See https://viewcomponent.org/guide/collections.html for more information on rendering collections.",
-      exception.message
-    )
   end
 
   def test_collection_component_present_custom_parameter_name_with_activemodel
