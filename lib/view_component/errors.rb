@@ -52,7 +52,7 @@ module ViewComponent
       "The COMPONENT initializer is empty or invalid. " \
       "It must accept the parameter `PARAMETER` to render it as a collection.\n\n" \
       "To fix this issue, update the initializer to accept `PARAMETER`.\n\n" \
-      "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
+      "See [the collections docs](https://viewcomponent.org/guide/collections.html) for more information on rendering collections."
 
     def initialize(klass_name, parameter)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("PARAMETER", parameter.to_s))
@@ -64,7 +64,7 @@ module ViewComponent
       "The initializer for COMPONENT doesn't accept the parameter `PARAMETER`, " \
       "which is required to render it as a collection.\n\n" \
       "To fix this issue, update the initializer to accept `PARAMETER`.\n\n" \
-      "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
+      "See [the collections docs](https://viewcomponent.org/guide/collections.html) for more information on rendering collections."
 
     def initialize(klass_name, parameter)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("PARAMETER", parameter.to_s))
@@ -166,7 +166,7 @@ module ViewComponent
       "on the view context that only exists once a ViewComponent is passed to " \
       "the Rails render pipeline.\n\n" \
       "It's sometimes possible to fix this issue by moving code dependent on " \
-      "`#translate` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
+      "`#translate` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void)."
   end
 
   class HelpersCalledBeforeRenderError < BaseError
@@ -175,7 +175,7 @@ module ViewComponent
       "on the view context that only exists once a ViewComponent is passed to " \
       "the Rails render pipeline.\n\n" \
       "It's sometimes possible to fix this issue by moving code dependent on " \
-      "`#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
+      "`#helpers` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void)."
   end
 
   class ControllerCalledBeforeRenderError < BaseError

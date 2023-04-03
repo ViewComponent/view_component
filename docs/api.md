@@ -395,17 +395,17 @@ To fix this issue, use either `with_content` or a block.
 
 ### `EmptyOrInvalidInitializerError`
 
-The COMPONENT initializer is empty or invalid.It must accept the parameter `PARAMETER` to render it as a collection.
+The COMPONENT initializer is empty or invalid. It must accept the parameter `PARAMETER` to render it as a collection.
 
 To fix this issue, update the initializer to accept `PARAMETER`.
 
-See https://viewcomponent.org/guide/collections.html for more information on rendering collections.
+See [the collections docs](https://viewcomponent.org/guide/collections.html) for more information on rendering collections.
 
 ### `HelpersCalledBeforeRenderError`
 
 `#helpers` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
-It's sometimes possible to fix this issue by moving code dependent on `#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void.
+It's sometimes possible to fix this issue by moving code dependent on `#helpers` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
 
 ### `InvalidCollectionArgumentError`
 
@@ -413,15 +413,15 @@ The value of the first argument passed to `with_collection` isn't a valid collec
 
 ### `InvalidSlotDefinitionError`
 
-Invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)
+Invalid slot definition. Please pass a class, string, or callable (that is proc, lambda, etc)
 
 ### `MissingCollectionArgumentError`
 
-The initializer for COMPONENT doesn't accept the parameter `PARAMETER`, which is required in order to render it as a collection.
+The initializer for COMPONENT doesn't accept the parameter `PARAMETER`, which is required to render it as a collection.
 
 To fix this issue, update the initializer to accept `PARAMETER`.
 
-See https://viewcomponent.org/guide/collections.html for more information on rendering collections.
+See [the collections docs](https://viewcomponent.org/guide/collections.html) for more information on rendering collections.
 
 ### `MissingPreviewTemplateError`
 
@@ -473,7 +473,7 @@ To fix this issue, choose a different name.
 
 COMPONENT declares a slot named SLOT_NAME, which ends with a question mark.
 
-This is not allowed because the ViewComponent framework already provides predicate methods ending in `?`.
+This isn't allowed because the ViewComponent framework already provides predicate methods ending in `?`.
 
 To fix this issue, choose a different name.
 
@@ -489,4 +489,4 @@ ViewComponent SystemTest controller must only be called in a test environment fo
 
 `#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
-It's sometimes possible to fix this issue by moving code dependent on `#translate` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void.
+It's sometimes possible to fix this issue by moving code dependent on `#translate` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
