@@ -401,6 +401,10 @@ See https://viewcomponent.org/guide/collections.html for more information on ren
 
 It's sometimes possible to fix this issue by moving code dependent on `#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void.
 
+### `InvalidCollectionArgumentError`
+
+The value of the first argument passed to `with_collection` isn't a valid collection. Make sure it responds to `to_ary`.
+
 ### `InvalidSlotDefinitionError`
 
 Invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)

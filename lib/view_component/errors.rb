@@ -50,6 +50,12 @@ module ViewComponent
     end
   end
 
+  class InvalidCollectionArgumentError < BaseError
+    MESSAGE =
+      "The value of the first argument passed to `with_collection` isn't a valid collection. " \
+      "Make sure it responds to `to_ary`."
+  end
+
   class ContentSlotNameError < StandardError
     MESSAGE =
       "COMPONENT declares a slot named content, which is a reserved word in ViewComponent.\n\n" \

@@ -652,7 +652,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_missing_collection_object
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::InvalidCollectionArgumentError do
         render_inline(ProductComponent.with_collection("foo"))
       end
 
