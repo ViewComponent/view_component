@@ -268,7 +268,7 @@ Internally sets `page` to be a `Capybara::Node::Simple`, allowing for
 Capybara assertions to be used. All arguments are forwarded to the block.
 
 ```ruby
-render_in_view_context(arg1, arg2:) do |arg1, arg2:|
+render_in_view_context(arg1, arg2: nil) do |arg1, arg2:|
   render(MyComponent.new(arg1, arg2))
 end
 

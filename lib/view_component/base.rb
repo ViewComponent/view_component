@@ -542,10 +542,10 @@ module ViewComponent
         # parameters will be empty and ViewComponent will not be able to render
         # the component.
         if initialize_parameters.empty?
-          raise EmptyOrInvalidInitializerError.new(self.name, parameter)
+          raise EmptyOrInvalidInitializerError.new(name, parameter)
         end
 
-        raise MissingCollectionArgumentError.new(self.name, parameter)
+        raise MissingCollectionArgumentError.new(name, parameter)
       end
 
       # Ensure the component initializer doesn't define
@@ -555,7 +555,7 @@ module ViewComponent
       def validate_initialization_parameters!
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
-        raise ReservedParameterError.new(self.name, RESERVED_PARAMETER)
+        raise ReservedParameterError.new(name, RESERVED_PARAMETER)
       end
 
       # @private

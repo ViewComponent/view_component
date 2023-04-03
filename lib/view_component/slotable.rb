@@ -251,7 +251,7 @@ module ViewComponent
 
       def validate_plural_slot_name(slot_name)
         if RESERVED_NAMES[:plural].include?(slot_name.to_sym)
-          raise ReservedPluralSlotNameError.new(self.name, slot_name)
+          raise ReservedPluralSlotNameError.new(name, slot_name)
         end
 
         raise_if_slot_ends_with_question_mark(slot_name)
@@ -260,11 +260,11 @@ module ViewComponent
 
       def validate_singular_slot_name(slot_name)
         if slot_name.to_sym == :content
-          raise ContentSlotNameError.new(self.name)
+          raise ContentSlotNameError.new(name)
         end
 
         if RESERVED_NAMES[:singular].include?(slot_name.to_sym)
-          raise ReservedSingularSlotNameError.new(self.name, slot_name)
+          raise ReservedSingularSlotNameError.new(name, slot_name)
         end
 
         raise_if_slot_ends_with_question_mark(slot_name)
@@ -274,12 +274,12 @@ module ViewComponent
       def raise_if_slot_registered(slot_name)
         if registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
-          raise RedefinedSlotError.new(self.name, slot_name)
+          raise RedefinedSlotError.new(name, slot_name)
         end
       end
 
       def raise_if_slot_ends_with_question_mark(slot_name)
-        raise SlotPredicateNameError.new(self.name, slot_name) if slot_name.to_s.ends_with?("?")
+        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.ends_with?("?")
       end
     end
 
