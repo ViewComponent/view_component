@@ -145,7 +145,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock = Minitest::Mock.new
       mock.expect :map, [template_identifier + ".html.haml", template_identifier + ".html.erb"]
       Rails.application.config.view_component.stub :preview_paths, mock do
-        exception = assert_raises ViewComponent::MultipleTemplatesForPreviewError do
+        exception = assert_raises ViewComponent::MultipleMatchingTemplatesForPreviewError do
           PreviewHelper.find_template_data(
             lookup_context: lookup_context,
             template_identifier: template_identifier
