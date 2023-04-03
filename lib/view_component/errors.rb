@@ -5,6 +5,12 @@ module ViewComponent
     end
   end
 
+  class TemplateError < StandardError
+    def initialize(errors)
+      super(errors.join(", "))
+    end
+  end
+
   class MultipleInlineTemplatesError < BaseError
     MESSAGE = "Inline templates can only be defined once per-component."
   end

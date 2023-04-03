@@ -33,7 +33,7 @@ module ViewComponent
       component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
 
       if template_errors.present?
-        raise ViewComponent::TemplateError.new(template_errors) if raise_errors
+        raise TemplateError.new(template_errors) if raise_errors
 
         return false
       end

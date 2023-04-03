@@ -20,7 +20,6 @@ module ViewComponent
   autoload :SystemTestHelpers
   autoload :TestCase
   autoload :SystemTestCase
-  autoload :TemplateError
   autoload :Translatable
 end
 
