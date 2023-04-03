@@ -514,7 +514,7 @@ module ViewComponent
       # end
       # ```
       #
-      # @param value [Boolean] Whether or not to strip newlines.
+      # @param value [Boolean] Whether to strip newlines.
       def strip_trailing_whitespace(value = true)
         self.__vc_strip_trailing_whitespace = value
       end

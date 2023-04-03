@@ -49,7 +49,7 @@ module ViewComponent
 
   class EmptyOrInvalidInitializerError < StandardError
     MESSAGE =
-      "The COMPONENT initializer is empty or invalid." \
+      "The COMPONENT initializer is empty or invalid. " \
       "It must accept the parameter `PARAMETER` to render it as a collection.\n\n" \
       "To fix this issue, update the initializer to accept `PARAMETER`.\n\n" \
       "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
@@ -62,7 +62,7 @@ module ViewComponent
   class MissingCollectionArgumentError < StandardError
     MESSAGE =
       "The initializer for COMPONENT doesn't accept the parameter `PARAMETER`, " \
-      "which is required in order to render it as a collection.\n\n" \
+      "which is required to render it as a collection.\n\n" \
       "To fix this issue, update the initializer to accept `PARAMETER`.\n\n" \
       "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
 
@@ -101,13 +101,13 @@ module ViewComponent
   class InvalidSlotDefinitionError < BaseError
     MESSAGE =
       "Invalid slot definition. Please pass a class, " \
-      "string, or callable (i.e. proc, lambda, etc)"
+      "string, or callable (that is proc, lambda, etc)"
   end
 
   class SlotPredicateNameError < StandardError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which ends with a question mark.\n\n" \
-      "This is not allowed because the ViewComponent framework already provides predicate " \
+      "This isn't allowed because the ViewComponent framework already provides predicate " \
       "methods ending in `?`.\n\n" \
       "To fix this issue, choose a different name."
 

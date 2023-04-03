@@ -701,7 +701,7 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_match(
       "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, " \
-      "which is required in order to render it as a collection.\n\n" \
+      "which is required to render it as a collection.\n\n" \
       "To fix this issue, update the initializer to accept `name`.\n\n" \
       "See https://viewcomponent.org/guide/collections.html for more information on rendering collections.",
       exception.message

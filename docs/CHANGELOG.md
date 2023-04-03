@@ -48,7 +48,7 @@ nav_order: 5
 
     *Joel Hawksley*
 
-* Check for inline `erb_template` calls when deciding whether or not to compile a component's superclass.
+* Check for inline `erb_template` calls when deciding whether to compile a component's superclass.
 
     *Justin Kenyon*
 
@@ -104,7 +104,7 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Joel Hawksley*
 
-* BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they was easily accessible in tests. As such, we're cautiously considering this to be a breaking change.
+* BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they were accessible in tests. As such, we're considering this to be a breaking change.
 
     *Joel Hawksley*
 
@@ -144,7 +144,7 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
 
-We're so grateful for all of the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
+We're so grateful for all the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
 
 This release makes the following breaking changes, many of which have long been deprecated:
 
