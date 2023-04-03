@@ -14,6 +14,14 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Fix broken links in documentation.
+
+    *Ellen Keal*
+
+* Run `standardrb` against markdown in docs.
+
+    *Joel Hawksley*
+
 * BREAKING: Raise `TranslateCalledBeforeRenderError`, `ControllerCalledBeforeRenderError`, or `HelpersCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`.
 
     *Joel Hawksley*
