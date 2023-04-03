@@ -81,7 +81,7 @@ module ViewComponent
     end
 
     def translate(key = nil, **options)
-      raise(ViewComponent::TranslateCalledBeforeRenderError) if view_context.nil?
+      raise ViewComponent::TranslateCalledBeforeRenderError if view_context.nil?
 
       return super unless i18n_backend
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
