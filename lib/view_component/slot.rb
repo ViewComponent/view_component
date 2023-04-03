@@ -31,11 +31,7 @@ module ViewComponent
       view_context = @parent.send(:view_context)
 
       if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content)
-        raise ArgumentError.new(
-          "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
-          "which means that ViewComponent doesn't know which content to use.\n\n" \
-          "To fix this issue, use either `with_content` or a block."
-        )
+        raise DuplicateSlotContentError.new(self.class.name)
       end
 
       @content =

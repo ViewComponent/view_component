@@ -387,6 +387,12 @@ It looks like a block was provided after calling `with_content` on COMPONENT, wh
 
 To fix this issue, use either `with_content` or a block.
 
+### `DuplicateSlotContentError`
+
+It looks like a block was provided after calling `with_content` on COMPONENT, which means that ViewComponent doesn't know which content to use.
+
+To fix this issue, use either `with_content` or a block.
+
 ### `EmptyOrInvalidInitializerError`
 
 The COMPONENT initializer is empty or invalid.It must accept the parameter `PARAMETER` to render it as a collection.

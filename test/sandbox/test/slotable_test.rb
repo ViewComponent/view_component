@@ -417,7 +417,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_raises_if_using_both_block_content_and_with_content
     error =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::DuplicateSlotContentError do
         component = SlotsComponent.new
         slot = component.with_title("some_argument")
         slot.with_content("This is my title!")
