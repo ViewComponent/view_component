@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror`, `SystemTestControllerOnlyAllowedInTestError`, `SystemTestControllerNefariousPathError`, `NoMatchingTemplatesForPreviewError`, `MultipleMatchingTemplatesForPreviewError`, `DuplicateContentError` or `NilWithContentError` instead of generic error classes.
+* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror`, `SystemTestControllerOnlyAllowedInTestError`, `SystemTestControllerNefariousPathError`, `NoMatchingTemplatesForPreviewError`, `MultipleMatchingTemplatesForPreviewError`, `DuplicateContentError`, `EmptyOrInvalidInitializerError`, `MissingCollectionArgumentError` or `NilWithContentError` instead of generic error classes.
 
     *Joel Hawksley*
 

@@ -387,6 +387,14 @@ It looks like a block was provided after calling `with_content` on COMPONENT, wh
 
 To fix this issue, use either `with_content` or a block.
 
+### `EmptyOrInvalidInitializerError`
+
+The COMPONENT initializer is empty or invalid.It must accept the parameter `PARAMETER` to render it as a collection.
+
+To fix this issue, update the initializer to accept `PARAMETER`.
+
+See https://viewcomponent.org/guide/collections.html for more information on rendering collections.
+
 ### `HelpersCalledBeforeRenderError`
 
 `#helpers` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
@@ -396,6 +404,14 @@ It's sometimes possible to fix this issue by moving code dependent on `#helpers`
 ### `InvalidSlotDefinitionError`
 
 Invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)
+
+### `MissingCollectionArgumentError`
+
+The initializer for COMPONENT doesn't accept the parameter `PARAMETER`, which is required in order to render it as a collection.
+
+To fix this issue, update the initializer to accept `PARAMETER`.
+
+See https://viewcomponent.org/guide/collections.html for more information on rendering collections.
 
 ### `MultipleMatchingTemplatesForPreviewError`
 

@@ -172,7 +172,7 @@ module ViewComponent
     #
     # @return [ActionController::Base]
     def controller
-      raise(ControllerCalledBeforeRenderError) if view_context.nil?
+      raise ControllerCalledBeforeRenderError if view_context.nil?
 
       @__vc_controller ||= view_context.controller
     end
@@ -182,7 +182,7 @@ module ViewComponent
     #
     # @return [ActionView::Base]
     def helpers
-      raise(HelpersCalledBeforeRenderError) if view_context.nil?
+      raise HelpersCalledBeforeRenderError if view_context.nil?
 
       # Attempt to re-use the original view_context passed to the first
       # component rendered in the rendering pipeline. This prevents the
@@ -538,20 +538,14 @@ module ViewComponent
         return unless parameter
         return if initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
 
-        # If Ruby can't parse the component class, then the initalize
+        # If Ruby can't parse the component class, then the initialize
         # parameters will be empty and ViewComponent will not be able to render
         # the component.
         if initialize_parameters.empty?
-          raise ArgumentError, "The #{self} initializer is empty or invalid." \
-            "It must accept the parameter `#{parameter}` to render it as a collection.\n\n" \
-            "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
-            "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
+          raise EmptyOrInvalidInitializerError.new(self.name, parameter)
         end
 
-        raise ArgumentError, "The initializer for #{self} doesn't accept the parameter `#{parameter}`, " \
-          "which is required in order to render it as a collection.\n\n" \
-          "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
-          "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
+        raise MissingCollectionArgumentError.new(self.name, parameter)
       end
 
       # Ensure the component initializer doesn't define

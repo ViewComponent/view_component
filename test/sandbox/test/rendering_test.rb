@@ -681,7 +681,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_collection_component_missing_parameter_name
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::MissingCollectionArgumentError do
         render_inline(MissingCollectionParameterNameComponent.with_collection([]))
       end
 
@@ -692,7 +692,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_collection_component_missing_default_parameter_name
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::MissingCollectionArgumentError do
         render_inline(
           MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
         )
@@ -702,7 +702,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_collection_component_missing_custom_parameter_name_with_activemodel
-    exception = assert_raises ArgumentError do
+    exception = assert_raises ViewComponent::MissingCollectionArgumentError do
       render_inline(
         MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
       )
@@ -758,7 +758,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_collection_component_with_trailing_comma_attr_reader
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::EmptyOrInvalidInitializerError do
         render_inline(
           ProductReaderOopsComponent.with_collection(["foo"])
         )
