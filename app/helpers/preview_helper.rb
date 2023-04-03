@@ -31,10 +31,8 @@ module PreviewHelper
         path =~ /#{template_identifier}*.(html)/
       end
 
-      # In-case of a conflict due to multiple template files with
-      # the same name
-      raise "found 0 matches for templates for #{template_identifier}." if matching_templates.empty?
-      raise "found multiple templates for #{template_identifier}." if matching_templates.size > 1
+      raise ViewComponent::NoMatchingTemplatesForPreviewError.new(template_identifier) if matching_templates.empty?
+      raise ViewComponent::MultipleTemplatesForPreviewError.new(template_identifier) if matching_templates.size > 1
 
       template_file_path = matching_templates.first
       template_source = File.read(template_file_path)

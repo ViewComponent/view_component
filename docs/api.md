@@ -391,11 +391,19 @@ It's sometimes possible to fix this issue by moving code dependent on `#helpers`
 
 Invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)
 
+### `MultipleMatchingTemplatesForPreviewError`
+
+Found multiple templates for TEMPLATE_IDENTIFIER.
+
 ### `NilWithContentError`
 
 No content provided to `#with_content` for ViewComponent::NilWithContentError.
 
 To fix this issue, pass a value.
+
+### `NoMatchingTemplatesForPreviewError`
+
+Found 0 matches for templates for TEMPLATE_IDENTIFIER.
 
 ### `RedefinedSlotError`
 
@@ -423,9 +431,13 @@ This is not allowed because the ViewComponent framework already provides predica
 
 To fix this issue, choose a different name.
 
+### `SystemTestControllerNefariousPathError`
+
+ViewComponent SystemTest controller attempted to load a file outside of the expected directory.
+
 ### `SystemTestControllerOnlyAllowedInTestError`
 
-ViewComponent System Test Controller must only be called in a test environment for security reasons.
+ViewComponent SystemTest controller must only be called in a test environment for security reasons.
 
 ### `TranslateCalledBeforeRenderError`
 

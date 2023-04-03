@@ -105,6 +105,22 @@ module ViewComponent
       "`#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void)."
   end
 
+  class NoMatchingTemplatesForPreviewError < StandardError
+    MESSAGE = "Found 0 matches for templates for TEMPLATE_IDENTIFIER."
+
+    def initialize(template_identifier)
+      super(MESSAGE.gsub("TEMPLATE_IDENTIFIER", template_identifier))
+    end
+  end
+
+  class MultipleMatchingTemplatesForPreviewError < StandardError
+    MESSAGE = "Found multiple templates for TEMPLATE_IDENTIFIER."
+
+    def initialize(template_identifier)
+      super(MESSAGE.gsub("TEMPLATE_IDENTIFIER", template_identifier))
+    end
+  end
+
   class SystemTestControllerOnlyAllowedInTestError < BaseError
     MESSAGE = "ViewComponent SystemTest controller must only be called in a test environment for security reasons."
   end
