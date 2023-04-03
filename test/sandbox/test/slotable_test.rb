@@ -490,6 +490,16 @@ class SlotableTest < ViewComponent::TestCase
     assert_selector(".item.highlighted", count: 1)
   end
 
+  def test_supports_with_setters_plural_non_hash
+    render_inline(SlotsComponent.new(classes: "mt-4")) do |component|
+      component.with_posts([Post.new(title: "Title A"), Post.new(title: "Title B")])
+    end
+
+    assert_selector(".post-title", count: 2)
+    assert_selector(".post-title", text: "Title A")
+    assert_selector(".post-title", text: "Title B")
+  end
+
   def test_polymorphic_slot_with_setters
     render_inline(PolymorphicSlotComponent.new) do |component|
       component.with_header_standard { "standard" }
