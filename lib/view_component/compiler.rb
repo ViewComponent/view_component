@@ -33,13 +33,6 @@ module ViewComponent
       component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
       subclass_instance_methods = component_class.instance_methods(false)
 
-      if subclass_instance_methods.include?(:with_content) && raise_errors
-        raise ViewComponent::ComponentError.new(
-          "#{component_class} implements a reserved method, `#with_content`.\n\n" \
-          "To fix this issue, change the name of the method."
-        )
-      end
-
       if template_errors.present?
         raise ViewComponent::TemplateError.new(template_errors) if raise_errors
 

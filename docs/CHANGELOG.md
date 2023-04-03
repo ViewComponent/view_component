@@ -18,6 +18,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Allow `.with_content` to be redefined by components.
+
+    *Joel Hawksley*
+
 * Run `standardrb` against markdown in docs.
 
     *Joel Hawksley*

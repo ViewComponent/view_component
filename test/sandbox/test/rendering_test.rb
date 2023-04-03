@@ -61,15 +61,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_includes error.message, "It looks like a block was provided after calling"
   end
 
-  def test_raise_error_when_component_implements_with_content
-    exception =
-      assert_raises ViewComponent::ComponentError do
-        render_inline(InvalidWithRenderComponent.new)
-      end
-
-    assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `#with_content`"
-  end
-
   def test_renders_content_given_as_argument
     render_inline(WrapperComponent.new.with_content("from arg"))
 
