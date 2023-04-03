@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror` or `NilWithContentError` instead of `ArgumentError`.
+* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror`, `SystemTestControllerOnlyAllowedInTestError`, `SystemTestControllerNefariousPathError` or `NilWithContentError` instead of generic error classes.
 
     *Joel Hawksley*
 

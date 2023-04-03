@@ -423,6 +423,10 @@ This is not allowed because the ViewComponent framework already provides predica
 
 To fix this issue, choose a different name.
 
+### `SystemTestControllerOnlyAllowedInTestError`
+
+ViewComponent System Test Controller must only be called in a test environment for security reasons.
+
 ### `TranslateCalledBeforeRenderError`
 
 `#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.

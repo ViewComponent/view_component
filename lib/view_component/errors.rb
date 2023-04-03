@@ -104,4 +104,12 @@ module ViewComponent
       "It's sometimes possible to fix this issue by moving code dependent on " \
       "`#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void)."
   end
+
+  class SystemTestControllerOnlyAllowedInTestError < BaseError
+    MESSAGE = "ViewComponent SystemTest controller must only be called in a test environment for security reasons."
+  end
+
+  class SystemTestControllerNefariousPathError < BaseError
+    MESSAGE = "ViewComponent SystemTest controller attempted to load a file outside of the expected directory."
+  end
 end
