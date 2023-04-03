@@ -32,7 +32,7 @@ module PreviewHelper
       end
 
       raise ViewComponent::NoMatchingTemplatesForPreviewError.new(template_identifier) if matching_templates.empty?
-      raise ViewComponent::MultipleTemplatesForPreviewError.new(template_identifier) if matching_templates.size > 1
+      raise ViewComponent::MultipleMatchingTemplatesForPreviewError.new(template_identifier) if matching_templates.size > 1
 
       template_file_path = matching_templates.first
       template_source = File.read(template_file_path)
