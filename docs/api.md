@@ -433,6 +433,10 @@ COMPONENT declares the SLOT_NAME slot multiple times.
 
 To fix this issue, choose a different slot name.
 
+### `ReservedParameterError`
+
+COMPONENT initializer can't accept the parameter `PARAMETER`, as it will override a public ViewComponent method. To fix this issue, rename the parameter.
+
 ### `ReservedPluralSlotNameError`
 
 COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.

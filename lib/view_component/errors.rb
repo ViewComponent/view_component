@@ -40,6 +40,16 @@ module ViewComponent
     end
   end
 
+  class ReservedParameterError < StandardError
+    MESSAGE =
+      "COMPONENT initializer can't accept the parameter `PARAMETER`, as it will override a " \
+      "public ViewComponent method. To fix this issue, rename the parameter."
+
+    def initialize(klass_name, parameter)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("PARAMETER", parameter.to_s))
+    end
+  end
+
   class ContentSlotNameError < StandardError
     MESSAGE =
       "COMPONENT declares a slot named content, which is a reserved word in ViewComponent.\n\n" \

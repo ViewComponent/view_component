@@ -730,7 +730,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache = Set.new
 
     exception =
-      assert_raises ViewComponent::ComponentError do
+      assert_raises ViewComponent::ReservedParameterError do
         InvalidParametersComponent.compile(raise_errors: true)
       end
 
@@ -744,7 +744,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache = Set.new
 
     exception =
-      assert_raises ViewComponent::ComponentError do
+      assert_raises ViewComponent::ReservedParameterError do
         InvalidNamedParametersComponent.compile(raise_errors: true)
       end
 
