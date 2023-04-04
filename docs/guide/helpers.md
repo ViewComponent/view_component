@@ -11,7 +11,7 @@ Helpers must be included to be used:
 ```ruby
 module IconHelper
   def icon(name)
-    tag.i data: { feather: name.to_s }
+    tag.i data: {feather: name.to_s}
   end
 end
 

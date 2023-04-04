@@ -6,6 +6,7 @@ require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
+require "view_component/errors"
 require "view_component/preview"
 require "view_component/slotable"
 require "view_component/translatable"
@@ -27,8 +28,6 @@ module ViewComponent
       # unless you're building a `ViewComponent::Config` elsewhere.
       attr_writer :config
     end
-
-    class ViewContextCalledBeforeRenderError < StandardError; end
 
     include ViewComponent::Slotable
     include ViewComponent::Translatable
@@ -94,9 +93,7 @@ module ViewComponent
       @current_template = self
 
       if block && defined?(@__vc_content_set_by_with_content)
-        raise ArgumentError, "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
-          "which means that ViewComponent doesn't know which content to use.\n\n" \
-          "To fix this issue, use either `with_content` or a block."
+        raise DuplicateContentError.new(self.class.name)
       end
 
       @__vc_content_evaluated = false
@@ -175,16 +172,7 @@ module ViewComponent
     #
     # @return [ActionController::Base]
     def controller
-      if view_context.nil?
-        raise(
-          ViewContextCalledBeforeRenderError,
-          "`#controller` can't be used during initialization, as it depends " \
-          "on the view context that only exists once a ViewComponent is passed to " \
-          "the Rails render pipeline.\n\n" \
-          "It's sometimes possible to fix this issue by moving code dependent on " \
-          "`#controller` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
-        )
-      end
+      raise ControllerCalledBeforeRenderError if view_context.nil?
 
       @__vc_controller ||= view_context.controller
     end
@@ -194,16 +182,7 @@ module ViewComponent
     #
     # @return [ActionView::Base]
     def helpers
-      if view_context.nil?
-        raise(
-          ViewContextCalledBeforeRenderError,
-          "`#helpers` can't be used during initialization as it depends " \
-          "on the view context that only exists once a ViewComponent is passed to " \
-          "the Rails render pipeline.\n\n" \
-          "It's sometimes possible to fix this issue by moving code dependent on " \
-          "`#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
-        )
-      end
+      raise HelpersCalledBeforeRenderError if view_context.nil?
 
       # Attempt to re-use the original view_context passed to the first
       # component rendered in the rendering pipeline. This prevents the
@@ -535,7 +514,7 @@ module ViewComponent
       # end
       # ```
       #
-      # @param value [Boolean] Whether or not to strip newlines.
+      # @param value [Boolean] Whether to strip newlines.
       def strip_trailing_whitespace(value = true)
         self.__vc_strip_trailing_whitespace = value
       end
@@ -559,20 +538,14 @@ module ViewComponent
         return unless parameter
         return if initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
 
-        # If Ruby can't parse the component class, then the initalize
+        # If Ruby can't parse the component class, then the initialize
         # parameters will be empty and ViewComponent will not be able to render
         # the component.
         if initialize_parameters.empty?
-          raise ArgumentError, "The #{self} initializer is empty or invalid." \
-            "It must accept the parameter `#{parameter}` to render it as a collection.\n\n" \
-            "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
-            "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
+          raise EmptyOrInvalidInitializerError.new(name, parameter)
         end
 
-        raise ArgumentError, "The initializer for #{self} doesn't accept the parameter `#{parameter}`, " \
-          "which is required in order to render it as a collection.\n\n" \
-          "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
-          "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
+        raise MissingCollectionArgumentError.new(name, parameter)
       end
 
       # Ensure the component initializer doesn't define
@@ -582,8 +555,7 @@ module ViewComponent
       def validate_initialization_parameters!
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
-        raise ViewComponent::ComponentError, "#{self} initializer can't accept the parameter `#{RESERVED_PARAMETER}`, as it will override a " \
-          "public ViewComponent method. To fix this issue, rename the parameter."
+        raise ReservedParameterError.new(name, RESERVED_PARAMETER)
       end
 
       # @private

@@ -10,7 +10,7 @@ module ViewComponent # :nodoc:
         return super if !method.end_with?("_template")
 
         if defined?(@__vc_inline_template_defined) && @__vc_inline_template_defined
-          raise ViewComponent::ComponentError, "inline templates can only be defined once per-component"
+          raise MultipleInlineTemplatesError
         end
 
         if args.size != 1

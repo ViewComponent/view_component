@@ -95,9 +95,9 @@ class MessageComponent < ViewComponent::Base
   end
 
   def call
-    @output_buffer.safe_append='<h1>Hello, '.freeze
-    @output_buffer.append=( @name )
-    @output_buffer.safe_append='!</h1>'.freeze
+    @output_buffer.safe_append = "<h1>Hello, ".freeze
+    @output_buffer.append = (@name)
+    @output_buffer.safe_append = "!</h1>".freeze
     @output_buffer.to_s
   end
 end
@@ -160,6 +160,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
 <img src="https://avatars.githubusercontent.com/leighhalliday?s=64" alt="leighhalliday" width="32" />
+<img src="https://avatars.githubusercontent.com/llenk?s=64" alt="llenk" width="32" />
 <img src="https://avatars.githubusercontent.com/manuelpuyol?s=64" alt="manuelpuyol" width="32" />
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
 <img src="https://avatars.githubusercontent.com/matt-yorkley?s=64" alt="Matt-Yorkley" width="32" />

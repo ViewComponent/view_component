@@ -2,21 +2,40 @@
 
 module ViewComponent
   class DocsBuilderComponent < Base
-    class Section < Struct.new(:heading, :methods, :show_types, keyword_init: true)
-      def initialize(heading: nil, methods: [], show_types: true)
+    class Section < Struct.new(:heading, :methods, :error_klasses, :show_types, keyword_init: true)
+      def initialize(heading: nil, methods: [], error_klasses: [], show_types: true)
         methods.sort_by! { |method| method[:name] }
+        error_klasses.sort!
         super
       end
     end
 
-    class MethodDoc < ViewComponent::Base
-      def initialize(method, section: Section.new(show_types: true))
-        @method = method
-        @section = section
+    class ErrorKlassDoc < ViewComponent::Base
+      def initialize(error_klass, _show_types)
+        @error_klass = error_klass
       end
 
-      def show_types?
-        @section.show_types
+      def klass_name
+        @error_klass.gsub("ViewComponent::", "").gsub("::MESSAGE", "")
+      end
+
+      def error_message
+        ViewComponent.const_get(@error_klass)
+      end
+
+      def call
+        <<~DOCS.chomp
+          `#{klass_name}`
+
+          #{error_message}
+        DOCS
+      end
+    end
+
+    class MethodDoc < ViewComponent::Base
+      def initialize(method, show_types = true)
+        @method = method
+        @show_types = show_types
       end
 
       def deprecated?
@@ -28,7 +47,7 @@ module ViewComponent
       end
 
       def types
-        " → [#{@method.tag(:return).types.join(",")}]" if @method.tag(:return)&.types && show_types?
+        " → [#{@method.tag(:return).types.join(",")}]" if @method.tag(:return)&.types && @show_types
       end
 
       def signature_or_name
