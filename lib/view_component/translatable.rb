@@ -81,16 +81,7 @@ module ViewComponent
     end
 
     def translate(key = nil, **options)
-      if view_context.nil?
-        raise(
-          ViewComponent::ViewContextCalledBeforeRenderError,
-          "`#translate` can't be used during initialization as it depends " \
-          "on the view context that only exists once a ViewComponent is passed to " \
-          "the Rails render pipeline.\n\n" \
-          "It's sometimes possible to fix this issue by moving code dependent on " \
-          "`#translate` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
-        )
-      end
+      raise ViewComponent::TranslateCalledBeforeRenderError if view_context.nil?
 
       return super unless i18n_backend
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)

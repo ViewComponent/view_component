@@ -126,7 +126,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_sub_component_raise_with_duplicate_slot_name
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::RedefinedSlotError do
         SlotsComponent.renders_one :title
       end
 
@@ -335,7 +335,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_component_raises_when_given_content_slot_name
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::ContentSlotNameError do
         Class.new(ViewComponent::Base) do
           renders_one :content
         end
@@ -347,7 +347,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_component_raises_when_given_invalid_slot_name
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::ReservedSingularSlotNameError do
         Class.new(ViewComponent::Base) do
           renders_one :render
         end
@@ -358,7 +358,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_component_raises_when_given_one_slot_name_ending_with_question_mark
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::SlotPredicateNameError do
         Class.new(ViewComponent::Base) do
           renders_one :item?
         end
@@ -368,7 +368,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_component_raises_when_given_invalid_slot_name_for_has_many
-    exception = assert_raises ArgumentError do
+    exception = assert_raises ViewComponent::ReservedPluralSlotNameError do
       Class.new(ViewComponent::Base) do
         renders_many :contents
       end
@@ -379,7 +379,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_component_raises_when_given_many_slot_name_ending_with_question_mark
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::SlotPredicateNameError do
         Class.new(ViewComponent::Base) do
           renders_many :items?
         end
@@ -417,7 +417,7 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_raises_if_using_both_block_content_and_with_content
     error =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::DuplicateSlotContentError do
         component = SlotsComponent.new
         slot = component.with_title("some_argument")
         slot.with_content("This is my title!")
@@ -569,7 +569,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_singular_polymorphic_slot_raises_on_redefinition
-    error = assert_raises ArgumentError do
+    error = assert_raises ViewComponent::ContentAlreadySetForPolymorphicSlotError do
       render_inline(PolymorphicSlotComponent.new) do |component|
         component.with_header_standard { "standard" }
         component.with_header_special { "special" }
@@ -580,13 +580,13 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_invalid_slot_definition_raises_error
-    error = assert_raises ArgumentError do
+    error = assert_raises ViewComponent::InvalidSlotDefinitionError do
       Class.new(ViewComponent::Base) do
         renders_many :items, :foo
       end
     end
 
-    assert_includes error.message, "invalid slot definition"
+    assert_includes error.message, "Invalid slot definition"
   end
 
   def test_component_delegation_slots_work_with_helpers
@@ -614,7 +614,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_raises_error_on_conflicting_slot_names
-    error = assert_raises ArgumentError do
+    error = assert_raises ViewComponent::RedefinedSlotError do
       Class.new(ViewComponent::Base) do
         renders_one :conflicting_item
         renders_many :conflicting_items
@@ -625,7 +625,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_raises_error_on_conflicting_slot_names_in_reverse_order
-    error = assert_raises ArgumentError do
+    error = assert_raises ViewComponent::RedefinedSlotError do
       Class.new(ViewComponent::Base) do
         renders_many :conflicting_items
         renders_one :conflicting_item

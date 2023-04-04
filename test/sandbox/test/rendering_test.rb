@@ -52,7 +52,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_raise_error_when_content_already_set
     error =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::DuplicateContentError do
         render_inline(WrapperComponent.new.with_content("setter content")) do
           "block content"
         end
@@ -61,24 +61,15 @@ class RenderingTest < ViewComponent::TestCase
     assert_includes error.message, "It looks like a block was provided after calling"
   end
 
-  def test_raise_error_when_component_implements_with_content
-    exception =
-      assert_raises ViewComponent::ComponentError do
-        render_inline(InvalidWithRenderComponent.new)
-      end
-
-    assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `#with_content`"
-  end
-
   def test_renders_content_given_as_argument
     render_inline(WrapperComponent.new.with_content("from arg"))
 
     assert_selector("span", text: "from arg")
   end
 
-  def test_raises_error_when_with_content_is_called_withot_any_values
+  def test_raises_error_when_with_content_is_called_without_any_values
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::NilWithContentError do
         WrapperComponent.new.with_content(nil)
       end
 
@@ -377,7 +368,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_component_with_initializer_translations
     err =
-      assert_raises ViewComponent::ViewContextCalledBeforeRenderError do
+      assert_raises ViewComponent::TranslateCalledBeforeRenderError do
         render_inline(InitializerTranslationsComponent.new)
       end
     assert_includes err.message, "can't be used during initialization"
@@ -652,7 +643,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_missing_collection_object
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::InvalidCollectionArgumentError do
         render_inline(ProductComponent.with_collection("foo"))
       end
 
@@ -680,41 +671,25 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_collection_component_missing_parameter_name
-    exception =
-      assert_raises ArgumentError do
-        render_inline(MissingCollectionParameterNameComponent.with_collection([]))
-      end
-
-    assert_match(
-      /The initializer for MissingCollectionParameterNameComponent doesn't accept the parameter/, exception.message
-    )
+    assert_raises ViewComponent::MissingCollectionArgumentError do
+      render_inline(MissingCollectionParameterNameComponent.with_collection([]))
+    end
   end
 
   def test_collection_component_missing_default_parameter_name
-    exception =
-      assert_raises ArgumentError do
-        render_inline(
-          MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
-        )
-      end
-
-    assert_match(/MissingDefaultCollectionParameterComponent doesn't accept the parameter/, exception.message)
+    assert_raises ViewComponent::MissingCollectionArgumentError do
+      render_inline(
+        MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
   end
 
   def test_collection_component_missing_custom_parameter_name_with_activemodel
-    exception = assert_raises ArgumentError do
+    assert_raises ViewComponent::MissingCollectionArgumentError do
       render_inline(
         MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
       )
     end
-
-    assert_match(
-      "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, " \
-      "which is required in order to render it as a collection.\n\n" \
-      "To fix this issue, update the initializer to accept `name`.\n\n" \
-      "See https://viewcomponent.org/guide/collections.html for more information on rendering collections.",
-      exception.message
-    )
   end
 
   def test_collection_component_present_custom_parameter_name_with_activemodel
@@ -730,7 +705,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache = Set.new
 
     exception =
-      assert_raises ViewComponent::ComponentError do
+      assert_raises ViewComponent::ReservedParameterError do
         InvalidParametersComponent.compile(raise_errors: true)
       end
 
@@ -744,7 +719,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache = Set.new
 
     exception =
-      assert_raises ViewComponent::ComponentError do
+      assert_raises ViewComponent::ReservedParameterError do
         InvalidNamedParametersComponent.compile(raise_errors: true)
       end
 
@@ -758,7 +733,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_collection_component_with_trailing_comma_attr_reader
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::EmptyOrInvalidInitializerError do
         render_inline(
           ProductReaderOopsComponent.with_collection(["foo"])
         )

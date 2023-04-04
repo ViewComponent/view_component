@@ -121,14 +121,14 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock = Minitest::Mock.new
       mock.expect :map, []
       Rails.application.config.view_component.stub :preview_paths, mock do
-        exception = assert_raises RuntimeError do
+        exception = assert_raises ViewComponent::NoMatchingTemplatesForPreviewError do
           PreviewHelper.find_template_data(
             lookup_context: lookup_context,
             template_identifier: template_identifier
           )
         end
 
-        assert_equal("found 0 matches for templates for #{template_identifier}.", exception.message)
+        assert_equal("Found 0 matches for templates for #{template_identifier}.", exception.message)
       end
     end
 
@@ -145,14 +145,14 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock = Minitest::Mock.new
       mock.expect :map, [template_identifier + ".html.haml", template_identifier + ".html.erb"]
       Rails.application.config.view_component.stub :preview_paths, mock do
-        exception = assert_raises RuntimeError do
+        exception = assert_raises ViewComponent::MultipleMatchingTemplatesForPreviewError do
           PreviewHelper.find_template_data(
             lookup_context: lookup_context,
             template_identifier: template_identifier
           )
         end
 
-        assert_equal("found multiple templates for #{template_identifier}.", exception.message)
+        assert_equal("Found multiple templates for #{template_identifier}.", exception.message)
       end
     end
   end

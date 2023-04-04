@@ -31,7 +31,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   def test_calling_helpers_outside_render_raises
     component = ViewComponent::Base.new
     err =
-      assert_raises ViewComponent::ViewContextCalledBeforeRenderError do
+      assert_raises ViewComponent::HelpersCalledBeforeRenderError do
         component.helpers
       end
     assert_includes err.message, "can't be used during initialization"

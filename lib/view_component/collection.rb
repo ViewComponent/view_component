@@ -53,10 +53,7 @@ module ViewComponent
       if object.respond_to?(:to_ary)
         object.to_ary
       else
-        raise ArgumentError.new(
-          "The value of the first argument passed to `with_collection` isn't a valid collection. " \
-          "Make sure it responds to `to_ary`."
-        )
+        raise InvalidCollectionArgumentError
       end
     end
 

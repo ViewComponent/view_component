@@ -268,7 +268,7 @@ Internally sets `page` to be a `Capybara::Node::Simple`, allowing for
 Capybara assertions to be used. All arguments are forwarded to the block.
 
 ```ruby
-render_in_view_context(arg1, arg2: "foo") do |arg1, arg2:|
+render_in_view_context(arg1, arg2: nil) do |arg1, arg2:|
   render(MyComponent.new(arg1, arg2))
 end
 
@@ -363,8 +363,130 @@ end
 
 ## Errors
 
+### `ContentAlreadySetForPolymorphicSlotError`
+
+Content for slot SLOT_NAME has already been provided.
+
+### `ContentSlotNameError`
+
+COMPONENT declares a slot named content, which is a reserved word in ViewComponent.
+
+Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.
+
+To fix this issue, either use the `content` accessor directly or choose a different slot name.
+
 ### `ControllerCalledBeforeRenderError`
 
 `#controller` can't be used during initialization, as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
 It's sometimes possible to fix this issue by moving code dependent on `#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
+
+### `DuplicateContentError`
+
+It looks like a block was provided after calling `with_content` on COMPONENT, which means that ViewComponent doesn't know which content to use.
+
+To fix this issue, use either `with_content` or a block.
+
+### `DuplicateSlotContentError`
+
+It looks like a block was provided after calling `with_content` on COMPONENT, which means that ViewComponent doesn't know which content to use.
+
+To fix this issue, use either `with_content` or a block.
+
+### `EmptyOrInvalidInitializerError`
+
+The COMPONENT initializer is empty or invalid. It must accept the parameter `PARAMETER` to render it as a collection.
+
+To fix this issue, update the initializer to accept `PARAMETER`.
+
+See [the collections docs](https://viewcomponent.org/guide/collections.html) for more information on rendering collections.
+
+### `HelpersCalledBeforeRenderError`
+
+`#helpers` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
+
+It's sometimes possible to fix this issue by moving code dependent on `#helpers` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
+
+### `InvalidCollectionArgumentError`
+
+The value of the first argument passed to `with_collection` isn't a valid collection. Make sure it responds to `to_ary`.
+
+### `InvalidSlotDefinitionError`
+
+Invalid slot definition. Please pass a class, string, or callable (that is proc, lambda, etc)
+
+### `MissingCollectionArgumentError`
+
+The initializer for COMPONENT doesn't accept the parameter `PARAMETER`, which is required to render it as a collection.
+
+To fix this issue, update the initializer to accept `PARAMETER`.
+
+See [the collections docs](https://viewcomponent.org/guide/collections.html) for more information on rendering collections.
+
+### `MissingPreviewTemplateError`
+
+A preview template for example EXAMPLE doesn't exist.
+
+To fix this issue, create a template for the example.
+
+### `MultipleInlineTemplatesError`
+
+Inline templates can only be defined once per-component.
+
+### `MultipleMatchingTemplatesForPreviewError`
+
+Found multiple templates for TEMPLATE_IDENTIFIER.
+
+### `NilWithContentError`
+
+No content provided to `#with_content` for ViewComponent::NilWithContentError.
+
+To fix this issue, pass a value.
+
+### `NoMatchingTemplatesForPreviewError`
+
+Found 0 matches for templates for TEMPLATE_IDENTIFIER.
+
+### `RedefinedSlotError`
+
+COMPONENT declares the SLOT_NAME slot multiple times.
+
+To fix this issue, choose a different slot name.
+
+### `ReservedParameterError`
+
+COMPONENT initializer can't accept the parameter `PARAMETER`, as it will override a public ViewComponent method. To fix this issue, rename the parameter.
+
+### `ReservedPluralSlotNameError`
+
+COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.
+
+To fix this issue, choose a different name.
+
+### `ReservedSingularSlotNameError`
+
+COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.
+
+To fix this issue, choose a different name.
+
+### `SlotPredicateNameError`
+
+COMPONENT declares a slot named SLOT_NAME, which ends with a question mark.
+
+This isn't allowed because the ViewComponent framework already provides predicate methods ending in `?`.
+
+To fix this issue, choose a different name.
+
+### `SystemTestControllerNefariousPathError`
+
+ViewComponent SystemTest controller attempted to load a file outside of the expected directory.
+
+### `SystemTestControllerOnlyAllowedInTestError`
+
+ViewComponent SystemTest controller must only be called in a test environment for security reasons.
+
+### `TranslateCalledBeforeRenderError`
+
+`#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
+
+It's sometimes possible to fix this issue by moving code dependent on `#translate` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
