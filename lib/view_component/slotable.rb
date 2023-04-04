@@ -243,10 +243,7 @@ module ViewComponent
           define_method method_name, &callable
           slot[:renderable_function] = instance_method(method_name)
         else
-          raise(
-            ArgumentError,
-            "invalid slot definition. Please pass a class, string, or callable (i.e. proc, lambda, etc)"
-          )
+          raise(InvalidSlotDefinitionError)
         end
 
         slot
@@ -254,10 +251,7 @@ module ViewComponent
 
       def validate_plural_slot_name(slot_name)
         if RESERVED_NAMES[:plural].include?(slot_name.to_sym)
-          raise ArgumentError.new(
-            "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
-            "To fix this issue, choose a different name."
-          )
+          raise ReservedPluralSlotNameError.new(name, slot_name)
         end
 
         raise_if_slot_ends_with_question_mark(slot_name)
@@ -266,18 +260,11 @@ module ViewComponent
 
       def validate_singular_slot_name(slot_name)
         if slot_name.to_sym == :content
-          raise ArgumentError.new(
-            "#{self} declares a slot named content, which is a reserved word in ViewComponent.\n\n" \
-            "Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.\n\n" \
-            "To fix this issue, either use the `content` accessor directly or choose a different slot name."
-          )
+          raise ContentSlotNameError.new(name)
         end
 
         if RESERVED_NAMES[:singular].include?(slot_name.to_sym)
-          raise ArgumentError.new(
-            "#{self} declares a slot named #{slot_name}, which is a reserved word in the ViewComponent framework.\n\n" \
-            "To fix this issue, choose a different name."
-          )
+          raise ReservedSingularSlotNameError.new(name, slot_name)
         end
 
         raise_if_slot_ends_with_question_mark(slot_name)
@@ -287,22 +274,12 @@ module ViewComponent
       def raise_if_slot_registered(slot_name)
         if registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
-          raise ArgumentError.new(
-            "#{self} declares the #{slot_name} slot multiple times.\n\n" \
-            "To fix this issue, choose a different slot name."
-          )
+          raise RedefinedSlotError.new(name, slot_name)
         end
       end
 
       def raise_if_slot_ends_with_question_mark(slot_name)
-        if slot_name.to_s.ends_with?("?")
-          raise ArgumentError.new(
-            "#{self} declares a slot named #{slot_name}, which ends with a question mark.\n\n" \
-            "This is not allowed because the ViewComponent framework already provides predicate " \
-            "methods ending in `?`.\n\n" \
-            "To fix this issue, choose a different name."
-          )
-        end
+        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.ends_with?("?")
       end
     end
 
@@ -383,7 +360,7 @@ module ViewComponent
       slot_definition = self.class.registered_slots[slot_name]
 
       if !slot_definition[:collection] && (defined?(@__vc_set_slots) && @__vc_set_slots[slot_name])
-        raise ArgumentError, "content for slot '#{slot_name}' has already been provided"
+        raise ContentAlreadySetForPolymorphicSlotError.new(slot_name)
       end
 
       poly_def = slot_definition[:renderable_hash][poly_type]

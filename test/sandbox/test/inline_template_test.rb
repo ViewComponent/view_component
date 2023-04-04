@@ -123,14 +123,14 @@ class InlineErbTest < ViewComponent::TestCase
   end
 
   test "calling template methods multiple times raises an exception" do
-    error = assert_raises ViewComponent::ComponentError do
+    error = assert_raises ViewComponent::MultipleInlineTemplatesError do
       Class.new(InlineErbComponent) do
         erb_template "foo"
         erb_template "bar"
       end
     end
 
-    assert_equal "inline templates can only be defined once per-component", error.message
+    assert_equal "Inline templates can only be defined once per-component.", error.message
   end
 
   test "calling template methods with more or less than 1 argument raises" do
