@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Allow ActiveRecord objects to be passed to `renders_many`
+* Allow ActiveRecord objects to be passed to `renders_many`.
 
     *Leigh Halliday*
 
