@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Allow ActiveRecord objects to be passed to `renders_many`.
+
+    *Leigh Halliday*
+
 * BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror`, `SystemTestControllerOnlyAllowedInTestError`, `SystemTestControllerNefariousPathError`, `NoMatchingTemplatesForPreviewError`, `MultipleMatchingTemplatesForPreviewError`, `DuplicateContentError`, `EmptyOrInvalidInitializerError`, `MissingCollectionArgumentError`, `ReservedParameterError`, `InvalidCollectionArgumentError`, `MultipleInlineTemplatesError`, `MissingPreviewTemplateError`, `DuplicateSlotContentError` or `NilWithContentError` instead of generic error classes.
 
     *Joel Hawksley*

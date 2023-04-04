@@ -9,6 +9,8 @@ class SlotsComponent < ViewComponent::Base
     end
   end
 
+  renders_many :posts, PostComponent
+
   renders_many :tabs
 
   renders_many :items, ->(highlighted: false) do
