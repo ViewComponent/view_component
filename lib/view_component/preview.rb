@@ -80,13 +80,7 @@ module ViewComponent # :nodoc:
             Dir["#{path}/#{preview_name}_preview/#{example}.html.*"].first
           end
 
-        if preview_path.nil?
-          raise(
-            PreviewTemplateError,
-            "A preview template for example #{example} doesn't exist.\n\n" \
-            "To fix this issue, create a template for the example."
-          )
-        end
+        raise MissingPreviewTemplateError.new(example) if preview_path.nil?
 
         path = Dir["#{preview_path}/#{preview_name}_preview/#{example}.html.*"].first
         Pathname.new(path)

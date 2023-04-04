@@ -569,7 +569,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
   def test_raises_an_error_if_the_template_is_not_present_and_the_render_with_template_method_is_used_in_the_example
     error =
-      assert_raises ViewComponent::PreviewTemplateError do
+      assert_raises ViewComponent::MissingPreviewTemplateError do
         get "/rails/view_components/inline_component/without_template"
       end
     assert_match(/preview template for example without_template doesn't exist/, error.message)
@@ -667,7 +667,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_path_traversal_raises_error
     path = "../../README.md"
 
-    assert_raises ArgumentError do
+    assert_raises ViewComponent::SystemTestControllerNefariousPathError do
       get "/_system_test_entrypoint?file=#{path}"
     end
   end

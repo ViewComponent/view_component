@@ -69,8 +69,31 @@ class InlineErbTest < ViewComponent::TestCase
     ERB
   end
 
+  class ParentBaseComponent < ViewComponent::Base
+  end
+
+  class InlineErbChildComponent < ParentBaseComponent
+    include ViewComponent::InlineTemplate
+
+    attr_reader :name
+
+    erb_template <<~ERB
+      <h1>Hello, <%= name %>!</h1>
+    ERB
+
+    def initialize(name)
+      @name = name
+    end
+  end
+
   test "renders inline templates" do
     render_inline(InlineErbComponent.new("Fox Mulder"))
+
+    assert_selector("h1", text: "Hello, Fox Mulder!")
+  end
+
+  test "renders inline templates when inheriting base component" do
+    render_inline(InlineErbChildComponent.new("Fox Mulder"))
 
     assert_selector("h1", text: "Hello, Fox Mulder!")
   end
@@ -100,14 +123,14 @@ class InlineErbTest < ViewComponent::TestCase
   end
 
   test "calling template methods multiple times raises an exception" do
-    error = assert_raises ViewComponent::ComponentError do
+    error = assert_raises ViewComponent::MultipleInlineTemplatesError do
       Class.new(InlineErbComponent) do
         erb_template "foo"
         erb_template "bar"
       end
     end
 
-    assert_equal "inline templates can only be defined once per-component", error.message
+    assert_equal "Inline templates can only be defined once per-component.", error.message
   end
 
   test "calling template methods with more or less than 1 argument raises" do

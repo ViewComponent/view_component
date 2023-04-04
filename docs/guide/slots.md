@@ -113,7 +113,7 @@ class BlogComponent < ViewComponent::Base
     end
 
     def call
-      content_tag :h1, content, { class: classes }
+      content_tag :h1, content, {class: classes}
     end
   end
 end
@@ -177,17 +177,17 @@ It's also possible to define a slot as a lambda that returns content to be rende
 
 ```ruby
 class BlogComponent < ViewComponent::Base
-  renders_one :header, -> (classes:) do
+  renders_one :header, ->(classes:) do
     # This isn't complex enough to be its own component yet, so we'll use a
     # lambda slot. If it gets much bigger, it should be extracted out to a
     # ViewComponent and rendered here with a component slot.
     content_tag :h1 do
-      link_to title, root_path, { class: classes }
+      link_to title, root_path, {class: classes}
     end
   end
 
   # It's also possible to return another ViewComponent with preset default values:
-  renders_many :posts, -> (title:, classes:) do
+  renders_many :posts, ->(title:, classes:) do
     PostComponent.new(title: title, classes: "my-default-class " + classes)
   end
 end
@@ -211,7 +211,7 @@ To provide content for a lambda slot via a block, add a block parameter. Render 
 
 ```ruby
 class BlogComponent < ViewComponent::Base
-  renders_one :header, -> (classes:, &block) do
+  renders_one :header, ->(classes:, &block) do
     content_tag :h1, class: classes, &block
   end
 end

@@ -22,6 +22,7 @@ Passing a form object (often `f`) to a ViewComponent works for simple cases like
 
 Some workarounds include:
 
+- Experimental: Enable the capture compatibility patch with `config.view_component.capture_compatibility_patch_enabled = true`.
 - Render an entire form within a single ViewComponent.
 - Render a [partial](https://guides.rubyonrails.org/layouts_and_rendering.html#using-partials) within the ViewComponent which includes the form.
 - Use a [custom `FormBuilder`](https://guides.rubyonrails.org/form_helpers.html#customizing-form-builders) to create reusable form components:

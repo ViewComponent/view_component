@@ -31,14 +31,14 @@ _Is this page missing a link? Open a PR!_
 
 - [Code with Jason - ViewComponent with Joel Hawksley, Staff Engineer at GitHub](https://www.codewithjason.com/podcast/9936046-130-viewcomponent-with-joel-hawksley-staff-engineer-at-github/)
 - [Remote Ruby - ViewComponents and the Future of Assets](https://remoteruby.transistor.fm/125)
-- [Ruby Rogues - RUX: JSX-Style Rails View Components](https://rubyrogues.com/rux-jsx-style-rails-view-components-ruby-517)
+- [Ruby Rogues - RUX: JSX-Style Rails View Components](https://topenddevs.com/podcasts/ruby-rogues/episodes/rux-jsx-style-rails-view-components-ruby-517)
 - [Code with Jason - ViewComponent with Joel Hawksley of GitHub](https://www.codewithjason.com/podcast/9478227-088-viewcomponent-with-joel-hawksley-of-github/)
-- [Ruby Rogues - Rethinking the View Layer with Components](https://devchat.tv/ruby-rogues/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley/)
-- [Ruby on Rails Podcast - ViewComponents in Action with Andrew Mason](https://5by5.tv/rubyonrails/320)
-- [The Ruby Blend - ViewComponent at GitHub with Joel Hawksley](https://the-ruby-blend.fireside.fm/9)
-- [The Ruby Blend - Components, HAML vs ERB, and Design Systems](https://the-ruby-blend.fireside.fm/4)
-- [Ruby on Rails Podcast - Introducing ActionView::Component with Joel Hawksley](http://5by5.tv/rubyonrails/276)
-- [Ruby on Rails Podcast - Choosing the Right Tech Stack with Dave Paola](https://5by5.tv/rubyonrails/307)
+- [Ruby Rogues - Rethinking the View Layer with Components](https://topenddevs.com/podcasts/ruby-rogues/episodes/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley)
+- [Ruby on Rails Podcast - ViewComponents in Action with Andrew Mason](https://www.therubyonrailspodcast.com/320)
+- [The Ruby Blend - ViewComponent at GitHub with Joel Hawksley](https://rubyblend.transistor.fm/episodes/episode-9-viewcomponent-at-github-with-joel-hawksley)
+- [The Ruby Blend - Components, HAML vs ERB, and Design Systems](https://rubyblend.transistor.fm/episodes/episode-4-components-haml-vs-erb-and-design-systems)
+- [Ruby on Rails Podcast - Introducing ActionView::Component with Joel Hawksley](https://www.therubyonrailspodcast.com/276)
+- [Ruby on Rails Podcast - Choosing the Right Tech Stack with Dave Paola](https://www.therubyonrailspodcast.com/307)
 
 ## Conference talks
 
@@ -63,7 +63,7 @@ _Is this page missing a link? Open a PR!_
 - [Building a Component Library in Rails With Storybook](https://orbit.love/blog/building-a-component-library-in-rails-with-storybook)
 - [Introducing ViewComponent - The Next Level In Rails Views](https://teamhq.app/blog/tech/15-introducing-viewcomponent-the-next-level-in-rails-views)
 - [Rails to Introduce View Components, Dev.to](https://dev.to/andy/rails-to-introduce-view-components-3ome)
-- [ActionView::Components in Rails 6.1, Drifting Ruby](https://www.driftingruby.com/episodes/actionview-components-in-rails-6-1)
+- [ActionView::Components in Rails 6.1, Drifting Ruby - paid content](https://www.driftingruby.com/episodes/viewcomponent-in-rails)
 - [ViewComponent in the Wild I: building modern Rails frontends](https://evilmartians.com/chronicles/viewcomponent-in-the-wild-building-modern-rails-frontends)
 - [ViewComponent in the Wild II: supercharging your components](https://evilmartians.com/chronicles/viewcomponent-in-the-wild-supercharging-your-components)
 

@@ -23,12 +23,16 @@ class TestHelperTest < ViewComponent::TestCase
     warden = Minitest::Mock.new
     warden.expect(:authenticate!, true)
 
-    __vc_test_helpers_request.env["warden"] = warden
+    vc_test_request.env["warden"] = warden
 
     with_request_url "/constraints_with_env" do
       render_inline(ControllerInlineComponent.new(message: "request.env is valid"))
     end
 
     assert_selector("div", text: "request.env is valid")
+  end
+
+  def test_vc_test_controller_exists
+    assert vc_test_controller.is_a?(ActionController::Base)
   end
 end
