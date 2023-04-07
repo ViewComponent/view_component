@@ -12,6 +12,24 @@ module ViewComponent
       @parent = parent
     end
 
+    def content?
+      if @__vc_content.present? || @__vc_content_set_by_with_content.present? || @__vc_content_block.present?
+        return true
+      end
+
+      return @__vc_component_instance.content? if __vc_component_instance?
+
+      false
+    end
+
+    def with_content(args)
+      if __vc_component_instance?
+        @__vc_component_instance.with_content(args)
+      else
+        super
+      end
+    end
+
     # Used to render the slot content in the template
     #
     # There's currently 3 different values that may be set, that we can render.
@@ -35,7 +53,7 @@ module ViewComponent
       end
 
       @content =
-        if defined?(@__vc_component_instance)
+        if __vc_component_instance?
           @__vc_component_instance.__vc_original_view_context = @parent.__vc_original_view_context
 
           if defined?(@__vc_content_set_by_with_content)
@@ -88,7 +106,13 @@ module ViewComponent
     end
 
     def respond_to_missing?(symbol, include_all = false)
-      defined?(@__vc_component_instance) && @__vc_component_instance.respond_to?(symbol, include_all)
+      __vc_component_instance? && @__vc_component_instance.respond_to?(symbol, include_all)
+    end
+
+    private
+
+    def __vc_component_instance?
+      defined?(@__vc_component_instance)
     end
   end
 end

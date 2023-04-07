@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix bug where `content?` and `with_content` did not work reliably with slots.
+
+    *Joel Hawksley*
+
 * Allow ActiveRecord objects to be passed to `renders_many`.
 
     *Leigh Halliday*

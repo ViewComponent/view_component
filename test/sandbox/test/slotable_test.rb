@@ -645,11 +645,29 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_content_inside_slotted_component
     component = SlottedContentParentComponent.new
+    component.with_child.with_content("Content")
 
-    render_inline(component) do |c|
-      c.with_child.with_content("Content")
-    end
+    assert component.children.first.content?
+  end
 
-    assert_equal component.children.any?(&:content?), true
+  def test_block_content_inside_slotted_component
+    component = SlottedContentParentComponent.new
+    component.with_child { "Content" }
+
+    assert component.children.first.content?
+  end
+
+  def test_lambda_slot_content
+    component = LambdaSlotComponent.new
+    component.with_header(classes: "some-class")
+
+    assert component.header.content?
+  end
+
+  def test_pass_through_slot_content
+    component = SlotsComponent.new
+    component.with_title("some_argument").with_content("This is my title!")
+
+    assert component.title.content?
   end
 end
