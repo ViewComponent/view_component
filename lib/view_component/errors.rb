@@ -38,7 +38,7 @@ module ViewComponent
 
   class DuplicateContentError < StandardError
     MESSAGE =
-      "It looks like a block was provided after calling `with_content` on COMPONENT, " \
+      "A block was provided after calling `with_content` on COMPONENT, " \
       "which means that ViewComponent doesn't know which content to use.\n\n" \
       "To fix this issue, use either `with_content` or a block."
 
@@ -89,7 +89,7 @@ module ViewComponent
 
   class ContentSlotNameError < StandardError
     MESSAGE =
-      "COMPONENT declares a slot named content, which is a reserved word in ViewComponent.\n\n" \
+      "COMPONENT declares a slot named `content`, a reserved word in ViewComponent.\n\n" \
       "Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.\n\n" \
       "To fix this issue, either use the `content` accessor directly or choose a different slot name."
 
@@ -100,8 +100,7 @@ module ViewComponent
 
   class InvalidSlotDefinitionError < BaseError
     MESSAGE =
-      "Invalid slot definition. Please pass a class, " \
-      "string, or callable (that is proc, lambda, etc)"
+      "Invalid slot definition. Please pass a class, string, or callable (that is proc, lambda, etc)"
   end
 
   class SlotPredicateNameError < StandardError
@@ -109,7 +108,7 @@ module ViewComponent
       "COMPONENT declares a slot named SLOT_NAME, which ends with a question mark.\n\n" \
       "This isn't allowed because the ViewComponent framework already provides predicate " \
       "methods ending in `?`.\n\n" \
-      "To fix this issue, choose a different name."
+      "To fix this issue, choose a different name without a question mark."
 
     def initialize(klass_name, slot_name)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
@@ -156,8 +155,7 @@ module ViewComponent
 
   class NilWithContentError < BaseError
     MESSAGE =
-      "No content provided to `#with_content` for #{self}.\n\n" \
-      "To fix this issue, pass a value."
+      "No content provided to `#with_content` for #{self}.\n\nTo fix this issue, pass a value."
   end
 
   class TranslateCalledBeforeRenderError < BaseError
@@ -181,7 +179,7 @@ module ViewComponent
   class ControllerCalledBeforeRenderError < BaseError
     MESSAGE =
       "`#controller` can't be used during initialization, as it depends " \
-      "on the view context that only exists once a ViewComponent is passed to " \
+      "on the view context that only exists once a ViewComponent is passed to `render`.\n\n " \
       "the Rails render pipeline.\n\n" \
       "It's sometimes possible to fix this issue by moving code dependent on " \
       "`#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void)."
