@@ -650,6 +650,6 @@ class SlotableTest < ViewComponent::TestCase
       c.with_child.with_content("Content")
     end
 
-    assert_equal component.children.any?(&:has_content?), true
+    assert_equal component.children.any?(&:content?), true
   end
 end
