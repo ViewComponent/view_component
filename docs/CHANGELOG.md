@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `with_SLOT_NAME_content` helper.
+
+    *Will Cosgrove*
+
 * Allow ActiveRecord objects to be passed to `renders_many`.
 
     *Leigh Halliday*

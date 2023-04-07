@@ -116,6 +116,19 @@ class SlotableTest < ViewComponent::TestCase
     assert_text "No items provided"
   end
 
+  def test_renders_slots_via_with_slot_content_helper
+    render_inline(
+      SlotsComponent.new
+        .with_title_content("This is my title!")
+        .with_subtitle_content("This is my subtitle!")
+        .with_tab_content("Tab A")
+    )
+
+    assert_selector(".title", text: "This is my title!")
+    assert_selector(".subtitle", text: "This is my subtitle!")
+    assert_selector(".tab", text: "Tab A")
+  end
+
   def test_renders_slots_template_raise_with_unknown_slot
     assert_raises NoMethodError do
       render_inline(SlotsComponent.new) do |component|
@@ -512,6 +525,12 @@ class SlotableTest < ViewComponent::TestCase
     assert_selector("div .standard", text: "standard")
     assert_selector("div .foo.custom-foo:nth-child(2)")
     assert_selector("div .bar.custom-bar:last")
+  end
+
+  def test_polymorphic_slot_with_shorthand
+    render_inline(PolymorphicSlotComponent.new.with_item_passthrough_content("standard"))
+
+    assert_text("standard")
   end
 
   def test_polymorphic_slot_predicate

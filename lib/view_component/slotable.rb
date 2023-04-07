@@ -68,6 +68,11 @@ module ViewComponent
       #       <p>Bar</p>
       #     <% end %>
       #   <% end %>
+      #
+      # Additionally, content can be set by calling `with_#{slot_name}_content`
+      # on the component instance.
+      #
+      #   <%= render_inline(MyComponent.new.with_header_content("Foo")) %>
       def renders_one(slot_name, callable = nil)
         validate_singular_slot_name(slot_name)
 
@@ -76,10 +81,12 @@ module ViewComponent
         else
           validate_plural_slot_name(ActiveSupport::Inflector.pluralize(slot_name).to_sym)
 
-          define_method :"with_#{slot_name}" do |*args, &block|
+          setter_method_name = :"with_#{slot_name}"
+
+          define_method setter_method_name do |*args, &block|
             set_slot(slot_name, nil, *args, &block)
           end
-          ruby2_keywords(:"with_#{slot_name}") if respond_to?(:ruby2_keywords, true)
+          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
           define_method slot_name do
             get_slot(slot_name)
@@ -87,6 +94,12 @@ module ViewComponent
 
           define_method "#{slot_name}?" do
             get_slot(slot_name).present?
+          end
+
+          define_method "with_#{slot_name}_content" do |content|
+            send(setter_method_name) { content.to_s }
+
+            self
           end
 
           register_slot(slot_name, collection: false, callable: callable)
@@ -139,10 +152,18 @@ module ViewComponent
           singular_name = ActiveSupport::Inflector.singularize(slot_name)
           validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
 
-          define_method :"with_#{singular_name}" do |*args, &block|
+          setter_method_name = :"with_#{singular_name}"
+
+          define_method setter_method_name do |*args, &block|
             set_slot(slot_name, nil, *args, &block)
           end
-          ruby2_keywords(:"with_#{singular_name}") if respond_to?(:ruby2_keywords, true)
+          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
+
+          define_method "with_#{singular_name}_content" do |content|
+            send(setter_method_name) { content.to_s }
+
+            self
+          end
 
           define_method :"with_#{slot_name}" do |collection_args = nil, &block|
             collection_args.map do |args|
@@ -209,10 +230,18 @@ module ViewComponent
               "#{slot_name}_#{poly_type}"
             end
 
-          define_method("with_#{setter_name}") do |*args, &block|
+          setter_method_name = :"with_#{setter_name}"
+
+          define_method(setter_method_name) do |*args, &block|
             set_polymorphic_slot(slot_name, poly_type, *args, &block)
           end
-          ruby2_keywords(:"with_#{setter_name}") if respond_to?(:ruby2_keywords, true)
+          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
+
+          define_method "with_#{setter_name}_content" do |content|
+            send(setter_method_name) { content.to_s }
+
+            self
+          end
         end
 
         registered_slots[slot_name] = {
