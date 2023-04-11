@@ -56,11 +56,7 @@ module ViewComponent
         if __vc_component_instance?
           @__vc_component_instance.__vc_original_view_context = @parent.__vc_original_view_context
 
-          if defined?(@__vc_content_set_by_with_content)
-            @__vc_component_instance.with_content(@__vc_content_set_by_with_content)
-
-            @__vc_component_instance.render_in(view_context)
-          elsif defined?(@__vc_content_block)
+          if defined?(@__vc_content_block)
             # render_in is faster than `parent.render`
             @__vc_component_instance.render_in(view_context, &@__vc_content_block)
           else
