@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Fix bug where `content?` and `with_content` did not work reliably with slots.
+* Fix bug where `content?` and `with_content` didn't work reliably with slots.
 
     *Derek Kniffin, Joel Hawksley*
 
