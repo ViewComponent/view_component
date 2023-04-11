@@ -661,4 +661,39 @@ class SlotableTest < ViewComponent::TestCase
 
     assert_selector(".label", text: "the truth is out there")
   end
+
+  def test_content_inside_slotted_component
+    component = SlottedContentParentComponent.new
+    component.with_child.with_content("Content")
+
+    assert component.children.first.content?
+  end
+
+  def test_block_content_inside_slotted_component
+    component = SlottedContentParentComponent.new
+    component.with_child { "Content" }
+
+    assert component.children.first.content?
+  end
+
+  def test_lambda_slot_content
+    component = LambdaSlotComponent.new
+    component.with_header(classes: "some-class")
+
+    assert component.header.content?
+  end
+
+  def test_pass_through_slot_content
+    component = SlotsComponent.new
+    component.with_title("some_argument").with_content("This is my title!")
+
+    assert component.title.content?
+  end
+
+  def test_slot_with_content_shorthand
+    component = SlotsComponent.new
+    component.with_title_content("This is my title!")
+
+    assert component.title.content?
+  end
 end

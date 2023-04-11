@@ -69,7 +69,7 @@ module ViewComponent
       #     <% end %>
       #   <% end %>
       #
-      # Additionally, content can be set by calling `with_#{slot_name}_content`
+      # Additionally, content can be set by calling `with_SLOT_NAME_content`
       # on the component instance.
       #
       #   <%= render_inline(MyComponent.new.with_header_content("Foo")) %>

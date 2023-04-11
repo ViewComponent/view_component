@@ -249,7 +249,7 @@ module ViewComponent
     attr_reader :view_context
 
     def __vc_render_in_block_provided?
-      @view_context && @__vc_render_in_block
+      defined?(@view_context) && @view_context && @__vc_render_in_block
     end
 
     def __vc_content_set_by_with_content_defined?
@@ -257,7 +257,7 @@ module ViewComponent
     end
 
     def content_evaluated?
-      @__vc_content_evaluated
+      defined?(@__vc_content_evaluated) && @__vc_content_evaluated
     end
 
     # Set the controller used for testing components:

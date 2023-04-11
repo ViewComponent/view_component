@@ -12,6 +12,23 @@ module ViewComponent
       @parent = parent
     end
 
+    def content?
+      return true if defined?(@__vc_content) && @__vc_content.present?
+      return true if defined?(@__vc_content_set_by_with_content) && @__vc_content_set_by_with_content.present?
+      return true if defined?(@__vc_content_block) && @__vc_content_block.present?
+      return false if !__vc_component_instance?
+
+      @__vc_component_instance.content?
+    end
+
+    def with_content(args)
+      if __vc_component_instance?
+        @__vc_component_instance.with_content(args)
+      else
+        super
+      end
+    end
+
     # Used to render the slot content in the template
     #
     # There's currently 3 different values that may be set, that we can render.
@@ -35,14 +52,10 @@ module ViewComponent
       end
 
       @content =
-        if defined?(@__vc_component_instance)
+        if __vc_component_instance?
           @__vc_component_instance.__vc_original_view_context = @parent.__vc_original_view_context
 
-          if defined?(@__vc_content_set_by_with_content)
-            @__vc_component_instance.with_content(@__vc_content_set_by_with_content)
-
-            @__vc_component_instance.render_in(view_context)
-          elsif defined?(@__vc_content_block)
+          if defined?(@__vc_content_block)
             # render_in is faster than `parent.render`
             @__vc_component_instance.render_in(view_context, &@__vc_content_block)
           else
@@ -88,7 +101,13 @@ module ViewComponent
     end
 
     def respond_to_missing?(symbol, include_all = false)
-      defined?(@__vc_component_instance) && @__vc_component_instance.respond_to?(symbol, include_all)
+      __vc_component_instance? && @__vc_component_instance.respond_to?(symbol, include_all)
+    end
+
+    private
+
+    def __vc_component_instance?
+      defined?(@__vc_component_instance)
     end
   end
 end

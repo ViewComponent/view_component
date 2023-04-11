@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix bug where `content?` and `with_content` didn't work reliably with slots.
+
+    *Derek Kniffin, Joel Hawksley*
+
 * Add `with_SLOT_NAME_content` helper.
 
     *Will Cosgrove*
