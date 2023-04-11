@@ -258,6 +258,17 @@ end
 <% end %>
 ```
 
+## `#with_SLOT_NAME_content`
+
+Since 3.0.0
+{: .label }
+
+Assuming no arguments need to be passed to the slot, slot content can be set with `#with_SLOT_NAME_content`:
+
+```erb
+<%= render(BlogComponent.new.with_header_content("My blog")) %>
+```
+
 ## `#with_content`
 
 Since 2.31.0
