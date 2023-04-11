@@ -689,4 +689,11 @@ class SlotableTest < ViewComponent::TestCase
 
     assert component.title.content?
   end
+
+  def test_slot_with_content_shorthand
+    component = SlotsComponent.new
+    component.with_title_content("This is my title!")
+
+    assert component.title.content?
+  end
 end
