@@ -16,8 +16,9 @@ module ViewComponent
       return true if defined?(@__vc_content) && @__vc_content.present?
       return true if defined?(@__vc_content_set_by_with_content) && @__vc_content_set_by_with_content.present?
       return true if defined?(@__vc_content_block) && @__vc_content_block.present?
+      return false if !__vc_component_instance?
 
-      return @__vc_component_instance.content? if __vc_component_instance?
+      @__vc_component_instance.content?
     end
 
     def with_content(args)
