@@ -20,8 +20,6 @@ module ViewComponent
       end
 
       return @__vc_component_instance.content? if __vc_component_instance?
-
-      false
     end
 
     def with_content(args)
