@@ -257,7 +257,7 @@ module ViewComponent
     end
 
     def content_evaluated?
-      @__vc_content_evaluated
+      defined?(@__vc_content_evaluated) && @__vc_content_evaluated
     end
 
     # Set the controller used for testing components:
