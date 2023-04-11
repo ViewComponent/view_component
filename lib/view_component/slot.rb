@@ -13,7 +13,9 @@ module ViewComponent
     end
 
     def content?
-      if @__vc_content.present? || @__vc_content_set_by_with_content.present? || @__vc_content_block.present?
+      if (defined?(@__vc_content) && @__vc_content.present?) ||
+        (defined?(@__vc_content_set_by_with_content) && @__vc_content_set_by_with_content.present?) ||
+        (defined?(@__vc_content_block) &&@__vc_content_block.present?)
         return true
       end
 
