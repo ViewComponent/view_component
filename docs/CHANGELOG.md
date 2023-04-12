@@ -10,6 +10,22 @@ nav_order: 5
 
 ## main
 
+### v3.0.0.rc6
+
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629). We hope to release v3.0.0 in the near future!
+
+* BREAKING: `#SLOT_NAME` getter no longer accepts arguments. This change was missed as part of the earlier deprecation in `3.0.0.rc1`.
+
+    *Joel Hawksley*
+
+* BREAKING: Raise `TranslateCalledBeforeRenderError`, `ControllerCalledBeforeRenderError`, or `HelpersCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`.
+
+    *Joel Hawksley*
+
+* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror`, `SystemTestControllerOnlyAllowedInTestError`, `SystemTestControllerNefariousPathError`, `NoMatchingTemplatesForPreviewError`, `MultipleMatchingTemplatesForPreviewError`, `DuplicateContentError`, `EmptyOrInvalidInitializerError`, `MissingCollectionArgumentError`, `ReservedParameterError`, `InvalidCollectionArgumentError`, `MultipleInlineTemplatesError`, `MissingPreviewTemplateError`, `DuplicateSlotContentError` or `NilWithContentError` instead of generic error classes.
+
+    *Joel Hawksley*
+
 * Fix bug where `content?` and `with_content` didn't work reliably with slots.
 
     *Derek Kniffin, Joel Hawksley*
@@ -22,19 +38,11 @@ nav_order: 5
 
     *Leigh Halliday*
 
-* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror`, `SystemTestControllerOnlyAllowedInTestError`, `SystemTestControllerNefariousPathError`, `NoMatchingTemplatesForPreviewError`, `MultipleMatchingTemplatesForPreviewError`, `DuplicateContentError`, `EmptyOrInvalidInitializerError`, `MissingCollectionArgumentError`, `ReservedParameterError`, `InvalidCollectionArgumentError`, `MultipleInlineTemplatesError`, `MissingPreviewTemplateError`, `DuplicateSlotContentError` or `NilWithContentError` instead of generic error classes.
-
-    *Joel Hawksley*
-
 * Fix broken links in documentation.
 
     *Ellen Keal*
 
 * Run `standardrb` against markdown in docs.
-
-    *Joel Hawksley*
-
-* BREAKING: Raise `TranslateCalledBeforeRenderError`, `ControllerCalledBeforeRenderError`, or `HelpersCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`.
 
     *Joel Hawksley*
 
@@ -46,15 +54,13 @@ nav_order: 5
 
     *Joel Hawksley*
 
-* BREAKING: `#SLOT_NAME` getter no longer accepts arguments. This change was missed as part of the earlier deprecation in `3.0.0.rc1`.
-
-    *Joel Hawksley*
-
 * Raise error if translations are used in initializer.
 
     *Joel Hawksley*
 
 ## v3.0.0.rc5
+
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
 
 * Fix bug where `mkdir_p` failed due to incorrect permissions.
 
