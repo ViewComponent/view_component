@@ -10,6 +10,366 @@ nav_order: 5
 
 ## main
 
+* Fix bug where `content?` and `with_content` didn't work reliably with slots.
+
+    *Derek Kniffin, Joel Hawksley*
+
+* Add `with_SLOT_NAME_content` helper.
+
+    *Will Cosgrove*
+
+* Allow ActiveRecord objects to be passed to `renders_many`.
+
+    *Leigh Halliday*
+
+* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror`, `SystemTestControllerOnlyAllowedInTestError`, `SystemTestControllerNefariousPathError`, `NoMatchingTemplatesForPreviewError`, `MultipleMatchingTemplatesForPreviewError`, `DuplicateContentError`, `EmptyOrInvalidInitializerError`, `MissingCollectionArgumentError`, `ReservedParameterError`, `InvalidCollectionArgumentError`, `MultipleInlineTemplatesError`, `MissingPreviewTemplateError`, `DuplicateSlotContentError` or `NilWithContentError` instead of generic error classes.
+
+    *Joel Hawksley*
+
+* Fix broken links in documentation.
+
+    *Ellen Keal*
+
+* Run `standardrb` against markdown in docs.
+
+    *Joel Hawksley*
+
+* BREAKING: Raise `TranslateCalledBeforeRenderError`, `ControllerCalledBeforeRenderError`, or `HelpersCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`.
+
+    *Joel Hawksley*
+
+* Allow `.with_content` to be redefined by components.
+
+    *Joel Hawksley*
+
+* Run `standardrb` against markdown in docs.
+
+    *Joel Hawksley*
+
+* BREAKING: `#SLOT_NAME` getter no longer accepts arguments. This change was missed as part of the earlier deprecation in `3.0.0.rc1`.
+
+    *Joel Hawksley*
+
+* Raise error if translations are used in initializer.
+
+    *Joel Hawksley*
+
+## v3.0.0.rc5
+
+* Fix bug where `mkdir_p` failed due to incorrect permissions.
+
+    *Joel Hawksley*
+
+* Check for inline `erb_template` calls when deciding whether to compile a component's superclass.
+
+    *Justin Kenyon*
+
+* Protect against `SystemStackError` if `CaptureCompatibility` module is included more than once.
+
+    *Cameron Dutro*
+
+## v3.0.0.rc4
+
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
+* Add `TestHelpers#vc_test_request`.
+
+    *Joel Hawksley*
+
+## v3.0.0.rc3
+
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
+* Fix typos in generator docs.
+
+    *Sascha Karnatz*
+
+* Add `TestHelpers#vc_test_controller`.
+
+    *Joel Hawksley*
+
+* Document `config.view_component.capture_compatibility_patch_enabled` as option for the known incompatibilities with Rails form helpers.
+
+    *Tobias L. Maier*
+
+* Add support for experimental inline templates.
+
+    *Blake Williams*
+
+* Expose `translate` and `t` I18n methods on component classes.
+
+    *Elia Schito*
+
+* Protect against Arbitrary File Read edge case in `ViewComponentsSystemTestController`.
+
+    *Nick Malcolm*
+
+## v3.0.0.rc2
+
+Run into an issue with this release? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
+* BREAKING: Rename `SlotV2` to `Slot` and `SlotableV2` to `Slotable`.
+
+    *Joel Hawksley*
+
+* BREAKING: Incorporate `PolymorphicSlots` into `Slotable`. To migrate, remove any references to `PolymorphicSlots` as they are no longer necessary.
+
+    *Joel Hawksley*
+
+* BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they were accessible in tests. As such, we're considering this to be a breaking change.
+
+    *Joel Hawksley*
+
+* Avoid loading ActionView::Base during Rails initialization. Originally submitted in #1528.
+
+    *Jonathan del Strother*
+
+* Improve documentation of known incompatibilities with Rails form helpers.
+
+    *Tobias L. Maier*
+
+* Remove dependency on environment task from `view_component:statsetup`.
+
+    *Svetlin Simonyan*
+
+* Add experimental `config.view_component.capture_compatibility_patch_enabled` option resolving rendering issues related to forms, capture, turbo frames, etc.
+
+    *Blake Williams*
+
+* Add `#content?` method that indicates if content has been passed to component.
+
+    *Joel Hawksley*
+
+* Added example of a custom preview controller.
+
+    *Graham Rogers*
+
+* Add Krystal to list of companies using ViewComponent.
+
+     *Matt Bearman*
+
+* Add Mon Ami to list of companies using ViewComponent.
+
+    *Ethan Lee-Tyson*
+
+## 3.0.0.rc1
+
+1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
+
+We're so grateful for all the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
+
+This release makes the following breaking changes, many of which have long been deprecated:
+
+* BREAKING: Remove deprecated slots setter methods. Use `with_SLOT_NAME` instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `content_areas` feature. Use Slots instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated support for loading ViewComponent engine manually. Make sure `require "view_component/engine"` is removed from `Gemfile`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `generate_*` methods. Use `generate.*` instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `with_variant` method.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `rendered_component` in favor of `rendered_content`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `config.preview_path` in favor of `config.preview_paths`.
+
+    *Joel Hawksley*
+
+* BREAKING: Support Ruby 2.7+ instead of 2.4+
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `before_render_check`.
+
+    *Joel Hawksley*
+
+* BREAKING: Change counter variable to start iterating from `0` instead of `1`.
+
+    *Frank S*
+
+Run into an issue with this release? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
+## 2.82.0
+
+* Revert "Avoid loading ActionView::Base during initialization (#1528)"
+
+    *Jon Rohan*
+
+* Fix tests using `with_rendered_component_path` with custom layouts.
+
+    *Ian Hollander*
+
+## 2.81.0
+
+* Adjust the way response objects are set on the preview controller to work around a recent change in Rails main.
+
+    *Cameron Dutro*
+
+* Fix typo in "Generate a Stimulus controller" documentation.
+
+    *Ben Trewern*
+
+* Modify the `render_in_view_context` test helper to forward its args to the block.
+
+    *Cameron Dutro*
+
+## 2.80.0
+
+* Move system test endpoint out of the unrelated previews controller.
+
+    *Edwin Mak*
+
+* Display Ruby 2.7 deprecation notice only once, when starting the application.
+
+    *Henrik Hauge Bjørnskov*
+
+* Require Rails 5.2+ in gemspec and update documentation.
+
+    *Drew Bragg*
+
+* Add documentation for using `with_rendered_component_path` with RSpec.
+
+    *Edwin Mak*
+
+## 2.79.0
+
+* Add ability to pass explicit `preview_path` to preview generator.
+
+    *Erinna Chen*
+
+* Add `with_rendered_component_path` helper for writing component system tests.
+
+    *Edwin Mak*
+
+* Include gem name and deprecation horizon in every deprecation message.
+
+    *Jan Klimo*
+
+## 2.78.0
+
+* Support variants with dots in their names.
+
+    *Javi Martín*
+
+## 2.77.0
+
+* Support variants with dashes in their names.
+
+    *Javi Martín*
+
+## 2.76.0
+
+* `Component.with_collection` supports components that accept splatted keyword arguments.
+
+    *Zee Spencer*
+
+* Remove `config.view_component.use_consistent_rendering_lifecycle` since it is no longer planned for 3.0.
+
+    *Blake Williams*
+
+* Prevent polymorphic slots from calculating `content` when setting a slot.
+
+    *Blake Williams*
+
+* Add ability to pass in the preview class to `render_preview`.
+
+    *Jon Rohan*
+
+* Fix issue causing PVC tests to fail in CI.
+
+    *Cameron Dutro*
+
+* Fix YARD docs build task.
+
+    *Hans Lemuet*
+
+* Add Startup Jobs to list of companies using ViewComponent.
+
+    *Marc Köhlbrugge*
+
+* Run PVC's accessibility tests in a single process to avoid resource contention in CI.
+
+    *Cameron Dutro*
+
+## 2.75.0
+
+* Avoid loading ActionView::Base during Rails initialization.
+
+    *Jonathan del Strother*
+
+<!-- vale off -->
+* Mention lambda slots rendering returned values lazily in the guide.
+
+    *Graham Rogers*
+<!-- vale on -->
+
+* Add "ViewComponent In The Wild" articles to resources.
+
+    *Alexander Baygeldin*
+
+## 2.74.1
+
+* Add more users of ViewComponent to docs.
+
+    *Joel Hawksley*
+
+* Add a known issue for usage with `turbo_frame_tag` to the documentation.
+
+    *Vlad Radulescu*
+
+* Add note about system testing components with previews.
+
+    *Joel Hawksley*
+
+* Remove locking mechanisms from the compiler.
+
+    *Cameron Dutro*
+
+## 2.74.0
+
+* Add Avo to list of companies using ViewComponent.
+
+    *Adrian Marin*
+
+* Promote experimental `_output_postamble` method to public API as `output_postamble`.
+
+    *Joel Hawksley*
+
+* Promote experimental `_sidecar_files` method to public API as `sidecar_files`.
+
+    *Joel Hawksley*
+
+* Fix `show_previews` regression introduced in 2.73.0.
+
+    *Andy Baranov*
+
+* `with_request_url` test helper supports router constraints (such as Devise).
+
+     *Aotokitsuruya*
+
+## 2.73.0
+
+* Remove experimental `_after_compile` lifecycle method.
+
+    *Joel Hawksley*
+
 * Fix capitalization of JavaScript in docs.
 
     *Erinna Chen*
@@ -227,7 +587,7 @@ nav_order: 5
 
 * Revert `Expose Capybara DSL methods directly inside tests.` This change unintentionally broke other Capybara methods and thus introduced a regression. We aren't confident that we can fail forward so we have decided to revert this change.
 
-    *Joel Hawksley*, *Blake Williams*
+    *Joel Hawksley, Blake Williams*
 
 * Revert change making content evaluation consistent.
 
@@ -310,7 +670,7 @@ nav_order: 5
 
 * Add @boardfish and @spone as maintainers.
 
-    *Joel Hawksley*, *Cameron Dutro*, *Blake Williams*
+    *Joel Hawksley, Cameron Dutro, Blake Williams*
 
 * Re-compile updated, inherited templates when class caching is disabled.
 
@@ -370,13 +730,13 @@ nav_order: 5
 
 * Restore removed `rendered_component`, marking it for deprecation in v3.0.0.
 
-    *Tyson Gach*, *Richard Macklin*, *Joel Hawksley*
+    *Tyson Gach, Richard Macklin, Joel Hawksley*
 
 ## 2.56.1
 
 * Rename private accessor `rendered_component` to `rendered_content`.
 
-    *Yoshiyuki Hirano*, *Simon Dawson*
+    *Yoshiyuki Hirano, Simon Dawson*
 
 ## 2.56.0
 
@@ -467,7 +827,7 @@ nav_order: 5
 
 * Skip Rails 5.2 in local test environment if using incompatible Ruby version.
 
-    *Cameron Dutro*, *Blake Williams*, *Joel Hawksley*
+    *Cameron Dutro, Blake Williams, Joel Hawksley*
 
 * Improve landing page documentation.
 
@@ -493,7 +853,7 @@ nav_order: 5
 
 * Add the option to use a "global" output buffer so `form_for` and friends can be used with view components.
 
-    *Cameron Dutro*, *Blake Williams*
+    *Cameron Dutro, Blake Williams*
 
 * Fix fragment caching in partials when global output buffer is enabled.
 * Fix template inheritance when eager loading is disabled.
@@ -630,7 +990,7 @@ nav_order: 5
 
 * Add generators to support `tailwindcss-rails`.
 
-    *Dino Maric*, *Hans Lemuet*
+    *Dino Maric, Hans Lemuet*
 
 * Add a namespaced component example to docs.
 
@@ -811,7 +1171,7 @@ nav_order: 5
 
 * Rename internal accessor to use private naming.
 
-    *Joel Hawksley*, *Blake Williams*, *Cameron Dutro*
+    *Joel Hawksley, Blake Williams, Cameron Dutro*
 
 * Add Github repo link to docs website header.
 
@@ -879,7 +1239,7 @@ nav_order: 5
 
 * Add support for `image_path` helper in previews.
 
-    *Tobias Ahlin*, *Joel Hawksley*
+    *Tobias Ahlin, Joel Hawksley*
 
 * Add section to docs listing users of ViewComponent. Please submit a PR to add your team to the list!
 
@@ -917,7 +1277,7 @@ nav_order: 5
 
 * Fix bug where `helpers` would instantiate and use a new `view_context` in each component.
 
-    *Blake Williams*, *Ian C. Anderson*
+    *Blake Williams, Ian C. Anderson*
 
 * Implement polymorphic slots as experimental feature. See the Slots documentation to learn more.
 
@@ -944,7 +1304,7 @@ nav_order: 5
 
 * Fix bug where `with_collection_parameter` didn't inherit from parent component.
 
-    *Will Drexler*, *Christian Campoli*
+    *Will Drexler, Christian Campoli*
 
 * Allow query parameters in `with_request_url` test helper.
 
@@ -984,7 +1344,7 @@ nav_order: 5
 
 * Clarify documentation of `with_variant` as an override of Action Pack.
 
-    *Blake Williams*, *Cameron Dutro*, *Joel Hawksley*
+    *Blake Williams, Cameron Dutro, Joel Hawksley*
 
 * Update docs page to be called Javascript and CSS, rename Building ViewComponents to Guide.
 
@@ -1009,7 +1369,7 @@ nav_order: 5
 
 * Clarify slots example in docs to reduce naming confusion.
 
-    *Joel Hawksley*, *Blake Williams*
+    *Joel Hawksley, Blake Williams*
 
 * Fix error in documentation for `render_many` passthrough slots.
 
@@ -1471,7 +1831,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Add support for templates as ViewComponent::Preview examples.
 
-    *Juan Manuel Ramallo
+    *Juan Manuel Ramallo*
 
 ## 2.14.1
 
@@ -1848,11 +2208,11 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
     *Rainer Borene*
 
+<!-- vale off -->
 * Fix edge case issue with extracting variants from less conventional source_locations.
 
-<!-- vale proselint.GenderBias = NO -->
     *Ryan Workman*
-<!-- vale proselint.GenderBias = YES -->
+<!-- vale on -->
 
 ## v1.6.0
 
@@ -1870,7 +2230,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 * Template-less variants fall back to default template.
 
-    *Asger Behncke Jacobsen*, *Cesario Uy*
+    *Asger Behncke Jacobsen, Cesario Uy*
 
 * Generated tests use new naming convention.
 
@@ -1886,11 +2246,11 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 ## v1.5.3
 
+<!-- vale off -->
 * Add support for RSpec to generators.
 
-<!-- vale proselint.GenderBias = NO -->
     *Dylan Clark, Ryan Workman*
-<!-- vale proselint.GenderBias = YES -->
+<!-- vale on -->
 
 * Require controllers as part of setting autoload paths.
 
@@ -1912,11 +2272,11 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
 Note: `actionview-component` is now loaded by requiring `actionview/component`, not `actionview/component/base`.
 
+<!-- vale off -->
 * Fix issue with generating component method signatures.
 
-<!-- vale proselint.GenderBias = NO -->
     *Ryan Workman, Dylan Clark*
-<!-- vale proselint.GenderBias = YES -->
+<!-- vale off -->
 
 * Create component generator.
 

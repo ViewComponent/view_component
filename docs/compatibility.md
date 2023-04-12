@@ -8,9 +8,9 @@ nav_order: 6
 
 ## Ruby & Rails
 
-ViewComponent is [supported natively](https://edgeguides.rubyonrails.org/layouts_and_rendering.html#rendering-objects) in Rails 6.1, and compatible with Rails 5.0+ via an included [monkey patch](https://github.com/viewcomponent/view_component/blob/main/lib/view_component/render_monkey_patch.rb).
+ViewComponent is [supported natively](https://edgeguides.rubyonrails.org/layouts_and_rendering.html#rendering-objects) in Rails 6.1, and compatible with Rails 5.2+ via an included [monkey patch](https://github.com/viewcomponent/view_component/blob/main/lib/view_component/render_monkey_patch.rb).
 
-ViewComponent is tested for compatibility [with combinations of](https://github.com/viewcomponent/view_component/blob/22e3d4ccce70d8f32c7375e5a5ccc3f70b22a703/.github/workflows/ruby_on_rails.yml#L10-L11) Ruby v2.5+ and Rails v5+. Ruby 2.4 is likely compatible, but is no longer tested.
+ViewComponent is tested for compatibility [with combinations of](https://github.com/viewcomponent/view_component/blob/22e3d4ccce70d8f32c7375e5a5ccc3f70b22a703/.github/workflows/ruby_on_rails.yml#L10-L11) Ruby v2.5+ and Rails v5.2+. Ruby 2.4 is likely compatible, but is no longer tested.
 
 ## Template languages
 
@@ -39,9 +39,7 @@ With the monkey patch disabled, use `render_component` (or  `render_component_to
 
 Using `rich_text_area` from ActionText in a ViewComponent will result in this error:
 
-```ruby
-undefined method 'rich_text_area_tag'
-```
+`undefined method "rich_text_area_tag"`
 
 This is due to ViewComponent not having access to the helpers it needs via ActionText. As a workaround, add the following to your component (or base component):
 

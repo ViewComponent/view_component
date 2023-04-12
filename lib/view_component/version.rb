@@ -2,11 +2,12 @@
 
 module ViewComponent
   module VERSION
-    MAJOR = 2
-    MINOR = 72
+    MAJOR = 3
+    MINOR = 0
     PATCH = 0
+    PRE = "rc5"
 
-    STRING = [MAJOR, MINOR, PATCH].join(".")
+    STRING = [MAJOR, MINOR, PATCH, PRE].compact.join(".")
   end
 end
 

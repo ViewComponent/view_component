@@ -95,9 +95,9 @@ class MessageComponent < ViewComponent::Base
   end
 
   def call
-    @output_buffer.safe_append='<h1>Hello, '.freeze
-    @output_buffer.append=( @name )
-    @output_buffer.safe_append='!</h1>'.freeze
+    @output_buffer.safe_append = "<h1>Hello, ".freeze
+    @output_buffer.append = (@name)
+    @output_buffer.safe_append = "!</h1>".freeze
     @output_buffer.to_s
   end
 end
@@ -160,6 +160,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
 <img src="https://avatars.githubusercontent.com/leighhalliday?s=64" alt="leighhalliday" width="32" />
+<img src="https://avatars.githubusercontent.com/llenk?s=64" alt="llenk" width="32" />
 <img src="https://avatars.githubusercontent.com/manuelpuyol?s=64" alt="manuelpuyol" width="32" />
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
 <img src="https://avatars.githubusercontent.com/matt-yorkley?s=64" alt="Matt-Yorkley" width="32" />
@@ -205,30 +206,45 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/yykamei?s=64" alt="yykamei" width="32" />
 <img src="https://avatars.githubusercontent.com/matheuspolicamilo?s=64" alt="matheuspolicamilo" width="32" />
 <img src="https://avatars.githubusercontent.com/erinnachen?s=64" alt="erinnachen" width="32" />
+<img src="https://avatars.githubusercontent.com/ihollander?s=64" alt="ihollander" width="32" />
+<img src="https://avatars.githubusercontent.com/svetlins?s=64" alt="svetlins" width="32" />
+<img src="https://avatars.githubusercontent.com/nickmalcolm?s=64" alt="nickmalcolm" width="32" />
 
 ## Who uses ViewComponent?
 
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
+* [Avo](https://avohq.io/)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [City of Paris](https://www.paris.fr/)
 * [Clio](https://www.clio.com/)
 * [Cometeer](https://cometeer.com/)
+* [Consul](https://consulproject.org/en/)
 * [Cults.](https://cults3d.com/)
+* [Eagerworks](https://eagerworks.com/)
 * [Framework](https://frame.work/)
 * [FreeAgent](https://www.freeagent.com)
 * [G2](https://www.g2.com/) (200+ components)
+* [Getblock](https://getblock.io/)
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
+* [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
+* [Krystal](https://krystal.uk)
 * [Litmus](https://litmus.engineering/)
+* [Login.gov](https://github.com/18F/identity-idp)
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
+* [Mon Ami](https://www.monami.io)
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
+* [openSUSE Open Build Service](https://openbuildservice.org/)
 * [Orbit](https://orbit.love)
 * [Podia](https://www.podia.com/)
 * [PrintReleaf](https://www.printreleaf.com/)
+* [Project Blacklight](http://projectblacklight.org/)
 * [QuickNode](https://www.quicknode.com/)
 * [Shogun](https://getshogun.com/)
+* [Spina CMS](https://spinacms.com/)
+* [Startup Jobs](https://startup.jobs/)
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
 * [Within3](https://www.within3.com/)

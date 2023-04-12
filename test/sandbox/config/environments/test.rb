@@ -21,14 +21,11 @@ Sandbox::Application.configure do
 
   config.view_component.show_previews = true
 
-  # This line ensures that the old preview_path argument still works.
-  # Remove once we land v3.0.0
-  config.view_component.preview_path = "#{Rails.root}/lib/component_previews_old"
-
   config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
   config.view_component.render_monkey_patch_enabled = true
   config.view_component.show_previews_source = true
   config.view_component.test_controller = "IntegrationExamplesController"
+  config.view_component.capture_compatibility_patch_enabled = ENV["CAPTURE_PATCH_ENABLED"] == "true"
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the

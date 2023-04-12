@@ -12,7 +12,7 @@ module ViewComponent
 
       def defaults
         ActiveSupport::OrderedOptions.new.merge!({
-          generate: ActiveSupport::OrderedOptions.new(false),
+          generate: default_generate_options,
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
           show_previews_source: false,
@@ -23,7 +23,8 @@ module ViewComponent
           show_previews: Rails.env.development? || Rails.env.test?,
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
-          default_preview_layout: nil
+          default_preview_layout: nil,
+          capture_compatibility_patch_enabled: false
         })
       end
 
@@ -34,25 +35,25 @@ module ViewComponent
       # All options under this namespace default to `false` unless otherwise
       # stated.
       #
-      # #### #sidecar
+      # #### `#sidecar`
       #
       # Always generate a component with a sidecar directory:
       #
       #     config.view_component.generate.sidecar = true
       #
-      # #### #stimulus_controller
+      # #### `#stimulus_controller`
       #
       # Always generate a Stimulus controller alongside the component:
       #
       #     config.view_component.generate.stimulus_controller = true
       #
-      # #### #locale
+      # #### `#locale`
       #
       # Always generate translations file alongside the component:
       #
       #     config.view_component.generate.locale = true
       #
-      # #### #distinct_locale_files
+      # #### `#distinct_locale_files`
       #
       # Always generate as many translations files as available locales:
       #
@@ -61,11 +62,22 @@ module ViewComponent
       # One file will be generated for each configured `I18n.available_locales`,
       # falling back to `[:en]` when no `available_locales` is defined.
       #
-      # #### #preview
+      # #### `#preview`
       #
       # Always generate a preview alongside the component:
       #
       #      config.view_component.generate.preview = true
+      #
+      # #### #preview_path
+      #
+      # Path to generate preview:
+      #
+      #      config.view_component.generate.preview_path = "test/components/previews"
+      #
+      # Required when there is more than one path defined in preview_paths.
+      # Defaults to `""`. If this is blank, the generator will use
+      # `ViewComponent.config.preview_paths` if defined,
+      # `"test/components/previews"` otherwise
 
       # @!attribute preview_controller
       # @return [String]
@@ -115,9 +127,6 @@ module ViewComponent
       # The locations in which component previews will be looked up.
       # Defaults to `['test/component/previews']` relative to your Rails root.
 
-      # @!attribute preview_path
-      # @deprecated Use #preview_paths instead. Will be removed in v3.0.0.
-
       # @!attribute test_controller
       # @return [String]
       # The controller used for testing components.
@@ -129,25 +138,29 @@ module ViewComponent
       # A custom default layout used for the previews index page and individual
       # previews.
       # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
+      #
+      # @!attribute capture_compatibility_patch_enabled
+      # @return [Boolean]
+      # Enables the experimental capture compatibility patch that makes ViewComponent
+      # compatible with forms, capture, and other built-ins.
+      # previews.
+      # Defaults to `false`.
 
       def default_preview_paths
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
 
         ["#{Rails.root}/test/components/previews"]
       end
+
+      def default_generate_options
+        options = ActiveSupport::OrderedOptions.new(false)
+        options.preview_path = ""
+        options
+      end
     end
 
     def initialize
       @config = self.class.defaults
-    end
-
-    def preview_path
-      preview_paths
-    end
-
-    def preview_path=(new_value)
-      ViewComponent::Deprecation.warn("`preview_path` will be removed in v3.0.0. Use `preview_paths` instead.")
-      self.preview_paths = Array.wrap(new_value)
     end
 
     delegate_missing_to :config

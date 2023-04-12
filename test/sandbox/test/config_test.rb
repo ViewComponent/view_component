@@ -9,7 +9,7 @@ module ViewComponent
     end
 
     def test_defaults_are_correct
-      assert_equal @config.generate, {}
+      assert_equal @config.generate, {preview_path: ""}
       assert_equal @config.preview_controller, "ViewComponentsController"
       assert_equal @config.preview_route, "/rails/view_components"
       assert_equal @config.show_previews_source, false
@@ -17,18 +17,6 @@ module ViewComponent
       assert_equal @config.render_monkey_patch_enabled, true
       assert_equal @config.show_previews, true
       assert_equal @config.preview_paths, ["#{Rails.root}/test/components/previews"]
-    end
-
-    def test_preview_path_alias
-      @config.preview_path << "some/new/path"
-      assert_equal @config.preview_paths, @config.preview_path
-    end
-
-    def test_preview_path_setter_alias
-      old_value = @config.preview_path
-      @config.preview_path = "some/new/path"
-      assert_equal @config.preview_path, ["some/new/path"]
-      @config.preview_path = old_value
     end
 
     def test_all_methods_are_documented
@@ -48,6 +36,14 @@ module ViewComponent
         "Not all configuration options are documented: #{configuration_methods_to_document.map(&:name) - options_defined_on_instance.to_a}"
       assert configuration_methods_to_document.map(&:docstring).all?(&:present?),
         "Configuration options are missing docstrings."
+    end
+
+    def test_compatibility_module_included
+      if ENV["CAPTURE_PATCH_ENABLED"] == "true"
+        assert ActionView::Base < ViewComponent::CaptureCompatibility
+      else
+        refute ActionView::Base < ViewComponent::CaptureCompatibility
+      end
     end
   end
 end

@@ -6,11 +6,9 @@ require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
-require "view_component/content_areas"
-require "view_component/polymorphic_slots"
+require "view_component/errors"
 require "view_component/preview"
 require "view_component/slotable"
-require "view_component/slotable_v2"
 require "view_component/translatable"
 require "view_component/with_content_helper"
 
@@ -19,26 +17,26 @@ module ViewComponent
     class << self
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
+      # Returns the current config.
+      #
+      # @return [ViewComponent::Config]
       def config
-        @config ||= ViewComponent::Config.defaults
+        @config ||= ActiveSupport::OrderedOptions.new
       end
+
+      # Replaces the entire config. You shouldn't need to use this directly
+      # unless you're building a `ViewComponent::Config` elsewhere.
+      attr_writer :config
     end
 
-    include ViewComponent::ContentAreas
-    include ViewComponent::PolymorphicSlots
-    include ViewComponent::SlotableV2
+    include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
-
-    ViewContextCalledBeforeRenderError = Class.new(StandardError)
 
     RESERVED_PARAMETER = :content
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
-
-    class_attribute :content_areas
-    self.content_areas = [] # class_attribute:default doesn't work until Rails 5.2
 
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
@@ -58,32 +56,6 @@ module ViewComponent
     def set_original_view_context(view_context)
       self.__vc_original_view_context = view_context
     end
-
-    # EXPERIMENTAL: This API is experimental and may be removed at any time.
-    # Hook for allowing components to do work as part of the compilation process.
-    #
-    # For example, one might compile component-specific assets at this point.
-    # @private TODO: add documentation
-    def self._after_compile
-      # noop
-    end
-
-    # @!macro [attach] deprecated_generate_mattr_accessor
-    #   @method generate_$1
-    #   @deprecated Use `#generate.$1` instead. Will be removed in v3.0.0.
-    def self._deprecated_generate_mattr_accessor(name)
-      define_singleton_method("generate_#{name}".to_sym) do
-        generate.public_send(name)
-      end
-      define_singleton_method("generate_#{name}=".to_sym) do |value|
-        generate.public_send("#{name}=".to_sym, value)
-      end
-    end
-
-    _deprecated_generate_mattr_accessor :distinct_locale_files
-    _deprecated_generate_mattr_accessor :locale
-    _deprecated_generate_mattr_accessor :sidecar
-    _deprecated_generate_mattr_accessor :stimulus_controller
 
     # Entrypoint for rendering components.
     #
@@ -121,9 +93,7 @@ module ViewComponent
       @current_template = self
 
       if block && defined?(@__vc_content_set_by_with_content)
-        raise ArgumentError, "It looks like a block was provided after calling `with_content` on #{self.class.name}, " \
-          "which means that ViewComponent doesn't know which content to use.\n\n" \
-          "To fix this issue, use either `with_content` or a block."
+        raise DuplicateContentError.new(self.class.name)
       end
 
       @__vc_content_evaluated = false
@@ -132,12 +102,7 @@ module ViewComponent
       before_render
 
       if render?
-        # Ensure `content` is evaluated before rendering the template, this is
-        # needed so slots and other side-effects are performed before the
-        # component template is evaluated.
-        content if self.class.use_consistent_rendering_lifecycle
-
-        render_template_for(@__vc_variant).to_s + _output_postamble
+        render_template_for(@__vc_variant).to_s + output_postamble
       else
         ""
       end
@@ -160,10 +125,10 @@ module ViewComponent
       nil
     end
 
-    # EXPERIMENTAL: Optional content to be returned after the rendered template.
+    # Optional content to be returned after the rendered template.
     #
     # @return [String]
-    def _output_postamble
+    def output_postamble
       ""
     end
 
@@ -172,14 +137,6 @@ module ViewComponent
     #
     # @return [void]
     def before_render
-      before_render_check
-    end
-
-    # Called after rendering the component.
-    #
-    # @deprecated Use `#before_render` instead. Will be removed in v3.0.0.
-    # @return [void]
-    def before_render_check
       # noop
     end
 
@@ -215,16 +172,7 @@ module ViewComponent
     #
     # @return [ActionController::Base]
     def controller
-      if view_context.nil?
-        raise(
-          ViewContextCalledBeforeRenderError,
-          "`#controller` can't be used during initialization, as it depends " \
-          "on the view context that only exists once a ViewComponent is passed to " \
-          "the Rails render pipeline.\n\n" \
-          "It's sometimes possible to fix this issue by moving code dependent on " \
-          "`#controller` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
-        )
-      end
+      raise ControllerCalledBeforeRenderError if view_context.nil?
 
       @__vc_controller ||= view_context.controller
     end
@@ -234,16 +182,7 @@ module ViewComponent
     #
     # @return [ActionView::Base]
     def helpers
-      if view_context.nil?
-        raise(
-          ViewContextCalledBeforeRenderError,
-          "`#helpers` can't be used during initialization, as it depends " \
-          "on the view context that only exists once a ViewComponent is passed to " \
-          "the Rails render pipeline.\n\n" \
-          "It's sometimes possible to fix this issue by moving code dependent on " \
-          "`#helpers` to a `#before_render` method: https://viewcomponent.org/api.html#before_render--void."
-        )
-      end
+      raise HelpersCalledBeforeRenderError if view_context.nil?
 
       # Attempt to re-use the original view_context passed to the first
       # component rendered in the rendering pipeline. This prevents the
@@ -272,21 +211,8 @@ module ViewComponent
     #
     # @private
     def format
-      # Ruby 2.6 throws a warning without checking `defined?`, 2.7 doesn't
       @__vc_variant if defined?(@__vc_variant)
     end
-
-    # Use the provided variant instead of the one determined by the current request.
-    #
-    # @deprecated Will be removed in v3.0.0.
-    # @param variant [Symbol] The variant to be used by the component.
-    # @return [self]
-    def with_variant(variant)
-      @__vc_variant = variant
-
-      self
-    end
-    deprecate :with_variant, deprecator: ViewComponent::Deprecation
 
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.
@@ -296,24 +222,42 @@ module ViewComponent
       @request ||= controller.request if controller.respond_to?(:request)
     end
 
-    private
-
-    attr_reader :view_context
-
+    # The content passed to the component instance as a block.
+    #
+    # @return [String]
     def content
       @__vc_content_evaluated = true
       return @__vc_content if defined?(@__vc_content)
 
       @__vc_content =
-        if @view_context && @__vc_render_in_block
+        if __vc_render_in_block_provided?
           view_context.capture(self, &@__vc_render_in_block)
-        elsif defined?(@__vc_content_set_by_with_content)
+        elsif __vc_content_set_by_with_content_defined?
           @__vc_content_set_by_with_content
         end
     end
 
+    # Whether `content` has been passed to the component.
+    #
+    # @return [Boolean]
+    def content?
+      __vc_render_in_block_provided? || __vc_content_set_by_with_content_defined?
+    end
+
+    private
+
+    attr_reader :view_context
+
+    def __vc_render_in_block_provided?
+      defined?(@view_context) && @view_context && @__vc_render_in_block
+    end
+
+    def __vc_content_set_by_with_content_defined?
+      defined?(@__vc_content_set_by_with_content)
+    end
+
     def content_evaluated?
-      @__vc_content_evaluated
+      defined?(@__vc_content_evaluated) && @__vc_content_evaluated
     end
 
     # Set the controller used for testing components:
@@ -341,18 +285,6 @@ module ViewComponent
     #
     # Defaults to `nil`. If this is falsy, `app/components` is used.
     #
-
-    # Evaluate `#content` before `#call` to ensure side-effects are present
-    # during component renders. This will be the default behavior in a future
-    # release.
-    #
-    # ```ruby
-    # config.view_component.use_consistent_rendering_lifecycle = true
-    # ```
-    #
-    # Defaults to `false`
-    #
-    mattr_accessor :use_consistent_rendering_lifecycle, instance_writer: false, default: false
 
     # Parent class for generated components
     #
@@ -418,15 +350,14 @@ module ViewComponent
       # @private
       attr_accessor :source_location, :virtual_path
 
-      # EXPERIMENTAL: This API is experimental and may be removed at any time.
       # Find sidecar files for the given extensions.
       #
       # The provided array of extensions is expected to contain
-      # strings starting without the "dot", example: `["erb", "haml"]`.
+      # strings starting without the dot, example: `["erb", "haml"]`.
       #
       # For example, one might collect sidecar CSS files that need to be compiled.
-      # @private TODO: add documentation
-      def _sidecar_files(extensions)
+      # @param extensions [Array<String>] Extensions of which to return matching sidecar files.
+      def sidecar_files(extensions)
         return [] unless source_location
 
         extensions = extensions.join(",")
@@ -529,6 +460,11 @@ module ViewComponent
         compiler.compiled?
       end
 
+      # @private
+      def ensure_compiled
+        compile unless compiled?
+      end
+
       # Compile templates to instance methods, assuming they haven't been compiled already.
       #
       # Do as much work as possible in this step, as doing so reduces the amount
@@ -578,7 +514,7 @@ module ViewComponent
       # end
       # ```
       #
-      # @param value [Boolean] Whether or not to strip newlines.
+      # @param value [Boolean] Whether to strip newlines.
       def strip_trailing_whitespace(value = true)
         self.__vc_strip_trailing_whitespace = value
       end
@@ -600,22 +536,16 @@ module ViewComponent
         parameter = validate_default ? collection_parameter : provided_collection_parameter
 
         return unless parameter
-        return if initialize_parameter_names.include?(parameter)
+        return if initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
 
-        # If Ruby can't parse the component class, then the initalize
+        # If Ruby can't parse the component class, then the initialize
         # parameters will be empty and ViewComponent will not be able to render
         # the component.
         if initialize_parameters.empty?
-          raise ArgumentError, "The #{self} initializer is empty or invalid." \
-            "It must accept the parameter `#{parameter}` to render it as a collection.\n\n" \
-            "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
-            "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
+          raise EmptyOrInvalidInitializerError.new(name, parameter)
         end
 
-        raise ArgumentError, "The initializer for #{self} doesn't accept the parameter `#{parameter}`, " \
-          "which is required in order to render it as a collection.\n\n" \
-          "To fix this issue, update the initializer to accept `#{parameter}`.\n\n" \
-          "See https://viewcomponent.org/guide/collections.html for more information on rendering collections."
+        raise MissingCollectionArgumentError.new(name, parameter)
       end
 
       # Ensure the component initializer doesn't define
@@ -625,8 +555,7 @@ module ViewComponent
       def validate_initialization_parameters!
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
-        raise ViewComponent::ComponentError, "#{self} initializer can't accept the parameter `#{RESERVED_PARAMETER}`, as it will override a " \
-          "public ViewComponent method. To fix this issue, rename the parameter."
+        raise ReservedParameterError.new(name, RESERVED_PARAMETER)
       end
 
       # @private
@@ -655,6 +584,11 @@ module ViewComponent
       end
 
       private
+
+      def splatted_keyword_argument_present?
+        initialize_parameters.flatten.include?(:keyrest) &&
+          !initialize_parameters.include?([:keyrest, :**]) # Un-named splatted keyword args don't count!
+      end
 
       def initialize_parameter_names
         return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)

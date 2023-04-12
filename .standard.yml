@@ -1,0 +1,3 @@
+ruby_version: 2.5
+ignore:
+  - 'docs/CHANGELOG.md' # Rubocop doesn't like our indenting of code examples

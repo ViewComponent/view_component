@@ -17,7 +17,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
 
     compiler = ViewComponent::Compiler.new(ViewComponent::Base)
 
-    ViewComponent::Base.stub(:_sidecar_files, file_path) do
+    ViewComponent::Base.stub(:sidecar_files, file_path) do
       templates = compiler.send(:templates)
 
       templates.each_with_index do |template, index|
@@ -31,7 +31,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   def test_calling_helpers_outside_render_raises
     component = ViewComponent::Base.new
     err =
-      assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+      assert_raises ViewComponent::HelpersCalledBeforeRenderError do
         component.helpers
       end
     assert_includes err.message, "can't be used during initialization"
@@ -40,7 +40,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   def test_calling_controller_outside_render_raises
     component = ViewComponent::Base.new
     err =
-      assert_raises ViewComponent::Base::ViewContextCalledBeforeRenderError do
+      assert_raises ViewComponent::ControllerCalledBeforeRenderError do
         component.controller
       end
 
@@ -56,7 +56,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
         "#{root}/app/components/template_and_sidecar_directory_template_component/" \
         "template_and_sidecar_directory_template_component.html.erb"
       ],
-      TemplateAndSidecarDirectoryTemplateComponent._sidecar_files(["erb"])
+      TemplateAndSidecarDirectoryTemplateComponent.sidecar_files(["erb"])
     )
 
     assert_equal(
@@ -64,17 +64,17 @@ class ViewComponent::Base::UnitTest < Minitest::Test
         "#{root}/app/components/css_sidecar_file_component.css",
         "#{root}/app/components/css_sidecar_file_component.html.erb"
       ],
-      CssSidecarFileComponent._sidecar_files(["css", "erb"])
+      CssSidecarFileComponent.sidecar_files(["css", "erb"])
     )
 
     assert_equal(
       ["#{root}/app/components/css_sidecar_file_component.css"],
-      CssSidecarFileComponent._sidecar_files(["css"])
+      CssSidecarFileComponent.sidecar_files(["css"])
     )
 
     assert_equal(
       ["#{root}/app/components/translatable_component.yml"],
-      TranslatableComponent._sidecar_files(["yml"])
+      TranslatableComponent.sidecar_files(["yml"])
     )
   end
 
@@ -82,10 +82,10 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     skip unless Rails::VERSION::MAJOR >= 7
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
-      rendered_component = Array.new(2) {
+      rendered_output = Array.new(2) {
         DisplayInlineComponent.new.render_in(ActionController::Base.new.view_context)
       }.join
-      assert_includes rendered_component, "<span>Hello, world!</span><span>Hello, world!</span>"
+      assert_includes rendered_output, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   ensure
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7

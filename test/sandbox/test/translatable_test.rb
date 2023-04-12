@@ -81,7 +81,7 @@ class TranslatableTest < ViewComponent::TestCase
     ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)
 
     ViewComponent::Base.stub(
-      :_sidecar_files,
+      :sidecar_files,
       ->(exts) { exts.include?("yml") ? [] : TranslatableComponent.__minitest_stub___sidecar_files(exts) }
     ) do
       assert_equal "MISSING", translate(".hello", default: "MISSING")
@@ -129,6 +129,16 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal "This is coming from Rails", translate("rails", scope: ["from"])
     assert_equal "This is coming from the sidecar", translate(:sidecar, scope: [:".from"])
     assert_equal "This is coming from Rails", translate(:rails, scope: [:from])
+  end
+
+  def test_translating_from_the_class
+    assert_equal "This is coming from the sidecar", TranslatableComponent.t(".from.sidecar")
+    assert_equal ["This is coming from the sidecar"], TranslatableComponent.t([".from.sidecar"])
+    assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.t(".from"))
+
+    assert_equal "This is coming from the sidecar", TranslatableComponent.translate(".from.sidecar")
+    assert_equal ["This is coming from the sidecar"], TranslatableComponent.translate([".from.sidecar"])
+    assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.translate(".from"))
   end
 
   private
