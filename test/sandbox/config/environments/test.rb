@@ -7,6 +7,8 @@ Sandbox::Application.configure do
   # test suite.  You never need to work with it otherwise.  Remember that
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
+
+  # `cache_classes=false` is necessary to test code-reloading for people using VC in development
   config.cache_classes = false
 
   # Show full error reports and disable caching
