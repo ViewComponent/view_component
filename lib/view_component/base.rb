@@ -19,7 +19,7 @@ module ViewComponent
 
       # Returns the current config.
       #
-      # @return [ViewComponent::Config]
+      # @return [ActiveSupport::OrderedOptions]
       def config
         @config ||= ActiveSupport::OrderedOptions.new
       end
