@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add Topkey to list of companies using ViewComponent.
+
+     *Bryan Beshore*
+
 * Add OBLSK & PLT4M to list of companies using ViewComponent.
 
      *Mike Munroe*
