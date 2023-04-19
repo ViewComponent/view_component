@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add OBLSK & PLT4M to list of companies using ViewComponent.
+
+     *Mike Munroe*
+
 ### v3.0.0.rc6
 
 Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629). We hope to release v3.0.0 in the near future!
