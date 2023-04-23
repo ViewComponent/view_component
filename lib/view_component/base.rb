@@ -38,7 +38,7 @@ module ViewComponent
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
-    #For Content Security Policy nonces
+    # For Content Security Policy nonces
     delegate :content_security_policy_nonce, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
