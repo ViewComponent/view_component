@@ -16,12 +16,10 @@ module ViewComponent
   autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview
-  autoload :PreviewTemplateError
   autoload :TestHelpers
   autoload :SystemTestHelpers
   autoload :TestCase
   autoload :SystemTestCase
-  autoload :TemplateError
   autoload :Translatable
 end
 

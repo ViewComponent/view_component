@@ -15,7 +15,7 @@ class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
   private
 
   def validate_test_env
-    raise "ViewComponentsSystemTestController must only be called in a test environment" unless Rails.env.test?
+    raise ViewComponent::SystemTestControllerOnlyAllowedInTestError unless Rails.env.test?
   end
 
   # Ensure that the file path is valid and doesn't target files outside
@@ -24,7 +24,7 @@ class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
     base_path = ::File.realpath(self.class.temp_dir)
     @path = ::File.realpath(params.permit(:file)[:file], base_path)
     unless @path.start_with?(base_path)
-      raise ArgumentError, "Invalid file path"
+      raise ViewComponent::SystemTestControllerNefariousPathError
     end
   end
 end

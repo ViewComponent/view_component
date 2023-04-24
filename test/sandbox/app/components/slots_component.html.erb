@@ -32,6 +32,14 @@
     <% end %>
   </div>
 
+  <% if posts? %>
+    <div class="posts">
+      <% posts.each do |post| %>
+        <%= post %>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if extra? %>
     <div class="extra">
       <%= extra %>

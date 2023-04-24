@@ -95,9 +95,9 @@ class MessageComponent < ViewComponent::Base
   end
 
   def call
-    @output_buffer.safe_append='<h1>Hello, '.freeze
-    @output_buffer.append=( @name )
-    @output_buffer.safe_append='!</h1>'.freeze
+    @output_buffer.safe_append = "<h1>Hello, ".freeze
+    @output_buffer.append = (@name)
+    @output_buffer.safe_append = "!</h1>".freeze
     @output_buffer.to_s
   end
 end
@@ -160,6 +160,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
 <img src="https://avatars.githubusercontent.com/leighhalliday?s=64" alt="leighhalliday" width="32" />
+<img src="https://avatars.githubusercontent.com/llenk?s=64" alt="llenk" width="32" />
 <img src="https://avatars.githubusercontent.com/manuelpuyol?s=64" alt="manuelpuyol" width="32" />
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
 <img src="https://avatars.githubusercontent.com/matt-yorkley?s=64" alt="Matt-Yorkley" width="32" />
@@ -235,8 +236,10 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
 * [Mon Ami](https://www.monami.io)
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
+* [OBLSK](https://oblsk.com/)
 * [openSUSE Open Build Service](https://openbuildservice.org/)
 * [Orbit](https://orbit.love)
+* [PLT4M](https://plt4m.com/)
 * [Podia](https://www.podia.com/)
 * [PrintReleaf](https://www.printreleaf.com/)
 * [Project Blacklight](http://projectblacklight.org/)
@@ -244,6 +247,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Shogun](https://getshogun.com/)
 * [Spina CMS](https://spinacms.com/)
 * [Startup Jobs](https://startup.jobs/)
+* [Topkey](https://topkey.io/)
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
 * [Within3](https://www.within3.com/)

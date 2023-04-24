@@ -10,17 +10,139 @@ nav_order: 5
 
 ## main
 
+### v3.0.0
+
+1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
+
+We're so grateful for all the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
+
+This release makes the following breaking changes, many of which have long been deprecated:
+
+* BREAKING: Remove deprecated slots setter methods. Use `with_SLOT_NAME` instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `content_areas` feature. Use Slots instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated support for loading ViewComponent engine manually. Make sure `require "view_component/engine"` is removed from `Gemfile`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `generate_*` methods. Use `generate.*` instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `with_variant` method.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `rendered_component` in favor of `rendered_content`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `config.preview_path` in favor of `config.preview_paths`.
+
+    *Joel Hawksley*
+
+* BREAKING: Support Ruby 2.7+ instead of 2.4+
+
+    *Joel Hawksley*
+
+* BREAKING: Remove deprecated `before_render_check`.
+
+    *Joel Hawksley*
+
+* BREAKING: Change counter variable to start iterating from `0` instead of `1`.
+
+    *Frank S*
+
+* BREAKING: `#SLOT_NAME` getter no longer accepts arguments. This change was missed as part of the earlier deprecation in `3.0.0.rc1`.
+
+    *Joel Hawksley*
+
+* BREAKING: Raise `TranslateCalledBeforeRenderError`, `ControllerCalledBeforeRenderError`, or `HelpersCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`.
+
+    *Joel Hawksley*
+
+* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror`, `SystemTestControllerOnlyAllowedInTestError`, `SystemTestControllerNefariousPathError`, `NoMatchingTemplatesForPreviewError`, `MultipleMatchingTemplatesForPreviewError`, `DuplicateContentError`, `EmptyOrInvalidInitializerError`, `MissingCollectionArgumentError`, `ReservedParameterError`, `InvalidCollectionArgumentError`, `MultipleInlineTemplatesError`, `MissingPreviewTemplateError`, `DuplicateSlotContentError` or `NilWithContentError` instead of generic error classes.
+
+    *Joel Hawksley*
+
+* BREAKING: Rename `SlotV2` to `Slot` and `SlotableV2` to `Slotable`.
+
+    *Joel Hawksley*
+
+* BREAKING: Incorporate `PolymorphicSlots` into `Slotable`. To migrate, remove any references to `PolymorphicSlots` as they are no longer necessary.
+
+    *Joel Hawksley*
+
+* BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they were accessible in tests. As such, we're considering this to be a breaking change.
+
+    *Joel Hawksley*
+
+### v3.0.0.rc6
+
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629). We hope to release v3.0.0 in the near future!
+
+* BREAKING: `#SLOT_NAME` getter no longer accepts arguments. This change was missed as part of the earlier deprecation in `3.0.0.rc1`.
+
+    *Joel Hawksley*
+
+* BREAKING: Raise `TranslateCalledBeforeRenderError`, `ControllerCalledBeforeRenderError`, or `HelpersCalledBeforeRenderError` instead of `ViewContextCalledBeforeRenderError`.
+
+    *Joel Hawksley*
+
+* BREAKING: Raise `SlotPredicateNameError`, `RedefinedSlotError`, `ReservedSingularSlotNameError`, `ContentSlotNameError`, `InvalidSlotDefinitionError`, `ReservedPluralSlotNameError`, `ContentAlreadySetForPolymorphicSlotErrror`, `SystemTestControllerOnlyAllowedInTestError`, `SystemTestControllerNefariousPathError`, `NoMatchingTemplatesForPreviewError`, `MultipleMatchingTemplatesForPreviewError`, `DuplicateContentError`, `EmptyOrInvalidInitializerError`, `MissingCollectionArgumentError`, `ReservedParameterError`, `InvalidCollectionArgumentError`, `MultipleInlineTemplatesError`, `MissingPreviewTemplateError`, `DuplicateSlotContentError` or `NilWithContentError` instead of generic error classes.
+
+    *Joel Hawksley*
+
+* Fix bug where `content?` and `with_content` didn't work reliably with slots.
+
+    *Derek Kniffin, Joel Hawksley*
+
+* Add `with_SLOT_NAME_content` helper.
+
+    *Will Cosgrove*
+
+* Allow ActiveRecord objects to be passed to `renders_many`.
+
+    *Leigh Halliday*
+
+* Fix broken links in documentation.
+
+    *Ellen Keal*
+
+* Run `standardrb` against markdown in docs.
+
+    *Joel Hawksley*
+
+* Allow `.with_content` to be redefined by components.
+
+    *Joel Hawksley*
+
+* Run `standardrb` against markdown in docs.
+
+    *Joel Hawksley*
+
 * Raise error if translations are used in initializer.
 
     *Joel Hawksley*
 
 ## v3.0.0.rc5
 
+Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629).
+
 * Fix bug where `mkdir_p` failed due to incorrect permissions.
 
     *Joel Hawksley*
 
-* Check for inline `erb_template` calls when deciding whether or not to compile a component's superclass.
+* Check for inline `erb_template` calls when deciding whether to compile a component's superclass.
 
     *Justin Kenyon*
 
@@ -76,7 +198,7 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Joel Hawksley*
 
-* BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they was easily accessible in tests. As such, we're cautiously considering this to be a breaking change.
+* BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they were accessible in tests. As such, we're considering this to be a breaking change.
 
     *Joel Hawksley*
 
@@ -116,7 +238,7 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
 
-We're so grateful for all of the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
+We're so grateful for all the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
 
 This release makes the following breaking changes, many of which have long been deprecated:
 
