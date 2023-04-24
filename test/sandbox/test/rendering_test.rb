@@ -1020,4 +1020,10 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_text("foo")
   end
+
+  def test_content_security_policy_nonce
+    render_inline(ContentSecurityPolicyComponent.new)
+
+    assert_selector("script", text: "alert('hello')", count: 1)
+  end
 end
