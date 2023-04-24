@@ -18,7 +18,7 @@ module ViewComponent
   module Codemods
     class V3SlotSetters
       TEMPLATE_LANGUAGES = %w[erb slim haml].join(",").freeze
-      RENDER_REGEX = /render[( ](?<component>\w+(?:::\w+)*)\.new[) ]+(do|\{) \|(?<arg>\w+)\b/
+      RENDER_REGEX = /render[( ](?<component>\w+(?:::\w+)*)\.new[) ]+(do|\{) \|(?<arg>\w+)\b/ # standard:disable Lint/MixedRegexpCaptureTypes
 
       Suggestion = Struct.new(:file, :line, :message)
 
@@ -45,7 +45,6 @@ module ViewComponent
 
       def process_file(file)
         @suggestions = []
-
         @suggestions += scan_exact_matches(file)
         @suggestions += scan_uncertain_matches(file)
 
@@ -65,13 +64,13 @@ module ViewComponent
           rendered_components = []
           content = File.read(file)
 
-          if render_match = content.match(RENDER_REGEX)
+          if (render_match = content.match(RENDER_REGEX))
             component = render_match[:component]
             arg = render_match[:arg]
 
             if registered_slots.key?(component.constantize)
               used_slots_names = registered_slots[component.constantize]
-              rendered_components << { component: component, arg: arg, slots: used_slots_names }
+              rendered_components << {component: component, arg: arg, slots: used_slots_names}
             end
           end
 
@@ -81,7 +80,7 @@ module ViewComponent
                 arg = rendered_component[:arg]
                 slots = rendered_component[:slots]
 
-                if matches = line.scan(/#{arg}\.#{Regexp.union(slots)}/)
+                if (matches = line.scan(/#{arg}\.#{Regexp.union(slots)}/))
                   matches.each do |match|
                     suggestions << Suggestion.new(file, f.lineno, "probably replace `#{match}` with `#{match.gsub("#{arg}.", "#{arg}.with_")}`")
                   end
@@ -96,7 +95,7 @@ module ViewComponent
         [].tap do |suggestions|
           File.open(file) do |f|
             f.each_line do |line|
-              if matches = line.scan(/(?<!\s)\.(?<slot>#{Regexp.union(all_registered_slot_names)})/)
+              if (matches = line.scan(/(?<!\s)\.(?<slot>#{Regexp.union(all_registered_slot_names)})/))
                 next if matches.size == 0
 
                 matches.flatten.each do |match|
@@ -125,7 +124,7 @@ module ViewComponent
           puts
           puts "Detected slots:"
           slottable_components.each do |comp|
-            puts "- `#{comp}` has slots: #{comp.registered_slots.keys.join(', ')}"
+            puts "- `#{comp}` has slots: #{comp.registered_slots.keys.join(", ")}"
             slots[comp] = comp.registered_slots.map do |slot_name, slot|
               normalized_slot_name(slot_name, slot)
             end
@@ -152,27 +151,27 @@ module ViewComponent
       def view_component_paths
         @view_component_paths ||= [
           Rails.application.config.view_component.view_component_path,
-          @view_component_path,
+          @view_component_path
         ].flatten.compact.uniq
       end
 
       def view_component_path_glob
         return view_component_paths.first if view_component_paths.size == 1
 
-        "{#{view_component_paths.join(',')}}"
+        "{#{view_component_paths.join(",")}}"
       end
 
       def view_paths
         @view_paths ||= [
           "app/views",
-          @view_path,
+          @view_path
         ].flatten.compact.uniq
       end
 
       def view_path_glob
         return view_paths.first if view_paths.size == 1
 
-        "{#{view_paths.join(',')}}"
+        "{#{view_paths.join(",")}}"
       end
 
       def normalized_slot_name(slot_name, slot)
