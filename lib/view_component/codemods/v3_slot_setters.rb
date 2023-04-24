@@ -1,9 +1,5 @@
 # Usage (in rails console):
 #
-# Make sure all your ViewComponents are loaded before running the codemod.
-#
-#     Zeitwerk::Loader.eager_load_all
-#
 # Run the codemod:
 #
 #     ViewComponent::Codemods::V3SlotSetters.new.call
@@ -23,6 +19,8 @@ module ViewComponent
       Suggestion = Struct.new(:file, :line, :message)
 
       def initialize(view_component_path: [], view_path: [])
+        Zeitwerk::Loader.eager_load_all
+
         @view_component_path = view_component_path
         @view_path = view_path
       end
