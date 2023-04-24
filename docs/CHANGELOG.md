@@ -18,7 +18,7 @@ nav_order: 5
 
      *Mike Munroe*
 
-* Add support for csp nonces inside of components
+* Add support for CSP nonces inside of components.
 
       *Reegan Viljoen*
 
