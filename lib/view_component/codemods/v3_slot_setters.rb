@@ -32,7 +32,7 @@ module ViewComponent
         puts "Using Views path: #{view_paths.join(", ")}"
         puts "#{view_components.size} ViewComponents found"
         puts "#{slottable_components.size} ViewComponents using Slots found"
-        puts "#{view_component_files.size} view component files found"
+        puts "#{view_component_files.size} ViewComponent templates found"
         puts "#{view_files.size} view files found"
         process_all_files
       end
