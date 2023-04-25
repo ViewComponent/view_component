@@ -1024,6 +1024,5 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(ContentSecurityPolicyNonceComponent.new)
 
     assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
-    # assert(page).to have_content("\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n")
   end
 end
