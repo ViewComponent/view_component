@@ -38,6 +38,9 @@ module ViewComponent
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
+    # For Content Security Policy nonces
+    delegate :content_security_policy_nonce, to: :helpers
+
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
     self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
