@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "better_html"
   spec.add_development_dependency "bundler", "~> 2"
   spec.add_development_dependency "erb_lint"
-  spec.add_development_dependency "haml", "~> 5"
+  spec.add_development_dependency "haml", "~> 6"
   spec.add_development_dependency "jbuilder", "~> 2"
   spec.add_development_dependency "m", "~> 1"
   spec.add_development_dependency "minitest", "= 5.6.0"
