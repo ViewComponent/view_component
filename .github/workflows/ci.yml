@@ -11,7 +11,7 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       with:
         path: vendor/bundle
         key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
@@ -63,7 +63,7 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby_version }}
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       with:
         path: vendor/bundle
         key: gems-build-rails-${{ matrix.rails_version }}-ruby-${{ matrix.ruby_version }}-${{ hashFiles('**/Gemfile.lock') }}
@@ -101,7 +101,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       with:
         path: |
           node_modules
@@ -131,7 +131,7 @@ jobs:
         ruby-version: 2.7
     - name: Download coverage results
       uses: actions/download-artifact@v2
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       with:
         path: vendor/bundle
         key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
