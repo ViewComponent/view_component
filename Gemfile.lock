@@ -82,7 +82,7 @@ GEM
       rake
       thor (>= 0.14.0)
     ast (2.4.2)
-    benchmark-ips (2.8.4)
+    benchmark-ips (2.12.0)
     better_html (2.0.1)
       actionview (>= 6.0)
       activesupport (>= 6.0)
@@ -124,8 +124,9 @@ GEM
       websocket-driver (>= 0.6, < 0.8)
     globalid (1.1.0)
       activesupport (>= 5.0)
-    haml (5.2.2)
-      temple (>= 0.8.0)
+    haml (6.1.1)
+      temple (>= 0.8.2)
+      thor
       tilt
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
@@ -243,7 +244,7 @@ GEM
       rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
-    selenium-webdriver (4.8.6)
+    selenium-webdriver (4.9.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -297,16 +298,19 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal (~> 2.4)
-  benchmark-ips (~> 2.8.2)
+  benchmark-ips (~> 2.12.0)
   better_html
   bundler (~> 2)
   capybara (~> 3)
   cuprite (~> 0.8)
   erb_lint
-  haml (~> 5)
+  haml (~> 6)
   jbuilder (~> 2)
   m (~> 1)
   minitest (= 5.6.0)
+  net-imap
+  net-pop
+  net-smtp
   pry (~> 0.13)
   puma (~> 5)
   rails (~> 7.0.0)
