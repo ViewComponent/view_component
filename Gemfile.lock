@@ -82,7 +82,7 @@ GEM
       rake
       thor (>= 0.14.0)
     ast (2.4.2)
-    benchmark-ips (2.8.4)
+    benchmark-ips (2.12.0)
     better_html (2.0.1)
       actionview (>= 6.0)
       activesupport (>= 6.0)
@@ -244,7 +244,7 @@ GEM
       rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
-    selenium-webdriver (4.8.6)
+    selenium-webdriver (4.9.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -298,7 +298,7 @@ PLATFORMS
 
 DEPENDENCIES
   appraisal (~> 2.4)
-  benchmark-ips (~> 2.8.2)
+  benchmark-ips (~> 2.12.0)
   better_html
   bundler (~> 2)
   capybara (~> 3)
