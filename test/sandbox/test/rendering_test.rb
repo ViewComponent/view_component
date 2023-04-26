@@ -1019,4 +1019,10 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_text("foo")
   end
+
+  def test_content_security_policy_nonce
+    render_inline(ContentSecurityPolicyNonceComponent.new)
+
+    assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
+  end
 end

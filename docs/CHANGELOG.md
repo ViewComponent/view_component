@@ -86,6 +86,10 @@ This release makes the following breaking changes, many of which have long been 
 
     *Joel Hawksley*
 
+* Add support for CSP nonces inside of components.
+
+      *Reegan Viljoen*
+
 ### v3.0.0.rc6
 
 Run into an issue with this release candidate? [Let us know](https://github.com/ViewComponent/view_component/issues/1629). We hope to release v3.0.0 in the near future!
