@@ -11,7 +11,7 @@ nav_order: 5
 ## main
 Add FlightLogger to list of companies using ViewComponent.
 
-*Joseph Carpenter*
+   *Joseph Carpenter*
 
 ### v3.0.0
 
