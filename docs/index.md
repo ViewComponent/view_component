@@ -224,6 +224,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Consul](https://consulproject.org/en/)
 * [Cults.](https://cults3d.com/)
 * [Eagerworks](https://eagerworks.com/)
+* [FlightLogger](https://flightlogger.net/)
 * [Framework](https://frame.work/)
 * [FreeAgent](https://www.freeagent.com)
 * [G2](https://www.g2.com/) (200+ components)
