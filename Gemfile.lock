@@ -251,7 +251,7 @@ GEM
     simplecov (0.18.5)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
-    simplecov-console (0.7.2)
+    simplecov-console (0.9.1)
       ansi
       simplecov
       terminal-table
@@ -307,7 +307,7 @@ DEPENDENCIES
   haml (~> 6)
   jbuilder (~> 2)
   m (~> 1)
-  minitest (= 5.18.0)
+  minitest (~> 5.18)
   net-imap
   net-pop
   net-smtp
@@ -319,7 +319,7 @@ DEPENDENCIES
   rubocop-md (~> 1)
   selenium-webdriver (~> 4)
   simplecov (~> 0.18.0)
-  simplecov-console (~> 0.7.2)
+  simplecov-console (~> 0.9.1)
   slim (~> 4.0)
   sprockets-rails (~> 3.2.2)
   standard (~> 1)
