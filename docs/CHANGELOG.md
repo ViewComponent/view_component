@@ -9,7 +9,9 @@ nav_order: 5
 # Changelog
 
 ## main
-Added Flightlogger to 'Who uses view components'
+Add FlightLogger to list of companies using ViewComponent.
+
+*Joseph Carpenter*
 
 ### v3.0.0
 
