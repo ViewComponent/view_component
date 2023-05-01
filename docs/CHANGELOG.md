@@ -9,6 +9,7 @@ nav_order: 5
 # Changelog
 
 ## main
+Added Flightlogger to 'Who uses view components'
 
 ### v3.0.0
 
