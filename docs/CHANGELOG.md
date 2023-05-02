@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add Ophelos to list of companies using ViewComponent.
+
+   *Graham Rogers*
+
 * Add FlightLogger to list of companies using ViewComponent.
 
    *Joseph Carpenter*
