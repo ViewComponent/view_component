@@ -206,6 +206,14 @@ module ViewComponent
       end
 
       def register_polymorphic_slot(slot_name, types, collection:)
+        define_method(slot_name) do
+          get_slot(slot_name)
+        end
+
+        define_method("#{slot_name}?") do
+          get_slot(slot_name).present?
+        end
+
         renderable_hash = types.each_with_object({}) do |(poly_type, poly_attributes_or_callable), memo|
           if poly_attributes_or_callable.is_a?(Hash)
             poly_callable = poly_attributes_or_callable[:renders]
@@ -221,14 +229,6 @@ module ViewComponent
             else
               "#{slot_name}_#{poly_type}"
             end
-
-          define_method(slot_name) do
-            get_slot(slot_name)
-          end
-
-          define_method("#{slot_name}?") do
-            get_slot(slot_name).present?
-          end
 
           memo[poly_type] = define_slot(
             slot_name, collection: collection, callable: poly_callable
