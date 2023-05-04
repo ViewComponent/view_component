@@ -419,6 +419,8 @@ class RenderingTest < ViewComponent::TestCase
   def test_compiles_unrendered_component
     skip "this might not still be compiled if it's been reloaded since boot"
     assert UnreferencedComponent.compiled?
+    # Or a possible alternative is booting a fresh process:
+    # assert_equal "true\n", `ruby -r bundler/setup -r ./test/sandbox/config/environment.rb -e "puts UnreferencedComponent.compiled?"`
   end
 
   def test_compiles_components_without_initializers
