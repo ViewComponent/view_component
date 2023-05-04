@@ -516,15 +516,19 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_polymorphic_slot_with_setters
-    render_inline(PolymorphicSlotComponent.new) do |component|
+    render_inline(component = PolymorphicSlotComponent.new) do |component|
       component.with_header_standard { "standard" }
-      component.with_item_foo(class_names: "custom-foo")
-      component.with_item_bar(class_names: "custom-bar")
+      component.with_foo_field(class_names: "custom-foo1")
+      component.with_bar_field(class_names: "custom-bar1")
+      component.with_item_foo(class_names: "custom-foo2")
+      component.with_item_bar(class_names: "custom-bar2")
     end
 
     assert_selector("div .standard", text: "standard")
-    assert_selector("div .foo.custom-foo:nth-child(2)")
-    assert_selector("div .bar.custom-bar:last")
+    assert_selector("div .foo.custom-foo1")
+    assert_selector("div .bar.custom-bar1")
+    assert_selector("div .foo.custom-foo2")
+    assert_selector("div .bar.custom-bar2")
   end
 
   def test_polymorphic_slot_with_shorthand

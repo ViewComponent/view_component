@@ -206,29 +206,33 @@ module ViewComponent
       end
 
       def register_polymorphic_slot(slot_name, types, collection:)
-        unless types.empty?
-          getter_name = slot_name
-
-          define_method(getter_name) do
-            get_slot(slot_name)
+        renderable_hash = types.each_with_object({}) do |(poly_type, poly_attributes_or_callable), memo|
+          if poly_attributes_or_callable.is_a?(Hash)
+            poly_callable = poly_attributes_or_callable[:renders]
+            setter_name = poly_attributes_or_callable[:as]
+          else
+            poly_callable = poly_attributes_or_callable
+            setter_name = nil
           end
 
-          define_method("#{getter_name}?") do
-            get_slot(slot_name).present?
-          end
-        end
-
-        renderable_hash = types.each_with_object({}) do |(poly_type, poly_callable), memo|
-          memo[poly_type] = define_slot(
-            "#{slot_name}_#{poly_type}", collection: collection, callable: poly_callable
-          )
-
-          setter_name =
+          setter_name ||=
             if collection
               "#{ActiveSupport::Inflector.singularize(slot_name)}_#{poly_type}"
             else
               "#{slot_name}_#{poly_type}"
             end
+
+          define_method(slot_name) do
+            get_slot(slot_name)
+          end
+
+          define_method("#{slot_name}?") do
+            get_slot(slot_name).present?
+          end
+
+          memo[poly_type] = define_slot(
+            slot_name, collection: collection, callable: poly_callable
+          )
 
           setter_method_name = :"with_#{setter_name}"
 
