@@ -1,16 +1,17 @@
-# Usage (in rails console):
-#
-# Run the codemod:
-#
-#     ViewComponent::Codemods::V3SlotSetters.new.call
-#
-# If your app uses custom paths for views, you can pass them in:
-#
-#     ViewComponent::Codemods::V3SlotSetters.new(
-#       view_path: Rails.root.join("app/views"),
-#     ).call
+# frozen_string_literal: true
 
 module ViewComponent
+  # Usage:
+  #
+  # Run via rake task:
+  #
+  #     bin/rails view_component:detect_legacy_slots
+  #
+  # Or run via rails console if you need to pass custom paths:
+  #
+  #     ViewComponent::Codemods::V3SlotSetters.new(
+  #       view_path: Rails.root.join("app/views"),
+  #     ).call
   module Codemods
     class V3SlotSetters
       TEMPLATE_LANGUAGES = %w[erb slim haml].join(",").freeze
