@@ -21,7 +21,7 @@ module ViewComponent
       Suggestion = Struct.new(:file, :line, :message)
 
       def initialize(view_component_path: [], view_path: [], migrate: false)
-        Zeitwerk::Loader.eager_load_all
+        Rails.application.eager_load!
 
         @view_component_path = view_component_path
         @view_path = view_path
