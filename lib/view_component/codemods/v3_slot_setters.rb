@@ -75,7 +75,8 @@ module ViewComponent
             end
           end
 
-          File.open(file) do |f|
+          File.open(file, "r+") do |f|
+            lines = []
             f.each_line do |line|
               rendered_components.each do |rendered_component|
                 arg = rendered_component[:arg]
@@ -91,12 +92,17 @@ module ViewComponent
                     end
                     suggestions << Suggestion.new(file, f.lineno, message)
                     if @migrate
-                      content = File.read(file)
-                      File.write(file, content.gsub(/(?<!\s)#{match}\b/, new_value))
+                      line.gsub!("#{arg}.", "#{arg}.with_")
                     end
                   end
                 end
               end
+              lines << line
+            end
+
+            if @migrate
+              f.rewind
+              f.write(lines.join)
             end
           end
         end
@@ -104,11 +110,10 @@ module ViewComponent
 
       def scan_uncertain_matches(file)
         [].tap do |suggestions|
-          File.open(file) do |f|
+          File.open(file, "r+") do |f|
+            lines = []
             f.each_line do |line|
               if (matches = line.scan(/(?<!\s)\.(?<slot>#{Regexp.union(all_registered_slot_names)})\b/))
-                next if matches.size == 0
-
                 matches.flatten.each do |match|
                   next if @suggestions.find { |s| s.file == file && s.line == f.lineno }
 
@@ -119,11 +124,16 @@ module ViewComponent
                   end
                   suggestions << Suggestion.new(file, f.lineno, message)
                   if @migrate
-                    content = File.read(file)
-                    File.write(file, content.gsub(/(?<!\s)\.(#{match})\b/, ".with_\\1"))
+                    line.gsub!(/(?<!\s)\.(#{match})\b/, ".with_\\1")
                   end
                 end
               end
+              lines << line
+            end
+
+            if @migrate
+              f.rewind
+              f.write(lines.join)
             end
           end
         end
