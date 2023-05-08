@@ -249,14 +249,16 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    simplecov (0.18.5)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
     simplecov-console (0.9.1)
       ansi
       simplecov
       terminal-table
     simplecov-html (0.12.3)
+    simplecov_json_formatter (0.1.4)
     slim (5.1.0)
       temple (~> 0.10.0)
       tilt (>= 2.0.6, < 2.2)
@@ -325,7 +327,7 @@ DEPENDENCIES
   rspec-rails (~> 5)
   rubocop-md (~> 1)
   selenium-webdriver (~> 4)
-  simplecov (~> 0.18.0)
+  simplecov (~> 0.22.0)
   simplecov-console (~> 0.9.1)
   slim (~> 5.1)
   sprockets-rails (~> 3.4.2)
