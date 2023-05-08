@@ -93,7 +93,7 @@ module ViewComponent
         [].tap do |suggestions|
           File.open(file) do |f|
             f.each_line do |line|
-              if (matches = line.scan(/(?<!\s)\.(?<slot>#{Regexp.union(all_registered_slot_names)})/))
+              if (matches = line.scan(/(?<!\s)\.(?<slot>#{Regexp.union(all_registered_slot_names)})\b/))
                 next if matches.size == 0
 
                 matches.flatten.each do |match|
