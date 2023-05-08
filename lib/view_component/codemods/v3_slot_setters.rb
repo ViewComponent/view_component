@@ -7,7 +7,7 @@
 # If your app uses custom paths for views, you can pass them in:
 #
 #     ViewComponent::Codemods::V3SlotSetters.new(
-#       view_path: "../app/views",
+#       view_path: Rails.root.join("../app/views"),
 #     ).call
 
 module ViewComponent
@@ -135,11 +135,11 @@ module ViewComponent
       end
 
       def view_component_files
-        Dir.glob(Rails.root.join(view_component_path_glob, "**", "*.{rb,#{TEMPLATE_LANGUAGES}}"))
+        Dir.glob(Pathname.new(File.join(view_component_path_glob, "**", "*.{rb,#{TEMPLATE_LANGUAGES}}")))
       end
 
       def view_files
-        Dir.glob(Rails.root.join(view_path_glob, "**", "*.{#{TEMPLATE_LANGUAGES}}"))
+        Dir.glob(Pathname.new(File.join(view_path_glob, "**", "*.{#{TEMPLATE_LANGUAGES}}")))
       end
 
       def all_files
@@ -161,7 +161,8 @@ module ViewComponent
 
       def view_paths
         @view_paths ||= [
-          "app/views",
+          Rails.root.join("app/views"),
+          Rails.application.config.view_component.preview_paths,
           @view_path
         ].flatten.compact.uniq
       end
