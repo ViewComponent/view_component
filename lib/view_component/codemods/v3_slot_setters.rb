@@ -92,9 +92,7 @@ module ViewComponent
                     suggestions << Suggestion.new(file, f.lineno, message)
                     if @migrate
                       content = File.read(file)
-                      File.open(file, "w") do |f|
-                        f.write(content.gsub(/(?<!\s)#{match}\b/, "#{new_value}"))
-                      end
+                      File.write(file, content.gsub(/(?<!\s)#{match}\b/, new_value))
                     end
                   end
                 end
@@ -122,9 +120,7 @@ module ViewComponent
                   suggestions << Suggestion.new(file, f.lineno, message)
                   if @migrate
                     content = File.read(file)
-                    File.open(file, "w") do |f|
-                      f.write(content.gsub(/(?<!\s)\.(#{match})\b/, ".with_\\1"))
-                    end
+                    File.write(file, content.gsub(/(?<!\s)\.(#{match})\b/, ".with_\\1"))
                   end
                 end
               end
