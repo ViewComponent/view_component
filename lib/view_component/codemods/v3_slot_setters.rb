@@ -7,7 +7,7 @@
 # If your app uses custom paths for views, you can pass them in:
 #
 #     ViewComponent::Codemods::V3SlotSetters.new(
-#       view_path: Rails.root.join("../app/views"),
+#       view_path: Rails.root.join("app/views"),
 #     ).call
 
 module ViewComponent
