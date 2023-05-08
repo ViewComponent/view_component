@@ -159,9 +159,15 @@ module ViewComponent
         "{#{view_component_paths.join(",")}}"
       end
 
+      def rails_view_paths
+        ActionController::Base.view_paths.select do |path|
+          path.to_s.include?(Rails.root.to_s)
+        end.map(&:to_s)
+      end
+
       def view_paths
         @view_paths ||= [
-          Rails.root.join("app/views"),
+          rails_view_paths,
           Rails.application.config.view_component.preview_paths,
           @view_path
         ].flatten.compact.uniq
