@@ -6,6 +6,7 @@ module ViewComponent
   # Run via rake task:
   #
   #     bin/rails view_component:detect_legacy_slots
+  #     bin/rails view_component:migrate_legacy_slots
   #
   # Or run via rails console if you need to pass custom paths:
   #
@@ -19,11 +20,12 @@ module ViewComponent
 
       Suggestion = Struct.new(:file, :line, :message)
 
-      def initialize(view_component_path: [], view_path: [])
+      def initialize(view_component_path: [], view_path: [], migrate: false)
         Zeitwerk::Loader.eager_load_all
 
         @view_component_path = view_component_path
         @view_path = view_path
+        @migrate = migrate
       end
 
       def call
@@ -81,7 +83,19 @@ module ViewComponent
 
                 if (matches = line.scan(/#{arg}\.#{Regexp.union(slots)}/))
                   matches.each do |match|
-                    suggestions << Suggestion.new(file, f.lineno, "probably replace `#{match}` with `#{match.gsub("#{arg}.", "#{arg}.with_")}`")
+                    new_value = match.gsub("#{arg}.", "#{arg}.with_")
+                    message = if @migrate
+                      "replaced `#{match}` with `#{new_value}`"
+                    else
+                      "probably replace `#{match}` with `#{new_value}`"
+                    end
+                    suggestions << Suggestion.new(file, f.lineno, message)
+                    if @migrate
+                      content = File.read(file)
+                      File.open(file, "w") do |f|
+                        f.write(content.gsub(/(?<!\s)#{match}\b/, "#{new_value}"))
+                      end
+                    end
                   end
                 end
               end
@@ -100,7 +114,18 @@ module ViewComponent
                 matches.flatten.each do |match|
                   next if @suggestions.find { |s| s.file == file && s.line == f.lineno }
 
-                  suggestions << Suggestion.new(file, f.lineno, "maybe replace `.#{match}` with `.with_#{match}`")
+                  message = if @migrate
+                    "replaced `#{match}` with `with_#{match}`"
+                  else
+                    "maybe replace `#{match}` with `with_#{match}`"
+                  end
+                  suggestions << Suggestion.new(file, f.lineno, message)
+                  if @migrate
+                    content = File.read(file)
+                    File.open(file, "w") do |f|
+                      f.write(content.gsub(/(?<!\s)\.(#{match})\b/, ".with_\\1"))
+                    end
+                  end
                 end
               end
             end
