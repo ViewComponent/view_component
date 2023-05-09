@@ -317,16 +317,13 @@ DEPENDENCIES
   jbuilder (~> 2)
   m (~> 1)
   minitest (~> 5.18)
-  net-imap
-  net-pop
-  net-smtp
   pry (~> 0.13)
   puma (~> 5)
   rails (~> 7.0.0)
   rake (~> 13.0)
   rspec-rails (~> 5)
   rubocop-md (~> 1)
-  selenium-webdriver (~> 4)
+  selenium-webdriver (= 4.9.0)
   simplecov (~> 0.22.0)
   simplecov-console (~> 0.9.1)
   slim (~> 5.1)
