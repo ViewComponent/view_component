@@ -14,7 +14,7 @@ group :test do
   gem "cuprite", "~> 0.8"
   gem "puma", "~> 5"
 
-  gem "selenium-webdriver", "~> 4"
+  gem "selenium-webdriver", "4.9.0" # 4.9.1 requires Ruby 3+
 end
 
 if RUBY_VERSION >= "3.1"
