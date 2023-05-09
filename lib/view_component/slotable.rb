@@ -217,13 +217,13 @@ module ViewComponent
         renderable_hash = types.each_with_object({}) do |(poly_type, poly_attributes_or_callable), memo|
           if poly_attributes_or_callable.is_a?(Hash)
             poly_callable = poly_attributes_or_callable[:renders]
-            setter_name = poly_attributes_or_callable[:as]
+            poly_slot_name = poly_attributes_or_callable[:as]
           else
             poly_callable = poly_attributes_or_callable
-            setter_name = nil
+            poly_slot_name = nil
           end
 
-          setter_name ||=
+          poly_slot_name ||=
             if collection
               "#{ActiveSupport::Inflector.singularize(slot_name)}_#{poly_type}"
             else
@@ -231,17 +231,17 @@ module ViewComponent
             end
 
           memo[poly_type] = define_slot(
-            slot_name, collection: collection, callable: poly_callable
+            poly_slot_name, collection: collection, callable: poly_callable
           )
 
-          setter_method_name = :"with_#{setter_name}"
+          setter_method_name = :"with_#{poly_slot_name}"
 
           define_method(setter_method_name) do |*args, &block|
             set_polymorphic_slot(slot_name, poly_type, *args, &block)
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method "with_#{setter_name}_content" do |content|
+          define_method "with_#{poly_slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self
