@@ -162,7 +162,7 @@ GEM
       timeout
     net-smtp (0.3.3)
       net-protocol
-    nio4r (2.5.8)
+    nio4r (2.5.9)
     nokogiri (1.14.3)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
@@ -173,7 +173,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.0.1)
-    puma (5.6.5)
+    puma (6.2.2)
       nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.7)
@@ -317,8 +317,11 @@ DEPENDENCIES
   jbuilder (~> 2)
   m (~> 1)
   minitest (~> 5.18)
+  net-imap
+  net-pop
+  net-smtp
   pry (~> 0.13)
-  puma (~> 5)
+  puma (~> 6)
   rails (~> 7.0.0)
   rake (~> 13.0)
   rspec-rails (~> 5)
