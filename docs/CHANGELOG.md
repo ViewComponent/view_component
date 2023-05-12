@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Allow customization of polymorphic slot setters.
+
+    *Cameron Dutro*
+
 * Add Ophelos to list of companies using ViewComponent.
 
    *Graham Rogers*

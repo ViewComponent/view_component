@@ -328,3 +328,23 @@ To see whether a polymorphic slot has been passed to the component, use the `#{s
   <span class="visual-placeholder">N/A</span>
 <% end %>
 ```
+
+### Custom polymorphic slot setters
+
+Since 3.1.0
+{: .label }
+
+Slot setters can be customized by specifying a nested hash for the `type` value.
+
+```ruby
+class ListItemComponent < ViewComponent::Base
+  renders_one :visual, types: {
+    icon: { renders: IconComponent, as: :icon_visual },
+    avatar: lambda { |**system_arguments|
+      AvatarComponent.new(size: 16, **system_arguments)
+    }
+  }
+end
+```
+
+The setter is now `#with_icon_visual` instead of the default `#with_visual_icon`. The slot getter remains `#visual`.
