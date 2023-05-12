@@ -14,6 +14,10 @@ nav_order: 5
 
     *Cameron Dutro*
 
+* Add `SECURITY.md`.
+
+  *Joel Hawksley*
+
 * Add Ophelos to list of companies using ViewComponent.
 
    *Graham Rogers*
