@@ -2,7 +2,7 @@
 
 class PolymorphicSlotComponent < ViewComponent::Base
   renders_many :fields, types: {
-    foo: { renders: "FooItem", as: :foo_field },
+    foo: {renders: "FooItem", as: :foo_field},
     bar: {
       renders: lambda { |class_names: "", **_system_arguments|
         classes = (class_names.split(" ") + ["bar"]).join(" ")

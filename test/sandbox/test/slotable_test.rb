@@ -516,7 +516,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_polymorphic_slot_with_setters
-    render_inline(component = PolymorphicSlotComponent.new) do |component|
+    render_inline(PolymorphicSlotComponent.new) do |component|
       component.with_header_standard { "standard" }
       component.with_foo_field(class_names: "custom-foo1")
       component.with_bar_field(class_names: "custom-bar1")
