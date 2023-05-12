@@ -339,7 +339,7 @@ Slot setters can be customized by specifying a nested hash for the `type` value.
 ```ruby
 class ListItemComponent < ViewComponent::Base
   renders_one :visual, types: {
-    icon: { renders: IconComponent, as: :icon_visual },
+    icon: {renders: IconComponent, as: :icon_visual},
     avatar: lambda { |**system_arguments|
       AvatarComponent.new(size: 16, **system_arguments)
     }
