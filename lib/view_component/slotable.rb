@@ -236,6 +236,10 @@ module ViewComponent
 
           setter_method_name = :"with_#{poly_slot_name}"
 
+          if instance_methods.include?(setter_method_name)
+            raise AlreadyDefinedPolymorphicSlotSetterError.new(setter_method_name, poly_slot_name)
+          end
+
           define_method(setter_method_name) do |*args, &block|
             set_polymorphic_slot(slot_name, poly_type, *args, &block)
           end
