@@ -128,6 +128,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_helper_changes_are_reflected_on_new_request
+    skip if Rails.application.config.cache_classes
+
     get "/helpers_proxy_component"
     assert_select("div", "Hello helper method")
     assert_response :success
@@ -151,6 +153,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_helper_changes_are_reflected_on_new_request_with_previews
+    skip if Rails.application.config.cache_classes
+
     with_preview_route("/previews") do
       get "/previews/helpers_proxy_component/default"
       assert_select("div", "Hello helper method")
