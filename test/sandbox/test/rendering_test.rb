@@ -931,8 +931,8 @@ class RenderingTest < ViewComponent::TestCase
     # undo the changes made by self.class.compile and friends, forcing a compile the next time
     # #render_template_for is called. This shouldn't be necessary except in the test environment,
     # since eager loading is turned on here.
-    Object.send(:remove_const, :MyComponent)
-    Object.send(:remove_const, :InheritedWithOwnTemplateComponent)
+    Object.send(:remove_const, :MyComponent) if defined?(MyComponent)
+    Object.send(:remove_const, :InheritedWithOwnTemplateComponent) if defined?(InheritedWithOwnTemplateComponent)
 
     load "test/sandbox/app/components/my_component.rb"
     load "test/sandbox/app/components/inherited_with_own_template_component.rb"
