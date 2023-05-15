@@ -340,11 +340,12 @@ Slot setters can be customized by specifying a nested hash for the `type` value.
 class ListItemComponent < ViewComponent::Base
   renders_one :visual, types: {
     icon: {renders: IconComponent, as: :icon_visual},
-    avatar: lambda { |**system_arguments|
-      AvatarComponent.new(size: 16, **system_arguments)
+    avatar: {
+      renders: lambda { |**system_arguments| AvatarComponent.new(size: 16, **system_arguments) },
+      as: :avatar_visual
     }
   }
 end
 ```
 
-The setter is now `#with_icon_visual` instead of the default `#with_visual_icon`. The slot getter remains `#visual`.
+The setters are now `#with_icon_visual` and `#with_avatar_visual` instead of the default `#with_visual_icon` and `#with_visual_avatar`. The slot getter remains `#visual`.
