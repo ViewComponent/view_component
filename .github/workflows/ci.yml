@@ -71,10 +71,12 @@ jobs:
       run: |
         bundle config path vendor/bundle
         bundle update
-        bundle exec rake test spec
+        # Code-reloading isn't compatible with simplecov, so we need to run once
+        # to collect coverage, and again to test reloads.
+        MEASURE_COVERAGE=true bundle exec rake test spec
+        ENABLE_RELOADING=true bundle exec rake test spec
       env:
         RAISE_ON_WARNING: 1
-        MEASURE_COVERAGE: true
         RAILS_VERSION: ${{ matrix.rails_version }}
         CAPTURE_PATCH_ENABLED: ${{ matrix.mode == 'capture_patch_enabled' && 'true' || 'false' }}
     - name: Upload coverage results

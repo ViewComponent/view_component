@@ -14,17 +14,21 @@ nav_order: 5
 
     *Cameron Dutro*
 
+* Fix helpers not reloading in development.
+
+    *Jonathan del Strother*
+
 * Add `SECURITY.md`.
 
-  *Joel Hawksley*
+    *Joel Hawksley*
 
 * Add Ophelos to list of companies using ViewComponent.
 
-   *Graham Rogers*
+    *Graham Rogers*
 
 * Add FlightLogger to list of companies using ViewComponent.
 
-   *Joseph Carpenter*
+    *Joseph Carpenter*
 
 ### v3.0.0
 

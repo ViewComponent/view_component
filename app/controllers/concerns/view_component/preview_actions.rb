@@ -11,6 +11,10 @@ module ViewComponent
       before_action :require_local!, unless: :show_previews?
 
       content_security_policy(false) if respond_to?(:content_security_policy)
+
+      # Including helpers here ensures that we're loading the
+      # latest version of helpers if code-reloading is enabled
+      helper :all if include_all_helpers
     end
 
     def index
