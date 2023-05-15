@@ -5,7 +5,9 @@ require "test_helper"
 module ViewComponent
   class RakeTasksTest < TestCase
     def setup
-      Sandbox::Application.load_tasks
+      Kernel.silence_warnings do
+        Sandbox::Application.load_tasks
+      end
     end
 
     def test_statsetup_task
