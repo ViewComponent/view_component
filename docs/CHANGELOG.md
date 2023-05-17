@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix duplication in configuration docs.
+
+    *Tom Chen*
+
 * Fix helpers not reloading in development.
 
     *Jonathan del Strother*
