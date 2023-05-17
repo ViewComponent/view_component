@@ -138,7 +138,7 @@ module ViewComponent
       # A custom default layout used for the previews index page and individual
       # previews.
       # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
-      #
+
       # @!attribute capture_compatibility_patch_enabled
       # @return [Boolean]
       # Enables the experimental capture compatibility patch that makes ViewComponent
