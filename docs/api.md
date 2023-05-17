@@ -10,7 +10,7 @@ nav_order: 3
 
 ## Class methods
 
-### `.config` → [ViewComponent::Config]
+### `.config` → [ActiveSupport::OrderedOptions]
 
 Returns the current config.
 
