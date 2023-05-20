@@ -152,6 +152,10 @@ module ViewComponent
           singular_name = ActiveSupport::Inflector.singularize(slot_name)
           validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
 
+          if callable.respond_to?(:counter_argument_present?)
+            counter_argument = {callable.collection_counter_parameter => 0} if callable&.counter_argument_present?
+          end
+
           setter_method_name = :"with_#{singular_name}"
 
           define_method setter_method_name do |*args, &block|
@@ -166,6 +170,10 @@ module ViewComponent
           end
 
           define_method :"with_#{slot_name}" do |collection_args = nil, &block|
+            if counter_argument.present?
+              counter_argument[collection_counter_parameter] += 1
+              collection_args.append(counter_argument)
+            end
             collection_args.map do |args|
               if args.respond_to?(:to_hash)
                 set_slot(slot_name, nil, **args, &block)
@@ -182,7 +190,7 @@ module ViewComponent
           define_method "#{slot_name}?" do
             get_slot(slot_name).present?
           end
-
+          
           register_slot(slot_name, collection: true, callable: callable)
         end
       end
@@ -278,7 +286,6 @@ module ViewComponent
         else
           raise(InvalidSlotDefinitionError)
         end
-
         slot
       end
 

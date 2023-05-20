@@ -699,13 +699,8 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_slot_with_iterrations
     component = SlotsIterationComponent.new
-    component.with_numbered_tab do |item|
-      item.with_content(title: "Item A")
-    end
-
-    component.with_numbered_tab do |item|
-      item.with_content(title: "Item B")
-    end
+    component.with_numbered_tab(title: 'Item A')
+    component.with_numbered_tab(title: 'Item B')
 
     assert component.numbered_tabs.first.content?
     assert component.numbered_tabs.last.content?
