@@ -348,21 +348,13 @@ module ViewComponent
 
       # If class
       if slot_definition[:renderable]
-        item_options = {}
-        @collection_iterator ||= ActionView::PartialIteration.new(send(slot_name))
-        item_options[slot_definition[:renderable].collection_counter_parameter] = @collection_iterator.index if slot_definition[:renderable].counter_argument_present?
-        item_options[slot_definition[:renderable].collection_iteration_parameter] = @collection_iterator.dup if slot_definition[:renderable].iteration_argument_present?
-        @collection_iterator.iterate!
+        item_options = set_slot_itterator(args, slot_definition[:renderable], slot_name)
         args.last.merge!(item_options) if item_options.present?
 
         slot.__vc_component_instance = slot_definition[:renderable].new(*args)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
-        item_options = {}
-        @collection_iterator ||= ActionView::PartialIteration.new(send(slot_name))
-        item_options[self.class.const_get(slot_definition[:renderable_class_name]).collection_counter_parameter] = @collection_iterator.index if self.class.const_get(slot_definition[:renderable_class_name]).counter_argument_present?
-        item_options[self.class.const_get(slot_definition[:renderable_class_name]).collection_iteration_parameter] = @collection_iterator.dup if self.class.const_get(slot_definition[:renderable_class_name]).iteration_argument_present?
-        @collection_iterator.iterate!
+        item_options = set_slot_itterator(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name)
         args.last.merge!(item_options) if item_options.present?
         slot.__vc_component_instance =
           self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
@@ -400,6 +392,16 @@ module ViewComponent
 
       slot
     end
+
+    def set_slot_itterator(options, component, slot_name)
+      item_options = {}
+      @collection_iterator ||= ActionView::PartialIteration.new(send(slot_name))
+      item_options[component.collection_counter_parameter] = @collection_iterator.index if component.counter_argument_present?
+      item_options[component.collection_iteration_parameter] = @collection_iterator.dup if component.iteration_argument_present?
+      @collection_iterator.iterate!
+      options.last.merge!(item_options) if item_options.present?
+    end
+
     ruby2_keywords(:set_slot) if respond_to?(:ruby2_keywords, true)
 
     def set_polymorphic_slot(slot_name, poly_type = nil, *args, &block)
