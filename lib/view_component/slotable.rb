@@ -348,6 +348,7 @@ module ViewComponent
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
       slot.__vc_content_block = block if block
+      
       # If class
       if slot_definition[:renderable]
         if slot_definition[:renderable].counter_argument_present?
