@@ -151,9 +151,8 @@ module ViewComponent
         else
           singular_name = ActiveSupport::Inflector.singularize(slot_name)
           validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
-
-          if callable.respond_to?(:counter_argument_present?)
-            counter_argument = {callable.collection_counter_parameter => 0} if callable&.counter_argument_present?
+          if callable&.respond_to?(:counter_argument_present?) && callable&.counter_argument_present?
+            @collection_counter = 0 if callable&.counter_argument_present?
           end
 
           setter_method_name = :"with_#{singular_name}"
@@ -170,10 +169,6 @@ module ViewComponent
           end
 
           define_method :"with_#{slot_name}" do |collection_args = nil, &block|
-            if counter_argument.present?
-              counter_argument[collection_counter_parameter] += 1
-              collection_args.append(counter_argument)
-            end
             collection_args.map do |args|
               if args.respond_to?(:to_hash)
                 set_slot(slot_name, nil, **args, &block)
@@ -190,7 +185,7 @@ module ViewComponent
           define_method "#{slot_name}?" do
             get_slot(slot_name).present?
           end
-          
+
           register_slot(slot_name, collection: true, callable: callable)
         end
       end
@@ -352,11 +347,16 @@ module ViewComponent
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
       slot.__vc_content_block = block if block
-
       # If class
       if slot_definition[:renderable]
+        if slot_definition[:renderable].counter_argument_present?
+          @collection_counter ||= 0
+          @collection_counter += 1
+          counter_argument = slot_definition[:renderable].collection_counter_parameter
+          args.last.merge!({counter_argument => @collection_counter})
+        end
         slot.__vc_component_instance = slot_definition[:renderable].new(*args)
-      # If class name as a string
+        # If class name as a string
       elsif slot_definition[:renderable_class_name]
         slot.__vc_component_instance =
           self.class.const_get(slot_definition[:renderable_class_name]).new(*args)

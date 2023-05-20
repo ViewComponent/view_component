@@ -698,11 +698,12 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_slot_with_iterrations
-    component = SlotsIterationComponent.new
-    component.with_numbered_tab(title: 'Item A')
-    component.with_numbered_tab(title: 'Item B')
 
-    assert component.numbered_tabs.first.content?
-    assert component.numbered_tabs.last.content?
+    render_inline(SlotsIterationComponent.new()) do |component|
+      component.with_numbered_tab(title: 'Item A')
+      component.with_numbered_tab(title: 'Item B')
+    end
+    assert_text("1. Item A")
+    assert_text("2. Item B")
   end
 end
