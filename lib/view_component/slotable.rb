@@ -151,9 +151,6 @@ module ViewComponent
         else
           singular_name = ActiveSupport::Inflector.singularize(slot_name)
           validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
-          if callable&.respond_to?(:counter_argument_present?) && callable&.counter_argument_present?
-            @collection_counter = 0 if callable&.counter_argument_present?
-          end
 
           setter_method_name = :"with_#{singular_name}"
 
@@ -348,7 +345,7 @@ module ViewComponent
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
       slot.__vc_content_block = block if block
-      
+
       # If class
       if slot_definition[:renderable]
         if slot_definition[:renderable].counter_argument_present?
