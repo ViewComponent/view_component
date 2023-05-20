@@ -348,12 +348,13 @@ module ViewComponent
 
       # If class
       if slot_definition[:renderable]
-        if slot_definition[:renderable].counter_argument_present?
-          @collection_iterator ||= ActionView::PartialIteration.new(send(slot_name))
-          @collection_iterator.iterate!
-          index_args = {slot_definition[:renderable].collection_counter_parameter => @collection_iterator.index}
-          args.last.merge!(index_args)
-        end
+        item_options = {}
+        @collection_iterator ||= ActionView::PartialIteration.new(send(slot_name))
+        item_options[slot_definition[:renderable].collection_counter_parameter] = @collection_iterator.index if slot_definition[:renderable].counter_argument_present?
+        item_options[slot_definition[:renderable].collection_iteration_parameter] = @collection_iterator.dup if slot_definition[:renderable].iteration_argument_present?
+
+        @collection_iterator.iterate!
+        args.last.merge!(item_options)
         slot.__vc_component_instance = slot_definition[:renderable].new(*args)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]

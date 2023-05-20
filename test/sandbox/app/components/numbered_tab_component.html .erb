@@ -1,1 +1,5 @@
-<p><%= @tab_number%>. <%=@title%></p>
+<% if @tab_iteration.first? %>
+  <p><%= @tab_number%>. first <%=@title%></p>
+<% else %>
+  <p><%= @tab_number%>. not first <%=@title%></p>
+<% end %>
