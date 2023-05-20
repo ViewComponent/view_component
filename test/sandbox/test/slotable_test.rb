@@ -696,4 +696,18 @@ class SlotableTest < ViewComponent::TestCase
 
     assert component.title.content?
   end
+
+  def test_slot_with_iterrations
+    component = SlotsIterationComponent.new
+    component.with_numbered_tab do |item|
+      item.with_content(title: "Item A")
+    end
+
+    component.with_numbered_tab do |item|
+      item.with_content(title: "Item B")
+    end
+
+    assert component.numbered_tabs.first.content?
+    assert component.numbered_tabs.last.content?
+  end
 end
