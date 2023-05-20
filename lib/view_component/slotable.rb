@@ -281,6 +281,7 @@ module ViewComponent
         else
           raise(InvalidSlotDefinitionError)
         end
+
         slot
       end
 
@@ -356,7 +357,7 @@ module ViewComponent
           args.last.merge!({counter_argument => @collection_counter})
         end
         slot.__vc_component_instance = slot_definition[:renderable].new(*args)
-        # If class name as a string
+      # If class name as a string
       elsif slot_definition[:renderable_class_name]
         slot.__vc_component_instance =
           self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
