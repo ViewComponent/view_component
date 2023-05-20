@@ -358,6 +358,12 @@ module ViewComponent
         slot.__vc_component_instance = slot_definition[:renderable].new(*args)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
+        item_options = {}
+        @collection_iterator ||= ActionView::PartialIteration.new(send(slot_name))
+        item_options[self.class.const_get(slot_definition[:renderable_class_name]).collection_counter_parameter] = @collection_iterator.index if self.class.const_get(slot_definition[:renderable_class_name]).counter_argument_present?
+        item_options[self.class.const_get(slot_definition[:renderable_class_name]).collection_iteration_parameter] = @collection_iterator.dup if self.class.const_get(slot_definition[:renderable_class_name]).iteration_argument_present?
+        @collection_iterator.iterate!
+        args.last.merge!(item_options) if item_options.present?
         slot.__vc_component_instance =
           self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
       # If passed a lambda

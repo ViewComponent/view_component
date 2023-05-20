@@ -1,3 +1,11 @@
 <% numbered_tabs.each do |tab| %>
   <%= tab %>
 <% end %>
+
+<% numbered_items.each do |item| %>
+  <% if item.first? %>
+    <p><%= item.item_number %>. first <%= item.title %></p>
+  <% else %>
+    <p><%= item.item_number %>. not first <%= item.title %></p>
+  <% end %>
+<% end %>
