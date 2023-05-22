@@ -29,7 +29,7 @@ nav_order: 5
 * Add FlightLogger to list of companies using ViewComponent.
 
     *Joseph Carpenter*
-    
+
 * Add support for CSP nonces inside of components.
 
      *Reegan Viljoen*
