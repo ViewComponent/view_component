@@ -29,6 +29,14 @@ nav_order: 5
 * Add FlightLogger to list of companies using ViewComponent.
 
     *Joseph Carpenter*
+    
+* Add support for CSP nonces inside of components.
+
+     *Reegan Viljoen*
+
+* Add slot iteration helpers.
+
+     *Reegan Viljoen*
 
 ### v3.0.0
 
@@ -105,14 +113,6 @@ This release makes the following breaking changes, many of which have long been 
 * BREAKING: Rename private TestHelpers#controller, #build_controller, #request, and #preview_class to avoid conflicts. Note: While these methods were undocumented and marked as private, they were accessible in tests. As such, we're considering this to be a breaking change.
 
     *Joel Hawksley*
-
-* Add support for CSP nonces inside of components.
-
-      *Reegan Viljoen*
-
-* Add slot iteration helpers.
-
-      *Reegan Viljoen*
 
 ### v3.0.0.rc6
 
