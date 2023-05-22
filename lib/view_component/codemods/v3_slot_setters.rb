@@ -7,6 +7,7 @@ module ViewComponent
   #
   #     bin/rails view_component:detect_legacy_slots
   #     bin/rails view_component:migrate_legacy_slots
+  #     bin/rails view_component:migrate_legacy_slots app/views
   #
   # Or run via rails console if you need to pass custom paths:
   #
