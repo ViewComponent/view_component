@@ -10,6 +10,14 @@ nav_order: 5
 
 ## main
 
+* Fix duplication in configuration docs.
+
+    *Tom Chen*
+
+* Fix helpers not reloading in development.
+
+    *Jonathan del Strother*
+
 * Add `SECURITY.md`.
 
     *Joel Hawksley*
@@ -22,7 +30,7 @@ nav_order: 5
 
     *Joseph Carpenter*
 
-* Fix ViewComponent's coverage reports overwriting each other when running locally.
+* Fix coverage reports overwriting each other when running locally.
 
     *Jonathan del Strother*
 

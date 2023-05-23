@@ -115,6 +115,15 @@ def with_generate_sidecar(enabled, &block)
   with_generate_option(:sidecar, enabled, &block)
 end
 
+def with_template_caching
+  old_cache_template_loading = ActionView::Base.cache_template_loading
+  ActionView::Base.cache_template_loading = true
+
+  yield
+ensure
+  ActionView::Base.cache_template_loading = old_cache_template_loading
+end
+
 def with_new_cache
   old_cache = ViewComponent::CompileCache.cache
   ViewComponent::CompileCache.cache = Set.new

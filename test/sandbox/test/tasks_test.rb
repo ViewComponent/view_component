@@ -4,7 +4,9 @@ require "test_helper"
 
 class TasksTest < ActiveSupport::TestCase
   setup do
-    Rails.application.load_tasks
+    Kernel.silence_warnings do
+      Rails.application.load_tasks
+    end
   end
 
   teardown do

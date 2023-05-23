@@ -7,7 +7,10 @@ Sandbox::Application.configure do
   # test suite.  You never need to work with it otherwise.  Remember that
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
-  config.cache_classes = true
+
+  # `cache_classes=false` is necessary to test code-reloading for people using VC in development.
+  # However, it's incompatible with collecting simplecov coverage reports.
+  config.cache_classes = !ENV["ENABLE_RELOADING"]
 
   # Show full error reports and disable caching
   config.consider_all_requests_local = true
