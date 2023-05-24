@@ -3,7 +3,7 @@
 <% end %>
 
 <% numbered_items.each do |item| %>
-  <% if item.first? %>
+  <% if item.item_iteration.first? %>
     <p><%= item.item_number %>. first <%= item.title %></p>
   <% else %>
     <p><%= item.item_number %>. not first <%= item.title %></p>

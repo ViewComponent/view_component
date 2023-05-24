@@ -9,7 +9,6 @@ class SlotsIterationComponent < ViewComponent::Base
   end
 
   class NumberedItemComponent < ViewComponent::Base
-    delegate :first?, :last?, to: :item_iteration
     attr_accessor :item_number, :item_iteration, :title
 
     def initialize(title:, numbered_item_counter:, numbered_item_iteration:)
