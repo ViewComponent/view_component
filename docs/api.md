@@ -10,7 +10,7 @@ nav_order: 3
 
 ## Class methods
 
-### `.config` → [ViewComponent::Config]
+### `.config` → [ActiveSupport::OrderedOptions]
 
 Returns the current config.
 
@@ -130,10 +130,6 @@ so helpers, etc work as expected.
 
 ### `.capture_compatibility_patch_enabled`
 
-A custom default layout used for the previews index page and individual
-previews.
-Defaults to `nil`. If this is falsy, `"component_preview"` is used.
-
 Enables the experimental capture compatibility patch that makes ViewComponent
 compatible with forms, capture, and other built-ins.
 previews.
@@ -154,11 +150,6 @@ Returns the value of attribute config.
 A custom default layout used for the previews index page and individual
 previews.
 Defaults to `nil`. If this is falsy, `"component_preview"` is used.
-
-Enables the experimental capture compatibility patch that makes ViewComponent
-compatible with forms, capture, and other built-ins.
-previews.
-Defaults to `false`.
 
 ### `.generate`
 
