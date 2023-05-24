@@ -10,17 +10,29 @@ nav_order: 5
 
 ## main
 
+* Fix duplication in configuration docs.
+
+    *Tom Chen*
+
+* Fix helpers not reloading in development.
+
+    *Jonathan del Strother*
+
 * Add `SECURITY.md`.
 
-  *Joel Hawksley*
+    *Joel Hawksley*
 
 * Add Ophelos to list of companies using ViewComponent.
 
-   *Graham Rogers*
+    *Graham Rogers*
 
 * Add FlightLogger to list of companies using ViewComponent.
 
-   *Joseph Carpenter*
+    *Joseph Carpenter*
+
+* Fix coverage reports overwriting each other when running locally.
+
+    *Jonathan del Strother*
 
 ### v3.0.0
 
