@@ -334,7 +334,7 @@ To see whether a polymorphic slot has been passed to the component, use the `#{s
 Since 3.1.0
 {: .label }
 
-Slot setters can be customized by specifying a nested hash for the `type` value.
+Customize slot setters by specifying a nested hash for the `type` value:
 
 ```ruby
 class ListItemComponent < ViewComponent::Base
