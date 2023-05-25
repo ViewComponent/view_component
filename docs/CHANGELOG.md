@@ -33,7 +33,7 @@ nav_order: 5
 * Add FlightLogger to list of companies using ViewComponent.
 
     *Joseph Carpenter*
-    
+
 * Fix coverage reports overwriting each other when running locally.
 
     *Jonathan del Strother*
@@ -45,7 +45,7 @@ nav_order: 5
 * Add slot iteration helpers.
 
      *Reegan Viljoen*
-     
+
 ### v3.0.0
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
