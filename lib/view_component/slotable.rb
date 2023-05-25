@@ -206,38 +206,46 @@ module ViewComponent
       end
 
       def register_polymorphic_slot(slot_name, types, collection:)
-        unless types.empty?
-          getter_name = slot_name
-
-          define_method(getter_name) do
-            get_slot(slot_name)
-          end
-
-          define_method("#{getter_name}?") do
-            get_slot(slot_name).present?
-          end
+        define_method(slot_name) do
+          get_slot(slot_name)
         end
 
-        renderable_hash = types.each_with_object({}) do |(poly_type, poly_callable), memo|
-          memo[poly_type] = define_slot(
-            "#{slot_name}_#{poly_type}", collection: collection, callable: poly_callable
-          )
+        define_method("#{slot_name}?") do
+          get_slot(slot_name).present?
+        end
 
-          setter_name =
+        renderable_hash = types.each_with_object({}) do |(poly_type, poly_attributes_or_callable), memo|
+          if poly_attributes_or_callable.is_a?(Hash)
+            poly_callable = poly_attributes_or_callable[:renders]
+            poly_slot_name = poly_attributes_or_callable[:as]
+          else
+            poly_callable = poly_attributes_or_callable
+            poly_slot_name = nil
+          end
+
+          poly_slot_name ||=
             if collection
               "#{ActiveSupport::Inflector.singularize(slot_name)}_#{poly_type}"
             else
               "#{slot_name}_#{poly_type}"
             end
 
-          setter_method_name = :"with_#{setter_name}"
+          memo[poly_type] = define_slot(
+            poly_slot_name, collection: collection, callable: poly_callable
+          )
+
+          setter_method_name = :"with_#{poly_slot_name}"
+
+          if instance_methods.include?(setter_method_name)
+            raise AlreadyDefinedPolymorphicSlotSetterError.new(setter_method_name, poly_slot_name)
+          end
 
           define_method(setter_method_name) do |*args, &block|
             set_polymorphic_slot(slot_name, poly_type, *args, &block)
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method "with_#{setter_name}_content" do |content|
+          define_method "with_#{poly_slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self

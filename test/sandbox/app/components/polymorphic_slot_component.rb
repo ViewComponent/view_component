@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 class PolymorphicSlotComponent < ViewComponent::Base
+  renders_many :fields, types: {
+    foo: {renders: "FooItem", as: :foo_field},
+    bar: {
+      renders: lambda { |class_names: "", **_system_arguments|
+        classes = (class_names.split(" ") + ["bar"]).join(" ")
+        content_tag(:div, class: classes) do
+          "bar item"
+        end
+      },
+
+      as: :bar_field
+    }
+  }
+
   renders_one :header, types: {
     standard: lambda { |&block| content_tag(:div, class: "standard", &block) },
     special: lambda { |&block| content_tag(:div, class: "special", &block) }
