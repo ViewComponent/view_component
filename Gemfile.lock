@@ -107,6 +107,9 @@ GEM
       capybara (~> 3.0)
       ferrum (~> 0.13.0)
     date (3.3.3)
+    debug (1.7.2)
+      irb (>= 1.5.0)
+      reline (>= 0.3.1)
     diff-lcs (1.5.0)
     docile (1.4.0)
     erb_lint (0.4.0)
@@ -130,6 +133,9 @@ GEM
       tilt
     i18n (1.13.0)
       concurrent-ruby (~> 1.0)
+    io-console (0.6.0)
+    irb (1.6.4)
+      reline (>= 0.3.0)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -208,6 +214,8 @@ GEM
     rainbow (3.1.1)
     rake (13.0.6)
     regexp_parser (2.8.0)
+    reline (0.3.3)
+      io-console (~> 0.5)
     rexml (3.2.5)
     rspec-core (3.12.1)
       rspec-support (~> 3.12.0)
@@ -312,14 +320,12 @@ DEPENDENCIES
   bundler (~> 2)
   capybara (~> 3)
   cuprite (~> 0.8)
+  debug
   erb_lint
   haml (~> 6)
   jbuilder (~> 2)
   m (~> 1)
   minitest (~> 5.18)
-  net-imap
-  net-pop
-  net-smtp
   pry (~> 0.13)
   puma (~> 6)
   rails (~> 7.0.0)
