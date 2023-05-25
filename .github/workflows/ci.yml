@@ -93,6 +93,7 @@ jobs:
       with:
         repository: 'primer/view_components'
         path: 'primer_view_components'
+        ref: fix_vc_tests
     - uses: actions/checkout@master
       with:
         path: 'view_component'
