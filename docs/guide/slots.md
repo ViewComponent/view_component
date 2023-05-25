@@ -281,6 +281,7 @@ Slot content can also be set using `#with_content`:
   <% component.with_header(classes: "title").with_content("My blog") %>
 <% end %>
 ```
+
 ## Collection counter
 
 ViewComponent defines a counter variable, inside the slotted component, passed as a collection matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
@@ -336,6 +337,7 @@ end
 ViewComponent defines an iteration variable, inside the slotted component, matching the parameter name above, followed by `_iteration`. This gives contextual information about the iteration to components within the collection (`#size`, `#index`, `#first?`, and `#last?`).
 
 To access the variable, add it to `initialize` as an argument:
+
 ```erb
 <%# index.html.erb %>
 <%= render ParentComponent.new do |component| %>
@@ -381,6 +383,7 @@ end
   <%= @first_name %>
 </li>
 ```
+
 ## Polymorphic slots
 
 Since 2.42.0
