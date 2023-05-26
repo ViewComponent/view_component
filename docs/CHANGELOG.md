@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix viewcomponent.org Axe violations.
+
+    *Joel Hawksley*
+
 * Allow customization of polymorphic slot setters.
 
     *Cameron Dutro*
