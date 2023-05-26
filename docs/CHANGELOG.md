@@ -14,6 +14,10 @@ nav_order: 5
 
     *Donapieppo*
 
+* Allow customization of polymorphic slot setters.
+
+    *Cameron Dutro*
+
 * Fix duplication in configuration docs.
 
     *Tom Chen*

@@ -518,13 +518,36 @@ class SlotableTest < ViewComponent::TestCase
   def test_polymorphic_slot_with_setters
     render_inline(PolymorphicSlotComponent.new) do |component|
       component.with_header_standard { "standard" }
-      component.with_item_foo(class_names: "custom-foo")
-      component.with_item_bar(class_names: "custom-bar")
+      component.with_foo_field(class_names: "custom-foo1")
+      component.with_bar_field(class_names: "custom-bar1")
+      component.with_item_foo(class_names: "custom-foo2")
+      component.with_item_bar(class_names: "custom-bar2")
     end
 
     assert_selector("div .standard", text: "standard")
-    assert_selector("div .foo.custom-foo:nth-child(2)")
-    assert_selector("div .bar.custom-bar:last")
+    assert_selector("div .foo.custom-foo1")
+    assert_selector("div .bar.custom-bar1")
+    assert_selector("div .foo.custom-foo2")
+    assert_selector("div .bar.custom-bar2")
+  end
+
+  def test_polymorphic_slot_setter_collision
+    error = assert_raises(ViewComponent::AlreadyDefinedPolymorphicSlotSetterError) do
+      Class.new(ViewComponent::Base) do
+        renders_one :foo
+
+        renders_one :field, types: {
+          text: nil,
+          select: {as: :foo}
+        }
+      end
+    end
+
+    assert_equal(
+      "A method called 'with_foo' already exists and would be overwritten by the 'foo' polymorphic " \
+      "slot setter.\n\nPlease choose a different setter name.",
+      error.message
+    )
   end
 
   def test_polymorphic_slot_with_shorthand
