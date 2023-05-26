@@ -372,7 +372,7 @@ end
 class ChildComponent < ViewComponent::Base
   def initialize(first_name:, child_iteration:)
     @first_name = first_name
-    @counter = child_counter
+    @iteration = child_iteration
   end
 end
 ```
