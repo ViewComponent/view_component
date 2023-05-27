@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Check `defined?(Rails) && Rails.application` before using `ViewComponent::Base.config.view_component_path`.
+
+    *Donapieppo*
+
 * Allow customization of polymorphic slot setters.
 
     *Cameron Dutro*
