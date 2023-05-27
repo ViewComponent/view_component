@@ -356,13 +356,13 @@ module ViewComponent
 
       # If class
       if slot_definition[:renderable]
-        item_options = set_slot_iterator(args, slot_definition[:renderable], slot_name)
-        args[-1] = item_options if item_options.present?
+        iter_options = add_slot_iterator_options(args, slot_definition[:renderable], slot_name)
+        args[-1] = iter_options if iter_options.present?
         slot.__vc_component_instance = slot_definition[:renderable].new(*args)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
-        item_options = set_slot_iterator(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name)
-        args[-1] = item_options if item_options.present?
+        iter_options = add_slot_iterator_options(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name)
+        args[-1] = iter_options if iter_options.present?
         slot.__vc_component_instance =
           self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
       # If passed a lambda
@@ -400,13 +400,16 @@ module ViewComponent
       slot
     end
 
-    def set_slot_iterator(options, component, slot_name)
-      item_options = {}
+    def add_slot_iterator_options(options, component, slot_name)
       @collection_iterator ||= ActionView::PartialIteration.new(send(slot_name))
-      item_options[component.collection_counter_parameter] = @collection_iterator.index if component.counter_argument_present?
-      item_options[component.collection_iteration_parameter] = @collection_iterator.dup if component.iteration_argument_present?
+
+      iter_options = {}
+      iter_options[component.collection_counter_parameter] = @collection_iterator.index if component.counter_argument_present?
+      iter_options[component.collection_iteration_parameter] = @collection_iterator.dup if component.iteration_argument_present?
+
       @collection_iterator.iterate!
-      options.last.merge!(item_options) if item_options.present?
+
+      iter_options.present? ? options.last.merge!(iter_options) : options.last
     end
 
     ruby2_keywords(:set_slot) if respond_to?(:ruby2_keywords, true)
