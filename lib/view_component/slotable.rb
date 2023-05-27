@@ -356,13 +356,11 @@ module ViewComponent
 
       # If class
       if slot_definition[:renderable]
-        iter_options = add_slot_iterator_options(args, slot_definition[:renderable], slot_name)
-        args[-1] = iter_options if iter_options.present?
+        args[-1] = add_slot_iterator_options(args, slot_definition[:renderable], slot_name) if args.any?
         slot.__vc_component_instance = slot_definition[:renderable].new(*args)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
-        iter_options = add_slot_iterator_options(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name)
-        args[-1] = iter_options if iter_options.present?
+        args[-1] =  add_slot_iterator_options(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name) if args.any?
         slot.__vc_component_instance =
           self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
       # If passed a lambda
