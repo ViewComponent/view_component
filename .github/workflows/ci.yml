@@ -99,7 +99,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.1
     - uses: actions/setup-node@v3
       with:
         node-version: 16
@@ -120,7 +120,7 @@ jobs:
         bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '~> 6.1.0'
+        RAILS_VERSION: '7.0.3'
         PARALLEL_WORKERS: '1'
   coverage:
     needs: test

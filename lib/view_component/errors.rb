@@ -210,4 +210,14 @@ module ViewComponent
   class SystemTestControllerNefariousPathError < BaseError
     MESSAGE = "ViewComponent SystemTest controller attempted to load a file outside of the expected directory."
   end
+
+  class AlreadyDefinedPolymorphicSlotSetterError < StandardError
+    MESSAGE =
+      "A method called 'SETTER_METHOD_NAME' already exists and would be overwritten by the 'SETTER_NAME' polymorphic " \
+      "slot setter.\n\nPlease choose a different setter name."
+
+    def initialize(setter_method_name, setter_name)
+      super(MESSAGE.gsub("SETTER_METHOD_NAME", setter_method_name.to_s).gsub("SETTER_NAME", setter_name.to_s))
+    end
+  end
 end

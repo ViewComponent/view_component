@@ -447,10 +447,12 @@ module ViewComponent
         # has been re-defined by the consuming application, likely in ApplicationComponent.
         child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].path
 
-        # Removes the first part of the path and the extension.
-        child.virtual_path = child.source_location.gsub(
-          /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
-        )
+        # If Rails application is loaded, removes the first part of the path and the extension.
+        if defined?(Rails) && Rails.application
+          child.virtual_path = child.source_location.gsub(
+            /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
+          )
+        end
 
         # Set collection parameter to the extended component
         child.with_collection_parameter provided_collection_parameter

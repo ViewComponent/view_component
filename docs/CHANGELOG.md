@@ -10,6 +10,14 @@ nav_order: 5
 
 ## main
 
+* Check `defined?(Rails) && Rails.application` before using `ViewComponent::Base.config.view_component_path`.
+
+    *Donapieppo*
+
+* Allow customization of polymorphic slot setters.
+
+    *Cameron Dutro*
+
 * Fix duplication in configuration docs.
 
     *Tom Chen*
@@ -29,6 +37,10 @@ nav_order: 5
 * Add FlightLogger to list of companies using ViewComponent.
 
     *Joseph Carpenter*
+
+* Fix coverage reports overwriting each other when running locally.
+
+    *Jonathan del Strother*
 
 ### v3.0.0
 
