@@ -399,12 +399,19 @@ module ViewComponent
     end
 
     def add_slot_iterator_options(options, component, slot_name)
-      @collection_iterator ||= ActionView::PartialIteration.new(send(slot_name))
+      if component.counter_argument_present? || component.iteration_argument_present?
+        @collection_iterator ||= ActionView::PartialIteration.new(send(slot_name))
 
-      options[-1][component.collection_counter_parameter] = @collection_iterator.index if component.counter_argument_present?
-      options[-1][component.collection_iteration_parameter] = @collection_iterator.dup if component.iteration_argument_present?
+        if component.counter_argument_present?
+          options[-1][component.collection_counter_parameter] = @collection_iterator.index
+        end
 
-      @collection_iterator.iterate!
+        if component.iteration_argument_present?
+          options[-1][component.collection_iteration_parameter] = @collection_iterator.dup
+        end
+
+        @collection_iterator.iterate!
+      end
 
       options
     end
