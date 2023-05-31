@@ -720,23 +720,25 @@ class SlotableTest < ViewComponent::TestCase
     assert component.title.content?
   end
 
-  def test_slot_with_iterrations
+  def test_slot_with_iterations
     render_inline(SlotsIterationComponent.new) do |component|
       component.with_numbered_tab(title: "Item A")
       component.with_numbered_tab(title: "Item B")
       component.with_numbered_tab(title: "Item C")
     end
+
     assert_text("0. first Item A")
     assert_text("1. not first Item B")
     assert_text("2. not first Item C")
   end
 
-  def test_slot_with_iterrations_shorthand
+  def test_slot_with_iterations_shorthand
     render_inline(SlotsIterationComponent.new) do |component|
       component.with_numbered_item(title: "Item A")
       component.with_numbered_item(title: "Item B")
       component.with_numbered_item(title: "Item C")
     end
+
     assert_text("0. first Item A")
     assert_text("1. not first Item B")
     assert_text("2. not first Item C")
