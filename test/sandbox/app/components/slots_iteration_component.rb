@@ -4,10 +4,6 @@ class SlotsIterationComponent < ViewComponent::Base
   renders_many :numbered_tabs, NumberedTabComponent
   renders_many :numbered_items, "NumberedItemComponent"
 
-  def initialize(classes: "")
-    @classes = classes
-  end
-
   class NumberedItemComponent < ViewComponent::Base
     attr_accessor :item_number, :item_iteration, :title
 
