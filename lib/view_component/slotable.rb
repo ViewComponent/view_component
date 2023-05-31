@@ -400,6 +400,7 @@ module ViewComponent
 
     def add_slot_iterator_options(options, component, slot_name)
       if component.counter_argument_present? || component.iteration_argument_present?
+        @__vc_set_slots ||= {}
         @collection_iterator ||=
           ActionView::PartialIteration.new(
             Array(
