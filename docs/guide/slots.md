@@ -284,7 +284,9 @@ Slot content can also be set using `#with_content`:
 
 ## Collection counter
 
-ViewComponent provides a counter parameter matching the component name followed by `_counter`. To access the counter, add it to `initialize` as an argument:
+ViewComponent provides a counter parameter matching the component name followed by `_counter`.
+
+To access the counter, add it to `initialize` as an argument:
 
 ```ruby
 # app/components/child_component.rb
