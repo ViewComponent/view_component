@@ -284,95 +284,55 @@ Slot content can also be set using `#with_content`:
 
 ## Collection counter
 
-ViewComponent defines a counter variable, inside the slotted component, passed as a collection matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
-
-```erb
-<%# index.html.erb %>
-<%= render ParentComponent.new do |component| %>
-  <% component.with_child(first_name: "Daniel") do %>
-    Interesting stuff.
-  <% end %>
-  <% component.with_child(first_name: "Peter") do %>
-    More interesting stuff.
-  <% end %>
-  <% component.with_child(first_name: "Richard") do %>
-    Really interesting stuff.
-  <% end %>
-<% end %>
-```
-
-```ruby
-#app/components/parent_component.rb
-class ParentComponent < ViewComponent::Base
-  renders_many :children, ChildComponent
-end
-```
-
-```erb
-#app/components/parent_component.html.erb
-<% children.each do |child| %>
-  <%= child %>
-<% end %>
-```
+ViewComponent provides a counter parameter matching the component name followed by `_counter`. To access the counter, add it to `initialize` as an argument:
 
 ```ruby
 # app/components/child_component.rb
 class ChildComponent < ViewComponent::Base
   def initialize(first_name:, child_counter:)
-    @first_name = first_name
-    @counter = child_counter
+    @first_name, @child_counter = first_name, child_counter
   end
 end
 ```
 
 ```erb
 <%# app/components/child_component.html.erb %>
-<li>
-  <%= @counter %>: <%= @first_name %>
-</li>
-```
-
-## Collection iteration context
-
-ViewComponent defines an iteration variable, inside the slotted component, matching the parameter name above, followed by `_iteration`. This gives contextual information about the iteration to components within the collection (`#size`, `#index`, `#first?`, and `#last?`).
-
-To access the variable, add it to `initialize` as an argument:
-
-```erb
-<%# index.html.erb %>
-<%= render ParentComponent.new do |component| %>
-  <% component.with_child(first_name: "Daniel") do %>
-    Interesting stuff.
-  <% end %>
-  <% component.with_child(first_name: "Peter") do %>
-    More interesting stuff.
-  <% end %>
-  <% component.with_child(first_name: "Richard") do %>
-    Really interesting stuff.
-  <% end %>
-<% end %>
+<li><%= @child_counter %>: <%= @first_name %></li>
 ```
 
 ```ruby
-#app/components/parent_component.rb
+# app/components/parent_component.rb
 class ParentComponent < ViewComponent::Base
   renders_many :children, ChildComponent
 end
 ```
 
 ```erb
-#app/components/parent_component.html.erb
+<%# app/components/parent_component.html.erb %>
 <% children.each do |child| %>
   <%= child %>
 <% end %>
 ```
 
+```erb
+<%# index.html.erb %>
+<%= render ParentComponent.new do |component| %>
+  <% component.with_child(first_name: "Daniel") %>
+  <% component.with_child(first_name: "Peter") %>
+<% end %>
+```
+
+## Collection iteration context
+
+ViewComponent provides an iteration parameter matching the component name followed by `_iteration`. This gives contextual information about the iteration to components within the collection (`#size`, `#index`, `#first?`, and `#last?`).
+
+To access the iteration, add it to `initialize` as an argument:
+
 ```ruby
 # app/components/child_component.rb
 class ChildComponent < ViewComponent::Base
   def initialize(first_name:, child_iteration:)
-    @first_name = first_name
-    @iteration = child_iteration
+    @first_name, @iteration = first_name, child_iteration
   end
 end
 ```
@@ -382,6 +342,28 @@ end
 <li class="<%= "first_born" if @iteration.first? %>">
   <%= @first_name %>
 </li>
+```
+
+```ruby
+#app/components/parent_component.rb
+class ParentComponent < ViewComponent::Base
+  renders_many :children, ChildComponent
+end
+```
+
+```erb
+#app/components/parent_component.html.erb
+<% children.each do |child| %>
+  <%= child %>
+<% end %>
+```
+
+```erb
+<%# index.html.erb %>
+<%= render ParentComponent.new do |component| %>
+  <% component.with_child(first_name: "Daniel") %>
+  <% component.with_child(first_name: "Peter") %>
+<% end %>
 ```
 
 ## Polymorphic slots
