@@ -24,7 +24,7 @@ baseurl: ""
 url: "https://viewcomponent.org"
 
 # Theme settings
-remote_theme: joelhawksley/just-the-docs@a11y-fixes
+remote_theme: just-the-docs/just-the-docs
 search_enabled: true
 color_scheme: custom
 logo: "/logo/viewcomponent-color-logo.svg"
