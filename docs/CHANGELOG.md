@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix viewcomponent.org Axe violations.
+
+    *Joel Hawksley*
+
 * Fix example of RSpec configuration in docs
 
     *Pasha Kalashnikov*
