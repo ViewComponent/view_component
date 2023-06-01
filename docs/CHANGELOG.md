@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix example of RSpec configuration in docs
+
+    *Pasha Kalashnikov*
+
 ## 3.1.0
 
 * Check `defined?(Rails) && Rails.application` before using `ViewComponent::Base.config.view_component_path`.
