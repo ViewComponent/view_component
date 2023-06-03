@@ -356,11 +356,11 @@ module ViewComponent
 
       # If class
       if slot_definition[:renderable]
-        args = add_slot_iterator_options(args, slot_definition[:renderable], slot_name) if args.any?
+        args = add_slot_iterator_args(args, slot_definition[:renderable], slot_name) if args.any?
         slot.__vc_component_instance = slot_definition[:renderable].new(*args)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
-        args = add_slot_iterator_options(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name) if args.any?
+        args = add_slot_iterator_args(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name) if args.any?
         slot.__vc_component_instance =
           self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
       # If passed a lambda
@@ -398,7 +398,7 @@ module ViewComponent
       slot
     end
 
-    def add_slot_iterator_options(options, component, slot_name)
+    def add_slot_iterator_args(args, component, slot_name)
       if component.counter_argument_present? || component.iteration_argument_present?
         @__vc_set_slots ||= {}
         @collection_iterator ||=
@@ -409,17 +409,17 @@ module ViewComponent
           )
 
         if component.counter_argument_present?
-          options[-1][component.collection_counter_parameter] = @collection_iterator.index
+          args[-1][component.collection_counter_parameter] = @collection_iterator.index
         end
 
         if component.iteration_argument_present?
-          options[-1][component.collection_iteration_parameter] = @collection_iterator.dup
+          args[-1][component.collection_iteration_parameter] = @collection_iterator.dup
         end
 
         @collection_iterator.iterate!
       end
 
-      options
+      args
     end
 
     ruby2_keywords(:set_slot) if respond_to?(:ruby2_keywords, true)
