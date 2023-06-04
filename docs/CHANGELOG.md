@@ -18,6 +18,10 @@ nav_order: 5
 
     *Pasha Kalashnikov*
 
+* Add URL helpers to previews
+
+    *Reegan Viljoen*
+
 ## 3.1.0
 
 * Check `defined?(Rails) && Rails.application` before using `ViewComponent::Base.config.view_component_path`.
