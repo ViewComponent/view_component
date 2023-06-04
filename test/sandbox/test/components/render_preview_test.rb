@@ -15,7 +15,7 @@ class RenderPreviewTest < ViewComponent::TestCase
 
   def test_render_preview_with_url_helper
     render_preview(:default, from: UrlHelperComponentPreview)
-    
+
     assert_selector("a[href='/']", text: "root")
   end
 end
