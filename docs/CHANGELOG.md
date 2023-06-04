@@ -10,6 +10,24 @@ nav_order: 5
 
 ## main
 
+* Fix viewcomponent.org Axe violations.
+
+    *Joel Hawksley*
+
+* Fix example of RSpec configuration in docs
+
+    *Pasha Kalashnikov*
+
+## 3.1.0
+
+* Check `defined?(Rails) && Rails.application` before using `ViewComponent::Base.config.view_component_path`.
+
+    *Donapieppo*
+
+* Allow customization of polymorphic slot setters.
+
+    *Cameron Dutro*
+
 * Fix duplication in configuration docs.
 
     *Tom Chen*
@@ -29,6 +47,14 @@ nav_order: 5
 * Add FlightLogger to list of companies using ViewComponent.
 
     *Joseph Carpenter*
+
+* Fix coverage reports overwriting each other when running locally.
+
+    *Jonathan del Strother*
+
+* Add @reeganviljoen to triage team.
+
+    *Reegan Viljoen*
 
 ### v3.0.0
 

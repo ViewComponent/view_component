@@ -3,6 +3,19 @@
   display: none;
 }
 
+pre {
+  white-space: pre-wrap;
+}
+
+div.highlight {
+  border: 1px solid #727272 !important;
+  border-radius: 5px;
+}
+
+div.highlight, pre.highlight {
+  background-color: white !important;
+}
+
 /* GitHub rouge theme */
 
 .highlight table td { padding: 5px; }
@@ -14,8 +27,8 @@
 .highlight .cp {
   color: #d73a49;
 }
-.highlight .c1 {
-  color: #999988;
+.highlight .c1, .highlight .c {
+  color: #727272 !important;
   font-style: italic;
 }
 .highlight .cs {
@@ -49,7 +62,7 @@
   background-color: #ddffdd;
 }
 .highlight .go {
-  color: #888888;
+  color: #727272;
 }
 .highlight .gp {
   color: #555555;
@@ -84,22 +97,22 @@
   color: #d73a49;
 }
 .highlight .mf {
-  color: #009999;
+  color: #038383;
 }
 .highlight .mh {
-  color: #009999;
+  color: #038383;
 }
 .highlight .il {
-  color: #009999;
+  color: #038383;
 }
 .highlight .mi {
-  color: #009999;
+  color: #038383;
 }
 .highlight .mo {
-  color: #009999;
+  color: #038383;
 }
 .highlight .m, .highlight .mb, .highlight .mx {
-  color: #009999;
+  color: #038383;
 }
 .highlight .sa {
   color: #000000;
@@ -129,7 +142,7 @@
   color: #d14;
 }
 .highlight .sr {
-  color: #009926;
+  color: #038a25;
 }
 .highlight .s1 {
   color: #d14;
@@ -147,13 +160,13 @@
   color: #d73a49;
 }
 .highlight .nb {
-  color: #0086B3;
+  color: #017faa;
 }
 .highlight .nc {
-  color: #e36209;
+  color: #c25002;
 }
 .highlight .no {
-  color: #e36209;
+  color: #c25002;
 }
 .highlight .nd {
   color: #3c5d5d;
