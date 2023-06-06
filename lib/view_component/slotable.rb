@@ -2,6 +2,7 @@
 
 require "active_support/concern"
 require "view_component/slot"
+require "debug"
 
 module ViewComponent
   module Slotable
@@ -399,6 +400,7 @@ module ViewComponent
     end
 
     def add_slot_iterator_args(args, component, slot_name)
+      args = args.deep_dup
       return args unless args.any?
       if component.counter_argument_present? || component.iteration_argument_present?
         @__vc_set_slots ||= {}
