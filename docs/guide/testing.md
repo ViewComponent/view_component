@@ -208,6 +208,7 @@ To use RSpec, add the following:
 ```ruby
 # spec/rails_helper.rb
 require "view_component/test_helpers"
+require "view_component/system_test_helpers"
 require "capybara/rspec"
 
 RSpec.configure do |config|

@@ -10,6 +10,20 @@ nav_order: 5
 
 ## main
 
+* Fix viewcomponent.org Axe violations.
+
+    *Joel Hawksley*
+
+* Fix example of RSpec configuration in docs
+
+    *Pasha Kalashnikov*
+
+* Add URL helpers to previews
+
+    *Reegan Viljoen*
+
+## 3.1.0
+
 * Check `defined?(Rails) && Rails.application` before using `ViewComponent::Base.config.view_component_path`.
 
     *Donapieppo*
