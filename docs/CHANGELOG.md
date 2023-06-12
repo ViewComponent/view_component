@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.2.0
+
 * Fix viewcomponent.org Axe violations.
 
     *Joel Hawksley*
