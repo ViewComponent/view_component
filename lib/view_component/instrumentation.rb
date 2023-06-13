@@ -10,7 +10,7 @@ module ViewComponent # :nodoc:
 
     def render_in(view_context, &block)
       ActiveSupport::Notifications.instrument(
-        "!render.view_component",
+        "render.view_component",
         {
           name: self.class.name,
           identifier: self.class.identifier
