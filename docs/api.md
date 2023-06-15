@@ -332,12 +332,20 @@ with_controller_class(UsersController) do
 end
 ```
 
-### `#with_request_url(path)`
+### `#with_request_url(path, host: nil)`
 
 Set the URL of the current request (such as when using request-dependent path helpers):
 
 ```ruby
 with_request_url("/users/42") do
+  render_inline(MyComponent.new)
+end
+```
+
+To use a specific host, pass the host param:
+
+```ruby
+with_request_url("/users/42", host: "app.example.com") do
   render_inline(MyComponent.new)
 end
 ```

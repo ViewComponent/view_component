@@ -862,6 +862,22 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_with_request_url_with_host
+    with_request_url "/", host: "app.example.com" do
+      render_inline UrlForComponent.new(only_path: false)
+      assert_text "http://app.example.com/?key=value"
+    end
+
+    with_request_url "/products", host: "app.example.com" do
+      render_inline UrlForComponent.new(only_path: false)
+      assert_text "http://app.example.com/products?key=value"
+    end
+
+    with_request_url "/products", host: "app.example.com" do
+      assert_equal "app.example.com", vc_test_request.host
+    end
+  end
+
   def test_components_share_helpers_state
     PartialHelper::State.reset
 
