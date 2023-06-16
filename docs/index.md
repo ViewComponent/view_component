@@ -248,6 +248,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [PrintReleaf](https://www.printreleaf.com/)
 * [Project Blacklight](http://projectblacklight.org/)
 * [QuickNode](https://www.quicknode.com/)
+* [Room AI](https://roomai.com/)
 * [Shogun](https://getshogun.com/)
 * [Spina CMS](https://spinacms.com/)
 * [Startup Jobs](https://startup.jobs/)

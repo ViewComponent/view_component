@@ -10,6 +10,12 @@ nav_order: 5
 
 ## main
 
+* Allow Setting host when using the `with_request_url` test helper.
+
+     *Daniel Alfaro*
+
+## 3.2.0
+
 * Fix viewcomponent.org Axe violations.
 
     *Joel Hawksley*
