@@ -358,12 +358,12 @@ module ViewComponent
       # If class
       if slot_definition[:renderable]
         *args, opts = add_slot_iterator_args(args, slot_definition[:renderable], slot_name)
-        slot.__vc_component_instance = slot_definition[:renderable].new(args)
+        slot.__vc_component_instance = slot_definition[:renderable].new(*args, **opts)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
         *args, opts = add_slot_iterator_args(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name)
         slot.__vc_component_instance =
-          self.class.const_get(slot_definition[:renderable_class_name]).new(args)
+          self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **opts)
       # If passed a lambda
       elsif slot_definition[:renderable_function]
         # Use `bind(self)` to ensure lambda is executed in the context of the
