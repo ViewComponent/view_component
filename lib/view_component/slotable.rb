@@ -401,7 +401,6 @@ module ViewComponent
 
     def add_slot_iterator_args(args, component, slot_name)
       args = args.deep_dup
-
       if args.last.is_a?(Hash)
         args[-1] = args[-1].dup
       else
