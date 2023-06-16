@@ -357,13 +357,13 @@ module ViewComponent
 
       # If class
       if slot_definition[:renderable]
-        args = add_slot_iterator_args(args, slot_definition[:renderable], slot_name)
-        slot.__vc_component_instance = slot_definition[:renderable].new(*args)
+        *args, opts = add_slot_iterator_args(args, slot_definition[:renderable], slot_name)
+        slot.__vc_component_instance = slot_definition[:renderable].new(args)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
-        args = add_slot_iterator_args(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name)
+        *args, opts = add_slot_iterator_args(args, self.class.const_get(slot_definition[:renderable_class_name]), slot_name)
         slot.__vc_component_instance =
-          self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
+          self.class.const_get(slot_definition[:renderable_class_name]).new(args)
       # If passed a lambda
       elsif slot_definition[:renderable_function]
         # Use `bind(self)` to ensure lambda is executed in the context of the
@@ -401,7 +401,13 @@ module ViewComponent
 
     def add_slot_iterator_args(args, component, slot_name)
       args = args.deep_dup
-      return args unless args.any?
+
+      if args.last.is_a?(Hash)
+        args[-1] = args[-1].dup
+      else
+        args << {}
+      end
+
       if component.counter_argument_present? || component.iteration_argument_present?
         @__vc_set_slots ||= {}
         @collection_iterator ||=
