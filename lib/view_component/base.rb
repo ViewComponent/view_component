@@ -22,12 +22,14 @@ module ViewComponent
       #
       # @return [ActiveSupport::OrderedOptions]
       def config
-        @config ||= ViewComponent::Config.defaults
+        ViewComponent::Config.current
       end
 
       # Replaces the entire config. You shouldn't need to use this directly
       # unless you're building a `ViewComponent::Config` elsewhere.
-      attr_writer :config
+      def config=(*args)
+        ViewComponent::Config.current = *args
+      end
     end
 
     include ViewComponent::InlineTemplate

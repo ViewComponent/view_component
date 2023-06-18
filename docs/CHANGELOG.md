@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Initialize ViewComponent::Config with defaults before framework load.
+
+    *Simon Fish*
+
 * Add Skroutz to users list.
 
     *Chris Nitsas*
