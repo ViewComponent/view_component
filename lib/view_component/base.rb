@@ -7,6 +7,7 @@ require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
 require "view_component/errors"
+require "view_component/inline_template"
 require "view_component/preview"
 require "view_component/slotable"
 require "view_component/translatable"
@@ -29,6 +30,7 @@ module ViewComponent
       attr_writer :config
     end
 
+    include ViewComponent::InlineTemplate
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper

@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Include InlineTemplate by default in Base. **Note:** It's no longer necessary to include `ViewComponent::InlineTemplate` to use inline templates.
+
+    *Joel Hawksley*
+
 * Allow Setting host when using the `with_request_url` test helper.
 
      *Daniel Alfaro*
