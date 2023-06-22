@@ -13,6 +13,10 @@ nav_order: 5
 * Allow Setting host when using the `with_request_url` test helper.
 
      *Daniel Alfaro*
+ 
+* Resolve ambiguous preview paths when using components without the Component suffix.
+
+     *Reed Law*
 
 ## 3.2.0
 
