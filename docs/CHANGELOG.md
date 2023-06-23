@@ -18,6 +18,10 @@ nav_order: 5
 
      *Daniel Alfaro*
 
+* Resolve ambiguous preview paths when using components without the Component suffix.
+
+     *Reed Law*
+
 ## 3.2.0
 
 * Fix viewcomponent.org Axe violations.
