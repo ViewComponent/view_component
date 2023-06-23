@@ -29,7 +29,7 @@ end
 
 ## Sibling file
 
-Place the view next to the Ruby component:
+Place template file next to the component:
 
 ```console
 app/components
