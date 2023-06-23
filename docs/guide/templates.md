@@ -87,7 +87,7 @@ _**Note**: `call_*` methods must be public._
 Since 3.0.0
 {: .label }
 
-To define a template inside a component call the `.TEMPLATE_HANDLER_template` macro:
+To define a template inside a component, call the `.TEMPLATE_HANDLER_template` macro:
 
 ```ruby
 class InlineErbComponent < ViewComponent::Base
