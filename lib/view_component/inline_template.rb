@@ -39,7 +39,7 @@ module ViewComponent # :nodoc:
       end
 
       def inline_template
-        @__vc_inline_template
+        @__vc_inline_template if defined?(@__vc_inline_template)
       end
 
       def inline_template_language
