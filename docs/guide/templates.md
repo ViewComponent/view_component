@@ -93,7 +93,7 @@ To define a template inside a component, call the `.TEMPLATE_HANDLER_template` m
 class InlineErbComponent < ViewComponent::Base
   attr_reader :name
 
-  erb_template <<~ERB
+  erb_template <<~'ERB'
     <h1>Hello, <%= name %>!</h1>
   ERB
 
