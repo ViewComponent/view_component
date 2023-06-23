@@ -59,7 +59,7 @@ module ViewComponent
     def find_preview
       candidates = []
       params[:path].to_s.scan(%r{/|$}) { candidates << Regexp.last_match.pre_match }
-      preview = candidates.detect { |candidate| ViewComponent::Preview.exists?(candidate) }
+      preview = candidates.sort_by(&:length).reverse_each.detect { |candidate| ViewComponent::Preview.exists?(candidate) }
 
       if preview
         @preview = ViewComponent::Preview.find(preview)

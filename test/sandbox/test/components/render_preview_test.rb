@@ -18,4 +18,10 @@ class RenderPreviewTest < ViewComponent::TestCase
 
     assert_selector("a[href='/']", text: "root")
   end
+
+  def test_render_preview_unsuffixed
+    render_preview(:other, from: Unsuffixed::OtherPreview)
+
+    assert_selector("div", text: "subclass")
+  end
 end
