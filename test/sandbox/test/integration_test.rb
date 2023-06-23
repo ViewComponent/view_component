@@ -616,7 +616,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     get "/nested_haml"
     assert_response :success
-    assert_select "p.foo > span.bar > div.baz > article.quux > div.haml-div"
+    assert_select ".foo > .bar > .baz > .quux > .haml-div"
   end
 
   def test_raises_an_error_if_the_template_is_not_present_and_the_render_with_template_method_is_used_in_the_example
