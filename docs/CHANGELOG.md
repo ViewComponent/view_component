@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.3.0
+
 * Include InlineTemplate by default in Base. **Note:** It's no longer necessary to include `ViewComponent::InlineTemplate` to use inline templates.
 
     *Joel Hawksley*
