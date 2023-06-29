@@ -18,7 +18,7 @@ nav_order: 5
 
    *Joseph Carpenter*
 
-* Add codemod to detect and migrate deprecated Slots setters to new `with_*` prefix introduced in v3.0.0.
+* Add codemod to detect and migrate deprecated Slots setters to new `with_*` prefix introduced in v3.x. Note: This codemod is non-deterministic and works on a best-effort basis.
 
     ```bash
     bin/rails view_component:detect_legacy_slots
