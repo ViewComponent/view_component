@@ -12,9 +12,9 @@ gem "rspec-rails", "~> 5"
 
 group :test do
   gem "cuprite", "~> 0.8"
-  gem "puma", "~> 5"
+  gem "puma", "~> 6"
 
-  gem "selenium-webdriver", "~> 4"
+  gem "selenium-webdriver", "4.9.0" # 4.9.1 requires Ruby 3+
 end
 
 if RUBY_VERSION >= "3.1"
@@ -22,3 +22,5 @@ if RUBY_VERSION >= "3.1"
   gem "net-pop", require: false
   gem "net-smtp", require: false
 end
+
+gem "debug"

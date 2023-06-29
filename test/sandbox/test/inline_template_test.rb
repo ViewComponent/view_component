@@ -4,8 +4,6 @@ require "test_helper"
 
 class InlineErbTest < ViewComponent::TestCase
   class InlineErbComponent < ViewComponent::Base
-    include ViewComponent::InlineTemplate
-
     attr_reader :name
 
     erb_template <<~ERB
@@ -18,8 +16,6 @@ class InlineErbTest < ViewComponent::TestCase
   end
 
   class InlineRaiseErbComponent < ViewComponent::Base
-    include ViewComponent::InlineTemplate
-
     attr_reader :name
 
     erb_template <<~ERB
@@ -38,8 +34,6 @@ class InlineErbTest < ViewComponent::TestCase
   end
 
   class InlineSlimComponent < ViewComponent::Base
-    include ViewComponent::InlineTemplate
-
     attr_reader :name
 
     slim_template <<~SLIM
@@ -58,8 +52,6 @@ class InlineErbTest < ViewComponent::TestCase
   end
 
   class SlotsInlineComponent < ViewComponent::Base
-    include ViewComponent::InlineTemplate
-
     renders_one :greeting, InlineErbComponent
 
     erb_template <<~ERB
@@ -73,8 +65,6 @@ class InlineErbTest < ViewComponent::TestCase
   end
 
   class InlineErbChildComponent < ParentBaseComponent
-    include ViewComponent::InlineTemplate
-
     attr_reader :name
 
     erb_template <<~ERB
@@ -103,7 +93,7 @@ class InlineErbTest < ViewComponent::TestCase
       render_inline(InlineRaiseErbComponent.new("Fox Mulder"))
     end
 
-    assert_match %r{test/sandbox/test/inline_template_test.rb:26}, error.backtrace[0]
+    assert_match %r{test/sandbox/test/inline_template_test.rb:22}, error.backtrace[0]
   end
 
   test "renders inline slim templates" do

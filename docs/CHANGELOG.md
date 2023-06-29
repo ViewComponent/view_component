@@ -10,13 +10,71 @@ nav_order: 5
 
 ## main
 
+## 3.3.0
+
+* Include InlineTemplate by default in Base. **Note:** It's no longer necessary to include `ViewComponent::InlineTemplate` to use inline templates.
+
+    *Joel Hawksley*
+
+* Allow Setting host when using the `with_request_url` test helper.
+
+     *Daniel Alfaro*
+
+* Resolve ambiguous preview paths when using components without the Component suffix.
+
+     *Reed Law*
+
+## 3.2.0
+
+* Fix viewcomponent.org Axe violations.
+
+    *Joel Hawksley*
+
+* Fix example of RSpec configuration in docs
+
+    *Pasha Kalashnikov*
+
+* Add URL helpers to previews
+
+    *Reegan Viljoen*
+
+## 3.1.0
+
+* Check `defined?(Rails) && Rails.application` before using `ViewComponent::Base.config.view_component_path`.
+
+    *Donapieppo*
+
+* Allow customization of polymorphic slot setters.
+
+    *Cameron Dutro*
+
+* Fix duplication in configuration docs.
+
+    *Tom Chen*
+
+* Fix helpers not reloading in development.
+
+    *Jonathan del Strother*
+
+* Add `SECURITY.md`.
+
+    *Joel Hawksley*
+
 * Add Ophelos to list of companies using ViewComponent.
 
-   *Graham Rogers*
+    *Graham Rogers*
 
 * Add FlightLogger to list of companies using ViewComponent.
 
-   *Joseph Carpenter*
+    *Joseph Carpenter*
+
+* Fix coverage reports overwriting each other when running locally.
+
+    *Jonathan del Strother*
+
+* Add @reeganviljoen to triage team.
+
+    *Reegan Viljoen*
 
 * Add codemod to detect and migrate deprecated Slots setters to new `with_*` prefix introduced in v3.x. Note: This codemod is non-deterministic and works on a best-effort basis.
 

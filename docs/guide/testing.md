@@ -183,6 +183,26 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+## Setting `request.host`
+
+Since 3.3.0
+{: .label }
+
+Rails routes that have a subdomain constraint require `request.host` to be set correctly.
+
+To set `request.host` for a test case, use `with_request_url` from `ViewComponent::TestHelpers`:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_with_request_url
+    with_request_url "/products/42", host: "app.example.com" do
+      render_inline ExampleComponent.new # contains i.e. `products_path` that is constrained to the 'app' subdomain
+      assert_link "Products", href: "/products"
+    end
+  end
+end
+```
+
 ### Query parameters
 
 Since 2.41.0
@@ -208,6 +228,7 @@ To use RSpec, add the following:
 ```ruby
 # spec/rails_helper.rb
 require "view_component/test_helpers"
+require "view_component/system_test_helpers"
 require "capybara/rspec"
 
 RSpec.configure do |config|

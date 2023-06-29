@@ -417,10 +417,18 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_compiles_unrendered_component
+    # The UnreferencedComponent will get compiled at boot,
+    # but that might have been thrown away if code-reloading is enabled
+    skip unless Rails.env.cache_classes?
+
     assert UnreferencedComponent.compiled?
   end
 
   def test_compiles_components_without_initializers
+    # MissingInitializerComponent will get compiled at boot,
+    # but that might have been thrown away if code-reloading is enabled
+    skip unless Rails.env.cache_classes?
+
     assert MissingInitializerComponent.compiled?
   end
 
@@ -854,6 +862,22 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_with_request_url_with_host
+    with_request_url "/", host: "app.example.com" do
+      render_inline UrlForComponent.new(only_path: false)
+      assert_text "http://app.example.com/?key=value"
+    end
+
+    with_request_url "/products", host: "app.example.com" do
+      render_inline UrlForComponent.new(only_path: false)
+      assert_text "http://app.example.com/products?key=value"
+    end
+
+    with_request_url "/products", host: "app.example.com" do
+      assert_equal "app.example.com", vc_test_request.host
+    end
+  end
+
   def test_components_share_helpers_state
     PartialHelper::State.reset
 
@@ -923,8 +947,8 @@ class RenderingTest < ViewComponent::TestCase
     # undo the changes made by self.class.compile and friends, forcing a compile the next time
     # #render_template_for is called. This shouldn't be necessary except in the test environment,
     # since eager loading is turned on here.
-    Object.send(:remove_const, :MyComponent)
-    Object.send(:remove_const, :InheritedWithOwnTemplateComponent)
+    Object.send(:remove_const, :MyComponent) if defined?(MyComponent)
+    Object.send(:remove_const, :InheritedWithOwnTemplateComponent) if defined?(InheritedWithOwnTemplateComponent)
 
     load "test/sandbox/app/components/my_component.rb"
     load "test/sandbox/app/components/inherited_with_own_template_component.rb"

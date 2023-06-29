@@ -33,4 +33,5 @@ Sandbox::Application.routes.draw do
   constraints(lambda { |request| request.env["warden"].authenticate! }) do
     get :constraints_with_env, to: "integration_examples#index"
   end
+  get :helpers_proxy_component, to: "integration_examples#helpers_proxy_component"
 end

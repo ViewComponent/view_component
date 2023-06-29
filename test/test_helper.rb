@@ -2,10 +2,11 @@
 
 require "simplecov"
 require "simplecov-console"
+require "rails/version"
 
 if ENV["MEASURE_COVERAGE"]
   SimpleCov.start do
-    command_name "rails#{ENV["RAILS_VERSION"]}-ruby#{ENV["RUBY_VERSION"]}" if ENV["RUBY_VERSION"]
+    command_name "minitest-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
 
     formatter SimpleCov::Formatter::Console
   end
@@ -112,6 +113,15 @@ end
 
 def with_generate_sidecar(enabled, &block)
   with_generate_option(:sidecar, enabled, &block)
+end
+
+def with_template_caching
+  old_cache_template_loading = ActionView::Base.cache_template_loading
+  ActionView::Base.cache_template_loading = true
+
+  yield
+ensure
+  ActionView::Base.cache_template_loading = old_cache_template_loading
 end
 
 def with_new_cache

@@ -210,6 +210,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/svetlins?s=64" alt="svetlins" width="32" />
 <img src="https://avatars.githubusercontent.com/nickmalcolm?s=64" alt="nickmalcolm" width="32" />
 <img src="https://avatars.githubusercontent.com/reeganviljoen?s=64" alt="reeganviljoen" width="32" />
+<img src="https://avatars.githubusercontent.com/thomascchen?s=64" alt="thomascchen" width="32" />
 
 ## Who uses ViewComponent?
 
@@ -247,6 +248,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [PrintReleaf](https://www.printreleaf.com/)
 * [Project Blacklight](http://projectblacklight.org/)
 * [QuickNode](https://www.quicknode.com/)
+* [Room AI](https://roomai.com/)
 * [Shogun](https://getshogun.com/)
 * [Spina CMS](https://spinacms.com/)
 * [Startup Jobs](https://startup.jobs/)

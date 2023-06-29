@@ -71,10 +71,12 @@ jobs:
       run: |
         bundle config path vendor/bundle
         bundle update
-        bundle exec rake test spec
+        # Code-reloading isn't compatible with simplecov, so we need to run once
+        # to collect coverage, and again to test reloads.
+        MEASURE_COVERAGE=true bundle exec rake test spec
+        ENABLE_RELOADING=true bundle exec rake test spec
       env:
         RAISE_ON_WARNING: 1
-        MEASURE_COVERAGE: true
         RAILS_VERSION: ${{ matrix.rails_version }}
         CAPTURE_PATCH_ENABLED: ${{ matrix.mode == 'capture_patch_enabled' && 'true' || 'false' }}
     - name: Upload coverage results
@@ -97,7 +99,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.1
     - uses: actions/setup-node@v3
       with:
         node-version: 16
@@ -118,7 +120,7 @@ jobs:
         bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '~> 6.1.0'
+        RAILS_VERSION: '7.0.3'
         PARALLEL_WORKERS: '1'
   coverage:
     needs: test

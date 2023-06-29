@@ -12,4 +12,16 @@ class RenderPreviewTest < ViewComponent::TestCase
 
     assert_selector("div", text: "hello,world!")
   end
+
+  def test_render_preview_with_url_helper
+    render_preview(:default, from: UrlHelperComponentPreview)
+
+    assert_selector("a[href='/']", text: "root")
+  end
+
+  def test_render_preview_unsuffixed
+    render_preview(:other, from: Unsuffixed::OtherPreview)
+
+    assert_selector("div", text: "subclass")
+  end
 end

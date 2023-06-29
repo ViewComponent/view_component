@@ -7,6 +7,7 @@ require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
 require "view_component/errors"
+require "view_component/inline_template"
 require "view_component/preview"
 require "view_component/slotable"
 require "view_component/translatable"
@@ -19,7 +20,7 @@ module ViewComponent
 
       # Returns the current config.
       #
-      # @return [ViewComponent::Config]
+      # @return [ActiveSupport::OrderedOptions]
       def config
         @config ||= ActiveSupport::OrderedOptions.new
       end
@@ -29,6 +30,7 @@ module ViewComponent
       attr_writer :config
     end
 
+    include ViewComponent::InlineTemplate
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
@@ -447,10 +449,12 @@ module ViewComponent
         # has been re-defined by the consuming application, likely in ApplicationComponent.
         child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].path
 
-        # Removes the first part of the path and the extension.
-        child.virtual_path = child.source_location.gsub(
-          /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
-        )
+        # If Rails application is loaded, removes the first part of the path and the extension.
+        if defined?(Rails) && Rails.application
+          child.virtual_path = child.source_location.gsub(
+            /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
+          )
+        end
 
         # Set collection parameter to the extended component
         child.with_collection_parameter provided_collection_parameter
