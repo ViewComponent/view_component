@@ -2,6 +2,7 @@
 
 require "rails"
 require "view_component/config"
+require "view_component/deprecation"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
@@ -42,6 +43,12 @@ module ViewComponent
           # :nocov:
           ViewComponent::Base.prepend(ViewComponent::Instrumentation)
           # :nocov:
+          if app.config.view_component.instrumentation_use_deprecated_name
+            ViewComponent::Deprecation.deprecation_warning(
+              "!render.view_component",
+              "Use the new instrumentation key `render.view_component` instead. See https://viewcomponent.org/guide/instrumentation.html"
+            )
+          end
         end
       end
     end
