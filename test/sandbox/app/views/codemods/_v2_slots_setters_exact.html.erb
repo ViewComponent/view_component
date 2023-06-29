@@ -1,0 +1,14 @@
+<%= render SlotsComponent.new do |component| %>
+  <% component.title do %>
+    This is my title!
+  <% end %>
+<% end %>
+
+<%= render SlotsComponent.new do |component| %>
+  <% component.tab do %>
+    <h1>Tab A</h1>
+  <% end %>
+  <% component.tab do %>
+    <h1>Tab B</h1>
+  <% end %>
+<% end %>

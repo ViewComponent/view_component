@@ -1,16 +1,19 @@
-# Usage (in rails console):
-#
-# Run the codemod:
-#
-#     ViewComponent::Codemods::V3SlotSetters.new.call
-#
-# If your app uses custom paths for views, you can pass them in:
-#
-#     ViewComponent::Codemods::V3SlotSetters.new(
-#       view_path: "../app/views",
-#     ).call
+# frozen_string_literal: true
 
 module ViewComponent
+  # Usage:
+  #
+  # Run via rake task:
+  #
+  #     bin/rails view_component:detect_legacy_slots
+  #     bin/rails view_component:migrate_legacy_slots
+  #     bin/rails view_component:migrate_legacy_slots app/views
+  #
+  # Or run via rails console if you need to pass custom paths:
+  #
+  #     ViewComponent::Codemods::V3SlotSetters.new(
+  #       view_path: Rails.root.join("app/views"),
+  #     ).call
   module Codemods
     class V3SlotSetters
       TEMPLATE_LANGUAGES = %w[erb slim haml].join(",").freeze
@@ -18,11 +21,12 @@ module ViewComponent
 
       Suggestion = Struct.new(:file, :line, :message)
 
-      def initialize(view_component_path: [], view_path: [])
-        Zeitwerk::Loader.eager_load_all
+      def initialize(view_component_path: [], view_path: [], migrate: false)
+        Rails.application.eager_load!
 
         @view_component_path = view_component_path
         @view_path = view_path
+        @migrate = migrate
       end
 
       def call
@@ -72,7 +76,8 @@ module ViewComponent
             end
           end
 
-          File.open(file) do |f|
+          File.open(file, "r+") do |f|
+            lines = []
             f.each_line do |line|
               rendered_components.each do |rendered_component|
                 arg = rendered_component[:arg]
@@ -80,10 +85,25 @@ module ViewComponent
 
                 if (matches = line.scan(/#{arg}\.#{Regexp.union(slots)}/))
                   matches.each do |match|
-                    suggestions << Suggestion.new(file, f.lineno, "probably replace `#{match}` with `#{match.gsub("#{arg}.", "#{arg}.with_")}`")
+                    new_value = match.gsub("#{arg}.", "#{arg}.with_")
+                    message = if @migrate
+                      "replaced `#{match}` with `#{new_value}`"
+                    else
+                      "probably replace `#{match}` with `#{new_value}`"
+                    end
+                    suggestions << Suggestion.new(file, f.lineno, message)
+                    if @migrate
+                      line.gsub!("#{arg}.", "#{arg}.with_")
+                    end
                   end
                 end
               end
+              lines << line
+            end
+
+            if @migrate
+              f.rewind
+              f.write(lines.join)
             end
           end
         end
@@ -91,17 +111,30 @@ module ViewComponent
 
       def scan_uncertain_matches(file)
         [].tap do |suggestions|
-          File.open(file) do |f|
+          File.open(file, "r+") do |f|
+            lines = []
             f.each_line do |line|
-              if (matches = line.scan(/(?<!\s)\.(?<slot>#{Regexp.union(all_registered_slot_names)})/))
-                next if matches.size == 0
-
+              if (matches = line.scan(/(?<!\s)\.(?<slot>#{Regexp.union(all_registered_slot_names)})\b/))
                 matches.flatten.each do |match|
                   next if @suggestions.find { |s| s.file == file && s.line == f.lineno }
 
-                  suggestions << Suggestion.new(file, f.lineno, "maybe replace `.#{match}` with `.with_#{match}`")
+                  message = if @migrate
+                    "replaced `#{match}` with `with_#{match}`"
+                  else
+                    "maybe replace `#{match}` with `with_#{match}`"
+                  end
+                  suggestions << Suggestion.new(file, f.lineno, message)
+                  if @migrate
+                    line.gsub!(/(?<!\s)\.(#{match})\b/, ".with_\\1")
+                  end
                 end
               end
+              lines << line
+            end
+
+            if @migrate
+              f.rewind
+              f.write(lines.join)
             end
           end
         end
@@ -135,11 +168,11 @@ module ViewComponent
       end
 
       def view_component_files
-        Dir.glob(Rails.root.join(view_component_path_glob, "**", "*.{rb,#{TEMPLATE_LANGUAGES}}"))
+        Dir.glob(Pathname.new(File.join(view_component_path_glob, "**", "*.{rb,#{TEMPLATE_LANGUAGES}}")))
       end
 
       def view_files
-        Dir.glob(Rails.root.join(view_path_glob, "**", "*.{#{TEMPLATE_LANGUAGES}}"))
+        Dir.glob(Pathname.new(File.join(view_path_glob, "**", "*.{#{TEMPLATE_LANGUAGES}}")))
       end
 
       def all_files
@@ -159,9 +192,16 @@ module ViewComponent
         "{#{view_component_paths.join(",")}}"
       end
 
+      def rails_view_paths
+        ActionController::Base.view_paths.select do |path|
+          path.to_s.include?(Rails.root.to_s)
+        end.map(&:to_s)
+      end
+
       def view_paths
         @view_paths ||= [
-          "app/views",
+          rails_view_paths,
+          Rails.application.config.view_component.preview_paths,
           @view_path
         ].flatten.compact.uniq
       end
