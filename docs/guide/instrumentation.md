@@ -18,7 +18,7 @@ config.view_component.instrumentation_enabled = true
 config.view_component.instrumentation_use_deprecated_name = false
 ```
 
-Setting `instrumentation_use_deprecated_name` configures the event name used.  If `false` the name `"render.view_component"` is used.  If `true` (default) it will use the deprecated name `"!render.view_component"`.
+Setting `instrumentation_use_deprecated_name` configures the event name used. If `false` the name `"render.view_component"` is used. If `true` (default) it will use the deprecated name `"!render.view_component"`.
 
 You can then subscribe to the event:
 
