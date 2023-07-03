@@ -41,20 +41,18 @@ Available options to customize the generator are documented on the [Generators](
 
 ## Implementation
 
-A ViewComponent is a Ruby file and corresponding template file with the same base name:
+A ViewComponent is a Ruby class that inherits from `ViewComponent::Base`:
 
 ```ruby
-# app/components/example_component.rb
 class ExampleComponent < ViewComponent::Base
+  erb_template <<-ERB
+    <span title="<%= @title %>"><%= content %></span>
+  ERB
+
   def initialize(title:)
     @title = title
   end
 end
-```
-
-```erb
-<%# app/components/example_component.html.erb %>
-<span title="<%= @title %>"><%= content %></span>
 ```
 
 Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor.
@@ -62,7 +60,6 @@ Content passed to a ViewComponent as a block is captured and assigned to the `co
 Rendered in a view as:
 
 ```erb
-<%# app/views/home/index.html.erb %>
 <%= render(ExampleComponent.new(title: "my title")) do %>
   Hello, World!
 <% end %>
@@ -82,7 +79,6 @@ Since 2.31.0
 String content can also be passed to a ViewComponent by calling `#with_content`:
 
 ```erb
-<%# app/views/home/index.html.erb %>
 <%= render(ExampleComponent.new(title: "my title").with_content("Hello, World!")) %>
 ```
 
@@ -91,7 +87,6 @@ String content can also be passed to a ViewComponent by calling `#with_content`:
 It's also possible to render ViewComponents in controllers:
 
 ```ruby
-# app/controllers/home_controller.rb
 def show
   render(ExampleComponent.new(title: "My Title"))
 end
@@ -102,7 +97,6 @@ _Note: Content can't be passed to a component via a block in controllers. Instea
 When using turbo frames with [turbo-rails](https://github.com/hotwired/turbo-rails), set `content_type` as `text/html`:
 
 ```ruby
-# app/controllers/home_controller.rb
 def create
   render(ExampleComponent.new, content_type: "text/html")
 end

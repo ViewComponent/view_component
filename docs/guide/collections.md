@@ -12,12 +12,10 @@ Since 2.1.0
 Like [Rails partials](https://guides.rubyonrails.org/layouts_and_rendering.html#rendering-collections), it's possible to render a collection with ViewComponents, using `with_collection`:
 
 ```erb
-<%# app/view/products/index.html.erb %>
 <%= render(ProductComponent.with_collection(@products)) %>
 ```
 
 ```ruby
-# app/components/product_component.rb
 class ProductComponent < ViewComponent::Base
   def initialize(product:)
     @product = product
@@ -32,7 +30,6 @@ end
 Use `with_collection_parameter` to change the name of the collection parameter:
 
 ```ruby
-# app/components/product_component.rb
 class ProductComponent < ViewComponent::Base
   with_collection_parameter :item
 
@@ -47,28 +44,25 @@ end
 Additional arguments besides the collection are passed to each component instance:
 
 ```erb
-<%# app/view/products/index.html.erb %>
 <%= render(ProductComponent.with_collection(@products, notice: "hi")) %>
 ```
 
 ```ruby
-# app/components/product_component.rb
 class ProductComponent < ViewComponent::Base
   with_collection_parameter :item
+
+  erb_template <<-ERB
+    <li>
+      <h2><%= @item.name %></h2>
+      <span><%= @notice %></span>
+    </li>
+  ERB
 
   def initialize(item:, notice:)
     @item = item
     @notice = notice
   end
 end
-```
-
-```erb
-<%# app/components/product_component.html.erb %>
-<li>
-  <h2><%= @item.name %></h2>
-  <span><%= @notice %></span>
-</li>
 ```
 
 ## Collection counter
@@ -79,20 +73,18 @@ Since 2.5.0
 ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
 
 ```ruby
-# app/components/product_component.rb
 class ProductComponent < ViewComponent::Base
+  erb_template <<-ERB
+    <li>
+      <%= @counter %> <%= @product.name %>
+    </li>
+  ERB
+
   def initialize(product:, product_counter:)
     @product = product
     @counter = product_counter
   end
 end
-```
-
-```erb
-<%# app/components/product_component.html.erb %>
-<li>
-  <%= @counter %> <%= @product.name %>
-</li>
 ```
 
 ## Collection iteration context
@@ -105,18 +97,16 @@ ViewComponent defines an iteration variable matching the parameter name above, f
 To access the variable, add it to `initialize` as an argument:
 
 ```ruby
-# app/components/product_component.rb
 class ProductComponent < ViewComponent::Base
+  erb_template <<-ERB
+    <li class="<%= "featured" if @iteration.first? %>">
+      <%= @product.name %>
+    </li>
+  ERB
+
   def initialize(product:, product_iteration:)
     @product = product
     @iteration = product_iteration
   end
 end
-```
-
-```erb
-<%# app/components/product_component.html.erb %>
-<li class="<%= "featured" if @iteration.first? %>">
-  <%= @product.name %>
-</li>
 ```
