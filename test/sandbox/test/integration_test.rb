@@ -208,7 +208,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/partial"
     assert_response :success
 
-    assert_select("div", { text: "hello,partial world!", count: 4 })
+    assert_select("div", {text: "hello,partial world!", count: 4})
   end
 
   def test_rendering_component_without_variant
