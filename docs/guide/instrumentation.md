@@ -15,12 +15,12 @@ To enable ActiveSupport notifications, use the `instrumentation_enabled` option:
 # config/application.rb
 # Enable ActiveSupport notifications for all ViewComponents
 config.view_component.instrumentation_enabled = true
-config.view_component.instrumentation_use_deprecated_name = false
+config.view_component.use_deprecated_instrumentation_name = false
 ```
 
-Setting `instrumentation_use_deprecated_name` configures the event name used. If `false` the name `"render.view_component"` is used. If `true` (default) it will use the deprecated name `"!render.view_component"`.
+Setting `use_deprecated_instrumentation_name` configures the event name. If `false` the name is `"render.view_component"`. If `true` (default) the deprecated `"!render.view_component"` will be used.
 
-You can then subscribe to the event:
+Subscribe to the event:
 
 ```ruby
 ActiveSupport::Notifications.subscribe("render.view_component") do |*args| # or !render.view_component
@@ -30,4 +30,4 @@ ActiveSupport::Notifications.subscribe("render.view_component") do |*args| # or 
 end
 ```
 
-If you're using the non-deprecated key & have `config.server_timing = true` (default in development) set in Rails 7, you can see sum total timing information in your browser's developer-tools. Find the request on the Network tab and view it's "timing" sub-tab. On most browsers server results are shown beneath the client-side data. Look for the key `render.view_component`.
+When using `render.view_component` with `config.server_timing = true` (default in development) in Rails 7, the Chrome developer tools display the sum total timing information in Network > Timing under the key `render.view_component`.

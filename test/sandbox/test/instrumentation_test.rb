@@ -4,7 +4,7 @@ require "test_helper"
 
 class InstrumentationTest < ViewComponent::TestCase
   def test_instrumentation
-    with_config_option(:instrumentation_use_deprecated_name, false) do
+    with_config_option(:use_deprecated_instrumentation_name, false) do
       events = []
       ActiveSupport::Notifications.subscribe("render.view_component") do |*args|
         events << ActiveSupport::Notifications::Event.new(*args)
