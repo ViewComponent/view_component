@@ -8,9 +8,28 @@ parent: How-to guide
 
 ViewComponents wrap a template (or several, if using [variants](https://guides.rubyonrails.org/layouts_and_rendering.html#the-variants-option)), defined in one of several ways:
 
+## Inline
+
+Since 3.0.0
+{: .label }
+
+To define a template inside a component, call the `.TEMPLATE_HANDLER_template` macro:
+
+```ruby
+class InlineErbComponent < ViewComponent::Base
+  erb_template <<~ERB
+    <h1>Hello, <%= @name %>!</h1>
+  ERB
+
+  def initialize(name)
+    @name = name
+  end
+end
+```
+
 ## Sibling file
 
-The simplest option is to place the view next to the Ruby component:
+Place template file next to the component:
 
 ```console
 app/components
@@ -81,27 +100,6 @@ end
 ```
 
 _**Note**: `call_*` methods must be public._
-
-## Inline
-
-Since 3.0.0
-{: .label }
-
-To define a template inside a component, call the `.TEMPLATE_HANDLER_template` macro:
-
-```ruby
-class InlineErbComponent < ViewComponent::Base
-  attr_reader :name
-
-  erb_template <<~ERB
-    <h1>Hello, <%= name %>!</h1>
-  ERB
-
-  def initialize(name)
-    @name = name
-  end
-end
-```
 
 ## Inherited
 
