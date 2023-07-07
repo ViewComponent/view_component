@@ -30,7 +30,7 @@ ActiveSupport::Notifications.subscribe("render.view_component") do |*args| # or 
 end
 ```
 
-### Viewing instrumentation sums in the browser developer tools
+## Viewing instrumentation sums in the browser developer tools
 
 When using `render.view_component` with `config.server_timing = true` (default in development) in Rails 7, the browser developer tools display the sum total timing information in Network > Timing under the key `render.view_component`.
 
