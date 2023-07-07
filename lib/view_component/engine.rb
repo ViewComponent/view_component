@@ -40,15 +40,15 @@ module ViewComponent
         Base.config = app.config.view_component
 
         if app.config.view_component.instrumentation_enabled.present?
-          # :nocov:
+          # :nocov: Re-executing the below in a test duplicates initializers and causes order-dependent failures.
           ViewComponent::Base.prepend(ViewComponent::Instrumentation)
-          # :nocov:
           if app.config.view_component.use_deprecated_instrumentation_name
             ViewComponent::Deprecation.deprecation_warning(
               "!render.view_component",
               "Use the new instrumentation key `render.view_component` instead. See https://viewcomponent.org/guide/instrumentation.html"
             )
           end
+         # :nocov:
         end
       end
     end
