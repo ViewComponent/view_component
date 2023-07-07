@@ -102,9 +102,9 @@ module ViewComponent
 
       # @!attribute use_deprecated_instrumentation_name
       # @return [Boolean]
-      # Whether ActiveSupport Notifications use the private name "!render.view_component"
-      # or are made more publicly available via "render.view_component".
-      # Will default to false in next major version.
+      # Whether ActiveSupport Notifications use the private name `"!render.view_component"`
+      # or are made more publicly available via `"render.view_component"`.
+      # Will default to `false` in next major version.
       # Defaults to `true`.
 
       # @!attribute render_monkey_patch_enabled
