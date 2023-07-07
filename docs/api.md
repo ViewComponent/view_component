@@ -244,6 +244,13 @@ The controller used for testing components.
 Can also be configured on a per-test basis using `#with_controller_class`.
 Defaults to `ApplicationController`.
 
+### `.use_deprecated_instrumentation_name`
+
+Whether ActiveSupport Notifications use the private name `"!render.view_component"`
+or are made more publicly available via `"render.view_component"`.
+Will default to `false` in next major version.
+Defaults to `true`.
+
 ### `.view_component_path`
 
 The path in which components, their templates, and their sidecars should
@@ -342,14 +349,6 @@ with_request_url("/users/42") do
 end
 ```
 
-To use a specific host, pass the host param:
-
-```ruby
-with_request_url("/users/42", host: "app.example.com") do
-  render_inline(MyComponent.new)
-end
-```
-
 ### `#with_variant(variant)`
 
 Set the Action Pack request variant for the given block:
@@ -361,6 +360,12 @@ end
 ```
 
 ## Errors
+
+### `AlreadyDefinedPolymorphicSlotSetterError`
+
+A method called 'SETTER_METHOD_NAME' already exists and would be overwritten by the 'SETTER_NAME' polymorphic slot setter.
+
+Please choose a different setter name.
 
 ### `ContentAlreadySetForPolymorphicSlotError`
 
