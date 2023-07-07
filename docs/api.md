@@ -349,6 +349,14 @@ with_request_url("/users/42") do
 end
 ```
 
+To use a specific host, pass the host param:
+
+```ruby
+with_request_url("/users/42", host: "app.example.com") do
+  render_inline(MyComponent.new)
+end
+```
+
 ### `#with_variant(variant)`
 
 Set the Action Pack request variant for the given block:
