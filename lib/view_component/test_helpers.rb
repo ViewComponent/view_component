@@ -155,6 +155,14 @@ module ViewComponent
     # end
     # ```
     #
+    # To use a specific host, pass the host param:
+    #
+    # ```ruby
+    # with_request_url("/users/42", host: "app.example.com") do
+    #   render_inline(MyComponent.new)
+    # end
+    # ```
+    #
     # @param path [String] The path to set for the current request.
     # @param host [String] The host to set for the current request.
     def with_request_url(path, host: nil)
