@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add Skroutz to users list.
+
+    *Chris Nitsas*
+
 ## 3.4.0
 
 * Avoid including Rails `url_helpers` into `Preview` class when they're not defined.
