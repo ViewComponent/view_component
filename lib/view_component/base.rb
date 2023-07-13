@@ -125,8 +125,18 @@ module ViewComponent
     #
     # Calls `super`, returning `nil` to avoid rendering the result twice.
     def render_parent
-      mtd = @__vc_variant ? "call_#{@__vc_variant}" : "call"
-      method(mtd).super_method.call
+      mtd = if @__vc_variant
+        mtd_variant_name = "call_#{@__vc_variant}"
+
+        if respond_to?(mtd_variant_name)
+          super_mtd = method(mtd_variant_name).super_method
+          super_mtd ? super_mtd : nil
+        end
+      end
+
+      mtd ||= method(:call).super_method
+      mtd.call
+
       nil
     end
 

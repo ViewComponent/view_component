@@ -969,6 +969,22 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_inherited_component_falls_back_to_call_method_when_rendering_variant
+    with_variant :phone do
+      render_inline(RenderParentWrapperComponent.new)
+    end
+
+    assert_selector ".render-parent-wrapper.phone .derived-component .base-component"
+  end
+
+  def test_inherited_component_falls_back_to_super_call_method_when_rendering_variant
+    with_variant :variant do
+      render_inline(SuperComponent.new)
+    end
+
+    assert_selector ".derived-component.variant .base-component"
+  end
+
   def test_component_renders_without_trailing_whitespace
     template = File.read(Rails.root.join("app/components/trailing_whitespace_component.html.erb"))
     assert template =~ /\s+\z/, "Template does not contain any trailing whitespace"
