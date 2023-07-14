@@ -68,13 +68,24 @@ module ViewComponent
           # Remove existing compiled template methods,
           # as Ruby warns when redefining a method.
           method_name = call_method_name(template[:variant])
+          unique_method_name = "#{method_name}__#{methodize(component_class.name)}"
 
           redefinition_lock.synchronize do
             component_class.silence_redefinition_of_method(method_name)
+            component_class.silence_redefinition_of_method(unique_method_name)
+
             # rubocop:disable Style/EvalWithLocation
             component_class.class_eval <<-RUBY, template[:path], 0
-            def #{method_name}
+            private def #{unique_method_name}
               #{compiled_template(template[:path])}
+            end
+
+            def #{method_name}
+              #{unique_method_name} do |msg|
+                if msg == :parent
+                  capture { super }
+                end
+              end
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
@@ -92,6 +103,10 @@ module ViewComponent
     private
 
     attr_reader :component_class, :redefinition_lock
+
+    def methodize(str)
+      str.gsub("::", "_").underscore
+    end
 
     def define_render_template_for
       variant_elsifs = variants.compact.uniq.map do |variant|

@@ -329,6 +329,9 @@ DEPENDENCIES
   jbuilder (~> 2)
   m (~> 1)
   minitest (~> 5.18)
+  net-imap
+  net-pop
+  net-smtp
   pry (~> 0.13)
   puma (~> 6)
   rails (~> 7.0.0)

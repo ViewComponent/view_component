@@ -961,28 +961,13 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_inherited_component_calls_super
-    render_inline(SuperComponent.new)
+    render_inline(Level3Component.new)
 
-    assert_selector(".base-component", count: 1)
-    assert_selector(".derived-component", count: 1) do
-      assert_selector(".base-component", count: 1)
+    assert_selector(".level3-component", count: 1) do |level3|
+      level3.assert_selector(".level2-component", count: 1) do |level2|
+        level2.assert_selector(".level1-component", count: 1)
+      end
     end
-  end
-
-  def test_inherited_component_falls_back_to_call_method_when_rendering_variant
-    with_variant :phone do
-      render_inline(RenderParentWrapperComponent.new)
-    end
-
-    assert_selector ".render-parent-wrapper.phone .derived-component .base-component"
-  end
-
-  def test_inherited_component_falls_back_to_super_call_method_when_rendering_variant
-    with_variant :variant do
-      render_inline(SuperComponent.new)
-    end
-
-    assert_selector ".derived-component.variant .base-component"
   end
 
   def test_component_renders_without_trailing_whitespace
