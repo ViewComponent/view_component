@@ -115,6 +115,8 @@ module ViewComponent
       @current_template = old_current_template
     end
 
+    # DEPRECATED
+    #
     # Subclass components that call `super` inside their template code will cause a
     # double render if they emit the result:
     #
@@ -125,21 +127,10 @@ module ViewComponent
     #
     # Calls `super`, returning `nil` to avoid rendering the result twice.
     def render_parent
-      # There are four scenarios to consider:
-      #
-      # 1. Scenario: Self responds to the variant method and so does the parent.
-      #    Behavior: Call the parent's variant method (i.e. call super).
+      ViewComponent::Deprecation.deprecation_warning(
+        "render_parent", "Use `yield :parent` instead."
+      )
 
-      # 2. Scenario: Self responds to the variant method but the parent does not.
-      #    Behavior: Call the parent's #call method.
-
-      # 3. Scenario: Self does not respond to the variant method but the parent does.
-      #    Behavior: Call the child's variant method, which is also the parent's variant method
-      #    by way of inheritance.
-      #
-      # 4. Scenario: Neither self nor the parent respond to the variant method.
-      #    Behavior: Call the parent's #call method.
-      #
       mtd = @__vc_variant ? "call_#{@__vc_variant}" : "call"
       method(mtd).super_method.call
       nil

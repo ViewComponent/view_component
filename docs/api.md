@@ -102,6 +102,8 @@ Returns HTML that has been escaped by the respective template handler.
 
 ### `#render_parent`
 
+DEPRECATED
+
 Subclass components that call `super` inside their template code will cause a
 double render if they emit the result:
 

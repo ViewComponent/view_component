@@ -43,45 +43,18 @@ module ViewComponent
         component_class.validate_collection_parameter!
       end
 
-      unique_superclass_name = methodize(component_class.superclass.name)
-
       if has_inline_template?
         template = component_class.inline_template
-        unique_method_name = "call__#{methodize(component_class.name)}"
+
+        template_info = {
+          path: template.path,
+          lineno: template.lineno - 1,
+          body: compiled_inline_template(template)
+        }
+
+        define_compiled_template_methods("call", template_info)
 
         redefinition_lock.synchronize do
-          component_class.silence_redefinition_of_method("call")
-          # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, template.path, template.lineno - 1
-          private def #{unique_method_name}
-            if block_given?
-              #{compiled_inline_template(template)}
-            else
-              #{unique_method_name} do |msg|
-                case msg
-                when :parent
-                  super_method_name = if @__vc_variant
-                    super_variant_method_name = :"call_\#{@__vc_variant}__#{unique_superclass_name}"
-                    respond_to?(super_variant_method_name, true) ? super_variant_method_name : nil
-                  end
-
-                  super_method_name ||= :call__#{unique_superclass_name}
-                  send(super_method_name)
-
-                  nil
-                else
-                  raise UnexpectedTemplateYield.new(msg)
-                end
-              end
-            end
-          end
-
-          def call
-            #{unique_method_name}
-          end
-          RUBY
-          # rubocop:enable Style/EvalWithLocation
-
           component_class.silence_redefinition_of_method("render_template_for")
           component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def render_template_for(variant = nil)
@@ -91,46 +64,14 @@ module ViewComponent
         end
       else
         templates.each do |template|
-          # Remove existing compiled template methods,
-          # as Ruby warns when redefining a method.
           method_name = call_method_name(template[:variant])
-          unique_method_name = "#{method_name}__#{methodize(component_class.name)}"
+          template_info = {
+            path: template[:path],
+            lineno: -1,
+            body: compiled_template(template[:path])
+          }
 
-          redefinition_lock.synchronize do
-            component_class.silence_redefinition_of_method(method_name)
-            component_class.silence_redefinition_of_method(unique_method_name)
-
-            # rubocop:disable Style/EvalWithLocation
-            component_class.class_eval <<-RUBY, template[:path], -1
-            private def #{unique_method_name}
-              if block_given?
-                #{compiled_template(template[:path])}
-              else
-                #{unique_method_name} do |msg|
-                  case msg
-                  when :parent
-                    super_method_name = if @__vc_variant
-                      super_variant_method_name = :"call_\#{@__vc_variant}__#{unique_superclass_name}"
-                      respond_to?(super_variant_method_name, true) ? super_variant_method_name : nil
-                    end
-
-                    super_method_name ||= :call__#{unique_superclass_name}
-                    send(super_method_name)
-
-                    nil
-                  else
-                    raise UnexpectedTemplateYield.new(msg)
-                  end
-                end
-              end
-            end
-
-            def #{method_name}
-              #{unique_method_name}
-            end
-            RUBY
-            # rubocop:enable Style/EvalWithLocation
-          end
+          define_compiled_template_methods(method_name, template_info)
         end
 
         define_render_template_for
@@ -144,6 +85,47 @@ module ViewComponent
     private
 
     attr_reader :component_class, :redefinition_lock
+
+    def define_compiled_template_methods(method_name, template_info)
+      unique_method_name = "#{method_name}__#{methodize(component_class.name)}"
+      unique_superclass_name = methodize(component_class.superclass.name)
+
+      redefinition_lock.synchronize do
+        # Remove existing compiled template methods,
+        # as Ruby warns when redefining a method.
+        component_class.silence_redefinition_of_method(method_name)
+        component_class.silence_redefinition_of_method(unique_method_name)
+
+        component_class.class_eval <<-RUBY, template_info[:path], template_info[:lineno]
+        private def #{unique_method_name}
+          if block_given?
+            #{template_info[:body]}
+          else
+            #{unique_method_name} do |msg|
+              case msg
+              when :parent
+                super_method_name = if @__vc_variant
+                  super_variant_method_name = :"call_\#{@__vc_variant}__#{unique_superclass_name}"
+                  respond_to?(super_variant_method_name, true) ? super_variant_method_name : nil
+                end
+
+                super_method_name ||= :call__#{unique_superclass_name}
+                send(super_method_name)
+
+                nil
+              else
+                raise UnexpectedTemplateYield.new(msg)
+              end
+            end
+          end
+        end
+
+        def #{method_name}
+          #{unique_method_name}
+        end
+        RUBY
+      end
+    end
 
     def methodize(str)
       str.gsub("::", "_").underscore
@@ -333,11 +315,12 @@ module ViewComponent
     end
 
     def should_compile_superclass?
-      development? && templates.empty? && !has_inline_template? &&
-        !(
-          component_class.instance_methods(false).include?(:call) ||
-            component_class.private_instance_methods(false).include?(:call)
-        )
+      development? && templates.empty? && !has_inline_template? && !call_defined?
+    end
+
+    def call_defined?
+      component_class.instance_methods(false).include?(:call) ||
+        component_class.private_instance_methods(false).include?(:call)
     end
   end
 end
