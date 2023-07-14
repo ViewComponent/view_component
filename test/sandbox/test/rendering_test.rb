@@ -960,14 +960,34 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello, my own template")
   end
 
-  def test_inherited_component_calls_super
+  def test_child_components_can_render_parent
     render_inline(Level3Component.new)
 
-    assert_selector(".level3-component", count: 1) do |level3|
-      level3.assert_selector(".level2-component", count: 1) do |level2|
-        level2.assert_selector(".level1-component", count: 1)
-      end
+    assert_selector(".level3-component.base .level2-component.base .level1-component")
+  end
+
+  def test_variant_propagates_to_parent
+    with_variant :variant do
+      render_inline(Level3Component.new)
     end
+
+    assert_selector ".level3-component.variant .level2-component.variant .level1-component"
+  end
+
+  def test_child_components_fall_back_to_default_variant
+    with_variant :non_existent_variant do
+      render_inline(Level3Component.new)
+    end
+
+    assert_selector ".level3-component.base .level2-component.base .level1-component"
+  end
+
+  def test_yielding_unexpected_value_raises_error
+    error = assert_raises(ViewComponent::UnexpectedTemplateYield) do
+      render_inline(BadYieldValueComponent.new)
+    end
+
+    assert_equal "An unexpected value ':foo' was yielded inside a component template. Only :parent is allowed.", error.message
   end
 
   def test_component_renders_without_trailing_whitespace

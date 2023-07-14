@@ -43,15 +43,41 @@ module ViewComponent
         component_class.validate_collection_parameter!
       end
 
+      unique_superclass_name = methodize(component_class.superclass.name)
+
       if has_inline_template?
         template = component_class.inline_template
+        unique_method_name = "call__#{methodize(component_class.name)}"
 
         redefinition_lock.synchronize do
           component_class.silence_redefinition_of_method("call")
           # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, template.path, template.lineno
+          component_class.class_eval <<-RUBY, template.path, template.lineno - 1
+          private def #{unique_method_name}
+            if block_given?
+              #{compiled_inline_template(template)}
+            else
+              #{unique_method_name} do |msg|
+                case msg
+                when :parent
+                  super_method_name = if @__vc_variant
+                    super_variant_method_name = :"call_\#{@__vc_variant}__#{unique_superclass_name}"
+                    respond_to?(super_variant_method_name, true) ? super_variant_method_name : nil
+                  end
+
+                  super_method_name ||= :call__#{unique_superclass_name}
+                  send(super_method_name)
+
+                  nil
+                else
+                  raise UnexpectedTemplateYield.new(msg)
+                end
+              end
+            end
+          end
+
           def call
-            #{compiled_inline_template(template)}
+            #{unique_method_name}
           end
           RUBY
           # rubocop:enable Style/EvalWithLocation
@@ -75,17 +101,32 @@ module ViewComponent
             component_class.silence_redefinition_of_method(unique_method_name)
 
             # rubocop:disable Style/EvalWithLocation
-            component_class.class_eval <<-RUBY, template[:path], 0
+            component_class.class_eval <<-RUBY, template[:path], -1
             private def #{unique_method_name}
-              #{compiled_template(template[:path])}
+              if block_given?
+                #{compiled_template(template[:path])}
+              else
+                #{unique_method_name} do |msg|
+                  case msg
+                  when :parent
+                    super_method_name = if @__vc_variant
+                      super_variant_method_name = :"call_\#{@__vc_variant}__#{unique_superclass_name}"
+                      respond_to?(super_variant_method_name, true) ? super_variant_method_name : nil
+                    end
+
+                    super_method_name ||= :call__#{unique_superclass_name}
+                    send(super_method_name)
+
+                    nil
+                  else
+                    raise UnexpectedTemplateYield.new(msg)
+                  end
+                end
+              end
             end
 
             def #{method_name}
-              #{unique_method_name} do |msg|
-                if msg == :parent
-                  capture { super }
-                end
-              end
+              #{unique_method_name}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
