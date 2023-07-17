@@ -129,7 +129,7 @@ To render a parent component's template from a subclass' template, use `yield :p
 </div>
 ```
 
-If the parent supports the current variant, the variant will automatically be rendered. `yield :parent` replaces the deprecated `#render_parent` method, which does not respect variants or multiple levels of inheritance.
+If the parent supports the current variant, the variant will automatically be rendered. `yield :parent` replaces the deprecated `#render_parent` method, which doesn't respect variants or multiple levels of inheritance.
 
 `yield :parent` also works with inline templates:
 
@@ -154,7 +154,7 @@ class MyComponent < ViewComponent::Base
 end
 ```
 
-`super` will attempt to call the `#call_phone` method on the parent class. If the parent class does not support the "phone" variant, Ruby will raise a `NoMethodError`. Consider using a template and `render :parent` to handle superclass variants automatically.
+`super` will attempt to call the `#call_phone` method on the parent class. If the parent class doesn't support the "phone" variant, Ruby will raise a `NoMethodError`. Consider using a template and `render :parent` to handle superclass variants automatically.
 
 ### render_parent
 

@@ -96,6 +96,7 @@ module ViewComponent
         component_class.silence_redefinition_of_method(method_name)
         component_class.silence_redefinition_of_method(unique_method_name)
 
+        # rubocop:disable Style/EvalWithLocation
         component_class.class_eval <<-RUBY, template_info[:path], template_info[:lineno]
         private def #{unique_method_name}
           if block_given?
@@ -124,6 +125,7 @@ module ViewComponent
           #{unique_method_name}
         end
         RUBY
+        # rubocop:enable Style/EvalWithLocation
       end
     end
 

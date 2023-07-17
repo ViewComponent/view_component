@@ -960,6 +960,15 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello, my own template")
   end
 
+  def test_render_parent
+    render_inline(SuperComponent.new)
+
+    assert_selector(".base-component", count: 1)
+    assert_selector(".derived-component", count: 1) do |derived|
+      derived.assert_selector(".base-component", count: 1)
+    end
+  end
+
   def test_child_components_can_render_parent
     render_inline(Level3Component.new)
 
