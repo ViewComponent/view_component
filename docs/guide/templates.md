@@ -117,27 +117,27 @@ end
 
 ### Rendering parent templates
 
-Since 3.5.0
+Since 2.55.0
 {: .label }
 
-To render a parent component's template from a subclass' template, use `yield :parent`:
+To render a parent component's template from a subclass' template, use `#render_parent`:
 
 ```erb
 <%# my_link_component.html.erb %>
 <div class="base-component-template">
-  <% yield :parent %>
+  <%= render_parent %>
 </div>
 ```
 
-If the parent supports the current variant, the variant will automatically be rendered. `yield :parent` replaces the deprecated `#render_parent` method, which doesn't respect variants or multiple levels of inheritance.
+If the parent supports the current variant, the variant will automatically be rendered.
 
-`yield :parent` also works with inline templates:
+`#render_parent` also works with inline templates:
 
 ```ruby
 class MyComponent < ViewComponent::Base
   erb_template <<~ERB
     <div>
-      <% yield :parent %>
+      <%= render_parent %>
     </div>
   ERB
 end
@@ -154,24 +154,7 @@ class MyComponent < ViewComponent::Base
 end
 ```
 
-`super` will attempt to call the `#call_phone` method on the parent class. If the parent class doesn't support the "phone" variant, Ruby will raise a `NoMethodError`. Consider using a template and `render :parent` to handle superclass variants automatically.
-
-### render_parent
-
-Since 2.55.0
-{: .label }
-
-Deprecated
-{: .label .label-red }
-
-To render a parent component's template from a subclass, call `render_parent`:
-
-```erb
-<%# my_link_component.html.erb %>
-<div class="base-component-template">
-  <% render_parent %>
-</div>
-```
+`super` will attempt to call the `#call_phone` method on the parent class. If the parent class doesn't support the "phone" variant, Ruby will raise a `NoMethodError`. Consider using a template and `#render_parent` to handle superclass variants automatically.
 
 ## Trailing whitespace
 

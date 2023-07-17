@@ -991,14 +991,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector ".level3-component.base .level2-component.base .level1-component"
   end
 
-  def test_yielding_unexpected_value_raises_error
-    error = assert_raises(ViewComponent::UnexpectedTemplateYield) do
-      render_inline(BadYieldValueComponent.new)
-    end
-
-    assert_equal "An unexpected value ':foo' was yielded inside a component template. Only :parent is allowed.", error.message
-  end
-
   def test_component_renders_without_trailing_whitespace
     template = File.read(Rails.root.join("app/components/trailing_whitespace_component.html.erb"))
     assert template =~ /\s+\z/, "Template does not contain any trailing whitespace"

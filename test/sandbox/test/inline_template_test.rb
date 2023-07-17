@@ -79,16 +79,10 @@ class InlineErbTest < ViewComponent::TestCase
     end
   end
 
-  class InlineBadYieldComponent < ViewComponent::Base
-    erb_template <<~ERB
-      <%= yield :foo %>
-    ERB
-  end
-
   class InlineComponentDerivedFromComponentSupportingVariants < Level2Component
     erb_template <<~ERB
       <div class="inline-template">
-        <%= yield :parent %>
+        <%= render_parent %>
       </div>
     ERB
   end
@@ -141,14 +135,6 @@ class InlineErbTest < ViewComponent::TestCase
     end
 
     assert_selector ".inline-template .level2-component.variant .level1-component"
-  end
-
-  test "yielding unexpected value raises error" do
-    error = assert_raises(ViewComponent::UnexpectedTemplateYield) do
-      render_inline(InlineBadYieldComponent.new)
-    end
-
-    assert_equal "An unexpected value ':foo' was yielded inside a component template. Only :parent is allowed.", error.message
   end
 
   test "calling template methods multiple times raises an exception" do

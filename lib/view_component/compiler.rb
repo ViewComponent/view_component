@@ -48,7 +48,7 @@ module ViewComponent
 
         template_info = {
           path: template.path,
-          lineno: template.lineno - 1,
+          lineno: template.lineno - 4,
           body: compiled_inline_template(template)
         }
 
@@ -67,7 +67,7 @@ module ViewComponent
           method_name = call_method_name(template[:variant])
           template_info = {
             path: template[:path],
-            lineno: -1,
+            lineno: -4,
             body: compiled_template(template[:path])
           }
 
@@ -98,25 +98,26 @@ module ViewComponent
 
         # rubocop:disable Style/EvalWithLocation
         component_class.class_eval <<-RUBY, template_info[:path], template_info[:lineno]
-        private def #{unique_method_name}
-          if block_given?
-            #{template_info[:body]}
+        private def #{unique_method_name}(&block)
+          if block
+            @__vc_parent_call_block = block
+
+            begin
+              #{template_info[:body]}
+            end.tap do
+              @__vc_parent_call_block = nil
+            end
           else
-            #{unique_method_name} do |msg|
-              case msg
-              when :parent
-                super_method_name = if @__vc_variant
-                  super_variant_method_name = :"call_\#{@__vc_variant}__#{unique_superclass_name}"
-                  respond_to?(super_variant_method_name, true) ? super_variant_method_name : nil
-                end
-
-                super_method_name ||= :call__#{unique_superclass_name}
-                send(super_method_name)
-
-                nil
-              else
-                raise UnexpectedTemplateYield.new(msg)
+            #{unique_method_name} do
+              super_method_name = if @__vc_variant
+                super_variant_method_name = :"call_\#{@__vc_variant}__#{unique_superclass_name}"
+                respond_to?(super_variant_method_name, true) ? super_variant_method_name : nil
               end
+
+              super_method_name ||= :call__#{unique_superclass_name}
+              send(super_method_name)
+
+              nil
             end
           end
         end

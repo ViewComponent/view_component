@@ -115,25 +115,19 @@ module ViewComponent
       @current_template = old_current_template
     end
 
-    # DEPRECATED
-    #
     # Subclass components that call `super` inside their template code will cause a
-    # double render if they emit the result:
+    # double render if they emit the result.
     #
     # ```erb
     # <%= super %> # double-renders
     # <% super %> # does not double-render
     # ```
     #
-    # Calls `super`, returning `nil` to avoid rendering the result twice.
+    # `super` also does not consider the current variant. `render_parent` penders the
+    # parent template considering the current variant and emits the result without
+    # double-rendering.
     def render_parent
-      ViewComponent::Deprecation.deprecation_warning(
-        "render_parent", "Use `yield :parent` instead."
-      )
-
-      mtd = @__vc_variant ? "call_#{@__vc_variant}" : "call"
-      method(mtd).super_method.call
-      nil
+      @__vc_parent_call_block&.call
     end
 
     # Optional content to be returned after the rendered template.

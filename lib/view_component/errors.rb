@@ -220,12 +220,4 @@ module ViewComponent
       super(MESSAGE.gsub("SETTER_METHOD_NAME", setter_method_name.to_s).gsub("SETTER_NAME", setter_name.to_s))
     end
   end
-
-  class UnexpectedTemplateYield < StandardError
-    MESSAGE = "An unexpected value 'YIELDED_VALUE' was yielded inside a component template. Only :parent is allowed."
-
-    def initialize(yielded_value)
-      super(MESSAGE.gsub("YIELDED_VALUE", yielded_value.inspect))
-    end
-  end
 end
