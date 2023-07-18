@@ -127,7 +127,18 @@ module ViewComponent
     # parent template considering the current variant and emits the result without
     # double-rendering.
     def render_parent
-      @__vc_parent_call_block&.call
+      @__vc_parent_render_level ||= 0 # ensure a good starting value
+
+      begin
+        target_render = self.class.instance_variable_get(:@__vc_ancestor_calls).reverse[@__vc_parent_render_level]
+        @__vc_parent_render_level += 1
+
+        target_render.bind_call(self)
+      ensure
+        @__vc_parent_render_level -= 1
+      end
+
+      # @__vc_parent_call_block&.call
     end
 
     # Optional content to be returned after the rendered template.
@@ -458,6 +469,13 @@ module ViewComponent
 
         # Set collection parameter to the extended component
         child.with_collection_parameter provided_collection_parameter
+
+        if instance_methods(false).include?(:render_template_for)
+          __vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
+
+          __vc_ancestor_calls.push(instance_method(:render_template_for))
+          child.instance_variable_set(:@__vc_ancestor_calls, __vc_ancestor_calls)
+        end
 
         super
       end

@@ -65,13 +65,19 @@ module ViewComponent
       else
         templates.each do |template|
           method_name = call_method_name(template[:variant])
-          template_info = {
-            path: template[:path],
-            lineno: -4,
-            body: compiled_template(template[:path])
-          }
+ 
+          redefinition_lock.synchronize do
+            component_class.silence_redefinition_of_method(method_name)
+            # rubocop:disable Style/EvalWithLocation
+            component_class.class_eval <<-RUBY, template[:path], 0
+            def #{method_name}
+              #{compiled_template(template[:path])}
+            end
+            RUBY
+            # rubocop:enable Style/EvalWithLocation
+          end
 
-          define_compiled_template_methods(method_name, template_info)
+          # define_compiled_template_methods(method_name, template_info)
         end
 
         define_render_template_for
@@ -136,15 +142,20 @@ module ViewComponent
 
     def define_render_template_for
       variant_elsifs = variants.compact.uniq.map do |variant|
-        "elsif variant.to_sym == :'#{variant}'\n    #{call_method_name(variant)}"
+        safe_name = "_call_variant_#{normalized_variant_name(variant)}_#{component_class.name.underscore}"
+        component_class.define_method("_call_variant_#{normalized_variant_name(variant)}_#{component_class.name.underscore}", component_class.instance_method(call_method_name(variant)))
+
+        "elsif variant.to_sym == :'#{variant}'\n    #{safe_name}"
       end.join("\n")
+
+      component_class.define_method("_call_#{component_class.name.underscore.gsub("/", "__")}", component_class.instance_method(:call))
 
       body = <<-RUBY
         if variant.nil?
-          call
+          _call_#{component_class.name.underscore.gsub("/", "__")}
         #{variant_elsifs}
         else
-          call
+          _call_#{component_class.name.underscore.gsub("/", "__")}
         end
       RUBY
 
