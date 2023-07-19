@@ -14,6 +14,10 @@ nav_order: 5
 
     *Chris Nitsas*
 
+* Add CharlieHR to users list.
+
+    *Alex Balhatchet*
+
 ## 3.4.0
 
 * Avoid including Rails `url_helpers` into `Preview` class when they're not defined.
