@@ -133,7 +133,8 @@ module ViewComponent
         target_render = self.class.instance_variable_get(:@__vc_ancestor_calls).reverse[@__vc_parent_render_level]
         @__vc_parent_render_level += 1
 
-        target_render.bind_call(self)
+        target_render.bind_call(self, @__vc_variant)
+        nil
       ensure
         @__vc_parent_render_level -= 1
       end

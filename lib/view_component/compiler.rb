@@ -65,7 +65,7 @@ module ViewComponent
       else
         templates.each do |template|
           method_name = call_method_name(template[:variant])
- 
+
           redefinition_lock.synchronize do
             component_class.silence_redefinition_of_method(method_name)
             # rubocop:disable Style/EvalWithLocation
