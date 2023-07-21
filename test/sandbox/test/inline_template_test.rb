@@ -31,7 +31,7 @@ class InlineErbTest < ViewComponent::TestCase
     erb_template <<~ERB
       <h1>Hey, <%= name %>!</h1>
       <div class="parent">
-        <%= yield :parent %>
+        <%= render_parent %>
       </div>
     ERB
   end

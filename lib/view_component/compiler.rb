@@ -46,19 +46,22 @@ module ViewComponent
       if has_inline_template?
         template = component_class.inline_template
 
-        template_info = {
-          path: template.path,
-          lineno: template.lineno - 4,
-          body: compiled_inline_template(template)
-        }
-
-        define_compiled_template_methods("call", template_info)
-
         redefinition_lock.synchronize do
+          component_class.silence_redefinition_of_method("call")
+          # rubocop:disable Style/EvalWithLocation
+          component_class.class_eval <<-RUBY, template.path, template.lineno
+          def call
+            #{compiled_inline_template(template)}
+          end
+          RUBY
+          # rubocop:enable Style/EvalWithLocation
+
+          component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
+
           component_class.silence_redefinition_of_method("render_template_for")
           component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def render_template_for(variant = nil)
-            call
+            _call_#{safe_class_name}
           end
           RUBY
         end
@@ -76,8 +79,6 @@ module ViewComponent
             RUBY
             # rubocop:enable Style/EvalWithLocation
           end
-
-          # define_compiled_template_methods(method_name, template_info)
         end
 
         define_render_template_for
@@ -92,70 +93,22 @@ module ViewComponent
 
     attr_reader :component_class, :redefinition_lock
 
-    def define_compiled_template_methods(method_name, template_info)
-      unique_method_name = "#{method_name}__#{methodize(component_class.name)}"
-      unique_superclass_name = methodize(component_class.superclass.name)
-
-      redefinition_lock.synchronize do
-        # Remove existing compiled template methods,
-        # as Ruby warns when redefining a method.
-        component_class.silence_redefinition_of_method(method_name)
-        component_class.silence_redefinition_of_method(unique_method_name)
-
-        # rubocop:disable Style/EvalWithLocation
-        component_class.class_eval <<-RUBY, template_info[:path], template_info[:lineno]
-        private def #{unique_method_name}(&block)
-          if block
-            @__vc_parent_call_block = block
-
-            begin
-              #{template_info[:body]}
-            end.tap do
-              @__vc_parent_call_block = nil
-            end
-          else
-            #{unique_method_name} do
-              super_method_name = if @__vc_variant
-                super_variant_method_name = :"call_\#{@__vc_variant}__#{unique_superclass_name}"
-                respond_to?(super_variant_method_name, true) ? super_variant_method_name : nil
-              end
-
-              super_method_name ||= :call__#{unique_superclass_name}
-              send(super_method_name)
-
-              nil
-            end
-          end
-        end
-
-        def #{method_name}
-          #{unique_method_name}
-        end
-        RUBY
-        # rubocop:enable Style/EvalWithLocation
-      end
-    end
-
-    def methodize(str)
-      str.gsub("::", "_").underscore
-    end
-
     def define_render_template_for
       variant_elsifs = variants.compact.uniq.map do |variant|
-        safe_name = "_call_variant_#{normalized_variant_name(variant)}_#{component_class.name.underscore}"
-        component_class.define_method("_call_variant_#{normalized_variant_name(variant)}_#{component_class.name.underscore}", component_class.instance_method(call_method_name(variant)))
+        safe_name = "_call_variant_#{normalized_variant_name(variant)}_#{safe_class_name}"
+        component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
 
         "elsif variant.to_sym == :'#{variant}'\n    #{safe_name}"
       end.join("\n")
 
-      component_class.define_method("_call_#{component_class.name.underscore.gsub("/", "__")}", component_class.instance_method(:call))
+      component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
 
       body = <<-RUBY
         if variant.nil?
-          _call_#{component_class.name.underscore.gsub("/", "__")}
+          _call_#{safe_class_name}
         #{variant_elsifs}
         else
-          _call_#{component_class.name.underscore.gsub("/", "__")}
+          _call_#{safe_class_name}
         end
       RUBY
 
@@ -326,6 +279,10 @@ module ViewComponent
 
     def normalized_variant_name(variant)
       variant.to_s.gsub("-", "__").gsub(".", "___")
+    end
+
+    def safe_class_name
+      @safe_class_name ||= component_class.name.gsub("::", "_").underscore
     end
 
     def should_compile_superclass?
