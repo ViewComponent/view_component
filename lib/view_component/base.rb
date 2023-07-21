@@ -120,10 +120,10 @@ module ViewComponent
     #
     # ```erb
     # <%= super %> # double-renders
-    # <% super %> # does not double-render
+    # <% super %> # doesn't double-render
     # ```
     #
-    # `super` also does not consider the current variant. `render_parent` renders the
+    # `super` also doesn't consider the current variant. `render_parent` renders the
     # parent template considering the current variant and emits the result without
     # double-rendering.
     def render_parent
@@ -470,10 +470,10 @@ module ViewComponent
         child.with_collection_parameter provided_collection_parameter
 
         if instance_methods(false).include?(:render_template_for)
-          __vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
+          vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
 
-          __vc_ancestor_calls.unshift(instance_method(:render_template_for))
-          child.instance_variable_set(:@__vc_ancestor_calls, __vc_ancestor_calls)
+          vc_ancestor_calls.unshift(instance_method(:render_template_for))
+          child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
         end
 
         super
