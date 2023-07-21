@@ -107,10 +107,10 @@ double render if they emit the result.
 
 ```erb
 <%= super %> # double-renders
-<% super %> # does not double-render
+<% super %> # doesn't double-render
 ```
 
-`super` also does not consider the current variant. `render_parent` renders the
+`super` also doesn't consider the current variant. `render_parent` renders the
 parent template considering the current variant and emits the result without
 double-rendering.
 
