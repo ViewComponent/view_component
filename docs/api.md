@@ -102,17 +102,17 @@ Returns HTML that has been escaped by the respective template handler.
 
 ### `#render_parent`
 
-DEPRECATED
-
 Subclass components that call `super` inside their template code will cause a
-double render if they emit the result:
+double render if they emit the result.
 
 ```erb
 <%= super %> # double-renders
 <% super %> # does not double-render
 ```
 
-Calls `super`, returning `nil` to avoid rendering the result twice.
+`super` also does not consider the current variant. `render_parent` penders the
+parent template considering the current variant and emits the result without
+double-rendering.
 
 ### `#request` → [ActionDispatch::Request]
 

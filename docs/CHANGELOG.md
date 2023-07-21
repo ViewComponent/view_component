@@ -14,7 +14,7 @@ nav_order: 5
 
     *Chris Nitsas*
 
-* Introduce `yield :parent` as a replacement for `#render_parent`, which respects variants and deep inheritance hierarchies.
+* Improve implementation of `#render_parent` so it respects variants and deep inheritance hierarchies.
 
     *Cameron Dutro*
 

@@ -123,7 +123,7 @@ module ViewComponent
     # <% super %> # does not double-render
     # ```
     #
-    # `super` also does not consider the current variant. `render_parent` penders the
+    # `super` also does not consider the current variant. `render_parent` renders the
     # parent template considering the current variant and emits the result without
     # double-rendering.
     def render_parent
