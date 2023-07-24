@@ -116,18 +116,42 @@ module ViewComponent
     end
 
     # Subclass components that call `super` inside their template code will cause a
-    # double render if they emit the result:
+    # double render if they emit the result.
     #
     # ```erb
     # <%= super %> # double-renders
-    # <% super %> # does not double-render
+    # <% super %> # doesn't double-render
     # ```
     #
-    # Calls `super`, returning `nil` to avoid rendering the result twice.
+    # `super` also doesn't consider the current variant. `render_parent` renders the
+    # parent template considering the current variant and emits the result without
+    # double-rendering.
     def render_parent
-      mtd = @__vc_variant ? "call_#{@__vc_variant}" : "call"
-      method(mtd).super_method.call
-      nil
+      @__vc_parent_render_level ||= 0 # ensure a good starting value
+
+      begin
+        target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
+        @__vc_parent_render_level += 1
+
+        target_render.bind_call(self, @__vc_variant)
+        nil
+      ensure
+        @__vc_parent_render_level -= 1
+      end
+    end
+
+    # Renders the parent component to a string and returns it. This method is meant
+    # to be used inside custom #call methods when a string result is desired, eg.
+    #
+    # ```ruby
+    # def call
+    #   "<div>#{render_parent_to_string}</div>"
+    # end
+    # ```
+    #
+    # When rendering the parent inside an .erb template, use `#render_parent` instead.
+    def render_parent_to_string
+      capture { render_parent }
     end
 
     # Optional content to be returned after the rendered template.
@@ -458,6 +482,13 @@ module ViewComponent
 
         # Set collection parameter to the extended component
         child.with_collection_parameter provided_collection_parameter
+
+        if instance_methods(false).include?(:render_template_for)
+          vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
+
+          vc_ancestor_calls.unshift(instance_method(:render_template_for))
+          child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
+        end
 
         super
       end

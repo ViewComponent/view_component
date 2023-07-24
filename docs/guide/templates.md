@@ -120,13 +120,52 @@ end
 Since 2.55.0
 {: .label }
 
-To render a parent component's template from a subclass, call `render_parent`:
+To render a parent component's template from a subclass' template, use `#render_parent`:
 
 ```erb
 <%# my_link_component.html.erb %>
 <div class="base-component-template">
-  <% render_parent %>
+  <%= render_parent %>
 </div>
+```
+
+If the parent supports the current variant, the variant will automatically be rendered.
+
+`#render_parent` also works with inline templates:
+
+```ruby
+class MyComponent < ViewComponent::Base
+  erb_template <<~ERB
+    <div>
+      <%= render_parent %>
+    </div>
+  ERB
+end
+```
+
+Finally, `#render_parent` also works inside `#call` methods:
+
+```ruby
+class MyComponent < ViewComponent::Base
+  def call
+    content_tag("div") do
+      render_parent
+    end
+  end
+end
+```
+
+When composing `#call` methods, keep in mind that `#render_parent` does not return a string. If a string is desired, call `#render_parent_to_string` instead. For example:
+
+```ruby
+class MyComponent < ViewComponent::Base
+  # "phone" variant
+  def call_phone
+    content_tag("div") do
+      "<div>#{render_parent_to_string}</div>"
+    end
+  end
+end
 ```
 
 ## Trailing whitespace

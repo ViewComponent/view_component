@@ -960,13 +960,57 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello, my own template")
   end
 
-  def test_inherited_component_calls_super
+  def test_render_parent
     render_inline(SuperComponent.new)
 
     assert_selector(".base-component", count: 1)
-    assert_selector(".derived-component", count: 1) do
-      assert_selector(".base-component", count: 1)
+    assert_selector(".derived-component", count: 1) do |derived|
+      derived.assert_selector(".base-component", count: 1)
     end
+  end
+
+  def test_child_components_can_render_parent
+    render_inline(Level3Component.new)
+
+    assert_selector(".level3-component.base .level2-component.base .level1-component")
+  end
+
+  def test_variant_propagates_to_parent
+    with_variant :variant do
+      render_inline(Level3Component.new)
+    end
+
+    assert_selector ".level3-component.variant .level2-component.variant .level1-component"
+  end
+
+  def test_child_components_fall_back_to_default_variant
+    with_variant :non_existent_variant do
+      render_inline(Level3Component.new)
+    end
+
+    assert_selector ".level3-component.base .level2-component.base .level1-component"
+  end
+
+  def test_child_components_can_render_parent_with_inline_templates
+    render_inline(InlineLevel3Component.new)
+
+    assert_selector(".level3-component.base .level2-component.base .level1-component")
+  end
+
+  def test_variant_propagates_to_parent_with_inline_templates
+    with_variant :variant do
+      render_inline(InlineLevel3Component.new)
+    end
+
+    assert_selector ".level3-component.variant .level2-component.variant .level1-component"
+  end
+
+  def test_child_components_fall_back_to_default_variant_with_inline_templates
+    with_variant :non_existent_variant do
+      render_inline(InlineLevel3Component.new)
+    end
+
+    assert_selector ".level3-component.base .level2-component.base .level1-component"
   end
 
   def test_component_renders_without_trailing_whitespace

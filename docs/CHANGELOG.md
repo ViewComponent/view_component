@@ -14,6 +14,10 @@ nav_order: 5
 
     *Chris Nitsas*
 
+* Improve implementation of `#render_parent` so it respects variants and deep inheritance hierarchies.
+
+    *Cameron Dutro*
+
 * Add CharlieHR to users list.
 
     *Alex Balhatchet*
