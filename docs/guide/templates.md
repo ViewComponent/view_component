@@ -143,26 +143,13 @@ class MyComponent < ViewComponent::Base
 end
 ```
 
-Finally, `#render_parent` also works inside `#call` methods:
+Keep in mind that `#render_parent` doesn't return a string. If a string is desired, eg. inside a `#call` method, call `#render_parent_to_string` instead. For example:
 
 ```ruby
 class MyComponent < ViewComponent::Base
   def call
     content_tag("div") do
-      render_parent
-    end
-  end
-end
-```
-
-When composing `#call` methods, keep in mind that `#render_parent` does not return a string. If a string is desired, call `#render_parent_to_string` instead. For example:
-
-```ruby
-class MyComponent < ViewComponent::Base
-  # "phone" variant
-  def call_phone
-    content_tag("div") do
-      "<div>#{render_parent_to_string}</div>"
+      render_parent_to_string
     end
   end
 end
