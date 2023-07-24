@@ -127,17 +127,8 @@ module ViewComponent
     # parent template considering the current variant and emits the result without
     # double-rendering.
     def render_parent
-      @__vc_parent_render_level ||= 0 # ensure a good starting value
-
-      begin
-        target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
-        @__vc_parent_render_level += 1
-
-        target_render.bind_call(self, @__vc_variant)
-        nil
-      ensure
-        @__vc_parent_render_level -= 1
-      end
+      render_parent_to_string
+      nil
     end
 
     # Renders the parent component to a string and returns it. This method is meant
@@ -151,7 +142,16 @@ module ViewComponent
     #
     # When rendering the parent inside an .erb template, use `#render_parent` instead.
     def render_parent_to_string
-      capture { render_parent }
+      @__vc_parent_render_level ||= 0 # ensure a good starting value
+
+      begin
+        target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
+        @__vc_parent_render_level += 1
+
+        target_render.bind_call(self, @__vc_variant)
+      ensure
+        @__vc_parent_render_level -= 1
+      end
     end
 
     # Optional content to be returned after the rendered template.
