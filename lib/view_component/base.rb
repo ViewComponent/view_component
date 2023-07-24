@@ -140,6 +140,20 @@ module ViewComponent
       end
     end
 
+    # Renders the parent component to a string and returns it. This method is meant
+    # to be used inside custom #call methods when a string result is desired, eg.
+    #
+    # ```ruby
+    # def call
+    #   "<div>#{render_parent_to_string}</div>"
+    # end
+    # ```
+    #
+    # When rendering the parent inside an .erb template, use `#render_parent` instead.
+    def render_parent_to_string
+      capture { render_parent }
+    end
+
     # Optional content to be returned after the rendered template.
     #
     # @return [String]

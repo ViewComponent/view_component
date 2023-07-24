@@ -114,6 +114,19 @@ double render if they emit the result.
 parent template considering the current variant and emits the result without
 double-rendering.
 
+### `#render_parent_to_string`
+
+Renders the parent component to a string and returns it. This method is meant
+to be used inside custom #call methods when a string result is desired, eg.
+
+```ruby
+def call
+  "<div>#{render_parent_to_string}</div>"
+end
+```
+
+When rendering the parent inside an .erb template, use `#render_parent` instead.
+
 ### `#request` → [ActionDispatch::Request]
 
 The current request. Use sparingly as doing so introduces coupling that

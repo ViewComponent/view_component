@@ -991,6 +991,28 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector ".level3-component.base .level2-component.base .level1-component"
   end
 
+  def test_child_components_can_render_parent_with_inline_templates
+    render_inline(InlineLevel3Component.new)
+
+    assert_selector(".level3-component.base .level2-component.base .level1-component")
+  end
+
+  def test_variant_propagates_to_parent_with_inline_templates
+    with_variant :variant do
+      render_inline(InlineLevel3Component.new)
+    end
+
+    assert_selector ".level3-component.variant .level2-component.variant .level1-component"
+  end
+
+  def test_child_components_fall_back_to_default_variant_with_inline_templates
+    with_variant :non_existent_variant do
+      render_inline(InlineLevel3Component.new)
+    end
+
+    assert_selector ".level3-component.base .level2-component.base .level1-component"
+  end
+
   def test_component_renders_without_trailing_whitespace
     template = File.read(Rails.root.join("app/components/trailing_whitespace_component.html.erb"))
     assert template =~ /\s+\z/, "Template does not contain any trailing whitespace"

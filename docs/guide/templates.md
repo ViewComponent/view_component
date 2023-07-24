@@ -143,18 +143,30 @@ class MyComponent < ViewComponent::Base
 end
 ```
 
-To render a parent component's template from a `#call` method, call `super`.
+Finally, `#render_parent` also works inside `#call` methods:
+
+```ruby
+class MyComponent < ViewComponent::Base
+  def call
+    content_tag("div") do
+      render_parent
+    end
+  end
+end
+```
+
+When composing `#call` methods, keep in mind that `#render_parent` does not return a string. If a string is desired, call `#render_parent_to_string` instead. For example:
 
 ```ruby
 class MyComponent < ViewComponent::Base
   # "phone" variant
   def call_phone
-    "<div>#{super}</div>"
+    content_tag("div") do
+      "<div>#{render_parent_to_string}</div>"
+    end
   end
 end
 ```
-
-`super` will attempt to call the `#call_phone` method on the parent class. If the parent class doesn't support the "phone" variant, Ruby will raise a `NoMethodError`. Consider using a template and `#render_parent` to handle superclass variants automatically.
 
 ## Trailing whitespace
 
