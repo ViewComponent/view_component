@@ -282,7 +282,7 @@ module ViewComponent
     end
 
     def safe_class_name
-      @safe_class_name ||= component_class.name.gsub("::", "_").underscore
+      @safe_class_name ||= component_class.name.underscore.gsub("/", "__")
     end
 
     def should_compile_superclass?
