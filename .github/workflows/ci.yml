@@ -116,7 +116,6 @@ jobs:
         cd demo && npm ci && cd ..
         bundle config path vendor/bundle
         bundle install
-        bundle exec rake docs:preview
         bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
