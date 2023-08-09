@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Stop running PVC's `docs:preview` rake task in CI, as the old docsite has been removed.
+
+    *Cameron Dutro*
+
 ## 3.5.0
 
 * Add Skroutz to users list.
