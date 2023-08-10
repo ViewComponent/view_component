@@ -18,6 +18,10 @@ nav_order: 5
 
     *Cameron Dutro*
 
+* Minor testing documentation improvement.
+
+    *Travis Gaff*
+
 ## 3.5.0
 
 * Add Skroutz to users list.
