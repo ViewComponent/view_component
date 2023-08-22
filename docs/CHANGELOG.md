@@ -10,6 +10,18 @@ nav_order: 5
 
 ## main
 
+* Add 3.2 to the list of Ruby CI versions
+
+    *Igor Drozdov*
+
+* Stop running PVC's `docs:preview` rake task in CI, as the old docsite has been removed.
+
+    *Cameron Dutro*
+
+* Minor testing documentation improvement.
+
+    *Travis Gaff*
+
 ## 3.5.0
 
 * Add Skroutz to users list.
