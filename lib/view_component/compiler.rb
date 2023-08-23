@@ -56,17 +56,17 @@ module ViewComponent
           RUBY
           # rubocop:enable Style/EvalWithLocation
 
+          component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
+
           component_class.silence_redefinition_of_method("render_template_for")
           component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def render_template_for(variant = nil)
-            call
+            _call_#{safe_class_name}
           end
           RUBY
         end
       else
         templates.each do |template|
-          # Remove existing compiled template methods,
-          # as Ruby warns when redefining a method.
           method_name = call_method_name(template[:variant])
 
           redefinition_lock.synchronize do
@@ -95,15 +95,20 @@ module ViewComponent
 
     def define_render_template_for
       variant_elsifs = variants.compact.uniq.map do |variant|
-        "elsif variant.to_sym == :'#{variant}'\n    #{call_method_name(variant)}"
+        safe_name = "_call_variant_#{normalized_variant_name(variant)}_#{safe_class_name}"
+        component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
+
+        "elsif variant.to_sym == :'#{variant}'\n    #{safe_name}"
       end.join("\n")
+
+      component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
 
       body = <<-RUBY
         if variant.nil?
-          call
+          _call_#{safe_class_name}
         #{variant_elsifs}
         else
-          call
+          _call_#{safe_class_name}
         end
       RUBY
 
@@ -276,12 +281,17 @@ module ViewComponent
       variant.to_s.gsub("-", "__").gsub(".", "___")
     end
 
+    def safe_class_name
+      @safe_class_name ||= component_class.name.underscore.gsub("/", "__")
+    end
+
     def should_compile_superclass?
-      development? && templates.empty? && !has_inline_template? &&
-        !(
-          component_class.instance_methods(false).include?(:call) ||
-            component_class.private_instance_methods(false).include?(:call)
-        )
+      development? && templates.empty? && !has_inline_template? && !call_defined?
+    end
+
+    def call_defined?
+      component_class.instance_methods(false).include?(:call) ||
+        component_class.private_instance_methods(false).include?(:call)
     end
   end
 end

@@ -218,6 +218,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [Causey](https://www.causey.app/) (100+ components)
+* [CharlieHR](https://www.charliehr.com/)
 * [City of Paris](https://www.paris.fr/)
 * [Clio](https://www.clio.com/)
 * [Cometeer](https://cometeer.com/)

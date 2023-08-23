@@ -103,14 +103,29 @@ Returns HTML that has been escaped by the respective template handler.
 ### `#render_parent`
 
 Subclass components that call `super` inside their template code will cause a
-double render if they emit the result:
+double render if they emit the result.
 
 ```erb
 <%= super %> # double-renders
-<% super %> # does not double-render
+<% super %> # doesn't double-render
 ```
 
-Calls `super`, returning `nil` to avoid rendering the result twice.
+`super` also doesn't consider the current variant. `render_parent` renders the
+parent template considering the current variant and emits the result without
+double-rendering.
+
+### `#render_parent_to_string`
+
+Renders the parent component to a string and returns it. This method is meant
+to be used inside custom #call methods when a string result is desired, eg.
+
+```ruby
+def call
+  "<div>#{render_parent_to_string}</div>"
+end
+```
+
+When rendering the parent inside an .erb template, use `#render_parent` instead.
 
 ### `#request` → [ActionDispatch::Request]
 

@@ -42,6 +42,9 @@ jobs:
           - rails_version: "main"
             ruby_version: "3.1"
             mode: "capture_patch_enabled"
+          - rails_version: "main"
+            ruby_version: "3.2"
+            mode: "capture_patch_enabled"
           - rails_version: "5.2.6"
             ruby_version: "2.7"
             mode: "capture_patch_disabled"
@@ -56,6 +59,9 @@ jobs:
             mode: "capture_patch_disabled"
           - rails_version: "main"
             ruby_version: "3.1"
+            mode: "capture_patch_disabled"
+          - rails_version: "main"
+            ruby_version: "3.2"
             mode: "capture_patch_disabled"
     steps:
     - uses: actions/checkout@master
@@ -116,7 +122,6 @@ jobs:
         cd demo && npm ci && cd ..
         bundle config path vendor/bundle
         bundle install
-        bundle exec rake docs:preview
         bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component

@@ -30,6 +30,9 @@ class InlineErbTest < ViewComponent::TestCase
   class InlineErbSubclassComponent < InlineErbComponent
     erb_template <<~ERB
       <h1>Hey, <%= name %>!</h1>
+      <div class="parent">
+        <%= render_parent %>
+      </div>
     ERB
   end
 
@@ -76,6 +79,14 @@ class InlineErbTest < ViewComponent::TestCase
     end
   end
 
+  class InlineComponentDerivedFromComponentSupportingVariants < Level2Component
+    erb_template <<~ERB
+      <div class="inline-template">
+        <%= render_parent %>
+      </div>
+    ERB
+  end
+
   test "renders inline templates" do
     render_inline(InlineErbComponent.new("Fox Mulder"))
 
@@ -110,6 +121,20 @@ class InlineErbTest < ViewComponent::TestCase
     render_inline(InlineErbSubclassComponent.new("Fox Mulder"))
 
     assert_selector("h1", text: "Hey, Fox Mulder!")
+  end
+
+  test "child components can render their parent" do
+    render_inline(InlineErbSubclassComponent.new("Fox Mulder"))
+
+    assert_selector(".parent h1", text: "Hello, Fox Mulder!")
+  end
+
+  test "inline child component propagates variant to parent" do
+    with_variant :variant do
+      render_inline(InlineComponentDerivedFromComponentSupportingVariants.new)
+    end
+
+    assert_selector ".inline-template .level2-component.variant .level1-component"
   end
 
   test "calling template methods multiple times raises an exception" do

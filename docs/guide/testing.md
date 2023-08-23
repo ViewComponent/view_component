@@ -33,6 +33,7 @@ def test_render_component
   component = ListComponent.new(title: "Fruits").tap do |c|
     c.with_item { "Apple" }
     c.with_item { "Orange" }
+    c.with_extra { "<div><span>rendered html</span></div>".html_safe }
   end
 
   render_inline(component)
