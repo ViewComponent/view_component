@@ -24,12 +24,6 @@ module ViewComponent
       def config
         ViewComponent::Config.current
       end
-
-      # Replaces the entire config. You shouldn't need to use this directly
-      # unless you're building a `ViewComponent::Config` elsewhere.
-      def config=(*args)
-        ViewComponent::Config.current = *args
-      end
     end
 
     include ViewComponent::InlineTemplate

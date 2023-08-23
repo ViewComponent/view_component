@@ -4,7 +4,7 @@ require "active_support/descendants_tracker"
 
 module ViewComponent # :nodoc:
   class Preview
-    include Rails.application.routes.url_helpers if Rails && Rails.application.present?
+    include Rails.application.routes.url_helpers if defined?(Rails) && Rails.application.present?
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::AssetTagHelper
     extend ActiveSupport::DescendantsTracker
