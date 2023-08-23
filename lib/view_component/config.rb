@@ -167,6 +167,14 @@ module ViewComponent
       end
     end
 
+    # @!attribute current
+    # @return [ViewComponent::Config]
+    # Returns the current ViewComponent::Config. This is persisted against this
+    # class so that config options remain accessible before the rest of
+    # ViewComponent has loaded. Defaults to an instance of ViewComponent::Config
+    # with all other documented defaults set.
+    class_attribute :current, default: defaults, instance_predicate: false
+
     def initialize
       @config = self.class.defaults
     end

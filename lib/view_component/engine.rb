@@ -6,7 +6,7 @@ require "view_component/deprecation"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ViewComponent::Config.defaults
+    config.view_component = ViewComponent::Config.current
 
     rake_tasks do
       load "view_component/rails/tasks/view_component.rake"
@@ -15,6 +15,9 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
+      %i[generate preview_controller preview_route show_previews_source].each do |config_option|
+        options[config_option] ||= ViewComponent::Base.public_send(config_option)
+      end
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
       options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
       options.show_previews = (Rails.env.development? || Rails.env.test?) if options.show_previews.nil?
@@ -37,8 +40,6 @@ module ViewComponent
 
     initializer "view_component.enable_instrumentation" do |app|
       ActiveSupport.on_load(:view_component) do
-        Base.config = app.config.view_component
-
         if app.config.view_component.instrumentation_enabled.present?
           # :nocov: Re-executing the below in tests duplicates initializers and causes order-dependent failures.
           ViewComponent::Base.prepend(ViewComponent::Instrumentation)

@@ -22,12 +22,8 @@ module ViewComponent
       #
       # @return [ActiveSupport::OrderedOptions]
       def config
-        @config ||= ActiveSupport::OrderedOptions.new
+        ViewComponent::Config.current
       end
-
-      # Replaces the entire config. You shouldn't need to use this directly
-      # unless you're building a `ViewComponent::Config` elsewhere.
-      attr_writer :config
     end
 
     include ViewComponent::InlineTemplate

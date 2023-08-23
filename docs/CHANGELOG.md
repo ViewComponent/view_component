@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Initialize ViewComponent::Config with defaults before framework load.
+
+    *Simon Fish*
+
 * Add 3.2 to the list of Ruby CI versions
 
     *Igor Drozdov*

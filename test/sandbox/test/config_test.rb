@@ -34,7 +34,7 @@ module ViewComponent
       end
       options_defined_on_instance = Set[*default_options, *accessors]
       assert options_defined_on_instance.subset?(Set[*configuration_methods_to_document.map(&:name)]),
-        "Not all configuration options are documented: #{configuration_methods_to_document.map(&:name) - options_defined_on_instance.to_a}"
+        "Not all configuration options are documented: #{options_defined_on_instance.to_a - configuration_methods_to_document.map(&:name)}"
       assert configuration_methods_to_document.map(&:docstring).all?(&:present?),
         "Configuration options are missing docstrings."
     end
