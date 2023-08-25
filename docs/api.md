@@ -14,11 +14,6 @@ nav_order: 3
 
 Returns the current config.
 
-### `.config=(value)`
-
-Replaces the entire config. You shouldn't need to use this directly
-unless you're building a `ViewComponent::Config` elsewhere.
-
 ### `.sidecar_files(extensions)`
 
 Find sidecar files for the given extensions.
@@ -159,6 +154,13 @@ Defaults to `nil`. If this is falsy, generators will use
 ### `#config`
 
 Returns the value of attribute config.
+
+### `#current`
+
+Returns the current ViewComponent::Config. This is persisted against this
+class so that config options remain accessible before the rest of
+ViewComponent has loaded. Defaults to an instance of ViewComponent::Config
+with all other documented defaults set.
 
 ### `.default_preview_layout`
 

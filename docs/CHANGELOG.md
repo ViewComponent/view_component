@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix API documentation and revert unnecessary change in `preview.rb`.
+
+    *Richard Macklin*
+
 * Initialize ViewComponent::Config with defaults before framework load.
 
     *Simon Fish*
