@@ -224,7 +224,7 @@ module ViewComponent
     end
 
     def inline_calls_defined_on_self
-      @inline_calls_defined_on_self ||= instance_methods = component_class.instance_methods(false).grep(/^call(_|$)/)
+      @inline_calls_defined_on_self ||= component_class.instance_methods(false).grep(/^call(_|$)/)
     end
 
     def variants

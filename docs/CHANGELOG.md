@@ -30,6 +30,10 @@ nav_order: 5
 
     *Travis Gaff*
 
+* Resolve an issue where slots starting with `call` would cause a `NameError`
+
+    *Blake Williams*
+
 ## 3.5.0
 
 * Add Skroutz to users list.
