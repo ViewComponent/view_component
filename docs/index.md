@@ -249,6 +249,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Project Blacklight](http://projectblacklight.org/)
 * [QuickNode](https://www.quicknode.com/)
 * [Room AI](https://roomai.com/)
+* [SearchApi](https://www.searchapi.io/)
 * [Skroutz](https://engineering.skroutz.gr/blog/)
 * [Shogun](https://getshogun.com/)
 * [Spina CMS](https://spinacms.com/)

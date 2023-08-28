@@ -30,6 +30,10 @@ nav_order: 5
 
     *Travis Gaff*
 
+* Add SearchApi to users list.
+
+    *Sebastjan Prachovskij*
+
 ## 3.5.0
 
 * Add Skroutz to users list.
