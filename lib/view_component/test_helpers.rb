@@ -177,7 +177,8 @@ module ViewComponent
       vc_test_request.host = host if host
       vc_test_request.path_info = path
       vc_test_request.path_parameters = Rails.application.routes.recognize_path_with_request(vc_test_request, path, {})
-      vc_test_request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
+      vc_test_request.set_header("action_dispatch.request.query_parameters",
+        Rack::Utils.parse_nested_query(query).with_indifferent_access)
       vc_test_request.set_header(Rack::QUERY_STRING, query)
       yield
     ensure

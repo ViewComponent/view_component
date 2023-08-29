@@ -34,6 +34,10 @@ nav_order: 5
 
     *Sebastjan Prachovskij*
 
+* Fix `#with_request_url` to ensure `request.query_parameters` is an instance of ActiveSupport::HashWithIndifferentAccess.
+
+    *milk1000cc*
+
 ## 3.5.0
 
 * Add Skroutz to users list.
