@@ -106,4 +106,14 @@ class ViewComponent::Base::UnitTest < Minitest::Test
 
     eval(source) # rubocop:disable Security/Eval
   end
+
+  def test_no_method_error_references_helper_if_available
+    exception = assert_raises(NoMethodError) { Class.new(ViewComponent::Base).new.current_user }
+    exception_message_regex = Regexp.new <<~MESSAGE.chomp #, Regexp::MULTILINE
+      undefined method `current_user' for .*
+
+      You may be trying to call a method provided as a view helper. Did you mean `helpers.current_user'?
+    MESSAGE
+    assert exception_message_regex.match?(exception.message)
+  end
 end
