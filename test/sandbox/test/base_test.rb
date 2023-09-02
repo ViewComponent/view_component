@@ -107,13 +107,30 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     eval(source) # rubocop:disable Security/Eval
   end
 
-  def test_no_method_error_references_helper_if_available
+  def test_no_method_error_does_not_reference_helper_if_view_context_not_present
     exception = assert_raises(NoMethodError) { Class.new(ViewComponent::Base).new.current_user }
-    exception_message_regex = Regexp.new <<~MESSAGE.chomp #, Regexp::MULTILINE
+    exception_message_regex = Regexp.new <<~MESSAGE.chomp, Regexp::MULTILINE
       undefined method `current_user' for .*
 
       You may be trying to call a method provided as a view helper. Did you mean `helpers.current_user'?
     MESSAGE
-    assert exception_message_regex.match?(exception.message)
+    assert !exception_message_regex.match?(exception.message)
+  end
+
+  def test_no_method_error_references_helper_if_view_context_present
+    view_context = ActionController::Base.new.view_context
+    view_context.instance_eval { def current_user; "a user"; end }
+    exception = assert_raises(NameError) { ReferencesMethodOnHelpersComponent.new.render_in(view_context) }
+    exception_advice = "You may be trying to call a method provided as a view helper. Did you mean `helpers.current_user'?"
+    assert exception.message.ends_with?(exception_advice)
+  end
+
+  def test_no_method_error_does_not_reference_missing_helper
+    view_context = ActionController::Base.new.view_context
+    exception = assert_raises(NameError) { ReferencesMethodOnHelpersComponent.new.render_in(view_context) }
+    exception_message_regex = Regexp.new <<~MESSAGE.chomp
+      You may be trying to call a method provided as a view helper\\. Did you mean `helpers.current_user'\\?$
+    MESSAGE
+    assert !exception_message_regex.match?(exception.message)
   end
 end
