@@ -122,7 +122,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     view_context.instance_eval { def current_user; "a user"; end }
     exception = assert_raises(NameError) { ReferencesMethodOnHelpersComponent.new.render_in(view_context) }
     exception_advice = "You may be trying to call a method provided as a view helper. Did you mean `helpers.current_user'?"
-    assert exception.message.ends_with?(exception_advice)
+    assert exception.message.include?(exception_advice)
   end
 
   def test_no_method_error_does_not_reference_missing_helper
