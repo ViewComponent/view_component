@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Refer to `helpers` in `NameError` message in development and test environments.
+
+    *Simon Fish*
+
 * Fix API documentation and revert unnecessary change in `preview.rb`.
 
     *Richard Macklin*

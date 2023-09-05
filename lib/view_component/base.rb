@@ -219,6 +219,21 @@ module ViewComponent
       @__vc_helpers ||= __vc_original_view_context || controller.view_context
     end
 
+    if Rails.env.development? || Rails.env.test?
+      def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
+        super
+      rescue => e # rubocop:disable Style/RescueStandardError
+        e.set_backtrace e.backtrace.tap(&:shift)
+        raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && helpers.respond_to?(method_name)
+          #{e.message}
+
+          You may be trying to call a method provided as a view helper. Did you mean `helpers.#{method_name}'?
+        MESSAGE
+
+        raise
+      end
+    end
+
     # Exposes .virtual_path as an instance method
     #
     # @private
