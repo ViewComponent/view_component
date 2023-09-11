@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add support for `Devise::Test::ControllerHelpers` by resolving `NoMethodError: undefined method env for nil:NilClass`
+
+    *fugufish*
+
 * Refer to `helpers` in `NameError` message in development and test environments.
 
     *Simon Fish*
