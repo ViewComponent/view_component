@@ -117,9 +117,9 @@ module ViewComponent
     #
     # assert_text("Hello, World!")
     # ```
-    def render_in_view_context(*args, &block)
+    def render_in_view_context(*, &block)
       @page = nil
-      @rendered_content = vc_test_controller.view_context.instance_exec(*args, &block)
+      @rendered_content = vc_test_controller.view_context.instance_exec(*, &block)
       Nokogiri::HTML.fragment(@rendered_content)
     end
 
@@ -193,7 +193,7 @@ module ViewComponent
       vc_test_request.path_info = path
       vc_test_request.path_parameters = Rails.application.routes.recognize_path_with_request(vc_test_request, path, {})
       vc_test_request.set_header("action_dispatch.request.query_parameters",
-                                 Rack::Utils.parse_nested_query(query).with_indifferent_access)
+        Rack::Utils.parse_nested_query(query).with_indifferent_access)
       vc_test_request.set_header(Rack::QUERY_STRING, query)
       yield
     ensure
@@ -250,12 +250,12 @@ module ViewComponent
 
     def __vc_test_helpers_preview_class
       result = if respond_to?(:described_class)
-                 raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
+        raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
 
-                 "#{described_class}Preview"
-               else
-                 self.class.name.gsub("Test", "Preview")
-               end
+        "#{described_class}Preview"
+      else
+        self.class.name.gsub("Test", "Preview")
+      end
       result = result.constantize
     rescue NameError
       raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
