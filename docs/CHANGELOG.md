@@ -42,6 +42,10 @@ nav_order: 5
 
     *milk1000cc*
 
+* Add PeopleForce to list of companies using ViewComponent.
+
+    *Volodymyr Khandiuk*
+
 ## 3.5.0
 
 * Add Skroutz to users list.
