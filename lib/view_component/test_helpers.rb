@@ -230,6 +230,11 @@ module ViewComponent
       super
     end
 
+    def teardown
+      super
+      @vc_render_preview_controller = nil
+    end
+
     # Note: We prefix private methods here to prevent collisions in consumer's tests.
     private
 
