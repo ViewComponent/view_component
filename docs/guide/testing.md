@@ -164,17 +164,6 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
-## Testing with Devise
-
-Testing with Devise requires you include `Devise::Test::ControllerHelpers` in the `ViewComponent::TestCase` class. This
-is typically done by adding the following to `test/test_helper.rb`:
-
-```ruby
-class ViewComponent::TestCase
-  include Devise::Test::ControllerHelpers
-end
-```
-
 ## Setting `request.path_parameters`
 
 Since 2.31.0
