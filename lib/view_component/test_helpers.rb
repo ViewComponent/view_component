@@ -21,23 +21,11 @@ module ViewComponent
       if ENV["DEBUG"]
         warn(
           "WARNING in `ViewComponent::TestHelpers`: Add `capybara` " \
-            "to Gemfile to use Capybara assertions."
+          "to Gemfile to use Capybara assertions."
         )
       end
 
       # :nocov:
-    end
-
-    def self.included(base)
-      if defined?(Devise::Test::ControllerHelpers)
-        # the `@request` instance variable is used by Devise::Test::ControllerHelpers and must
-        # be in a `setup` block before including `Devise::Test::ControllerHelpers`
-        base.instance_eval do
-          setup do
-            @request = __vc_render_preview_controller.request
-          end
-        end
-      end
     end
 
     # Returns the result of a render_inline call.
@@ -87,7 +75,7 @@ module ViewComponent
     # @param params [Hash] Parameters to be passed to the preview.
     # @return [Nokogiri::HTML]
     def render_preview(name, from: __vc_test_helpers_preview_class, params: {})
-      previews_controller = __vc_render_preview_controller
+      previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.preview_controller.constantize)
 
       # From what I can tell, it's not possible to overwrite all request parameters
       # at once, so we set them individually here.
@@ -120,7 +108,6 @@ module ViewComponent
       @rendered_content = vc_test_controller.view_context.instance_exec(*args, &block)
       Nokogiri::HTML.fragment(@rendered_content)
     end
-
     ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
 
     # Set the Action Pack request variant for the given block:
@@ -239,7 +226,6 @@ module ViewComponent
     end
 
     # Note: We prefix private methods here to prevent collisions in consumer's tests.
-
     private
 
     def __vc_test_helpers_build_controller(klass)
@@ -257,10 +243,6 @@ module ViewComponent
       result = result.constantize
     rescue NameError
       raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
-    end
-
-    def __vc_render_preview_controller
-      @vc_render_preview_controller ||= __vc_test_helpers_build_controller(Rails.application.config.view_component.preview_controller.constantize)
     end
   end
 end
