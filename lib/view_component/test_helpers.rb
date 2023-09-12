@@ -37,8 +37,6 @@ module ViewComponent
             @request = __vc_render_preview_controller.request
           end
         end
-
-        base.include(Devise::Test::ControllerHelpers)
       end
     end
 
