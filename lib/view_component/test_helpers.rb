@@ -103,9 +103,9 @@ module ViewComponent
     #
     # assert_text("Hello, World!")
     # ```
-    def render_in_view_context(*, &block)
+    def render_in_view_context(*args, &block)
       @page = nil
-      @rendered_content = vc_test_controller.view_context.instance_exec(*, &block)
+      @rendered_content = vc_test_controller.view_context.instance_exec(*args, &block)
       Nokogiri::HTML.fragment(@rendered_content)
     end
     ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
