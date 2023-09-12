@@ -166,7 +166,7 @@ end
 
 ## Testing with Devise
 
-Testing with Devise reqiures you include `Devise::Test::ControllerHelpers` in the `ViewComponent::TestCase` class. This
+Testing with Devise requires you include `Devise::Test::ControllerHelpers` in the `ViewComponent::TestCase` class. This
 is typically done by adding the following to `test/test_helper.rb`:
 
 ```ruby
