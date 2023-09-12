@@ -244,6 +244,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [openSUSE Open Build Service](https://openbuildservice.org/)
 * [Ophelos](https://ophelos.com)
 * [Orbit](https://orbit.love)
+* [PeopleForce](https://peopleforce.io)
 * [PLT4M](https://plt4m.com/)
 * [Podia](https://www.podia.com/)
 * [PrintReleaf](https://www.printreleaf.com/)
