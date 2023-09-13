@@ -79,10 +79,11 @@ class TranslatableTest < ViewComponent::TestCase
     # The cache needs to be kept clean for TranslatableComponent, otherwise it will rely on the
     # already created i18n_backend.
     ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)
+    original_method = TranslatableComponent.method(:sidecar_files)
 
     ViewComponent::Base.stub(
       :sidecar_files,
-      ->(exts) { exts.include?("yml") ? [] : TranslatableComponent.__minitest_stub___sidecar_files(exts) }
+      ->(exts) { exts.include?("yml") ? [] : original_method.call(exts) }
     ) do
       assert_equal "MISSING", translate(".hello", default: "MISSING")
       assert_equal "Hello from Rails translations!", translate("hello")
