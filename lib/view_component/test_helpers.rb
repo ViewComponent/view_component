@@ -75,7 +75,7 @@ module ViewComponent
     # @param params [Hash] Parameters to be passed to the preview.
     # @return [Nokogiri::HTML]
     def render_preview(name, from: __vc_test_helpers_preview_class, params: {})
-      previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.preview_controller.constantize)
+      previews_controller = __vc_render_preview_controller
 
       # From what I can tell, it's not possible to overwrite all request parameters
       # at once, so we set them individually here.
@@ -225,6 +225,16 @@ module ViewComponent
         end
     end
 
+    def before_setup
+      @request = __vc_render_preview_controller.request
+      super
+    end
+
+    def teardown
+      super
+      @vc_render_preview_controller = nil
+    end
+
     # Note: We prefix private methods here to prevent collisions in consumer's tests.
     private
 
@@ -243,6 +253,10 @@ module ViewComponent
       result = result.constantize
     rescue NameError
       raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
+    end
+
+    def __vc_render_preview_controller
+      @vc_render_preview_controller ||= __vc_test_helpers_build_controller(Rails.application.config.view_component.preview_controller.constantize)
     end
   end
 end
