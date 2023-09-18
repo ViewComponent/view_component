@@ -146,7 +146,7 @@ GEM
     loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    m (1.6.1)
+    m (1.6.2)
       method_source (>= 0.6.7)
       rake (>= 0.9.2.2)
     mail (2.8.1)
@@ -333,6 +333,9 @@ DEPENDENCIES
   jbuilder (~> 2)
   m (~> 1)
   minitest (~> 5.18)
+  net-imap
+  net-pop
+  net-smtp
   pry (~> 0.13)
   puma (~> 6)
   rails (~> 7.0.0)
