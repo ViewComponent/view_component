@@ -12,7 +12,7 @@ nav_order: 5
 
 * Add Simundia to list of companies using ViewComponent.
 
-    * Alexandre Ignjatovic*
+    *Alexandre Ignjatovic*
 
 ## 3.6.0
 
