@@ -255,6 +255,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Simundia](https://www.simundia.com/)
 * [Skroutz](https://engineering.skroutz.gr/blog/)
 * [Shogun](https://getshogun.com/)
+* [SpendHQ](https://www.spendhq.com/)
 * [Spina CMS](https://spinacms.com/)
 * [Startup Jobs](https://startup.jobs/)
 * [Topkey](https://topkey.io/)
