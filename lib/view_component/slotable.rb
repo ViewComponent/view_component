@@ -73,11 +73,13 @@ module ViewComponent
       # on the component instance.
       #
       #   <%= render_inline(MyComponent.new.with_header_content("Foo")) %>
-      def renders_one(slot_name, callable = nil)
+      def renders_one(slot_name, callable = nil, options = {})
         validate_singular_slot_name(slot_name)
 
         if callable.is_a?(Hash) && callable.key?(:types)
           register_polymorphic_slot(slot_name, callable[:types], collection: false)
+        elsif callable.is_a?(Hash) && callable.key?(:required)
+          raise RequiredSlotsOnPassthroughSlotError.new(name, slot_name)
         else
           validate_plural_slot_name(ActiveSupport::Inflector.pluralize(slot_name).to_sym)
 
@@ -102,7 +104,7 @@ module ViewComponent
             self
           end
 
-          register_slot(slot_name, collection: false, callable: callable)
+          register_slot(slot_name, collection: false, callable: callable, **options)
         end
       end
 
@@ -218,9 +220,11 @@ module ViewComponent
           if poly_attributes_or_callable.is_a?(Hash)
             poly_callable = poly_attributes_or_callable[:renders]
             poly_slot_name = poly_attributes_or_callable[:as]
+            poly_required = poly_attributes_or_callable[:required] && !collection
           else
             poly_callable = poly_attributes_or_callable
             poly_slot_name = nil
+            poly_required = false
           end
 
           poly_slot_name ||=
@@ -231,8 +235,10 @@ module ViewComponent
             end
 
           memo[poly_type] = define_slot(
-            poly_slot_name, collection: collection, callable: poly_callable
+            poly_slot_name, collection: collection, callable: poly_callable, required: poly_required
           )
+
+          raise MultipleRequiredSlotError.new(name, slot_name) if memo.values.count { |v| v[:required] } > 1
 
           setter_method_name = :"with_#{poly_slot_name}"
 
@@ -264,10 +270,11 @@ module ViewComponent
         registered_slots[slot_name] = define_slot(slot_name, **kwargs)
       end
 
-      def define_slot(slot_name, collection:, callable:)
+      def define_slot(slot_name, collection:, callable:, required: false)
         # Setup basic slot data
         slot = {
-          collection: collection
+          collection: collection,
+          required: required
         }
         return slot unless callable
 
@@ -409,5 +416,19 @@ module ViewComponent
       set_slot(slot_name, poly_def, *args, &block)
     end
     ruby2_keywords(:set_polymorphic_slot) if respond_to?(:ruby2_keywords, true)
+
+    def __vc_initialize_required_slots
+      registered_slots.each do |slot_name, slot|
+        next if get_slot(slot_name).present?
+
+        if slot[:required] && slot[:renderable_hash].nil?
+          set_slot(slot_name, nil)
+        elsif slot[:renderable_hash].present?
+          required_type = slot[:renderable_hash].keys.find { |type| slot[:renderable_hash][type][:required] }
+
+          set_polymorphic_slot(slot_name, required_type) if required_type
+        end
+      end
+    end
   end
 end

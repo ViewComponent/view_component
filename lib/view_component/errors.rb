@@ -126,6 +126,26 @@ module ViewComponent
     end
   end
 
+  class MultipleRequiredSlotError < StandardError
+    MESSAGE =
+      "COMPONENT with polymorphic SLOT_NAME requires multiple types.\n\n" \
+      "To fix this issue, please only `required: true` for 1 type."
+
+    def initialize(klass_name, slot_name)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
+  class RequiredSlotsOnPassthroughSlotError < StandardError
+    MESSAGE =
+      "COMPONENT with SLOT_NAME can not be set to `required: true`.\n\n" \
+      "To fix this issue, please use component or lambda slot instead of a passthrough slot."
+
+    def initialize(klass_name, slot_name)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
   class ReservedSingularSlotNameError < StandardError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \

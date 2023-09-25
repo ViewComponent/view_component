@@ -719,4 +719,49 @@ class SlotableTest < ViewComponent::TestCase
 
     assert component.title.content?
   end
+
+  def test_required_slot_with_defaults
+    render_inline(SlotsRequiredComponent.new)
+
+    assert_selector("#child1 .child")
+    assert_no_selector("#child1 .child.child1")
+    assert_selector("#child2 .child.child2")
+    assert_selector("#child3 .child.child3")
+    assert_no_selector("#child4 .child")
+  end
+
+  def test_required_slot_with_overwrites
+    render_inline(SlotsRequiredComponent.new) do |component|
+      component.with_child1(class_names: "overwrite")
+      component.with_child2(class_names: "overwrite")
+      component.with_child3_icon(class_names: "overwrite")
+      component.with_child4(class_names: "overwrite")
+    end
+
+    assert_selector("#child1 .child.overwrite")
+    assert_selector("#child2 .child.overwrite")
+    assert_selector("#child3 .child.overwrite")
+    assert_selector("#child4 .child.overwrite")
+  end
+
+  def test_required_slot_raise_when_multiple_on_polymorphic_slots
+    exception =
+      assert_raises ViewComponent::MultipleRequiredSlotError do
+        SlotsRequiredComponent.renders_one :child5, types: {
+          icon: { renders: SlotsRequiredComponent::SlotsRequiredChildComponent, required: true },
+          avatar: { renders: SlotsRequiredComponent::SlotsRequiredChildComponent, required: true }
+        }
+      end
+
+    assert_includes exception.message, "requires multiple types"
+  end
+
+  def test_required_slot_raise_when_used_on_passthrough_slot
+    exception =
+      assert_raises ViewComponent::RequiredSlotsOnPassthroughSlotError do
+        SlotsRequiredComponent.renders_one :child5, required: true
+      end
+
+    assert_includes exception.message, "can not be set to"
+  end
 end

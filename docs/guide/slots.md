@@ -349,3 +349,44 @@ end
 ```
 
 The setters are now `#with_icon_visual` and `#with_avatar_visual` instead of the default `#with_visual_icon` and `#with_visual_avatar`. The slot getter remains `#visual`.
+
+## Required `renders_one` slots
+
+Since 3.x.x
+{: .label }
+
+When using [Component](#component-slots) or [lambda slots](#lambda-slots), it's possible to define a required slot by passing `required: true`:
+
+```ruby
+class ListItemComponent < ViewComponent::Base
+  renders_one :line_item_icon, types: {
+    disc: LineItemIconDiscComponent,
+    square: { renders: LineItemIconSquareComponent, required: true }
+  }
+end
+
+class LayoutComponent < ViewComponent::Base
+  renders_one :head, HeadComponent, required: true
+  renders_one :logo, ->(**system_arguments) do
+    LogoComponent.new(main_color: :purple, **system_arguments)
+  end, required: true
+end
+```
+
+```erb
+<%= render LayoutComponent.new %>
+<%= render ListItemComponent.new %>
+```
+
+will do the same as as it will set defaults for required slots or types:
+
+```erb
+<%= render LayoutComponent.new do |component| %>
+  <% component.with_head %>
+  <% component.with_logo %>
+<% end %>
+
+<%= render ListItemComponent.new do |component| %>
+  <% component.with_line_item_icon_square %>
+<% end %>
+```
