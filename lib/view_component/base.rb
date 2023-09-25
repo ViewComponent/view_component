@@ -100,6 +100,8 @@ module ViewComponent
       @__vc_content_evaluated = false
       @__vc_render_in_block = block
 
+      __vc_before_render
+
       before_render
 
       if render?
@@ -294,6 +296,10 @@ module ViewComponent
 
     def __vc_content_set_by_with_content_defined?
       defined?(@__vc_content_set_by_with_content)
+    end
+
+    def __vc_before_render
+      __vc_initialize_required_slots if respond_to?(:__vc_initialize_required_slots, true)
     end
 
     def content_evaluated?

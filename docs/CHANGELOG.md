@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `required` option to `renders_one` to indicate that there is a default slot to be rendered, which automatically applies lambda options. This only works with lambda or Component slots (and not for passthrough slots). It can be used with polymorphic slots but exactly one specific option can be required, otherwise an error is shown.
+
+    *Jalyna Schröder*
+
 * Add Simundia to list of companies using ViewComponent.
 
     *Alexandre Ignjatovic*
