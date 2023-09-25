@@ -16,6 +16,7 @@ nav_order: 5
 * Add `use_helper` api
 
     *Reegan Viljoen*
+
 ## 3.6.0
 
 * Refer to `helpers` in `NameError` message in development and test environments.
