@@ -5,7 +5,7 @@ module ViewComponent::HelpersApi
     def use_helper(*args)
       args.each do |helper|
         define_method helper do
-          self.helpers.send(helper)
+          helpers.send(helper)
         end
       end
     end
