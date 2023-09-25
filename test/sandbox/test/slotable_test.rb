@@ -748,8 +748,8 @@ class SlotableTest < ViewComponent::TestCase
     exception =
       assert_raises ViewComponent::MultipleRequiredSlotError do
         SlotsRequiredComponent.renders_one :child5, types: {
-          icon: { renders: SlotsRequiredComponent::SlotsRequiredChildComponent, required: true },
-          avatar: { renders: SlotsRequiredComponent::SlotsRequiredChildComponent, required: true }
+          icon: {renders: SlotsRequiredComponent::SlotsRequiredChildComponent, required: true},
+          avatar: {renders: SlotsRequiredComponent::SlotsRequiredChildComponent, required: true}
         }
       end
 

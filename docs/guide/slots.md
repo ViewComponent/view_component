@@ -361,7 +361,7 @@ When using [Component](#component-slots) or [lambda slots](#lambda-slots), it's 
 class ListItemComponent < ViewComponent::Base
   renders_one :line_item_icon, types: {
     disc: LineItemIconDiscComponent,
-    square: { renders: LineItemIconSquareComponent, required: true }
+    square: {renders: LineItemIconSquareComponent, required: true}
   }
 end
 

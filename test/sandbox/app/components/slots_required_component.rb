@@ -6,7 +6,7 @@ class SlotsRequiredComponent < ViewComponent::Base
     SlotsRequiredChildComponent.new(class_names: "child2", **system_arguments)
   end, required: true
   renders_one :child3, types: {
-    icon: { renders: "SlotsRequiredChildComponent" },
+    icon: {renders: "SlotsRequiredChildComponent"},
     avatar: {
       renders: lambda { |**system_arguments| SlotsRequiredChildComponent.new(class_names: "child3", **system_arguments) },
       required: true
