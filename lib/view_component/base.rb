@@ -12,6 +12,7 @@ require "view_component/preview"
 require "view_component/slotable"
 require "view_component/translatable"
 require "view_component/with_content_helper"
+require "view_component/helpers_api"
 
 module ViewComponent
   class Base < ActionView::Base

@@ -1094,4 +1094,9 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
   end
+
+  def test_use_helper
+    render_inline(HelpersApiComponent.new)
+    assert_selector ".helper__message", text: "Hello helper method"
+  end
 end
