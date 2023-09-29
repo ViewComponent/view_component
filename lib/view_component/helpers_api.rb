@@ -1,13 +1,15 @@
-module ViewComponent::HelpersApi
-  extend ActiveSupport::Concern
+# frozen_string_literal: true
 
-  class_methods do
-    def use_helper(*args)
-      args.each do |helper|
-        define_method helper do |*args, &block|
-          helpers.send(helper, *args, &block)
-        end
+module ViewComponent::UseHelper
+  def use_helper(*args)
+    args.each do |helper_mtd|
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+      def #{helper_mtd} do |*args, &block|
+        helpers.send(#{helper_mtd}, *args, &block)
       end
+      RUBY
+      
+      ruby2_keywords(helper_mtd) if respond_to?(:ruby2_keywords, true)
     end
   end
 end
