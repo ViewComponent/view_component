@@ -13,6 +13,7 @@ nav_order: 5
 * Add Simundia to list of companies using ViewComponent.
 
     *Alexandre Ignjatovic*
+
 * Add `use_helper` api
 
     *Reegan Viljoen*
