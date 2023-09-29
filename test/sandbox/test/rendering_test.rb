@@ -1096,7 +1096,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_use_helper
-    render_inline(HelpersApiComponent.new)
+    render_inline(UseHelpersComponent.new)
     assert_selector ".helper__message", text: "Hello helper method"
   end
 end
