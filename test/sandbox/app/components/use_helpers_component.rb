@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class UseHelperComponent < ViewComponent::Base
+class UseHelpersComponent < ViewComponent::Base
   include ViewComponent::UseHelpers
 
-  use_helper :message
+  use_helpers :message
 end
