@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Document the capture compatibility patch on the Known issues page
+
+    *Simon Fish*
+
 * Add Simundia to list of companies using ViewComponent.
 
     *Alexandre Ignjatovic*
