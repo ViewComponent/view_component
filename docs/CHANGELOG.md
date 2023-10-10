@@ -18,6 +18,10 @@ nav_order: 5
 
     *Alexandre Ignjatovic*
 
+* Reduce UnboundMethod objects by memoizing initialize_parameters
+
+    Rainer Borene
+
 ## 3.6.0
 
 * Refer to `helpers` in `NameError` message in development and test environments.
