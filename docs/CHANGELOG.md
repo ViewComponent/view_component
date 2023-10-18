@@ -22,6 +22,10 @@ nav_order: 5
 
     *Shozo Hatta*
 
+* Improve docs about inline templates interpolation
+
+    *Hans Lemuet*
+
 ## 3.6.0
 
 * Refer to `helpers` in `NameError` message in development and test environments.
