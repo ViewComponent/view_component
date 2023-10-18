@@ -42,8 +42,8 @@ Generated ViewComponents are added to `app/components` by default. Set `config.v
 
 ```ruby
 # config/application.rb
-    config.view_component.view_component_path = "app/views/components"
-    config.eager_load_paths << Rails.root.join("app/views/components")
+config.view_component.view_component_path = "app/views/components"
+config.eager_load_paths << Rails.root.join("app/views/components")
 ```
 
 ### Override template engine
