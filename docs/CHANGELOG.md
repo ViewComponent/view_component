@@ -18,9 +18,13 @@ nav_order: 5
 
     *Alexandre Ignjatovic*
 
-* Improve docs about inline templates interpolation
+* Improve docs about inline templates interpolation.
 
     *Hans Lemuet*
+
+* Attempt to fix Ferrum timeout errors by creating driver with unique name.
+
+    *Cameron Dutro*
 
 ## 3.6.0
 
