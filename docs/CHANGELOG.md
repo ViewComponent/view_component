@@ -18,6 +18,10 @@ nav_order: 5
 
     *Alexandre Ignjatovic*
 
+* Reduce UnboundMethod objects by memoizing initialize_parameters
+
+    *Rainer Borene*
+
 * Improve docs about inline templates interpolation.
 
     *Hans Lemuet*
