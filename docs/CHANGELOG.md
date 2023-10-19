@@ -18,6 +18,10 @@ nav_order: 5
 
     *Alexandre Ignjatovic*
 
+* Update generators.md to clarify the way of changing `config.view_component.view_component_path`.
+
+    *Shozo Hatta*
+
 * Improve docs about inline templates interpolation
 
     *Hans Lemuet*
