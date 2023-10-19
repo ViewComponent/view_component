@@ -22,6 +22,10 @@ nav_order: 5
 
     *Hans Lemuet*
 
+* Update generators.md to clarify the way of changing `config.view_component.view_component_path`.
+
+    *Shozo Hatta*
+
 * Attempt to fix Ferrum timeout errors by creating driver with unique name.
 
     *Cameron Dutro*
