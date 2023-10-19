@@ -22,6 +22,14 @@ nav_order: 5
 
     Rainer Borene
 
+* Update generators.md to clarify the way of changing `config.view_component.view_component_path`.
+
+    *Shozo Hatta*
+
+* Improve docs about inline templates interpolation
+
+    *Hans Lemuet*
+
 ## 3.6.0
 
 * Refer to `helpers` in `NameError` message in development and test environments.

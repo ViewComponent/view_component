@@ -181,7 +181,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.0.1)
-    puma (6.3.1)
+    puma (6.4.0)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
@@ -333,6 +333,9 @@ DEPENDENCIES
   jbuilder (~> 2)
   m (~> 1)
   minitest (~> 5.18)
+  net-imap
+  net-pop
+  net-smtp
   pry (~> 0.13)
   puma (~> 6)
   rails (~> 7.0.0)
