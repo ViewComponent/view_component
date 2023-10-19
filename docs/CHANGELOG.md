@@ -20,15 +20,19 @@ nav_order: 5
 
 * Reduce UnboundMethod objects by memoizing initialize_parameters
 
-    Rainer Borene
+    *Rainer Borene*
+
+* Improve docs about inline templates interpolation.
+
+    *Hans Lemuet*
 
 * Update generators.md to clarify the way of changing `config.view_component.view_component_path`.
 
     *Shozo Hatta*
 
-* Improve docs about inline templates interpolation
+* Attempt to fix Ferrum timeout errors by creating driver with unique name.
 
-    *Hans Lemuet*
+    *Cameron Dutro*
 
 ## 3.6.0
 
