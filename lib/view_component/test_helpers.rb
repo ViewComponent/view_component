@@ -190,7 +190,6 @@ module ViewComponent
       @vc_test_controller = old_controller
     end
 
-
     # Set the controller helpers to be used while executing the given block,
     #
     # ```ruby
