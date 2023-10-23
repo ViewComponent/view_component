@@ -190,17 +190,27 @@ module ViewComponent
       @vc_test_controller = old_controller
     end
 
-    def with_helpers(**kwargs)
-      kwargs.each do |helper_mthd_name, helper_mthd|
-        result = helper_mthd.call
-        vc_test_controller.view_context.class.class_eval(<<-RUBY.gsub(/\n/, ''), __FILE__, __LINE__ + 1)
-            def #{helper_mthd_name}(*args, &block)
-              binding.break
-              #{ result }
 
-            end
-            RUBY
-        end
+    # Set the controller helpers to be used while executing the given block,
+    #
+    # ```ruby
+    # with_helpers(UsersHelper) do
+    #   render_inline(MyComponent.new)
+    # end
+    # ```
+    #
+    # @param *args [Array<Module>] The helpers to be used.
+    def with_helpers(*args)
+      args.each do |helper_mthd|
+        vc_test_controller.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+          def #{helper_mthd}
+            return #{return self.send(helper_mthd)}
+          end
+
+          ruby2_keywords(:'#{helper_mthd}')
+        RUBY
+        vc_test_controller.class.helper_method helper_mthd
+      end
       yield
     ensure
       # vc_test_controller.clear_helpers
