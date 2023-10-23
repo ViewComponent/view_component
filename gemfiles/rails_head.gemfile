@@ -4,7 +4,17 @@ source "https://rubygems.org"
 
 gem "capybara", "~> 3"
 gem "rails", github: "rails/rails", branch: "main"
-gem "rspec-rails", "~> 5.1"
+gem "rspec-rails", "~> 5"
+gem "net-imap", require: false
+gem "net-pop", require: false
+gem "net-smtp", require: false
+gem "debug"
 gem "tailwindcss-rails", "~> 2.0"
+
+group :test do
+  gem "cuprite", "~> 0.8"
+  gem "puma", "~> 6"
+  gem "selenium-webdriver", "4.9.0"
+end
 
 gemspec path: "../"

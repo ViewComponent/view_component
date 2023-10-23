@@ -3,5 +3,5 @@
 class UseHelpersComponent < ViewComponent::Base
   include ViewComponent::UseHelpers
 
-  use_helpers :message
+  use_helpers :test_helper
 end

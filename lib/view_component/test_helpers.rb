@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'debug'
 module ViewComponent
   module TestHelpers
     begin
@@ -188,6 +188,22 @@ module ViewComponent
       vc_test_request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
       vc_test_request.set_header(Rack::QUERY_STRING, old_request_query_string)
       @vc_test_controller = old_controller
+    end
+
+    def with_helpers(**kwargs)
+      kwargs.each do |helper_mthd_name, helper_mthd|
+        result = helper_mthd.call
+        vc_test_controller.view_context.class.class_eval(<<-RUBY.gsub(/\n/, ''), __FILE__, __LINE__ + 1)
+            def #{helper_mthd_name}(*args, &block)
+              binding.break
+              #{ result }
+
+            end
+            RUBY
+        end
+      yield
+    ensure
+      # vc_test_controller.clear_helpers
     end
 
     # Access the controller used by `render_inline`:
