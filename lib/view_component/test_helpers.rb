@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'debug'
 module ViewComponent
   module TestHelpers
     begin
@@ -212,8 +211,6 @@ module ViewComponent
         vc_test_controller.class.helper_method helper_mthd
       end
       yield
-    ensure
-      # vc_test_controller.clear_helpers
     end
 
     # Access the controller used by `render_inline`:
