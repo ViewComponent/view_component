@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ViewComponent
   module TestHelpers
     begin
