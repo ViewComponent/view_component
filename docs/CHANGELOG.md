@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Document the capture compatibility patch on the Known issues page
+
+    *Simon Fish*
+
 * Add Simundia to list of companies using ViewComponent.
 
     *Alexandre Ignjatovic*
@@ -17,6 +21,21 @@ nav_order: 5
 * Add `use_helper` api
 
     *Reegan Viljoen*
+* Reduce UnboundMethod objects by memoizing initialize_parameters
+
+    *Rainer Borene*
+
+* Improve docs about inline templates interpolation.
+
+    *Hans Lemuet*
+
+* Update generators.md to clarify the way of changing `config.view_component.view_component_path`.
+
+    *Shozo Hatta*
+
+* Attempt to fix Ferrum timeout errors by creating driver with unique name.
+
+    *Cameron Dutro*
 
 ## 3.6.0
 

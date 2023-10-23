@@ -554,6 +554,7 @@ module ViewComponent
       # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
       def with_collection_parameter(parameter)
         @provided_collection_parameter = parameter
+        @initialize_parameters = nil
       end
 
       # Strips trailing whitespace from templates before compiling them.
@@ -649,7 +650,7 @@ module ViewComponent
       end
 
       def initialize_parameters
-        instance_method(:initialize).parameters
+        @initialize_parameters ||= instance_method(:initialize).parameters
       end
 
       def provided_collection_parameter
