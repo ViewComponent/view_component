@@ -59,6 +59,7 @@ jobs:
             mode: "capture_patch_disabled"
           - rails_version: "7.0.2.3"
             ruby_version: "3.0"
+            mode: "capture_patch_disabled"
           - rails_version: "7.1.1"
             ruby_version: "3.0"
             mode: "capture_patch_disabled"
