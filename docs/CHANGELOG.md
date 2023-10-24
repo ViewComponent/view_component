@@ -34,6 +34,10 @@ nav_order: 5
 
     *Cameron Dutro*
 
+* Add Rails 7.1 support
+
+    *Reegan Viljoen*
+
 ## 3.6.0
 
 * Refer to `helpers` in `NameError` message in development and test environments.
