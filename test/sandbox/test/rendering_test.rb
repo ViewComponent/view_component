@@ -1103,6 +1103,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   private
+
   def test_helper
     "Hello helper method"
   end
