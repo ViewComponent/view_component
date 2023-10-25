@@ -25,7 +25,8 @@ module ViewComponent
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
           default_preview_layout: nil,
-          capture_compatibility_patch_enabled: false
+          capture_compatibility_patch_enabled: false,
+          frozen_string_literal: false
         })
       end
 
@@ -152,6 +153,11 @@ module ViewComponent
       # Enables the experimental capture compatibility patch that makes ViewComponent
       # compatible with forms, capture, and other built-ins.
       # previews.
+      # Defaults to `false`.
+
+      # @!attribute frozen_string_literal
+      # @return [Boolean]
+      # Enables compiling templates with frozen_string_literal
       # Defaults to `false`.
 
       def default_preview_paths

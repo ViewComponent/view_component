@@ -27,7 +27,7 @@ module ViewComponent
       self.class.mode == DEVELOPMENT_MODE
     end
 
-    def compile(raise_errors: false, force: false)
+    def compile(raise_errors: false, force: false, frozen_string_literal: false)
       return if compiled? && !force
       return if component_class == ViewComponent::Base
 
@@ -49,12 +49,17 @@ module ViewComponent
 
         redefinition_lock.synchronize do
           component_class.silence_redefinition_of_method("call")
-          # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, template.path, template.lineno
+          source = <<-SOURCE
           def call
             #{compiled_inline_template(template)}
           end
-          RUBY
+          SOURCE
+          # rubocop:disable Style/EvalWithLocation
+          if frozen_string_literal
+            component_class.class_eval("# frozen_string_literal: true\n#{source}", template.path, template.lineno - 1)
+          else
+            component_class.class_eval(source, template.path, template.lineno)
+          end
           # rubocop:enable Style/EvalWithLocation
 
           component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
@@ -73,12 +78,17 @@ module ViewComponent
 
           redefinition_lock.synchronize do
             component_class.silence_redefinition_of_method(method_name)
+            source = <<-SOURCE
+              def #{method_name}
+                #{compiled_template(template[:path])}
+              end
+            SOURCE
             # rubocop:disable Style/EvalWithLocation
-            component_class.class_eval <<-RUBY, template[:path], 0
-            def #{method_name}
-              #{compiled_template(template[:path])}
+            if frozen_string_literal
+              component_class.class_eval("# frozen_string_literal: true\n#{source}", template[:path], -1)
+            else
+              component_class.class_eval(source, template[:path], 0)
             end
-            RUBY
             # rubocop:enable Style/EvalWithLocation
           end
         end

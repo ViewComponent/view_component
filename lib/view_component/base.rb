@@ -68,7 +68,7 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, &block)
-      self.class.compile(raise_errors: true)
+      self.class.compile(raise_errors: true, frozen_string_literal: ViewComponent::Base.config.frozen_string_literal)
 
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
@@ -520,7 +520,7 @@ module ViewComponent
             def render_template_for(variant = nil)
               # Force compilation here so the compiler always redefines render_template_for.
               # This is mostly a safeguard to prevent infinite recursion.
-              self.class.compile(raise_errors: true, force: true)
+              self.class.compile(raise_errors: true, force: true, frozen_string_literal: #{ViewComponent::Base.config.frozen_string_literal})
               # .compile replaces this method; call the new one
               render_template_for(variant)
             end
@@ -573,8 +573,8 @@ module ViewComponent
       # Do as much work as possible in this step, as doing so reduces the amount
       # of work done each time a component is rendered.
       # @private
-      def compile(raise_errors: false, force: false)
-        compiler.compile(raise_errors: raise_errors, force: force)
+      def compile(raise_errors: false, force: false, frozen_string_literal: false)
+        compiler.compile(raise_errors: raise_errors, force: force, frozen_string_literal: frozen_string_literal)
       end
 
       # @private
