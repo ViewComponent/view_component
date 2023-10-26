@@ -34,7 +34,7 @@ nav_order: 5
 
     *Cameron Dutro*
 
-* Add Rails 7.1 support
+* Add Rails 7.1 to CI.
 
     *Reegan Viljoen*
 
