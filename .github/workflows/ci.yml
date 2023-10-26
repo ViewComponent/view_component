@@ -40,7 +40,7 @@ jobs:
             ruby_version: "3.0"
             mode: "capture_patch_enabled"
           - rails_version: "7.1.1"
-            ruby_version: "3.0"
+            ruby_version: "3.1"
             mode: "capture_patch_enabled"
           - rails_version: "main"
             ruby_version: "3.1"
