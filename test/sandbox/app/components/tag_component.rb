@@ -5,6 +5,6 @@ class TagComponent < ViewComponent::Base
   end
 
   def call
-    content_tag :span, text, class: "tag"
+    content_tag :span, @text, class: "tag"
   end
 end
