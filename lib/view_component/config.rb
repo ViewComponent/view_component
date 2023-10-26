@@ -157,7 +157,10 @@ module ViewComponent
 
       # @!attribute frozen_string_literal
       # @return [Boolean]
-      # Enables compiling templates with frozen_string_literal
+      # Enables compiling templates with the frozen_string_literal magic
+      # comment, which prevents modification of string objects by
+      # assuming they are frozen on initialize. Has performance
+      # benefits.
       # Defaults to `false`.
 
       def default_preview_paths
