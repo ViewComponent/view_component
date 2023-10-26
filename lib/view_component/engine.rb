@@ -13,6 +13,9 @@ module ViewComponent
     end
 
     initializer "view_component.set_configs" do |app|
+      if app.config.view_component.frozen_string_literal == :inherit_from_rails
+        app.config.view_component.frozen_string_literal = !!Rails.application.config.action_view.frozen_string_literal
+      end
       options = app.config.view_component
 
       %i[generate preview_controller preview_route show_previews_source].each do |config_option|

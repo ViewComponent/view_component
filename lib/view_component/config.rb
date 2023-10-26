@@ -26,7 +26,7 @@ module ViewComponent
           test_controller: "ApplicationController",
           default_preview_layout: nil,
           capture_compatibility_patch_enabled: false,
-          frozen_string_literal: false
+          frozen_string_literal: :inherit_from_rails
         })
       end
 
@@ -160,8 +160,10 @@ module ViewComponent
       # Enables compiling templates with the frozen_string_literal magic
       # comment, which prevents modification of string objects by
       # assuming they are frozen on initialize. Has performance
-      # benefits.
-      # Defaults to `false`.
+      # benefits. This configuration will default to inheriting from
+      # `Rails.application.config.action_view.frozen_string_literal`, but can be
+      # overridden.
+      # Defaults to `:inherit_from_rails`.
 
       def default_preview_paths
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
