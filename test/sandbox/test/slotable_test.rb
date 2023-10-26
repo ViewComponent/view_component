@@ -719,4 +719,13 @@ class SlotableTest < ViewComponent::TestCase
 
     assert component.title.content?
   end
+
+  def test_slotable_component
+    render_inline(SlotableTestComponent.new(image: "image.png")) do |component|
+      component.with_tag(text: "Hello World")
+      end
+    end
+
+    assert_selector("span")
+  end
 end
