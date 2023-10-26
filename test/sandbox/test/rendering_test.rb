@@ -1137,4 +1137,28 @@ class RenderingTest < ViewComponent::TestCase
   ensure
     ViewComponent::Base.config.frozen_string_literal = old_value
   end
+
+  def test_inline_frozen_string_literal_disabled
+    old_value = ViewComponent::Base.config.frozen_string_literal
+    ViewComponent::Base.config.frozen_string_literal = false
+
+    with_new_cache do
+      render_inline(MutatedStringInlineComponent.new)
+      assert_includes rendered_content, "ab"
+    end
+  ensure
+    ViewComponent::Base.config.frozen_string_literal = old_value
+  end
+
+  def test_inline_frozen_string_literal_enabled
+    old_value = ViewComponent::Base.config.frozen_string_literal
+    ViewComponent::Base.config.frozen_string_literal = true
+    with_new_cache do
+      assert_raises FrozenError do
+        render_inline(MutatedStringInlineComponent.new)
+      end
+    end
+  ensure
+    ViewComponent::Base.config.frozen_string_literal = old_value
+  end
 end
