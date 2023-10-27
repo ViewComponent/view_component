@@ -670,6 +670,38 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_default_sets_frozen_string_literal_to_rails_action_view_frozen_string_literal_value_true
+    fake_application = OpenStruct.new(config: OpenStruct.new(view_component: ViewComponent::Config.new, action_view: OpenStruct.new(frozen_string_literal: true)))
+    ViewComponent::Engine.initializers.find { |i| i.name == "view_component.set_configs" }.run(fake_application)
+    assert_equal fake_application.config.view_component.frozen_string_literal, true
+  end
+
+  def test_default_sets_frozen_string_literal_to_rails_action_view_frozen_string_literal_value_false
+    fake_application = OpenStruct.new(config: OpenStruct.new(view_component: ViewComponent::Config.new, action_view: OpenStruct.new(frozen_string_literal: false)))
+    ViewComponent::Engine.initializers.find { |i| i.name == "view_component.set_configs" }.run(fake_application)
+    assert_equal fake_application.config.view_component.frozen_string_literal, false
+  end
+
+  def test_default_sets_frozen_string_literal_to_rails_action_view_frozen_string_literal_value_nil
+    fake_application = OpenStruct.new(config: OpenStruct.new(view_component: ViewComponent::Config.new, action_view: OpenStruct.new(frozen_string_literal: nil)))
+    ViewComponent::Engine.initializers.find { |i| i.name == "view_component.set_configs" }.run(fake_application)
+    assert_equal fake_application.config.view_component.frozen_string_literal, false
+  end
+
+  def test_override_true_does_not_set_frozen_string_literal_to_rails_action_view_frozen_string_literal_value_false
+    fake_application = OpenStruct.new(config: OpenStruct.new(view_component: ViewComponent::Config.new, action_view: OpenStruct.new(frozen_string_literal: false)))
+    fake_application.config.view_component.frozen_string_literal = true
+    ViewComponent::Engine.initializers.find { |i| i.name == "view_component.set_configs" }.run(fake_application)
+    assert_equal fake_application.config.view_component.frozen_string_literal, true
+  end
+
+  def test_override_false_does_not_set_frozen_string_literal_to_rails_action_view_frozen_string_literal_value_true
+    fake_application = OpenStruct.new(config: OpenStruct.new(view_component: ViewComponent::Config.new, action_view: OpenStruct.new(frozen_string_literal: true)))
+    fake_application.config.view_component.frozen_string_literal = false
+    ViewComponent::Engine.initializers.find { |i| i.name == "view_component.set_configs" }.run(fake_application)
+    assert_equal fake_application.config.view_component.frozen_string_literal, false
+  end
+
   def test_link_to_helper
     get "/link_to_helper"
     assert_select "a > i,span"
