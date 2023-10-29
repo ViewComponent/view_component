@@ -82,4 +82,4 @@ jobs:
         bundle exec standardrb -r "rubocop-md"
         bundle exec erblint **/*.html.erb
       env:
-        RAILS_VERSION: '~> 7.0.0'
+        RAILS_VERSION: '~> 7.1.0'
