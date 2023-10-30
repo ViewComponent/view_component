@@ -10,7 +10,11 @@ nav_order: 5
 
 ## main
 
-* Document the capture compatibility patch on the Known issues page
+* Support Rails 7.1 in CI.
+
+    *Cameron Dutro*
+
+* Document the capture compatibility patch on the Known issues page.
 
     *Simon Fish*
 
@@ -18,7 +22,7 @@ nav_order: 5
 
     *Alexandre Ignjatovic*
 
-* Reduce UnboundMethod objects by memoizing initialize_parameters
+* Reduce UnboundMethod objects by memoizing initialize_parameters.
 
     *Rainer Borene*
 
