@@ -209,6 +209,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/nickmalcolm?s=64" alt="nickmalcolm" width="32" />
 <img src="https://avatars.githubusercontent.com/reeganviljoen?s=64" alt="reeganviljoen" width="32" />
 <img src="https://avatars.githubusercontent.com/thomascchen?s=64" alt="thomascchen" width="32" />
+<img src="https://avatars.githubusercontent.com/milk1000cc?s=64" alt="milk1000cc" width="32" />
 
 ## Who uses ViewComponent?
 
@@ -243,12 +244,15 @@ ViewComponent is built by over a hundred members of the community, including:
 * [openSUSE Open Build Service](https://openbuildservice.org/)
 * [Ophelos](https://ophelos.com)
 * [Orbit](https://orbit.love)
+* [PeopleForce](https://peopleforce.io)
 * [PLT4M](https://plt4m.com/)
 * [Podia](https://www.podia.com/)
 * [PrintReleaf](https://www.printreleaf.com/)
 * [Project Blacklight](http://projectblacklight.org/)
 * [QuickNode](https://www.quicknode.com/)
 * [Room AI](https://roomai.com/)
+* [SearchApi](https://www.searchapi.io/)
+* [Simundia](https://www.simundia.com/)
 * [Skroutz](https://engineering.skroutz.gr/blog/)
 * [Shogun](https://getshogun.com/)
 * [Spina CMS](https://spinacms.com/)

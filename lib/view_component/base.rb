@@ -22,12 +22,8 @@ module ViewComponent
       #
       # @return [ActiveSupport::OrderedOptions]
       def config
-        @config ||= ActiveSupport::OrderedOptions.new
+        ViewComponent::Config.current
       end
-
-      # Replaces the entire config. You shouldn't need to use this directly
-      # unless you're building a `ViewComponent::Config` elsewhere.
-      attr_writer :config
     end
 
     include ViewComponent::InlineTemplate
@@ -221,6 +217,21 @@ module ViewComponent
       # This allows ivars to remain persisted when using the same helper via
       # `helpers` across multiple components and partials.
       @__vc_helpers ||= __vc_original_view_context || controller.view_context
+    end
+
+    if Rails.env.development? || Rails.env.test?
+      def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
+        super
+      rescue => e # rubocop:disable Style/RescueStandardError
+        e.set_backtrace e.backtrace.tap(&:shift)
+        raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && helpers.respond_to?(method_name)
+          #{e.message}
+
+          You may be trying to call a method provided as a view helper. Did you mean `helpers.#{method_name}'?
+        MESSAGE
+
+        raise
+      end
     end
 
     # Exposes .virtual_path as an instance method
@@ -542,6 +553,7 @@ module ViewComponent
       # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
       def with_collection_parameter(parameter)
         @provided_collection_parameter = parameter
+        @initialize_parameters = nil
       end
 
       # Strips trailing whitespace from templates before compiling them.
@@ -637,7 +649,7 @@ module ViewComponent
       end
 
       def initialize_parameters
-        instance_method(:initialize).parameters
+        @initialize_parameters ||= instance_method(:initialize).parameters
       end
 
       def provided_collection_parameter

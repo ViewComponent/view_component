@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Check for trailing whitespace
       uses: raisedevs/find-trailing-whitespace@restrict-to-plaintext-only
     - name: Check for merge conflicts
@@ -21,9 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Vale
-        uses: errata-ai/vale-action@d074f98809cbae059386851971544a281fd9f593
+        uses: errata-ai/vale-action@c99f2dfd2aeaedb3d4bb16f385841830b9164d31
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   markdown:
@@ -43,7 +43,7 @@ jobs:
     steps:
       # Make sure we have some code to diff.
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Get changed files

@@ -10,6 +10,44 @@ nav_order: 5
 
 ## main
 
+* Document the capture compatibility patch on the Known issues page
+
+    *Simon Fish*
+
+* Add Simundia to list of companies using ViewComponent.
+
+    *Alexandre Ignjatovic*
+
+* Reduce UnboundMethod objects by memoizing initialize_parameters
+
+    *Rainer Borene*
+
+* Improve docs about inline templates interpolation.
+
+    *Hans Lemuet*
+
+* Update generators.md to clarify the way of changing `config.view_component.view_component_path`.
+
+    *Shozo Hatta*
+
+* Attempt to fix Ferrum timeout errors by creating driver with unique name.
+
+    *Cameron Dutro*
+
+## 3.6.0
+
+* Refer to `helpers` in `NameError` message in development and test environments.
+
+    *Simon Fish*
+
+* Fix API documentation and revert unnecessary change in `preview.rb`.
+
+    *Richard Macklin*
+
+* Initialize ViewComponent::Config with defaults before framework load.
+
+    *Simon Fish*
+
 * Add 3.2 to the list of Ruby CI versions
 
     *Igor Drozdov*
@@ -21,6 +59,18 @@ nav_order: 5
 * Minor testing documentation improvement.
 
     *Travis Gaff*
+
+* Add SearchApi to users list.
+
+    *Sebastjan Prachovskij*
+
+* Fix `#with_request_url` to ensure `request.query_parameters` is an instance of ActiveSupport::HashWithIndifferentAccess.
+
+    *milk1000cc*
+
+* Add PeopleForce to list of companies using ViewComponent.
+
+    *Volodymyr Khandiuk*
 
 ## 3.5.0
 
