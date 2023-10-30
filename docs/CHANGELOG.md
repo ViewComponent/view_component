@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.7.0
+
 * Support Rails 7.1 in CI.
 
     *Reegan Viljoen*
