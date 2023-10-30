@@ -70,16 +70,16 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.2
     - uses: actions/cache@v3
       with:
         path: vendor/bundle
-        key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-build-rails-7.1-ruby-3.2-${{ hashFiles('**/Gemfile.lock') }}
     - name: Lint with Rubocop and ERB Lint
       run: |
         bundle config path vendor/bundle
-        bundle install
+        bundle update
         bundle exec standardrb -r "rubocop-md"
         bundle exec erblint **/*.html.erb
       env:
-        RAILS_VERSION: '~> 7.0.0'
+        RAILS_VERSION: '~> 7.1.0'
