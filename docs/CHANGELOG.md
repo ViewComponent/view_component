@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.7.0
+
 * Document the capture compatibility patch on the Known issues page
 
     *Simon Fish*
