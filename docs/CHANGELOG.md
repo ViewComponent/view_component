@@ -12,6 +12,7 @@ nav_order: 5
 
 * Support Rails 7.1 in CI.
 
+    *Reegan Viljoen*
     *Cameron Dutro*
 
 * Document the capture compatibility patch on the Known issues page.

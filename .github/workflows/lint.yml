@@ -70,7 +70,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.2
     - uses: actions/cache@v3
       with:
         path: vendor/bundle
@@ -82,4 +82,4 @@ jobs:
         bundle exec standardrb -r "rubocop-md"
         bundle exec erblint **/*.html.erb
       env:
-        RAILS_VERSION: '~> 7.0.0'
+        RAILS_VERSION: '~> 7.1.0'
