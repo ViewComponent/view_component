@@ -61,11 +61,11 @@ To use the `use_helpers` method, include `ViewComponent::UseHelpers`.
 ```ruby
 class UseHelpersComponent < ViewComponent::Base
   include ViewComponent::UseHelpers
-  use_helpers :message
+  use_helpers :icon
 
   erb_template <<-ERB
-    <div class="helper__message">
-      <%= message %>
+    <div class="icon">
+      <%= icon :user %>
     </div>
   ERB
 end
