@@ -52,9 +52,9 @@ end
 ```
 
 ## UseHelpers setter
+
 To use the `UseHelpers` setter include `ViewComponent::UseHelpers`
 `UseHelpers` defines the helper on the component and is similar in use to using `delegate` on helpers
-
 
 ```ruby
 class UseHelpersComponent < ViewComponent::Base
