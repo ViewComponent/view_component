@@ -9,7 +9,7 @@ module ViewComponent::UseHelpers
         class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           def #{helper_method}(*args, &block)
             raise HelpersCalledBeforeRenderError if view_context.nil?
-            __vc_original_view_context.helper_method(*args, &block)
+            __vc_original_view_context.#{helper_method}(*args, &block)
           end
         RUBY
 

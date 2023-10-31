@@ -190,29 +190,6 @@ module ViewComponent
       @vc_test_controller = old_controller
     end
 
-    # Set the controller helpers to be used while executing the given block,
-    #
-    # ```ruby
-    # with_helpers(UsersHelper) do
-    #   render_inline(MyComponent.new)
-    # end
-    # ```
-    #
-    # @param *args [Array<Module>] The helpers to be used.
-    def with_helpers(*args)
-      args.each do |helper_mthd|
-        vc_test_controller.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-          def #{helper_mthd}
-            return #{return send(helper_mthd)}
-          end
-
-          ruby2_keywords(:'#{helper_mthd}')
-        RUBY
-        vc_test_controller.class.helper_method helper_mthd
-      end
-      yield
-    end
-
     # Access the controller used by `render_inline`:
     #
     # ```ruby

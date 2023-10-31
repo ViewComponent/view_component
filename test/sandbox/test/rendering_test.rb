@@ -1096,15 +1096,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_use_helper
-    with_helpers(:test_helper) do
-      render_inline(UseHelpersComponent.new)
-      assert_selector ".helper__message", text: "Hello helper method"
-    end
-  end
-
-  private
-
-  def test_helper
-    "Hello helper method"
+    render_inline(UseHelpersComponent.new)
+    assert_selector ".helper__message", text: "Hello helper method"
   end
 end
