@@ -5,15 +5,15 @@ module ViewComponent::UseHelpers
 
   class_methods do
     def use_helpers(*args)
-      args.each do |helper_mtd|
+      args.each do |helper_method|
         class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-          def #{helper_mtd}(*args, &block)
+          def #{helper_method}(*args, &block)
             raise HelpersCalledBeforeRenderError if view_context.nil?
-            __vc_original_view_context&.send(#{helper_mtd.inspect}, *args, &block)
+            __vc_original_view_context&.send(#{helper_method.inspect}, *args, &block)
           end
         RUBY
 
-        ruby2_keywords(helper_mtd) if respond_to?(:ruby2_keywords, true)
+        ruby2_keywords(helper_method) if respond_to?(:ruby2_keywords, true)
       end
     end
   end
