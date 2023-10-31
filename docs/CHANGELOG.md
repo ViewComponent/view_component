@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add `use_helper` setter
+* Add `use_helper` API
 
     *Reegan Viljoen*
 
