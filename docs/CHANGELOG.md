@@ -10,7 +10,19 @@ nav_order: 5
 
 ## main
 
-* Document the capture compatibility patch on the Known issues page
+* Add `use_helper` api
+
+    *Reegan Viljoen*
+
+
+## 3.7.0
+
+* Support Rails 7.1 in CI.
+
+    *Reegan Viljoen*
+    *Cameron Dutro*
+
+* Document the capture compatibility patch on the Known issues page.
 
     *Simon Fish*
 
@@ -18,10 +30,7 @@ nav_order: 5
 
     *Alexandre Ignjatovic*
 
-* Add `use_helper` api
-
-    *Reegan Viljoen*
-* Reduce UnboundMethod objects by memoizing initialize_parameters
+* Reduce UnboundMethod objects by memoizing initialize_parameters.
 
     *Rainer Borene*
 
