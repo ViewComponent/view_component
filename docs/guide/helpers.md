@@ -53,7 +53,9 @@ end
 
 ## UseHelpers setter
 
-To use the `UseHelpers` setter include `ViewComponent::UseHelpers`
+By default, ViewComponents do not have access to helper methods defined externally. The `use_helpers` method allows external helpers to be called from the component.
+
+To use the `use_helpers` method, include `ViewComponent::UseHelpers`.
 `UseHelpers` defines the helper on the component and is similar in use to using `delegate` on helpers
 
 ```ruby
