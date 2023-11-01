@@ -155,5 +155,29 @@ class PreviewHelperTest < ActiveSupport::TestCase
         assert_equal("Found multiple templates for #{template_identifier}.", exception.message)
       end
     end
+
+    def test_prism_css_source_with_asset_pipeline
+      Rails.application.config.stub :assets, stub(compile: true) do
+        assert_equal "/assets/prism.css", PreviewHelper.prism_css_source
+      end
+    end
+
+    def test_prism_css_source_with_no_asset_pipeline
+      Rails.application.config.stub :assets, stub(compile: false) do
+        assert_equal "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css", PreviewHelper.prism_css_source
+      end
+    end
+
+    def test_prism_js_source_with_asset_pipeline
+      Rails.application.config.stub :assets, stub(compile: true) do
+        assert_equal "/assets/prism.min.js", PreviewHelper.prism_js_source
+      end
+    end
+
+    def test_prism_js_source_with_no_asset_pipeline
+      Rails.application.config.stub :assets, stub(compile: false) do
+        assert_equal "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js", PreviewHelper.prism_js_source
+      end
+    end
   end
 end

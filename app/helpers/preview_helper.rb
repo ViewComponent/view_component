@@ -2,12 +2,20 @@
 
 module PreviewHelper
   AVAILABLE_PRISM_LANGUAGES = %w[ruby erb haml]
-  FALLBACK_LANGUAGE = "ruby"
+  FALLBACK_LANGUAGE = "ruby"\
 
   def preview_source
     return if @render_args.nil?
 
     render "preview_source"
+  end
+
+  def prism_css_source
+    serve_static_previews? ? asset_path('prism.css', skip_pipeline: true) : 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css'
+  end
+
+  def prism_js_source
+    serve_static_previews? ? asset_path('prism.min.js', skip_pipeline: true) : 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js'
   end
 
   def find_template_data(lookup_context:, template_identifier:)
@@ -61,5 +69,9 @@ module PreviewHelper
     return FALLBACK_LANGUAGE unless AVAILABLE_PRISM_LANGUAGES.include? language
 
     language
+  end
+
+  def serve_static_previews?
+    ViewComponent::Base.config.show_previews && Rails.application.config.public_file_server.enabled
   end
 end
