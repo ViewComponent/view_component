@@ -164,7 +164,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
 
     def test_prism_css_source_with_no_asset_pipeline
       Rails.application.config.stub :assets, stub(compile: false) do
-        assert_equal "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css", PreviewHelper.prism_css_source
+        assert_equal "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.min.css", PreviewHelper.prism_css_source
       end
     end
 
@@ -176,7 +176,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
 
     def test_prism_js_source_with_no_asset_pipeline
       Rails.application.config.stub :assets, stub(compile: false) do
-        assert_equal "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js", PreviewHelper.prism_js_source
+        assert_equal "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.min.js"
       end
     end
   end
