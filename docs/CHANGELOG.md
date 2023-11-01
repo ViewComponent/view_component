@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix bug where `#with_request_url`, set the incorrect `request.fullpath`.
+
+    *Nachiket Pusalkar*
+
 ## 3.7.0
 
 * Support Rails 7.1 in CI.
