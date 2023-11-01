@@ -38,7 +38,13 @@ bin/rails generate component Sections::Example title content
 
 You can specify options when running the generator. To alter the default values project-wide, define the configuration settings described in [API docs](/api.html#configuration).
 
-Generated ViewComponents are added to `app/components` by default. Set `config.view_component.view_component_path` to use a different path.
+Generated ViewComponents are added to `app/components` by default. Set `config.view_component.view_component_path` to use a different path. Note that you need to add the same path to `config.eager_load_paths` as well.
+
+```ruby
+# config/application.rb
+config.view_component.view_component_path = "app/views/components"
+config.eager_load_paths << Rails.root.join("app/views/components")
+```
 
 ### Override template engine
 
@@ -97,12 +103,12 @@ bin/rails generate component Example title --stimulus
       invoke  test_unit
       create    test/components/example_component_test.rb
       invoke  stimulus
-      create    test/components/example_component_controller.js
+      create    app/components/example_component_controller.js
       invoke  erb
       create    app/components/example_component.html.erb
 ```
 
-To always generate a Stimulus controller, set `config.view_component.generate_stimulus_controller = true`.
+To always generate a Stimulus controller, set `config.view_component.generate.stimulus_controller = true`.
 
 ### Generate [locale files](/guide/translations.html)
 
@@ -121,9 +127,9 @@ bin/rails generate component Example title --locale
       create    app/components/example_component.html.erb
 ```
 
-To always generate locale files, set `config.view_component.generate_locale = true`.
+To always generate locale files, set `config.view_component.generate.locale = true`.
 
-To generate translations in distinct locale files, set `config.view_component.generate_distinct_locale_files = true` to generate as many files as configured in `I18n.available_locales`.
+To generate translations in distinct locale files, set `config.view_component.generate.distinct_locale_files = true` to generate as many files as configured in `I18n.available_locales`.
 
 ### Place the view in a sidecar directory
 

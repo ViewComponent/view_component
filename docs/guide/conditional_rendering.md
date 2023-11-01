@@ -30,8 +30,13 @@ or the view that renders the component:
 Using the `#render?` hook simplifies the view:
 
 ```ruby
-# app/components/confirm_email_component.rb
 class ConfirmEmailComponent < ViewComponent::Base
+  erb_template <<-ERB
+    <div class="banner">
+      Please confirm your email address.
+    </div>
+  ERB
+
   def initialize(user:)
     @user = user
   end
@@ -40,13 +45,6 @@ class ConfirmEmailComponent < ViewComponent::Base
     @user.requires_confirmation?
   end
 end
-```
-
-```erb
-<%# app/components/confirm_email_component.html.erb %>
-<div class="banner">
-  Please confirm your email address.
-</div>
 ```
 
 ```erb

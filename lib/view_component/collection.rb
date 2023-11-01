@@ -53,16 +53,13 @@ module ViewComponent
       if object.respond_to?(:to_ary)
         object.to_ary
       else
-        raise ArgumentError.new(
-          "The value of the first argument passed to `with_collection` isn't a valid collection. " \
-          "Make sure it responds to `to_ary`."
-        )
+        raise InvalidCollectionArgumentError
       end
     end
 
     def component_options(item, iterator)
       item_options = {component.collection_parameter => item}
-      item_options[component.collection_counter_parameter] = iterator.index + 1 if component.counter_argument_present?
+      item_options[component.collection_counter_parameter] = iterator.index if component.counter_argument_present?
       item_options[component.collection_iteration_parameter] = iterator.dup if component.iteration_argument_present?
 
       @options.merge(item_options)

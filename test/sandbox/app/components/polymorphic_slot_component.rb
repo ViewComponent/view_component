@@ -1,7 +1,19 @@
 # frozen_string_literal: true
 
 class PolymorphicSlotComponent < ViewComponent::Base
-  warn_on_deprecated_slot_setter
+  renders_many :fields, types: {
+    foo: {renders: "FooItem", as: :foo_field},
+    bar: {
+      renders: lambda { |class_names: "", **_system_arguments|
+        classes = (class_names.split(" ") + ["bar"]).join(" ")
+        content_tag(:div, class: classes) do
+          "bar item"
+        end
+      },
+
+      as: :bar_field
+    }
+  }
 
   renders_one :header, types: {
     standard: lambda { |&block| content_tag(:div, class: "standard", &block) },
@@ -9,6 +21,7 @@ class PolymorphicSlotComponent < ViewComponent::Base
   }
 
   renders_many :items, types: {
+    passthrough: "PassthroughItem",
     foo: "FooItem",
     bar: lambda { |class_names: "", **_system_arguments|
       classes = (class_names.split(" ") + ["bar"]).join(" ")
@@ -17,6 +30,12 @@ class PolymorphicSlotComponent < ViewComponent::Base
       end
     }
   }
+
+  class PassthroughItem < ViewComponent::Base
+    def call
+      content
+    end
+  end
 
   class FooItem < ViewComponent::Base
     def initialize(class_names: "", **_system_arguments)

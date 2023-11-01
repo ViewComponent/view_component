@@ -2,17 +2,17 @@
 
 require "simplecov"
 require "simplecov-console"
+require "rails/version"
 
 if ENV["MEASURE_COVERAGE"]
   SimpleCov.start do
-    command_name "rails#{ENV["RAILS_VERSION"]}-ruby#{ENV["RUBY_VERSION"]}" if ENV["RUBY_VERSION"]
+    command_name "minitest-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
 
     formatter SimpleCov::Formatter::Console
   end
 end
 
 require "bundler/setup"
-require "pp"
 require "pathname"
 require "minitest/autorun"
 
@@ -37,6 +37,21 @@ ViewComponent::Deprecation.behavior = :silence
 
 require File.expand_path("sandbox/config/environment.rb", __dir__)
 require "rails/test_help"
+
+require "capybara/cuprite"
+
+# Rails registers its own driver named "cuprite" which will overwrite the one we
+# register here. Avoid the problem by registering the driver with a distinct name.
+Capybara.register_driver(:vc_cuprite) do |app|
+  # Add the process_timeout option to prevent failures due to the browser
+  # taking too long to start up.
+  Capybara::Cuprite::Driver.new(app, {process_timeout: 60, timeout: 30})
+end
+
+# Reduce extra logs produced by puma booting up
+Capybara.server = :puma, {Silent: true}
+# Increase the max wait time to appease test failures due to timeouts.
+Capybara.default_max_wait_time = 30
 
 def with_config_option(option_name, new_value, config_entrypoint: Rails.application.config.view_component)
   old_value = config_entrypoint.public_send(option_name)
@@ -102,6 +117,15 @@ def with_generate_sidecar(enabled, &block)
   with_generate_option(:sidecar, enabled, &block)
 end
 
+def with_template_caching
+  old_cache_template_loading = ActionView::Base.cache_template_loading
+  ActionView::Base.cache_template_loading = true
+
+  yield
+ensure
+  ActionView::Base.cache_template_loading = old_cache_template_loading
+end
+
 def with_new_cache
   old_cache = ViewComponent::CompileCache.cache
   ViewComponent::CompileCache.cache = Set.new
@@ -112,14 +136,6 @@ def with_new_cache
 ensure
   ActionView::Base.cache_template_loading = old_cache_template_loading
   ViewComponent::CompileCache.cache = old_cache
-end
-
-def with_consistent_render
-  old_value = ViewComponent::Base.use_consistent_rendering_lifecycle
-  ViewComponent::Base.use_consistent_rendering_lifecycle = true
-  yield
-ensure
-  ViewComponent::Base.use_consistent_rendering_lifecycle = old_value
 end
 
 def without_template_annotations(&block)

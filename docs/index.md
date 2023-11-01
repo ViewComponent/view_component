@@ -10,26 +10,23 @@ A framework for creating reusable, testable & encapsulated view components, buil
 
 ## What's a ViewComponent?
 
-Think of ViewComponents as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html). A ViewComponent is a Ruby object and template:
+Think of ViewComponents as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html). A ViewComponent is a Ruby object:
 
 ```ruby
-# app/components/message_component.rb
 class MessageComponent < ViewComponent::Base
+  erb_template <<-ERB
+    <h1>Hello, <%= @name %>!</h1>
+  ERB
+
   def initialize(name:)
     @name = name
   end
 end
 ```
 
-```erb
-<%# app/components/message_component.html.erb %>
-<h1>Hello, <%= @name %>!</h1>
-```
-
 Which is instantiated and passed to Rails' `#render`:
 
 ```erb
-<%# app/views/demo/index.html.erb %>
 <%= render(MessageComponent.new(name: "World")) %>
 ```
 
@@ -85,7 +82,7 @@ Based on several [benchmarks](https://github.com/viewcomponent/view_component/bl
 
 The primary optimization is pre-compiling all ViewComponent templates at application boot, instead of at runtime like traditional Rails views.
 
-For example, the `MessageComponent` template is compiled onto the Ruby object like so:
+For example, the `MessageComponent` template is compiled onto the Ruby object:
 
 ```ruby
 # app/components/message_component.rb
@@ -95,9 +92,9 @@ class MessageComponent < ViewComponent::Base
   end
 
   def call
-    @output_buffer.safe_append='<h1>Hello, '.freeze
-    @output_buffer.append=( @name )
-    @output_buffer.safe_append='!</h1>'.freeze
+    @output_buffer.safe_append = "<h1>Hello, ".freeze
+    @output_buffer.append = (@name)
+    @output_buffer.safe_append = "!</h1>".freeze
     @output_buffer.to_s
   end
 end
@@ -160,6 +157,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
 <img src="https://avatars.githubusercontent.com/leighhalliday?s=64" alt="leighhalliday" width="32" />
+<img src="https://avatars.githubusercontent.com/llenk?s=64" alt="llenk" width="32" />
 <img src="https://avatars.githubusercontent.com/manuelpuyol?s=64" alt="manuelpuyol" width="32" />
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
 <img src="https://avatars.githubusercontent.com/matt-yorkley?s=64" alt="Matt-Yorkley" width="32" />
@@ -194,6 +192,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=64" alt="tbroad-ramsey" width="32" />
 <img src="https://avatars.githubusercontent.com/tclem?s=64" alt="tclem" width="32" />
 <img src="https://avatars.githubusercontent.com/tenderlove?s=64" alt="tenderlove" width="32" />
+<img src="https://avatars.githubusercontent.com/tgaff?s=64" alt="tgaff" width="32" />
 <img src="https://avatars.githubusercontent.com/thutterer?s=64" alt="thutterer" width="32" />
 <img src="https://avatars.githubusercontent.com/tonkpils?s=64" alt="tonkpils" width="32" />
 <img src="https://avatars.githubusercontent.com/traels?s=64" alt="traels" width="32" />
@@ -205,30 +204,61 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/yykamei?s=64" alt="yykamei" width="32" />
 <img src="https://avatars.githubusercontent.com/matheuspolicamilo?s=64" alt="matheuspolicamilo" width="32" />
 <img src="https://avatars.githubusercontent.com/danigonza?s=64" alt="danigonza" width="32" />
+<img src="https://avatars.githubusercontent.com/erinnachen?s=64" alt="erinnachen" width="32" />
+<img src="https://avatars.githubusercontent.com/ihollander?s=64" alt="ihollander" width="32" />
+<img src="https://avatars.githubusercontent.com/svetlins?s=64" alt="svetlins" width="32" />
+<img src="https://avatars.githubusercontent.com/nickmalcolm?s=64" alt="nickmalcolm" width="32" />
+<img src="https://avatars.githubusercontent.com/reeganviljoen?s=64" alt="reeganviljoen" width="32" />
+<img src="https://avatars.githubusercontent.com/thomascchen?s=64" alt="thomascchen" width="32" />
+<img src="https://avatars.githubusercontent.com/milk1000cc?s=64" alt="milk1000cc" width="32" />
 
 ## Who uses ViewComponent?
 
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
+* [Avo](https://avohq.io/)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
+* [Causey](https://www.causey.app/) (100+ components)
+* [CharlieHR](https://www.charliehr.com/)
 * [City of Paris](https://www.paris.fr/)
 * [Clio](https://www.clio.com/)
 * [Cometeer](https://cometeer.com/)
+* [Consul](https://consulproject.org/en/)
 * [Cults.](https://cults3d.com/)
+* [Eagerworks](https://eagerworks.com/)
+* [FlightLogger](https://flightlogger.net/)
 * [Framework](https://frame.work/)
 * [FreeAgent](https://www.freeagent.com)
 * [G2](https://www.g2.com/) (200+ components)
+* [Getblock](https://getblock.io/)
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
+* [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
+* [Krystal](https://krystal.uk)
 * [Litmus](https://litmus.engineering/)
+* [Login.gov](https://github.com/18F/identity-idp)
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
+* [Mon Ami](https://www.monami.io)
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
+* [OBLSK](https://oblsk.com/)
+* [openSUSE Open Build Service](https://openbuildservice.org/)
+* [Ophelos](https://ophelos.com)
 * [Orbit](https://orbit.love)
+* [PeopleForce](https://peopleforce.io)
+* [PLT4M](https://plt4m.com/)
 * [Podia](https://www.podia.com/)
 * [PrintReleaf](https://www.printreleaf.com/)
+* [Project Blacklight](http://projectblacklight.org/)
 * [QuickNode](https://www.quicknode.com/)
+* [Room AI](https://roomai.com/)
+* [SearchApi](https://www.searchapi.io/)
+* [Simundia](https://www.simundia.com/)
+* [Skroutz](https://engineering.skroutz.gr/blog/)
 * [Shogun](https://getshogun.com/)
+* [Spina CMS](https://spinacms.com/)
+* [Startup Jobs](https://startup.jobs/)
+* [Topkey](https://topkey.io/)
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
 * [Within3](https://www.within3.com/)

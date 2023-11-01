@@ -79,10 +79,11 @@ class TranslatableTest < ViewComponent::TestCase
     # The cache needs to be kept clean for TranslatableComponent, otherwise it will rely on the
     # already created i18n_backend.
     ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)
+    original_method = TranslatableComponent.method(:sidecar_files)
 
     ViewComponent::Base.stub(
-      :_sidecar_files,
-      ->(exts) { exts.include?("yml") ? [] : TranslatableComponent.__minitest_stub___sidecar_files(exts) }
+      :sidecar_files,
+      ->(exts) { exts.include?("yml") ? [] : original_method.call(exts) }
     ) do
       assert_equal "MISSING", translate(".hello", default: "MISSING")
       assert_equal "Hello from Rails translations!", translate("hello")
@@ -129,6 +130,16 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal "This is coming from Rails", translate("rails", scope: ["from"])
     assert_equal "This is coming from the sidecar", translate(:sidecar, scope: [:".from"])
     assert_equal "This is coming from Rails", translate(:rails, scope: [:from])
+  end
+
+  def test_translating_from_the_class
+    assert_equal "This is coming from the sidecar", TranslatableComponent.t(".from.sidecar")
+    assert_equal ["This is coming from the sidecar"], TranslatableComponent.t([".from.sidecar"])
+    assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.t(".from"))
+
+    assert_equal "This is coming from the sidecar", TranslatableComponent.translate(".from.sidecar")
+    assert_equal ["This is coming from the sidecar"], TranslatableComponent.translate([".from.sidecar"])
+    assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.translate(".from"))
   end
 
   private

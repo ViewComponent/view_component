@@ -4,7 +4,7 @@ class ComposableSlotsComponent < ViewComponent::Base
   delegate :title, to: :@parent
 
   def initialize
-    @parent = SlotsV2WithoutContentBlockComponent.new
+    @parent = SlotsWithoutContentBlockComponent.new
   end
 
   def call

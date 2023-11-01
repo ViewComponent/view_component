@@ -1,0 +1,11 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function(event) {
+    let button = document.querySelector('[data-button]')
+    let hiddenField = document.querySelector('[data-hidden-field]')
+    button.addEventListener('click', function() {
+      hiddenField.style.display = "block"
+    })
+  })
+</script>
+
+<%= render(SimpleJavascriptInteractionWithoutJsIncludedComponent.new) %>

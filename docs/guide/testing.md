@@ -26,13 +26,28 @@ end
 
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
+## Testing Slots
+
+```ruby
+def test_render_component
+  component = ListComponent.new(title: "Fruits").tap do |c|
+    c.with_item { "Apple" }
+    c.with_item { "Orange" }
+    c.with_extra { "<div><span>rendered html</span></div>".html_safe }
+  end
+
+  render_inline(component)
+
+  assert_selector("ul")
+  assert_selector("li", text: "Apple")
+  assert_selector("li", text: "Orange")
+end
+```
+
 ## Previews as test cases
 
 Since 2.56.0
 {: .label }
-
-Experimental
-{: .label .label-yellow }
 
 Use `render_preview(name)` to render previews in ViewComponent unit tests:
 
@@ -42,6 +57,22 @@ class ExampleComponentTest < ViewComponent::TestCase
     render_preview(:with_default_title)
 
     assert_text("Example component default")
+  end
+end
+```
+
+## Testing components with behaviors
+
+To test ViewComponents with behaviors, visit a preview in a system test:
+
+```ruby
+class MyComponentSystemTest < ActionDispatch::SystemTestCase
+  def test_default_preview
+    visit("/rails/view_components/my_component/default")
+
+    click_on("Open dialog")
+
+    assert_text("Test Dialog")
   end
 end
 ```
@@ -77,8 +108,8 @@ To test components that use Slots:
 ```ruby
 def test_renders_slots_with_content
   render_inline(SlotsComponent.new(footer: "Bye!")) do |component|
-    component.title { "Hello!" }
-    component.body { "Have a nice day." }
+    component.with_title { "Hello!" }
+    component.with_body { "Have a nice day." }
   end
 
   assert_selector(".title", text: "Hello!")
@@ -153,6 +184,26 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+## Setting `request.host`
+
+Since 3.3.0
+{: .label }
+
+Rails routes that have a subdomain constraint require `request.host` to be set correctly.
+
+To set `request.host` for a test case, use `with_request_url` from `ViewComponent::TestHelpers`:
+
+```ruby
+class ExampleComponentTest < ViewComponent::TestCase
+  def test_with_request_url
+    with_request_url "/products/42", host: "app.example.com" do
+      render_inline ExampleComponent.new # contains i.e. `products_path` that is constrained to the 'app' subdomain
+      assert_link "Products", href: "/products"
+    end
+  end
+end
+```
+
 ### Query parameters
 
 Since 2.41.0
@@ -178,10 +229,12 @@ To use RSpec, add the following:
 ```ruby
 # spec/rails_helper.rb
 require "view_component/test_helpers"
+require "view_component/system_test_helpers"
 require "capybara/rspec"
 
 RSpec.configure do |config|
   config.include ViewComponent::TestHelpers, type: :component
+  config.include ViewComponent::SystemTestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
 end
 ```
@@ -193,7 +246,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :component
 
   config.before(:each, type: :component) do
-    @request = controller.request
+    @request = vc_test_controller.request
   end
 end
 ```
@@ -219,4 +272,34 @@ To use component previews:
 ```ruby
 # config/application.rb
 config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+```
+
+## Component system tests
+
+Use `with_rendered_component_path` with `render_inline` to system test components:
+
+```rb
+class ViewComponentSystemTest < ViewComponent::SystemTestCase
+  def test_simple_js_interaction_in_browser_without_layout
+    with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)) do |path|
+      visit(path)
+
+      assert(find("[data-hidden-field]", visible: false))
+      find("[data-button]", text: "Click Me To Reveal Something Cool").click
+      assert(find("[data-hidden-field]", visible: true))
+    end
+  end
+end
+```
+
+For components that depend on a layout, provide the `layout` argument:
+
+```rb
+class ViewComponentSystemTest < ViewComponent::SystemTestCase
+  def test_simple_js_interaction_in_browser_with_layout
+    with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithoutJsIncludedComponent.new), layout: "application") do |path|
+      # ...
+    end
+  end
+end
 ```

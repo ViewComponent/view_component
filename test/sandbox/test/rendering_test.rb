@@ -15,6 +15,17 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
+  def test_render_in_view_context_forwards_arguments
+    @foo = "foo"
+    @bar = "bar"
+
+    render_in_view_context(@foo, bar: @bar) do |foo, bar:|
+      render(MyComponent.new) { foo + bar }
+    end
+
+    assert_text "hello,world!\nfoobar"
+  end
+
   def test_render_inline_returns_nokogiri_fragment
     assert_includes render_inline(MyComponent.new).css("div").to_html, "hello,world!"
   end
@@ -23,12 +34,6 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(MyComponent.new)
 
     assert_includes rendered_content, "hello,world!"
-  end
-
-  def test_render_inline_sets_rendered_component
-    render_inline(MyComponent.new)
-
-    assert_includes rendered_component, "hello,world!"
   end
 
   def test_child_component
@@ -47,7 +52,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_raise_error_when_content_already_set
     error =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::DuplicateContentError do
         render_inline(WrapperComponent.new.with_content("setter content")) do
           "block content"
         end
@@ -56,24 +61,15 @@ class RenderingTest < ViewComponent::TestCase
     assert_includes error.message, "It looks like a block was provided after calling"
   end
 
-  def test_raise_error_when_component_implements_with_content
-    exception =
-      assert_raises ViewComponent::ComponentError do
-        render_inline(InvalidWithRenderComponent.new)
-      end
-
-    assert_includes exception.message, "InvalidWithRenderComponent implements a reserved method, `#with_content`"
-  end
-
   def test_renders_content_given_as_argument
     render_inline(WrapperComponent.new.with_content("from arg"))
 
     assert_selector("span", text: "from arg")
   end
 
-  def test_raises_error_when_with_content_is_called_withot_any_values
+  def test_raises_error_when_with_content_is_called_without_any_values
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::NilWithContentError do
         WrapperComponent.new.with_content(nil)
       end
 
@@ -85,13 +81,6 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_predicate InlineComponent, :compiled?
     assert_selector("input[type='text'][name='name']")
-  end
-
-  def test_render_without_template_variant
-    render_inline(InlineComponent.new.with_variant(:email))
-
-    assert_predicate InlineComponent, :compiled?
-    assert_selector("input[type='text'][name='email']")
   end
 
   def test_render_child_without_template
@@ -129,10 +118,10 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_slim_with_many_slots
     render_inline(SlimRendersManyComponent.new) do |c|
-      c.slim_component(message: "Bar A") do
+      c.with_slim_component(message: "Bar A") do
         "Foo A "
       end
-      c.slim_component(message: "Bar B") do
+      c.with_slim_component(message: "Bar B") do
         "Foo B "
       end
     end
@@ -180,17 +169,27 @@ class RenderingTest < ViewComponent::TestCase
     ActionController::Base.allow_forgery_protection = old_value
   end
 
-  def test_renders_component_with_variant_method
-    render_inline(VariantsComponent.new.with_variant(:phone))
-
-    assert_text("Phone")
-  end
-
   def test_renders_component_with_variant
     with_variant :phone do
       render_inline(VariantsComponent.new)
 
       assert_text("Phone")
+    end
+  end
+
+  def test_renders_component_with_variant_containing_a_dash
+    with_variant :"mini-watch" do
+      render_inline(VariantsComponent.new)
+
+      assert_text("Mini Watch with dash")
+    end
+  end
+
+  def test_renders_component_with_variant_containing_a_dot
+    with_variant :"mini.watch" do
+      render_inline(VariantsComponent.new)
+
+      assert_text("Mini Watch with dot")
     end
   end
 
@@ -245,87 +244,6 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(ContentForComponent.new)
 
     assert_text("Hello content for")
-  end
-
-  def test_renders_content_areas_template_with_initialize_arguments
-    render_inline(ContentAreasComponent.new(title: "Hi!", footer: "Bye!")) do |component|
-      component.with(:body) { "Have a nice day." }
-    end
-  end
-
-  def test_renders_content_areas_template_with_content
-    render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
-      component.with(:title, "Hello!")
-      component.with(:body) { "Have a nice day." }
-    end
-
-    assert_selector(".title", text: "Hello!")
-    assert_selector(".body", text: "Have a nice day.")
-    assert_selector(".footer", text: "Bye!")
-  end
-
-  def test_renders_content_areas_template_with_block
-    render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
-      component.with(:title) { "Hello!" }
-      component.with(:body) { "Have a nice day." }
-    end
-
-    assert_selector(".title", text: "Hello!")
-    assert_selector(".body", text: "Have a nice day.")
-    assert_selector(".footer", text: "Bye!")
-  end
-
-  def test_renders_content_areas_template_replaces_content
-    render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
-      component.with(:title) { "Hello!" }
-      component.with(:title, "Hi!")
-      component.with(:body) { "Have a nice day." }
-    end
-
-    assert_selector(".title", text: "Hi!")
-    assert_selector(".body", text: "Have a nice day.")
-    assert_selector(".footer", text: "Bye!")
-  end
-
-  def test_renders_content_areas_template_can_wrap_render_arguments
-    render_inline(ContentAreasComponent.new(title: "Hello!", footer: "Bye!")) do |component|
-      component.with(:title) { "<strong>#{component.title}</strong>".html_safe }
-      component.with(:body) { "Have a nice day." }
-    end
-
-    assert_selector(".title strong", text: "Hello!")
-    assert_selector(".body", text: "Have a nice day.")
-    assert_selector(".footer", text: "Bye!")
-  end
-
-  def test_renders_content_areas_template_raise_with_unknown_content_areas
-    exception =
-      assert_raises ArgumentError do
-        render_inline(ContentAreasComponent.new(footer: "Bye!")) do |component|
-          component.with(:foo) { "Hello!" }
-        end
-      end
-
-    assert_includes exception.message, "expected one of '[:title, :body, :footer]'"
-  end
-
-  def test_with_content_areas_raise_with_content_keyword
-    exception =
-      assert_raises ArgumentError do
-        ContentAreasComponent.with_content_areas :content
-      end
-
-    assert_includes exception.message, "defines a content area called :content"
-  end
-
-  def test_with_content_areas_render_predicate
-    render_inline(ContentAreasPredicateComponent.new) do |c|
-      c.with :title do
-        "hello world"
-      end
-    end
-
-    assert_selector("h1", text: "hello world")
   end
 
   def test_renders_helper_method_through_proxy
@@ -434,8 +352,9 @@ class RenderingTest < ViewComponent::TestCase
     version_string = [
       ::ViewComponent::VERSION::MAJOR,
       ::ViewComponent::VERSION::MINOR,
-      ::ViewComponent::VERSION::PATCH
-    ].join(".")
+      ::ViewComponent::VERSION::PATCH,
+      ::ViewComponent::VERSION::PRE
+    ].compact.join(".")
     assert_equal version_string, ::ViewComponent::VERSION::STRING
   end
 
@@ -444,6 +363,14 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_selector("h1", text: I18n.t("translations_component.title"))
     assert_selector("h2", text: I18n.t("translations_component.subtitle"))
+  end
+
+  def test_renders_component_with_initializer_translations
+    err =
+      assert_raises ViewComponent::TranslateCalledBeforeRenderError do
+        render_inline(InitializerTranslationsComponent.new)
+      end
+    assert_includes err.message, "can't be used during initialization"
   end
 
   def test_renders_component_with_rb_in_its_name
@@ -474,19 +401,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("Content")
   end
 
-  def test_render_check
-    render_inline(RenderCheckComponent.new)
-
-    assert_text("Rendered")
-
-    controller.view_context.cookies[:shown] = true
-
-    render_inline(RenderCheckComponent.new)
-
-    assert_no_text("Rendered")
-    refute_component_rendered
-  end
-
   def test_assert_select
     render_inline(MyComponent.new)
 
@@ -499,24 +413,22 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(ValidationsComponent.new)
       end
 
-    assert_equal "Validation failed: Content can't be blank", exception.message
-  end
-
-  # TODO: Remove in v3.0.0
-  def test_before_render_check
-    exception =
-      assert_raises ActiveModel::ValidationError do
-        render_inline(OldValidationsComponent.new)
-      end
-
-    assert_equal "Validation failed: Content can't be blank", exception.message
+    assert_includes exception.message, "Validation failed: Content"
   end
 
   def test_compiles_unrendered_component
+    # The UnreferencedComponent will get compiled at boot,
+    # but that might have been thrown away if code-reloading is enabled
+    skip unless Rails.env.cache_classes?
+
     assert UnreferencedComponent.compiled?
   end
 
   def test_compiles_components_without_initializers
+    # MissingInitializerComponent will get compiled at boot,
+    # but that might have been thrown away if code-reloading is enabled
+    skip unless Rails.env.cache_classes?
+
     assert MissingInitializerComponent.compiled?
   end
 
@@ -586,6 +498,35 @@ class RenderingTest < ViewComponent::TestCase
     )
   end
 
+  def test_raise_error_when_variant_template_file_and_inline_variant_collide
+    error =
+      assert_raises ViewComponent::TemplateError do
+        with_variant :"mini-watch" do
+          render_inline(VariantTemplateAndInlineVariantCollisionComponent.new)
+        end
+      end
+
+    assert_includes(
+      error.message,
+      "Colliding templates 'mini-watch' and 'mini__watch' found in " \
+      "VariantTemplateAndInlineVariantCollisionComponent."
+    )
+  end
+
+  def test_raise_error_when_variant_template_files_collide
+    error =
+      assert_raises ViewComponent::TemplateError do
+        with_variant :"mini-watch" do
+          render_inline(VariantTemplatesCollisionComponent.new)
+        end
+      end
+
+    assert_includes(
+      error.message,
+      "Colliding templates 'mini-watch' and 'mini__watch' found in VariantTemplatesCollisionComponent." \
+    )
+  end
+
   def test_raise_error_when_template_file_and_sidecar_directory_template_exist
     error =
       assert_raises ViewComponent::TemplateError do
@@ -631,8 +572,8 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("h2.first", text: "Radio clock")
     assert_selector("h2:not(.first)", text: "Mints")
     assert_selector("p", text: "On sale", count: 2)
-    assert_selector("p", text: "Radio clock counter: 1")
-    assert_selector("p", text: "Mints counter: 2")
+    assert_selector("p", text: "Radio clock counter: 0")
+    assert_selector("p", text: "Mints counter: 1")
   end
 
   def test_render_collection_custom_collection_parameter_name
@@ -651,10 +592,10 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(CollectionCounterComponent.with_collection(photos))
 
     assert_selector("figure[data-index=0]", {count: 1})
-    assert_selector("figcaption", text: "Photo.1 - Yellow flowers")
+    assert_selector("figcaption", text: "Photo.0 - Yellow flowers")
 
     assert_selector("figure[data-index=1]", {count: 1})
-    assert_selector("figcaption", text: "Photo.2 - Mountains at sunset")
+    assert_selector("figcaption", text: "Photo.1 - Mountains at sunset")
   end
 
   def test_render_collection_custom_collection_parameter_name_iteration
@@ -709,7 +650,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_missing_collection_object
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::InvalidCollectionArgumentError do
         render_inline(ProductComponent.with_collection("foo"))
       end
 
@@ -737,41 +678,25 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_collection_component_missing_parameter_name
-    exception =
-      assert_raises ArgumentError do
-        render_inline(MissingCollectionParameterNameComponent.with_collection([]))
-      end
-
-    assert_match(
-      /The initializer for MissingCollectionParameterNameComponent doesn't accept the parameter/, exception.message
-    )
+    assert_raises ViewComponent::MissingCollectionArgumentError do
+      render_inline(MissingCollectionParameterNameComponent.with_collection([]))
+    end
   end
 
   def test_collection_component_missing_default_parameter_name
-    exception =
-      assert_raises ArgumentError do
-        render_inline(
-          MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
-        )
-      end
-
-    assert_match(/MissingDefaultCollectionParameterComponent doesn't accept the parameter/, exception.message)
+    assert_raises ViewComponent::MissingCollectionArgumentError do
+      render_inline(
+        MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
+      )
+    end
   end
 
   def test_collection_component_missing_custom_parameter_name_with_activemodel
-    exception = assert_raises ArgumentError do
+    assert_raises ViewComponent::MissingCollectionArgumentError do
       render_inline(
         MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
       )
     end
-
-    assert_match(
-      "The initializer for MissingCollectionParameterWithActiveModelComponent doesn't accept the parameter `name`, " \
-      "which is required in order to render it as a collection.\n\n" \
-      "To fix this issue, update the initializer to accept `name`.\n\n" \
-      "See https://viewcomponent.org/guide/collections.html for more information on rendering collections.",
-      exception.message
-    )
   end
 
   def test_collection_component_present_custom_parameter_name_with_activemodel
@@ -787,7 +712,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache = Set.new
 
     exception =
-      assert_raises ViewComponent::ComponentError do
+      assert_raises ViewComponent::ReservedParameterError do
         InvalidParametersComponent.compile(raise_errors: true)
       end
 
@@ -801,7 +726,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache = Set.new
 
     exception =
-      assert_raises ViewComponent::ComponentError do
+      assert_raises ViewComponent::ReservedParameterError do
         InvalidNamedParametersComponent.compile(raise_errors: true)
       end
 
@@ -815,7 +740,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_collection_component_with_trailing_comma_attr_reader
     exception =
-      assert_raises ArgumentError do
+      assert_raises ViewComponent::EmptyOrInvalidInitializerError do
         render_inline(
           ProductReaderOopsComponent.with_collection(["foo"])
         )
@@ -853,14 +778,6 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(VariantIvarComponent.new(variant: "foo"))
 
     assert_text("foo")
-  end
-
-  def test_after_compile
-    assert_equal AfterCompileComponent.compiled_value, "Hello, World!"
-
-    render_inline(AfterCompileComponent.new)
-
-    assert_text "Hello, World!"
   end
 
   def test_does_not_render_passed_in_content_if_render_is_false
@@ -914,7 +831,7 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products" do
-      assert_equal "/products", request.path
+      assert_equal "/products", vc_test_request.path
     end
   end
 
@@ -935,13 +852,30 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     with_request_url "/products?mykey=myvalue&otherkey=othervalue" do
-      assert_equal "/products", request.path
-      assert_equal "mykey=myvalue&otherkey=othervalue", request.query_string
-      assert_equal "/products?mykey=myvalue&otherkey=othervalue", request.fullpath
+      assert_equal "/products", vc_test_request.path
+      assert_equal "mykey=myvalue&otherkey=othervalue", vc_test_request.query_string
+      assert_equal "/products?mykey=myvalue&otherkey=othervalue", vc_test_request.fullpath
+      assert_instance_of ActiveSupport::HashWithIndifferentAccess, vc_test_request.query_parameters
     end
 
     with_request_url "/products?mykey[mynestedkey]=myvalue" do
-      assert_equal({"mynestedkey" => "myvalue"}, request.parameters["mykey"])
+      assert_equal({"mynestedkey" => "myvalue"}, vc_test_request.parameters["mykey"])
+    end
+  end
+
+  def test_with_request_url_with_host
+    with_request_url "/", host: "app.example.com" do
+      render_inline UrlForComponent.new(only_path: false)
+      assert_text "http://app.example.com/?key=value"
+    end
+
+    with_request_url "/products", host: "app.example.com" do
+      render_inline UrlForComponent.new(only_path: false)
+      assert_text "http://app.example.com/products?key=value"
+    end
+
+    with_request_url "/products", host: "app.example.com" do
+      assert_equal "app.example.com", vc_test_request.host
     end
   end
 
@@ -957,10 +891,6 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")
-  end
-
-  def test_each_component_has_a_different_lock
-    assert_not_equal(MyComponent.compiler.__vc_compiler_lock, AnotherComponent.compiler.__vc_compiler_lock)
   end
 
   def test_compilation_in_development_mode
@@ -996,25 +926,21 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_concurrency_deadlock_cache
+    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+      with_new_cache do
+        render_inline(ContentEvalComponent.new) do
+          ViewComponent::CompileCache.invalidate!
+          render_inline(ContentEvalComponent.new)
+        end
+      end
+    end
+  end
+
   def test_multiple_inline_renders_of_the_same_component
     component = ErbComponent.new(message: "foo")
     render_inline(InlineRenderComponent.new(items: [component, component]))
     assert_selector("div", text: "foo", count: 2)
-  end
-
-  def test_deprecated_generate_mattr_accessor
-    ViewComponent::Base._deprecated_generate_mattr_accessor(:test_accessor)
-    assert(ViewComponent::Base.respond_to?(:generate_test_accessor))
-    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
-    ViewComponent::Base.generate_test_accessor = "changed"
-    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
-    ViewComponent::Base.generate.test_accessor = "changed again"
-    assert_equal(ViewComponent::Base.generate_test_accessor, ViewComponent::Base.generate.test_accessor)
-  ensure
-    ViewComponent::Base.class_eval do
-      singleton_class.undef_method :generate_test_accessor
-      singleton_class.undef_method :generate_test_accessor=
-    end
   end
 
   def test_inherited_component_renders_when_lazy_loading
@@ -1022,8 +948,8 @@ class RenderingTest < ViewComponent::TestCase
     # undo the changes made by self.class.compile and friends, forcing a compile the next time
     # #render_template_for is called. This shouldn't be necessary except in the test environment,
     # since eager loading is turned on here.
-    Object.send(:remove_const, :MyComponent)
-    Object.send(:remove_const, :InheritedWithOwnTemplateComponent)
+    Object.send(:remove_const, :MyComponent) if defined?(MyComponent)
+    Object.send(:remove_const, :InheritedWithOwnTemplateComponent) if defined?(InheritedWithOwnTemplateComponent)
 
     load "test/sandbox/app/components/my_component.rb"
     load "test/sandbox/app/components/inherited_with_own_template_component.rb"
@@ -1035,13 +961,57 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello, my own template")
   end
 
-  def test_inherited_component_calls_super
+  def test_render_parent
     render_inline(SuperComponent.new)
 
     assert_selector(".base-component", count: 1)
-    assert_selector(".derived-component", count: 1) do
-      assert_selector(".base-component", count: 1)
+    assert_selector(".derived-component", count: 1) do |derived|
+      derived.assert_selector(".base-component", count: 1)
     end
+  end
+
+  def test_child_components_can_render_parent
+    render_inline(Level3Component.new)
+
+    assert_selector(".level3-component.base .level2-component.base .level1-component")
+  end
+
+  def test_variant_propagates_to_parent
+    with_variant :variant do
+      render_inline(Level3Component.new)
+    end
+
+    assert_selector ".level3-component.variant .level2-component.variant .level1-component"
+  end
+
+  def test_child_components_fall_back_to_default_variant
+    with_variant :non_existent_variant do
+      render_inline(Level3Component.new)
+    end
+
+    assert_selector ".level3-component.base .level2-component.base .level1-component"
+  end
+
+  def test_child_components_can_render_parent_with_inline_templates
+    render_inline(InlineLevel3Component.new)
+
+    assert_selector(".level3-component.base .level2-component.base .level1-component")
+  end
+
+  def test_variant_propagates_to_parent_with_inline_templates
+    with_variant :variant do
+      render_inline(InlineLevel3Component.new)
+    end
+
+    assert_selector ".level3-component.variant .level2-component.variant .level1-component"
+  end
+
+  def test_child_components_fall_back_to_default_variant_with_inline_templates
+    with_variant :non_existent_variant do
+      render_inline(InlineLevel3Component.new)
+    end
+
+    assert_selector ".level3-component.base .level2-component.base .level1-component"
   end
 
   def test_component_renders_without_trailing_whitespace
@@ -1081,64 +1051,6 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
-  def test_deprecated_slot_setter_warning_stack_trace_singular
-    line_num = __LINE__ + 3 # offset because `c.item`, below, is the line that causes the deprecation warning
-    assert_deprecated(/with_item`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.item { "foo" }
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_warning_stack_trace_collection
-    line_num = __LINE__ + 3 # offset because `c.items`, below, is the line that causes the deprecation warning
-    assert_deprecated(/with_items`.*#{__FILE__}:#{line_num}/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.items([{foo: "bar"}])
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_warning_collection_singular
-    assert_deprecated(/with_item`/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.item { "foo" }
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_warning_collection
-    assert_deprecated(/with_items`/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.items([{foo: "bar"}])
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_warning_singular
-    assert_deprecated(/with_header`/, ViewComponent::Deprecation) do
-      render_inline(DeprecatedSlotsSetterComponent.new) do |c|
-        c.header { "hi!" }
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_polymorphic_singular
-    assert_deprecated(/with_header_standard`/, ViewComponent::Deprecation) do
-      render_inline(PolymorphicSlotComponent.new) do |c|
-        c.header_standard { "hi!" }
-      end
-    end
-  end
-
-  def test_deprecated_slot_setter_polymorphic_collection
-    assert_deprecated(/with_item_foo`/, ViewComponent::Deprecation) do
-      render_inline(PolymorphicSlotComponent.new) do |c|
-        c.item_foo { "hi!" }
-      end
-    end
-  end
-
   def test_concurrency_deadlock
     with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
       with_new_cache do
@@ -1163,5 +1075,23 @@ class RenderingTest < ViewComponent::TestCase
         t.join
       end
     end
+  end
+
+  def test_content_predicate_false
+    render_inline(ContentPredicateComponent.new)
+
+    assert_text("Default")
+  end
+
+  def test_content_predicate_true
+    render_inline(ContentPredicateComponent.new.with_content("foo"))
+
+    assert_text("foo")
+  end
+
+  def test_content_security_policy_nonce
+    render_inline(ContentSecurityPolicyNonceComponent.new)
+
+    assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
   end
 end

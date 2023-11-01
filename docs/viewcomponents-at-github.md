@@ -76,9 +76,9 @@ ViewComponents have less value in single-use cases like replacing a `show` view.
 
 When migrating an entire route to use ViewComponents, we've had our best luck doing so from the bottom up, extracting portions of the page into ViewComponents first.
 
-### Integrating Javascript behaviors
+### Integrating JavaScript behaviors
 
-Write ViewComponents that wrap Web Components, writing any custom Javascript with [Catalyst](https://github.github.io/catalyst/).
+Write ViewComponents that wrap Web Components, writing any custom JavaScript with [Catalyst](https://github.github.io/catalyst/).
 
 ### Prefer tests against rendered content, not instance methods
 
@@ -100,18 +100,16 @@ Most ViewComponent instance methods can be private, as they will still be availa
 ```ruby
 # good
 class MyComponent < ViewComponent::Base
-  def initialize; end
-
   private
 
-  def method_used_in_template; end
+  def method_used_in_template
+  end
 end
 
 # bad
 class MyComponent < ViewComponent::Base
-  def initialize; end
-
-  def method_used_in_template; end
+  def method_used_in_template
+  end
 end
 ```
 
@@ -172,12 +170,16 @@ ViewComponents should be passed individual object attributes unless three or mor
 ```ruby
 # good
 class MyComponent < ViewComponent::Base
-  def initialize(repository:); end
+  def initialize(repository:)
+    #...
+  end
 end
 
 # bad
 class MyComponent < ViewComponent::Base
-  def initialize(repository_name:, repository_owner:, repository_created_at:); end
+  def initialize(repository_name:, repository_owner:, repository_created_at:)
+    #...
+  end
 end
 ```
 

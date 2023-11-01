@@ -4,9 +4,6 @@ require "concurrent-ruby"
 
 module ViewComponent
   class Compiler
-    # Lock required to be obtained before compiling the component
-    attr_reader :__vc_compiler_lock
-
     # Compiler mode. Can be either:
     # * development (a blocking mode which ensures thread safety when redefining the `call` method for components,
     #                default in Rails development and test mode)
@@ -18,7 +15,7 @@ module ViewComponent
 
     def initialize(component_class)
       @component_class = component_class
-      @__vc_compiler_lock = Concurrent::ReadWriteLock.new
+      @redefinition_lock = Mutex.new
     end
 
     def compiled?
@@ -33,112 +30,90 @@ module ViewComponent
       return if compiled? && !force
       return if component_class == ViewComponent::Base
 
-      if RUBY_VERSION < "2.7.0"
-        ViewComponent::Deprecation.warn("Support for Ruby versions < 2.7.0 will be removed in v3.0.0.")
-      end
-
       component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
 
-      with_write_lock do
-        CompileCache.invalidate_class!(component_class)
+      if template_errors.present?
+        raise TemplateError.new(template_errors) if raise_errors
 
-        subclass_instance_methods = component_class.instance_methods(false)
+        return false
+      end
 
-        if subclass_instance_methods.include?(:with_content) && raise_errors
-          raise ViewComponent::ComponentError.new(
-            "#{component_class} implements a reserved method, `#with_content`.\n\n" \
-            "To fix this issue, change the name of the method."
-          )
-        end
+      if raise_errors
+        component_class.validate_initialization_parameters!
+        component_class.validate_collection_parameter!
+      end
 
-        if template_errors.present?
-          raise ViewComponent::TemplateError.new(template_errors) if raise_errors
+      if has_inline_template?
+        template = component_class.inline_template
 
-          return false
-        end
-
-        if subclass_instance_methods.include?(:before_render_check)
-          ViewComponent::Deprecation.warn(
-            "`#before_render_check` will be removed in v3.0.0.\n\n" \
-            "To fix this issue, use `#before_render` instead."
-          )
-        end
-
-        if raise_errors
-          component_class.validate_initialization_parameters!
-          component_class.validate_collection_parameter!
-        end
-
-        templates.each do |template|
-          # Remove existing compiled template methods,
-          # as Ruby warns when redefining a method.
-          method_name = call_method_name(template[:variant])
-
-          if component_class.instance_methods.include?(method_name.to_sym)
-            component_class.send(:undef_method, method_name.to_sym)
-          end
-
+        redefinition_lock.synchronize do
+          component_class.silence_redefinition_of_method("call")
           # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, template[:path], 0
-          def #{method_name}
-            #{compiled_template(template[:path])}
+          component_class.class_eval <<-RUBY, template.path, template.lineno
+          def call
+            #{compiled_inline_template(template)}
           end
           RUBY
           # rubocop:enable Style/EvalWithLocation
+
+          component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
+
+          component_class.silence_redefinition_of_method("render_template_for")
+          component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def render_template_for(variant = nil)
+            _call_#{safe_class_name}
+          end
+          RUBY
+        end
+      else
+        templates.each do |template|
+          method_name = call_method_name(template[:variant])
+
+          redefinition_lock.synchronize do
+            component_class.silence_redefinition_of_method(method_name)
+            # rubocop:disable Style/EvalWithLocation
+            component_class.class_eval <<-RUBY, template[:path], 0
+            def #{method_name}
+              #{compiled_template(template[:path])}
+            end
+            RUBY
+            # rubocop:enable Style/EvalWithLocation
+          end
         end
 
         define_render_template_for
-
-        component_class.build_i18n_backend
-        component_class._after_compile
-
-        CompileCache.register(component_class)
       end
-    end
 
-    def with_write_lock(&block)
-      if development?
-        __vc_compiler_lock.with_write_lock(&block)
-      else
-        block.call
-      end
-    end
+      component_class.build_i18n_backend
 
-    def with_read_lock(&block)
-      __vc_compiler_lock.with_read_lock(&block)
+      CompileCache.register(component_class)
     end
 
     private
 
-    attr_reader :component_class
+    attr_reader :component_class, :redefinition_lock
 
     def define_render_template_for
-      if component_class.instance_methods.include?(:render_template_for)
-        component_class.send(:undef_method, :render_template_for)
-      end
-
       variant_elsifs = variants.compact.uniq.map do |variant|
-        "elsif variant.to_sym == :#{variant}\n    #{call_method_name(variant)}"
+        safe_name = "_call_variant_#{normalized_variant_name(variant)}_#{safe_class_name}"
+        component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
+
+        "elsif variant.to_sym == :'#{variant}'\n    #{safe_name}"
       end.join("\n")
+
+      component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
 
       body = <<-RUBY
         if variant.nil?
-          call
+          _call_#{safe_class_name}
         #{variant_elsifs}
         else
-          call
+          _call_#{safe_class_name}
         end
       RUBY
 
-      if development?
-        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
-          self.class.compiler.with_read_lock do
-            #{body}
-          end
-        end
-        RUBY
-      else
+      redefinition_lock.synchronize do
+        component_class.silence_redefinition_of_method(:render_template_for)
         component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil)
           #{body}
@@ -147,12 +122,16 @@ module ViewComponent
       end
     end
 
+    def has_inline_template?
+      component_class.respond_to?(:inline_template) && component_class.inline_template.present?
+    end
+
     def template_errors
       @__vc_template_errors ||=
         begin
           errors = []
 
-          if (templates + inline_calls).empty?
+          if (templates + inline_calls).empty? && !has_inline_template?
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
@@ -196,6 +175,19 @@ module ViewComponent
               "There can only be a template file or inline render method per variant."
           end
 
+          uniq_variants = variants.compact.uniq
+          normalized_variants = uniq_variants.map { |variant| normalized_variant_name(variant) }
+
+          colliding_variants = uniq_variants.select do |variant|
+            normalized_variants.count(normalized_variant_name(variant)) > 1
+          end
+
+          unless colliding_variants.empty?
+            errors <<
+              "Colliding templates #{colliding_variants.sort.map { |v| "'#{v}'" }.to_sentence} " \
+              "found in #{component_class}."
+          end
+
           errors
         end
     end
@@ -205,11 +197,11 @@ module ViewComponent
         begin
           extensions = ActionView::Template.template_handler_extensions
 
-          component_class._sidecar_files(extensions).each_with_object([]) do |path, memo|
+          component_class.sidecar_files(extensions).each_with_object([]) do |path, memo|
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
-              variant: pieces.second.split("+").second&.to_sym,
+              variant: pieces[1..-2].join(".").split("+").second&.to_sym,
               handler: pieces.last
             }
           end
@@ -247,9 +239,21 @@ module ViewComponent
       end
     end
 
+    def compiled_inline_template(template)
+      handler = ActionView::Template.handler_for_extension(template.language)
+      template.rstrip! if component_class.strip_trailing_whitespace?
+
+      compile_template(template.source, handler)
+    end
+
     def compiled_template(file_path)
       handler = ActionView::Template.handler_for_extension(File.extname(file_path).delete("."))
       template = File.read(file_path)
+
+      compile_template(template, handler)
+    end
+
+    def compile_template(template, handler)
       template.rstrip! if component_class.strip_trailing_whitespace?
 
       if handler.method(:call).parameters.length > 1
@@ -267,19 +271,27 @@ module ViewComponent
 
     def call_method_name(variant)
       if variant.present? && variants.include?(variant)
-        "call_#{variant}"
+        "call_#{normalized_variant_name(variant)}"
       else
         "call"
       end
     end
 
+    def normalized_variant_name(variant)
+      variant.to_s.gsub("-", "__").gsub(".", "___")
+    end
+
+    def safe_class_name
+      @safe_class_name ||= component_class.name.underscore.gsub("/", "__")
+    end
+
     def should_compile_superclass?
-      development? &&
-        templates.empty? &&
-        !(
-          component_class.instance_methods(false).include?(:call) ||
-            component_class.private_instance_methods(false).include?(:call)
-        )
+      development? && templates.empty? && !has_inline_template? && !call_defined?
+    end
+
+    def call_defined?
+      component_class.instance_methods(false).include?(:call) ||
+        component_class.private_instance_methods(false).include?(:call)
     end
   end
 end

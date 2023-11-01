@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require "rails"
-require "view_component/base"
+require "view_component/config"
+require "view_component/deprecation"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ViewComponent::Base.config
+    config.view_component = ViewComponent::Config.current
 
     rake_tasks do
       load "view_component/rails/tasks/view_component.rake"
@@ -19,8 +20,7 @@ module ViewComponent
       end
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
       options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
-      options.show_previews = Rails.env.development? || Rails.env.test? if options.show_previews.nil?
-      options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
+      options.show_previews = (Rails.env.development? || Rails.env.test?) if options.show_previews.nil?
 
       if options.show_previews
         # This is still necessary because when `config.view_component` is declared, `Rails.root` is unspecified.
@@ -41,12 +41,26 @@ module ViewComponent
     initializer "view_component.enable_instrumentation" do |app|
       ActiveSupport.on_load(:view_component) do
         if app.config.view_component.instrumentation_enabled.present?
-          # :nocov:
+          # :nocov: Re-executing the below in tests duplicates initializers and causes order-dependent failures.
           ViewComponent::Base.prepend(ViewComponent::Instrumentation)
+          if app.config.view_component.use_deprecated_instrumentation_name
+            ViewComponent::Deprecation.deprecation_warning(
+              "!render.view_component",
+              "Use the new instrumentation key `render.view_component` instead. See https://viewcomponent.org/guide/instrumentation.html"
+            )
+          end
           # :nocov:
         end
       end
     end
+
+    # :nocov:
+    initializer "view_component.enable_capture_patch" do |app|
+      ActiveSupport.on_load(:view_component) do
+        ActionView::Base.include(ViewComponent::CaptureCompatibility) if app.config.view_component.capture_compatibility_patch_enabled
+      end
+    end
+    # :nocov:
 
     initializer "view_component.set_autoload_paths" do |app|
       options = app.config.view_component
@@ -136,22 +150,15 @@ module ViewComponent
         end
       end
 
+      if Rails.env.test?
+        app.routes.prepend do
+          get("_system_test_entrypoint", to: "view_components_system_test#system_test_entrypoint")
+        end
+      end
+
       app.executor.to_run :before do
         CompileCache.invalidate! unless ActionView::Base.cache_template_loading
       end
     end
   end
 end
-
-# :nocov:
-unless defined?(ViewComponent::Base)
-  require "view_component/deprecation"
-
-  ViewComponent::Deprecation.warn(
-    "This manually engine loading is deprecated and will be removed in v3.0.0. " \
-    'Remove `require "view_component/engine"`.'
-  )
-
-  require "view_component"
-end
-# :nocov:

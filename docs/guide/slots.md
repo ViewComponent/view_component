@@ -43,13 +43,13 @@ To render a `renders_many` slot, iterate over the name of the slot:
 
 ```erb
 <%# index.html.erb %>
-<%= render BlogComponent.new do |c| %>
-  <% c.with_header do %>
+<%= render BlogComponent.new do |component| %>
+  <% component.with_header do %>
     <%= link_to "My blog", root_path %>
   <% end %>
 
   <% BlogPost.all.each do |blog_post| %>
-    <% c.with_post do %>
+    <% component.with_post do %>
       <%= link_to blog_post.name, blog_post.url %>
     <% end %>
   <% end %>
@@ -113,7 +113,7 @@ class BlogComponent < ViewComponent::Base
     end
 
     def call
-      content_tag :h1, content, { class: classes }
+      content_tag :h1, content, {class: classes}
     end
   end
 end
@@ -130,16 +130,16 @@ end
 
 ```erb
 <%# index.html.erb %>
-<%= render BlogComponent.new do |c| %>
-  <% c.with_header(classes: "") do %>
+<%= render BlogComponent.new do |component| %>
+  <% component.with_header(classes: "") do %>
     <%= link_to "My Site", root_path %>
   <% end %>
 
-  <% c.with_post(title: "My blog post") do %>
+  <% component.with_post(title: "My blog post") do %>
     Really interesting stuff.
   <% end %>
 
-  <% c.with_post(title: "Another post!") do %>
+  <% component.with_post(title: "Another post!") do %>
     Blog every day.
   <% end %>
 <% end %>
@@ -177,17 +177,17 @@ It's also possible to define a slot as a lambda that returns content to be rende
 
 ```ruby
 class BlogComponent < ViewComponent::Base
-  renders_one :header, -> (classes:) do
+  renders_one :header, ->(classes:) do
     # This isn't complex enough to be its own component yet, so we'll use a
     # lambda slot. If it gets much bigger, it should be extracted out to a
     # ViewComponent and rendered here with a component slot.
     content_tag :h1 do
-      link_to title, root_path, { class: classes }
+      link_to title, root_path, {class: classes}
     end
   end
 
   # It's also possible to return another ViewComponent with preset default values:
-  renders_many :posts, -> (title:, classes:) do
+  renders_many :posts, ->(title:, classes:) do
     PostComponent.new(title: title, classes: "my-default-class " + classes)
   end
 end
@@ -211,11 +211,13 @@ To provide content for a lambda slot via a block, add a block parameter. Render 
 
 ```ruby
 class BlogComponent < ViewComponent::Base
-  renders_one :header, -> (classes:, &block) do
+  renders_one :header, ->(classes:, &block) do
     content_tag :h1, class: classes, &block
   end
 end
 ```
+
+_Note: While a lambda is called when the `with_*` method is called, a returned component isn't rendered until first use._
 
 ## Rendering collections
 
@@ -247,13 +249,24 @@ end
 
 ```erb
 <%# index.html.erb %>
-<%= render(NavigationComponent.new) do |c| %>
-  <% c.with_links([
+<%= render(NavigationComponent.new) do |component| %>
+  <% component.with_links([
     { name: "Home", href: "/" },
     { name: "Pricing", href: "/pricing" },
     { name: "Sign Up", href: "/sign-up" },
   ]) %>
 <% end %>
+```
+
+## `#with_SLOT_NAME_content`
+
+Since 3.0.0
+{: .label }
+
+Assuming no arguments need to be passed to the slot, slot content can be set with `#with_SLOT_NAME_content`:
+
+```erb
+<%= render(BlogComponent.new.with_header_content("My blog")) %>
 ```
 
 ## `#with_content`
@@ -264,12 +277,10 @@ Since 2.31.0
 Slot content can also be set using `#with_content`:
 
 ```erb
-<%= render BlogComponent.new do |c| %>
-  <% c.with_header(classes: "title").with_content("My blog") %>
+<%= render BlogComponent.new do |component| %>
+  <% component.with_header(classes: "title").with_content("My blog") %>
 <% end %>
 ```
-
-_To view documentation for content_areas (deprecated) and the original implementation of Slots (deprecated), see [/content_areas](/content_areas) and [/slots_v1](/slots_v1)._
 
 ## Polymorphic slots
 
@@ -296,13 +307,13 @@ end
 Filling in the `visual` slot is done by calling the appropriate slot method:
 
 ```erb
-<%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") do %>
+<%= render ListItemComponent.new do |component| %>
+  <% component.with_visual_avatar(src: "http://some-site.com/my_avatar.jpg", alt: "username") do %>
     Profile
   <% end >
 <% end %>
-<%= render ListItemComponent.new do |c| %>
-  <% c.with_visual_icon(icon: :key) do %>
+<%= render ListItemComponent.new do |component| %>
+  <% component.with_visual_icon(icon: :key) do %>
     Security Settings
   <% end >
 <% end %>
@@ -318,14 +329,23 @@ To see whether a polymorphic slot has been passed to the component, use the `#{s
 <% end %>
 ```
 
-## Migrating from previous Slots implementations
+### Custom polymorphic slot setters
 
-In [v2.54.0](https://viewcomponent.org/CHANGELOG.html#2540), the Slots API was updated to require the `with_*` prefix for setting Slots. The non-`with_*` setters will be deprecated in a coming version and removed in `v3.0`.
+Since 3.1.0
+{: .label }
 
-To enable the coming deprecation warning, add `warn_on_deprecated_slot_setter`:
+Customize slot setters by specifying a nested hash for the `type` value:
 
 ```ruby
-class DeprecatedSlotsSetterComponent < ViewComponent::Base
-  warn_on_deprecated_slot_setter
+class ListItemComponent < ViewComponent::Base
+  renders_one :visual, types: {
+    icon: {renders: IconComponent, as: :icon_visual},
+    avatar: {
+      renders: lambda { |**system_arguments| AvatarComponent.new(size: 16, **system_arguments) },
+      as: :avatar_visual
+    }
+  }
 end
 ```
+
+The setters are now `#with_icon_visual` and `#with_avatar_visual` instead of the default `#with_visual_icon` and `#with_visual_avatar`. The slot getter remains `#visual`.

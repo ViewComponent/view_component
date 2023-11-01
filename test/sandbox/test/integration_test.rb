@@ -52,21 +52,21 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_template_changes_are_not_reflected_on_new_request_when_cache_template_loading_is_true
-    # cache_template_loading is set to true on the initializer
+    with_template_caching do
+      get "/controller_inline"
+      assert_select("div", "bar")
+      assert_response :success
 
-    get "/controller_inline"
-    assert_select("div", "bar")
-    assert_response :success
+      modify_file "app/components/controller_inline_component.html.erb", "<div>Goodbye world!</div>" do
+        get "/controller_inline"
+        assert_select("div", "bar")
+        assert_response :success
+      end
 
-    modify_file "app/components/controller_inline_component.html.erb", "<div>Goodbye world!</div>" do
       get "/controller_inline"
       assert_select("div", "bar")
       assert_response :success
     end
-
-    get "/controller_inline"
-    assert_select("div", "bar")
-    assert_response :success
   end
 
   def test_template_changes_are_reflected_on_new_request_when_cache_template_loading_is_false
@@ -127,6 +127,58 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_helper_changes_are_reflected_on_new_request
+    skip if Rails.application.config.cache_classes
+
+    get "/helpers_proxy_component"
+    assert_select("div", "Hello helper method")
+    assert_response :success
+
+    helper = <<~RUBY
+      module MessageHelper
+        def message
+          "Goodbye world!"
+        end
+      end
+    RUBY
+    modify_file "app/helpers/message_helper.rb", helper do
+      get "/helpers_proxy_component"
+      assert_select("div", "Goodbye world!")
+      assert_response :success
+    end
+
+    get "/helpers_proxy_component"
+    assert_select("div", "Hello helper method")
+    assert_response :success
+  end
+
+  def test_helper_changes_are_reflected_on_new_request_with_previews
+    skip if Rails.application.config.cache_classes
+
+    with_preview_route("/previews") do
+      get "/previews/helpers_proxy_component/default"
+      assert_select("div", "Hello helper method")
+      assert_response :success
+
+      helper = <<~RUBY
+        module MessageHelper
+          def message
+            "Goodbye world!"
+          end
+        end
+      RUBY
+      modify_file "app/helpers/message_helper.rb", helper do
+        get "/previews/helpers_proxy_component/default"
+        assert_select("div", "Goodbye world!")
+        assert_response :success
+      end
+
+      get "/previews/helpers_proxy_component/default"
+      assert_select("div", "Hello helper method")
+      assert_response :success
+    end
+  end
+
   def test_rendering_component_in_a_controller_using_render_to_string
     get "/controller_inline_baseline"
 
@@ -152,20 +204,11 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Open"
   end
 
-  def test_rendering_component_with_content_for
-    get "/content_areas"
-    assert_response :success
-
-    assert_select(".title h1", "Hi!")
-    assert_select(".body p", "Did you know that 1+1=2?")
-    assert_select(".footer h3", "Bye!")
-  end
-
   def test_rendering_component_with_a_partial
     get "/partial"
     assert_response :success
 
-    assert_select("div", "hello,partial world!", count: 2)
+    assert_select("div", {text: "hello,partial world!", count: 4})
   end
 
   def test_rendering_component_without_variant
@@ -223,7 +266,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Rendered"
 
-    cookies[:shown] = true
+    cookies[:hide] = true
 
     get "/render_check"
     assert_response :success
@@ -392,8 +435,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("h2", text: "Radio clock")
     assert_select("h2", text: "Mints")
     assert_select("p", text: "Today only", count: 2)
-    assert_select("p", text: "Radio clock counter: 1")
-    assert_select("p", text: "Mints counter: 2")
+    assert_select("p", text: "Radio clock counter: 0")
+    assert_select("p", text: "Mints counter: 1")
   end
 
   def test_renders_inline_collections
@@ -403,8 +446,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("h2", text: "Radio clock")
     assert_select("h2", text: "Mints")
     assert_select("p", text: "Today only", count: 2)
-    assert_select("p", text: "Radio clock counter: 1")
-    assert_select("p", text: "Mints counter: 2")
+    assert_select("p", text: "Radio clock counter: 0")
+    assert_select("p", text: "Mints counter: 1")
   end
 
   def test_renders_the_previews_in_the_configured_route
@@ -430,8 +473,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_renders_singular_and_collection_slots_with_arguments
     get "/slots"
 
-    assert_select(".card.mt-4")
-
     assert_select(".title p", text: "This is my title!")
 
     assert_select(".subtitle small", text: "This is my subtitle!")
@@ -444,21 +485,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select(".item.normal", count: 2)
 
     assert_select(".footer.text-blue h3", text: "This is the footer")
-
-    title_node = Nokogiri::HTML.fragment(response.body).css(".title").to_html
-    expected_title_html = "<div class=\"title\">\n    <p>This is my title!</p>\n  </div>"
-
-    assert_equal(title_node, expected_title_html)
   end
 
   def test_renders_empty_slot_without_error
     get "/empty_slot"
-
-    assert_response :success
-  end
-
-  def test_renders_empty_slot_v2_with_slim_without_error
-    get "/empty_slot_v2_with_slim"
 
     assert_response :success
   end
@@ -586,12 +616,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     get "/nested_haml"
     assert_response :success
-    assert_select "p.foo > span.bar > div.baz > article.quux > div.haml-div"
+    assert_select ".foo > .bar > .baz > .quux > .haml-div"
   end
 
   def test_raises_an_error_if_the_template_is_not_present_and_the_render_with_template_method_is_used_in_the_example
     error =
-      assert_raises ViewComponent::PreviewTemplateError do
+      assert_raises ViewComponent::MissingPreviewTemplateError do
         get "/rails/view_components/inline_component/without_template"
       end
     assert_match(/preview template for example without_template doesn't exist/, error.message)
@@ -683,6 +713,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         end
       end
       config_entrypoints.rotate!
+    end
+  end
+
+  def test_path_traversal_raises_error
+    path = "../../README.md"
+
+    assert_raises ViewComponent::SystemTestControllerNefariousPathError do
+      get "/_system_test_entrypoint?file=#{path}"
     end
   end
 end

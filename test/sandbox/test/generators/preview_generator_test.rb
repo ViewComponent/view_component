@@ -3,6 +3,9 @@
 require "test_helper"
 require "rails/generators/preview/component_generator"
 
+# See: https://github.com/rails/rails/pull/47752#issuecomment-1720256371
+require "active_record"
+
 Rails.application.load_generators
 
 class PreviewGeneratorTest < Rails::Generators::TestCase
@@ -15,6 +18,17 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user --preview]
 
       assert_file "test/components/previews/user_component_preview.rb" do |component|
+        assert_match(/class UserComponentPreview < /, component)
+        assert_match(/render\(UserComponent.new\)/, component)
+      end
+    end
+  end
+
+  def test_component_preview_with_preview_path_option
+    with_preview_paths([]) do
+      run_generator %w[user --preview --preview-path other/test/components/previews]
+
+      assert_file "other/test/components/previews/user_component_preview.rb" do |component|
         assert_match(/class UserComponentPreview < /, component)
         assert_match(/render\(UserComponent.new\)/, component)
       end
@@ -39,6 +53,17 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       assert_no_file "test/components/previews/user_component_preview.rb"
       assert_no_file "spec/components/previews/user_component_preview.rb"
       assert_no_file "some/other/directory/user_component_preview.rb"
+    end
+  end
+
+  def test_component_preview_with_two_overridden_preview_paths_and_preview_path_option
+    with_preview_paths(%w[spec/components/previews some/other/directory]) do
+      run_generator %w[user --preview --preview-path other/test/components/previews]
+
+      assert_file "other/test/components/previews/user_component_preview.rb" do |component|
+        assert_match(/class UserComponentPreview < /, component)
+        assert_match(/render\(UserComponent.new\)/, component)
+      end
     end
   end
 

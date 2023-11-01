@@ -2,6 +2,10 @@
 
 class RenderCheckComponent < ViewComponent::Base
   def render?
-    !view_context.cookies[:shown]
+    !view_context.cookies[:hide]
+  end
+
+  def call
+    "Rendered"
   end
 end

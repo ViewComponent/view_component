@@ -13,7 +13,7 @@ class IntegrationExamplesController < ActionController::Base
 
   def controller_inline_with_block
     render(ControllerInlineWithBlockComponent.new(message: "bar").tap do |c|
-      c.slot(name: "baz")
+      c.with_slot(name: "baz")
       c.with_content("bam")
     end)
   end
@@ -32,6 +32,10 @@ class IntegrationExamplesController < ActionController::Base
 
   def controller_inline_render_component
     render_component(ControllerInlineComponent.new(message: "bar"))
+  end
+
+  def helpers_proxy_component
+    render(plain: render_to_string(HelpersProxyComponent.new))
   end
 
   def controller_to_string_render_component

@@ -69,7 +69,19 @@ Parameters can also be passed:
 ```ruby
 class ExampleComponentTest < ViewComponent::TestCase
   def test_render_preview
-    render_preview(:with_default_title, params: { message: "Hello, world!" })
+    render_preview(:with_default_title, params: {message: "Hello, world!"})
+
+    assert_text("Hello, world!")
+  end
+end
+```
+
+By default, the preview class is inferred from the name of the current test file. Use `from` to set it explicitly:
+
+```ruby
+class ExampleTest < ViewComponent::TestCase
+  def test_render_preview
+    render_preview(:with_default_title, from: ExampleComponentPreview)
 
     assert_text("Hello, world!")
   end
@@ -90,8 +102,6 @@ Previews render with the application layout by default, but can use a specific l
 # test/components/previews/example_component_preview.rb
 class ExampleComponentPreview < ViewComponent::Preview
   layout "admin"
-
-  ...
 end
 ```
 
@@ -145,13 +155,13 @@ end
 ```
 
 To use a different location for preview templates, pass the `template` argument:
-(the path should be relative to `config.view_component.preview_path`):
+(the path should be relative to `config.view_component.preview_paths`):
 
 ```ruby
 # test/components/previews/cell_component_preview.rb
 class CellComponentPreview < ViewComponent::Preview
   def default
-    render_with_template(template: 'custom_cell_component_preview/my_preview_template')
+    render_with_template(template: "custom_cell_component_preview/my_preview_template")
   end
 end
 ```
@@ -179,6 +189,14 @@ Extend previews to add authentication, authorization, before actions, etc. using
 ```ruby
 # config/application.rb
 config.view_component.preview_controller = "MyPreviewController"
+```
+
+Then include `PreviewActions` in the controller:
+
+```ruby
+class MyPreviewController < ActionController::Base
+  include ViewComponent::PreviewActions
+end
 ```
 
 ## Enabling previews

@@ -11,6 +11,10 @@ module ViewComponent
       before_action :require_local!, unless: :show_previews?
 
       content_security_policy(false) if respond_to?(:content_security_policy)
+
+      # Including helpers here ensures that we're loading the
+      # latest version of helpers if code-reloading is enabled
+      helper :all if include_all_helpers
     end
 
     def index
@@ -55,7 +59,7 @@ module ViewComponent
     def find_preview
       candidates = []
       params[:path].to_s.scan(%r{/|$}) { candidates << Regexp.last_match.pre_match }
-      preview = candidates.detect { |candidate| ViewComponent::Preview.exists?(candidate) }
+      preview = candidates.sort_by(&:length).reverse_each.detect { |candidate| ViewComponent::Preview.exists?(candidate) }
 
       if preview
         @preview = ViewComponent::Preview.find(preview)
