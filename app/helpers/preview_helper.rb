@@ -10,7 +10,7 @@ module PreviewHelper
     render "preview_source"
   end
 
-  def prism_css_source
+  def prism_css_source_url
     serve_static_previews? ? asset_path('prism.css', skip_pipeline: true) : 'https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.min.css'
   end
 
