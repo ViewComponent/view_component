@@ -156,27 +156,27 @@ class PreviewHelperTest < ActiveSupport::TestCase
       end
     end
 
-    def test_prism_css_source_with_asset_pipeline
+    def test_prism_css_source_url_with_asset_pipeline
       Rails.application.config.stub :assets, stub(compile: true) do
-        assert_equal "/assets/prism.css", PreviewHelper.prism_css_source
+        assert_equal "/assets/prism.css", PreviewHelper.prism_css_source_url
       end
     end
 
-    def test_prism_css_source_with_no_asset_pipeline
+    def test_prism_css_source_url_with_no_asset_pipeline
       Rails.application.config.stub :assets, stub(compile: false) do
-        assert_equal "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.min.css", PreviewHelper.prism_css_source
+        assert_equal "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.min.css", PreviewHelper.prism_css_source_url
       end
     end
 
     def test_prism_js_source_with_asset_pipeline
       Rails.application.config.stub :assets, stub(compile: true) do
-        assert_equal "/assets/prism.min.js", PreviewHelper.prism_js_source
+        assert_equal "/assets/prism.min.js", PreviewHelper.prism_js_source_url
       end
     end
 
-    def test_prism_js_source_with_no_asset_pipeline
+    def test_prism_js_source_url_with_no_asset_pipeline
       Rails.application.config.stub :assets, stub(compile: false) do
-        assert_equal "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.min.js"
+        assert_equal "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.min.js", PreviewHelper.prism_js_source_url
       end
     end
   end
