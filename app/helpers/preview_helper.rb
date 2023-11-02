@@ -2,7 +2,7 @@
 
 module PreviewHelper
   AVAILABLE_PRISM_LANGUAGES = %w[ruby erb haml]
-  FALLBACK_LANGUAGE = "ruby"\
+  FALLBACK_LANGUAGE = "ruby"
 
   def preview_source
     return if @render_args.nil?
