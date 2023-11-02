@@ -115,7 +115,7 @@ module ViewComponent
       end
     end
 
-    def serve_static_previews?(app_config)
+    def serve_static_preview_assets?(app_config)
       app_config.view_component.show_previews && app_config.public_file_server.enabled
     end
 
