@@ -157,25 +157,25 @@ class PreviewHelperTest < ActiveSupport::TestCase
     end
 
     def test_prism_css_source_url_with_asset_pipeline
-      Rails.application.config.stub :assets, stub(compile: true) do
+      Rails.application.config.public_file_server.stub(:enabled, true) do
         assert_equal "/assets/prism.css", PreviewHelper.prism_css_source_url
       end
     end
 
     def test_prism_css_source_url_with_no_asset_pipeline
-      Rails.application.config.stub :assets, stub(compile: false) do
+      Rails.application.config.public_file_server.stub(:enabled, false) do
         assert_equal "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.min.css", PreviewHelper.prism_css_source_url
       end
     end
 
     def test_prism_js_source_with_asset_pipeline
-      Rails.application.config.stub :assets, stub(compile: true) do
+      Rails.application.config.public_file_server.stub(:enabled, true) do
         assert_equal "/assets/prism.min.js", PreviewHelper.prism_js_source_url
       end
     end
 
     def test_prism_js_source_url_with_no_asset_pipeline
-      Rails.application.config.stub :assets, stub(compile: false) do
+      Rails.application.config.public_file_server.stub(:enabled, false) do
         assert_equal "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.min.js", PreviewHelper.prism_js_source_url
       end
     end
