@@ -56,7 +56,7 @@ module ViewComponent
           SOURCE
           # rubocop:disable Style/EvalWithLocation
           if frozen_string_literal
-            component_class.class_eval("# frozen_string_literal: true\n#{source}", template.path, template.lineno - 1)
+            component_class.class_eval(source.prepend("# frozen_string_literal: true\n"), template.path, template.lineno - 1)
           else
             component_class.class_eval(source, template.path, template.lineno)
           end
@@ -85,7 +85,7 @@ module ViewComponent
             SOURCE
             # rubocop:disable Style/EvalWithLocation
             if frozen_string_literal
-              component_class.class_eval("# frozen_string_literal: true\n#{source}", template[:path], -1)
+              component_class.class_eval(source.prepend("# frozen_string_literal: true\n"), template[:path], -1)
             else
               component_class.class_eval(source, template[:path], 0)
             end
