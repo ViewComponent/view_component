@@ -720,7 +720,7 @@ class SlotableTest < ViewComponent::TestCase
     assert component.title.content?
   end
 
-  def test_slot_names_can_not_start_with_call_
+  def test_slot_names_cannot_start_with_call_
     assert_raises ViewComponent::InvalidSlotNameError do
       Class.new(ViewComponent::Base) do
         renders_one :call_out_title
@@ -730,6 +730,14 @@ class SlotableTest < ViewComponent::TestCase
     assert_raises ViewComponent::InvalidSlotNameError do
       Class.new(ViewComponent::Base) do
         renders_many :call_out_titles
+      end
+    end
+  end
+
+  def test_slot_names_can_start_with_call
+    assert_nothing_raised do
+      Class.new(ViewComponent::Base) do
+        renders_one :callhome_et
       end
     end
   end
