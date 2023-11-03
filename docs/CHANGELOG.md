@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Resolve an issue where slots starting with `call` would cause a `NameError`
+
+    *Blake Williams*
+
 * Add `use_helper` API.
 
     *Reegan Viljoen*
