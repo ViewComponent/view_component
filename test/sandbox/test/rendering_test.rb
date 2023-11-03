@@ -855,6 +855,7 @@ class RenderingTest < ViewComponent::TestCase
       assert_equal "/products", vc_test_request.path
       assert_equal "mykey=myvalue&otherkey=othervalue", vc_test_request.query_string
       assert_equal "/products?mykey=myvalue&otherkey=othervalue", vc_test_request.fullpath
+      assert_instance_of ActiveSupport::HashWithIndifferentAccess, vc_test_request.query_parameters
     end
 
     with_request_url "/products?mykey[mynestedkey]=myvalue" do
@@ -1092,5 +1093,10 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(ContentSecurityPolicyNonceComponent.new)
 
     assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
+  end
+
+  def test_use_helper
+    render_inline(UseHelpersComponent.new)
+    assert_selector ".helper__message", text: "Hello helper method"
   end
 end

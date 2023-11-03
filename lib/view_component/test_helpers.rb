@@ -165,7 +165,7 @@ module ViewComponent
     #
     # @param path [String] The path to set for the current request.
     # @param host [String] The host to set for the current request.
-    def with_request_url(path, host: nil)
+    def with_request_url(full_path, host: nil)
       old_request_host = vc_test_request.host
       old_request_path_info = vc_test_request.path_info
       old_request_path_parameters = vc_test_request.path_parameters
@@ -173,11 +173,14 @@ module ViewComponent
       old_request_query_string = vc_test_request.query_string
       old_controller = defined?(@vc_test_controller) && @vc_test_controller
 
-      path, query = path.split("?", 2)
+      path, query = full_path.split("?", 2)
+      vc_test_request.instance_variable_set(:@fullpath, full_path)
+      vc_test_request.instance_variable_set(:@original_fullpath, full_path)
       vc_test_request.host = host if host
       vc_test_request.path_info = path
       vc_test_request.path_parameters = Rails.application.routes.recognize_path_with_request(vc_test_request, path, {})
-      vc_test_request.set_header("action_dispatch.request.query_parameters", Rack::Utils.parse_nested_query(query))
+      vc_test_request.set_header("action_dispatch.request.query_parameters",
+        Rack::Utils.parse_nested_query(query).with_indifferent_access)
       vc_test_request.set_header(Rack::QUERY_STRING, query)
       yield
     ensure

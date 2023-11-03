@@ -3,6 +3,9 @@
 require "test_helper"
 require "rails/generators/preview/component_generator"
 
+# See: https://github.com/rails/rails/pull/47752#issuecomment-1720256371
+require "active_record"
+
 Rails.application.load_generators
 
 class PreviewGeneratorTest < Rails::Generators::TestCase
