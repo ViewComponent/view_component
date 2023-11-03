@@ -92,6 +92,10 @@ module ViewComponent
             get_slot(slot_name)
           end
 
+          define_method "#{slot_name}_instance" do
+            extract_component_instance(get_slot(slot_name))
+          end
+
           define_method "#{slot_name}?" do
             get_slot(slot_name).present?
           end
@@ -179,6 +183,12 @@ module ViewComponent
             get_slot(slot_name)
           end
 
+          define_method "#{singular_name}_instances" do
+            get_slot(slot_name).map do |slot|
+              extract_component_instance(slot)
+            end
+          end
+
           define_method "#{slot_name}?" do
             get_slot(slot_name).present?
           end
@@ -206,8 +216,20 @@ module ViewComponent
       end
 
       def register_polymorphic_slot(slot_name, types, collection:)
-        define_method(slot_name) do
+        singular_name = ActiveSupport::Inflector.singularize(slot_name)
+
+        define_method slot_name do
           get_slot(slot_name)
+        end
+
+        define_method "#{singular_name}_#{collection ? "instances" : "instance"}" do
+          if collection
+            get_slot(slot_name).map do |slot|
+              extract_component_instance(slot)
+            end
+          else
+            extract_component_instance(get_slot(slot_name))
+          end
         end
 
         define_method("#{slot_name}?") do
@@ -225,7 +247,7 @@ module ViewComponent
 
           poly_slot_name ||=
             if collection
-              "#{ActiveSupport::Inflector.singularize(slot_name)}_#{poly_type}"
+              "#{singular_name}_#{poly_type}"
             else
               "#{slot_name}_#{poly_type}"
             end
@@ -409,5 +431,9 @@ module ViewComponent
       set_slot(slot_name, poly_def, *args, &block)
     end
     ruby2_keywords(:set_polymorphic_slot) if respond_to?(:ruby2_keywords, true)
+
+    def extract_component_instance(slot)
+      slot.instance_variable_get(:@__vc_component_instance)
+    end
   end
 end

@@ -4,7 +4,7 @@ require "test_helper"
 
 class SlotableTest < ViewComponent::TestCase
   def test_renders_slots
-    render_inline(SlotsComponent.new(classes: "mt-4")) do |component|
+    render_inline(c = SlotsComponent.new(classes: "mt-4")) do |component|
       component.with_title do
         "This is my title!"
       end
@@ -33,6 +33,8 @@ class SlotableTest < ViewComponent::TestCase
         "This is the footer"
       end
     end
+
+    binding.irb
 
     assert_selector(".card.mt-4")
 
@@ -516,13 +518,15 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_polymorphic_slot_with_setters
-    render_inline(PolymorphicSlotComponent.new) do |component|
+    render_inline(c = PolymorphicSlotComponent.new) do |component|
       component.with_header_standard { "standard" }
       component.with_foo_field(class_names: "custom-foo1")
       component.with_bar_field(class_names: "custom-bar1")
       component.with_item_foo(class_names: "custom-foo2")
       component.with_item_bar(class_names: "custom-bar2")
     end
+
+    binding.irb
 
     assert_selector("div .standard", text: "standard")
     assert_selector("div .foo.custom-foo1")
