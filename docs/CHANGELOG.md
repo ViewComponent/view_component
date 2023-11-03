@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Fix bug where the `Rails` module wasn't being searched from the root namespace
+* Fix bug where the `Rails` module wasn't being searched from the root namespace.
 
 * Fix bug where `#with_request_url`, set the incorrect `request.fullpath`.
 
