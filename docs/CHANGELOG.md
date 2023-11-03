@@ -10,9 +10,17 @@ nav_order: 5
 
 ## main
 
-* Add `use_helper` API
+* Add `use_helper` API.
 
     *Reegan Viljoen*
+
+* Fix bug where the `Rails` module wasn't being searched from the root namespace.
+
+    *Zenéixe*
+
+* Fix bug where `#with_request_url`, set the incorrect `request.fullpath`.
+
+    *Nachiket Pusalkar*
 
 ## 3.7.0
 
