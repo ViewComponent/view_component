@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module PreviewHelper
+  include ActionView::Helpers::AssetUrlHelper if Rails.version.to_f < 6.1
+
   AVAILABLE_PRISM_LANGUAGES = %w[ruby erb haml]
   FALLBACK_LANGUAGE = "ruby"
 

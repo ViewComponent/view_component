@@ -158,7 +158,11 @@ class PreviewHelperTest < ActiveSupport::TestCase
 
     def test_prism_css_source_url_with_asset_pipeline
       Rails.application.config.public_file_server.stub(:enabled, true) do
-        assert_equal "/assets/prism.css", PreviewHelper.prism_css_source_url
+        if Rails.version.to_f >= 6.1
+          assert_equal "/assets/prism.css", PreviewHelper.prism_css_source_url
+        else
+          assert_equal "/prism.css", PreviewHelper.prism_css_source_url
+        end
       end
     end
 
@@ -170,7 +174,11 @@ class PreviewHelperTest < ActiveSupport::TestCase
 
     def test_prism_js_source_with_asset_pipeline
       Rails.application.config.public_file_server.stub(:enabled, true) do
-        assert_equal "/assets/prism.min.js", PreviewHelper.prism_js_source_url
+        if Rails.version.to_f >= 6.1
+          assert_equal "/assets/prism.min.js", PreviewHelper.prism_js_source_url
+        else
+          assert_equal "/prism.min.js", PreviewHelper.prism_js_source_url
+        end
       end
     end
 
