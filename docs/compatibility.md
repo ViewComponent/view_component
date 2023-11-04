@@ -10,7 +10,7 @@ nav_order: 6
 
 View Component supports all actively supported versions of Ruby (3.0+) and Ruby on Rails(6.1+) and is tested against a combination of these versions of ruby and rails
 
-Rails >= 6.0 and Ruby >= 2.7 may still work with view_component, but this configuration is not actively supported and any issues submitted against unsupported versions of Ruby or Rails have no guarantee of being fixed
+Rails >= 6.0 and Ruby >= 2.7 may still work with view_component, but this configuration is not actively supported and any issues submitted against unsupported versions of Ruby or Rails have no guarantee of being fixed as they may eb arrising from issues from these unsupported versions
 
 ## Template languages
 
