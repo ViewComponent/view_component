@@ -13,11 +13,11 @@ module PreviewHelper
   end
 
   def prism_css_source_url
-    serve_static_preview_assets? ? asset_path('prism.css', skip_pipeline: true) : 'https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.min.css'
+    serve_static_preview_assets? ? asset_path("prism.css", skip_pipeline: true) : "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.min.css"
   end
 
   def prism_js_source_url
-    serve_static_preview_assets? ? asset_path('prism.min.js', skip_pipeline: true) : 'https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.min.js'
+    serve_static_preview_assets? ? asset_path("prism.min.js", skip_pipeline: true) : "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.min.js"
   end
 
   def find_template_data(lookup_context:, template_identifier:)
