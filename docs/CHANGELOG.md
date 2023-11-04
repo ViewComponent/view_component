@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Remove support for using view_component with unsupported versions of rails or ruby
+
+    *Reegan Viljoen*
+
 * Resolve an issue where slots starting with `call` would cause a `NameError`
 
     *Blake Williams*
