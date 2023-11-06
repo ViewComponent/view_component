@@ -154,11 +154,11 @@ module ViewComponent
       end
 
       if RUBY_VERSION < "3.0.0"
-        ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 3.0.0", "ViewComponent 4.0 will drop support for Ruby versions < 3.0.0 " )
+        ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 3.0.0", "ViewComponent 4.0 will drop support for Ruby versions < 3.0.0 ")
       end
 
       if Rails.version.to_f < 6.1
-        ViewComponent::Deprecation.deprecation_warning("Support for Rails versions < 6.1", "ViewComponent 4.0 will drop support for Rails versions < 6.1 " )
+        ViewComponent::Deprecation.deprecation_warning("Support for Rails versions < 6.1", "ViewComponent 4.0 will drop support for Rails versions < 6.1 ")
       end
 
       app.executor.to_run :before do
