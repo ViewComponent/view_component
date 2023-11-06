@@ -720,11 +720,13 @@ class SlotableTest < ViewComponent::TestCase
     assert component.title.content?
   end
 
-  def test_slotable_component
-    render_inline(SlotableTestComponent.new) do |component|
-      component.with_tag(text: "Hello World")
+  def test_raises_error_on_conflicting_slot_names_with_content
+    exeption = assert_raises ViewComponent::RedefinedExistingMethodError do
+      Class.new(ViewComponent::Base) do
+        renders_one :tag
+      end
     end
 
-    assert_selector("span.tag", text: "Hello World")
+    assert_includes exeption.message, "declares a slot named tag"
   end
 end

@@ -126,6 +126,16 @@ module ViewComponent
     end
   end
 
+  class RedefinedExistingMethodError < StandardError
+    MESSAGE =
+      "COMPONENT declares a slot named SLOT_NAME, which conflicts with an existing method.\n\n" \
+      "To fix this issue, choose a different slot name."
+
+    def initialize(klass_name, slot_name)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
   class ReservedSingularSlotNameError < StandardError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
