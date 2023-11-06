@@ -160,7 +160,7 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.4)
     minitest (5.20.0)
-    net-imap (0.4.2)
+    net-imap (0.4.4)
       date
       net-protocol
     net-pop (0.1.2)
@@ -333,6 +333,9 @@ DEPENDENCIES
   jbuilder (~> 2)
   m (~> 1)
   minitest (~> 5.18)
+  net-imap
+  net-pop
+  net-smtp
   pry (~> 0.13)
   puma (~> 6)
   rails (~> 7.0.0)
