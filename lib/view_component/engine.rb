@@ -79,7 +79,7 @@ module ViewComponent
 
     initializer "view_component.monkey_patch_render" do |app|
       next if Rails.version.to_f >= 6.1 || !app.config.view_component.render_monkey_patch_enabled
-
+      ViewComponent::Deprecation.deprecation_warning("Monkey patching `render`", "ViewComponent 4.0 will drop monkey patching `render`")
       ActiveSupport.on_load(:action_view) do
         require "view_component/render_monkey_patch"
         ActionView::Base.prepend ViewComponent::RenderMonkeyPatch
@@ -95,6 +95,7 @@ module ViewComponent
 
     initializer "view_component.include_render_component" do |_app|
       next if Rails.version.to_f >= 6.1
+      ViewComponent::Deprecation.deprecation_warning("using `render_component`", "ViewComponent 4.0 will drop using `render_component`")
 
       ActiveSupport.on_load(:action_view) do
         require "view_component/render_component_helper"
@@ -150,6 +151,14 @@ module ViewComponent
         app.routes.prepend do
           get("_system_test_entrypoint", to: "view_components_system_test#system_test_entrypoint")
         end
+      end
+
+      if RUBY_VERSION < "3.0.0"
+        ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 3.0.0", "ViewComponent 4.0 will drop support for Ruby versions < 3.0.0 " )
+      end
+
+      if Rails.version.to_f < 6.1
+        ViewComponent::Deprecation.deprecation_warning("Support for Rails versions < 6.1", "ViewComponent 4.0 will drop support for Rails versions < 6.1 " )
       end
 
       app.executor.to_run :before do
