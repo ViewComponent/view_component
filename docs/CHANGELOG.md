@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Remove support for using view_component with unsupported versions of rails or ruby
+* Remove unsupported versions of Rails & Ruby from CI matrix.
 
     *Reegan Viljoen*
 
