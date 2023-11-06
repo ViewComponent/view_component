@@ -10,7 +10,7 @@ nav_order: 6
 
 ViewComponent supports all actively supported versions of Ruby (3.0+) and Ruby on Rails(6.1+) and is tested against a combination of these versions of Ruby on Rails.
 
-While EOL (end-of-life) versions of Ruby (>= 2.7) and Ruby on Rails (> 6.0) may still work with ViewComponent, they are not actively supported and we do not active test the gem against them. We will still accept patches on a case-by-case basis to support older Ruby and Ruby on Rails versions based on the complexity and maintenance burden. Please open an issue before submitting a Pull Request that addresses issues with EOL Ruby/Ruby on Rails versions.
+While EOL (end-of-life) versions of Ruby and Ruby on Rails may still work with ViewComponent, they are not actively supported and no longer tested. We will still accept patches on a case-by-case basis to support older Ruby & Rails versions based on the complexity and maintenance burden. Please open an issue before submitting such a Pull Request.
 
 ## Template languages
 
