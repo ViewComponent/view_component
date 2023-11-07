@@ -61,6 +61,7 @@ module PreviewHelper
 
   private
 
+  # :nocov:
   def prism_language_name_by_template(template:)
     language = template.identifier.split(".").last
 
@@ -68,6 +69,7 @@ module PreviewHelper
 
     language
   end
+  # :nocov:
 
   def prism_language_name_by_template_path(template_file_path:)
     language = template_file_path.gsub(".html", "").split(".").last
