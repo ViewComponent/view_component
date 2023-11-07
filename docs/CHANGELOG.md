@@ -10,6 +10,11 @@ nav_order: 5
 
 ## main
 
+* Don't add ActionDispatch::Static middleware unless `public_file_server.enabled`.
+
+    *Daniel Gonzalez*
+    *Reegan Viljoen*
+
 * Resolve an issue where slots starting with `call` would cause a `NameError`
 
     *Blake Williams*
