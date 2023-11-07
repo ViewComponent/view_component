@@ -12,6 +12,7 @@ require "view_component/preview"
 require "view_component/slotable"
 require "view_component/translatable"
 require "view_component/with_content_helper"
+require "view_component/use_helpers"
 
 module ViewComponent
   class Base < ActionView::Base
@@ -219,7 +220,7 @@ module ViewComponent
       @__vc_helpers ||= __vc_original_view_context || controller.view_context
     end
 
-    if Rails.env.development? || Rails.env.test?
+    if ::Rails.env.development? || ::Rails.env.test?
       def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
         super
       rescue => e # rubocop:disable Style/RescueStandardError

@@ -2,10 +2,6 @@
 
 class CurrentPageComponent < ViewComponent::Base
   def text
-    if current_page?("/slots")
-      "Inside /slots"
-    else
-      "Outside /slots"
-    end
+    "#{current_page?("/slots") ? "Inside" : "Outside"} /slots (#{request.method} #{request.path})"
   end
 end
