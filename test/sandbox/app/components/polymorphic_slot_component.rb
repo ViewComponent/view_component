@@ -20,6 +20,11 @@ class PolymorphicSlotComponent < ViewComponent::Base
     special: lambda { |&block| content_tag(:div, class: "special", &block) }
   }
 
+  renders_one :footer, types: {
+    standard: "StandardFooter",
+    special: "SpecialFooter"
+  }
+
   renders_many :items, types: {
     passthrough: "PassthroughItem",
     foo: "FooItem",
@@ -48,5 +53,11 @@ class PolymorphicSlotComponent < ViewComponent::Base
         "foo item"
       end
     end
+  end
+
+  class StandardFooter < ViewComponent::Base
+  end
+
+  class SpecialFooter < ViewComponent::Base
   end
 end

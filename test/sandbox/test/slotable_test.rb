@@ -4,7 +4,7 @@ require "test_helper"
 
 class SlotableTest < ViewComponent::TestCase
   def test_renders_slots
-    render_inline(c = SlotsComponent.new(classes: "mt-4")) do |component|
+    render_inline(SlotsComponent.new(classes: "mt-4")) do |component|
       component.with_title do
         "This is my title!"
       end
@@ -33,8 +33,6 @@ class SlotableTest < ViewComponent::TestCase
         "This is the footer"
       end
     end
-
-    binding.irb
 
     assert_selector(".card.mt-4")
 
@@ -518,15 +516,13 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_polymorphic_slot_with_setters
-    render_inline(c = PolymorphicSlotComponent.new) do |component|
+    render_inline(PolymorphicSlotComponent.new) do |component|
       component.with_header_standard { "standard" }
       component.with_foo_field(class_names: "custom-foo1")
       component.with_bar_field(class_names: "custom-bar1")
       component.with_item_foo(class_names: "custom-foo2")
       component.with_item_bar(class_names: "custom-bar2")
     end
-
-    binding.irb
 
     assert_selector("div .standard", text: "standard")
     assert_selector("div .foo.custom-foo1")
@@ -722,5 +718,61 @@ class SlotableTest < ViewComponent::TestCase
     component.with_title_content("This is my title!")
 
     assert component.title.content?
+  end
+
+  def test_get_component_instance_for_renders_one
+    render_inline(component = SlotsComponent.new) do |component|
+      component.with_extra(message: "Hello")
+    end
+
+    assert component.extra.is_a?(ViewComponent::Slot)
+    assert component.extra_instance.is_a?(SlotsComponent::ExtraComponent)
+  end
+
+  def test_get_component_instances_for_renders_many
+    render_inline(component = SlotsComponent.new) do |component|
+      component.with_item do
+        "Item A"
+      end
+      component.with_item do
+        "Item B"
+      end
+    end
+
+    assert component.items.all? { |item| item.is_a?(ViewComponent::Slot) }
+    assert component.item_instances.all? { |item| item.is_a?(SlotsComponent::MyHighlightComponent) }
+  end
+
+  def test_returns_nil_if_slot_is_not_component_instance
+    render_inline(component = SlotsComponent.new) do |component|
+      component.with_tab do
+        "Tab A"
+      end
+      component.with_tab do
+        "Tab B"
+      end
+    end
+
+    assert component.tabs.all? { |item| item.is_a?(ViewComponent::Slot) }
+    assert_equal [nil, nil], component.tab_instances
+  end
+
+  def test_get_instance_for_polymorphic_renders_one
+    render_inline(component = PolymorphicSlotComponent.new) do |component|
+      component.with_footer_standard
+    end
+
+    assert component.footer.is_a?(ViewComponent::Slot)
+    assert component.footer_instance.is_a?(PolymorphicSlotComponent::StandardFooter)
+  end
+
+  def test_get_instances_for_polymorphic_renders_many
+    render_inline(component = PolymorphicSlotComponent.new) do |component|
+      component.with_foo_field(classes: "field-1")
+      component.with_foo_field(classes: "field-2")
+    end
+
+    assert component.fields.all? { |field| field.is_a?(ViewComponent::Slot) }
+    assert component.field_instances.all? { |item| item.is_a?(PolymorphicSlotComponent::FooItem) }
   end
 end
