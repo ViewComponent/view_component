@@ -433,7 +433,9 @@ module ViewComponent
     ruby2_keywords(:set_polymorphic_slot) if respond_to?(:ruby2_keywords, true)
 
     def extract_component_instance(slot)
-      slot.instance_variable_get(:@__vc_component_instance)
+      slot.instance_eval do
+        @__vc_component_instance if defined?(@__vc_component_instance)
+      end
     end
   end
 end
