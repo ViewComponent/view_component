@@ -190,6 +190,7 @@ module ViewComponent
       "`#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void)."
   end
 
+  # :nocov:
   class NoMatchingTemplatesForPreviewError < StandardError
     MESSAGE = "Found 0 matches for templates for TEMPLATE_IDENTIFIER."
 
@@ -205,6 +206,7 @@ module ViewComponent
       super(MESSAGE.gsub("TEMPLATE_IDENTIFIER", template_identifier))
     end
   end
+  # :nocov:
 
   class SystemTestControllerOnlyAllowedInTestError < BaseError
     MESSAGE = "ViewComponent SystemTest controller must only be called in a test environment for security reasons."
