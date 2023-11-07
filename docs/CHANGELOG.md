@@ -10,11 +10,38 @@ nav_order: 5
 
 ## main
 
-* Add an error in case of conflict after naming a slot with the name of an existing method.
+* Add the error `RedefinedExistingMethodError` in case of conflict after naming a slot with the name of an existing method.
 
     *Hugo Chantelauze*
 
-* Document the capture compatibility patch on the Known issues page
+* Resolve an issue where slots starting with `call` would cause a `NameError`
+
+    *Blake Williams*
+
+* Add `use_helper` API.
+
+    *Reegan Viljoen*
+
+* Fix bug where the `Rails` module wasn't being searched from the root namespace.
+
+    *Zenéixe*
+
+* Fix bug where `#with_request_url`, set the incorrect `request.fullpath`.
+
+    *Nachiket Pusalkar*
+
+* Allow setting method when using the `with_request_url` test helper.
+
+    *Andrew Duthie*
+
+## 3.7.0
+
+* Support Rails 7.1 in CI.
+
+    *Reegan Viljoen*
+    *Cameron Dutro*
+
+* Document the capture compatibility patch on the Known issues page.
 
     *Simon Fish*
 
@@ -22,7 +49,7 @@ nav_order: 5
 
     *Alexandre Ignjatovic*
 
-* Reduce UnboundMethod objects by memoizing initialize_parameters
+* Reduce UnboundMethod objects by memoizing initialize_parameters.
 
     *Rainer Borene*
 

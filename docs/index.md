@@ -110,6 +110,7 @@ ViewComponents are Ruby objects, making it easy to follow (and enforce) code qua
 
 ViewComponent is built by over a hundred members of the community, including:
 
+<img src="https://avatars.githubusercontent.com/nachiket87?s=64" alt="nachiket87" width="32" />
 <img src="https://avatars.githubusercontent.com/andrewjtait?s=64" alt="andrewjtait" width="32" />
 <img src="https://avatars.githubusercontent.com/asgerb?s=64" alt="asgerb" width="32" />
 <img src="https://avatars.githubusercontent.com/bbugh?s=64" alt="bbugh" width="32" />
@@ -211,6 +212,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/reeganviljoen?s=64" alt="reeganviljoen" width="32" />
 <img src="https://avatars.githubusercontent.com/thomascchen?s=64" alt="thomascchen" width="32" />
 <img src="https://avatars.githubusercontent.com/milk1000cc?s=64" alt="milk1000cc" width="32" />
+<img src="https://avatars.githubusercontent.com/aduth?s=64" alt="aduth" width="32" />
 
 ## Who uses ViewComponent?
 

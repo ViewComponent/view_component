@@ -104,7 +104,10 @@ module ViewComponent
       "string, or callable (that is proc, lambda, etc)"
   end
 
-  class SlotPredicateNameError < StandardError
+  class InvalidSlotNameError < StandardError
+  end
+
+  class SlotPredicateNameError < InvalidSlotNameError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which ends with a question mark.\n\n" \
       "This isn't allowed because the ViewComponent framework already provides predicate " \
@@ -126,7 +129,7 @@ module ViewComponent
     end
   end
 
-  class RedefinedExistingMethodError < StandardError
+  class RedefinedExistingMethodError < InvalidSlotNameError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which conflicts with an existing method.\n\n" \
       "To fix this issue, choose a different slot name."
@@ -136,7 +139,7 @@ module ViewComponent
     end
   end
 
-  class ReservedSingularSlotNameError < StandardError
+  class ReservedSingularSlotNameError < InvalidSlotNameError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
       "To fix this issue, choose a different name."
@@ -146,7 +149,7 @@ module ViewComponent
     end
   end
 
-  class ReservedPluralSlotNameError < StandardError
+  class ReservedPluralSlotNameError < InvalidSlotNameError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
       "To fix this issue, choose a different name."
