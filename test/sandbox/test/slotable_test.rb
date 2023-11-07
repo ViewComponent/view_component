@@ -719,4 +719,11 @@ class SlotableTest < ViewComponent::TestCase
 
     assert component.title.content?
   end
+
+  def test_slot_with_unplurialized_name
+    component = NamingSlotTestComponent.new
+    component.with_serie(name: "John Doe")
+
+    assert_equal "John Doe", component.series.first.name
+  end
 end
