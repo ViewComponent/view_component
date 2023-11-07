@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add deprecation warnings for EOL ruby and Rails versions and patches assocaited with them
+* Add deprecation warnings for EOL ruby and Rails versions and patches associated with them
 
 * Resolve an issue where slots starting with `call` would cause a `NameError`
 
