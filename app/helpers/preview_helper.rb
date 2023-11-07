@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module PreviewHelper
-
   # :nocov:
   include ActionView::Helpers::AssetUrlHelper if Rails.version.to_f < 6.1
   # :nocov:
