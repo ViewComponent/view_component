@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add the error `RedefinedExistingMethodError` in case of conflict after naming a slot with the name of an existing method.
+* Raise the error `RedefinedExistingMethodError` when declaring a slot which conflicts with an existing method.
 
     *Hugo Chantelauze*
 
