@@ -110,9 +110,13 @@ module ViewComponent
     end
 
     initializer "static assets" do |app|
-      if app.config.view_component.show_previews
+      if serve_static_preview_assets?(app.config)
         app.middleware.use(::ActionDispatch::Static, "#{root}/app/assets/vendor")
       end
+    end
+
+    def serve_static_preview_assets?(app_config)
+      app_config.view_component.show_previews && app_config.public_file_server.enabled
     end
 
     initializer "compiler mode" do |_app|
