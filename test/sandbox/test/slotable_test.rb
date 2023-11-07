@@ -719,7 +719,6 @@ class SlotableTest < ViewComponent::TestCase
 
     assert component.title.content?
   end
-  
   def test_slot_names_cannot_start_with_call_
     assert_raises ViewComponent::InvalidSlotNameError do
       Class.new(ViewComponent::Base) do
@@ -742,7 +741,7 @@ class SlotableTest < ViewComponent::TestCase
     end
   end
 
-  def test_raises_error_on_conflicting_slot_names_with_content_for_renders_one
+  def test_raises_error_on_slot_name_conflicting_with_existing_method_for_renders_one
     exception = assert_raises ViewComponent::RedefinedExistingMethodError do
       Class.new(ViewComponent::Base) do
         renders_one :tag
@@ -752,7 +751,7 @@ class SlotableTest < ViewComponent::TestCase
     assert_includes exception.message, "declares a slot named tag"
   end
   
-  def test_raises_error_on_conflicting_slot_names_with_content_for_renders_many
+  def test_raises_error_on_slot_name_conflicting_with_existing_method_for_renders_many
     exception = assert_raises ViewComponent::RedefinedExistingMethodError do
       Class.new(ViewComponent::Base) do
         renders_many :tags
@@ -761,5 +760,4 @@ class SlotableTest < ViewComponent::TestCase
   
     assert_includes exception.message, "declares a slot named tag"
   end
-  
 end
