@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Raise the error `RedefinedExistingMethodError` when declaring a slot which conflicts with an existing method.
+
+    *Hugo Chantelauze*
+
 * Resolve an issue where slots starting with `call` would cause a `NameError`
 
     *Blake Williams*

@@ -741,4 +741,24 @@ class SlotableTest < ViewComponent::TestCase
       end
     end
   end
+
+  def test_raises_error_on_slot_name_conflicting_with_existing_method_for_renders_one
+    exception = assert_raises ViewComponent::RedefinedExistingMethodError do
+      Class.new(ViewComponent::Base) do
+        renders_one :tag
+      end
+    end
+
+    assert_includes exception.message, "declares a slot named tag"
+  end
+
+  def test_raises_error_on_slot_name_conflicting_with_existing_method_for_renders_many
+    exception = assert_raises ViewComponent::RedefinedExistingMethodError do
+      Class.new(ViewComponent::Base) do
+        renders_many :tags
+      end
+    end
+
+    assert_includes exception.message, "declares a slot named tag"
+  end
 end

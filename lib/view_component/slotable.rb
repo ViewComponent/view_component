@@ -312,6 +312,11 @@ module ViewComponent
         raise_if_slot_conflicts_with_call(slot_name)
         raise_if_slot_ends_with_question_mark(slot_name)
         raise_if_slot_registered(slot_name)
+        raise_if_method_exists(slot_name)
+      end
+
+      def raise_if_slot_ends_with_question_mark(slot_name)
+        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.ends_with?("?")
       end
 
       def raise_if_slot_registered(slot_name)
@@ -321,8 +326,10 @@ module ViewComponent
         end
       end
 
-      def raise_if_slot_ends_with_question_mark(slot_name)
-        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.ends_with?("?")
+      def raise_if_method_exists(slot_name)
+        if instance_methods.include?(slot_name)
+          raise RedefinedExistingMethodError.new(name, slot_name)
+        end
       end
 
       def raise_if_slot_conflicts_with_call(slot_name)
