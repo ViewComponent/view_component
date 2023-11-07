@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 module PreviewHelper
+
+  # :nocov:
   include ActionView::Helpers::AssetUrlHelper if Rails.version.to_f < 6.1
+  # :nocov:
 
   AVAILABLE_PRISM_LANGUAGES = %w[ruby erb haml]
   FALLBACK_LANGUAGE = "ruby"
@@ -28,6 +31,7 @@ module PreviewHelper
         source: template.source,
         prism_language_name: prism_language_name_by_template(template: template)
       }
+    # :nocov:
     else
       # Fetch template source via finding it through preview paths
       # to accomodate source view when exclusively using templates
@@ -53,6 +57,7 @@ module PreviewHelper
         prism_language_name: prism_language_name
       }
     end
+    # :nocov:
   end
 
   private
