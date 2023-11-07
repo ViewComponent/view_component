@@ -48,6 +48,7 @@ module ViewComponent
       @rendered_content =
         if Rails.version.to_f >= 6.1
           vc_test_controller.view_context.render(component, args, &block)
+
         # :nocov:
         else
           vc_test_controller.view_context.render_component(component, &block)
