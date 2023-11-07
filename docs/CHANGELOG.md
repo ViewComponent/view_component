@@ -28,6 +28,10 @@ nav_order: 5
 
     *Nachiket Pusalkar*
 
+* Allow setting method when using the `with_request_url` test helper.
+
+    *Andrew Duthie*
+
 ## 3.7.0
 
 * Support Rails 7.1 in CI.
