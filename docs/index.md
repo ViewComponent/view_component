@@ -140,6 +140,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/fsateler?s=64" alt="fsateler" width="32" />
 <img src="https://avatars.githubusercontent.com/fugufish?s=64" alt="fugufish" width="32" />
 <img src="https://avatars.githubusercontent.com/g13ydson?s=64" alt="g13ydson" width="32" />
+<img src="https://avatars.githubusercontent.com/hchtlz?s=64" alt="hchtlz" width="32" />
 <img src="https://avatars.githubusercontent.com/horacio?s=64" alt="horacio" width="32" />
 <img src="https://avatars.githubusercontent.com/horiaradu?s=64" alt="horiaradu" width="32" />
 <img src="https://avatars.githubusercontent.com/jacob-carlborg-apoex?s=64" alt="yykamei" width="32" />

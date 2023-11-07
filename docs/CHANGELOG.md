@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add an error in case of conflict after naming a slot with the name of an existing method.
+
+    *Hugo Chantelauze*
+
 * Document the capture compatibility patch on the Known issues page
 
     *Simon Fish*
