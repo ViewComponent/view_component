@@ -54,7 +54,7 @@ module ViewComponent
           vc_test_controller.view_context.render_component(component, &block)
         end
 
-        # :nocov:
+      # :nocov:
 
       Nokogiri::HTML.fragment(@rendered_content)
     end
