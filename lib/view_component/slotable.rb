@@ -92,10 +92,6 @@ module ViewComponent
             get_slot(slot_name)
           end
 
-          define_method "#{slot_name}_instance" do
-            extract_component_instance(get_slot(slot_name))
-          end
-
           define_method "#{slot_name}?" do
             get_slot(slot_name).present?
           end
@@ -106,7 +102,14 @@ module ViewComponent
             self
           end
 
-          register_slot(slot_name, collection: false, callable: callable)
+          slot_def = register_slot(slot_name, collection: false, callable: callable)
+
+          # _instance methods should only be defined for component slots
+          if slot_def.include?(:renderable) || slot_def.include?(:renderable_class_name)
+            define_method "#{slot_name}_instance" do
+              extract_component_instance(get_slot(slot_name))
+            end
+          end
         end
       end
 
@@ -183,17 +186,20 @@ module ViewComponent
             get_slot(slot_name)
           end
 
-          define_method "#{singular_name}_instances" do
-            get_slot(slot_name).map do |slot|
-              extract_component_instance(slot)
-            end
-          end
-
           define_method "#{slot_name}?" do
             get_slot(slot_name).present?
           end
 
-          register_slot(slot_name, collection: true, callable: callable)
+          slot_def = register_slot(slot_name, collection: true, callable: callable)
+
+          # _instances methods should only be defined for component slots
+          if slot_def.include?(:renderable) || slot_def.include?(:renderable_class_name)
+            define_method "#{singular_name}_instances" do
+              get_slot(slot_name).map do |slot|
+                extract_component_instance(slot)
+              end
+            end
+          end
         end
       end
 

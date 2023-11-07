@@ -219,6 +219,25 @@ end
 
 _Note: While a lambda is called when the `with_*` method is called, a returned component isn't rendered until first use._
 
+## Retrieving slot component instances
+
+Since 3.8.0
+{: .label }
+
+Component slots are wrapped in an instance of `ViewComponent::Slot` which transparently proxies method calls to the original instance via Ruby's `#method_missing`. To retrieve the underlying component instance(s), call the corresponding `*_instance` or `*_instances` method.
+
+```ruby
+blog = BlogComponent.new { ... }
+
+# renders_one slot
+blog.header  # returns an instance of ViewComponent::Slot
+blog.header_instance  # returns an instance of BlogComponent::HeaderComponent
+
+# renders_many slot
+blog.posts  # returns an array of ViewComponent::Slot instances
+blog.post_instances  # returns an array of BlogComponent::PostComponent instances
+```
+
 ## Rendering collections
 
 Since 2.23.0

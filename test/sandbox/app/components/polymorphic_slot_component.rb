@@ -22,7 +22,7 @@ class PolymorphicSlotComponent < ViewComponent::Base
 
   renders_one :footer, types: {
     standard: "StandardFooter",
-    special: "SpecialFooter"
+    special: -> { "special footer" }
   }
 
   renders_many :items, types: {
@@ -56,8 +56,8 @@ class PolymorphicSlotComponent < ViewComponent::Base
   end
 
   class StandardFooter < ViewComponent::Base
-  end
-
-  class SpecialFooter < ViewComponent::Base
+    def call
+      "standard footer"
+    end
   end
 end

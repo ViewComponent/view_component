@@ -731,30 +731,17 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_get_component_instances_for_renders_many
     render_inline(component = SlotsComponent.new) do |component|
-      component.with_item do
-        "Item A"
-      end
-      component.with_item do
-        "Item B"
-      end
+      component.with_post(Post.new(title: "Post A"))
+      component.with_post(Post.new(title: "Post B"))
     end
 
-    assert component.items.all? { |item| item.is_a?(ViewComponent::Slot) }
-    assert component.item_instances.all? { |item| item.is_a?(SlotsComponent::MyHighlightComponent) }
+    assert component.posts.all? { |item| item.is_a?(ViewComponent::Slot) }
+    assert component.post_instances.all? { |item| item.is_a?(PostComponent) }
   end
 
-  def test_returns_nil_if_slot_is_not_component_instance
-    render_inline(component = SlotsComponent.new) do |component|
-      component.with_tab do
-        "Tab A"
-      end
-      component.with_tab do
-        "Tab B"
-      end
-    end
-
-    assert component.tabs.all? { |item| item.is_a?(ViewComponent::Slot) }
-    assert_equal [nil, nil], component.tab_instances
+  def test_does_not_define_instance_retrieval_method_if_not_component_slot
+    component = SlotsComponent.new
+    refute component.respond_to?(:tab_instances)
   end
 
   def test_get_instance_for_polymorphic_renders_one
@@ -766,6 +753,15 @@ class SlotableTest < ViewComponent::TestCase
     assert component.footer_instance.is_a?(PolymorphicSlotComponent::StandardFooter)
   end
 
+  def test_get_instance_for_polymorphic_renders_one_lambda_slot
+    render_inline(component = PolymorphicSlotComponent.new) do |component|
+      component.with_footer_special
+    end
+
+    assert component.footer.is_a?(ViewComponent::Slot)
+    assert_nil component.footer_instance
+  end
+
   def test_get_instances_for_polymorphic_renders_many
     render_inline(component = PolymorphicSlotComponent.new) do |component|
       component.with_foo_field(classes: "field-1")
@@ -774,6 +770,17 @@ class SlotableTest < ViewComponent::TestCase
 
     assert component.fields.all? { |field| field.is_a?(ViewComponent::Slot) }
     assert component.field_instances.all? { |item| item.is_a?(PolymorphicSlotComponent::FooItem) }
+  end
+
+  def test_get_instances_for_polymorphic_renders_many_with_mixed_component_and_lambda_slots
+    render_inline(component = PolymorphicSlotComponent.new) do |component|
+      component.with_foo_field(classes: "field-1")
+      component.with_bar_field(classes: "field-2")
+    end
+
+    assert component.fields.all? { |field| field.is_a?(ViewComponent::Slot) }
+    assert component.field_instances[0].is_a?(PolymorphicSlotComponent::FooItem)
+    assert_nil component.field_instances[1]
   end
 
   def test_slot_names_cannot_start_with_call_

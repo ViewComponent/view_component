@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add API for "unwrapping" slots, i.e. return the component instance inside `ViewComponent::Slot`.
+
+    *Cameron Dutro*
+
 * Don't add ActionDispatch::Static middleware unless `public_file_server.enabled`.
 
     *Daniel Gonzalez*
