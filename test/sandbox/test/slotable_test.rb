@@ -719,6 +719,7 @@ class SlotableTest < ViewComponent::TestCase
 
     assert component.title.content?
   end
+
   def test_slot_names_cannot_start_with_call_
     assert_raises ViewComponent::InvalidSlotNameError do
       Class.new(ViewComponent::Base) do
