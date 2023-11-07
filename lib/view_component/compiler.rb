@@ -219,12 +219,12 @@ module ViewComponent
               component_class.included_modules
             )
 
-          view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call/) }.uniq
+          view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
         end
     end
 
     def inline_calls_defined_on_self
-      @inline_calls_defined_on_self ||= component_class.instance_methods(false).grep(/^call/)
+      @inline_calls_defined_on_self ||= component_class.instance_methods(false).grep(/^call(_|$)/)
     end
 
     def variants

@@ -10,6 +10,15 @@ nav_order: 5
 
 ## main
 
+* Don't add ActionDispatch::Static middleware unless `public_file_server.enabled`.
+
+    *Daniel Gonzalez*
+    *Reegan Viljoen*
+
+* Resolve an issue where slots starting with `call` would cause a `NameError`
+
+    *Blake Williams*
+
 * Add `use_helper` API.
 
     *Reegan Viljoen*
@@ -21,6 +30,10 @@ nav_order: 5
 * Fix bug where `#with_request_url`, set the incorrect `request.fullpath`.
 
     *Nachiket Pusalkar*
+
+* Allow setting method when using the `with_request_url` test helper.
+
+    *Andrew Duthie*
 
 ## 3.7.0
 

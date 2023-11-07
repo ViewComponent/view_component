@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module PreviewHelper
+  include ActionView::Helpers::AssetUrlHelper if Rails.version.to_f < 6.1
+
   AVAILABLE_PRISM_LANGUAGES = %w[ruby erb haml]
   FALLBACK_LANGUAGE = "ruby"
 
@@ -8,6 +10,14 @@ module PreviewHelper
     return if @render_args.nil?
 
     render "preview_source"
+  end
+
+  def prism_css_source_url
+    serve_static_preview_assets? ? asset_path("prism.css", skip_pipeline: true) : "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.min.css"
+  end
+
+  def prism_js_source_url
+    serve_static_preview_assets? ? asset_path("prism.min.js", skip_pipeline: true) : "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.min.js"
   end
 
   def find_template_data(lookup_context:, template_identifier:)
@@ -61,5 +71,9 @@ module PreviewHelper
     return FALLBACK_LANGUAGE unless AVAILABLE_PRISM_LANGUAGES.include? language
 
     language
+  end
+
+  def serve_static_preview_assets?
+    ViewComponent::Base.config.show_previews && Rails.application.config.public_file_server.enabled
   end
 end
