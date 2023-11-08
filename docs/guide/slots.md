@@ -227,15 +227,15 @@ Since 3.8.0
 Component slots are wrapped in an instance of `ViewComponent::Slot` which transparently proxies method calls to the original instance via Ruby's `#method_missing`. To retrieve the underlying component instance(s), call the corresponding `*_instance` or `*_instances` method.
 
 ```ruby
-blog = BlogComponent.new { ... }
+render(BlogComponent.new) do |blog|
+  # renders_one slot
+  blog.header  # returns an instance of ViewComponent::Slot
+  blog.header_instance  # returns an instance of BlogComponent::HeaderComponent
 
-# renders_one slot
-blog.header  # returns an instance of ViewComponent::Slot
-blog.header_instance  # returns an instance of BlogComponent::HeaderComponent
-
-# renders_many slot
-blog.posts  # returns an array of ViewComponent::Slot instances
-blog.post_instances  # returns an array of BlogComponent::PostComponent instances
+  # renders_many slot
+  blog.posts  # returns an array of ViewComponent::Slot instances
+  blog.post_instances  # returns an array of BlogComponent::PostComponent instances
+end
 ```
 
 ## Rendering collections
