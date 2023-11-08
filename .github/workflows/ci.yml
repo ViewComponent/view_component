@@ -42,6 +42,9 @@ jobs:
           - rails_version: "main"
             ruby_version: "3.1"
             mode: "capture_patch_enabled"
+          - rails_version: "7.1.1"
+            ruby_version: "3.2"
+            mode: "capture_patch_enabled"
           - rails_version: "main"
             ruby_version: "3.2"
             mode: "capture_patch_enabled"
@@ -59,6 +62,9 @@ jobs:
             mode: "capture_patch_disabled"
           - rails_version: "main"
             ruby_version: "3.1"
+            mode: "capture_patch_disabled"
+          - rails_version: "7.1.1"
+            ruby_version: "3.2"
             mode: "capture_patch_disabled"
           - rails_version: "main"
             ruby_version: "3.2"
@@ -105,8 +111,8 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1
-    - uses: actions/setup-node@v3
+        ruby-version: 3.2
+    - uses: actions/setup-node@v4
       with:
         node-version: 16
     - uses: actions/cache@v3
@@ -125,7 +131,7 @@ jobs:
         bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '7.0.3'
+        RAILS_VERSION: '7.1.1'
         PARALLEL_WORKERS: '1'
   coverage:
     needs: test
@@ -148,4 +154,4 @@ jobs:
         bundle update
         bundle exec rake coverage:report
       env:
-        RAILS_VERSION: '~> 7.0.0'
+        RAILS_VERSION: '~> 7.1.0'

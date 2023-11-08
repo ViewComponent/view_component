@@ -10,7 +10,39 @@ nav_order: 5
 
 ## main
 
-* Document the capture compatibility patch on the Known issues page
+* Don't add ActionDispatch::Static middleware unless `public_file_server.enabled`.
+
+    *Daniel Gonzalez*
+    *Reegan Viljoen*
+
+* Resolve an issue where slots starting with `call` would cause a `NameError`
+
+    *Blake Williams*
+
+* Add `use_helper` API.
+
+    *Reegan Viljoen*
+
+* Fix bug where the `Rails` module wasn't being searched from the root namespace.
+
+    *Zenéixe*
+
+* Fix bug where `#with_request_url`, set the incorrect `request.fullpath`.
+
+    *Nachiket Pusalkar*
+
+* Allow setting method when using the `with_request_url` test helper.
+
+    *Andrew Duthie*
+
+## 3.7.0
+
+* Support Rails 7.1 in CI.
+
+    *Reegan Viljoen*
+    *Cameron Dutro*
+
+* Document the capture compatibility patch on the Known issues page.
 
     *Simon Fish*
 
@@ -18,7 +50,7 @@ nav_order: 5
 
     *Alexandre Ignjatovic*
 
-* Reduce UnboundMethod objects by memoizing initialize_parameters
+* Reduce UnboundMethod objects by memoizing initialize_parameters.
 
     *Rainer Borene*
 
