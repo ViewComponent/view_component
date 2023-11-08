@@ -10,6 +10,11 @@ nav_order: 5
 
 ## main
 
+* Raise error when uncountable slot names are used in `renders_many`
+
+  *Hugo Chantelauze*
+  *Reegan Viljoen*
+
 * Don't add ActionDispatch::Static middleware unless `public_file_server.enabled`.
 
     *Daniel Gonzalez*
