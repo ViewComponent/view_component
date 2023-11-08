@@ -322,7 +322,7 @@ module ViewComponent
       end
 
       def raise_if_slot_ends_with_question_mark(slot_name)
-        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.ends_with?("?")
+        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.end_with?("?")
       end
 
       def raise_if_slot_conflicts_with_call(slot_name)

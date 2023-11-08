@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Replace usage of `String#ends_with?` with `String#end_with?` to reduce the dependency on ActiveSupport core extensions.
+
+    *halo*
+
 * Don't add ActionDispatch::Static middleware unless `public_file_server.enabled`.
 
     *Daniel Gonzalez*
