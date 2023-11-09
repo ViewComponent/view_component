@@ -477,7 +477,11 @@ module ViewComponent
         # If Rails application is loaded, add application url_helpers to the component context
         # we need to check this to use this gem as a dependency
         if defined?(Rails) && Rails.application && !(child < Rails.application.routes.url_helpers)
-          child.include Rails.application.routes.url_helpers
+          child.include Rails.application.routes.mounted_helpers
+
+          if ViewComponent::Base.config.include_application_routes
+            child.include Rails.application.routes.url_helpers
+          end
         end
 
         # Derive the source location of the component Ruby file from the call stack.
