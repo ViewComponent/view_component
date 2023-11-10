@@ -137,4 +137,18 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     MESSAGE
     assert !exception_message_regex.match?(exception.message)
   end
+
+  def test_including_application_routes
+    assert_equal true, ViewComponent::Base.config.include_application_routes
+    component_class = Class.new(ViewComponent::Base)
+    assert component_class.include?(Rails.application.routes.url_helpers)
+    assert component_class.include?(Rails.application.routes.mounted_helpers)
+
+    ViewComponent::Base.config.include_application_routes = false
+    component_class = Class.new(ViewComponent::Base)
+    refute component_class.include?(Rails.application.routes.url_helpers)
+    assert component_class.include?(Rails.application.routes.mounted_helpers)
+  ensure
+    ViewComponent::Base.config.include_application_routes = true
+  end
 end

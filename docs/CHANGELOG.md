@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `config.include_application_routes` to allow skipping inclusion of application routes.
+
+    *Elia Schito*
+
 * Replace usage of `String#ends_with?` with `String#end_with?` to reduce the dependency on ActiveSupport core extensions.
 
     *halo*
