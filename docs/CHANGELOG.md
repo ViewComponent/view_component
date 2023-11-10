@@ -10,6 +10,11 @@ nav_order: 5
 
 ## main
 
+* Raise error when uncountable slot names are used in `renders_many`
+
+    *Hugo Chantelauze*
+    *Reegan Viljoen*
+
 * Replace usage of `String#ends_with?` with `String#end_with?` to reduce the dependency on ActiveSupport core extensions.
 
     *halo*
