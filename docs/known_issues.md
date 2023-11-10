@@ -6,7 +6,23 @@ nav_order: 9
 
 # Known issues
 
-## turbo_frame_tag double rendering or scrambled HTML structure
+## Issues resolved by the optional capture compatibility patch
+
+If you're experiencing issues with duplicated content or malformed HTML output, the capture compatibility patch may resolve these.
+
+[Set `config.view_component.capture_compatibility_patch_enabled` to `true`](https://viewcomponent.org/api.html#capture_compatibility_patch_enabled) to resolve these issues.
+
+These issues arise because the related features/methods keep a reference to the
+primary `ActionView::Base` instance, which has its own `@output_buffer`. When
+`#capture` is called on the original `ActionView::Base` instance while
+evaluating a block from a ViewComponent, the `@output_buffer` is overridden in
+the `ActionView::Base` instance, and *not* the component. This results in a
+double render due to `#capture` implementation details.
+
+To resolve the issue, we override `#capture` so that we can delegate the
+`capture` logic to the ViewComponent that created the block.
+
+### turbo_frame_tag double rendering or scrambled HTML structure
 
 When using `turbo_frame_tag` inside a ViewComponent, the template may be rendered twice. See [https://github.com/github/view_component/issues/1099](https://github.com/github/view_component/issues/1099).
 
@@ -14,7 +30,7 @@ As a workaround, use `tag.turbo_frame` instead of `turbo_frame_tag`.
 
 Note: For the same functionality as `turbo_frame_tag(my_model)`, use `tag.turbo_frame(id: dom_id(my_model))`.
 
-## Compatibility with Rails form helpers
+### Compatibility with Rails form helpers
 
 ViewComponent [isn't compatible](https://github.com/viewcomponent/view_component/issues/241) with `form_for` helpers by default.
 

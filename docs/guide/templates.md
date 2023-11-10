@@ -27,6 +27,28 @@ class InlineErbComponent < ViewComponent::Base
 end
 ```
 
+### Interpolations
+
+When using Slim, interpolations have to be escaped, or they'll be evaluated in the context of the ViewComponent class.
+
+```ruby
+class InlineSlimComponent < ViewComponent::Base
+  slim_template <<~SLIM
+    p Hello, #{name}!
+    p Hello, \#{name}!
+  SLIM
+
+  def name
+    "World"
+  end
+end
+```
+
+will render:
+
+    <p>Hello InlineSlimComponent!</p>
+    <p>Hello World!</p>
+
 ## Sibling file
 
 Place template file next to the component:

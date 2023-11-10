@@ -12,6 +12,7 @@ require "view_component/preview"
 require "view_component/slotable"
 require "view_component/translatable"
 require "view_component/with_content_helper"
+require "view_component/use_helpers"
 
 module ViewComponent
   class Base < ActionView::Base
@@ -217,6 +218,21 @@ module ViewComponent
       # This allows ivars to remain persisted when using the same helper via
       # `helpers` across multiple components and partials.
       @__vc_helpers ||= __vc_original_view_context || controller.view_context
+    end
+
+    if ::Rails.env.development? || ::Rails.env.test?
+      def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
+        super
+      rescue => e # rubocop:disable Style/RescueStandardError
+        e.set_backtrace e.backtrace.tap(&:shift)
+        raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && helpers.respond_to?(method_name)
+          #{e.message}
+
+          You may be trying to call a method provided as a view helper. Did you mean `helpers.#{method_name}'?
+        MESSAGE
+
+        raise
+      end
     end
 
     # Exposes .virtual_path as an instance method
@@ -538,6 +554,7 @@ module ViewComponent
       # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
       def with_collection_parameter(parameter)
         @provided_collection_parameter = parameter
+        @initialize_parameters = nil
       end
 
       # Strips trailing whitespace from templates before compiling them.
@@ -633,7 +650,7 @@ module ViewComponent
       end
 
       def initialize_parameters
-        instance_method(:initialize).parameters
+        @initialize_parameters ||= instance_method(:initialize).parameters
       end
 
       def provided_collection_parameter
