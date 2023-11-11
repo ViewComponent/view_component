@@ -74,9 +74,13 @@ module ViewComponent
       end
     end
 
-    initializer "view_component.eager_load_actions" do
+    initializer "view_component.eager_load_actions" do |app|
       ActiveSupport.on_load(:after_initialize) do
-        ViewComponent::Base.descendants.each(&:compile) if Rails.application.config.eager_load
+        if Rails.application.config.eager_load
+          ViewComponent::Base.descendants.each do |descendant|
+            descendant.compile(frozen_string_literal: app.config.view_component.frozen_string_literal)
+          end
+        end
       end
     end
 
