@@ -104,7 +104,11 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@__vc_variant).to_s + output_postamble
+        if output_postamble.blank?
+          render_template_for(@__vc_variant).to_s
+        else
+          render_template_for(@__vc_variant).to_s + output_postamble
+        end
       else
         ""
       end

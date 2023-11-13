@@ -22,6 +22,10 @@ nav_order: 5
 
     *Olle Jonsson*
 
+* Avoid duplicating rendered string when `output_postamble` is blank
+
+    *Mitchell Henke*
+
 ## 3.8.0
 
 * Use correct value for the `config.action_dispatch.show_exceptions` config option for edge Rails.
