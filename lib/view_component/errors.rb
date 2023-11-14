@@ -149,6 +149,16 @@ module ViewComponent
     end
   end
 
+  class UncountableSlotNameError < InvalidSlotNameError
+    MESSAGE =
+      "COMPONENT declares a slot named SLOT_NAME, which is an uncountable word\n\n" \
+      "To fix this issue, choose a different name."
+
+    def initialize(klass_name, slot_name)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
   class ContentAlreadySetForPolymorphicSlotError < StandardError
     MESSAGE = "Content for slot SLOT_NAME has already been provided."
 
