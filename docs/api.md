@@ -374,16 +374,6 @@ with_request_url("/users/42", host: "app.example.com") do
 end
 ```
 
-### `#with_variant(variant)`
-
-Set the Action Pack request variant for the given block:
-
-```ruby
-with_variant(:phone) do
-  render_inline(MyComponent.new)
-end
-```
-
 ## Errors
 
 ### `AlreadyDefinedPolymorphicSlotSetterError`

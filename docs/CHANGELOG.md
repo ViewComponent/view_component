@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Remove `with_variant` in API docs.
+
+    *Tyson Gach*
+
 * Remove unsupported versions of Rails & Ruby from CI matrix.
 
     *Reegan Viljoen*
