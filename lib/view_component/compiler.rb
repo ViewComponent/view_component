@@ -258,6 +258,7 @@ module ViewComponent
 
       if handler.method(:call).parameters.length > 1
         handler.call(component_class, template)
+      # :nocov:
       else
         handler.call(
           OpenStruct.new(
@@ -267,6 +268,7 @@ module ViewComponent
           )
         )
       end
+      # :nocov:
     end
 
     def call_method_name(variant)

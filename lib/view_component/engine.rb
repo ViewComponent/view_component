@@ -80,6 +80,7 @@ module ViewComponent
     initializer "view_component.monkey_patch_render" do |app|
       next if Rails.version.to_f >= 6.1 || !app.config.view_component.render_monkey_patch_enabled
 
+      # :nocov:
       ActiveSupport.on_load(:action_view) do
         require "view_component/render_monkey_patch"
         ActionView::Base.prepend ViewComponent::RenderMonkeyPatch
@@ -91,11 +92,13 @@ module ViewComponent
         ActionController::Base.prepend ViewComponent::RenderingMonkeyPatch
         ActionController::Base.prepend ViewComponent::RenderToStringMonkeyPatch
       end
+      # :nocov:
     end
 
     initializer "view_component.include_render_component" do |_app|
       next if Rails.version.to_f >= 6.1
 
+      # :nocov:
       ActiveSupport.on_load(:action_view) do
         require "view_component/render_component_helper"
         ActionView::Base.include ViewComponent::RenderComponentHelper
@@ -107,6 +110,7 @@ module ViewComponent
         ActionController::Base.include ViewComponent::RenderingComponentHelper
         ActionController::Base.include ViewComponent::RenderComponentToStringHelper
       end
+      # :nocov:
     end
 
     initializer "static assets" do |app|

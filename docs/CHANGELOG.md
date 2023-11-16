@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Remove unsupported versions of Rails & Ruby from CI matrix.
+
+    *Reegan Viljoen*
+
 * Raise error when uncountable slot names are used in `renders_many`
 
     *Hugo Chantelauze*
