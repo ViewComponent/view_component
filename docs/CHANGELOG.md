@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.8.0
+
 * Remove unsupported versions of Rails & Ruby from CI matrix.
 
     *Reegan Viljoen*
