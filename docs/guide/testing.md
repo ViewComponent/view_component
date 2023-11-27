@@ -117,20 +117,6 @@ def test_renders_slots_with_content
 end
 ```
 
-## Action Pack Variants
-
-Use the `with_variant` helper to test specific variants:
-
-```ruby
-def test_render_component_for_tablet
-  with_variant :tablet do
-    render_inline(ExampleComponent.new(title: "my title")) { "Hello, tablets!" }
-
-    assert_selector("span[title='my title']", text: "Hello, tablets!")
-  end
-end
-```
-
 ## Configuring the controller used in tests
 
 Since 2.27.0

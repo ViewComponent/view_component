@@ -114,24 +114,6 @@ module ViewComponent
     end
     ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
 
-    # Set the Action Pack request variant for the given block:
-    #
-    # ```ruby
-    # with_variant(:phone) do
-    #   render_inline(MyComponent.new)
-    # end
-    # ```
-    #
-    # @param variant [Symbol] The variant to be set for the provided block.
-    def with_variant(variant)
-      old_variants = vc_test_controller.view_context.lookup_context.variants
-
-      vc_test_controller.view_context.lookup_context.variants = variant
-      yield
-    ensure
-      vc_test_controller.view_context.lookup_context.variants = old_variants
-    end
-
     # Set the controller to be used while executing the given block,
     # allowing access to controller-specific methods:
     #

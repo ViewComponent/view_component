@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Remove `with_variant` in API docs.
+* Remove `with_variant` test helper.
 
     *Tyson Gach*
 
