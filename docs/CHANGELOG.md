@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Use correct value for the `config.action_dispatch.show_exceptions` config option for edge Rails.
+
+    *Cameron Dutro*
+
 * Remove unsupported versions of Rails & Ruby from CI matrix.
 
     *Reegan Viljoen*
