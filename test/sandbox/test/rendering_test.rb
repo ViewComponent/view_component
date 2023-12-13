@@ -888,9 +888,9 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_output_postamble
-    render_inline(AfterRenderComponent.new)
+    render_inline(AroundRenderComponent.new)
 
-    assert_text("Hello, World!")
+    assert_text("Why Hello, World!")
   end
 
   def test_compilation_in_development_mode

@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
-class AfterRenderComponent < ViewComponent::Base
+class AroundRenderComponent < ViewComponent::Base
   def call
     "Hello, "
+  end
+
+  def output_preamble
+    "Why "
   end
 
   def output_postamble

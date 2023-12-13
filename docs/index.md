@@ -156,6 +156,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/jules2689?s=64" alt="jules2689" width="32" />
 <img src="https://avatars.githubusercontent.com/jwshuff?s=64" alt="jwshuff" width="32" />
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
+<img src="https://avatars.githubusercontent.com/kdonovan?s=64" alt="kdonovan" width="32" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
 <img src="https://avatars.githubusercontent.com/leighhalliday?s=64" alt="leighhalliday" width="32" />
 <img src="https://avatars.githubusercontent.com/llenk?s=64" alt="llenk" width="32" />

@@ -104,7 +104,7 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@__vc_variant).to_s + output_postamble
+        output_preamble + render_template_for(@__vc_variant).to_s + output_postamble
       else
         ""
       end
@@ -149,6 +149,13 @@ module ViewComponent
       ensure
         @__vc_parent_render_level -= 1
       end
+    end
+
+    # Optional content to be returned before the rendered template.
+    #
+    # @return [String]
+    def output_preamble
+      ""
     end
 
     # Optional content to be returned after the rendered template.

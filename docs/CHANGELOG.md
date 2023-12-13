@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `output_preamble` to match existing `output_postamble`.
+
+    *Kali Donovan*
+
 * Fix spelling in a local variable.
 
     *Olle Jonsson*

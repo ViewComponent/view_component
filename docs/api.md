@@ -78,6 +78,10 @@ that inhibits encapsulation & reuse, often making testing difficult.
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
 
+### `#output_preamble` → [String]
+
+Optional content to be returned before the rendered template.
+
 ### `#output_postamble` → [String]
 
 Optional content to be returned after the rendered template.
