@@ -347,7 +347,7 @@ DEPENDENCIES
   sprockets-rails (~> 3.4.2)
   standard (~> 1)
   view_component!
-  yard (~> 0.9.25)
+  yard (~> 0.9.34)
   yard-activesupport-concern (~> 0.0.1)
 
 BUNDLED WITH
