@@ -720,6 +720,17 @@ class SlotableTest < ViewComponent::TestCase
     assert component.title.content?
   end
 
+  def test_slot_with_unplurialized_name
+    exception =
+      assert_raises ViewComponent::UncountableSlotNameError do
+        Class.new(ViewComponent::Base) do
+          renders_many :series
+        end
+      end
+
+    assert_includes exception.message, ""
+  end
+
   def test_slot_names_cannot_start_with_call_
     assert_raises ViewComponent::InvalidSlotNameError do
       Class.new(ViewComponent::Base) do

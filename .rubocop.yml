@@ -1,3 +1,5 @@
 require:
   - standard
   - "rubocop-md"
+inherit_gem:
+  standard: config/base.yml

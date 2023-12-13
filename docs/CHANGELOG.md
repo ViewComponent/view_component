@@ -10,7 +10,37 @@ nav_order: 5
 
 ## main
 
-* Add deprecation warnings for EOL ruby and Rails versions and patches associated with them
+* Add deprecation warnings for EOL ruby and Rails versions and patches associated with them.
+
+    *Reegan Viljoen*
+
+* Fix spelling in a local variable.
+
+    *Olle Jonsson*
+
+## 3.8.0
+
+* Use correct value for the `config.action_dispatch.show_exceptions` config option for edge Rails.
+
+    *Cameron Dutro*
+
+* Remove unsupported versions of Rails & Ruby from CI matrix.
+
+    *Reegan Viljoen*
+
+* Raise error when uncountable slot names are used in `renders_many`
+
+    *Hugo Chantelauze*
+    *Reegan Viljoen*
+
+* Replace usage of `String#ends_with?` with `String#end_with?` to reduce the dependency on ActiveSupport core extensions.
+
+    *halo*
+
+* Don't add ActionDispatch::Static middleware unless `public_file_server.enabled`.
+
+    *Daniel Gonzalez*
+    *Reegan Viljoen*
 
 * Resolve an issue where slots starting with `call` would cause a `NameError`
 

@@ -149,6 +149,16 @@ module ViewComponent
     end
   end
 
+  class UncountableSlotNameError < InvalidSlotNameError
+    MESSAGE =
+      "COMPONENT declares a slot named SLOT_NAME, which is an uncountable word\n\n" \
+      "To fix this issue, choose a different name."
+
+    def initialize(klass_name, slot_name)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
   class ContentAlreadySetForPolymorphicSlotError < StandardError
     MESSAGE = "Content for slot SLOT_NAME has already been provided."
 
@@ -190,6 +200,7 @@ module ViewComponent
       "`#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void)."
   end
 
+  # :nocov:
   class NoMatchingTemplatesForPreviewError < StandardError
     MESSAGE = "Found 0 matches for templates for TEMPLATE_IDENTIFIER."
 
@@ -205,6 +216,7 @@ module ViewComponent
       super(MESSAGE.gsub("TEMPLATE_IDENTIFIER", template_identifier))
     end
   end
+  # :nocov:
 
   class SystemTestControllerOnlyAllowedInTestError < BaseError
     MESSAGE = "ViewComponent SystemTest controller must only be called in a test environment for security reasons."

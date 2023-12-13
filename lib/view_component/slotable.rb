@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/concern"
+require "active_support/inflector/inflections"
 require "view_component/slot"
 
 module ViewComponent
@@ -295,6 +296,7 @@ module ViewComponent
           raise ReservedPluralSlotNameError.new(name, slot_name)
         end
 
+        raise_if_slot_name_uncountable(slot_name)
         raise_if_slot_conflicts_with_call(slot_name)
         raise_if_slot_ends_with_question_mark(slot_name)
         raise_if_slot_registered(slot_name)
@@ -322,12 +324,19 @@ module ViewComponent
       end
 
       def raise_if_slot_ends_with_question_mark(slot_name)
-        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.ends_with?("?")
+        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.end_with?("?")
       end
 
       def raise_if_slot_conflicts_with_call(slot_name)
         if slot_name.start_with?("call_")
           raise InvalidSlotNameError, "Slot cannot start with 'call_'. Please rename #{slot_name}"
+        end
+      end
+
+      def raise_if_slot_name_uncountable(slot_name)
+        slot_name = slot_name.to_s
+        if slot_name.pluralize == slot_name.singularize
+          raise UncountableSlotNameError.new(name, slot_name)
         end
       end
     end
