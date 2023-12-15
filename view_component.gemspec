@@ -63,10 +63,4 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency "net-pop"
     spec.add_development_dependency "net-smtp"
   end
-
-  rails_version = (ENV["RAILS_VERSION"] || "~> 7.0.0").to_s
-  spec.add_development_dependency(
-    "rails",
-    (rails_version == "main") ? {git: "https://github.com/rails/rails", ref: "main"} : rails_version
-  )
 end
