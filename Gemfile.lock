@@ -7,6 +7,7 @@ PATH
       method_source (~> 1.0)
 
 GEM
+  remote: https://rubygems.org/
   specs:
     actioncable (7.0.8)
       actionpack (= 7.0.8)
