@@ -5,7 +5,7 @@ require "warning"
 # Use https://github.com/jeremyevans/ruby-warning
 # to restrict warnings outside our control
 ["mail", "activesupport", "yard"].each do |gem_name|
-  Warning.ignore(//, /.*gems\/#{gem_name}\-.*/)
+  Warning.ignore(//, /.*gems\/#{gem_name}-.*/)
 end
 
 Sandbox::Application.configure do
