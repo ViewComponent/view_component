@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Resolve console warnings when running test suite.
+
+    *Joel Hawksley*
+
 * Fix spelling in a local variable.
 
     *Olle Jonsson*

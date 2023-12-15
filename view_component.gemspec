@@ -55,7 +55,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov-console", "~> 0.9.1"
   spec.add_development_dependency "slim", "~> 5.1"
   spec.add_development_dependency "sprockets-rails", "~> 3.4.2"
-  spec.add_development_dependency "yard", "~> 0.9.25"
+  spec.add_development_dependency "yard", "~> 0.9.34"
   spec.add_development_dependency "yard-activesupport-concern", "~> 0.0.1"
 
   if RUBY_VERSION >= "3.1"
