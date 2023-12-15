@@ -80,10 +80,10 @@ jobs:
         RAILS_VERSION: ${{ matrix.rails_version }}
         CAPTURE_PATCH_ENABLED: ${{ matrix.mode == 'capture_patch_enabled' && 'true' || 'false' }}
     - name: Upload coverage results
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@v3.3.3
       if: always()
       with:
-        name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}-sha#{{env.GITHUB_SHA}}
+        name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}
         path: coverage
   primer_view_components_compatibility:
     name: Test compatibility with Primer ViewComponents (main)
