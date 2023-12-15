@@ -303,6 +303,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
+    warning (1.3.0)
     webrick (1.8.1)
     websocket (1.2.9)
     websocket-driver (0.7.6)
@@ -347,7 +348,8 @@ DEPENDENCIES
   sprockets-rails (~> 3.4.2)
   standard (~> 1)
   view_component!
-  yard (~> 0.9.25)
+  warning
+  yard (~> 0.9.34)
   yard-activesupport-concern (~> 0.0.1)
 
 BUNDLED WITH

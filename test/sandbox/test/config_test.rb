@@ -23,7 +23,9 @@ module ViewComponent
     def test_all_methods_are_documented
       require "yard"
       require "rake"
-      YARD::Rake::YardocTask.new
+      YARD::Rake::YardocTask.new do |t|
+        t.options = ["--no-output", "--no-stats", "--no-progress"]
+      end
       Rake::Task["yard"].execute
       configuration_methods_to_document = YARD::RegistryStore.new.tap do |store|
         store.load!(".yardoc")
