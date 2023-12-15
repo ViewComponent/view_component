@@ -83,7 +83,7 @@ jobs:
       uses: actions/upload-artifact@master
       if: always()
       with:
-        name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}
+        name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}-sha#{{env.GITHUB_SHA}}
         path: coverage
   primer_view_components_compatibility:
     name: Test compatibility with Primer ViewComponents (main)
