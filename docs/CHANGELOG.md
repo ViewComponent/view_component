@@ -10,6 +10,7 @@ nav_order: 5
 
 ## main
 
+* Move dependencies to gemspec.
 * Resolve console warnings when running test suite.
 
     *Joel Hawksley*
