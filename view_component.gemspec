@@ -36,14 +36,20 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "benchmark-ips", "~> 2.12.0"
   spec.add_development_dependency "better_html"
   spec.add_development_dependency "bundler", "~> 2"
+  spec.add_development_dependency "capybara", "~> 3"
+  spec.add_development_dependency "cuprite", "~> 0.15"
+  spec.add_development_dependency "debug"
   spec.add_development_dependency "erb_lint"
   spec.add_development_dependency "haml", "~> 6"
   spec.add_development_dependency "jbuilder", "~> 2"
   spec.add_development_dependency "m", "~> 1"
   spec.add_development_dependency "minitest", "~> 5.18"
   spec.add_development_dependency "pry", "~> 0.13"
+  spec.add_development_dependency "puma", "~> 6"
   spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rspec-rails", "~> 5"
   spec.add_development_dependency "rubocop-md", "~> 1"
+  spec.add_development_dependency "selenium-webdriver", "4.9.0"
   spec.add_development_dependency "standard", "~> 1"
   spec.add_development_dependency "simplecov", "~> 0.22.0"
   spec.add_development_dependency "simplecov-console", "~> 0.9.1"
@@ -51,4 +57,16 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sprockets-rails", "~> 3.4.2"
   spec.add_development_dependency "yard", "~> 0.9.25"
   spec.add_development_dependency "yard-activesupport-concern", "~> 0.0.1"
+
+  if RUBY_VERSION >= "3.1"
+    spec.add_development_dependency "net-imap"
+    spec.add_development_dependency "net-pop"
+    spec.add_development_dependency "net-smtp"
+  end
+
+  rails_version = (ENV["RAILS_VERSION"] || "~> 7.0.0").to_s
+  spec.add_development_dependency(
+    "rails",
+    (rails_version == "main") ? {git: "https://github.com/rails/rails", ref: "main"} : rails_version
+  )
 end
