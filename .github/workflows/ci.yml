@@ -111,7 +111,7 @@ jobs:
         cd primer_view_components
         npm ci
         cd demo && npm ci && cd ..
-        bundle exec rake
+        bundle && bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
         RAILS_VERSION: '7.1.1'
