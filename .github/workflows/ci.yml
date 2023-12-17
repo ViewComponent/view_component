@@ -104,6 +104,7 @@ jobs:
       with:
         node-version: 16
         cache: 'npm'
+        cache-dependency-path: 'primer_view_components/package-lock.json'
     - name: Build and test with Rake
       run: |
         cd primer_view_components
