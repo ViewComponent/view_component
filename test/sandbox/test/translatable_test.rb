@@ -142,6 +142,20 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.translate(".from"))
   end
 
+  def test_inheriting_and_overriding_translations
+    render_inline(TranslatableSubclassComponent.new)
+
+    assert_selector("p.sidecar.shared-key", text: "Hello from subclass sidecar translations!")
+    assert_selector("p.sidecar.nested", text: "This is coming from the sidecar")
+    assert_selector("p.sidecar.missing", text: "This is coming from Rails")
+
+    assert_selector("p.helpers.shared-key", text: "Hello from Rails translations!")
+    assert_selector("p.helpers.nested", text: "This is coming from Rails")
+
+    assert_selector("p.global.shared-key", text: "Hello from Rails translations!")
+    assert_selector("p.global.nested", text: "This is coming from Rails")
+  end
+
   private
 
   def translate(key, **options)
