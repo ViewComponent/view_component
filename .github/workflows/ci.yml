@@ -131,7 +131,7 @@ jobs:
       with:
         ruby-version: 2.7
     - name: Download coverage results
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
     - uses: actions/cache@v3
       with:
         path: vendor/bundle
