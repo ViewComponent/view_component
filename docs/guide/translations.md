@@ -61,7 +61,7 @@ en:
   greeting: "Cheers!"
 ```
 
-The translation is available in subclasses of `ParentComponent`, allowing translations to be used as is or overridden by the child component:
+The translation is available in subclasses of `ParentComponent`, allowing translations to be used as-is or overridden by the subclass:
 
 ```yml
 # app/components/child_component.yml
