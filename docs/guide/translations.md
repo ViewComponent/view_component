@@ -49,3 +49,32 @@ Access global translations via `helpers` or `I18n`:
 <%= helpers.t("hello") %>
 <%= I18n.t("hello") %>
 ```
+
+## Inheritance
+
+Translations are inherited from the component's parent class. Given a parent component with a translation file:
+
+```yml
+# app/components/parent_component.yml
+en:
+  hello: "Hello world!"
+  greeting: "Cheers!"
+```
+
+The translation is available in subclasses of `ParentComponent`, allowing translations to be used as-is or overridden by the subclass:
+
+```yml
+# app/components/child_component.yml
+en:
+  greeting: "Howdy!"
+```
+
+```rb
+# app/components/child_component.rb
+class ChildComponent < ParentComponent
+  def call
+    t(".hello") # => "Hello world!" (inherited)
+    t(".greeting") # => "Howdy!"    (overridden)
+  end
+end
+```

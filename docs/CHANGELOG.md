@@ -11,6 +11,13 @@ nav_order: 5
 ## main
 
 * Move dependencies to gemspec.
+
+    *Joel Hawksley*
+
+* Allow translations to be inherited and overridden in subclasses.
+
+    *Elia Schito*
+
 * Resolve console warnings when running test suite.
 
     *Joel Hawksley*
