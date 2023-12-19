@@ -232,6 +232,7 @@ module ViewComponent
     end
 
     if ::Rails.env.development? || ::Rails.env.test?
+      # @private
       def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
         super
       rescue => e # rubocop:disable Style/RescueStandardError
