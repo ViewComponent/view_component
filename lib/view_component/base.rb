@@ -104,11 +104,11 @@ module ViewComponent
       before_render
 
       if render?
-        [
-          output_preamble,
-          render_template_for(@__vc_variant).to_s,
+        (
+          output_preamble +
+          render_template_for(@__vc_variant).to_s +
           output_postamble
-        ].join.html_safe
+        ).html_safe
       else
         ""
       end
