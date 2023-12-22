@@ -8,7 +8,7 @@ rails_version = (ENV["RAILS_VERSION"] || "~> 7.0.0").to_s
 gem "capybara", "~> 3"
 gem "rails", (rails_version == "main") ? {git: "https://github.com/rails/rails", ref: "main"} : rails_version
 
-gem "rspec-rails", "~> 5"
+gem "rspec-rails", "~> 6"
 
 group :test do
   gem "cuprite", "~> 0.15"
