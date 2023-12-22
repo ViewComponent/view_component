@@ -10,6 +10,14 @@ nav_order: 5
 
 ## main
 
+* Allow translations to be inherited and overridden in subclasses.
+
+    *Elia Schito*
+
+* Resolve console warnings when running test suite.
+
+    *Joel Hawksley*
+
 * Fix spelling in a local variable.
 
     *Olle Jonsson*
