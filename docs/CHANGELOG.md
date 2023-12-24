@@ -237,6 +237,17 @@ This release makes the following breaking changes, many of which have long been 
 
     *Joel Hawksley*
 
+For example:
+
+```diff
+<%= render BlogComponent.new do |component| %>
+-  <% component.header do %>
++  <% component.with_header do %>
+    <%= link_to "My blog", root_path %>
+  <% end %>
+<% end %>
+```
+
 * BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
 
     *Joel Hawksley*
