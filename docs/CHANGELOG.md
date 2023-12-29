@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add support for ruby 3.3
+* Add support for Ruby 3.3.
 
       *Reegan Viljoen*
 
