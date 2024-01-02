@@ -10,6 +10,7 @@ module ViewComponent
     extend ActiveSupport::Concern
 
     HTML_SAFE_TRANSLATION_KEY = /(?:_|\b)html\z/
+    TRANSLATION_EXTENSIONS = %w[yml yaml].freeze
 
     included do
       class_attribute :i18n_backend, instance_writer: false, instance_predicate: false
@@ -23,9 +24,16 @@ module ViewComponent
       def build_i18n_backend
         return if compiled?
 
-        self.i18n_backend = if (translation_files = sidecar_files(%w[yml yaml])).any?
-          # Returning nil cleans up if translations file has been removed since the last compilation
+        # We need to load the translations files from the ancestors so a component
+        # can inherit translations from its parent and is able to overwrite them.
+        translation_files = ancestors.reverse_each.with_object([]) do |ancestor, files|
+          if ancestor.is_a?(Class) && ancestor < ViewComponent::Base
+            files.concat(ancestor.sidecar_files(TRANSLATION_EXTENSIONS))
+          end
+        end
 
+        # In development it will become nil if the translations file is removed
+        self.i18n_backend = if translation_files.any?
           I18nBackend.new(
             i18n_scope: i18n_scope,
             load_paths: translation_files

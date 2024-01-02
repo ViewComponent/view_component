@@ -14,6 +14,14 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Allow translations to be inherited and overridden in subclasses.
+
+    *Elia Schito*
+
+* Resolve console warnings when running test suite.
+
+    *Joel Hawksley*
+
 * Fix spelling in a local variable.
 
     *Olle Jonsson*
@@ -232,6 +240,17 @@ This release makes the following breaking changes, many of which have long been 
 * BREAKING: Remove deprecated slots setter methods. Use `with_SLOT_NAME` instead.
 
     *Joel Hawksley*
+
+For example:
+
+```diff
+<%= render BlogComponent.new do |component| %>
+-  <% component.header do %>
++  <% component.with_header do %>
+    <%= link_to "My blog", root_path %>
+  <% end %>
+<% end %>
+```
 
 * BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
 

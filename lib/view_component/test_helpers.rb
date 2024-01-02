@@ -175,7 +175,7 @@ module ViewComponent
     # end
     # ```
     #
-    # @param path [String] The path to set for the current request.
+    # @param full_path [String] The path to set for the current request.
     # @param host [String] The host to set for the current request.
     # @param method [String] The request method to set for the current request.
     def with_request_url(full_path, host: nil, method: nil)

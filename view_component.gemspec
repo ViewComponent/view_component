@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "method_source", "~> 1.0"
   spec.add_runtime_dependency "concurrent-ruby", "~> 1.0"
   spec.add_development_dependency "appraisal", "~> 2.4"
-  spec.add_development_dependency "benchmark-ips", "~> 2.12.0"
+  spec.add_development_dependency "benchmark-ips", "~> 2.13.0"
   spec.add_development_dependency "better_html"
   spec.add_development_dependency "bundler", "~> 2"
   spec.add_development_dependency "erb_lint"
@@ -49,6 +49,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov-console", "~> 0.9.1"
   spec.add_development_dependency "slim", "~> 5.1"
   spec.add_development_dependency "sprockets-rails", "~> 3.4.2"
-  spec.add_development_dependency "yard", "~> 0.9.25"
+  spec.add_development_dependency "yard", "~> 0.9.34"
   spec.add_development_dependency "yard-activesupport-concern", "~> 0.0.1"
 end
