@@ -79,9 +79,10 @@ module ViewComponent
 
     initializer "view_component.monkey_patch_render" do |app|
       next if Rails.version.to_f >= 6.1 || !app.config.view_component.render_monkey_patch_enabled
+  
+      # :nocov:
       ViewComponent::Deprecation.deprecation_warning("Monkey patching `render`", "ViewComponent 4.0 will remove the `render` monkey patch")
 
-      # :nocov:
       ActiveSupport.on_load(:action_view) do
         require "view_component/render_monkey_patch"
         ActionView::Base.prepend ViewComponent::RenderMonkeyPatch
