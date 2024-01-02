@@ -57,6 +57,12 @@ jobs:
           - rails_version: "main"
             ruby_version: "3.2"
             mode: "capture_patch_disabled"
+          - rails_version: "7.1.1"
+            ruby_version: "3.3"
+            mode: "capture_patch_disabled"
+          - rails_version: "main"
+            ruby_version: "3.3"
+            mode: "capture_patch_disabled"
     steps:
     - uses: actions/checkout@v4.1.1
     - name: Setup Ruby

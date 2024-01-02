@@ -93,11 +93,11 @@ module ViewComponent
             get_slot(slot_name)
           end
 
-          define_method "#{slot_name}?" do
+          define_method :"#{slot_name}?" do
             get_slot(slot_name).present?
           end
 
-          define_method "with_#{slot_name}_content" do |content|
+          define_method :"with_#{slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self
@@ -160,7 +160,7 @@ module ViewComponent
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method "with_#{singular_name}_content" do |content|
+          define_method :"with_#{singular_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self
@@ -180,7 +180,7 @@ module ViewComponent
             get_slot(slot_name)
           end
 
-          define_method "#{slot_name}?" do
+          define_method :"#{slot_name}?" do
             get_slot(slot_name).present?
           end
 
@@ -211,7 +211,7 @@ module ViewComponent
           get_slot(slot_name)
         end
 
-        define_method("#{slot_name}?") do
+        define_method(:"#{slot_name}?") do
           get_slot(slot_name).present?
         end
 
@@ -246,7 +246,7 @@ module ViewComponent
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method "with_#{poly_slot_name}_content" do |content|
+          define_method :"with_#{poly_slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self

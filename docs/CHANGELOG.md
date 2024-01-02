@@ -14,6 +14,10 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Add support for Ruby 3.3.
+
+      *Reegan Viljoen*
+
 * Allow translations to be inherited and overridden in subclasses.
 
     *Elia Schito*
