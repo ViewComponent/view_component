@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Don’t break `rails stats` if ViewComponent path is missing
+* Don’t break `rails stats` if ViewComponent path is missing.
 
     *Claudio Baccigalupo*
 
