@@ -309,30 +309,20 @@ module ViewComponent
       if text.html_safe?
         text
       else
-        yield if block_given?
+        yield
         html_escape(text)
       end
     end
 
-    if ::Rails.env.development? || ::Rails.env.test?
-      def safe_render_template_for(*)
-        maybe_escape_html(render_template_for(*)) do
-          warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
-        end
+    def safe_render_template_for(*)
+      maybe_escape_html(render_template_for(*)) do
+        warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
       end
+    end
 
-      def safe_output_postamble
-        maybe_escape_html(output_postamble) do
-          warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
-        end
-      end
-    else
-      def safe_render_template_for(*)
-        maybe_escape_html(render_template_for(*))
-      end
-
-      def safe_output_postamble
-        maybe_escape_html(output_postamble)
+    def safe_output_postamble
+      maybe_escape_html(output_postamble) do
+        warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
       end
     end
 
