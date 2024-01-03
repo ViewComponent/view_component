@@ -104,7 +104,12 @@ module ViewComponent
       before_render
 
       if render?
-        safe_render_template_for(@__vc_variant).to_s + safe_output_postamble
+        # Avoid allocating new string when output_postamble is blank
+        if output_postamble.blank?
+          safe_render_template_for(@__vc_variant).to_s
+        else
+          safe_render_template_for(@__vc_variant).to_s + safe_output_postamble
+        end
       else
         ""
       end
