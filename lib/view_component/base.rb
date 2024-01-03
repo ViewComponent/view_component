@@ -319,9 +319,13 @@ module ViewComponent
       end
     end
 
-    def safe_render_template_for(*args)
-      maybe_escape_html(render_template_for(*args)) do
-        Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
+    def safe_render_template_for(variant)
+      if compiler.renders_template_for_variant?(variant)
+        render_template_for(variant)
+      else
+        maybe_escape_html(render_template_for(variant)) do
+          Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
+        end
       end
     end
 
@@ -329,6 +333,10 @@ module ViewComponent
       maybe_escape_html(output_postamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
       end
+    end
+
+    def compiler
+      @compiler ||= self.class.compiler
     end
 
     # Set the controller used for testing components:
