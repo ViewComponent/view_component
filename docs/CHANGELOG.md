@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add deprecation warnings for EOL ruby and Rails versions and patches associated with them.
+
+    *Reegan Viljoen*
+
 * Add support for Ruby 3.3.
 
       *Reegan Viljoen*
