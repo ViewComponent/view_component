@@ -316,13 +316,13 @@ module ViewComponent
 
     def safe_render_template_for(*)
       maybe_escape_html(render_template_for(*)) do
-        warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
+        Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
       end
     end
 
     def safe_output_postamble
       maybe_escape_html(output_postamble) do
-        warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
+        Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
       end
     end
 

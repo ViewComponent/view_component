@@ -61,14 +61,10 @@ class IntegrationExamplesController < ActionController::Base
   end
 
   def unsafe_component
-    Kernel.silence_warnings do
-      render(UnsafeComponent.new)
-    end
+    render(UnsafeComponent.new)
   end
 
   def unsafe_postamble_component
-    Kernel.silence_warnings do
-      render(UnsafePostambleComponent.new)
-    end
+    render(UnsafePostambleComponent.new)
   end
 end
