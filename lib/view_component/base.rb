@@ -314,8 +314,8 @@ module ViewComponent
       end
     end
 
-    def safe_render_template_for(*)
-      maybe_escape_html(render_template_for(*)) do
+    def safe_render_template_for(*args)
+      maybe_escape_html(render_template_for(*args)) do
         Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
       end
     end
