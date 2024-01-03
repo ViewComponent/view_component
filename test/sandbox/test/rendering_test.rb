@@ -151,7 +151,9 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_jbuilder_template
-    render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
+    with_request_url("/", format: :json) do
+      render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
+    end
 
     assert_text("foo")
     assert_text("bar")
@@ -1084,7 +1086,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_content_predicate_true
-    render_inline(ContentPredicateComponent.new.with_content("foo"))
+    render_inline(ContentPredicateComponent.new.with_content("foo".html_safe))
 
     assert_text("foo")
   end

@@ -59,4 +59,16 @@ class IntegrationExamplesController < ActionController::Base
   def inherited_from_uncompilable_component
     render(InheritedFromUncompilableComponent.new)
   end
+
+  def unsafe_component
+    Kernel.silence_warnings do
+      render(UnsafeComponent.new)
+    end
+  end
+
+  def unsafe_postamble_component
+    Kernel.silence_warnings do
+      render(UnsafePostambleComponent.new)
+    end
+  end
 end

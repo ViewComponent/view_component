@@ -723,4 +723,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       get "/_system_test_entrypoint?file=#{path}"
     end
   end
+
+  def test_unsafe_component
+    get "/unsafe_component"
+    assert_select("script", false)
+  end
+
+  def test_unsafe_postamble_component
+    get "/unsafe_postamble_component"
+    assert_select("script", false)
+  end
 end

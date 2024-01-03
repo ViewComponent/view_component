@@ -104,7 +104,7 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@__vc_variant).to_s + output_postamble
+        safe_render_template_for(@__vc_variant).to_s + safe_output_postamble
       else
         ""
       end
@@ -155,7 +155,7 @@ module ViewComponent
     #
     # @return [String]
     def output_postamble
-      ""
+      @@default_output_postamble ||= "".html_safe
     end
 
     # Called before rendering the component. Override to perform operations that
@@ -300,6 +300,40 @@ module ViewComponent
 
     def content_evaluated?
       defined?(@__vc_content_evaluated) && @__vc_content_evaluated
+    end
+
+    def maybe_escape_html(text)
+      return text if request && !request.format.html?
+      return text if text.nil? || text.empty?
+
+      if text.html_safe?
+        text
+      else
+        yield if block_given?
+        html_escape(text)
+      end
+    end
+
+    if ::Rails.env.development? || ::Rails.env.test?
+      def safe_render_template_for(*)
+        maybe_escape_html(render_template_for(*)) do
+          warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
+        end
+      end
+
+      def safe_output_postamble
+        maybe_escape_html(output_postamble) do
+          warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
+        end
+      end
+    else
+      def safe_render_template_for(*)
+        maybe_escape_html(render_template_for(*))
+      end
+
+      def safe_output_postamble
+        maybe_escape_html(output_postamble)
+      end
     end
 
     # Set the controller used for testing components:
