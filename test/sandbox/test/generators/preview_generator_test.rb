@@ -18,6 +18,7 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user --preview]
 
       assert_file "test/components/previews/user_component_preview.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class UserComponentPreview < /, component)
         assert_match(/render\(UserComponent.new\)/, component)
       end
@@ -29,6 +30,7 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user --preview --preview-path other/test/components/previews]
 
       assert_file "other/test/components/previews/user_component_preview.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class UserComponentPreview < /, component)
         assert_match(/render\(UserComponent.new\)/, component)
       end
@@ -40,6 +42,7 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user --preview]
 
       assert_file "spec/components/previews/user_component_preview.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class UserComponentPreview < /, component)
         assert_match(/render\(UserComponent.new\)/, component)
       end
@@ -61,6 +64,7 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user --preview --preview-path other/test/components/previews]
 
       assert_file "other/test/components/previews/user_component_preview.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class UserComponentPreview < /, component)
         assert_match(/render\(UserComponent.new\)/, component)
       end
@@ -72,6 +76,7 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       run_generator %w[admins/user --preview]
 
       assert_file "test/components/previews/admins/user_component_preview.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class Admins::UserComponentPreview < /, component)
         assert_match(/render\(Admins::UserComponent.new\)/, component)
       end
@@ -83,6 +88,7 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user nickname fullname]
 
       assert_file "test/components/previews/user_component_preview.rb" do |preview|
+        assert_no_match(/module/, preview)
         assert_match(/class UserComponentPreview/, preview)
         assert_match(/render\(UserComponent.new\(nickname: "nickname", fullname: "fullname"\)\)/, preview)
       end
@@ -94,6 +100,7 @@ class PreviewGeneratorTest < Rails::Generators::TestCase
       run_generator %w[admins/user nickname fullname]
 
       assert_file "test/components/previews/admins/user_component_preview.rb" do |preview|
+        assert_no_match(/module/, preview)
         assert_match(/class Admins::UserComponentPreview/, preview)
         assert_match(/render\(Admins::UserComponent.new\(nickname: "nickname", fullname: "fullname"\)\)/, preview)
       end

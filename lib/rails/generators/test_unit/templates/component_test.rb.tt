@@ -2,6 +2,7 @@
 
 require "test_helper"
 
+<% module_namespacing do -%>
 class <%= class_name %>ComponentTest < ViewComponent::TestCase
   def test_component_renders_something_useful
     # assert_equal(
@@ -10,3 +11,4 @@ class <%= class_name %>ComponentTest < ViewComponent::TestCase
     # )
   end
 end
+<% end -%>
