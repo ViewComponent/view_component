@@ -79,7 +79,7 @@ module ViewComponent
 
     initializer "view_component.monkey_patch_render" do |app|
       next if Rails.version.to_f >= 6.1 || !app.config.view_component.render_monkey_patch_enabled
-  
+
       # :nocov:
       ViewComponent::Deprecation.deprecation_warning("Monkey patching `render`", "ViewComponent 4.0 will remove the `render` monkey patch")
 
@@ -99,9 +99,10 @@ module ViewComponent
 
     initializer "view_component.include_render_component" do |_app|
       next if Rails.version.to_f >= 6.1
-      ViewComponent::Deprecation.deprecation_warning("using `render_component`", "ViewComponent 4.0 will remove `render_component`")
 
       # :nocov:
+      ViewComponent::Deprecation.deprecation_warning("using `render_component`", "ViewComponent 4.0 will remove `render_component`")
+
       ActiveSupport.on_load(:action_view) do
         require "view_component/render_component_helper"
         ActionView::Base.include ViewComponent::RenderComponentHelper
@@ -163,6 +164,7 @@ module ViewComponent
         end
       end
 
+      # :nocov:
       if RUBY_VERSION < "3.0.0"
         ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 3.0.0", "ViewComponent 4.0 will remove support for Ruby versions < 3.0.0 ")
       end
@@ -170,6 +172,7 @@ module ViewComponent
       if Rails.version.to_f < 6.1
         ViewComponent::Deprecation.deprecation_warning("Support for Rails versions < 6.1", "ViewComponent 4.0 will remove support for Rails versions < 6.1 ")
       end
+      # :nocov:
 
       app.executor.to_run :before do
         CompileCache.invalidate! unless ActionView::Base.cache_template_loading
