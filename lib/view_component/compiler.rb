@@ -56,7 +56,7 @@ module ViewComponent
           RUBY
           # rubocop:enable Style/EvalWithLocation
 
-          component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
+          component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
 
           component_class.silence_redefinition_of_method("render_template_for")
           component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -101,7 +101,7 @@ module ViewComponent
         "elsif variant.to_sym == :'#{variant}'\n    #{safe_name}"
       end.join("\n")
 
-      component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
+      component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
 
       body = <<-RUBY
         if variant.nil?
