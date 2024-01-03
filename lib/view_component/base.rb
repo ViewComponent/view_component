@@ -628,7 +628,7 @@ module ViewComponent
 
       # @private
       def collection_counter_parameter
-        "#{collection_parameter}_counter".to_sym
+        :"#{collection_parameter}_counter"
       end
 
       # @private
@@ -638,7 +638,7 @@ module ViewComponent
 
       # @private
       def collection_iteration_parameter
-        "#{collection_parameter}_iteration".to_sym
+        :"#{collection_parameter}_iteration"
       end
 
       # @private
