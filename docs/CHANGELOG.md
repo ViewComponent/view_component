@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Don’t break `rails stats` if ViewComponent path is missing.
+
+    *Claudio Baccigalupo*
+
 * Add deprecation warnings for EOL ruby and Rails versions and patches associated with them.
 
     *Reegan Viljoen*
