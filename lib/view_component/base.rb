@@ -104,6 +104,7 @@ module ViewComponent
       before_render
 
       if render?
+        # Avoid allocating new string when output_postamble is blank
         if output_postamble.blank?
           render_template_for(@__vc_variant).to_s
         else

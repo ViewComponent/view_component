@@ -26,7 +26,7 @@ nav_order: 5
 
     *Olle Jonsson*
 
-* Avoid duplicating rendered string when `output_postamble` is blank
+* Avoid duplicating rendered string when `output_postamble` is blank.
 
     *Mitchell Henke*
 
