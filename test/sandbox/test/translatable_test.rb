@@ -75,8 +75,8 @@ class TranslatableTest < ViewComponent::TestCase
     )
   end
 
-  def test_translate_with_html_suffix_uses_fallback_for_missing_translations
-    translation = translate(".hello_html", locale: :fr, raise: false, fallback: true)
+  def test_translate_with_html_suffix_applies_reserved_options
+    translation = translate(".hello_html", locale: :fr, raise: false)
     assert_equal(
       "Translation missing: fr.translatable_component.hello_html",
       translation
