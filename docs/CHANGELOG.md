@@ -38,6 +38,10 @@ nav_order: 5
 
     *Mitchell Henke*
 
+* Ensure HTML output safety.
+
+    *Cameron Dutro*
+
 ## 3.8.0
 
 * Use correct value for the `config.action_dispatch.show_exceptions` config option for edge Rails.

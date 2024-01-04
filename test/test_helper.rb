@@ -179,3 +179,11 @@ def with_compiler_mode(mode)
 ensure
   ViewComponent::Compiler.mode = previous_mode
 end
+
+def capture_warnings(&block)
+  [].tap do |warnings|
+    Kernel.stub(:warn, ->(msg) { warnings << msg }) do
+      block.call
+    end
+  end
+end

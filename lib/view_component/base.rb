@@ -106,9 +106,9 @@ module ViewComponent
       if render?
         # Avoid allocating new string when output_postamble is blank
         if output_postamble.blank?
-          render_template_for(@__vc_variant).to_s
+          safe_render_template_for(@__vc_variant).to_s
         else
-          render_template_for(@__vc_variant).to_s + output_postamble
+          safe_render_template_for(@__vc_variant).to_s + safe_output_postamble
         end
       else
         ""
@@ -160,7 +160,7 @@ module ViewComponent
     #
     # @return [String]
     def output_postamble
-      ""
+      @@default_output_postamble ||= "".html_safe
     end
 
     # Called before rendering the component. Override to perform operations that
@@ -305,6 +305,38 @@ module ViewComponent
 
     def content_evaluated?
       defined?(@__vc_content_evaluated) && @__vc_content_evaluated
+    end
+
+    def maybe_escape_html(text)
+      return text if request && !request.format.html?
+      return text if text.nil? || text.empty?
+
+      if text.html_safe?
+        text
+      else
+        yield
+        html_escape(text)
+      end
+    end
+
+    def safe_render_template_for(variant)
+      if compiler.renders_template_for_variant?(variant)
+        render_template_for(variant)
+      else
+        maybe_escape_html(render_template_for(variant)) do
+          Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
+        end
+      end
+    end
+
+    def safe_output_postamble
+      maybe_escape_html(output_postamble) do
+        Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
+      end
+    end
+
+    def compiler
+      @compiler ||= self.class.compiler
     end
 
     # Set the controller used for testing components:
