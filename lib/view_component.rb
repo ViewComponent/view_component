@@ -16,7 +16,6 @@ module ViewComponent
   autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview
-  autoload :PreviewActions
   autoload :TestHelpers
   autoload :SystemTestHelpers
   autoload :TestCase
