@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.9.0
+
 * Don’t break `rails stats` if ViewComponent path is missing.
 
     *Claudio Baccigalupo*
