@@ -16,7 +16,7 @@ module ViewComponent
     def initialize(component_class)
       @component_class = component_class
       @redefinition_lock = Mutex.new
-      @variants_rendering_templates = Set.new()
+      @variants_rendering_templates = Set.new
     end
 
     def compiled?
