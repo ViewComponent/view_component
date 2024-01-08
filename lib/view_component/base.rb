@@ -110,10 +110,7 @@ module ViewComponent
         if output_preamble.blank? && output_postamble.blank?
           rendered_template
         else
-          preamble = output_preamble.blank? ? "" : safe_output_preamble
-          postamble = output_postamble.blank? ? "" : safe_output_postamble
-
-          preamble + rendered_template + postamble
+          safe_output_preamble + rendered_template + safe_output_postamble
         end
       else
         ""
