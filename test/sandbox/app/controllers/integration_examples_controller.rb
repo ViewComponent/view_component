@@ -64,6 +64,10 @@ class IntegrationExamplesController < ActionController::Base
     render(UnsafeComponent.new)
   end
 
+  def unsafe_preamble_component
+    render(UnsafePreambleComponent.new)
+  end
+
   def unsafe_postamble_component
     render(UnsafePostambleComponent.new)
   end
