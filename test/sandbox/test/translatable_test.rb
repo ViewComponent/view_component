@@ -75,6 +75,14 @@ class TranslatableTest < ViewComponent::TestCase
     )
   end
 
+  def test_translate_with_html_suffix_applies_reserved_options
+    translation = translate(".hello_html", locale: :fr, raise: false)
+    assert_equal(
+      "Translation missing: fr.translatable_component.hello_html",
+      translation
+    )
+  end
+
   def test_translate_uses_the_helper_when_no_sidecar_file_is_provided
     # The cache needs to be kept clean for TranslatableComponent, otherwise it will rely on the
     # already created i18n_backend.
