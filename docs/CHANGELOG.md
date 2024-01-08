@@ -14,10 +14,13 @@ nav_order: 5
 
     *Kathleen Cesar*
 
+* Fix html escaping in `#call` for non-strings.
+
+    *Reegan Viljoen, Cameron Dutro*
+
 * Add `output_preamble` to match `output_postamble`, using the same safety checks.
 
-    *Kali Donovan*
-    *Michael Daross*
+    *Kali Donovan, Michael Daross*
 
 * Exclude html escaping of I18n reserved keys with `I18n::RESERVED_KEYS` rather than `I18n.reserved_keys_pattern`.
 
