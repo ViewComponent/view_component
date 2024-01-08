@@ -10,6 +10,11 @@ nav_order: 5
 
 ## main
 
+* Fix html escaping in `#call` for non strings.
+
+    *Reegan Viljoen*
+
+
 * Update CI configuration to use `Appraisal`.
 
     *Hans Lemuet, Simon Fish*
