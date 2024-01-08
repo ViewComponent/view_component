@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 2.83.0
+
 * Ensure HTML output safety.
 
     *Cameron Dutro*
