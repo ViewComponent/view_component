@@ -8,10 +8,10 @@ class InlineSlotHtmlEscapeComponent < ViewComponent::Base
   end
 
   def call
-    return empty_state unless @heading.attached?
+    return empty_state unless @heading.nil?
 
     link_to @url do
-      tag.h1(@heading) +
+      @heading +
         tag.p(@paragraph)
     end
   end
