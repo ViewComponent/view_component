@@ -12,8 +12,7 @@ nav_order: 5
 
 * Fix html escaping in `#call` for non-strings.
 
-    *Reegan Viljoen*
-    *Cameron Dutro*
+    *Reegan Viljoen, Cameron Dutro*
 
 * Exclude html escaping of I18n reserved keys with `I18n::RESERVED_KEYS` rather than `I18n.reserved_keys_pattern`.
 
