@@ -14,7 +14,6 @@ nav_order: 5
 
     *Reegan Viljoen*
 
-
 * Update CI configuration to use `Appraisal`.
 
     *Hans Lemuet, Simon Fish*
