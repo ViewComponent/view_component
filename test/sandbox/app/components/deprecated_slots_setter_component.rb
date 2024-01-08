@@ -8,6 +8,6 @@ class DeprecatedSlotsSetterComponent < ViewComponent::Base
 
   def call
     header
-    items
+    html_escape(items)
   end
 end
