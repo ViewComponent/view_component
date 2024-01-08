@@ -752,4 +752,12 @@ class SlotableTest < ViewComponent::TestCase
       end
     end
   end
+
+  def test_inline_slot_html_escape
+    render InlineSlotHtmlEscapeComponent.new(heading: 'test', paragraph: 'lorem ipsum', url: root_path) do |component|
+      component.with_empty_state do
+        'No avatar'
+      end
+    end
+  end
 end
