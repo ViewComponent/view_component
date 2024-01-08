@@ -733,6 +733,15 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     )
   end
 
+  def test_unsafe_preamble_component
+    warnings = capture_warnings { get "/unsafe_preamble_component" }
+    assert_select("script", false)
+    assert(
+      warnings.any? { |warning| warning.include?("component was provided an HTML-unsafe preamble") },
+      "Rendering UnsafePreambleComponent did not emit an HTML safety warning"
+    )
+  end
+
   def test_unsafe_postamble_component
     warnings = capture_warnings { get "/unsafe_postamble_component" }
     assert_select("script", false)

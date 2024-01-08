@@ -104,11 +104,13 @@ module ViewComponent
       before_render
 
       if render?
-        # Avoid allocating new string when output_postamble is blank
-        if output_postamble.blank?
-          safe_render_template_for(@__vc_variant).to_s
+        # Avoid allocating new string when output_preamble and output_postamble are blank
+        rendered_template = safe_render_template_for(@__vc_variant).to_s
+
+        if output_preamble.blank? && output_postamble.blank?
+          rendered_template
         else
-          safe_render_template_for(@__vc_variant).to_s + safe_output_postamble
+          safe_output_preamble + rendered_template + safe_output_postamble
         end
       else
         ""
@@ -154,6 +156,13 @@ module ViewComponent
       ensure
         @__vc_parent_render_level -= 1
       end
+    end
+
+    # Optional content to be returned before the rendered template.
+    #
+    # @return [String]
+    def output_preamble
+      @@default_output_preamble ||= "".html_safe
     end
 
     # Optional content to be returned after the rendered template.
@@ -326,6 +335,12 @@ module ViewComponent
         maybe_escape_html(render_template_for(variant)) do
           Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
         end
+      end
+    end
+
+    def safe_output_preamble
+      maybe_escape_html(output_preamble) do
+        Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe preamble. The preamble will be automatically escaped, but you may want to investigate.")
       end
     end
 

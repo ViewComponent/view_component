@@ -889,10 +889,22 @@ class RenderingTest < ViewComponent::TestCase
     assert_equal 1, PartialHelper::State.calls
   end
 
+  def test_output_preamble
+    render_inline(BeforeRenderComponent.new)
+
+    assert_text("Well, Hello!")
+  end
+
   def test_output_postamble
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")
+  end
+
+  def test_output_preamble_and_postamble
+    render_inline(BeforeAndAfterRenderComponent.new)
+
+    assert_text("Well, Hello, World!")
   end
 
   def test_compilation_in_development_mode

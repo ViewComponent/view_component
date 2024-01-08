@@ -124,6 +124,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/cesariouy?s=64" alt="cesariouy" width="32" />
 <img src="https://avatars.githubusercontent.com/cover?s=64" alt="cover" width="32" />
 <img src="https://avatars.githubusercontent.com/cpjmcquillan?s=64" alt="cpjmcquillan" width="32" />
+<img src="https://avatars.githubusercontent.com/crookedgrin?s=64" alt="crookedgrin" width="32" />
 <img src="https://avatars.githubusercontent.com/czj?s=64" alt="czj" width="32" />
 <img src="https://avatars.githubusercontent.com/dani-sc?s=64" alt="dani-sc" width="32" />
 <img src="https://avatars.githubusercontent.com/danieldiekmeier?s=64" alt="danieldiekmeier" width="32" />
@@ -158,6 +159,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/jwshuff?s=64" alt="jwshuff" width="32" />
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
+<img src="https://avatars.githubusercontent.com/kdonovan?s=64" alt="kdonovan" width="32" />
 <img src="https://avatars.githubusercontent.com/leighhalliday?s=64" alt="leighhalliday" width="32" />
 <img src="https://avatars.githubusercontent.com/llenk?s=64" alt="llenk" width="32" />
 <img src="https://avatars.githubusercontent.com/manuelpuyol?s=64" alt="manuelpuyol" width="32" />
