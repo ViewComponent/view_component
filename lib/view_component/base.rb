@@ -308,6 +308,8 @@ module ViewComponent
     end
 
     def maybe_escape_html(text)
+      text = text.to_s # ensure we're working with a string because some things like active storage dont return strings
+
       return text if request && !request.format.html?
       return text if text.nil? || text.empty?
 
