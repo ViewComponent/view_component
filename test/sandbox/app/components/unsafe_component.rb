@@ -7,4 +7,3 @@ class UnsafeComponent < ViewComponent::Base
     "<div>hello #{user_input}</div>"
   end
 end
-

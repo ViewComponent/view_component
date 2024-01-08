@@ -9,4 +9,3 @@ class UnsafePostambleComponent < ViewComponent::Base
     "<script>alert('hello!')</script>"
   end
 end
-
