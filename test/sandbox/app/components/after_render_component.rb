@@ -2,10 +2,10 @@
 
 class AfterRenderComponent < ViewComponent::Base
   def call
-    "Hello, "
+    "Hello, ".html_safe
   end
 
   def output_postamble
-    "World!"
+    "World!".html_safe
   end
 end

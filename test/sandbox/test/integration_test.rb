@@ -165,7 +165,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/partial"
     assert_response :success
 
-    assert_select("div", "hello,partial world!", count: 2)
+    assert_select("div", text: "hello,partial world!", count: 4)
   end
 
   def test_rendering_component_without_variant
@@ -684,5 +684,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       end
       config_entrypoints.rotate!
     end
+  end
+
+  def test_unsafe_component
+    warnings = capture_warnings { get "/unsafe_component" }
+    assert_select("script", false)
+    assert(
+      warnings.any? { |warning| warning.include?("component rendered HTML-unsafe output") },
+      "Rendering UnsafeComponent did not emit an HTML safety warning"
+    )
+  end
+
+  def test_unsafe_postamble_component
+    warnings = capture_warnings { get "/unsafe_postamble_component" }
+    assert_select("script", false)
+    assert(
+      warnings.any? { |warning| warning.include?("component was provided an HTML-unsafe postamble") },
+      "Rendering UnsafePostambleComponent did not emit an HTML safety warning"
+    )
   end
 end

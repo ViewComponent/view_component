@@ -6,6 +6,6 @@ class VariantIvarComponent < ViewComponent::Base
   end
 
   def call
-    @variant.to_s
+    html_escape(@variant.to_s)
   end
 end
