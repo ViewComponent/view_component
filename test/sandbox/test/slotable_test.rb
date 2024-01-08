@@ -754,9 +754,9 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_inline_slot_html_escape
-    render_inline InlineSlotHtmlEscapeComponent.new(heading: 'hello', paragraph: 'lorem ipsum', url: '/some_url') do |component|
+    render_inline InlineSlotHtmlEscapeComponent.new(heading: 'lorem ipsum', counter: 12,  url: '/some_url') do |component|
       component.with_empty_state do
-        12
+        'empty state'
       end
     end
   end

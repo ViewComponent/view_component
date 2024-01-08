@@ -1,9 +1,9 @@
 class InlineSlotHtmlEscapeComponent < ViewComponent::Base
   renders_one :empty_state
 
-  def initialize(heading:, paragraph:, url:)
+  def initialize(counter:, heading:, url:)
+    @counter = counter
     @heading = heading
-    @paragraph = paragraph
     @url = url
   end
 
@@ -11,8 +11,8 @@ class InlineSlotHtmlEscapeComponent < ViewComponent::Base
     return empty_state unless @heading.nil?
 
     link_to @url do
-      @heading +
-        tag.p(@paragraph)
+      @counter +
+        tag.p(@heading)
     end
   end
 end
