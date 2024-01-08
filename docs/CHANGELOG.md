@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Update `maybe_escape_html` to return when in `test` environment.
+
+    *Kathleen Cesar*
+
 * Add `output_preamble` to match `output_postamble`, using the same safety checks.
 
     *Kali Donovan*

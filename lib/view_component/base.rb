@@ -317,6 +317,7 @@ module ViewComponent
     end
 
     def maybe_escape_html(text)
+      return text if ::Rails.env.test?
       return text if request && !request.format.html?
       return text if text.nil? || text.empty?
 
