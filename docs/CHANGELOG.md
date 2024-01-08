@@ -10,6 +10,11 @@ nav_order: 5
 
 ## main
 
+* Add `output_preamble` to match `output_postamble`, using the same safety checks.
+
+    *Kali Donovan*
+    *Michael Daross*
+
 * Update CI configuration to use `Appraisal`.
 
     *Hans Lemuet, Simon Fish*
@@ -26,7 +31,7 @@ nav_order: 5
 
 * Add support for Ruby 3.3.
 
-      *Reegan Viljoen*
+    *Reegan Viljoen*
 
 * Allow translations to be inherited and overridden in subclasses.
 
