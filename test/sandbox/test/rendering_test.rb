@@ -892,7 +892,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_output_preamble
     render_inline(BeforeRenderComponent.new)
 
-    assert_text("Hello, World!")
+    assert_text("Well, Hello!")
   end
 
   def test_output_postamble
