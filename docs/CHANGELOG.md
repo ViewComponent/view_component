@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Exclude html escaping of I18n reserved keys with `I18n::RESERVED_KEYS` rather than `I18n.reserved_keys_pattern`.
+
+    *Nick Coyne*
+
 * Update CI configuration to use `Appraisal`.
 
     *Hans Lemuet, Simon Fish*
