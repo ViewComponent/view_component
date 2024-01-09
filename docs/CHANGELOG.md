@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Bump `puma` in Gemfile.lock.
+
+    *Cameron Dutro*
+
 ## 3.10.0
 
 * Fix html escaping in `#call` for non-strings.
