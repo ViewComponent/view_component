@@ -168,9 +168,27 @@ module ViewComponent
       # Defaults to `false`.
 
       def default_preview_paths
+        default_rails_preview_paths + default_rails_engines_preview_paths
+      end
+
+      def default_rails_preview_paths
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
 
         ["#{Rails.root}/test/components/previews"]
+      end
+
+      def default_rails_engines_preview_paths
+        return [] unless defined?(Rails::Engine)
+
+        registered_rails_engines_with_previews.map do |descendant|
+          "#{descendant.root}/test/components/previews/#{descendant.engine_name}"
+        end
+      end
+
+      def registered_rails_engines_with_previews
+        Rails::Engine.descendants.select do |descendant|
+          defined?(descendant.root) && Dir.exist?("#{descendant.root}/test/components/previews/#{descendant.engine_name}")
+        end
       end
 
       def default_generate_options
