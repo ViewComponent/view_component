@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.10.0
+
 * Fix html escaping in `#call` for non-strings.
 
     *Reegan Viljoen, Cameron Dutro*
