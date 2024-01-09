@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Bump puma in the Gemfile.lock
+* Bump `puma` in Gemfile.lock.
 
     *Cameron Dutro*
 
