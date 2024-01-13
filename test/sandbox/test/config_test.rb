@@ -17,7 +17,7 @@ module ViewComponent
       assert_equal @config.use_deprecated_instrumentation_name, true
       assert_equal @config.render_monkey_patch_enabled, true
       assert_equal @config.show_previews, true
-      assert_equal @config.preview_paths, ["#{Rails.root}/test/components/previews"]
+      assert_equal @config.preview_paths, ["#{Rails.root}/test/components/previews", "#{Dummy::Engine.root}/test/components/previews/dummy"]
     end
 
     def test_all_methods_are_documented
