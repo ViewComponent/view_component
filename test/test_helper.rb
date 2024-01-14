@@ -4,10 +4,6 @@ require "simplecov"
 require "simplecov-console"
 require "rails/version"
 
-$LOAD_PATH << Pathname.new(File.expand_path("test/dummy/lib"))
-require "rails"
-require "dummy"
-
 if ENV["MEASURE_COVERAGE"]
   SimpleCov.start do
     command_name "minitest-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
