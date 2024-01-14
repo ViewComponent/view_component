@@ -15,6 +15,7 @@ Rake::TestTask.new(:engine_test) do |t|
   t.libs << "test/dummy"
   t.libs << "lib"
   t.libs << "test/dummy/lib"
+  t.libs << "test/dummy/app/components"
   t.test_files = FileList["test/dummy/**/*_test.rb"]
 end
 

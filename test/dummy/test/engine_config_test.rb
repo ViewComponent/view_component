@@ -3,7 +3,7 @@
 require "test_helper"
 
 module ViewComponent
-  class ConfigTestEngine < TestCase
+  class EngineConfigTest < TestCase
     def setup
       @config = ViewComponent::Config.new
     end
@@ -17,7 +17,7 @@ module ViewComponent
       assert_equal @config.use_deprecated_instrumentation_name, true
       assert_equal @config.render_monkey_patch_enabled, true
       assert_equal @config.show_previews, true
-      assert_equal @config.preview_paths, ["#{Rails.root}/test/components/previews", "#{Dummy::Engine.root}/test/components/previews/dummy"]
+      assert_equal @config.preview_paths, ["#{Dummy::Engine.root}/test/components/previews/dummy"]
     end
   end
 end
