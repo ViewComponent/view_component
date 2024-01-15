@@ -3,7 +3,7 @@
 require "test_helper"
 
 module ViewComponent
-  class EngineConfigTest < TestCase
+  class ConfigTest < TestCase
     def setup
       @config = ViewComponent::Config.new
     end

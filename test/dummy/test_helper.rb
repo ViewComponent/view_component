@@ -12,8 +12,8 @@ if ENV["MEASURE_COVERAGE"]
   end
 end
 require "rails/engine"
+require "rails/generators"
 require "view_component"
 require "dummy"
-require_relative "app/components/dummy/example_component"
 require "bundler/setup"
 require "minitest/autorun"
