@@ -11,9 +11,11 @@ if ENV["MEASURE_COVERAGE"]
     formatter SimpleCov::Formatter::Console
   end
 end
+require "bundler/setup"
+require "minitest/autorun"
 require "rails/engine"
 require "rails/generators"
 require "view_component"
+$LOAD_PATH.unshift "./test/dummy/lib"
 require "dummy"
-require "bundler/setup"
-require "minitest/autorun"
+
