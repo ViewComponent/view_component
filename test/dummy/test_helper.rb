@@ -13,9 +13,10 @@ if ENV["MEASURE_COVERAGE"]
 end
 require "bundler/setup"
 require "minitest/autorun"
-require "rails/engine"
+require "rails"
 require "rails/generators"
-require "view_component"
 $LOAD_PATH.unshift "./test/dummy/lib"
 require "dummy"
+require "view_component"
 
+Rails::Generators.namespace = Dummy
