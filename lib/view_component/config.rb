@@ -181,13 +181,13 @@ module ViewComponent
         return [] unless defined?(Rails::Engine)
 
         registered_rails_engines_with_previews.map do |descendant|
-          "#{descendant.root}/test/components/previews/#{descendant.engine_name}"
+          "#{descendant.root}/test/components/previews"
         end
       end
 
       def registered_rails_engines_with_previews
         Rails::Engine.descendants.select do |descendant|
-          defined?(descendant.root) && Dir.exist?("#{descendant.root}/test/components/previews/#{descendant.engine_name}")
+          defined?(descendant.root) && Dir.exist?("#{descendant.root}/test/components/previews")
         end
       end
 
