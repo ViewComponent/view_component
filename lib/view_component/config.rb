@@ -168,7 +168,7 @@ module ViewComponent
       # Defaults to `false`.
 
       def default_preview_paths
-        default_rails_preview_paths + default_rails_engines_preview_paths
+        (default_rails_preview_paths + default_rails_engines_preview_paths).uniq
       end
 
       def default_rails_preview_paths
