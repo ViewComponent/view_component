@@ -11,6 +11,7 @@ if ENV["MEASURE_COVERAGE"]
     formatter SimpleCov::Formatter::Console
   end
 end
+
 require "bundler/setup"
 require "minitest/autorun"
 require "rails"
@@ -20,3 +21,15 @@ require "dummy"
 require "view_component"
 
 Rails::Generators.namespace = Dummy
+
+def with_config_option(option_name, new_value, config_entrypoint: Dummy::Engine.config.view_component)
+  old_value = config_entrypoint.public_send(option_name)
+  config_entrypoint.public_send(:"#{option_name}=", new_value)
+  yield
+ensure
+  config_entrypoint.public_send(:"#{option_name}=", old_value)
+end
+
+def with_preview_paths(new_value, &block)
+  with_config_option(:preview_paths, new_value, &block)
+end
