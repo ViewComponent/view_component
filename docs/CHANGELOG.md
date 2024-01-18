@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add support for using view components in Rails Engine
+
+    *Tomasz Kowalewski*
+
 ## 3.11.0
 
 * Fix running non-integration tests under Rails main.
