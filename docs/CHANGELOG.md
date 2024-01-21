@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Make `use_helpers` a default method for all components
+
+      *Reegan Viljoen*
+
 * Bump `puma` in Gemfile.lock.
 
     *Cameron Dutro*
