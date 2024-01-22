@@ -71,7 +71,7 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.2
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       with:
         path: vendor/bundle
         key: gems-build-rails-7.1-ruby-3.2-${{ hashFiles('**/Gemfile.lock') }}
