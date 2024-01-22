@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add Strict helpers mode.
+
+    *Reegan Viljoen*
+
 * Make `use_helpers` a default method for all components
 
     *Reegan Viljoen*
