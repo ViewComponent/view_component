@@ -193,6 +193,20 @@ class RenderingTest < ViewComponent::TestCase
     ActionController::Base.allow_forgery_protection = old_value
   end
 
+  def test_renders_button_to_component_with_strict_helpers
+    with_strict_helpers_config(true) do
+      old_value = ActionController::Base.allow_forgery_protection
+      ActionController::Base.allow_forgery_protection = true
+
+      render_inline(ButtonToComponent.new) { "foo" }
+
+      assert_selector("form[class='button_to'][action='/'][method='post']")
+      assert_selector("input[type='hidden'][name='authenticity_token']", visible: false)
+
+      ActionController::Base.allow_forgery_protection = old_value
+    end
+  end
+
   def test_renders_component_with_variant
     with_variant :phone do
       render_inline(VariantsComponent.new)
@@ -345,6 +359,22 @@ class RenderingTest < ViewComponent::TestCase
 
       # Propshaft doesn't allow setting custom hosts so this only works in Rails < 8
       # TODO: Revisit this comment for v4 to see if we need to make any deprecations
+      component.config.asset_host = nil
+      assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
+
+      component.config.asset_host = "http://assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+
+      component.config.asset_host = "assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+    end
+  end
+
+  def test_renders_component_with_asset_url_with_strict_helpers
+    with_strict_helpers_config(true) do
+      component = AssetComponent.new
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+
       component.config.asset_host = nil
       assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
 
@@ -785,6 +815,14 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("http://assets.example.com")
   end
 
+  def test_renders_component_using_rails_config_with_strict_helpers
+    with_strict_helpers_config(true) do
+      render_inline(RailsConfigComponent.new)
+
+      assert_text("http://assets.example.com")
+    end
+  end
+
   def test_inherited_component_inherits_template
     render_inline(InheritedTemplateComponent.new)
 
@@ -1141,6 +1179,14 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
   end
 
+  def test_content_security_policy_nonce_with_strict_helpers
+    with_strict_helpers_config(true) do
+      render_inline(ContentSecurityPolicyNonceComponent.new)
+
+      assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
+    end
+  end
+
   def test_use_helper
     render_inline(UseHelpersComponent.new)
     assert_selector ".helper__message", text: "Hello helper method"
@@ -1231,6 +1277,13 @@ class RenderingTest < ViewComponent::TestCase
       render_inline(MultipleFormatsComponent.new)
 
       assert_equal(rendered_json["hello"], "world")
+  end
+
+  def test_strict_helpers
+    with_strict_helpers_config(true) do
+      assert_raises ViewComponent::StrictHelperError do
+        render_inline(HelpersProxyComponent.new)
+      end
     end
   end
 
