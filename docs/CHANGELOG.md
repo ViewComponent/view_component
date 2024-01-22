@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Make `use_helpers` a default method for all components
+* Include ViewComponent::UseHelpers by default instead.
 
       *Reegan Viljoen*
 
