@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Include ViewComponent::UseHelpers by default instead.
+* Include ViewComponent::UseHelpers by default.
 
       *Reegan Viljoen*
 
