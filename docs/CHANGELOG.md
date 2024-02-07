@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Include ViewComponent::UseHelpers by default.
+
+      *Reegan Viljoen*
+
 * Bump `puma` in Gemfile.lock.
 
     *Cameron Dutro*

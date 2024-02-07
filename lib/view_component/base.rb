@@ -28,6 +28,7 @@ module ViewComponent
     end
 
     include ViewComponent::InlineTemplate
+    include ViewComponent::UseHelpers
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
