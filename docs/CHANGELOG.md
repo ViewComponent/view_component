@@ -18,6 +18,10 @@ nav_order: 5
 
     *Cameron Dutro*
 
+* Add Keenly to users list.
+
+    *Vinoth*
+
 ## 3.10.0
 
 * Fix html escaping in `#call` for non-strings.

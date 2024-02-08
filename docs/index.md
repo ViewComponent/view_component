@@ -240,6 +240,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
+* [Keenly](https://www.keenly.so) (100+ components)
 * [Krystal](https://krystal.uk)
 * [Litmus](https://litmus.engineering/)
 * [Login.gov](https://github.com/18F/identity-idp)
