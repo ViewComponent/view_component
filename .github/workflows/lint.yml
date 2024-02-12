@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Vale
-        uses: errata-ai/vale-action@3f7188c866bcb3259339a09f517d7c4a8838303c
+        uses: errata-ai/vale-action@38bf078c328061f59879b347ca344a718a736018
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   markdown:
