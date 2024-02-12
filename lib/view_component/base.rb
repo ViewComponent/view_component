@@ -38,7 +38,6 @@ module ViewComponent
     VC_INTERNAL_DEFAULT_FORMAT = :html
 
     # For CSRF authenticity tokens in forms and Content Security Policy nonces
-    use_helpers :form_authenticity_token, :protect_against_forgery?, :config, :content_security_policy_nonce
 
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
@@ -71,7 +70,19 @@ module ViewComponent
     # @return [String]
     def render_in(view_context, &block)
       self.class.compile(raise_errors: true)
+      if ViewComponent::Base.config.strict_helpers_enabled
+        class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
+          use_helpers :form_authenticity_token, :protect_against_forgery?, :config, :content_security_policy_nonce
+        RUBY
+      else
+        class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
+          # For CSRF authenticity tokens in forms
+          delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
+          # For Content Security Policy nonces
+          delegate :content_security_policy_nonce, to: :helpers
+        RUBY
+      end
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
@@ -232,7 +243,7 @@ module ViewComponent
     # @return [ActionView::Base]
     def helpers
       raise HelpersCalledBeforeRenderError if view_context.nil?
-      raise StrictHelperError if ViewComponent::Base.strict_helpers_enabled
+      raise StrictHelperError if ViewComponent::Base.config.strict_helpers_enabled
       # Attempt to re-use the original view_context passed to the first
       # component rendered in the rendering pipeline. This prevents the
       # instantiation of a new view_context via `controller.view_context` which
@@ -249,7 +260,7 @@ module ViewComponent
         super
       rescue => e # rubocop:disable Style/RescueStandardError
         e.set_backtrace e.backtrace.tap(&:shift)
-        if ViewComponent::Base.strict_helpers_enabled
+        if ViewComponent::Base.config.strict_helpers_enabled
           raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && (__vc_original_view_context.respond_to?(method_name) || controller.view_context.respond_to?(method_name))
             #{e.message}
 
@@ -257,11 +268,11 @@ module ViewComponent
           MESSAGE
         elsif view_context && e.is_a?(NameError) && helpers.respond_to?(method_name)
           raise e, <<~MESSAGE.chomp
-end
             #{e.message}
 
             You may be trying to call a method provided as a view helper. Did you mean `helpers.#{method_name}'?
           MESSAGE
+        end
 
         raise
       end
