@@ -14,7 +14,7 @@ nav_order: 5
 
     *Reegan Viljoen*
 
-* Make `use_helpers` a default method for all components
+* Include ViewComponent::UseHelpers by default.
 
     *Reegan Viljoen*
 
