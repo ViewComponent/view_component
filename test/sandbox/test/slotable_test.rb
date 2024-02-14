@@ -752,4 +752,10 @@ class SlotableTest < ViewComponent::TestCase
       end
     end
   end
+
+  def test_inline_html_escape_with_integer
+    assert_nothing_raised do
+      render_inline InlineIntegerComponent.new
+    end
+  end
 end

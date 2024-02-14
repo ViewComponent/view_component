@@ -2,6 +2,6 @@
 
 class InheritedFromUncompilableComponent < UncompilableComponent
   def call
-    "<div>hello world</div>"
+    "<div>hello world</div>".html_safe
   end
 end

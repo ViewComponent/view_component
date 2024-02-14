@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 gem "capybara", "~> 3"
-gem "rails", "~> 7.1"
+gem "rails", github: "rails/rails", branch: "main"
 gem "rspec-rails", "~> 5"
 gem "net-imap", require: false
 gem "net-pop", require: false

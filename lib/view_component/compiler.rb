@@ -16,6 +16,7 @@ module ViewComponent
     def initialize(component_class)
       @component_class = component_class
       @redefinition_lock = Mutex.new
+      @variants_rendering_templates = Set.new
     end
 
     def compiled?
@@ -56,7 +57,7 @@ module ViewComponent
           RUBY
           # rubocop:enable Style/EvalWithLocation
 
-          component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
+          component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
 
           component_class.silence_redefinition_of_method("render_template_for")
           component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -68,6 +69,7 @@ module ViewComponent
       else
         templates.each do |template|
           method_name = call_method_name(template[:variant])
+          @variants_rendering_templates << template[:variant]
 
           redefinition_lock.synchronize do
             component_class.silence_redefinition_of_method(method_name)
@@ -89,6 +91,10 @@ module ViewComponent
       CompileCache.register(component_class)
     end
 
+    def renders_template_for_variant?(variant)
+      @variants_rendering_templates.include?(variant)
+    end
+
     private
 
     attr_reader :component_class, :redefinition_lock
@@ -101,7 +107,7 @@ module ViewComponent
         "elsif variant.to_sym == :'#{variant}'\n    #{safe_name}"
       end.join("\n")
 
-      component_class.define_method("_call_#{safe_class_name}", component_class.instance_method(:call))
+      component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
 
       body = <<-RUBY
         if variant.nil?
