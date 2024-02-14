@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Move dependencies to gemspec.
+
+    *Joel Hawksley*
+
 * Include ViewComponent::UseHelpers by default.
 
       *Reegan Viljoen*
