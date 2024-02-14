@@ -6,6 +6,6 @@ class InlineRenderComponent < ViewComponent::Base
   end
 
   def call
-    @items.map { |c| render(c) }.join
+    @items.map { |c| render(c) }.join.html_safe
   end
 end

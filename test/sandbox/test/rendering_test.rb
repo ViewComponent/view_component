@@ -151,7 +151,9 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_jbuilder_template
-    render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
+    with_request_url("/", format: :json) do
+      render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
+    end
 
     assert_text("foo")
     assert_text("bar")
@@ -887,10 +889,22 @@ class RenderingTest < ViewComponent::TestCase
     assert_equal 1, PartialHelper::State.calls
   end
 
+  def test_output_preamble
+    render_inline(BeforeRenderComponent.new)
+
+    assert_text("Well, Hello!")
+  end
+
   def test_output_postamble
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")
+  end
+
+  def test_output_preamble_and_postamble
+    render_inline(BeforeAndAfterRenderComponent.new)
+
+    assert_text("Well, Hello, World!")
   end
 
   def test_compilation_in_development_mode
@@ -1084,7 +1098,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_content_predicate_true
-    render_inline(ContentPredicateComponent.new.with_content("foo"))
+    render_inline(ContentPredicateComponent.new.with_content("foo".html_safe))
 
     assert_text("foo")
   end

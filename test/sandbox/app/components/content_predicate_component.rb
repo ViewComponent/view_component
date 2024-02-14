@@ -5,7 +5,7 @@ class ContentPredicateComponent < ViewComponent::Base
     if content?
       content
     else
-      "Default"
+      "Default".html_safe
     end
   end
 end

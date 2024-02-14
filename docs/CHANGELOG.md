@@ -10,6 +10,50 @@ nav_order: 5
 
 ## main
 
+* Include ViewComponent::UseHelpers by default.
+
+      *Reegan Viljoen*
+
+* Bump `puma` in Gemfile.lock.
+
+    *Cameron Dutro*
+
+* Add Keenly to users list.
+
+    *Vinoth*
+
+## 3.10.0
+
+* Fix html escaping in `#call` for non-strings.
+
+    *Reegan Viljoen, Cameron Dutro*
+
+* Add `output_preamble` to match `output_postamble`, using the same safety checks.
+
+    *Kali Donovan, Michael Daross*
+
+* Exclude html escaping of I18n reserved keys with `I18n::RESERVED_KEYS` rather than `I18n.reserved_keys_pattern`.
+
+    *Nick Coyne*
+
+* Update CI configuration to use `Appraisal`.
+
+    *Hans Lemuet, Simon Fish*
+
+## 3.9.0
+
+* Don’t break `rails stats` if ViewComponent path is missing.
+
+    *Claudio Baccigalupo*
+
+* Add deprecation warnings for EOL ruby and Rails versions and patches associated with them.
+
+    *Reegan Viljoen*
+
+* Add support for Ruby 3.3.
+
+    *Reegan Viljoen*
+
 * Allow translations to be inherited and overridden in subclasses.
 
     *Elia Schito*
@@ -21,6 +65,14 @@ nav_order: 5
 * Fix spelling in a local variable.
 
     *Olle Jonsson*
+
+* Avoid duplicating rendered string when `output_postamble` is blank.
+
+    *Mitchell Henke*
+
+* Ensure HTML output safety.
+
+    *Cameron Dutro*
 
 ## 3.8.0
 
@@ -236,6 +288,17 @@ This release makes the following breaking changes, many of which have long been 
 * BREAKING: Remove deprecated slots setter methods. Use `with_SLOT_NAME` instead.
 
     *Joel Hawksley*
+
+For example:
+
+```diff
+<%= render BlogComponent.new do |component| %>
+-  <% component.header do %>
++  <% component.with_header do %>
+    <%= link_to "My blog", root_path %>
+  <% end %>
+<% end %>
+```
 
 * BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
 

@@ -18,6 +18,10 @@ group :test do
   gem "selenium-webdriver", "4.9.0" # 4.9.1 requires Ruby 3+
 end
 
+group :development, :test do
+  gem "appraisal", "~> 2.5"
+end
+
 if RUBY_VERSION >= "3.1"
   gem "net-imap", require: false
   gem "net-pop", require: false

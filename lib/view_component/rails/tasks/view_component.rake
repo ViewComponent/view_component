@@ -7,7 +7,8 @@ namespace :view_component do
     # :nocov:
     require "rails/code_statistics"
 
-    ::STATS_DIRECTORIES << ["ViewComponents", ViewComponent::Base.view_component_path]
+    dir = ViewComponent::Base.view_component_path
+    ::STATS_DIRECTORIES << ["ViewComponents", dir] if File.directory?(Rails.root + dir)
     # :nocov:
   end
 end

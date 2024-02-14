@@ -2,6 +2,6 @@
 
 class CustomTestControllerComponent < ViewComponent::Base
   def call
-    helpers.foo
+    html_escape(helpers.foo)
   end
 end
