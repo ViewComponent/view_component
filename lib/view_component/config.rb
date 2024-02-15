@@ -25,7 +25,8 @@ module ViewComponent
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
           default_preview_layout: nil,
-          capture_compatibility_patch_enabled: false
+          capture_compatibility_patch_enabled: false,
+          template_extension: "html"
         })
       end
 

@@ -205,11 +205,15 @@ module ViewComponent
 
           component_class.sidecar_files(extensions).each_with_object([]) do |path, memo|
             pieces = File.basename(path).split(".")
-            memo << {
-              path: path,
-              variant: pieces[1..-2].join(".").split("+").second&.to_sym,
-              handler: pieces.last
-            }
+            
+            # Only load the template of the correct file type, defaults to "html"
+            if ViewComponent::Base.config.template_extension.casecmp?(pieces.second)
+              memo << {
+                path: path,
+                variant: pieces[1..-2].join(".").split("+").second&.to_sym,
+                handler: pieces.last
+              }
+            end
           end
         end
     end
