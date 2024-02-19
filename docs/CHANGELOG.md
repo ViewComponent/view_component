@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Document using rack-mini-profiler with ViewComponent
+
+    *Thomas Carr*
+
 * Move dependencies to gemspec.
 
     *Joel Hawksley*
