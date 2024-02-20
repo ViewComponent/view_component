@@ -38,9 +38,9 @@ When using `render.view_component` with `config.server_timing = true` (default i
 
 ## Viewing instrumentation breakdowns in rack-mini-profiler
 
-The [rack-mini-profiler gem](https://rubygems.org/gems/rack-mini-profiler) is a popular tool for profiling any rack-based ruby application.
+The [rack-mini-profiler gem](https://rubygems.org/gems/rack-mini-profiler) is a popular tool for profiling rack-based Ruby applications.
 
-To profile ViewComponent rendering alongside your views and partials:
+To profile ViewComponent rendering alongside views and partials:
 
 ```ruby
 # config/environments/development.rb

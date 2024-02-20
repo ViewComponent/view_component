@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Document using rack-mini-profiler with ViewComponent
+* Document using rack-mini-profiler with ViewComponent.
 
     *Thomas Carr*
 
