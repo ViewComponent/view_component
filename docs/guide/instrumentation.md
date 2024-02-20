@@ -23,8 +23,7 @@ Setting `use_deprecated_instrumentation_name` configures the event name. If `fal
 Subscribe to the event:
 
 ```ruby
-ActiveSupport::Notifications.subscribe("render.view_component") do |*args| # or !render.view_component
-  event = ActiveSupport::Notifications::Event.new(*args)
+ActiveSupport::Notifications.subscribe("render.view_component") do |event| # or !render.view_component
   event.name    # => "render.view_component"
   event.payload # => { name: "MyComponent", identifier: "/Users/mona/project/app/components/my_component.rb" }
 end
