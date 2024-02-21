@@ -238,6 +238,8 @@ module ViewComponent
     #
     # @return [ActionDispatch::TestRequest]
     def vc_test_request
+      require "action_controller/test_case"
+
       @vc_test_request ||=
         begin
           out = ActionDispatch::TestRequest.create
