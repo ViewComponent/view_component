@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Better name and link for Avo
+* Better name and link for Avo.
 
     *Adrian Marin*
 
