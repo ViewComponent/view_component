@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Fix running non-integration tests under Rails main
+* Fix running non-integration tests under Rails main.
 
     *Cameron Dutro*
 
