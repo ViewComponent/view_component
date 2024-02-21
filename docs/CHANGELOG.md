@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Better name and link for Avo
+
+    *Adrian Marin*
+
 * Document using rack-mini-profiler with ViewComponent.
 
     *Thomas Carr*
