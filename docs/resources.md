@@ -66,6 +66,7 @@ _Is this page missing a link? Open a PR!_
 - [ActionView::Components in Rails 6.1, Drifting Ruby - paid content](https://www.driftingruby.com/episodes/viewcomponent-in-rails)
 - [ViewComponent in the Wild I: building modern Rails frontends](https://evilmartians.com/chronicles/viewcomponent-in-the-wild-building-modern-rails-frontends)
 - [ViewComponent in the Wild II: supercharging your components](https://evilmartians.com/chronicles/viewcomponent-in-the-wild-supercharging-your-components)
+- [Quicktips for ViewComponent with Tailwind CSS/Hotwire ](https://railsdesigner.com/viewcomponents-and-tailwindcss/)
 
 ## Etcetera
 
