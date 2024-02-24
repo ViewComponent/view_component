@@ -233,7 +233,7 @@ module ViewComponent
     # @return [ActionView::Base]
     def helpers
       raise HelpersCalledBeforeRenderError if view_context.nil?
-      raise StrictHelperError if ViewComponent::Base.config.strict_helpers_enabled
+      raise StrictHelperError unless ViewComponent::Base.config.helpers_enabled
       # Attempt to re-use the original view_context passed to the first
       # component rendered in the rendering pipeline. This prevents the
       # instantiation of a new view_context via `controller.view_context` which
@@ -250,7 +250,7 @@ module ViewComponent
         super
       rescue => e # rubocop:disable Style/RescueStandardError
         e.set_backtrace e.backtrace.tap(&:shift)
-        if ViewComponent::Base.config.strict_helpers_enabled
+        if !ViewComponent::Base.config.helpers_enabled
           raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && (__vc_original_view_context.respond_to?(method_name) || controller.view_context.respond_to?(method_name))
             #{e.message}
 
