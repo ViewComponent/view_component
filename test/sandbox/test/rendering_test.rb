@@ -194,7 +194,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_renders_button_to_component_with_strict_helpers
-    with_strict_helpers_config(true) do
+    with_helpers_enabled_config(false) do
       old_value = ActionController::Base.allow_forgery_protection
       ActionController::Base.allow_forgery_protection = true
 
@@ -371,7 +371,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_renders_component_with_asset_url_with_strict_helpers
-    with_strict_helpers_config(true) do
+    with_helpers_enabled_config(false) do
       component = AssetComponent.new
       assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
 
@@ -816,7 +816,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_renders_component_using_rails_config_with_strict_helpers
-    with_strict_helpers_config(true) do
+    with_helpers_enabled_config(false) do
       render_inline(RailsConfigComponent.new)
 
       assert_text("http://assets.example.com")
@@ -1180,7 +1180,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_content_security_policy_nonce_with_strict_helpers
-    with_strict_helpers_config(true) do
+    with_helpers_enabled_config(false) do
       render_inline(ContentSecurityPolicyNonceComponent.new)
 
       assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
@@ -1280,7 +1280,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_strict_helpers
-    with_strict_helpers_config(true) do
+    with_helpers_enabled_config(false) do
       assert_raises ViewComponent::StrictHelperError do
         render_inline(HelpersProxyComponent.new)
       end
