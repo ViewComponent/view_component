@@ -43,9 +43,8 @@ module ViewComponent
     RESERVED_PARAMETER = :content
     VC_INTERNAL_DEFAULT_FORMAT = :html
 
-    use_helpers :form_authenticity_token, :protect_against_forgery?, :config, :content_security_policy_nonce
-
     # For CSRF authenticity tokens in forms and Content Security Policy nonces
+    use_helpers :form_authenticity_token, :protect_against_forgery?, :config, :content_security_policy_nonce
 
     attr_accessor :__vc_original_view_context
 
