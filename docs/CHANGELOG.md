@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `helpers_enabled` config.
+
+    *Reegan Viljoen*
+
 ## 3.11.0
 
 * Fix running non-integration tests under Rails main.
