@@ -439,10 +439,32 @@ module ViewComponent
     # ```
     #
     #  Defaults to `false`.
+    
+    # Retrieve which file extension is to be used as the template
+    #
+    # By default it will use `nil`, the ViewComponent config default value,
+    # but can be overridden per component by adding `self.template_extension = <value>`
+    # in the component's `initialize` method.
+    #
+    def template_extension
+      singleton_class.template_ext ||= config.template_extension
+    end
+    
+    def template_extension=(extension)
+      singleton_class.template_ext = extension
+    end
 
     class << self
       # @private
       attr_accessor :source_location, :virtual_path
+      
+      def template_ext
+        @@template_extension ||= template_extension
+      end
+      
+      def template_ext=(extension)
+        @@template_extension = extension
+      end
 
       # Find sidecar files for the given extensions.
       #
@@ -460,6 +482,13 @@ module ViewComponent
         directory = File.dirname(source_location)
         filename = File.basename(source_location, ".rb")
         component_name = name.demodulize.underscore
+        
+        # Limit template type if set in component configuration
+        component_template_extension_glob = ""
+        
+        unless template_ext.nil?
+          component_template_extension_glob = ".*{#{template_ext}}"
+        end
 
         # Add support for nested components defined in the same file.
         #
@@ -473,15 +502,15 @@ module ViewComponent
         # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
         nested_component_files =
           if name.include?("::") && component_name != filename
-            Dir["#{directory}/#{filename}/#{component_name}.*{#{extensions}}"]
+            Dir["#{directory}/#{filename}/#{component_name}#{component_template_extension_glob}.*{#{extensions}}"]
           else
             []
           end
 
         # view files in the same directory as the component
-        sidecar_files = Dir["#{directory}/#{component_name}.*{#{extensions}}"]
+        sidecar_files = Dir["#{directory}/#{component_name}#{component_template_extension_glob}.*{#{extensions}}"]
 
-        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
+        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}#{component_template_extension_glob}.*{#{extensions}}"]
 
         (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files).uniq
       end

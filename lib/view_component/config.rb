@@ -26,7 +26,7 @@ module ViewComponent
           test_controller: "ApplicationController",
           default_preview_layout: nil,
           capture_compatibility_patch_enabled: false,
-          template_extension: "html"
+          template_extension: nil
         })
       end
 
@@ -154,6 +154,11 @@ module ViewComponent
       # compatible with forms, capture, and other built-ins.
       # previews.
       # Defaults to `false`.
+      
+      # @!attribute template_extension
+      # @return [String]
+      # Define which file extension is to be used as the template.
+      # Defaults to `nil`.
 
       def default_preview_paths
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
