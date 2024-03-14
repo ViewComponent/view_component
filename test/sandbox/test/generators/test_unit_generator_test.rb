@@ -14,6 +14,7 @@ class TestUnitGeneratorTest < Rails::Generators::TestCase
     run_generator %w[Dummy data]
 
     assert_file "test/components/dummy_component_test.rb" do |content|
+      assert_no_match(/module/, content)
       assert_match(
         /render_inline\(DummyComponent.new\(message: "Hello, components!"\)\).css\("span"\).to_html/, content
       )
