@@ -154,7 +154,7 @@ module ViewComponent
       # compatible with forms, capture, and other built-ins.
       # previews.
       # Defaults to `false`.
-      
+
       # @!attribute template_extension
       # @return [String]
       # Define which file extension is to be used as the template.

@@ -1113,10 +1113,10 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(UseHelpersComponent.new)
     assert_selector ".helper__message", text: "Hello helper method"
   end
-  
+
   def test_renders_when_more_than_one_handler_file_exists_but_template_extension_has_been_defined
     render_inline(TemplateExtensionDefinedComponent.new(message: "bar")) { "foo" }
-    
+
     assert_text("foo")
     assert_text("bar")
   end

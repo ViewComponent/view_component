@@ -439,7 +439,7 @@ module ViewComponent
     # ```
     #
     #  Defaults to `false`.
-    
+
     # Retrieve which file extension is to be used as the template
     #
     # By default it will use `nil`, the ViewComponent config default value,
@@ -449,7 +449,7 @@ module ViewComponent
     def template_extension
       singleton_class.template_ext ||= config.template_extension
     end
-    
+
     def template_extension=(extension)
       singleton_class.template_ext = extension
     end
@@ -457,11 +457,11 @@ module ViewComponent
     class << self
       # @private
       attr_accessor :source_location, :virtual_path
-      
+
       def template_ext
         @@template_extension ||= template_extension
       end
-      
+
       def template_ext=(extension)
         @@template_extension = extension
       end
@@ -482,10 +482,10 @@ module ViewComponent
         directory = File.dirname(source_location)
         filename = File.basename(source_location, ".rb")
         component_name = name.demodulize.underscore
-        
+
         # Limit template type if set in component configuration
         component_template_extension_glob = ""
-        
+
         unless template_ext.nil?
           component_template_extension_glob = ".*{#{template_ext}}"
         end
