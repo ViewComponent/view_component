@@ -440,30 +440,21 @@ module ViewComponent
     #
     #  Defaults to `false`.
 
-    # Retrieve which file extension is to be used as the template
-    #
-    # By default it will use `nil`, the ViewComponent config default value,
-    # but can be overridden per component by adding `self.template_extension = <value>`
-    # in the component's `initialize` method.
-    #
-    def template_extension
-      singleton_class.template_ext ||= config.template_extension
-    end
-
-    def template_extension=(extension)
-      singleton_class.template_ext = extension
-    end
-
     class << self
       # @private
       attr_accessor :source_location, :virtual_path
 
+      # If the component class sets the template extension, use it
+      #
+      # A component overrides the global default by setting the
+      # VC_TEMPLATE_EXTENSION constant of the component class
+      #
       def template_ext
-        @@template_extension ||= template_extension
-      end
+        if const_defined?(:VC_TEMPLATE_EXTENSION)
+          return self::VC_TEMPLATE_EXTENSION
+        end
 
-      def template_ext=(extension)
-        @@template_extension = extension
+        template_extension
       end
 
       # Find sidecar files for the given extensions.

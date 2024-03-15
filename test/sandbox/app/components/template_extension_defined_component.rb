@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class TemplateExtensionDefinedComponent < ViewComponent::Base
-  def initialize(message:)
-    self.template_extension = "html"
+  VC_TEMPLATE_EXTENSION = "html"
 
+  def initialize(message:)
     @message = message
   end
 end

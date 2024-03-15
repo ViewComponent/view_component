@@ -192,3 +192,15 @@ class MyComponent < ViewComponent::Base
   strip_trailing_whitespace(false)
 end
 ```
+
+## Setting template file extension
+
+Sometimes a component will warrant the use of multiple file types for a single template handler. An example would be ERB handled files for both HTML and CSS. By default ViewComponent will return a "More than one template found for" error. To avoid this set the `VC_TEMPLATE_EXTENSION` constant in your component to the file extension of the template you wish your component to use.
+
+```ruby
+class MyComponent < ViewComponent::Base
+  VC_TEMPLATE_EXTENSION = 'html'
+  
+  ...
+end
+``` 
