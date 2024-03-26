@@ -445,6 +445,19 @@ module ViewComponent
       # @private
       attr_accessor :source_location, :virtual_path
 
+      # If the component class sets the template extension, use it
+      #
+      # A component overrides the global default by setting the
+      # VC_TEMPLATE_EXTENSION constant of the component class
+      #
+      def template_ext
+        if const_defined?(:VC_TEMPLATE_EXTENSION)
+          return self::VC_TEMPLATE_EXTENSION
+        end
+
+        template_extension
+      end
+
       # Find sidecar files for the given extensions.
       #
       # The provided array of extensions is expected to contain
@@ -462,6 +475,13 @@ module ViewComponent
         filename = File.basename(source_location, ".rb")
         component_name = name.demodulize.underscore
 
+        # Limit template type if set in component configuration
+        component_template_extension_glob = ""
+
+        unless template_ext.nil?
+          component_template_extension_glob = ".*{#{template_ext}}"
+        end
+
         # Add support for nested components defined in the same file.
         #
         # for example
@@ -474,15 +494,15 @@ module ViewComponent
         # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
         nested_component_files =
           if name.include?("::") && component_name != filename
-            Dir["#{directory}/#{filename}/#{component_name}.*{#{extensions}}"]
+            Dir["#{directory}/#{filename}/#{component_name}#{component_template_extension_glob}.*{#{extensions}}"]
           else
             []
           end
 
         # view files in the same directory as the component
-        sidecar_files = Dir["#{directory}/#{component_name}.*{#{extensions}}"]
+        sidecar_files = Dir["#{directory}/#{component_name}#{component_template_extension_glob}.*{#{extensions}}"]
 
-        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
+        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}#{component_template_extension_glob}.*{#{extensions}}"]
 
         (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files).uniq
       end
