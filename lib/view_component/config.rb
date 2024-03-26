@@ -87,11 +87,11 @@ module ViewComponent
       #
       #     config.view_component.generate.use_component_path_for_rspec_tests = true
       #
-      # When this is `true`, the generator will use the `view_component_path` as
-      # its guide for deciding where to generate the new RSpec component test.
-      # For example, if the `view_component_path` option has been changed to
+      # When set to `true`, the generator will use the `view_component_path` to
+      # decide where to generate the new RSpec component test.
+      # For example, if the `view_component_path` is
       # `app/views/components`, then the generator will create a new spec file
-      # in `spec/views/components/` rather than the usual `spec/components/`.
+      # in `spec/views/components/` rather than the default `spec/components/`.
 
       # @!attribute preview_controller
       # @return [String]
