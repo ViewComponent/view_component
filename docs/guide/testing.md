@@ -26,6 +26,8 @@ end
 
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
+For debugging purposes, the `rendered_content` test helper outputs the rendered HTML.
+
 ## Testing Slots
 
 ```ruby

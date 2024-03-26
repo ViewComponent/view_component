@@ -10,9 +10,35 @@ nav_order: 5
 
 ## main
 
+## 3.11.0
+
+* Fix running non-integration tests under Rails main.
+
+    *Cameron Dutro*
+
+* Better name and link for Avo.
+
+    *Adrian Marin*
+
+* Document using rack-mini-profiler with ViewComponent.
+
+    *Thomas Carr*
+
+* Move dependencies to gemspec.
+
+    *Joel Hawksley*
+
+* Include ViewComponent::UseHelpers by default.
+
+      *Reegan Viljoen*
+
 * Bump `puma` in Gemfile.lock.
 
     *Cameron Dutro*
+
+* Add Keenly to users list.
+
+    *Vinoth*
 
 ## 3.10.0
 

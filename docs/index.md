@@ -216,12 +216,13 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/thomascchen?s=64" alt="thomascchen" width="32" />
 <img src="https://avatars.githubusercontent.com/milk1000cc?s=64" alt="milk1000cc" width="32" />
 <img src="https://avatars.githubusercontent.com/aduth?s=64" alt="aduth" width="32" />
+<img src="https://avatars.githubusercontent.com/htcarr3?s=64" alt="htcarr3" width="32" />
 
 ## Who uses ViewComponent?
 
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
-* [Avo](https://avohq.io/)
+* [Avo Admin for Rails](https://avohq.io/rails-admin)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [Causey](https://www.causey.app/) (100+ components)
@@ -240,6 +241,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
+* [Keenly](https://www.keenly.so) (100+ components)
 * [Krystal](https://krystal.uk)
 * [Litmus](https://litmus.engineering/)
 * [Login.gov](https://github.com/18F/identity-idp)
