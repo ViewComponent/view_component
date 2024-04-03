@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix templates not being correctly populated when caller location label has a prefix.
+
+    *Allan Pires, Jason Kim*
+
 * Use component path for generating RSpec files.
 
 When generating new RSpec files for components, the generator will use the `view_component_path` value in the config to decide where to put the new spec file. For instance, if the `view_component_path` option has been changed to `app/views/components`, the generator will put the spec file in `spec/views/components`. **If the `view_component_path` doesn't start with `app/`, then the generator will fall back to `spec/components/`.**
