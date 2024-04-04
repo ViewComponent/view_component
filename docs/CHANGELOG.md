@@ -12,7 +12,7 @@ nav_order: 5
 
 * Fix templates not being correctly populated when caller location label has a prefix.
 
-On the upstream version of ruby, method owners are now included in backtraces as prefixes. This ruby change caused the callstack filtering to not work as intended, which can lead to `source_location` to be incorrect for child ViewComponents, consequently not populating templates correctly.
+On the upstream version of Ruby, method owners are now included in backtraces as prefixes. This caused the call stack filtering to not work as intended and thus `source_location` to be incorrect for child ViewComponents, consequently not populating templates correctly.
 
     *Allan Pires, Jason Kim*
 
