@@ -537,7 +537,9 @@ module ViewComponent
         # Derive the source location of the component Ruby file from the call stack.
         # We need to ignore `inherited` frames here as they indicate that `inherited`
         # has been re-defined by the consuming application, likely in ApplicationComponent.
-        child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].path
+        # We use `base_label` method here instead of `label` to avoid cases where the method
+        # owner is included in a prefix like `ApplicationComponent.inherited`.
+        child.source_location = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
 
         # If Rails application is loaded, removes the first part of the path and the extension.
         if defined?(Rails) && Rails.application
