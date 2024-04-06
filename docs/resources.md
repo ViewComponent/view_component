@@ -31,7 +31,6 @@ _Is this page missing a link? Open a PR!_
 ## Podcasts
 
 - [Code with Jason - ViewComponent with Joel Hawksley, Staff Engineer at GitHub](https://www.codewithjason.com/podcast/9936046-130-viewcomponent-with-joel-hawksley-staff-engineer-at-github/)
-- [Remote Ruby - ViewComponents and the Future of Assets](https://remoteruby.transistor.fm/125)
 - [Ruby Rogues - RUX: JSX-Style Rails View Components](https://topenddevs.com/podcasts/ruby-rogues/episodes/rux-jsx-style-rails-view-components-ruby-517)
 - [Code with Jason - ViewComponent with Joel Hawksley of GitHub](https://www.codewithjason.com/podcast/9478227-088-viewcomponent-with-joel-hawksley-of-github/)
 - [Ruby Rogues - Rethinking the View Layer with Components](https://topenddevs.com/podcasts/ruby-rogues/episodes/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley)
