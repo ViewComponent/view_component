@@ -10,9 +10,7 @@ nav_order: 5
 
 ## main
 
-* Remove offline links from resource
-
-The `resources.md` file had two offline links and both were removed to keep the file up to date
+* Remove offline links from resources.
 
     *Paulo Henrique Meneses*
 
