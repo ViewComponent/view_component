@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add ruby head and YJIT to CI.
+
+    *Reegan Viljoen*
+
 * Remove offline links from resources.
 
     *Paulo Henrique Meneses*
