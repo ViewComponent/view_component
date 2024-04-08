@@ -26,7 +26,7 @@ jobs:
         bundle exec rake partial_benchmark
         bundle exec rake translatable_benchmark
   test:
-    name: test (${{ matrix.rails_version }}, ${{ matrix.ruby_version }}, ${{ matrix.mode }})
+    name: test (${{ matrix.rails_version }}, ${{ matrix.ruby_version }}, ${{ matrix.mode }}, yjit-${{matrix.yjit_mode}})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
