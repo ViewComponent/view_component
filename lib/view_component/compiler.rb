@@ -77,9 +77,12 @@ module ViewComponent
           redefinition_lock.synchronize do
             component_class.silence_redefinition_of_method(method_name)
             # rubocop:disable Style/EvalWithLocation
-            component_class.class_eval <<-RUBY, template[:path], 0
-            def #{method_name}
+            component_class.class_eval <<-RUBY, template[:path], -1
+            #{visibility}def #{method_name}(#{method_args})
+              old_buffer = @output_buffer if defined? @output_buffer
               #{compiled_template(template[:path])}
+            ensure
+              @output_buffer = old_buffer
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
