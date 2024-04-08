@@ -34,7 +34,7 @@ jobs:
         rails_version: ["6.1", "7.0", "7.1", "main"]
         ruby_version: ["3.1", "3.2", "3.3", "head"]
         mode: ["capture_patch_enabled", "capture_patch_disabled"]
-        YJIT_MODE: ['1', 'O']
+        yjit_mode: ['1', 'O']
         include:
           # Run against all previously supported Rails versions for Ruby 3.0
           - ruby_version: "3.0"
@@ -75,7 +75,7 @@ jobs:
         RAISE_ON_WARNING: 1
         RAILS_VERSION: ${{ matrix.rails_version }}
         CAPTURE_PATCH_ENABLED: ${{ matrix.mode == 'capture_patch_enabled' && 'true' || 'false' }}
-        RUBY_YJIT_ENABLE: ${{matrix.YJIT_MODE}}
+        RUBY_YJIT_ENABLE: ${{matrix.yjit_mode}}
     - name: Upload coverage results
       uses: actions/upload-artifact@v3.1.3
       if: always()
