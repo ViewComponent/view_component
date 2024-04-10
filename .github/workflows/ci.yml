@@ -40,21 +40,27 @@ jobs:
           - ruby_version: "3.0"
             rails_version: "6.1"
             mode: "capture_patch_enabled"
+            yjit_mode: '0'
           - ruby_version: "3.0"
             rails_version: "6.1"
             mode: "capture_patch_disabled"
+            yjit_mode: '0'
           - ruby_version: "3.0"
             rails_version: "7.0"
             mode: "capture_patch_enabled"
+            yjit_mode: '0'
           - ruby_version: "3.0"
             rails_version: "7.0"
             mode: "capture_patch_disabled"
+            yjit_mode: '0'
           - ruby_version: "3.0"
             rails_version: "7.1"
             mode: "capture_patch_enabled"
+            yjit_mode: '0'
           - ruby_version: "3.0"
             rails_version: "7.1"
             mode: "capture_patch_disabled"
+            yjit_mode: '0'
         exclude:
           # Dont run YJIT and Ruby head against Rails 6.1
           - rails_version: "6.1"
