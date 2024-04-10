@@ -55,6 +55,42 @@ jobs:
           - ruby_version: "3.0"
             rails_version: "7.1"
             mode: "capture_patch_disabled"
+        exclude:
+          # Dont run YJIT and Ruby head against Rails 6.1
+          - rails_version: "6.1"
+            ruby_version: "3.1"
+            mode: "capture_patch_enabled"
+            yjit_mode: '1'
+          - rails_version: "6.1"
+            ruby_version: "3.1"
+            mode: "capture_patch_disabled"
+            yjit_mode: '1'
+          - rails_version: "6.1"
+            ruby_version: "3.2"
+            mode: "capture_patch_enabled"
+            yjit_mode: '1'
+          - rails_version: "6.1"
+            ruby_version: "3.2"
+            mode: "capture_patch_disabled"
+            yjit_mode: '1'
+          - rails_version: "6.1"
+            ruby_version: "3.3"
+            mode: "capture_patch_enabled"
+            yjit_mode: '1'
+          - rails_version: "6.1"
+            ruby_version: "3.3"
+            mode: "capture_patch_disabled"
+            yjit_mode: '1'
+          - rails_version: "6.1"
+            ruby_version: "head"
+            mode: "capture_patch_enabled"
+            yjit_mode: '1'
+          - rails_version: "6.1"
+            ruby_version: "head"
+            mode: "capture_patch_enabled"
+            yjit_mode: '0'
+
+
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
