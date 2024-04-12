@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.12.0
+
 * Remove offline links from resources.
 
     *Paulo Henrique Meneses*
