@@ -14,6 +14,8 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+## 3.12.0
+
 * Remove offline links from resources.
 
     *Paulo Henrique Meneses*
