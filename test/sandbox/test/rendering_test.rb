@@ -1113,4 +1113,8 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(UseHelpersComponent.new)
     assert_selector ".helper__message", text: "Hello helper method"
   end
+
+  def test_nested_component
+    render_inline(NestedComponent.new)
+  end
 end
