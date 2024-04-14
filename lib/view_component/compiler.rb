@@ -247,9 +247,9 @@ module ViewComponent
 
     def compiled_inline_template(template)
       handler = ActionView::Template.handler_for_extension(template.language)
-      template.rstrip! if component_class.strip_trailing_whitespace?
+      template = template.source.dup
 
-      compile_template(template.source, handler)
+      compile_template(template, handler)
     end
 
     def compiled_template(file_path)
