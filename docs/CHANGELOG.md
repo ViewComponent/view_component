@@ -9,6 +9,7 @@ nav_order: 5
 # Changelog
 
 ## main
+
 * Fixed a bug where inline templates where unable to remove trailing whitespace without throwing an error
 
     *Reegan Viljoen*
