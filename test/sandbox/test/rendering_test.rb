@@ -1114,7 +1114,11 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector ".helper__message", text: "Hello helper method"
   end
 
-  def test_nested_component
-    render_inline(NestedComponent.new)
+  def test_inline_component_renders_without_trailing_whitespace
+    without_template_annotations do
+      render_inline(InlineTrailingWhitespaceComponent.new)
+    end
+
+    refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
   end
 end
