@@ -9,9 +9,7 @@ class ForwardingSlotComponent < ViewComponent::Base
   end
 
   def with_target_content(&block)
-    @target.with_target_content do
-      instance_exec(&block)
-    end
+    @target.with_target_content(&block)
   end
 
   def before_render
