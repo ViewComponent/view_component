@@ -57,7 +57,6 @@ module ViewComponent
 
           if defined?(@__vc_content_block)
             # render_in is faster than `parent.render`
-
             @__vc_component_instance.render_in(view_context) do |*args|
               return @__vc_content_block.call(*args) if @__vc_content_block&.source_location.nil?
 

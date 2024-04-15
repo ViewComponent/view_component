@@ -28,11 +28,5 @@ Benchmark.ips do |x|
     controller_view.render(Performance::SlotsWrapperComponent.new(name: "Fox Mulder"))
   end
 
-  x.report("slots with changes") do
-    controller_view.render(Performance::SlotsWrapperComponent.new(name: "Fox Mulder"))
-  end
-
-  x.hold!("results.json")
-
   x.compare!
 end
