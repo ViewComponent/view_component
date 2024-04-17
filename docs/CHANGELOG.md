@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Ensure content is rendered correctly for forwarded slots.
+
+    *Cameron Dutro*
+
 ## 3.12.0
 
 * Remove offline links from resources.

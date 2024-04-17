@@ -758,4 +758,10 @@ class SlotableTest < ViewComponent::TestCase
       render_inline InlineIntegerComponent.new
     end
   end
+
+  def test_forwarded_slot_renders_correctly
+    render_inline(ForwardingSlotWrapperComponent.new)
+
+    assert_text "Target content", count: 1
+  end
 end
