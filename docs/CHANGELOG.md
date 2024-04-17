@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.12.1
+
 * Ensure content is rendered correctly for forwarded slots.
 
     *Cameron Dutro*
