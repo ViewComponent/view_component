@@ -10,9 +10,55 @@ nav_order: 5
 
 ## main
 
+## 3.12.0
+
+* Remove offline links from resources.
+
+    *Paulo Henrique Meneses*
+
+* Fix templates not being correctly populated when caller location label has a prefix.
+
+On the upstream version of Ruby, method owners are now included in backtraces as prefixes. This caused the call stack filtering to not work as intended and thus `source_location` to be incorrect for child ViewComponents, consequently not populating templates correctly.
+
+    *Allan Pires, Jason Kim*
+
+* Use component path for generating RSpec files.
+
+When generating new RSpec files for components, the generator will use the `view_component_path` value in the config to decide where to put the new spec file. For instance, if the `view_component_path` option has been changed to `app/views/components`, the generator will put the spec file in `spec/views/components`. **If the `view_component_path` doesn't start with `app/`, then the generator will fall back to `spec/components/`.**
+
+This feature is enabled via the `config.view_component.generate.use_component_path_for_rspec_tests` option, defaulting to `false`. The default will change to `true` in ViewComponent v4.
+
+    *William Mathewson*
+
+## 3.11.0
+
+* Fix running non-integration tests under Rails main.
+
+    *Cameron Dutro*
+
+* Better name and link for Avo.
+
+    *Adrian Marin*
+
+* Document using rack-mini-profiler with ViewComponent.
+
+    *Thomas Carr*
+
+* Move dependencies to gemspec.
+
+    *Joel Hawksley*
+
+* Include ViewComponent::UseHelpers by default.
+
+      *Reegan Viljoen*
+
 * Bump `puma` in Gemfile.lock.
 
     *Cameron Dutro*
+
+* Add Keenly to users list.
+
+    *Vinoth*
 
 ## 3.10.0
 
