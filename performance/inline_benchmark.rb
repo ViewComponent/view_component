@@ -10,7 +10,7 @@ ENV["RAILS_ENV"] = "production"
 require File.expand_path("../test/sandbox/config/environment.rb", __dir__)
 
 module Performance
-  require_relative "components/inline_trailing_whitespace_component"
+  require_relative "components/new_inline_component"
 end
 
 class BenchmarksController < ActionController::Base
@@ -23,8 +23,8 @@ Benchmark.ips do |x|
   x.time = 10
   x.warmup = 2
 
-  x.report("strip_trailing_white_space") do
-    controller_view.render(Performance::InlineTrailingWhitespaceComponent.new)
+  x.report("inline_component") do
+    controller_view.render(Performance::NewInlineComponent.new(name: 'Reegan'))
   end
 
   x.compare!
