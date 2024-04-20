@@ -14,6 +14,12 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+## 3.12.1
+
+* Ensure content is rendered correctly for forwarded slots.
+
+    *Cameron Dutro*
+
 ## 3.12.0
 
 * Remove offline links from resources.
