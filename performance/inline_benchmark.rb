@@ -24,7 +24,7 @@ Benchmark.ips do |x|
   x.warmup = 2
 
   x.report("inline_component") do
-    controller_view.render(Performance::NewInlineComponent.new(name: 'Reegan'))
+    controller_view.render(Performance::NewInlineComponent.new(name: "Reegan"))
   end
 
   x.compare!

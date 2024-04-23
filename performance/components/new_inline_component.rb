@@ -15,16 +15,16 @@ class Performance::NewInlineComponent < ViewComponent::Base
     @name = name
   end
 
-    erb_template <<~ERB
-      <h1>hello #{@name}</h1>
-      <%=
-        safe_join(
-          [
-            content,
-            50.times.map { render NestedComponent.new(name: @name) }
-          ],
-          "\n\n"
-        )
-      %>
-    ERB
+  erb_template <<~ERB
+    <h1>hello #{@name}</h1>
+    <%=
+      safe_join(
+        [
+          content,
+          50.times.map { render NestedComponent.new(name: @name) }
+        ],
+        "\n\n"
+      )
+    %>
+  ERB
 end
