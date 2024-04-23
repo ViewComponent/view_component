@@ -30,6 +30,10 @@ task :slots_benchmark do
   ruby "./performance/slots_benchmark.rb"
 end
 
+task :inline_components_benchmark do
+  ruby "./performance/inline_benchmark.rb"
+end
+
 namespace :coverage do
   task :report do
     require "simplecov"
