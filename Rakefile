@@ -26,6 +26,14 @@ task :translatable_benchmark do
   ruby "./performance/translatable_benchmark.rb"
 end
 
+task :slots_benchmark do
+  ruby "./performance/slots_benchmark.rb"
+end
+
+task :inline_components_benchmark do
+  ruby "./performance/inline_benchmark.rb"
+end
+
 namespace :coverage do
   task :report do
     require "simplecov"
@@ -42,7 +50,10 @@ end
 namespace :docs do
   # Build api.md documentation page from YARD comments.
   task :build do
-    YARD::Rake::YardocTask.new
+    YARD::Rake::YardocTask.new do |t|
+      t.options = ["--no-output"]
+    end
+
     puts "Building YARD documentation."
 
     Rake::Task["yard"].execute

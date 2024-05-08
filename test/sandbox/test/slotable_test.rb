@@ -719,4 +719,49 @@ class SlotableTest < ViewComponent::TestCase
 
     assert component.title.content?
   end
+
+  def test_slot_with_unplurialized_name
+    exception =
+      assert_raises ViewComponent::UncountableSlotNameError do
+        Class.new(ViewComponent::Base) do
+          renders_many :series
+        end
+      end
+
+    assert_includes exception.message, ""
+  end
+
+  def test_slot_names_cannot_start_with_call_
+    assert_raises ViewComponent::InvalidSlotNameError do
+      Class.new(ViewComponent::Base) do
+        renders_one :call_out_title
+      end
+    end
+
+    assert_raises ViewComponent::InvalidSlotNameError do
+      Class.new(ViewComponent::Base) do
+        renders_many :call_out_titles
+      end
+    end
+  end
+
+  def test_slot_names_can_start_with_call
+    assert_nothing_raised do
+      Class.new(ViewComponent::Base) do
+        renders_one :callhome_et
+      end
+    end
+  end
+
+  def test_inline_html_escape_with_integer
+    assert_nothing_raised do
+      render_inline InlineIntegerComponent.new
+    end
+  end
+
+  def test_forwarded_slot_renders_correctly
+    render_inline(ForwardingSlotWrapperComponent.new)
+
+    assert_text "Target content", count: 1
+  end
 end

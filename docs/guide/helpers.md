@@ -51,6 +51,24 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
+## UseHelpers setter
+
+By default, ViewComponents don't have access to helper methods defined externally. The `use_helpers` method allows external helpers to be called from the component.
+
+`use_helpers` defines the helper on the component, similar to `delegate`:
+
+```ruby
+class UseHelpersComponent < ViewComponent::Base
+  use_helpers :icon
+
+  erb_template <<-ERB
+    <div class="icon">
+      <%= icon :user %>
+    </div>
+  ERB
+end
+```
+
 ## Nested URL helpers
 
 Rails nested URL helpers implicitly depend on the current `request` in certain cases. Since ViewComponent is built to enable reusing components in different contexts, nested URL helpers should be passed their options explicitly:

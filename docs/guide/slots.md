@@ -98,7 +98,7 @@ Arguments passed when calling a component slot will be used to initialize the co
 ```ruby
 # blog_component.rb
 class BlogComponent < ViewComponent::Base
-  # Since `HeaderComponent` is nested inside of this component, we've to
+  # Since `HeaderComponent` is nested inside of this component, we have to
   # reference it as a string instead of a class name.
   renders_one :header, "HeaderComponent"
 

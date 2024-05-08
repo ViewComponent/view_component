@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/concern"
+require "active_support/inflector/inflections"
 require "view_component/slot"
 
 module ViewComponent
@@ -92,11 +93,11 @@ module ViewComponent
             get_slot(slot_name)
           end
 
-          define_method "#{slot_name}?" do
+          define_method :"#{slot_name}?" do
             get_slot(slot_name).present?
           end
 
-          define_method "with_#{slot_name}_content" do |content|
+          define_method :"with_#{slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self
@@ -159,7 +160,7 @@ module ViewComponent
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method "with_#{singular_name}_content" do |content|
+          define_method :"with_#{singular_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self
@@ -179,7 +180,7 @@ module ViewComponent
             get_slot(slot_name)
           end
 
-          define_method "#{slot_name}?" do
+          define_method :"#{slot_name}?" do
             get_slot(slot_name).present?
           end
 
@@ -210,7 +211,7 @@ module ViewComponent
           get_slot(slot_name)
         end
 
-        define_method("#{slot_name}?") do
+        define_method(:"#{slot_name}?") do
           get_slot(slot_name).present?
         end
 
@@ -245,7 +246,7 @@ module ViewComponent
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method "with_#{poly_slot_name}_content" do |content|
+          define_method :"with_#{poly_slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self
@@ -295,6 +296,8 @@ module ViewComponent
           raise ReservedPluralSlotNameError.new(name, slot_name)
         end
 
+        raise_if_slot_name_uncountable(slot_name)
+        raise_if_slot_conflicts_with_call(slot_name)
         raise_if_slot_ends_with_question_mark(slot_name)
         raise_if_slot_registered(slot_name)
       end
@@ -308,6 +311,7 @@ module ViewComponent
           raise ReservedSingularSlotNameError.new(name, slot_name)
         end
 
+        raise_if_slot_conflicts_with_call(slot_name)
         raise_if_slot_ends_with_question_mark(slot_name)
         raise_if_slot_registered(slot_name)
       end
@@ -320,7 +324,20 @@ module ViewComponent
       end
 
       def raise_if_slot_ends_with_question_mark(slot_name)
-        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.ends_with?("?")
+        raise SlotPredicateNameError.new(name, slot_name) if slot_name.to_s.end_with?("?")
+      end
+
+      def raise_if_slot_conflicts_with_call(slot_name)
+        if slot_name.start_with?("call_")
+          raise InvalidSlotNameError, "Slot cannot start with 'call_'. Please rename #{slot_name}"
+        end
+      end
+
+      def raise_if_slot_name_uncountable(slot_name)
+        slot_name = slot_name.to_s
+        if slot_name.pluralize == slot_name.singularize
+          raise UncountableSlotNameError.new(name, slot_name)
+        end
       end
     end
 
@@ -349,7 +366,7 @@ module ViewComponent
       # 1. If this is a `content_area` style sub-component, we will render the
       # block via the `slot`
       #
-      # 2. Since we've to pass block content to components when calling
+      # 2. Since we have to pass block content to components when calling
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
       slot.__vc_content_block = block if block

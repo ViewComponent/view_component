@@ -104,7 +104,10 @@ module ViewComponent
       "string, or callable (that is proc, lambda, etc)"
   end
 
-  class SlotPredicateNameError < StandardError
+  class InvalidSlotNameError < StandardError
+  end
+
+  class SlotPredicateNameError < InvalidSlotNameError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which ends with a question mark.\n\n" \
       "This isn't allowed because the ViewComponent framework already provides predicate " \
@@ -126,7 +129,7 @@ module ViewComponent
     end
   end
 
-  class ReservedSingularSlotNameError < StandardError
+  class ReservedSingularSlotNameError < InvalidSlotNameError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
       "To fix this issue, choose a different name."
@@ -136,9 +139,19 @@ module ViewComponent
     end
   end
 
-  class ReservedPluralSlotNameError < StandardError
+  class ReservedPluralSlotNameError < InvalidSlotNameError
     MESSAGE =
       "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
+      "To fix this issue, choose a different name."
+
+    def initialize(klass_name, slot_name)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
+    end
+  end
+
+  class UncountableSlotNameError < InvalidSlotNameError
+    MESSAGE =
+      "COMPONENT declares a slot named SLOT_NAME, which is an uncountable word\n\n" \
       "To fix this issue, choose a different name."
 
     def initialize(klass_name, slot_name)
@@ -187,6 +200,7 @@ module ViewComponent
       "`#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void)."
   end
 
+  # :nocov:
   class NoMatchingTemplatesForPreviewError < StandardError
     MESSAGE = "Found 0 matches for templates for TEMPLATE_IDENTIFIER."
 
@@ -202,6 +216,7 @@ module ViewComponent
       super(MESSAGE.gsub("TEMPLATE_IDENTIFIER", template_identifier))
     end
   end
+  # :nocov:
 
   class SystemTestControllerOnlyAllowedInTestError < BaseError
     MESSAGE = "ViewComponent SystemTest controller must only be called in a test environment for security reasons."

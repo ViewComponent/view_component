@@ -12,6 +12,7 @@ require "view_component/preview"
 require "view_component/slotable"
 require "view_component/translatable"
 require "view_component/with_content_helper"
+require "view_component/use_helpers"
 
 module ViewComponent
   class Base < ActionView::Base
@@ -27,6 +28,7 @@ module ViewComponent
     end
 
     include ViewComponent::InlineTemplate
+    include ViewComponent::UseHelpers
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
@@ -103,7 +105,14 @@ module ViewComponent
       before_render
 
       if render?
-        render_template_for(@__vc_variant).to_s + output_postamble
+        # Avoid allocating new string when output_preamble and output_postamble are blank
+        rendered_template = safe_render_template_for(@__vc_variant).to_s
+
+        if output_preamble.blank? && output_postamble.blank?
+          rendered_template
+        else
+          safe_output_preamble + rendered_template + safe_output_postamble
+        end
       else
         ""
       end
@@ -150,11 +159,18 @@ module ViewComponent
       end
     end
 
+    # Optional content to be returned before the rendered template.
+    #
+    # @return [String]
+    def output_preamble
+      @@default_output_preamble ||= "".html_safe
+    end
+
     # Optional content to be returned after the rendered template.
     #
     # @return [String]
     def output_postamble
-      ""
+      @@default_output_postamble ||= "".html_safe
     end
 
     # Called before rendering the component. Override to perform operations that
@@ -219,7 +235,8 @@ module ViewComponent
       @__vc_helpers ||= __vc_original_view_context || controller.view_context
     end
 
-    if Rails.env.development? || Rails.env.test?
+    if ::Rails.env.development? || ::Rails.env.test?
+      # @private
       def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
         super
       rescue => e # rubocop:disable Style/RescueStandardError
@@ -298,6 +315,44 @@ module ViewComponent
 
     def content_evaluated?
       defined?(@__vc_content_evaluated) && @__vc_content_evaluated
+    end
+
+    def maybe_escape_html(text)
+      return text if request && !request.format.html?
+      return text if text.blank?
+
+      if text.html_safe?
+        text
+      else
+        yield
+        html_escape(text)
+      end
+    end
+
+    def safe_render_template_for(variant)
+      if compiler.renders_template_for_variant?(variant)
+        render_template_for(variant)
+      else
+        maybe_escape_html(render_template_for(variant)) do
+          Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
+        end
+      end
+    end
+
+    def safe_output_preamble
+      maybe_escape_html(output_preamble) do
+        Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe preamble. The preamble will be automatically escaped, but you may want to investigate.")
+      end
+    end
+
+    def safe_output_postamble
+      maybe_escape_html(output_postamble) do
+        Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
+      end
+    end
+
+    def compiler
+      @compiler ||= self.class.compiler
     end
 
     # Set the controller used for testing components:
@@ -482,7 +537,9 @@ module ViewComponent
         # Derive the source location of the component Ruby file from the call stack.
         # We need to ignore `inherited` frames here as they indicate that `inherited`
         # has been re-defined by the consuming application, likely in ApplicationComponent.
-        child.source_location = caller_locations(1, 10).reject { |l| l.label == "inherited" }[0].path
+        # We use `base_label` method here instead of `label` to avoid cases where the method
+        # owner is included in a prefix like `ApplicationComponent.inherited`.
+        child.source_location = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
 
         # If Rails application is loaded, removes the first part of the path and the extension.
         if defined?(Rails) && Rails.application
@@ -553,6 +610,7 @@ module ViewComponent
       # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
       def with_collection_parameter(parameter)
         @provided_collection_parameter = parameter
+        @initialize_parameters = nil
       end
 
       # Strips trailing whitespace from templates before compiling them.
@@ -614,7 +672,7 @@ module ViewComponent
 
       # @private
       def collection_counter_parameter
-        "#{collection_parameter}_counter".to_sym
+        :"#{collection_parameter}_counter"
       end
 
       # @private
@@ -624,7 +682,7 @@ module ViewComponent
 
       # @private
       def collection_iteration_parameter
-        "#{collection_parameter}_iteration".to_sym
+        :"#{collection_parameter}_iteration"
       end
 
       # @private
@@ -648,7 +706,7 @@ module ViewComponent
       end
 
       def initialize_parameters
-        instance_method(:initialize).parameters
+        @initialize_parameters ||= instance_method(:initialize).parameters
       end
 
       def provided_collection_parameter

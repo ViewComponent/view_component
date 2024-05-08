@@ -34,11 +34,11 @@ module Locale
       end
 
       def destination(locale = nil)
-        extention = ".#{locale}" if locale
+        extension = ".#{locale}" if locale
         if sidecar?
-          File.join(component_path, class_path, "#{file_name}_component", "#{file_name}_component#{extention}.yml")
+          File.join(component_path, class_path, "#{file_name}_component", "#{file_name}_component#{extension}.yml")
         else
-          File.join(component_path, class_path, "#{file_name}_component#{extention}.yml")
+          File.join(component_path, class_path, "#{file_name}_component#{extension}.yml")
         end
       end
     end

@@ -6,6 +6,6 @@ class MessageComponent < ViewComponent::Base
   end
 
   def call
-    @message
+    html_escape(@message)
   end
 end

@@ -151,7 +151,9 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_jbuilder_template
-    render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
+    with_request_url("/", format: :json) do
+      render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
+    end
 
     assert_text("foo")
     assert_text("bar")
@@ -887,10 +889,22 @@ class RenderingTest < ViewComponent::TestCase
     assert_equal 1, PartialHelper::State.calls
   end
 
+  def test_output_preamble
+    render_inline(BeforeRenderComponent.new)
+
+    assert_text("Well, Hello!")
+  end
+
   def test_output_postamble
     render_inline(AfterRenderComponent.new)
 
     assert_text("Hello, World!")
+  end
+
+  def test_output_preamble_and_postamble
+    render_inline(BeforeAndAfterRenderComponent.new)
+
+    assert_text("Well, Hello, World!")
   end
 
   def test_compilation_in_development_mode
@@ -1084,7 +1098,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_content_predicate_true
-    render_inline(ContentPredicateComponent.new.with_content("foo"))
+    render_inline(ContentPredicateComponent.new.with_content("foo".html_safe))
 
     assert_text("foo")
   end
@@ -1093,5 +1107,18 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(ContentSecurityPolicyNonceComponent.new)
 
     assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
+  end
+
+  def test_use_helper
+    render_inline(UseHelpersComponent.new)
+    assert_selector ".helper__message", text: "Hello helper method"
+  end
+
+  def test_inline_component_renders_without_trailing_whitespace
+    without_template_annotations do
+      render_inline(InlineTrailingWhitespaceComponent.new)
+    end
+
+    refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
   end
 end

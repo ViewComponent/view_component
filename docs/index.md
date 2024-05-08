@@ -110,6 +110,8 @@ ViewComponents are Ruby objects, making it easy to follow (and enforce) code qua
 
 ViewComponent is built by over a hundred members of the community, including:
 
+<img src="https://avatars.githubusercontent.com/nickcoyne?s=64" alt="nickcoyne" width="32" />
+<img src="https://avatars.githubusercontent.com/nachiket87?s=64" alt="nachiket87" width="32" />
 <img src="https://avatars.githubusercontent.com/andrewjtait?s=64" alt="andrewjtait" width="32" />
 <img src="https://avatars.githubusercontent.com/asgerb?s=64" alt="asgerb" width="32" />
 <img src="https://avatars.githubusercontent.com/bbugh?s=64" alt="bbugh" width="32" />
@@ -122,6 +124,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/cesariouy?s=64" alt="cesariouy" width="32" />
 <img src="https://avatars.githubusercontent.com/cover?s=64" alt="cover" width="32" />
 <img src="https://avatars.githubusercontent.com/cpjmcquillan?s=64" alt="cpjmcquillan" width="32" />
+<img src="https://avatars.githubusercontent.com/crookedgrin?s=64" alt="crookedgrin" width="32" />
 <img src="https://avatars.githubusercontent.com/czj?s=64" alt="czj" width="32" />
 <img src="https://avatars.githubusercontent.com/dani-sc?s=64" alt="dani-sc" width="32" />
 <img src="https://avatars.githubusercontent.com/danieldiekmeier?s=64" alt="danieldiekmeier" width="32" />
@@ -156,6 +159,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/jwshuff?s=64" alt="jwshuff" width="32" />
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
 <img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
+<img src="https://avatars.githubusercontent.com/kdonovan?s=64" alt="kdonovan" width="32" />
 <img src="https://avatars.githubusercontent.com/leighhalliday?s=64" alt="leighhalliday" width="32" />
 <img src="https://avatars.githubusercontent.com/llenk?s=64" alt="llenk" width="32" />
 <img src="https://avatars.githubusercontent.com/manuelpuyol?s=64" alt="manuelpuyol" width="32" />
@@ -203,6 +207,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 <img src="https://avatars.githubusercontent.com/yykamei?s=64" alt="yykamei" width="32" />
 <img src="https://avatars.githubusercontent.com/matheuspolicamilo?s=64" alt="matheuspolicamilo" width="32" />
+<img src="https://avatars.githubusercontent.com/danigonza?s=64" alt="danigonza" width="32" />
 <img src="https://avatars.githubusercontent.com/erinnachen?s=64" alt="erinnachen" width="32" />
 <img src="https://avatars.githubusercontent.com/ihollander?s=64" alt="ihollander" width="32" />
 <img src="https://avatars.githubusercontent.com/svetlins?s=64" alt="svetlins" width="32" />
@@ -210,12 +215,17 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/reeganviljoen?s=64" alt="reeganviljoen" width="32" />
 <img src="https://avatars.githubusercontent.com/thomascchen?s=64" alt="thomascchen" width="32" />
 <img src="https://avatars.githubusercontent.com/milk1000cc?s=64" alt="milk1000cc" width="32" />
+<img src="https://avatars.githubusercontent.com/aduth?s=64" alt="aduth" width="32" />
+<img src="https://avatars.githubusercontent.com/htcarr3?s=64" alt="htcarr3" width="32" />
+<img src="https://avatars.githubusercontent.com/neanias?s=64" alt="neanias" width="32" />
+<img src="https://avatars.githubusercontent.com/allan-pires?s=64" alt="allan-pires" width="32" />
+<img src="https://avatars.githubusercontent.com/jasonkim?s=64" alt="jasonkim" width="32" />
 
 ## Who uses ViewComponent?
 
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
-* [Avo](https://avohq.io/)
+* [Avo Admin for Rails](https://avohq.io/rails-admin)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
 * [Causey](https://www.causey.app/) (100+ components)
@@ -234,6 +244,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
+* [Keenly](https://www.keenly.so) (100+ components)
 * [Krystal](https://krystal.uk)
 * [Litmus](https://litmus.engineering/)
 * [Login.gov](https://github.com/18F/identity-idp)

@@ -1,20 +1,7 @@
 # frozen_string_literal: true
 
-if RUBY_VERSION < "3.0.0"
-  appraise "rails-5.2" do
-    gem "rails", "~> 5.2.0"
-  end
-else
-  puts "WARNING: Skipping Rails 5.2, as it is not compatible with Ruby >= 3.0.0"
-end
-
-appraise "rails-6.0" do
-  gem "rails", "~> 6.0.0"
-  gem "tailwindcss-rails", "~> 2.0"
-end
-
 appraise "rails-6.1" do
-  gem "rails", "~> 6.1.0"
+  gem "rails", "~> 6.1"
   gem "tailwindcss-rails", "~> 2.0"
 
   # Required for Ruby 3.1.0
@@ -24,11 +11,16 @@ appraise "rails-6.1" do
 end
 
 appraise "rails-7.0" do
-  gem "rails", "~> 7.0.0"
+  gem "rails", "~> 7.0"
   gem "tailwindcss-rails", "~> 2.0"
 end
 
-appraise "rails-head" do
+appraise "rails-7.1" do
+  gem "rails", "~> 7.1"
+  gem "tailwindcss-rails", "~> 2.0"
+end
+
+appraise "rails-main" do
   gem "rails", github: "rails/rails", branch: "main"
   gem "tailwindcss-rails", "~> 2.0"
 end

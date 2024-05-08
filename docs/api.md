@@ -78,6 +78,10 @@ that inhibits encapsulation & reuse, often making testing difficult.
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
 
+### `#output_preamble` → [String]
+
+Optional content to be returned before the rendered template.
+
 ### `#output_postamble` → [String]
 
 Optional content to be returned after the rendered template.
@@ -356,7 +360,7 @@ with_controller_class(UsersController) do
 end
 ```
 
-### `#with_request_url(path, host: nil)`
+### `#with_request_url(full_path, host: nil, method: nil)`
 
 Set the URL of the current request (such as when using request-dependent path helpers):
 
@@ -370,6 +374,14 @@ To use a specific host, pass the host param:
 
 ```ruby
 with_request_url("/users/42", host: "app.example.com") do
+  render_inline(MyComponent.new)
+end
+```
+
+To specify a request method, pass the method param:
+
+```ruby
+with_request_url("/users/42", method: "POST") do
   render_inline(MyComponent.new)
 end
 ```
@@ -519,3 +531,9 @@ ViewComponent SystemTest controller must only be called in a test environment fo
 `#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
 It's sometimes possible to fix this issue by moving code dependent on `#translate` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
+
+### `UncountableSlotNameError`
+
+COMPONENT declares a slot named SLOT_NAME, which is an uncountable word
+
+To fix this issue, choose a different name.

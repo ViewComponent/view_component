@@ -12,7 +12,7 @@ module ViewComponent
       end
 
       def call
-        "<div data-name='#{product.name}'><h1>#{product.name}</h1></div>"
+        "<div data-name='#{product.name}'><h1>#{product.name}</h1></div>".html_safe
       end
     end
 

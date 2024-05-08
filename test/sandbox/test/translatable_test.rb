@@ -75,6 +75,14 @@ class TranslatableTest < ViewComponent::TestCase
     )
   end
 
+  def test_translate_with_html_suffix_applies_reserved_options
+    translation = translate(".hello_html", locale: :fr, raise: false)
+    assert_equal(
+      "Translation missing: fr.translatable_component.hello_html",
+      translation
+    )
+  end
+
   def test_translate_uses_the_helper_when_no_sidecar_file_is_provided
     # The cache needs to be kept clean for TranslatableComponent, otherwise it will rely on the
     # already created i18n_backend.
@@ -140,6 +148,20 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal "This is coming from the sidecar", TranslatableComponent.translate(".from.sidecar")
     assert_equal ["This is coming from the sidecar"], TranslatableComponent.translate([".from.sidecar"])
     assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.translate(".from"))
+  end
+
+  def test_inheriting_and_overriding_translations
+    render_inline(TranslatableSubclassComponent.new)
+
+    assert_selector("p.sidecar.shared-key", text: "Hello from subclass sidecar translations!")
+    assert_selector("p.sidecar.nested", text: "This is coming from the sidecar")
+    assert_selector("p.sidecar.missing", text: "This is coming from Rails")
+
+    assert_selector("p.helpers.shared-key", text: "Hello from Rails translations!")
+    assert_selector("p.helpers.nested", text: "This is coming from Rails")
+
+    assert_selector("p.global.shared-key", text: "Hello from Rails translations!")
+    assert_selector("p.global.nested", text: "This is coming from Rails")
   end
 
   private

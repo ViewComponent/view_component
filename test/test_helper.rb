@@ -40,7 +40,9 @@ require "rails/test_help"
 
 require "capybara/cuprite"
 
-Capybara.register_driver(:cuprite) do |app|
+# Rails registers its own driver named "cuprite" which will overwrite the one we
+# register here. Avoid the problem by registering the driver with a distinct name.
+Capybara.register_driver(:vc_cuprite) do |app|
   # Add the process_timeout option to prevent failures due to the browser
   # taking too long to start up.
   Capybara::Cuprite::Driver.new(app, {process_timeout: 60, timeout: 30})
@@ -53,10 +55,10 @@ Capybara.default_max_wait_time = 30
 
 def with_config_option(option_name, new_value, config_entrypoint: Rails.application.config.view_component)
   old_value = config_entrypoint.public_send(option_name)
-  config_entrypoint.public_send("#{option_name}=", new_value)
+  config_entrypoint.public_send(:"#{option_name}=", new_value)
   yield
 ensure
-  config_entrypoint.public_send("#{option_name}=", old_value)
+  config_entrypoint.public_send(:"#{option_name}=", old_value)
 end
 
 # Sets custom preview paths in tests.
@@ -176,4 +178,12 @@ def with_compiler_mode(mode)
   yield
 ensure
   ViewComponent::Compiler.mode = previous_mode
+end
+
+def capture_warnings(&block)
+  [].tap do |warnings|
+    Kernel.stub(:warn, ->(msg) { warnings << msg }) do
+      block.call
+    end
+  end
 end

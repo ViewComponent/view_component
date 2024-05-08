@@ -8,7 +8,7 @@ class TestHelperTest < ViewComponent::TestCase
       render_inline(CurrentPageComponent.new)
     end
 
-    assert_selector("div", text: "Inside /slots")
+    assert_selector("div", text: "Inside /slots (GET /slots)")
   end
 
   def test_with_request_url_outside_slots_path
@@ -16,7 +16,15 @@ class TestHelperTest < ViewComponent::TestCase
       render_inline(CurrentPageComponent.new)
     end
 
-    assert_selector("div", text: "Outside /slots")
+    assert_selector("div", text: "Outside /slots (GET /)")
+  end
+
+  def test_with_request_url_specifying_method
+    with_request_url "/create", method: "POST" do
+      render_inline(CurrentPageComponent.new)
+    end
+
+    assert_selector("div", text: "Outside /slots (POST /create)")
   end
 
   def test_with_request_url_under_constraint
