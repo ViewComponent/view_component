@@ -10,27 +10,32 @@ A framework for creating reusable, testable & encapsulated view components, buil
 
 ## What's a ViewComponent?
 
-Think of ViewComponents as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html). A ViewComponent is a Ruby object:
+ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
+
+ViewComponents are objects that encapsulate a template:
 
 ```ruby
+# app/components/message_component.rb
 class MessageComponent < ViewComponent::Base
-  erb_template <<-ERB
-    <h1>Hello, <%= @name %>!</h1>
-  ERB
-
   def initialize(name:)
     @name = name
   end
 end
 ```
 
-Which is instantiated and passed to Rails' `#render`:
+```erb
+<%# app/components/message_component.html.erb %>
+<h1>Hello, <%= @name %>!<h1>
+```
+
+Which is rendered by calling:
 
 ```erb
+<%# app/views/demo/index.html.erb %>
 <%= render(MessageComponent.new(name: "World")) %>
 ```
 
-Returning markup:
+Returning:
 
 ```html
 <h1>Hello, World!</h1>
