@@ -30,7 +30,7 @@ Then access the resulting previews at:
 * `/rails/view_components/example_component/with_default_title`
 * `/rails/view_components/example_component/with_content_block`
 
-_For a more interactive experience, consider using [Lookbook](https://github.com/allmarkedup/lookbook) or [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)._
+_For a more interactive experience, consider using [Lookbook](https://lookbook.build) or [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)._
 
 ## Passing parameters
 
