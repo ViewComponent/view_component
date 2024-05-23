@@ -562,7 +562,8 @@ class RenderingTest < ViewComponent::TestCase
       assert_raises NameError do
         render_inline(ExceptionInTemplateComponent.new)
       end
-    component_error_index = Rails::VERSION::STRING >= '7.1' ? 1 : 0
+
+    component_error_index = Rails::VERSION::STRING < '8.0' ? 0 : 1
     assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[component_error_index]
   end
 
