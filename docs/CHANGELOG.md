@@ -14,7 +14,7 @@ nav_order: 5
 
     *Reegan Viljoen*
 
-* Fixed Ci for Rails main.
+* Fixed CI for Rails main.
 
     *Reegan Viljoen*
 
