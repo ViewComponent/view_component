@@ -14,6 +14,10 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Fixed CI for Rails main.
+
+    *Reegan Viljoen*
+
 ## 3.12.1
 
 * Ensure content is rendered correctly for forwarded slots.
