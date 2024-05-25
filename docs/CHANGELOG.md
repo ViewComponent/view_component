@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Allow overridden slot methods to use `super` to call the standard implementation.
+
+    *Andrew Schwartz*
+
 * Defer to built-in caching for language environment setup, rather than manually using `actions/cache` in CI.
 
     *Simon Fish*
