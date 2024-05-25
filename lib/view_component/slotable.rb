@@ -18,6 +18,10 @@ module ViewComponent
       # Hash of registered Slots
       class_attribute :registered_slots
       self.registered_slots = {}
+
+      # Add a module on which we define slot methods, allowing them to be overriden by concrete classes
+      const_set(:GeneratedSlotMethods, Module.new) unless const_defined?(:GeneratedSlotMethods, false)
+      include self::GeneratedSlotMethods
     end
 
     class_methods do
@@ -84,20 +88,20 @@ module ViewComponent
 
           setter_method_name = :"with_#{slot_name}"
 
-          define_method setter_method_name do |*args, &block|
+          self::GeneratedSlotMethods.define_method setter_method_name do |*args, &block|
             set_slot(slot_name, nil, *args, &block)
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method slot_name do
+          self::GeneratedSlotMethods.define_method slot_name do
             get_slot(slot_name)
           end
 
-          define_method :"#{slot_name}?" do
+          self::GeneratedSlotMethods.define_method :"#{slot_name}?" do
             get_slot(slot_name).present?
           end
 
-          define_method :"with_#{slot_name}_content" do |content|
+          self::GeneratedSlotMethods.define_method :"with_#{slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self
@@ -155,18 +159,18 @@ module ViewComponent
 
           setter_method_name = :"with_#{singular_name}"
 
-          define_method setter_method_name do |*args, &block|
+          self::GeneratedSlotMethods.define_method setter_method_name do |*args, &block|
             set_slot(slot_name, nil, *args, &block)
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method :"with_#{singular_name}_content" do |content|
+          self::GeneratedSlotMethods.define_method :"with_#{singular_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self
           end
 
-          define_method :"with_#{slot_name}" do |collection_args = nil, &block|
+          self::GeneratedSlotMethods.define_method :"with_#{slot_name}" do |collection_args = nil, &block|
             collection_args.map do |args|
               if args.respond_to?(:to_hash)
                 set_slot(slot_name, nil, **args, &block)
@@ -176,11 +180,11 @@ module ViewComponent
             end
           end
 
-          define_method slot_name do
+          self::GeneratedSlotMethods.define_method slot_name do
             get_slot(slot_name)
           end
 
-          define_method :"#{slot_name}?" do
+          self::GeneratedSlotMethods.define_method :"#{slot_name}?" do
             get_slot(slot_name).present?
           end
 
@@ -207,11 +211,11 @@ module ViewComponent
       end
 
       def register_polymorphic_slot(slot_name, types, collection:)
-        define_method(slot_name) do
+        self::GeneratedSlotMethods.define_method(slot_name) do
           get_slot(slot_name)
         end
 
-        define_method(:"#{slot_name}?") do
+        self::GeneratedSlotMethods.define_method(:"#{slot_name}?") do
           get_slot(slot_name).present?
         end
 
@@ -241,12 +245,12 @@ module ViewComponent
             raise AlreadyDefinedPolymorphicSlotSetterError.new(setter_method_name, poly_slot_name)
           end
 
-          define_method(setter_method_name) do |*args, &block|
+          self::GeneratedSlotMethods.define_method(setter_method_name) do |*args, &block|
             set_polymorphic_slot(slot_name, poly_type, *args, &block)
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method :"with_#{poly_slot_name}_content" do |content|
+          self::GeneratedSlotMethods.define_method :"with_#{poly_slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
 
             self
@@ -282,7 +286,7 @@ module ViewComponent
           # If slot doesn't respond to `render_in`, we assume it's a proc,
           # define a method, and save a reference to it to call when setting
           method_name = :"_call_#{slot_name}"
-          define_method method_name, &callable
+          self::GeneratedSlotMethods.define_method method_name, &callable
           slot[:renderable_function] = instance_method(method_name)
         else
           raise(InvalidSlotDefinitionError)
