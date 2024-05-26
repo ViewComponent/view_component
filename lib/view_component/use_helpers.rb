@@ -5,11 +5,10 @@ module ViewComponent::UseHelpers
 
   class_methods do
     def use_helpers(*args, from: nil)
-      helper_source = from
-      if helper_source.nil?
+      if from.nil?
         define_helpers_without_source(*args)
       else
-        define_helpers_with_source(*args, source: helper_source)
+        define_helpers_with_source(*args, source: from)
       end
     end
 
