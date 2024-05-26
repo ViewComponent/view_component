@@ -1134,4 +1134,10 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_selector ".helper__args-message", text: "Hello macro helper method"
   end
+
+  def test_use_helper_macros_with_kwargs
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__kwargs-message", text: "Hello macro kwargs helper method"
+  end
 end
