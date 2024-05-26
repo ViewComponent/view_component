@@ -1122,4 +1122,16 @@ class RenderingTest < ViewComponent::TestCase
 
     refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
   end
+
+  def test_use_helper_macros
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__message", text: "Hello helper method"
+  end
+
+  def test_use_helper_macros_with_args
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__args-message", text: "Hello macro helper method"
+  end
 end
