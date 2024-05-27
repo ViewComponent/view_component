@@ -69,6 +69,18 @@ class UseHelpersComponent < ViewComponent::Base
 end
 ```
 
+Methods defined in helper modules that are not available in the component can be included individually using the `from:` keyword:
+
+```ruby
+class UserComponent < ViewComponent::Base
+  use_helpers :icon, from: IconHelper
+
+  def profile_icon
+    icon :user
+  end
+end
+```
+
 ## Nested URL helpers
 
 Rails nested URL helpers implicitly depend on the current `request` in certain cases. Since ViewComponent is built to enable reusing components in different contexts, nested URL helpers should be passed their options explicitly:
