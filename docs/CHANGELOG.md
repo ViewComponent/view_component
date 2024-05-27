@@ -18,6 +18,10 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Add `from:` option to `use_helpers` to allow for more flexible helper inclusion from modules.
+
+    *Reegan Viljoen*
+
 ## 3.12.1
 
 * Ensure content is rendered correctly for forwarded slots.
