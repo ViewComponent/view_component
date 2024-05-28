@@ -499,7 +499,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         assert_raises ActionView::Template::Error do
           get "/render_component"
         end
-
       assert_match(/undefined method `render_component'/, error.message)
     end
   end
