@@ -18,7 +18,7 @@ nav_order: 5
 
     *Reegan Viljoen*
 
-* Fixed ruby head matcher issue
+* Fixed ruby head matcher issue.
 
     *Reegan Viljoen*
 
