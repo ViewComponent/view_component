@@ -563,8 +563,7 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(ExceptionInTemplateComponent.new)
       end
 
-    component_error_index = (Rails::VERSION::STRING < "8.0") ? 0 : 1
-    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[component_error_index]
+    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace.first
   end
 
   def test_render_collection
