@@ -12,4 +12,8 @@ module MacroHelper
   def message_with_kwargs(name:)
     "Hello #{name}"
   end
+
+  def message_with_block
+    yield
+  end
 end
