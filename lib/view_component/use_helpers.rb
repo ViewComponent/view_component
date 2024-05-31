@@ -22,9 +22,9 @@ module ViewComponent::UseHelpers
 
     def define_helpers_without_source(helper_method:)
       class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-        def #{helper_method}(*args, **kwargs, &block)
+        def #{helper_method}(*args, &block)
           raise HelpersCalledBeforeRenderError if view_context.nil?
-          __vc_original_view_context.#{helper_method}(*args, **kwargs, &block)
+          __vc_original_view_context.#{helper_method}(*args, &block)
         end
       RUBY
       ruby2_keywords(helper_method) if respond_to?(:ruby2_keywords, true)
@@ -32,9 +32,9 @@ module ViewComponent::UseHelpers
 
     def define_helpers_with_source(helper_method:, source:)
       class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-        def #{helper_method}(*args, **kwargs, &block)
+        def #{helper_method}(*args, &block)
           raise HelpersCalledBeforeRenderError if view_context.nil?
-          #{source}.instance_method(:#{helper_method}).bind(self).call(*args, **kwargs, &block)
+          #{source}.instance_method(:#{helper_method}).bind(self).call(*args, &block)
         end
       RUBY
       ruby2_keywords(helper_method) if respond_to?(:ruby2_keywords, true)
