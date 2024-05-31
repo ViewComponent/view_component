@@ -63,7 +63,7 @@ class UseHelpersComponent < ViewComponent::Base
 
   erb_template <<-ERB
     <div class="icon">
-      <%= icon? ? icon :user : icon :guest %>
+      <%= icon? ? icon(:user) : icon(:guest) %>
     </div>
   ERB
 end
@@ -76,7 +76,7 @@ class UserComponent < ViewComponent::Base
   use_helpers :icon, :icon?, from: IconHelper
 
   def profile_icon
-    icon? ? icon :user : icon :guest
+    icon? ? icon(:user) : icon(:guest)
   end
 end
 ```
