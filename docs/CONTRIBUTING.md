@@ -42,7 +42,7 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 ## Submitting a pull request
 
 1. [Fork](https://github.com/viewcomponent/view_component/fork) and clone the repository.
-1. Configure and install local dependencies: `bundle exec install`.
+1. Configure and install local dependencies: `bundle install`.
 1. Configure and install testing dependencies: `bundle exec appraisal install`.
 1. Make sure the tests pass: `bundle exec appraisal rake` (see below for specific cases).
 1. Create a new branch: `git checkout -b my-branch-name`.
