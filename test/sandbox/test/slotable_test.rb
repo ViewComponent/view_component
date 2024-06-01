@@ -764,4 +764,14 @@ class SlotableTest < ViewComponent::TestCase
 
     assert_text "Target content", count: 1
   end
+
+  def test_slot_name_can_be_overriden_with_super
+    render_inline(SlotNameOverrideComponent.new) do |component|
+      component.with_title do
+        "This is my title!"
+      end
+    end
+
+    assert_selector(".title", text: "This is my title!")
+  end
 end
