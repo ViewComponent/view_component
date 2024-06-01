@@ -214,10 +214,7 @@ module ViewComponent
         child.registered_slots = registered_slots.clone
 
         # Add a module for slot methods, allowing them to be overriden by the component class
-        unless const_defined?(:GeneratedSlotMethods, false)
-          base_slot_module = superclass.const_defined?(:GeneratedSlotMethods, false) ? superclass::GeneratedSlotMethods : Module.new
-          const_set(:GeneratedSlotMethods, base_slot_module)
-        end
+        const_set(:GeneratedSlotMethods, Module.new) unless const_defined?(:GeneratedSlotMethods, false)
         include self::GeneratedSlotMethods
 
         super
