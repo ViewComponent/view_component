@@ -18,10 +18,6 @@ module ViewComponent
       # Hash of registered Slots
       class_attribute :registered_slots
       self.registered_slots = {}
-
-      # Add a module on which we define slot methods, allowing them to be overriden by concrete classes
-      const_set(:GeneratedSlotMethods, Module.new) unless const_defined?(:GeneratedSlotMethods, false)
-      include self::GeneratedSlotMethods
     end
 
     class_methods do
@@ -212,10 +208,18 @@ module ViewComponent
         end
       end
 
-      # Clone slot configuration into child class
-      # see #test_slots_pollution
       def inherited(child)
+        # Clone slot configuration into child class
+        # see #test_slots_pollution
         child.registered_slots = registered_slots.clone
+
+        # Add a module for slot methods, allowing them to be overriden by the component class
+        unless const_defined?(:GeneratedSlotMethods, false)
+          base_slot_module = superclass.const_defined?(:GeneratedSlotMethods, false) ? superclass::GeneratedSlotMethods : Module.new
+          const_set(:GeneratedSlotMethods, base_slot_module)
+        end
+        include self::GeneratedSlotMethods
+
         super
       end
 
