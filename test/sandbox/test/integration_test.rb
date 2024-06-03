@@ -499,7 +499,9 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         assert_raises ActionView::Template::Error do
           get "/render_component"
         end
-      assert_match(/undefined method `render_component'/, error.message)
+
+      matcher = (RUBY_VERSION >= "3.4") ? /undefined method 'render_component'/ : /undefined method `render_component' for/
+      assert_match(matcher, error.message)
     end
   end
 

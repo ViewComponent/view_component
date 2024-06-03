@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add ruby head and YJIT to CI.
+
+    *Reegan Viljoen*
+
 * Fixed a bug where inline templates where unable to remove trailing whitespace without throwing an error.
 
     *Reegan Viljoen*
@@ -19,6 +23,10 @@ nav_order: 5
     *Reegan Viljoen*
 
 * Add `from:` option to `use_helpers` to allow for more flexible helper inclusion from modules.
+    
+    *Reegan Viljoen*
+    
+* Fixed ruby head matcher issue.
 
     *Reegan Viljoen*
 
