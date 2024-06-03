@@ -143,13 +143,13 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.3
     - name: Download coverage results
       uses: actions/download-artifact@v3
     - uses: actions/cache@v4
       with:
         path: vendor/bundle
-        key: gems-build-rails-main-ruby-2.7-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-build-rails-main-ruby-3.3-${{ hashFiles('**/Gemfile.lock') }}
     - name: Collate simplecov
       run: |
         bundle config path vendor/bundle
