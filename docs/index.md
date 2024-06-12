@@ -279,6 +279,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
 * [Within3](https://www.within3.com/)
+* [Workbrew](https://www.workbrew.com/)
 * [Wrapbook](https://wrapbook.com/)
 * [Yobbers](https://www.yobbers.com/)
 

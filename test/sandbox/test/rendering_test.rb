@@ -563,7 +563,7 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(ExceptionInTemplateComponent.new)
       end
 
-    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[0]
+    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace.first
   end
 
   def test_render_collection

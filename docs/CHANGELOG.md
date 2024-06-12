@@ -14,7 +14,19 @@ nav_order: 5
 
     *Tomasz Kowalewski*
 
+* Add ruby head and YJIT to CI.
+
+    *Reegan Viljoen*
+
 * Fixed a bug where inline templates where unable to remove trailing whitespace without throwing an error.
+
+    *Reegan Viljoen*
+
+* Fixed CI for Rails main.
+
+    *Reegan Viljoen*
+
+* Fixed ruby head matcher issue.
 
     *Reegan Viljoen*
 
