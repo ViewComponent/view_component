@@ -26,6 +26,11 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Fix a bug where component previews would crash with "undefined local variable or method `preview_source'"
+
+    *Henning Koch*
+
+
 ## 3.12.1
 
 * Ensure content is rendered correctly for forwarded slots.
