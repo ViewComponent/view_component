@@ -240,6 +240,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Cometeer](https://cometeer.com/)
 * [Consul](https://consulproject.org/en/)
 * [Cults.](https://cults3d.com/)
+* [DotRuby](https://www.dotruby.com)
 * [Eagerworks](https://eagerworks.com/)
 * [FlightLogger](https://flightlogger.net/)
 * [Framework](https://frame.work/)
