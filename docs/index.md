@@ -228,6 +228,7 @@ ViewComponent is built by over a hundred members of the community, including:
 
 ## Who uses ViewComponent?
 
+* [Aboard HR](https://aboardhr.com/)
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
 * [Avo Admin for Rails](https://avohq.io/rails-admin)
@@ -275,6 +276,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [SpendHQ](https://www.spendhq.com/)
 * [Spina CMS](https://spinacms.com/)
 * [Startup Jobs](https://startup.jobs/)
+* [Teamtailor](https://teamtailor.com/)
 * [Topkey](https://topkey.io/)
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
