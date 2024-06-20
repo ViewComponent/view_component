@@ -22,6 +22,10 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Add `from:` option to `use_helpers` to allow for more flexible helper inclusion from modules.
+
+    *Reegan Viljoen*
+
 * Fixed ruby head matcher issue.
 
     *Reegan Viljoen*

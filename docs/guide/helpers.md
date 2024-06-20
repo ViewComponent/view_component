@@ -59,13 +59,37 @@ By default, ViewComponents don't have access to helper methods defined externall
 
 ```ruby
 class UseHelpersComponent < ViewComponent::Base
-  use_helpers :icon
+  use_helpers :icon, :icon?
 
   erb_template <<-ERB
     <div class="icon">
-      <%= icon :user %>
+      <%= icon? ? icon(:user) : icon(:guest) %>
     </div>
   ERB
+end
+```
+
+Use the `from:` keyword to include individual methods defined in helper modules not available in the component:
+
+```ruby
+class UserComponent < ViewComponent::Base
+  use_helpers :icon, :icon?, from: IconHelper
+
+  def profile_icon
+    icon? ? icon(:user) : icon(:guest)
+  end
+end
+```
+
+The singular version `use_helper` is also available:
+
+```ruby
+class UserComponent < ViewComponent::Base
+  use_helper :icon, from: IconHelper
+
+  def profile_icon
+    icon :user
+  end
 end
 ```
 

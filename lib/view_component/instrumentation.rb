@@ -16,7 +16,7 @@ module ViewComponent # :nodoc:
           identifier: self.class.identifier
         }
       ) do
-        super(view_context, &block)
+        super
       end
     end
 
