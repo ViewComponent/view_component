@@ -69,7 +69,7 @@ class UseHelpersComponent < ViewComponent::Base
 end
 ```
 
-Methods defined in helper modules that aren't available in the component can be included individually using the `from:` keyword:
+Use the `from:` keyword to include individual methods defined in helper modules not available in the component:
 
 ```ruby
 class UserComponent < ViewComponent::Base
@@ -81,7 +81,7 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
-The singular version `use_helper` is also available for a single helper:
+The singular version `use_helper` is also available:
 
 ```ruby
 class UserComponent < ViewComponent::Base
