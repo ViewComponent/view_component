@@ -224,13 +224,13 @@ module ViewComponent
       end
 
       def register_polymorphic_slot(slot_name, types, collection:)
-        self::GeneratedSlotMethods.define_method(slot_name) do
         # define_method(slot_name) do
+        self::GeneratedSlotMethods.define_method(slot_name) do
           get_slot(slot_name)
         end
 
-        self::GeneratedSlotMethods.define_method(:"#{slot_name}?") do
         # define_method(:"#{slot_name}?") do
+        self::GeneratedSlotMethods.define_method(:"#{slot_name}?") do
           get_slot(slot_name).present?
         end
 
