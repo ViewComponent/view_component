@@ -15,3 +15,7 @@ class SlotNameOverrideComponent < ViewComponent::Base
     @title.present? || super
   end
 end
+
+class SlotNameOverrideComponent::OtherComponent < ViewComponent::Base
+  renders_one :title
+end
