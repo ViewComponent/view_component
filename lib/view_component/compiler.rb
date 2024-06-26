@@ -11,6 +11,8 @@ module ViewComponent
     DEVELOPMENT_MODE = :development
     PRODUCTION_MODE = :production
 
+    EXPLICIT_LOCALS_REGEX = /\#\s+locals:\s+\((.*)\)/
+
     class_attribute :mode, default: PRODUCTION_MODE
 
     def initialize(component_class)
@@ -68,15 +70,19 @@ module ViewComponent
         end
       else
         templates.each do |template|
-          method_name = call_method_name(template[:variant])
+          method_name, method_args = method_name_and_args_for template
+          visibility = method_name.start_with?("call") ? "" : "private "
           @variants_rendering_templates << template[:variant]
 
           redefinition_lock.synchronize do
             component_class.silence_redefinition_of_method(method_name)
             # rubocop:disable Style/EvalWithLocation
-            component_class.class_eval <<-RUBY, template[:path], 0
-            def #{method_name}
+            component_class.class_eval <<-RUBY, template[:path], -1
+            #{visibility}def #{method_name}(#{method_args})
+              old_buffer = @output_buffer if defined? @output_buffer
               #{compiled_template(template[:path])}
+            ensure
+              @output_buffer = old_buffer
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
@@ -102,7 +108,7 @@ module ViewComponent
     def define_render_template_for
       variant_elsifs = variants.compact.uniq.map do |variant|
         safe_name = "_call_variant_#{normalized_variant_name(variant)}_#{safe_class_name}"
-        component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
+        component_class.define_method(safe_name, component_class.instance_method(call_method_name(nil, variant)))
 
         "elsif variant.to_sym == :'#{variant}'\n    #{safe_name}"
       end.join("\n")
@@ -141,27 +147,28 @@ module ViewComponent
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
-          if templates.count { |template| template[:variant].nil? } > 1
-            errors <<
-              "More than one template found for #{component_class}. " \
-              "There can only be one default template file per component."
-          end
-
-          invalid_variants =
+          invalid_templates =
             templates
-              .group_by { |template| template[:variant] }
-              .map { |variant, grouped| variant if grouped.length > 1 }
+              .group_by { |template| template[:variant].present? ? "#{template[:base_name]}+#{template[:variant]}" : template[:base_name] }
+              .map { |template, grouped| template if grouped.length > 1 }
               .compact
               .sort
 
-          unless invalid_variants.empty?
+          unless invalid_templates.empty?
             errors <<
-              "More than one template found for #{"variant".pluralize(invalid_variants.count)} " \
-              "#{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
+              "More than one template+variant found for #{"template".pluralize(invalid_templates.count)} " \
+              "#{invalid_templates.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
               "There can only be one template file per variant."
           end
 
-          if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
+          default_template_exists =
+            templates.find do |template|
+              pieces = File.basename(template[:path]).split(".")
+
+              template[:variant].nil? && pieces.first == component_class.name.demodulize.underscore
+            end
+
+          if default_template_exists && inline_calls_defined_on_self.include?(:call)
             errors <<
               "Template file and inline render method found for #{component_class}. " \
               "There can only be a template file or inline render method per component."
@@ -207,6 +214,7 @@ module ViewComponent
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
+              base_name: pieces.first,
               variant: pieces[1..-2].join(".").split("+").second&.to_sym,
               handler: pieces.last
             }
@@ -227,6 +235,14 @@ module ViewComponent
 
           view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
         end
+    end
+
+    def method_name_and_args_for(template)
+      file = File.read(template[:path])
+      file.match(EXPLICIT_LOCALS_REGEX)
+      explicit_locals = Regexp.last_match(1)
+      basename = template[:base_name]
+      [call_method_name(basename, template[:variant]), explicit_locals]
     end
 
     def inline_calls_defined_on_self
@@ -277,12 +293,16 @@ module ViewComponent
       # :nocov:
     end
 
-    def call_method_name(variant)
-      if variant.present? && variants.include?(variant)
-        "call_#{normalized_variant_name(variant)}"
-      else
-        "call"
-      end
+    def call_method_name(template, variant)
+      name =
+        if template.blank? || template == component_class.name.demodulize.underscore
+          "call"
+        else
+          "render"
+        end
+      name += "_#{normalized_variant_name(variant)}" if variant.present? && variants.include?(variant)
+      name += "_#{template}_template" if template.present? && template != component_class.name.demodulize.underscore
+      name.freeze
     end
 
     def normalized_variant_name(variant)
