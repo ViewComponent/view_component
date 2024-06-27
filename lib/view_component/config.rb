@@ -4,15 +4,14 @@ require "view_component/deprecation"
 
 module ViewComponent
   class Config
+    class Layer < ActiveSupport::OrderedOptions; end
     class << self
       # `new` without any arguments initializes the default configuration, but
       # it's important to differentiate in case that's no longer the case in
       # future.
-      alias_method :default, :new
-
-      def defaults
-        ActiveSupport::OrderedOptions.new.merge!({
-          generate: default_generate_options,
+      def default
+        Layer[
+          generate: Layer[preview_path: ""],
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
           show_previews_source: false,
@@ -26,7 +25,15 @@ module ViewComponent
           test_controller: "ApplicationController",
           default_preview_layout: nil,
           capture_compatibility_patch_enabled: false
-        })
+        ]
+      end
+
+      def defaults
+        default
+      end
+
+      def blank
+        Layer[default.deep_transform_values { nil }]
       end
 
       # @!attribute generate
@@ -182,14 +189,14 @@ module ViewComponent
 
     # @!attribute current
     # @return [ViewComponent::Config]
-    # Returns the current ViewComponent::Config. This is persisted against this
+    # Returns the global ViewComponent::Config. This is persisted against this
     # class so that config options remain accessible before the rest of
     # ViewComponent has loaded. Defaults to an instance of ViewComponent::Config
     # with all other documented defaults set.
-    class_attribute :current, default: defaults, instance_predicate: false
+    class_attribute :global, default: defaults, instance_predicate: false
 
     def initialize
-      @config = self.class.defaults
+      @config = self.class.blank
     end
 
     delegate_missing_to :config

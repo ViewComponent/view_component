@@ -22,9 +22,14 @@ module ViewComponent
       # Returns the current config.
       #
       # @return [ActiveSupport::OrderedOptions]
-      def config
-        ViewComponent::Config.current
-      end
+
+      # @!attribute current
+      # @return [ViewComponent::Config]
+      # Returns the current ViewComponent::Config. This is persisted against this
+      # class so that config options remain accessible before the rest of
+      # ViewComponent has loaded. Defaults to an instance of ViewComponent::Config
+      # with all other documented defaults set.
+      class_attribute :config, default: ViewComponent::Config.default, instance_predicate: false
     end
 
     include ViewComponent::InlineTemplate
