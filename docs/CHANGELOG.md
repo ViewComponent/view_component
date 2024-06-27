@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add support for using view components in Rails Engine
+
+    *Tomasz Kowalewski*
+
 * Add ruby head and YJIT to CI.
 
     *Reegan Viljoen*

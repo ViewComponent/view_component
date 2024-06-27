@@ -16,6 +16,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator
 
     assert_file "app/components/user_component.rb" do |component|
+      assert_no_match(/module/, component)
       assert_match(/class UserComponent < ViewComponent::Base/, component)
       assert_no_match(/def initialize/, component)
     end
@@ -25,6 +26,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator %w[user --test-framework test_unit]
 
     assert_file "test/components/user_component_test.rb" do |component|
+      assert_no_match(/module/, component)
       assert_match(/class UserComponentTest < /, component)
       assert_match(/def test_component_renders_something_useful/, component)
     end
@@ -35,6 +37,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user --preview]
 
       assert_file "test/components/previews/user_component_preview.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class UserComponentPreview < /, component)
         assert_match(/render\(UserComponent.new\)/, component)
       end
@@ -45,6 +48,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator %w[user name]
 
     assert_file "app/components/user_component.rb" do |component|
+      assert_no_match(/module/, component)
       assert_match(/class UserComponent < /, component)
       assert_match(/def initialize\(name:\)/, component)
     end
@@ -65,6 +69,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator %w[user --parent MyOtherBaseComponent]
 
     assert_file "app/components/user_component.rb" do |component|
+      assert_no_match(/module/, component)
       assert_match(/class UserComponent < MyOtherBaseComponent/, component)
     end
   end
@@ -74,6 +79,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user --parent MyOtherBaseComponent]
 
       assert_file "app/components/user_component.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class UserComponent < MyOtherBaseComponent/, component)
       end
     end
@@ -84,6 +90,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user --parent MyOtherBaseComponent]
 
       assert_file "app/components/user_component.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class UserComponent < MyOtherBaseComponent/, component)
       end
     end
@@ -92,13 +99,17 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   def test_component_with_namespace
     run_generator %w[admins/user]
 
-    assert_file "app/components/admins/user_component.rb", /class Admins::UserComponent < /
+    assert_file "app/components/admins/user_component.rb" do |component|
+      assert_no_match(/module/, component)
+      assert_match(/class Admins::UserComponent < /, component)
+    end
   end
 
   def test_component_tests_with_namespace
     run_generator %w[admins/user --test-framework test_unit]
 
     assert_file "test/components/admins/user_component_test.rb" do |component|
+      assert_no_match(/module/, component)
       assert_match(/class Admins::UserComponentTest < /, component)
       assert_match(/def test_component_renders_something_useful/, component)
     end
@@ -142,6 +153,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user]
 
       assert_file "app/components/user_component.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class UserComponent < ApplicationComponent/, component)
       end
     end
@@ -152,6 +164,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
       run_generator %w[user]
 
       assert_file "app/components/user_component.rb" do |component|
+        assert_no_match(/module/, component)
         assert_match(/class UserComponent < MyBaseComponent/, component)
       end
     end
@@ -163,6 +176,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
         run_generator %w[user]
 
         assert_file "app/components/user_component.rb" do |component|
+          assert_no_match(/module/, component)
           assert_match(/class UserComponent < MyBaseComponent/, component)
         end
       end
