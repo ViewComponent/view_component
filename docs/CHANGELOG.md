@@ -12,7 +12,7 @@ nav_order: 5
 
 ## 3.13.1
 
-* Look for preview files that end in `preview.rb` rather than `_preview.rb`, so they can be put in the sidecar directory.
+* Look for preview files that end in `preview.rb` rather than `_preview.rb`, so they can be put in the sidecar directory alongside test files.
 
 ## 3.13.0
 
