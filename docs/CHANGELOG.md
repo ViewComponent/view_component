@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Look for preview files that end in `preview.rb` rather than `_preview.rb` to allow previews to exist in sidecar directory with test files.
+
+    *Seth Herr*
+
 ## 3.13.0
 
 * Add ruby head and YJIT to CI.
