@@ -1169,4 +1169,10 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_selector ".helper__block-message", text: "Hello block helper method"
   end
+
+  def test_use_helper_macros_with_prefix
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__prefix-message", text: "Hello macro prefix helper method"
+  end
 end
