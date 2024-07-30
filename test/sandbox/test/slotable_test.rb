@@ -764,4 +764,16 @@ class SlotableTest < ViewComponent::TestCase
 
     assert_text "Target content", count: 1
   end
+
+  def test_slotable_default
+    render_inline(SlotableDefaultComponent.new)
+
+    assert_text "hello,world!", count: 1
+  end
+
+  def test_slotable_default_instance
+    render_inline(SlotableDefaultInstanceComponent.new)
+
+    assert_text "hello,world!", count: 1
+  end
 end

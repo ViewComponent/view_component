@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add experimental `SlotableDefault` module, allowing components to define a `default_SLOTNAME` method to provide a default value for slots.
+
+    *Joel Hawksley*
+
 * Look for preview files that end in `preview.rb` rather than `_preview.rb` to allow previews to exist in sidecar directory with test files.
 
     *Seth Herr*

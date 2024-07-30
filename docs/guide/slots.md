@@ -349,3 +349,36 @@ end
 ```
 
 The setters are now `#with_icon_visual` and `#with_avatar_visual` instead of the default `#with_visual_icon` and `#with_visual_avatar`. The slot getter remains `#visual`.
+
+## `#default_SLOT_NAME`
+
+Since 3.14.0
+{: .label }
+
+To provide a default value for a slot, include the experimental `SlotableDefault` module and define a `default_SLOT_NAME` method:
+
+```ruby
+class SlotableDefaultComponent < ViewComponent::Base
+  include SlotableDefault
+
+  renders_one :header
+
+  def default_header
+    "Hello, World!"
+  end
+end
+```
+
+`default_SLOT_NAME` can also return a component instance to be rendered:
+
+```ruby
+class SlotableDefaultInstanceComponent < ViewComponent::Base
+  include SlotableDefault
+
+  renders_one :header
+
+  def default_header
+    MyComponent.new
+  end
+end
+```
