@@ -4,8 +4,8 @@ module ViewComponent::UseHelpers
   extend ActiveSupport::Concern
 
   class_methods do
-    def use_helpers(*args, from: nil)
-      args.each { |helper_method| use_helper(helper_method, from: from) }
+    def use_helpers(*args, from: nil, prefix: false)
+      args.each { |helper_method| use_helper(helper_method, from: from, prefix: prefix) }
     end
 
     def use_helper(helper_method, from: nil, prefix: false)
