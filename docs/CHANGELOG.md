@@ -14,7 +14,7 @@ nav_order: 5
 
     *Seth Herr*
 
-* Add `prefix:` option to `use_helpers`
+* Add `prefix:` option to `use_helpers`.
 
     *Reegan Viljoen*
 
