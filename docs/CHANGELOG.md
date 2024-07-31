@@ -10,11 +10,19 @@ nav_order: 5
 
 ## main
 
+* Add documentation on rendering ViewComponents outside of the view context.
+
+    *Joel Hawksley*
+
 * Look for preview files that end in `preview.rb` rather than `_preview.rb` to allow previews to exist in sidecar directory with test files.
 
     *Seth Herr*
 
 * Add `assert_component_rendered` test helper.
+
+    *Reegan Viljoen*
+
+* Add `prefix:` option to `use_helpers`.
 
     *Reegan Viljoen*
 

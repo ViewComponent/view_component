@@ -13,6 +13,14 @@ module MacroHelper
     "Hello #{name}"
   end
 
+  def message_with_prefix(name)
+    "Hello #{name}"
+  end
+
+  def message_with_named_prefix(name)
+    "Hello #{name}"
+  end
+
   def message_with_block
     yield
   end
