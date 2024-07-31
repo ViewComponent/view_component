@@ -81,6 +81,30 @@ class UserComponent < ViewComponent::Base
 end
 ```
 
+Use the `prefix:` keyword to prefix the helper method with the name of the helper module:
+
+```ruby
+class UserComponent < ViewComponent::Base
+  use_helpers :icon, :icon?, from: IconHelper, prefix: true
+
+  def profile_icon
+    icon_helper_icon? ? icon_helper_icon(:user) : icon_helper_icon(:guest)
+  end
+end
+```
+
+or use the `prefix:` keyword with a custom prefix:
+
+```ruby
+class UserComponent < ViewComponent::Base
+  use_helpers :icon, :icon?, from: IconHelper, prefix: :user
+
+  def profile_icon
+    user_icon? ? user_icon(:user) : user_icon(:guest)
+  end
+end
+```
+
 The singular version `use_helper` is also available:
 
 ```ruby

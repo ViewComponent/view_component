@@ -10,6 +10,14 @@
   <%= message_with_kwargs(name: 'macro kwargs helper method') %>
 </div>
 
+<div class='helper__prefix-message'>
+  <%= macro_helper_message_with_prefix('macro prefix helper method') %>
+</div>
+
+<div class='helper__prefix-message'>
+  <%= named_message_with_named_prefix('macro named prefix helper method') %>
+</div>
+
 <div class='helper__block-message'>
   <%= block_content %>
 </div>
