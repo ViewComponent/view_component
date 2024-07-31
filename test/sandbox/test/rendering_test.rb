@@ -400,6 +400,7 @@ class RenderingTest < ViewComponent::TestCase
       "Content"
     end
 
+    assert_component_rendered
     assert_text("Content")
   end
 
@@ -1168,5 +1169,9 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(UseHelperMacroComponent.new)
 
     assert_selector ".helper__block-message", text: "Hello block helper method"
+  end
+
+  def test_assert_component_rendered
+
   end
 end

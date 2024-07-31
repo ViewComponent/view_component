@@ -14,6 +14,10 @@ nav_order: 5
 
     *Seth Herr*
 
+* Add `assert_component_rendered` test helper.
+
+    *Reegan Viljoen*
+
 ## 3.13.0
 
 * Add ruby head and YJIT to CI.
