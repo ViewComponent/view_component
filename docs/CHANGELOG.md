@@ -12,11 +12,19 @@ nav_order: 5
 
 * Add experimental `SlotableDefault` module, allowing components to define a `default_SLOTNAME` method to provide a default value for slots.
 
+*Joel Hawksley*
+
+* Add documentation on rendering ViewComponents outside of the view context.
+
     *Joel Hawksley*
 
 * Look for preview files that end in `preview.rb` rather than `_preview.rb` to allow previews to exist in sidecar directory with test files.
 
     *Seth Herr*
+
+* Add `prefix:` option to `use_helpers`.
+
+    *Reegan Viljoen*
 
 ## 3.13.0
 
