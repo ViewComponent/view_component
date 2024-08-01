@@ -266,10 +266,7 @@ module ViewComponent
       end
 
       def define_slot(slot_name, collection:, callable:)
-        # Setup basic slot data
-        slot = {
-          collection: collection
-        }
+        slot = {collection: collection}
         return slot unless callable
 
         # If callable responds to `render_in`, we set it on the slot as a renderable
