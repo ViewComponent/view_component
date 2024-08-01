@@ -126,5 +126,5 @@ end
 To render ViewComponents outside of the view context (such as in a background job, markdown processor, etc), instantiate a Rails controller:
 
 ```ruby
-ApplicationComponent.new.view_context.render(MyComponent.new)
+ApplicationController.new.view_context.render(MyComponent.new)
 ```

@@ -22,6 +22,10 @@ nav_order: 5
 
     *Seth Herr*
 
+* Add `assert_component_rendered` test helper.
+
+    *Reegan Viljoen*
+
 * Add `prefix:` option to `use_helpers`.
 
     *Reegan Viljoen*

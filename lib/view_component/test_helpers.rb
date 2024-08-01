@@ -14,6 +14,10 @@ module ViewComponent
       def refute_component_rendered
         assert_no_selector("body")
       end
+
+      def assert_component_rendered
+        assert_selector("body")
+      end
     rescue LoadError
       # We don't have a test case for running an application without capybara installed.
       # It's probably fine to leave this without coverage.

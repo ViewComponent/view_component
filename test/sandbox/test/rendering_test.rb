@@ -400,6 +400,7 @@ class RenderingTest < ViewComponent::TestCase
       "Content"
     end
 
+    assert_component_rendered
     assert_text("Content")
   end
 
