@@ -12,7 +12,7 @@ nav_order: 5
 
 * Add experimental `SlotableDefault` module, allowing components to define a `default_SLOTNAME` method to provide a default value for slots.
 
-*Joel Hawksley*
+    *Joel Hawksley*
 
 * Add documentation on rendering ViewComponents outside of the view context.
 
