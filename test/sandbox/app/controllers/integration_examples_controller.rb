@@ -70,6 +70,7 @@ class IntegrationExamplesController < ActionController::Base
 
   def unsafe_postamble_component
     render(UnsafePostambleComponent.new)
+  end
 
   def turbo_stream
     respond_to { |format| format.turbo_stream { render TurboStreamComponent.new } }
