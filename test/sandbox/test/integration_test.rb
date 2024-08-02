@@ -577,9 +577,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     skip unless Rails::VERSION::MAJOR >= 6
     without_template_annotations do
       get turbo_stream_path, headers: { "HTTP_ACCEPT" => "text/vnd.turbo-stream.html" }
-      assert_not_equal <<~TURBOSTREAM, response.body
+      expected_response_body = <<~TURBOSTREAM
         <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
       TURBOSTREAM
+      if ViewComponent::Base.config.capture_compatibility_patch_enabled
+        assert_equal expected_response_body, response.body
+      else
+        assert_not_equal expected_response_body, response.body
+      end
     end
   end
 
