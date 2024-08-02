@@ -2,25 +2,8 @@
 
 source "https://rubygems.org"
 
-gem "capybara", "~> 3"
 gem "rails", "~> 7.0"
-gem "rspec-rails", "~> 5"
-gem "net-imap", require: false
-gem "net-pop", require: false
-gem "net-smtp", require: false
-gem "debug"
 gem "tailwindcss-rails", "~> 2.0"
 gem "turbo-rails", "~> 1"
-
-group :test do
-  gem "cuprite", "~> 0.15"
-  gem "puma", "~> 6"
-  gem "warning"
-  gem "selenium-webdriver", "4.9.0"
-end
-
-group :development, :test do
-  gem "appraisal", "~> 2.5"
-end
 
 gemspec path: "../"
