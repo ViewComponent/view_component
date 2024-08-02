@@ -400,6 +400,7 @@ class RenderingTest < ViewComponent::TestCase
       "Content"
     end
 
+    assert_component_rendered
     assert_text("Content")
   end
 
@@ -563,7 +564,7 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(ExceptionInTemplateComponent.new)
       end
 
-    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace.first
+    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[0]
   end
 
   def test_render_collection
@@ -1120,5 +1121,77 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
+  end
+
+  def test_use_helpers_macros
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__message", text: "Hello helper method"
+  end
+
+  def test_use_helpers_macros_with_args
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__args-message", text: "Hello macro helper method"
+  end
+
+  def test_use_helpers_macros_with_kwargs
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__kwargs-message", text: "Hello macro kwargs helper method"
+  end
+
+  def test_use_helpers_with_block
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__block-message", text: "Hello block helper method"
+  end
+
+  def test_use_helper_macros
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__message", text: "Hello helper method"
+  end
+
+  def test_use_helper_macros_with_args
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__args-message", text: "Hello macro helper method"
+  end
+
+  def test_use_helper_macros_with_kwargs
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__kwargs-message", text: "Hello macro kwargs helper method"
+  end
+
+  def test_use_helper_macros_with_block
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__block-message", text: "Hello block helper method"
+  end
+
+  def test_use_helper_macros_with_prefix
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__prefix-message", text: "Hello macro prefix helper method"
+  end
+
+  def test_use_helper_macros_with_named_prefix
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__prefix-message", text: "Hello macro named prefix helper method"
+  end
+
+  def test_use_helpers_macros_with_prefix
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__prefix-message", text: "Hello macro prefix helper method"
+  end
+
+  def test_use_helpers_macros_with_named_prefix
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__named-prefix-message", text: "Hello macro named prefix helper method"
   end
 end

@@ -86,6 +86,12 @@ module ViewComponent
         define_render_template_for
       end
 
+      component_class.registered_slots.each do |slot_name, config|
+        config[:default_method] = component_class.instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
+
+        component_class.registered_slots[slot_name] = config
+      end
+
       component_class.build_i18n_backend
 
       CompileCache.register(component_class)

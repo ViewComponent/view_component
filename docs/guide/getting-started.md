@@ -120,3 +120,11 @@ class PagesController < ApplicationController
   end
 end
 ```
+
+### Rendering ViewComponents outside of the view context
+
+To render ViewComponents outside of the view context (such as in a background job, markdown processor, etc), instantiate a Rails controller:
+
+```ruby
+ApplicationController.new.view_context.render(MyComponent.new)
+```

@@ -229,11 +229,13 @@ ViewComponent is built by over a hundred members of the community, including:
 
 ## Who uses ViewComponent?
 
+* [Aboard HR](https://aboardhr.com/)
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
 * [Avo Admin for Rails](https://avohq.io/rails-admin)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
+* [Bump.sh](https://bump.sh)
 * [Causey](https://www.causey.app/) (100+ components)
 * [CharlieHR](https://www.charliehr.com/)
 * [City of Paris](https://www.paris.fr/)
@@ -241,6 +243,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Cometeer](https://cometeer.com/)
 * [Consul](https://consulproject.org/en/)
 * [Cults.](https://cults3d.com/)
+* [DotRuby](https://www.dotruby.com)
 * [Eagerworks](https://eagerworks.com/)
 * [FlightLogger](https://flightlogger.net/)
 * [Framework](https://frame.work/)
@@ -275,6 +278,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [SpendHQ](https://www.spendhq.com/)
 * [Spina CMS](https://spinacms.com/)
 * [Startup Jobs](https://startup.jobs/)
+* [Teamtailor](https://teamtailor.com/)
 * [Topkey](https://topkey.io/)
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
