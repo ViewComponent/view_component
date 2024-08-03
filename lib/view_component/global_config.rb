@@ -3,7 +3,7 @@
 require "view_component/deprecation"
 
 module ViewComponent
-  class Config
+  class GlobalConfig
     class << self
       # `new` without any arguments initializes the default configuration, but
       # it's important to differentiate in case that's no longer the case in
@@ -181,10 +181,10 @@ module ViewComponent
     end
 
     # @!attribute current
-    # @return [ViewComponent::Config]
-    # Returns the current ViewComponent::Config. This is persisted against this
+    # @return [ViewComponent::GlobalConfig]
+    # Returns the current ViewComponent::GlobalConfig. This is persisted against this
     # class so that config options remain accessible before the rest of
-    # ViewComponent has loaded. Defaults to an instance of ViewComponent::Config
+    # ViewComponent has loaded. Defaults to an instance of ViewComponent::GlobalConfig
     # with all other documented defaults set.
     class_attribute :current, default: defaults, instance_predicate: false
 

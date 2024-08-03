@@ -76,7 +76,7 @@ namespace :docs do
 
     instance_methods_to_document = meths.select { |method| method.scope != :class }
     class_methods_to_document = meths.select { |method| method.scope == :class }
-    configuration_methods_to_document = registry.get("ViewComponent::Config").meths.select(&:reader?)
+    configuration_methods_to_document = registry.get("ViewComponent::GlobalConfig").meths.select(&:reader?)
     test_helper_methods_to_document = registry
       .get("ViewComponent::TestHelpers")
       .meths
