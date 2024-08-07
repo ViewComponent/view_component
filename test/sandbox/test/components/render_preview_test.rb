@@ -24,4 +24,10 @@ class RenderPreviewTest < ViewComponent::TestCase
 
     assert_selector("div", text: "subclass")
   end
+
+  def test_render_preview_with_concat
+    render_preview(:with_concat, from: SlotsComponentPreview)
+
+    assert_selector("div", text: "Hello, world!")
+  end
 end
