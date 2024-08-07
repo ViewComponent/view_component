@@ -6,6 +6,7 @@ gem "capybara", "~> 3"
 gem "rails", "~> 6.0.0"
 gem "rspec-rails", "~> 5"
 gem "tailwindcss-rails", "~> 2.0"
+gem "turbo-rails", "~> 1"
 
 group :test do
   gem "cuprite", "~> 0.8"

@@ -38,4 +38,5 @@ Sandbox::Application.routes.draw do
     get :constraints_with_env, to: "integration_examples#index"
   end
   get :helpers_proxy_component, to: "integration_examples#helpers_proxy_component"
+  get :turbo_stream, to: "integration_examples#turbo_stream"
 end
