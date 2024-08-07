@@ -30,6 +30,10 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Add `helpers_enabled` config.
+
+    *Reegan Viljoen*
+
 ## 3.13.0
 
 * Add ruby head and YJIT to CI.
