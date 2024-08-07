@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add support for using view components in Rails Engine
+
+    *Tomasz Kowalewski*
+
 * Add experimental `SlotableDefault` module, allowing components to define a `default_SLOTNAME` method to provide a default value for slots.
 
     *Joel Hawksley*
