@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "rails"
-require "view_component/config"
+require "view_component/global_config"
 require "view_component/deprecation"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ViewComponent::Config.current
+    config.view_component = ViewComponent::GlobalConfig.current
 
     rake_tasks do
       load "view_component/rails/tasks/view_component.rake"
