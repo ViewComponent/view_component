@@ -20,6 +20,19 @@ module ViewComponent # :nodoc:
       end
     end
 
+    def helpers
+      super unless ViewComponent::Base.config.instrumentation_helpers
+      ActiveSupport::Notifications.instrument(
+        "#{notification_name}.helpers",
+        {
+          name: self.class.name,
+          identifier: self.class.identifier
+        }
+      ) do
+        super
+      end
+    end
+
     private
 
     def notification_name

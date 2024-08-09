@@ -30,6 +30,10 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Add helper instrumentation.
+
+    *Reegan Viljoen*
+
 ## 3.13.0
 
 * Add ruby head and YJIT to CI.
