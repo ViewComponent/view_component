@@ -29,4 +29,19 @@ class InstrumentationTest < ViewComponent::TestCase
     assert_equal(events.size, 1)
     assert_equal("!render.view_component", events[0].name)
   end
+
+  def test_helpers_instrumentation
+    with_config_option(:use_deprecated_instrumentation_name, false) do
+      with_config_option(:instrument_helpers, true) do
+        events = []
+        ActiveSupport::Notifications.subscribe("render.view_component.helpers") do |*args|
+          events << ActiveSupport::Notifications::Event.new(*args)
+        end
+        render_inline(InstrumentationComponent.new)
+
+        assert_equal(events.size, 1)
+        assert_equal("render.view_component.helpers", events[0].name)
+      end
+    end
+  end
 end

@@ -29,6 +29,23 @@ ActiveSupport::Notifications.subscribe("render.view_component") do |event| # or 
 end
 ```
 
+## Instrument helpers
+To enable helpers instrumentation, use the `instrument_helpers` option wich will instrument all helpers used in the rendering of a ViewComponent:
+
+```ruby
+# config/application.rb
+# Enable ActiveSupport notifications for all ViewComponents
+config.view_component.instrument_helpers = true
+config.view_component.use_deprecated_instrumentation_name = false
+```
+
+```ruby
+ActiveSupport::Notifications.subscribe("render.view_component.helpers") do |event| # or !render.view_component
+  event.name    # => "render.view_component"
+  event.payload # => { name: "MyComponent", identifier: "/Users/mona/project/app/components/my_component.rb" }
+end
+```
+
 ## Viewing instrumentation sums in the browser developer tools
 
 When using `render.view_component` with `config.server_timing = true` (default in development) in Rails 7, the browser developer tools display the sum total timing information in Network > Timing under the key `render.view_component`.

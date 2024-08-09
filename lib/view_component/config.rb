@@ -17,6 +17,7 @@ module ViewComponent
           preview_route: "/rails/view_components",
           show_previews_source: false,
           instrumentation_enabled: false,
+          instrument_helpers: false,
           use_deprecated_instrumentation_name: true,
           render_monkey_patch_enabled: true,
           view_component_path: "app/components",
@@ -111,6 +112,11 @@ module ViewComponent
       # @!attribute instrumentation_enabled
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
+      # Defaults to `false`.
+
+      # @!attribute instrument_helpers
+      # @return [Boolean]
+      # Whether ActiveSupport notifications are enabled for helpers.
       # Defaults to `false`.
 
       # @!attribute use_deprecated_instrumentation_name
