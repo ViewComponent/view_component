@@ -30,6 +30,7 @@ end
 ```
 
 ## Instrument helpers
+
 To enable helpers instrumentation, use the `instrument_helpers` option wich will instrument all helpers used in the rendering of a ViewComponent:
 
 ```ruby
