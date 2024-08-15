@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add support for using view components in Rails Engine
+* Add Rails engine support to generators.
 
     *Tomasz Kowalewski*
 
