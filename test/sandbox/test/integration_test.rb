@@ -576,7 +576,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_render_component_in_turbo_stream
     skip unless Rails::VERSION::MAJOR >= 6
     without_template_annotations do
-      get turbo_stream_path, headers: { "HTTP_ACCEPT" => "text/vnd.turbo-stream.html" }
+      get turbo_stream_path, headers: {"HTTP_ACCEPT" => "text/vnd.turbo-stream.html"}
       expected_response_body = <<~TURBOSTREAM
         <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
       TURBOSTREAM
