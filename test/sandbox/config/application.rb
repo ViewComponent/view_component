@@ -3,6 +3,7 @@
 require File.expand_path("boot", __dir__)
 
 require "active_model/railtie"
+require "action_cable/engine" # Remove when hotwired/turbo-rails#74 is resolved
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
