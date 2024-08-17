@@ -98,7 +98,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.2
+        ruby-version: 3.3
         bundler-cache: true
         working-directory: 'view_component'
     - uses: actions/setup-node@v4
