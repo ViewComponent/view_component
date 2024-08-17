@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Defer to built-in caching for language environment setup, rather than manually using `actions/cache` in CI.
+
+    *Simon Fish*
+
 * Add test coverage for use of `turbo_stream` helpers in components when `capture_compatibility_patch_enabled` is `true`.
 
   *Simon Fish*
