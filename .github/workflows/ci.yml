@@ -35,22 +35,18 @@ jobs:
           - ruby_version: "3.0"
             rails_version: "6.1"
             mode: "capture_patch_enabled"
-
           - ruby_version: "3.0"
             rails_version: "6.1"
             mode: "capture_patch_disabled"
-
           - ruby_version: "3.1"
             rails_version: "7.0"
             mode: "capture_patch_enabled"
           - ruby_version: "3.1"
             rails_version: "7.0"
             mode: "capture_patch_disabled"
-
           - ruby_version: "3.2"
             rails_version: "7.1"
             mode: "capture_patch_enabled"
-
           - ruby_version: "3.2"
             rails_version: "7.1"
             mode: "capture_patch_disabled"
@@ -63,6 +59,9 @@ jobs:
           - ruby_version: "3.3"
             rails_version: "7.2"
             mode: "capture_patch_disabled"
+         - ruby_version: "3.3"
+            rails_version: "7.2"
+            mode: "capture_patch_enabled"
           - ruby_version: "head"
             rails_version: "main"
             mode: "capture_patch_disabled"
