@@ -59,7 +59,7 @@ jobs:
           - ruby_version: "3.3"
             rails_version: "7.2"
             mode: "capture_patch_disabled"
-         - ruby_version: "3.3"
+          - ruby_version: "3.3"
             rails_version: "7.2"
             mode: "capture_patch_enabled"
           - ruby_version: "head"
