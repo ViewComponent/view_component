@@ -81,6 +81,7 @@ jobs:
       env:
         RAISE_ON_WARNING: 1
         RAILS_VERSION: ${{ matrix.rails_version }}
+        RUBY_VERSION: ${{ matrix.ruby_version }}
         CAPTURE_PATCH_ENABLED: ${{ matrix.mode == 'capture_patch_enabled' && 'true' || 'false' }}
     - name: Upload coverage results
       uses: actions/upload-artifact@v3.1.3
