@@ -30,7 +30,7 @@ nav_order: 5
 
     *Reegan Viljoen*
 
-* Add support for Rails 7.2
+* Add support for Rails 7.2.
 
     *Reegan Viljoen*
 
