@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add test coverage for use of `turbo_stream` helpers in components.
+* Add test coverage for use of `turbo_stream` helpers in components when `capture_compatibility_patch_enabled` is `true`.
 
   *Simon Fish*
 
