@@ -15,14 +15,9 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.3
-    - uses: actions/cache@v4
-      with:
-        path: vendor/bundle
-        key: gems-build-rails-main-ruby-3.3-${{ hashFiles('**/Gemfile.lock') }}
+        bundler-cache: true
     - name: Run benchmarks
       run: |
-        bundle config path vendor/bundle
-        bundle update
         bundle exec rake partial_benchmark
         bundle exec rake translatable_benchmark
   test:
@@ -103,24 +98,20 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.2
+        ruby-version: 3.3
+        bundler-cache: true
+        working-directory: 'view_component'
     - uses: actions/setup-node@v4
       with:
         node-version: 16
-    - uses: actions/cache@v4
-      with:
-        path: |
-          node_modules
-          vendor/bundle
-        key: gems-build-pvc-${{ hashFiles('**/Gemfile.lock') }}-${{ hashFiles('**/package-json.lock') }}
+        cache: 'npm'
+        cache-dependency-path: 'primer_view_components/package-lock.json'
     - name: Build and test with Rake
       run: |
         cd primer_view_components
         npm ci
         cd demo && npm ci && cd ..
-        bundle config path vendor/bundle
-        bundle install
-        bundle exec rake
+        bundle && bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
         RAILS_VERSION: '7.1.1'
@@ -134,16 +125,9 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.3
+        bundler-cache: true
     - name: Download coverage results
       uses: actions/download-artifact@v3
-    - uses: actions/cache@v4
-      with:
-        path: vendor/bundle
-        key: gems-build-rails-main-ruby-3.3-${{ hashFiles('**/Gemfile.lock') }}
     - name: Collate simplecov
       run: |
-        bundle config path vendor/bundle
-        bundle update
         bundle exec rake coverage:report
-      env:
-        RAILS_VERSION: '~> 7.1.0'
