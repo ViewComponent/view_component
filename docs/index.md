@@ -10,27 +10,32 @@ A framework for creating reusable, testable & encapsulated view components, buil
 
 ## What's a ViewComponent?
 
-Think of ViewComponents as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html). A ViewComponent is a Ruby object:
+ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
+
+ViewComponents are objects that encapsulate a template:
 
 ```ruby
+# app/components/message_component.rb
 class MessageComponent < ViewComponent::Base
-  erb_template <<-ERB
-    <h1>Hello, <%= @name %>!</h1>
-  ERB
-
   def initialize(name:)
     @name = name
   end
 end
 ```
 
-Which is instantiated and passed to Rails' `#render`:
+```erb
+<%# app/components/message_component.html.erb %>
+<h1>Hello, <%= @name %>!<h1>
+```
+
+Which is rendered by calling:
 
 ```erb
+<%# app/views/demo/index.html.erb %>
 <%= render(MessageComponent.new(name: "World")) %>
 ```
 
-Returning markup:
+Returning:
 
 ```html
 <h1>Hello, World!</h1>
@@ -217,14 +222,19 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/milk1000cc?s=64" alt="milk1000cc" width="32" />
 <img src="https://avatars.githubusercontent.com/aduth?s=64" alt="aduth" width="32" />
 <img src="https://avatars.githubusercontent.com/htcarr3?s=64" alt="htcarr3" width="32" />
+<img src="https://avatars.githubusercontent.com/neanias?s=64" alt="neanias" width="32" />
+<img src="https://avatars.githubusercontent.com/allan-pires?s=64" alt="allan-pires" width="32" />
+<img src="https://avatars.githubusercontent.com/jasonkim?s=64" alt="jasonkim" width="32" />
 
 ## Who uses ViewComponent?
 
+* [Aboard HR](https://aboardhr.com/)
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
 * [Avo Admin for Rails](https://avohq.io/rails-admin)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
+* [Bump.sh](https://bump.sh)
 * [Causey](https://www.causey.app/) (100+ components)
 * [CharlieHR](https://www.charliehr.com/)
 * [City of Paris](https://www.paris.fr/)
@@ -232,6 +242,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Cometeer](https://cometeer.com/)
 * [Consul](https://consulproject.org/en/)
 * [Cults.](https://cults3d.com/)
+* [DotRuby](https://www.dotruby.com)
 * [Eagerworks](https://eagerworks.com/)
 * [FlightLogger](https://flightlogger.net/)
 * [Framework](https://frame.work/)
@@ -263,12 +274,15 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Simundia](https://www.simundia.com/)
 * [Skroutz](https://engineering.skroutz.gr/blog/)
 * [Shogun](https://getshogun.com/)
+* [SpendHQ](https://www.spendhq.com/)
 * [Spina CMS](https://spinacms.com/)
 * [Startup Jobs](https://startup.jobs/)
+* [Teamtailor](https://teamtailor.com/)
 * [Topkey](https://topkey.io/)
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
 * [Within3](https://www.within3.com/)
+* [Workbrew](https://www.workbrew.com/)
 * [Wrapbook](https://wrapbook.com/)
 * [Yobbers](https://www.yobbers.com/)
 

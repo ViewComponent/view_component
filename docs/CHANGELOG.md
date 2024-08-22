@@ -10,6 +10,86 @@ nav_order: 5
 
 ## main
 
+* Defer to built-in caching for language environment setup, rather than manually using `actions/cache` in CI.
+
+    *Simon Fish*
+
+* Add test coverage for use of `turbo_stream` helpers in components when `capture_compatibility_patch_enabled` is `true`.
+
+  *Simon Fish*
+
+* Add experimental `SlotableDefault` module, allowing components to define a `default_SLOTNAME` method to provide a default value for slots.
+
+    *Joel Hawksley*
+
+* Add documentation on rendering ViewComponents outside of the view context.
+
+    *Joel Hawksley*
+
+* Look for preview files that end in `preview.rb` rather than `_preview.rb` to allow previews to exist in sidecar directory with test files.
+
+    *Seth Herr*
+
+* Add `assert_component_rendered` test helper.
+
+    *Reegan Viljoen*
+
+* Add `prefix:` option to `use_helpers`.
+
+    *Reegan Viljoen*
+
+* Add support for Rails 7.2.
+
+    *Reegan Viljoen*
+
+## 3.13.0
+
+* Add ruby head and YJIT to CI.
+
+    *Reegan Viljoen*
+
+* Fixed a bug where inline templates where unable to remove trailing whitespace without throwing an error.
+
+    *Reegan Viljoen*
+
+* Fixed CI for Rails main.
+
+    *Reegan Viljoen*
+
+* Add `from:` option to `use_helpers` to allow for more flexible helper inclusion from modules.
+
+    *Reegan Viljoen*
+
+* Fixed ruby head matcher issue.
+
+    *Reegan Viljoen*
+
+## 3.12.1
+
+* Ensure content is rendered correctly for forwarded slots.
+
+    *Cameron Dutro*
+
+## 3.12.0
+
+* Remove offline links from resources.
+
+    *Paulo Henrique Meneses*
+
+* Fix templates not being correctly populated when caller location label has a prefix.
+
+  On the upstream version of Ruby, method owners are now included in backtraces as prefixes. This caused the call stack filtering to not work as intended and thus `source_location` to be incorrect for child ViewComponents, consequently not populating templates correctly.
+
+    *Allan Pires, Jason Kim*
+
+* Use component path for generating RSpec files.
+
+  When generating new RSpec files for components, the generator will use the `view_component_path` value in the config to decide where to put the new spec file. For instance, if the `view_component_path` option has been changed to `app/views/components`, the generator will put the spec file in `spec/views/components`. **If the `view_component_path` doesn't start with `app/`, then the generator will fall back to `spec/components/`.**
+
+  This feature is enabled via the `config.view_component.generate.use_component_path_for_rspec_tests` option, defaulting to `false`. The default will change to `true` in ViewComponent v4.
+
+    *William Mathewson*
+
 ## 3.11.0
 
 * Fix running non-integration tests under Rails main.
@@ -30,7 +110,7 @@ nav_order: 5
 
 * Include ViewComponent::UseHelpers by default.
 
-      *Reegan Viljoen*
+    *Reegan Viljoen*
 
 * Bump `puma` in Gemfile.lock.
 

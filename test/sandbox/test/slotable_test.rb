@@ -758,4 +758,31 @@ class SlotableTest < ViewComponent::TestCase
       render_inline InlineIntegerComponent.new
     end
   end
+
+  def test_forwarded_slot_renders_correctly
+    render_inline(ForwardingSlotWrapperComponent.new)
+
+    assert_text "Target content", count: 1
+  end
+
+  def test_slotable_default
+    render_inline(SlotableDefaultComponent.new)
+
+    assert_text "hello,world!", count: 1
+  end
+
+  def test_slotable_default_override
+    component = SlotableDefaultComponent.new
+    component.with_header_content("foo")
+
+    render_inline(component)
+
+    assert_text "foo", count: 1
+  end
+
+  def test_slotable_default_instance
+    render_inline(SlotableDefaultInstanceComponent.new)
+
+    assert_text "hello,world!", count: 1
+  end
 end

@@ -266,10 +266,7 @@ module ViewComponent
       end
 
       def define_slot(slot_name, collection:, callable:)
-        # Setup basic slot data
-        slot = {
-          collection: collection
-        }
+        slot = {collection: collection}
         return slot unless callable
 
         # If callable responds to `render_in`, we set it on the slot as a renderable
@@ -366,7 +363,7 @@ module ViewComponent
       # 1. If this is a `content_area` style sub-component, we will render the
       # block via the `slot`
       #
-      # 2. Since we've to pass block content to components when calling
+      # 2. Since we have to pass block content to components when calling
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
       slot.__vc_content_block = block if block

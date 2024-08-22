@@ -25,13 +25,13 @@ _Is this page missing a link? Open a PR!_
 
 - [ViewComponent::Storybook](https://github.com/jonspalmer/view_component_storybook)
 - [ViewComponent Contrib](https://github.com/palkan/view_component-contrib)
-- [Lookbook](https://github.com/allmarkedup/lookbook)
+- [Lookbook](https://lookbook.build)
 - [ViewComponentAttributes](https://github.com/Amba-Health/view_component_attributes)
 
 ## Podcasts
 
 - [Code with Jason - ViewComponent with Joel Hawksley, Staff Engineer at GitHub](https://www.codewithjason.com/podcast/9936046-130-viewcomponent-with-joel-hawksley-staff-engineer-at-github/)
-- [Remote Ruby - ViewComponents and the Future of Assets](https://remoteruby.transistor.fm/125)
+- [Remote Ruby - ViewComponents and the Future of Assets](https://www.remoteruby.com/2260490/13761017-viewcomponents-and-the-future-of-assets-with-joel-hawksley)
 - [Ruby Rogues - RUX: JSX-Style Rails View Components](https://topenddevs.com/podcasts/ruby-rogues/episodes/rux-jsx-style-rails-view-components-ruby-517)
 - [Code with Jason - ViewComponent with Joel Hawksley of GitHub](https://www.codewithjason.com/podcast/9478227-088-viewcomponent-with-joel-hawksley-of-github/)
 - [Ruby Rogues - Rethinking the View Layer with Components](https://topenddevs.com/podcasts/ruby-rogues/episodes/rr-461-rethinking-the-view-layer-with-components-with-joel-hawksley)
@@ -50,7 +50,6 @@ _Is this page missing a link? Open a PR!_
 
 ## Articles
 
-- [Ruby-on-Rails ViewComponents tutorial and examples](https://www.bootrails.com/blog/ruby-on-rails-viewcomponents-tutorial-and-examples/)
 - [From partials to ViewComponents: writing reusable front-end code in Rails](https://dev.to/nejremeslnici/from-partials-to-viewcomponents-writing-reusable-front-end-code-in-rails-1c9o)
 - [Snapshot testing ViewComponents with RSpec](https://www.bearer.com/blog/snapshot-testing-viewcomponents-with-rspec)
 - [Don't Cloud Your View With Logic.](https://www.beflagrant.com/blog/dont-cloud-view-with-logic)

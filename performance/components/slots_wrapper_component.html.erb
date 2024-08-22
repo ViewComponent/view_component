@@ -1,0 +1,3 @@
+<%= render(Performance::SlotsComponent.new(name: "Fox Mulder")) do |component| %>
+  <% component.with_header(classes: "foo") { "Header" } %>
+<% end %>
