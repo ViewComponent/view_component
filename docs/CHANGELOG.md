@@ -10,6 +10,14 @@ nav_order: 5
 
 ## main
 
+* Defer to built-in caching for language environment setup, rather than manually using `actions/cache` in CI.
+
+    *Simon Fish*
+
+* Add test coverage for use of `turbo_stream` helpers in components when `capture_compatibility_patch_enabled` is `true`.
+
+  *Simon Fish*
+
 * Add experimental `SlotableDefault` module, allowing components to define a `default_SLOTNAME` method to provide a default value for slots.
 
     *Joel Hawksley*
@@ -27,6 +35,10 @@ nav_order: 5
     *Reegan Viljoen*
 
 * Add `prefix:` option to `use_helpers`.
+
+    *Reegan Viljoen*
+
+* Add support for Rails 7.2.
 
     *Reegan Viljoen*
 
