@@ -106,6 +106,13 @@ module ViewComponent
     attr_reader :component_class, :redefinition_lock
 
     def define_render_template_for
+      template_elsifs = templates.map do |template|
+        safe_name = "_call_variant_#{normalized_variant_name(template[:variant])}_#{template[:format]}_#{safe_class_name}"
+        component_class.define_method(safe_name, component_class.instance_method(call_method_name(template[:variant], template[:format])))
+
+        "elsif variant == #{template[:variant].inspect} && format == #{template[:format].inspect}\n    #{safe_name}"
+      end.join("\n")
+
       variant_elsifs = variants.compact.uniq.map do |variant|
         safe_name = "_call_variant_#{normalized_variant_name(variant)}_#{safe_class_name}"
         component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
@@ -116,7 +123,9 @@ module ViewComponent
       component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
 
       body = <<-RUBY
-        if variant.nil?
+        if false
+        #{template_elsifs}
+        elsif variant.nil?
           _call_#{safe_class_name}
         #{variant_elsifs}
         else
