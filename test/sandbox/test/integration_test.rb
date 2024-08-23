@@ -752,4 +752,22 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       "Rendering UnsafePostambleComponent did not emit an HTML safety warning"
     )
   end
+
+  def test_renders_multiple_format_component_as_html
+    get "/multiple_formats_component"
+
+    assert_includes response.body, "Hello, HTML!"
+  end
+
+  def test_renders_multiple_format_component_as_json
+    get "/multiple_formats_component.json"
+
+    assert_includes response.body, "Hello, JSON!"
+  end
+
+  def test_renders_multiple_format_component_as_css
+    get "/multiple_formats_component.css"
+
+    assert_includes response.body, "Hello, CSS!"
+  end
 end

@@ -71,4 +71,8 @@ class IntegrationExamplesController < ActionController::Base
   def unsafe_postamble_component
     render(UnsafePostambleComponent.new)
   end
+
+  def multiple_formats_component
+    render(MultipleFormatsComponent.new)
+  end
 end

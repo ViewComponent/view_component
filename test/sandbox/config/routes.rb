@@ -32,6 +32,7 @@ Sandbox::Application.routes.draw do
   get :unsafe_component, to: "integration_examples#unsafe_component"
   get :unsafe_preamble_component, to: "integration_examples#unsafe_preamble_component"
   get :unsafe_postamble_component, to: "integration_examples#unsafe_postamble_component"
+  get :multiple_formats_component, to: "integration_examples#multiple_formats_component"
   post :create, to: "integration_examples#create"
 
   constraints(lambda { |request| request.env["warden"].authenticate! }) do
