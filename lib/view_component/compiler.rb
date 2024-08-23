@@ -61,14 +61,14 @@ module ViewComponent
 
           component_class.silence_redefinition_of_method("render_template_for")
           component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def render_template_for(variant = nil)
+          def render_template_for(variant = nil, format = nil)
             _call_#{safe_class_name}
           end
           RUBY
         end
       else
         templates.each do |template|
-          method_name = call_method_name(template[:variant])
+          method_name = call_method_name(template[:variant], template[:format])
           @variants_rendering_templates << template[:variant]
 
           redefinition_lock.synchronize do
@@ -127,7 +127,7 @@ module ViewComponent
       redefinition_lock.synchronize do
         component_class.silence_redefinition_of_method(:render_template_for)
         component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
+        def render_template_for(variant = nil, format = nil)
           #{body}
         end
         RUBY
@@ -147,7 +147,7 @@ module ViewComponent
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
-          if templates.count { |template| template[:variant].nil? } > 1
+          if templates.map { |template| "#{template[:variant].inspect}_#{template[:format]}" }.tally.any? { |_, count| count > 1 }
             errors <<
               "More than one template found for #{component_class}. " \
               "There can only be one default template file per component."
@@ -213,6 +213,7 @@ module ViewComponent
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
+              format: pieces[1..-2].join(".").split("+").first&.to_sym,
               variant: pieces[1..-2].join(".").split("+").second&.to_sym,
               handler: pieces.last
             }
@@ -237,6 +238,10 @@ module ViewComponent
 
     def inline_calls_defined_on_self
       @inline_calls_defined_on_self ||= component_class.instance_methods(false).grep(/^call(_|$)/)
+    end
+
+    def formats
+      @__vc_variants = (templates.map { |template| template[:format] }).compact.uniq
     end
 
     def variants
@@ -283,12 +288,18 @@ module ViewComponent
       # :nocov:
     end
 
-    def call_method_name(variant)
-      if variant.present? && variants.include?(variant)
-        "call_#{normalized_variant_name(variant)}"
-      else
-        "call"
+    def call_method_name(variant, format = nil)
+      out = +"call"
+
+      if variant.present?
+        out << "_#{normalized_variant_name(variant)}"
       end
+
+      if format.present? && format != :html && formats.length > 1
+        out << "_#{format}"
+      end
+
+      out
     end
 
     def normalized_variant_name(variant)

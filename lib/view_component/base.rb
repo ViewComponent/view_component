@@ -107,7 +107,7 @@ module ViewComponent
 
       if render?
         # Avoid allocating new string when output_preamble and output_postamble are blank
-        rendered_template = safe_render_template_for(@__vc_variant).to_s
+        rendered_template = safe_render_template_for(@__vc_variant, request.present? ? request.format.to_sym : nil).to_s
 
         if output_preamble.blank? && output_postamble.blank?
           rendered_template
@@ -330,11 +330,11 @@ module ViewComponent
       end
     end
 
-    def safe_render_template_for(variant)
+    def safe_render_template_for(variant, format = nil)
       if compiler.renders_template_for_variant?(variant)
-        render_template_for(variant)
+        render_template_for(variant, format)
       else
-        maybe_escape_html(render_template_for(variant)) do
+        maybe_escape_html(render_template_for(variant, format)) do
           Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
         end
       end
@@ -519,12 +519,12 @@ module ViewComponent
         # meaning it will not be called for any children and thus not compile their templates.
         if !child.instance_methods(false).include?(:render_template_for) && !child.compiled?
           child.class_eval <<~RUBY, __FILE__, __LINE__ + 1
-            def render_template_for(variant = nil)
+            def render_template_for(variant = nil, format = nil)
               # Force compilation here so the compiler always redefines render_template_for.
               # This is mostly a safeguard to prevent infinite recursion.
               self.class.compile(raise_errors: true, force: true)
               # .compile replaces this method; call the new one
-              render_template_for(variant)
+              render_template_for(variant, format)
             end
           RUBY
         end
