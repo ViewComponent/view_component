@@ -151,7 +151,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_jbuilder_template
-    with_request_url("/", format: :json) do
+    with_format(:json) do
       render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
     end
 
@@ -1194,5 +1194,13 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(UseHelpersMacroComponent.new)
 
     assert_selector ".helper__named-prefix-message", text: "Hello macro named prefix helper method"
+  end
+
+  def test_with_format
+    with_format(:json) do
+      render_inline(MultipleFormatsComponent.new)
+
+      assert_equal(rendered_json["hello"], "world")
+    end
   end
 end

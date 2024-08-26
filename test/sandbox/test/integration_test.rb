@@ -779,7 +779,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_renders_multiple_format_component_as_json
     get "/multiple_formats_component.json"
 
-    assert_includes response.body, "Hello, JSON!"
+    assert_equal response.body, "{\"hello\":\"world\"}"
   end
 
   def test_renders_multiple_format_component_as_css

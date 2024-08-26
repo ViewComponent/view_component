@@ -10,6 +10,18 @@ nav_order: 5
 
 ## main
 
+* Add support for request formats.
+
+    *Joel Hawksley*
+
+* Add `rendered_json` test helper.
+
+    *Joel Hawksley*
+
+* Add `with_format` test helper.
+
+    *Joel Hawksley*
+
 * Defer to built-in caching for language environment setup, rather than manually using `actions/cache` in CI.
 
     *Simon Fish*
