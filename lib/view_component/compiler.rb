@@ -107,6 +107,7 @@ module ViewComponent
 
     def define_render_template_for
       branches = []
+      default_method_name = "_call_#{safe_class_name}"
 
       templates.each do |template|
         safe_name = +"_call"
@@ -115,7 +116,16 @@ module ViewComponent
         safe_name << "_#{template[:format]}" if template[:format].present? && template[:format] != :html
         safe_name << "_#{safe_class_name}"
 
-        component_class.define_method(safe_name, component_class.instance_method(call_method_name(template[:variant], template[:format])))
+        if safe_name == default_method_name
+          next
+        else
+          component_class.define_method(
+            safe_name,
+            component_class.instance_method(
+              call_method_name(template[:variant], template[:format])
+            )
+          )
+        end
 
         format_conditional =
           if template[:format] == :html
@@ -141,8 +151,6 @@ module ViewComponent
         branches << ["variant&.to_sym == :'#{variant}'", safe_name]
       end
 
-      default_method_name = "_call_#{safe_class_name}"
-
       component_class.define_method(:"#{default_method_name}", component_class.instance_method(:call))
 
       # Just use default method name if no conditional branches or if there is a single
@@ -153,8 +161,6 @@ module ViewComponent
         body = +""
 
         branches.each do |conditional, method_body|
-          next if method_body == default_method_name
-
           body << "#{!body.present? ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
         end
 
