@@ -570,6 +570,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
   end
 
+  # This test documents a bug that reports an incompatibility with the turbo-rails gem's `turbo_stream` helper.
+  # This helper may work if the `capture_compatibility_patch` is enabled.
+  # Prefer `tag.turbo_stream` instead if you do not have the patch enabled already.
+  def test_render_component_in_turbo_stream
+    without_template_annotations do
+      get turbo_stream_path, headers: {"HTTP_ACCEPT" => "text/vnd.turbo-stream.html"}
+      expected_response_body = <<~TURBOSTREAM
+        <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
+      TURBOSTREAM
+      if ViewComponent::Base.config.capture_compatibility_patch_enabled
+        assert_equal expected_response_body, response.body
+      else
+        assert_not_equal expected_response_body, response.body
+      end
+    end
+  end
+
   def test_renders_the_preview_example_with_its_own_template_and_a_layout
     get "/rails/view_components/my_component/inside_banner"
     assert_includes response.body, "ViewComponent - Admin - Test"

@@ -75,4 +75,8 @@ class IntegrationExamplesController < ActionController::Base
   def multiple_formats_component
     render(MultipleFormatsComponent.new)
   end
+
+  def turbo_stream
+    respond_to { |format| format.turbo_stream { render TurboStreamComponent.new } }
+  end
 end
