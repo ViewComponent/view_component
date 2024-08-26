@@ -152,10 +152,10 @@ module ViewComponent
       else
         body = +""
 
-        branches.each_with_index do |(conditional, method_body), index|
+        branches.each do |conditional, method_body|
           next if method_body == default_method_name
 
-          body << "#{index == 0 ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
+          body << "#{!body.present? ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
         end
 
         body << "else\n  #{default_method_name}\nend"
