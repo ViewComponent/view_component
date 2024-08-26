@@ -106,32 +106,64 @@ module ViewComponent
     attr_reader :component_class, :redefinition_lock
 
     def define_render_template_for
-      template_elsifs = templates.map do |template|
-        safe_name = "_call_variant_#{normalized_variant_name(template[:variant])}_#{template[:format]}_#{safe_class_name}"
+      branches = []
+
+      templates.each do |template|
+        safe_name = +"_call"
+        variant_name = normalized_variant_name(template[:variant])
+        safe_name << "_#{variant_name}" if variant_name.present?
+        safe_name << "_#{template[:format]}" if template[:format].present? && template[:format] != :html
+        safe_name << "_#{safe_class_name}"
+
         component_class.define_method(safe_name, component_class.instance_method(call_method_name(template[:variant], template[:format])))
 
-        "elsif variant == #{template[:variant].inspect} && format == #{template[:format].inspect}\n    #{safe_name}"
-      end.join("\n")
+        format_conditional =
+          if template[:format] == :html
+            "(format == :html || format.nil?)"
+          else
+            "format == #{template[:format].inspect}"
+          end
 
-      variant_elsifs = variants.compact.uniq.map do |variant|
-        safe_name = "_call_variant_#{normalized_variant_name(variant)}_#{safe_class_name}"
+        variant_conditional =
+          if template[:variant].nil?
+            "variant.nil?"
+          else
+            "variant&.to_sym == :'#{template[:variant]}'"
+          end
+
+        branches << ["#{variant_conditional} && #{format_conditional}", safe_name]
+      end
+
+      variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
+        safe_name = "_call_#{normalized_variant_name(variant)}_#{safe_class_name}"
         component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
 
-        "elsif variant.to_sym == :'#{variant}'\n    #{safe_name}"
-      end.join("\n")
+        branches << ["variant&.to_sym == :'#{variant}'", safe_name]
+      end
 
-      component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
+      default_method_name = "_call_#{safe_class_name}"
 
-      body = <<-RUBY
-        if false
-        #{template_elsifs}
-        elsif variant.nil?
-          _call_#{safe_class_name}
-        #{variant_elsifs}
-        else
-          _call_#{safe_class_name}
+      component_class.define_method(:"#{default_method_name}", component_class.instance_method(:call))
+
+      # Just use default method name if no conditional branches or if there is a single
+      # conditional branch that just calls the default method_name
+      if branches.empty? || (branches.length == 1 && branches[0].last == default_method_name)
+        body = default_method_name
+      else
+        body = +""
+
+        branches.each_with_index do |(conditional, method_body), index|
+          next if method_body == default_method_name
+
+          if index == 0
+            body << "if #{conditional}\n  #{method_body}\n"
+          else
+            body << "elsif #{conditional}\n  #{method_body}\n"
+          end
         end
-      RUBY
+
+        body << "else\n  #{default_method_name}\nend"
+      end
 
       redefinition_lock.synchronize do
         component_class.silence_redefinition_of_method(:render_template_for)
