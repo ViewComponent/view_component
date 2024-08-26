@@ -76,7 +76,7 @@ module ViewComponent
             # rubocop:disable Style/EvalWithLocation
             component_class.class_eval <<-RUBY, template[:path], 0
             def #{method_name}
-              #{compiled_template(template[:path])}
+              #{compiled_template(template[:path], template[:format])}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
@@ -306,25 +306,36 @@ module ViewComponent
       compile_template(template, handler)
     end
 
-    def compiled_template(file_path)
+    def compiled_template(file_path, format)
       handler = ActionView::Template.handler_for_extension(File.extname(file_path).delete("."))
       template = File.read(file_path)
 
-      compile_template(template, handler)
+      compile_template(template, handler, file_path, format)
     end
 
-    def compile_template(template, handler)
+    def compile_template(template, handler, identifier = component_class.source_location, format = :html)
       template.rstrip! if component_class.strip_trailing_whitespace?
 
+      short_identifier = defined?(Rails.root) ? identifier.sub("#{Rails.root}/", "") : identifier
+      type = ActionView::Template::Types[format]
+
       if handler.method(:call).parameters.length > 1
-        handler.call(component_class, template)
+        handler.call(
+          OpenStruct.new(
+            format: format,
+            identifier: identifier,
+            short_identifier: short_identifier,
+            type: type
+          ),
+          template
+        )
       # :nocov:
       else
         handler.call(
           OpenStruct.new(
             source: template,
-            identifier: component_class.identifier,
-            type: component_class.type
+            identifier: identifier,
+            type: type
           )
         )
       end

@@ -500,13 +500,6 @@ module ViewComponent
         Collection.new(self, collection, **args)
       end
 
-      # Provide identifier for ActionView template annotations
-      #
-      # @private
-      def short_identifier
-        @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
-      end
-
       # @private
       def inherited(child)
         # Compile so child will inherit compiled `call_*` template methods that
@@ -584,17 +577,6 @@ module ViewComponent
       # @private
       def compiler
         @__vc_compiler ||= Compiler.new(self)
-      end
-
-      # we'll eventually want to update this to support other types
-      # @private
-      def type
-        "text/html"
-      end
-
-      # @private
-      def format
-        :html
       end
 
       # @private

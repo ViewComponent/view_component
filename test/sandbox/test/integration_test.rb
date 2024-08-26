@@ -19,7 +19,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       get "/"
       assert_response :success
 
-      assert_includes response.body, "BEGIN app/components/erb_component.rb"
+      assert_includes response.body, "BEGIN app/components/erb_component.html.erb"
 
       assert_select("div", "Foo\n  bar")
     end
