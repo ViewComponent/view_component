@@ -8,8 +8,16 @@ module ViewComponent
   class Engine < Rails::Engine # :nodoc:
     config.view_component = ViewComponent::Config.current
 
-    rake_tasks do
-      load "view_component/rails/tasks/view_component.rake"
+    if Rails.version.to_f < 8.0
+      rake_tasks do
+        load "view_component/rails/tasks/view_component.rake"
+      end
+    else
+      initializer "view_component.stats_directories" do |app|
+        require "rails/code_statistics"
+        dir = ViewComponent::Base.view_component_path
+        Rails::CodeStatistics.register_directory("ViewComponents", dir)
+      end
     end
 
     initializer "view_component.set_configs" do |app|
