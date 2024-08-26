@@ -155,11 +155,7 @@ module ViewComponent
         branches.each_with_index do |(conditional, method_body), index|
           next if method_body == default_method_name
 
-          if index == 0
-            body << "if #{conditional}\n  #{method_body}\n"
-          else
-            body << "elsif #{conditional}\n  #{method_body}\n"
-          end
+          body << "#{index == 0 ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
         end
 
         body << "else\n  #{default_method_name}\nend"
