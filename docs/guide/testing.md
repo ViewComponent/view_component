@@ -147,6 +147,7 @@ def test_render_component_as_json
     assert_equal(rendered_json["hello"], "world")
   end
 end
+```
 
 ## Configuring the controller used in tests
 
