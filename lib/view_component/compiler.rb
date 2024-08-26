@@ -161,7 +161,7 @@ module ViewComponent
         body = +""
 
         branches.each do |conditional, method_body|
-          body << "#{!body.present? ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
+          body << "#{(!body.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
         end
 
         body << "else\n  #{default_method_name}\nend"
