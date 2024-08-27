@@ -12,9 +12,9 @@ Rake::TestTask.new(:test) do |t|
 end
 
 Rake::TestTask.new(:engine_test) do |t|
-  t.libs << "test/dummy"
-  t.libs << "test/dummy/lib"
-  t.test_files = FileList["test/dummy/**/*_test.rb"]
+  t.libs << "test/test_engine"
+  t.libs << "test/test_engine/lib"
+  t.test_files = FileList["test/test_engine/**/*_test.rb"]
 end
 
 begin

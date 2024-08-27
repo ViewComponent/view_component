@@ -11,9 +11,9 @@ class TestUnitGeneratorTest < Rails::Generators::TestCase
   def test_component_tests
     run_generator %w[example --test-framework test_unit]
 
-    assert_file "test/components/dummy/example_component_test.rb" do |component|
+    assert_file "test/components/test_engine/example_component_test.rb" do |component|
       assert_no_match(/module/, component)
-      assert_match(/class Dummy::ExampleComponentTest < /, component)
+      assert_match(/class TestEngine::ExampleComponentTest < /, component)
       assert_match(/def test_component_renders_something_useful/, component)
     end
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Dummy
+module TestEngine
   class ExampleComponentPreview < ViewComponent::Preview
     def default
       render(ExampleComponent.new)

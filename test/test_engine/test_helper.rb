@@ -16,13 +16,13 @@ require "bundler/setup"
 require "minitest/autorun"
 require "rails"
 require "rails/generators"
-$LOAD_PATH.unshift "./test/dummy/lib"
-require "dummy"
+$LOAD_PATH.unshift "./test/test_engine/lib"
+require "test_engine"
 require "view_component"
 
-Rails::Generators.namespace = Dummy
+Rails::Generators.namespace = TestEngine
 
-def with_config_option(option_name, new_value, config_entrypoint: Dummy::Engine.config.view_component)
+def with_config_option(option_name, new_value, config_entrypoint: TestEngine::Engine.config.view_component)
   old_value = config_entrypoint.public_send(option_name)
   config_entrypoint.public_send(:"#{option_name}=", new_value)
   yield
