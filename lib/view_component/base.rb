@@ -579,11 +579,6 @@ module ViewComponent
         @__vc_compiler ||= Compiler.new(self)
       end
 
-      # @private
-      def identifier
-        source_location
-      end
-
       # Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
       #
       # ```ruby
