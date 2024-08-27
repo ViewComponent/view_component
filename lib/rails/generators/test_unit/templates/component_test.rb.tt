@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class <%= class_name %>ComponentTest < ViewComponent::TestCase
+class <%= namespaced? ? "#{namespace.name}::" : '' %><%= class_name %>ComponentTest < ViewComponent::TestCase
   def test_component_renders_something_useful
     # assert_equal(
     #   %(<span>Hello, components!</span>),

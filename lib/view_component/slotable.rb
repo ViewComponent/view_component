@@ -89,11 +89,11 @@ module ViewComponent
           end
           ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
-          define_method slot_name do
+          self::GeneratedSlotMethods.define_method slot_name do
             get_slot(slot_name)
           end
 
-          define_method :"#{slot_name}?" do
+          self::GeneratedSlotMethods.define_method :"#{slot_name}?" do
             get_slot(slot_name).present?
           end
 
@@ -176,11 +176,11 @@ module ViewComponent
             end
           end
 
-          define_method slot_name do
+          self::GeneratedSlotMethods.define_method slot_name do
             get_slot(slot_name)
           end
 
-          define_method :"#{slot_name}?" do
+          self::GeneratedSlotMethods.define_method :"#{slot_name}?" do
             get_slot(slot_name).present?
           end
 
@@ -199,19 +199,28 @@ module ViewComponent
         end
       end
 
-      # Clone slot configuration into child class
-      # see #test_slots_pollution
       def inherited(child)
+        # Clone slot configuration into child class
+        # see #test_slots_pollution
         child.registered_slots = registered_slots.clone
+
+        # Add a module for slot methods, allowing them to be overriden by the component class
+        # see #test_slot_name_can_be_overriden
+        unless child.const_defined?(:GeneratedSlotMethods, false)
+          generated_slot_methods = Module.new
+          child.const_set(:GeneratedSlotMethods, generated_slot_methods)
+          child.include generated_slot_methods
+        end
+
         super
       end
 
       def register_polymorphic_slot(slot_name, types, collection:)
-        define_method(slot_name) do
+        self::GeneratedSlotMethods.define_method(slot_name) do
           get_slot(slot_name)
         end
 
-        define_method(:"#{slot_name}?") do
+        self::GeneratedSlotMethods.define_method(:"#{slot_name}?") do
           get_slot(slot_name).present?
         end
 

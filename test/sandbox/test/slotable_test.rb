@@ -785,4 +785,38 @@ class SlotableTest < ViewComponent::TestCase
 
     assert_text "hello,world!", count: 1
   end
+
+  def test_slot_name_can_be_overriden
+    # Uses overridden `title` slot method
+    render_inline(SlotNameOverrideComponent.new(title: "Simple Title"))
+
+    assert_selector(".title", text: "Simple Title")
+  end
+
+  def test_slot_name_override_can_use_super
+    # Uses standard `title` slot method via `super`
+    render_inline(SlotNameOverrideComponent.new) do |component|
+      component.with_title do
+        "Block Title with More Complexity"
+      end
+    end
+
+    assert_selector(".title", text: "Block Title with More Complexity")
+  end
+
+  def overriden_slot_name_predicate_returns_false_when_not_set
+    render_inline(SlotNameOverrideComponent.new)
+
+    refute_selector(".title")
+  end
+
+  def test_overridden_slot_name_can_be_inherited
+    render_inline(SlotNameOverrideComponent::SubComponent.new(title: "lowercase"))
+
+    assert_selector(".title", text: "LOWERCASE")
+  end
+
+  def test_slot_name_methods_are_not_shared_accross_components
+    assert_not_equal SlotsComponent.instance_method(:title).owner, SlotNameOverrideComponent::OtherComponent.instance_method(:title).owner
+  end
 end

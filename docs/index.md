@@ -182,6 +182,8 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/nicolas-brousse?s=64" alt="nicolas-brousse" width="32" />
 <img src="https://avatars.githubusercontent.com/nielsslot?s=64" alt="nshki" width="32" />
 <img src="https://avatars.githubusercontent.com/nshki?s=64" alt="nshki" width="32" />
+<img src="https://avatars.githubusercontent.com/ozydingo?s=64" alt="ozydingo" width="32" />
+<img src="https://avatars.githubusercontent.com/p8?s=64" alt="p8" width="32" />
 <img src="https://avatars.githubusercontent.com/patrickarnett?s=64" alt="patrickarnett" width="32" />
 <img src="https://avatars.githubusercontent.com/rainerborene?s=64" alt="rainerborene" width="32" />
 <img src="https://avatars.githubusercontent.com/rdavid1099?s=64" alt="rdavid1099" width="32" />
@@ -225,6 +227,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/neanias?s=64" alt="neanias" width="32" />
 <img src="https://avatars.githubusercontent.com/allan-pires?s=64" alt="allan-pires" width="32" />
 <img src="https://avatars.githubusercontent.com/jasonkim?s=64" alt="jasonkim" width="32" />
+<img src="https://avatars.githubusercontent.com/tkowalewski" alt="tkowalewski" width="32" />
 
 ## Who uses ViewComponent?
 
