@@ -190,7 +190,7 @@ module ViewComponent
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
-          if templates.map { |template| "#{template[:variant].inspect}_#{template[:format]}" }.tally.any? { |_, count| count > 1 }
+          if templates.map { |template| "#{template[:variant]}_#{template[:format]}" }.tally.any? { |_, count| count > 1 }
             errors <<
               "More than one template found for #{component_class}. " \
               "There can only be one default template file per component."
