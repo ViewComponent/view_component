@@ -18,7 +18,7 @@ nav_order: 5
 
     *Tomasz Kowalewski*
 
-* Register stats directories with Rails::CodeStatistics.register_directory to support `rails stats` in Rails 8.
+* Register stats directories with `Rails::CodeStatistics.register_directory` to support `rails stats` in Rails 8.
 
     *Petrik de Heus*
 
