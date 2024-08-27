@@ -10,6 +10,14 @@ nav_order: 5
 
 ## main
 
+* Allow overridden slot methods to use `super`.
+
+    *Andrew Schwartz*
+
+* Add Rails engine support to generators.
+
+    *Tomasz Kowalewski*
+
 ## 3.14.0
 
 * Defer to built-in caching for language environment setup, rather than manually using `actions/cache` in CI.
