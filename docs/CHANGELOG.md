@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Allow overridden slot methods to use `super` to call the standard implementation.
+* Allow overridden slot methods to use `super`.
 
     *Andrew Schwartz*
 
