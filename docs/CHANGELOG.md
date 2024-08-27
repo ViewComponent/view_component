@@ -18,6 +18,10 @@ nav_order: 5
 
     *Tomasz Kowalewski*
 
+* Register stats directories with `Rails::CodeStatistics.register_directory` to support `rails stats` in Rails 8.
+
+    *Petrik de Heus*
+
 ## 3.14.0
 
 * Defer to built-in caching for language environment setup, rather than manually using `actions/cache` in CI.
