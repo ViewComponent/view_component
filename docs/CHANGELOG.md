@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Allow overridden slot methods to use `super`.
+
+    *Andrew Schwartz*
+
 * Add Rails engine support to generators.
 
     *Tomasz Kowalewski*
