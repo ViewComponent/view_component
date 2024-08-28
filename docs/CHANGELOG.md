@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `config.include_application_routes` to allow skipping inclusion of application routes.
+
+    *Elia Schito*
+
 * Allow overridden slot methods to use `super`.
 
     *Andrew Schwartz*

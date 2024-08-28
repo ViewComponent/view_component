@@ -25,7 +25,8 @@ module ViewComponent
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
           default_preview_layout: nil,
-          capture_compatibility_patch_enabled: false
+          capture_compatibility_patch_enabled: false,
+          include_application_routes: true,
         })
       end
 
@@ -166,6 +167,11 @@ module ViewComponent
       # compatible with forms, capture, and other built-ins.
       # previews.
       # Defaults to `false`.
+
+      # @!attribute include_application_routes
+      # @return [Boolean]
+      # Whether to include the application's routes upon inheriting from ViewComponent::Base.
+      # Defaults to `true`.
 
       def default_preview_paths
         (default_rails_preview_paths + default_rails_engines_preview_paths).uniq
