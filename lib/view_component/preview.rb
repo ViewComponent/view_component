@@ -4,7 +4,11 @@ require "active_support/descendants_tracker"
 
 module ViewComponent # :nodoc:
   class Preview
-    include Rails.application.routes.url_helpers if defined?(Rails.application.routes.url_helpers)
+    if defined?(Rails.application.routes.url_helpers)
+      # Workaround from https://stackoverflow.com/questions/20853526/make-yard-ignore-certain-class-extensions to appease YARD
+      send(:include, Rails.application.routes.url_helpers)
+    end
+
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::AssetTagHelper
     extend ActiveSupport::DescendantsTracker
@@ -98,7 +102,7 @@ module ViewComponent # :nodoc:
 
       def load_previews
         Array(preview_paths).each do |preview_path|
-          Dir["#{preview_path}/**/*_preview.rb"].sort.each { |file| require_dependency file }
+          Dir["#{preview_path}/**/*preview.rb"].sort.each { |file| require_dependency file }
         end
       end
 

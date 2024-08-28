@@ -14,6 +14,197 @@ nav_order: 5
 
     *Elia Schito*
 
+* Allow overridden slot methods to use `super`.
+
+    *Andrew Schwartz*
+
+* Add Rails engine support to generators.
+
+    *Tomasz Kowalewski*
+
+* Register stats directories with `Rails::CodeStatistics.register_directory` to support `rails stats` in Rails 8.
+
+    *Petrik de Heus*
+
+## 3.14.0
+
+* Defer to built-in caching for language environment setup, rather than manually using `actions/cache` in CI.
+
+    *Simon Fish*
+
+* Add test coverage for use of `turbo_stream` helpers in components when `capture_compatibility_patch_enabled` is `true`.
+
+  *Simon Fish*
+
+* Add experimental `SlotableDefault` module, allowing components to define a `default_SLOTNAME` method to provide a default value for slots.
+
+    *Joel Hawksley*
+
+* Add documentation on rendering ViewComponents outside of the view context.
+
+    *Joel Hawksley*
+
+* Look for preview files that end in `preview.rb` rather than `_preview.rb` to allow previews to exist in sidecar directory with test files.
+
+    *Seth Herr*
+
+* Add `assert_component_rendered` test helper.
+
+    *Reegan Viljoen*
+
+* Add `prefix:` option to `use_helpers`.
+
+    *Reegan Viljoen*
+
+* Add support for Rails 7.2.
+
+    *Reegan Viljoen*
+
+## 3.13.0
+
+* Add ruby head and YJIT to CI.
+
+    *Reegan Viljoen*
+
+* Fixed a bug where inline templates where unable to remove trailing whitespace without throwing an error.
+
+    *Reegan Viljoen*
+
+* Fixed CI for Rails main.
+
+    *Reegan Viljoen*
+
+* Add `from:` option to `use_helpers` to allow for more flexible helper inclusion from modules.
+
+    *Reegan Viljoen*
+
+* Fixed ruby head matcher issue.
+
+    *Reegan Viljoen*
+
+## 3.12.1
+
+* Ensure content is rendered correctly for forwarded slots.
+
+    *Cameron Dutro*
+
+## 3.12.0
+
+* Remove offline links from resources.
+
+    *Paulo Henrique Meneses*
+
+* Fix templates not being correctly populated when caller location label has a prefix.
+
+  On the upstream version of Ruby, method owners are now included in backtraces as prefixes. This caused the call stack filtering to not work as intended and thus `source_location` to be incorrect for child ViewComponents, consequently not populating templates correctly.
+
+    *Allan Pires, Jason Kim*
+
+* Use component path for generating RSpec files.
+
+  When generating new RSpec files for components, the generator will use the `view_component_path` value in the config to decide where to put the new spec file. For instance, if the `view_component_path` option has been changed to `app/views/components`, the generator will put the spec file in `spec/views/components`. **If the `view_component_path` doesn't start with `app/`, then the generator will fall back to `spec/components/`.**
+
+  This feature is enabled via the `config.view_component.generate.use_component_path_for_rspec_tests` option, defaulting to `false`. The default will change to `true` in ViewComponent v4.
+
+    *William Mathewson*
+
+## 3.11.0
+
+* Fix running non-integration tests under Rails main.
+
+    *Cameron Dutro*
+
+* Better name and link for Avo.
+
+    *Adrian Marin*
+
+* Document using rack-mini-profiler with ViewComponent.
+
+    *Thomas Carr*
+
+* Move dependencies to gemspec.
+
+    *Joel Hawksley*
+
+* Include ViewComponent::UseHelpers by default.
+
+    *Reegan Viljoen*
+
+* Bump `puma` in Gemfile.lock.
+
+    *Cameron Dutro*
+
+* Add Keenly to users list.
+
+    *Vinoth*
+
+## 3.10.0
+
+* Fix html escaping in `#call` for non-strings.
+
+    *Reegan Viljoen, Cameron Dutro*
+
+* Add `output_preamble` to match `output_postamble`, using the same safety checks.
+
+    *Kali Donovan, Michael Daross*
+
+* Exclude html escaping of I18n reserved keys with `I18n::RESERVED_KEYS` rather than `I18n.reserved_keys_pattern`.
+
+    *Nick Coyne*
+
+* Update CI configuration to use `Appraisal`.
+
+    *Hans Lemuet, Simon Fish*
+
+## 3.9.0
+
+* Don’t break `rails stats` if ViewComponent path is missing.
+
+    *Claudio Baccigalupo*
+
+* Add deprecation warnings for EOL ruby and Rails versions and patches associated with them.
+
+    *Reegan Viljoen*
+
+* Add support for Ruby 3.3.
+
+    *Reegan Viljoen*
+
+* Allow translations to be inherited and overridden in subclasses.
+
+    *Elia Schito*
+
+* Resolve console warnings when running test suite.
+
+    *Joel Hawksley*
+
+* Fix spelling in a local variable.
+
+    *Olle Jonsson*
+
+* Avoid duplicating rendered string when `output_postamble` is blank.
+
+    *Mitchell Henke*
+
+* Ensure HTML output safety.
+
+    *Cameron Dutro*
+
+## 3.8.0
+
+* Use correct value for the `config.action_dispatch.show_exceptions` config option for edge Rails.
+
+    *Cameron Dutro*
+
+* Remove unsupported versions of Rails & Ruby from CI matrix.
+
+    *Reegan Viljoen*
+
+* Raise error when uncountable slot names are used in `renders_many`
+
+    *Hugo Chantelauze*
+    *Reegan Viljoen*
+
 * Replace usage of `String#ends_with?` with `String#end_with?` to reduce the dependency on ActiveSupport core extensions.
 
     *halo*
@@ -213,6 +404,17 @@ This release makes the following breaking changes, many of which have long been 
 * BREAKING: Remove deprecated slots setter methods. Use `with_SLOT_NAME` instead.
 
     *Joel Hawksley*
+
+For example:
+
+```diff
+<%= render BlogComponent.new do |component| %>
+-  <% component.header do %>
++  <% component.with_header do %>
+    <%= link_to "My blog", root_path %>
+  <% end %>
+<% end %>
+```
 
 * BREAKING: Remove deprecated SlotsV1 in favor of current SlotsV2.
 

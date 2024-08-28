@@ -14,6 +14,10 @@ module ViewComponent
       def refute_component_rendered
         assert_no_selector("body")
       end
+
+      def assert_component_rendered
+        assert_selector("body")
+      end
     rescue LoadError
       # We don't have a test case for running an application without capybara installed.
       # It's probably fine to leave this without coverage.
@@ -48,9 +52,13 @@ module ViewComponent
       @rendered_content =
         if Rails.version.to_f >= 6.1
           vc_test_controller.view_context.render(component, args, &block)
+
+        # :nocov:
         else
           vc_test_controller.view_context.render_component(component, &block)
         end
+
+      # :nocov:
 
       Nokogiri::HTML.fragment(@rendered_content)
     end
@@ -171,16 +179,17 @@ module ViewComponent
     # end
     # ```
     #
-    # @param path [String] The path to set for the current request.
+    # @param full_path [String] The path to set for the current request.
     # @param host [String] The host to set for the current request.
     # @param method [String] The request method to set for the current request.
-    def with_request_url(full_path, host: nil, method: nil)
+    def with_request_url(full_path, host: nil, method: nil, format: :html)
       old_request_host = vc_test_request.host
       old_request_method = vc_test_request.request_method
       old_request_path_info = vc_test_request.path_info
       old_request_path_parameters = vc_test_request.path_parameters
       old_request_query_parameters = vc_test_request.query_parameters
       old_request_query_string = vc_test_request.query_string
+      old_request_format = vc_test_request.format.symbol
       old_controller = defined?(@vc_test_controller) && @vc_test_controller
 
       path, query = full_path.split("?", 2)
@@ -193,6 +202,7 @@ module ViewComponent
       vc_test_request.set_header("action_dispatch.request.query_parameters",
         Rack::Utils.parse_nested_query(query).with_indifferent_access)
       vc_test_request.set_header(Rack::QUERY_STRING, query)
+      vc_test_request.format = format
       yield
     ensure
       vc_test_request.host = old_request_host
@@ -201,6 +211,7 @@ module ViewComponent
       vc_test_request.path_parameters = old_request_path_parameters
       vc_test_request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
       vc_test_request.set_header(Rack::QUERY_STRING, old_request_query_string)
+      vc_test_request.format = old_request_format
       @vc_test_controller = old_controller
     end
 
@@ -231,6 +242,8 @@ module ViewComponent
     #
     # @return [ActionDispatch::TestRequest]
     def vc_test_request
+      require "action_controller/test_case"
+
       @vc_test_request ||=
         begin
           out = ActionDispatch::TestRequest.create
@@ -248,9 +261,11 @@ module ViewComponent
 
     def __vc_test_helpers_preview_class
       result = if respond_to?(:described_class)
+        # :nocov:
         raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
 
         "#{described_class}Preview"
+        # :nocov:
       else
         self.class.name.gsub("Test", "Preview")
       end
@@ -258,5 +273,6 @@ module ViewComponent
     rescue NameError
       raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
     end
+    # :nocov:
   end
 end

@@ -52,8 +52,6 @@ Here's how the `Item` sub-component of the list example above would be implement
 
 ```ruby
 class Item < ViewComponent::Base
-  include ViewComponent::PolymorphicSlots
-
   renders_one :leading_visual, types: {
     icon: IconComponent, avatar: AvatarComponent
   }

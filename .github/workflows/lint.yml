@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Vale
-        uses: errata-ai/vale-action@c99f2dfd2aeaedb3d4bb16f385841830b9164d31
+        uses: errata-ai/vale-action@38bf078c328061f59879b347ca344a718a736018
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   markdown:
@@ -70,8 +70,8 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.2
-    - uses: actions/cache@v3
+        ruby-version: 3.3
+    - uses: actions/cache@v4
       with:
         path: vendor/bundle
         key: gems-build-rails-7.1-ruby-3.2-${{ hashFiles('**/Gemfile.lock') }}

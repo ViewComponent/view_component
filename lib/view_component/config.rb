@@ -80,6 +80,19 @@ module ViewComponent
       # Defaults to `""`. If this is blank, the generator will use
       # `ViewComponent.config.preview_paths` if defined,
       # `"test/components/previews"` otherwise
+      #
+      # #### `#use_component_path_for_rspec_tests`
+      #
+      # Whether to use the `config.view_component_path` when generating new
+      # RSpec component tests:
+      #
+      #     config.view_component.generate.use_component_path_for_rspec_tests = true
+      #
+      # When set to `true`, the generator will use the `view_component_path` to
+      # decide where to generate the new RSpec component test.
+      # For example, if the `view_component_path` is
+      # `app/views/components`, then the generator will create a new spec file
+      # in `spec/views/components/` rather than the default `spec/components/`.
 
       # @!attribute preview_controller
       # @return [String]
@@ -161,9 +174,27 @@ module ViewComponent
       # Defaults to `true`.
 
       def default_preview_paths
+        (default_rails_preview_paths + default_rails_engines_preview_paths).uniq
+      end
+
+      def default_rails_preview_paths
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
 
         ["#{Rails.root}/test/components/previews"]
+      end
+
+      def default_rails_engines_preview_paths
+        return [] unless defined?(Rails::Engine)
+
+        registered_rails_engines_with_previews.map do |descendant|
+          "#{descendant.root}/test/components/previews"
+        end
+      end
+
+      def registered_rails_engines_with_previews
+        Rails::Engine.descendants.select do |descendant|
+          defined?(descendant.root) && Dir.exist?("#{descendant.root}/test/components/previews")
+        end
       end
 
       def default_generate_options

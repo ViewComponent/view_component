@@ -6,6 +6,6 @@ class RenderCheckComponent < ViewComponent::Base
   end
 
   def call
-    "Rendered"
+    "Rendered".html_safe
   end
 end

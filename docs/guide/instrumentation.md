@@ -23,8 +23,7 @@ Setting `use_deprecated_instrumentation_name` configures the event name. If `fal
 Subscribe to the event:
 
 ```ruby
-ActiveSupport::Notifications.subscribe("render.view_component") do |*args| # or !render.view_component
-  event = ActiveSupport::Notifications::Event.new(*args)
+ActiveSupport::Notifications.subscribe("render.view_component") do |event| # or !render.view_component
   event.name    # => "render.view_component"
   event.payload # => { name: "MyComponent", identifier: "/Users/mona/project/app/components/my_component.rb" }
 end
@@ -35,3 +34,21 @@ end
 When using `render.view_component` with `config.server_timing = true` (default in development) in Rails 7, the browser developer tools display the sum total timing information in Network > Timing under the key `render.view_component`.
 
 ![Browser showing the Server Timing data in the browser dev tools](../images/viewing_instrumentation_sums_in_browser_dev_tools.png "Server Timing data in the browser dev tools")
+
+## Viewing instrumentation breakdowns in rack-mini-profiler
+
+The [rack-mini-profiler gem](https://rubygems.org/gems/rack-mini-profiler) is a popular tool for profiling rack-based Ruby applications.
+
+To profile ViewComponent rendering alongside views and partials:
+
+```ruby
+# config/environments/development.rb
+# Profile rendering of ViewComponents
+Rack::MiniProfilerRails.subscribe("render.view_component") do |_name, start, finish, _id, payload|
+  Rack::MiniProfilerRails.render_notification_handler(
+    Rack::MiniProfilerRails.shorten_identifier(payload[:identifier]),
+    finish,
+    start
+  )
+end
+```

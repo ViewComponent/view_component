@@ -22,7 +22,12 @@ class ViewComponent::Base::UnitTest < Minitest::Test
 
       templates.each_with_index do |template, index|
         assert_equal(template[:path], file_path[index])
-        assert_equal(template[:variant], expected[index][:variant])
+        if expected[index][:variant].nil?
+          # Minitest requires using #assert_nil if asserting nil!
+          assert_nil(template[:variant])
+        else
+          assert_equal(template[:variant], expected[index][:variant])
+        end
         assert_equal(template[:handler], expected[index][:handler])
       end
     end

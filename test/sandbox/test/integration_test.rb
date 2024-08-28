@@ -499,7 +499,9 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         assert_raises ActionView::Template::Error do
           get "/render_component"
         end
-      assert_match(/undefined method `render_component'/, error.message)
+
+      matcher = (RUBY_VERSION >= "3.4") ? /undefined method 'render_component'/ : /undefined method `render_component' for/
+      assert_match(matcher, error.message)
     end
   end
 
@@ -566,6 +568,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     end
   ensure
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+  end
+
+  # This test documents a bug that reports an incompatibility with the turbo-rails gem's `turbo_stream` helper.
+  # This helper may work if the `capture_compatibility_patch` is enabled.
+  # Prefer `tag.turbo_stream` instead if you do not have the patch enabled already.
+  def test_render_component_in_turbo_stream
+    without_template_annotations do
+      get turbo_stream_path, headers: {"HTTP_ACCEPT" => "text/vnd.turbo-stream.html"}
+      expected_response_body = <<~TURBOSTREAM
+        <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
+      TURBOSTREAM
+      if ViewComponent::Base.config.capture_compatibility_patch_enabled
+        assert_equal expected_response_body, response.body
+      else
+        assert_not_equal expected_response_body, response.body
+      end
+    end
   end
 
   def test_renders_the_preview_example_with_its_own_template_and_a_layout
@@ -722,5 +741,32 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_raises ViewComponent::SystemTestControllerNefariousPathError do
       get "/_system_test_entrypoint?file=#{path}"
     end
+  end
+
+  def test_unsafe_component
+    warnings = capture_warnings { get "/unsafe_component" }
+    assert_select("script", false)
+    assert(
+      warnings.any? { |warning| warning.include?("component rendered HTML-unsafe output") },
+      "Rendering UnsafeComponent did not emit an HTML safety warning"
+    )
+  end
+
+  def test_unsafe_preamble_component
+    warnings = capture_warnings { get "/unsafe_preamble_component" }
+    assert_select("script", false)
+    assert(
+      warnings.any? { |warning| warning.include?("component was provided an HTML-unsafe preamble") },
+      "Rendering UnsafePreambleComponent did not emit an HTML safety warning"
+    )
+  end
+
+  def test_unsafe_postamble_component
+    warnings = capture_warnings { get "/unsafe_postamble_component" }
+    assert_select("script", false)
+    assert(
+      warnings.any? { |warning| warning.include?("component was provided an HTML-unsafe postamble") },
+      "Rendering UnsafePostambleComponent did not emit an HTML safety warning"
+    )
   end
 end

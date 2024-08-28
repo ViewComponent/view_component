@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+require "warning"
+
+# Use https://github.com/jeremyevans/ruby-warning
+# to restrict warnings outside our control
+["mail", "activesupport", "yard"].each do |gem_name|
+  Warning.ignore(//, /.*gems\/#{gem_name}-.*/)
+end
+
 Sandbox::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -17,7 +25,7 @@ Sandbox::Application.configure do
   config.action_controller.perform_caching = false
 
   # Raise exceptions instead of rendering exception templates
-  config.action_dispatch.show_exceptions = false
+  config.action_dispatch.show_exceptions = (Rails::VERSION::STRING < "7.1") ? false : :none
 
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection = false

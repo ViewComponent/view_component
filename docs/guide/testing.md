@@ -15,6 +15,8 @@ class ExampleComponentTest < ViewComponent::TestCase
   def test_render_component
     render_inline(ExampleComponent.new(title: "my title")) { "Hello, World!" }
 
+    assert_component_rendered
+
     assert_selector("span[title='my title']", text: "Hello, World!")
     # or, to just assert against the text:
     assert_text("Hello, World!")
@@ -25,6 +27,8 @@ end
 (Capybara matchers are available if the gem is installed)
 
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
+
+For debugging purposes, the `rendered_content` test helper outputs the rendered HTML.
 
 ## Testing Slots
 
