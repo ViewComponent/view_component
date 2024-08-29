@@ -36,7 +36,7 @@ module ViewComponent
       if template_errors.present?
         raise TemplateError.new(template_errors) if raise_errors
 
-        return false
+        return
       end
 
       if raise_errors
