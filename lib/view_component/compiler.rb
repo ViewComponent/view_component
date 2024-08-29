@@ -31,7 +31,9 @@ module ViewComponent
       return if compiled? && !force
       return if component_class == ViewComponent::Base
 
-      component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
+      if development? && templates.empty? && !has_inline_template? && !call_defined?
+        component_class.superclass.compile(raise_errors: raise_errors)
+      end
 
       if template_errors.present?
         raise TemplateError.new(template_errors) if raise_errors
@@ -347,10 +349,6 @@ module ViewComponent
 
     def safe_class_name
       @safe_class_name ||= component_class.name.underscore.gsub("/", "__")
-    end
-
-    def should_compile_superclass?
-      development? && templates.empty? && !has_inline_template? && !call_defined?
     end
 
     def call_defined?
