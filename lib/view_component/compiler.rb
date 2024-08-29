@@ -56,9 +56,9 @@ module ViewComponent
             component.silence_redefinition_of_method("call")
 
             # rubocop:disable Style/EvalWithLocation
-            component.class_eval <<-RUBY, component.inline_template.path, component.inline_template.lineno
+            component.class_eval <<-RUBY, template[:path], template[:lineno]
             def call
-              #{compiled_template(component.inline_template.source.dup, component.inline_template.language)}
+              #{compiled_template(template[:source], template[:handler])}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
@@ -254,6 +254,9 @@ module ViewComponent
           if component.inline_template.present?
             templates << {
               type: :inline,
+              lineno: component.inline_template.lineno,
+              path: component.inline_template.path,
+              source: component.inline_template.source.dup,
               handler: component.inline_template.language
             }
           end
