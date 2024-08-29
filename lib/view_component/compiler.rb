@@ -54,10 +54,11 @@ module ViewComponent
       if has_inline_template?
         redefinition_lock.synchronize do
           component.silence_redefinition_of_method("call")
+
           # rubocop:disable Style/EvalWithLocation
           component.class_eval <<-RUBY, component.inline_template.path, component.inline_template.lineno
           def call
-            #{compiled_inline_template(component.inline_template)}
+            #{compiled_template(component.inline_template.source.dup, component.inline_template.language)}
           end
           RUBY
           # rubocop:enable Style/EvalWithLocation
@@ -81,7 +82,7 @@ module ViewComponent
             # rubocop:disable Style/EvalWithLocation
             component.class_eval <<-RUBY, template[:path], 0
             def #{method_name}
-              #{compiled_template(template[:path], template[:format])}
+              #{compiled_template(File.read(template[:path]), File.extname(template[:path]).delete("."), template[:path], template[:format])}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
@@ -292,22 +293,9 @@ module ViewComponent
       end
     end
 
-    def compiled_inline_template(template)
-      handler = ActionView::Template.handler_for_extension(template.language)
-      template = template.source.dup
-
-      compile_template(template, handler)
-    end
-
-    def compiled_template(file_path, format)
-      handler = ActionView::Template.handler_for_extension(File.extname(file_path).delete("."))
-      template = File.read(file_path)
-
-      compile_template(template, handler, file_path, format)
-    end
-
-    def compile_template(template, handler, identifier = component.source_location, format = :html)
-      template.rstrip! if component.strip_trailing_whitespace?
+    def compiled_template(template_source, extension, identifier = component.source_location, format = :html)
+      handler = ActionView::Template.handler_for_extension(extension)
+      template_source.rstrip! if component.strip_trailing_whitespace?
 
       short_identifier = defined?(Rails.root) ? identifier.sub("#{Rails.root}/", "") : identifier
       type = ActionView::Template::Types[format]
@@ -320,13 +308,13 @@ module ViewComponent
             short_identifier: short_identifier,
             type: type
           ),
-          template
+          template_source
         )
       # :nocov:
       else
         handler.call(
           OpenStruct.new(
-            source: template,
+            source: template_source,
             identifier: identifier,
             type: type
           )
