@@ -50,31 +50,29 @@ module ViewComponent
         component.validate_collection_parameter!
       end
 
-      if templates.any? { _1[:type] == :inline }
-        redefinition_lock.synchronize do
-          component.silence_redefinition_of_method("call")
+      templates.each do |template|
+        if template[:type] == :inline
+          redefinition_lock.synchronize do
+            component.silence_redefinition_of_method("call")
 
-          # rubocop:disable Style/EvalWithLocation
-          component.class_eval <<-RUBY, component.inline_template.path, component.inline_template.lineno
-          def call
-            #{compiled_template(component.inline_template.source.dup, component.inline_template.language)}
+            # rubocop:disable Style/EvalWithLocation
+            component.class_eval <<-RUBY, component.inline_template.path, component.inline_template.lineno
+            def call
+              #{compiled_template(component.inline_template.source.dup, component.inline_template.language)}
+            end
+            RUBY
+            # rubocop:enable Style/EvalWithLocation
+
+            component.define_method(default_method_name, component.instance_method(:call))
+
+            component.silence_redefinition_of_method("render_template_for")
+            component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def render_template_for(variant = nil, format = nil)
+              #{default_method_name}
+            end
+            RUBY
           end
-          RUBY
-          # rubocop:enable Style/EvalWithLocation
-
-          component.define_method(default_method_name, component.instance_method(:call))
-
-          component.silence_redefinition_of_method("render_template_for")
-          component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def render_template_for(variant = nil, format = nil)
-            #{default_method_name}
-          end
-          RUBY
-        end
-      else
-        templates.each do |template|
-          next if template[:type] == :inline
-
+        else
           method_name = call_method_name(template[:variant], template[:format])
           @variants_rendering_templates << template[:variant]
 
@@ -89,9 +87,9 @@ module ViewComponent
             # rubocop:enable Style/EvalWithLocation
           end
         end
-
-        define_render_template_for
       end
+
+      define_render_template_for if !templates.any? { _1[:type] == :inline }
 
       component.registered_slots.each do |slot_name, config|
         config[:default_method] = component.instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
