@@ -180,7 +180,7 @@ module ViewComponent
     end
 
     def has_inline_template?
-      component.respond_to?(:inline_template) && component.inline_template.present?
+      component.inline_template.present?
     end
 
     def template_errors
