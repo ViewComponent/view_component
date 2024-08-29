@@ -34,7 +34,6 @@ module ViewComponent
       if (
         development? &&
         templates.empty? &&
-        !has_inline_template? &&
         !(component.instance_methods(false).include?(:call) || component.private_instance_methods(false).include?(:call))
       )
         component.superclass.compile(raise_errors: raise_errors)
@@ -51,7 +50,7 @@ module ViewComponent
         component.validate_collection_parameter!
       end
 
-      if has_inline_template?
+      if templates.any? { _1[:type] == :inline }
         redefinition_lock.synchronize do
           component.silence_redefinition_of_method("call")
 
@@ -74,6 +73,8 @@ module ViewComponent
         end
       else
         templates.each do |template|
+          next if template[:type] == :inline
+
           method_name = call_method_name(template[:variant], template[:format])
           @variants_rendering_templates << template[:variant]
 
@@ -179,16 +180,12 @@ module ViewComponent
       end
     end
 
-    def has_inline_template?
-      component.inline_template.present?
-    end
-
     def template_errors
       @__vc_template_errors ||=
         begin
           errors = []
 
-          if (templates + inline_calls).empty? && !has_inline_template?
+          if (templates + inline_calls).empty?
             errors << "Couldn't find a template file or inline render method for #{component}."
           end
 
@@ -246,7 +243,7 @@ module ViewComponent
         begin
           extensions = ActionView::Template.template_handler_extensions
 
-          component.sidecar_files(extensions).each_with_object([]) do |path, memo|
+          templates = component.sidecar_files(extensions).each_with_object([]) do |path, memo|
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
@@ -255,6 +252,15 @@ module ViewComponent
               handler: pieces.last
             }
           end
+
+          if component.inline_template.present?
+            templates << {
+              type: :inline,
+              handler: component.inline_template.language
+            }
+          end
+
+          templates
         end
     end
 
