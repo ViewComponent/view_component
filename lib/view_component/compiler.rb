@@ -336,15 +336,8 @@ module ViewComponent
 
     def call_method_name(variant, format = nil)
       out = +"call"
-
-      if variant.present?
-        out << "_#{normalized_variant_name(variant)}"
-      end
-
-      if format.present? && format != :html && formats.length > 1
-        out << "_#{format}"
-      end
-
+      out << "_#{normalized_variant_name(variant)}" if variant.present?
+      out << "_#{format}" if format.present? && format != :html && formats.length > 1
       out
     end
 
