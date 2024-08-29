@@ -112,7 +112,7 @@ module ViewComponent
         safe_name = +default_method_name.to_s
         variant_name = normalized_variant_name(template[:variant])
         safe_name << "_#{variant_name}" if variant_name.present?
-        safe_name << "_#{template[:format]}" if template[:format].present? && template[:format] != :html
+        safe_name << "_#{template[:format]}" if template[:format] != :html
 
         if safe_name == default_method_name
           next
