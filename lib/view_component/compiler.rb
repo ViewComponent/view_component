@@ -76,7 +76,7 @@ module ViewComponent
             @variants_rendering_templates << template[:variant]
 
             # rubocop:disable Style/EvalWithLocation
-            component.class_eval <<-RUBY, template[:path], 0
+            component.class_eval <<-RUBY, template[:path], template[:lineno]
             def #{method_name}
               #{compiled_template(File.read(template[:path]), File.extname(template[:path]).delete("."), template[:path], template[:format])}
             end
@@ -241,7 +241,9 @@ module ViewComponent
           templates = component.sidecar_files(extensions).each_with_object([]) do |path, memo|
             pieces = File.basename(path).split(".")
             memo << {
+              type: :file,
               path: path,
+              lineno: 0,
               format: pieces[1..-2].join(".").split("+").first&.to_sym,
               variant: pieces[1..-2].join(".").split("+").second&.to_sym,
               handler: pieces.last
