@@ -52,12 +52,13 @@ module ViewComponent
 
       templates.each do |template|
         redefinition_lock.synchronize do
-          if template[:type] == :inline
-            component.silence_redefinition_of_method("call")
+          method_name = call_method_name(template[:variant], template[:format])
+          component.silence_redefinition_of_method(method_name)
 
+          if template[:type] == :inline
             # rubocop:disable Style/EvalWithLocation
             component.class_eval <<-RUBY, template[:path], template[:lineno]
-            def call
+            def #{method_name}
               #{compiled_template(template[:source], template[:handler])}
             end
             RUBY
@@ -72,10 +73,8 @@ module ViewComponent
             end
             RUBY
           else
-            method_name = call_method_name(template[:variant], template[:format])
             @variants_rendering_templates << template[:variant]
 
-            component.silence_redefinition_of_method(method_name)
             # rubocop:disable Style/EvalWithLocation
             component.class_eval <<-RUBY, template[:path], 0
             def #{method_name}
