@@ -114,16 +114,14 @@ module ViewComponent
         safe_name << "_#{variant_name}" if variant_name.present?
         safe_name << "_#{template[:format]}" if template[:format] != :html
 
-        if safe_name == default_method_name
-          next
-        else
-          component.define_method(
-            safe_name,
-            component.instance_method(
-              call_method_name(template[:variant], template[:format])
-            )
+        next if safe_name == default_method_name
+
+        component.define_method(
+          safe_name,
+          component.instance_method(
+            call_method_name(template[:variant], template[:format])
           )
-        end
+        )
 
         format_conditional =
           if template[:format] == :html
