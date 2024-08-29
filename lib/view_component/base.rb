@@ -562,10 +562,6 @@ module ViewComponent
         compile unless compiled?
       end
 
-      # Compile templates to instance methods, assuming they haven't been compiled already.
-      #
-      # Do as much work as possible in this step, as doing so reduces the amount
-      # of work done each time a component is rendered.
       # @private
       def compile(raise_errors: false, force: false)
         compiler.compile(raise_errors: raise_errors, force: force)
