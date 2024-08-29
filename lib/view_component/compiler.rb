@@ -47,14 +47,12 @@ module ViewComponent
       end
 
       if has_inline_template?
-        template = component_class.inline_template
-
         redefinition_lock.synchronize do
           component_class.silence_redefinition_of_method("call")
           # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, template.path, template.lineno
+          component_class.class_eval <<-RUBY, component_class.inline_template.path, component_class.inline_template.lineno
           def call
-            #{compiled_inline_template(template)}
+            #{compiled_inline_template(component_class.inline_template)}
           end
           RUBY
           # rubocop:enable Style/EvalWithLocation
