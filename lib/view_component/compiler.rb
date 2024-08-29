@@ -57,12 +57,12 @@ module ViewComponent
           RUBY
           # rubocop:enable Style/EvalWithLocation
 
-          component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
+          component_class.define_method(default_method_name, component_class.instance_method(:call))
 
           component_class.silence_redefinition_of_method("render_template_for")
           component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def render_template_for(variant = nil, format = nil)
-            _call_#{safe_class_name}
+            #{default_method_name}
           end
           RUBY
         end
@@ -107,14 +107,12 @@ module ViewComponent
 
     def define_render_template_for
       branches = []
-      default_method_name = "_call_#{safe_class_name}"
 
       templates.each do |template|
-        safe_name = +"_call"
+        safe_name = +default_method_name.to_s
         variant_name = normalized_variant_name(template[:variant])
         safe_name << "_#{variant_name}" if variant_name.present?
         safe_name << "_#{template[:format]}" if template[:format].present? && template[:format] != :html
-        safe_name << "_#{safe_class_name}"
 
         if safe_name == default_method_name
           next
@@ -145,13 +143,13 @@ module ViewComponent
       end
 
       variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
-        safe_name = "_call_#{normalized_variant_name(variant)}_#{safe_class_name}"
+        safe_name = "#{default_method_name}_#{normalized_variant_name(variant)}"
         component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
 
         branches << ["variant&.to_sym == :'#{variant}'", safe_name]
       end
 
-      component_class.define_method(:"#{default_method_name}", component_class.instance_method(:call))
+      component_class.define_method(default_method_name, component_class.instance_method(:call))
 
       # Just use default method name if no conditional branches or if there is a single
       # conditional branch that just calls the default method_name
@@ -345,8 +343,8 @@ module ViewComponent
       variant.to_s.gsub("-", "__").gsub(".", "___")
     end
 
-    def safe_class_name
-      @safe_class_name ||= component_class.name.underscore.gsub("/", "__")
+    def default_method_name
+      @default_method_name ||= "_call_#{component_class.name.underscore.gsub("/", "__")}".to_sym
     end
 
     def call_defined?
