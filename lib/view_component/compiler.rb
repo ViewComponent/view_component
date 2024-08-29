@@ -31,7 +31,12 @@ module ViewComponent
       return if compiled? && !force
       return if component == ViewComponent::Base
 
-      if development? && templates.empty? && !has_inline_template? && !call_defined?
+      if (
+        development? &&
+        templates.empty? &&
+        !has_inline_template? &&
+        !(component.instance_methods(false).include?(:call) || component.private_instance_methods(false).include?(:call))
+      )
         component.superclass.compile(raise_errors: raise_errors)
       end
 
@@ -343,11 +348,6 @@ module ViewComponent
 
     def default_method_name
       @default_method_name ||= "_call_#{component.name.underscore.gsub("/", "__")}".to_sym
-    end
-
-    def call_defined?
-      component.instance_methods(false).include?(:call) ||
-        component.private_instance_methods(false).include?(:call)
     end
   end
 end
