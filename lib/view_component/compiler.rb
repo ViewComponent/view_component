@@ -80,7 +80,7 @@ module ViewComponent
             # rubocop:disable Style/EvalWithLocation
             component.class_eval <<-RUBY, template[:path], template[:lineno]
             def #{method_name}
-              #{compiled_template(source, File.extname(template[:path]).delete("."), template[:path], template[:format])}
+              #{compiled_template(source, template[:handler], template[:path], template[:format])}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
