@@ -95,12 +95,10 @@ module ViewComponent
       end
 
       templates.each do |template|
-        safe_name = safe_name_for(template[:variant], template[:format])
-
         component.define_method(
-          safe_name,
+          template[:safe_method_name],
           component.instance_method(
-            call_method_name(template[:variant], template[:format])
+            template[:method_name]
           )
         )
 
@@ -118,7 +116,7 @@ module ViewComponent
             "variant&.to_sym == :'#{template[:variant]}'"
           end
 
-        branches << ["#{variant_conditional} && #{format_conditional}", safe_name]
+        branches << ["#{variant_conditional} && #{format_conditional}", template[:safe_method_name]]
       end
 
       variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
