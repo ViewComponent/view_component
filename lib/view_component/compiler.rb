@@ -208,9 +208,9 @@ module ViewComponent
     def templates
       @templates ||=
         begin
-          extensions = ActionView::Template.template_handler_extensions
-
-          templates = component.sidecar_files(extensions).each_with_object([]) do |path, memo|
+          templates = component.sidecar_files(
+            ActionView::Template.template_handler_extensions
+          ).map do |path|
             pieces = File.basename(path).split(".")
 
             out = {
@@ -225,7 +225,7 @@ module ViewComponent
 
             @variants_rendering_templates << out[:variant]
 
-            memo << out
+            out
           end
 
           if component.inline_template.present?
