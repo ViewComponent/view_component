@@ -57,8 +57,6 @@ module ViewComponent
           end
           RUBY
           # rubocop:enable Style/EvalWithLocation
-
-          @variants_rendering_templates << template[:variant] if template[:type] == :file
         end
       end
 
@@ -214,7 +212,8 @@ module ViewComponent
 
           templates = component.sidecar_files(extensions).each_with_object([]) do |path, memo|
             pieces = File.basename(path).split(".")
-            memo << {
+
+            out = {
               type: :file,
               path: path,
               lineno: 0,
@@ -223,6 +222,10 @@ module ViewComponent
               format: pieces[1..-2].join(".").split("+").first&.to_sym,
               variant: pieces[1..-2].join(".").split("+").second&.to_sym
             }
+
+            @variants_rendering_templates << out[:variant]
+
+            memo << out
           end
 
           if component.inline_template.present?
