@@ -23,16 +23,12 @@ module ViewComponent
       CompileCache.compiled?(component)
     end
 
-    def development?
-      self.class.mode == DEVELOPMENT_MODE
-    end
-
     def compile(raise_errors: false, force: false)
       return if compiled? && !force
       return if component == ViewComponent::Base
 
       if (
-        development? &&
+        self.class.mode == DEVELOPMENT_MODE &&
         templates.empty? &&
         !(component.instance_methods(false).include?(:call) || component.private_instance_methods(false).include?(:call))
       )
