@@ -55,15 +55,15 @@ module ViewComponent
           method_name = call_method_name(template[:variant], template[:format])
           component.silence_redefinition_of_method(method_name)
 
-          if template[:type] == :inline
-            # rubocop:disable Style/EvalWithLocation
-            component.class_eval <<-RUBY, template[:path], template[:lineno]
-            def #{method_name}
-              #{compiled_template(template)}
-            end
-            RUBY
-            # rubocop:enable Style/EvalWithLocation
+          # rubocop:disable Style/EvalWithLocation
+          component.class_eval <<-RUBY, template[:path], template[:lineno]
+          def #{method_name}
+            #{compiled_template(template)}
+          end
+          RUBY
+          # rubocop:enable Style/EvalWithLocation
 
+          if template[:type] == :inline
             component.define_method(default_method_name, component.instance_method(:call))
 
             component.silence_redefinition_of_method("render_template_for")
@@ -74,14 +74,6 @@ module ViewComponent
             RUBY
           else
             @variants_rendering_templates << template[:variant]
-
-            # rubocop:disable Style/EvalWithLocation
-            component.class_eval <<-RUBY, template[:path], template[:lineno]
-            def #{method_name}
-              #{compiled_template(template)}
-            end
-            RUBY
-            # rubocop:enable Style/EvalWithLocation
           end
         end
       end
