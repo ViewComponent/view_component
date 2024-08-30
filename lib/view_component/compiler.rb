@@ -268,10 +268,6 @@ module ViewComponent
       @inline_calls_defined_on_self ||= component.instance_methods(false).grep(/^call(_|$)/)
     end
 
-    def formats
-      @__vc_variants = (templates.map { |template| template[:format] }).compact.uniq
-    end
-
     def variants
       @__vc_variants = (
         templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
