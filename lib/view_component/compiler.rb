@@ -80,12 +80,7 @@ module ViewComponent
 
       define_render_template_for if !templates.any? { _1[:type] == :inline }
 
-      component.registered_slots.each do |slot_name, config|
-        config[:default_method] = component.instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
-
-        component.registered_slots[slot_name] = config
-      end
-
+      component.register_default_slots
       component.build_i18n_backend
 
       CompileCache.register(component)
