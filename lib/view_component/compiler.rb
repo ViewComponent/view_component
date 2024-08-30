@@ -235,6 +235,7 @@ module ViewComponent
               path: path,
               lineno: 0,
               format: pieces[1..-2].join(".").split("+").first&.to_sym,
+              source: nil,
               variant: pieces[1..-2].join(".").split("+").second&.to_sym,
               handler: pieces.last
             }
@@ -243,9 +244,11 @@ module ViewComponent
           if component.inline_template.present?
             templates << {
               type: :inline,
-              lineno: component.inline_template.lineno,
               path: component.inline_template.path,
+              lineno: component.inline_template.lineno,
+              format: nil,
               source: component.inline_template.source.dup,
+              variant: nil,
               handler: component.inline_template.language
             }
           end
