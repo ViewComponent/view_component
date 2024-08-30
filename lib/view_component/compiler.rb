@@ -55,11 +55,13 @@ module ViewComponent
           method_name = call_method_name(template[:variant], template[:format])
           component.silence_redefinition_of_method(method_name)
 
+          source = template[:source] || File.read(template[:path])
+
           if template[:type] == :inline
             # rubocop:disable Style/EvalWithLocation
             component.class_eval <<-RUBY, template[:path], template[:lineno]
             def #{method_name}
-              #{compiled_template(template[:source], template[:handler])}
+              #{compiled_template(source, template[:handler])}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
@@ -78,7 +80,7 @@ module ViewComponent
             # rubocop:disable Style/EvalWithLocation
             component.class_eval <<-RUBY, template[:path], template[:lineno]
             def #{method_name}
-              #{compiled_template(File.read(template[:path]), File.extname(template[:path]).delete("."), template[:path], template[:format])}
+              #{compiled_template(source, File.extname(template[:path]).delete("."), template[:path], template[:format])}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
