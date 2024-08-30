@@ -63,22 +63,11 @@ module ViewComponent
           RUBY
           # rubocop:enable Style/EvalWithLocation
 
-          if template[:type] == :inline
-            component.define_method(default_method_name, component.instance_method(:call))
-
-            component.silence_redefinition_of_method("render_template_for")
-            component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def render_template_for(variant = nil, format = nil)
-              #{default_method_name}
-            end
-            RUBY
-          else
-            @variants_rendering_templates << template[:variant]
-          end
+          @variants_rendering_templates << template[:variant] if template[:type] == :file
         end
       end
 
-      define_render_template_for if !templates.any? { _1[:type] == :inline }
+      define_render_template_for
 
       component.register_default_slots
       component.build_i18n_backend
@@ -96,6 +85,19 @@ module ViewComponent
 
     def define_render_template_for
       branches = []
+
+      if templates.any? { _1[:type] == :inline }
+        component.define_method(default_method_name, component.instance_method(:call))
+
+        component.silence_redefinition_of_method("render_template_for")
+        component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def render_template_for(variant = nil, format = nil)
+          #{default_method_name}
+        end
+        RUBY
+
+        return
+      end
 
       templates.each do |template|
         safe_name = +default_method_name.to_s
