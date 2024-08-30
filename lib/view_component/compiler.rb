@@ -100,10 +100,7 @@ module ViewComponent
       end
 
       templates.each do |template|
-        safe_name = +default_method_name.to_s
-        variant_name = normalized_variant_name(template[:variant])
-        safe_name << "_#{variant_name}" if variant_name.present?
-        safe_name << "_#{template[:format]}" if template[:format] != :html
+        safe_name = "_#{call_method_name(template[:variant], template[:format])}_#{component.name.underscore.gsub("/", "__")}"
 
         component.define_method(
           safe_name,
