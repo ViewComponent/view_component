@@ -129,7 +129,9 @@ module ViewComponent
         branches << ["variant&.to_sym == :'#{variant}'", safe_name]
       end
 
-      component.define_method(default_method_name, component.instance_method(:call))
+      if component.instance_methods.include?(:call)
+        component.define_method(default_method_name, component.instance_method(:call))
+      end
 
       # Just use default method name if no conditional branches or if there is a single
       # conditional branch that just calls the default method_name
@@ -316,7 +318,7 @@ module ViewComponent
     def call_method_name(variant, format = nil)
       out = +"call"
       out << "_#{normalized_variant_name(variant)}" if variant.present?
-      out << "_#{format}" if format.present? && format != :html && formats.length > 1
+      out << "_#{format}" if format.present? && format != :html
       out
     end
 
