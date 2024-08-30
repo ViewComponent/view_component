@@ -48,12 +48,11 @@ module ViewComponent
 
       templates.each do |template|
         redefinition_lock.synchronize do
-          method_name = call_method_name(template[:variant], template[:format])
-          component.silence_redefinition_of_method(method_name)
+          component.silence_redefinition_of_method(template[:method_name])
 
           # rubocop:disable Style/EvalWithLocation
           component.class_eval <<-RUBY, template[:path], template[:lineno]
-          def #{method_name}
+          def #{template[:method_name]}
             #{compiled_template(template)}
           end
           RUBY
@@ -82,13 +81,13 @@ module ViewComponent
     def define_render_template_for
       branches = []
 
-      if templates.any? { _1[:type] == :inline }
-        component.define_method(default_method_name, component.instance_method(:call))
+      if template = templates.find { _1[:type] == :inline }
+        component.define_method(template[:safe_method_name], component.instance_method(:call))
 
         component.silence_redefinition_of_method("render_template_for")
         component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil, format = nil)
-          #{default_method_name}
+          #{template[:safe_method_name]}
         end
         RUBY
 
@@ -245,7 +244,12 @@ module ViewComponent
             }
           end
 
-          templates
+          templates.map! do |template|
+            template[:safe_method_name] = safe_name_for(template[:variant], template[:format])
+            template[:method_name] = call_method_name(template[:variant], template[:format])
+
+            template
+          end
         end
     end
 
