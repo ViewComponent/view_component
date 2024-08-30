@@ -55,13 +55,11 @@ module ViewComponent
           method_name = call_method_name(template[:variant], template[:format])
           component.silence_redefinition_of_method(method_name)
 
-          source = template[:source] || File.read(template[:path])
-
           if template[:type] == :inline
             # rubocop:disable Style/EvalWithLocation
             component.class_eval <<-RUBY, template[:path], template[:lineno]
             def #{method_name}
-              #{compiled_template(source, template[:handler])}
+              #{compiled_template(template)}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
@@ -80,7 +78,7 @@ module ViewComponent
             # rubocop:disable Style/EvalWithLocation
             component.class_eval <<-RUBY, template[:path], template[:lineno]
             def #{method_name}
-              #{compiled_template(source, template[:handler], template[:path], template[:format])}
+              #{compiled_template(template)}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
@@ -301,18 +299,19 @@ module ViewComponent
       end
     end
 
-    def compiled_template(template_source, extension, identifier = component.source_location, format = :html)
-      handler = ActionView::Template.handler_for_extension(extension)
+    def compiled_template(template)
+      handler = ActionView::Template.handler_for_extension(template[:handler])
+      template_source = template[:source] || File.read(template[:path])
       template_source.rstrip! if component.strip_trailing_whitespace?
 
-      short_identifier = defined?(Rails.root) ? identifier.sub("#{Rails.root}/", "") : identifier
-      type = ActionView::Template::Types[format]
+      short_identifier = defined?(Rails.root) ? template[:path].sub("#{Rails.root}/", "") : template[:path]
+      type = ActionView::Template::Types[template[:format]]
 
       if handler.method(:call).parameters.length > 1
         handler.call(
           OpenStruct.new(
-            format: format,
-            identifier: identifier,
+            format: template[:format],
+            identifier: template[:path],
             short_identifier: short_identifier,
             type: type
           ),
@@ -323,7 +322,7 @@ module ViewComponent
         handler.call(
           OpenStruct.new(
             source: template_source,
-            identifier: identifier,
+            identifier: template[:path],
             type: type
           )
         )
