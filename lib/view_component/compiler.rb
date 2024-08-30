@@ -95,12 +95,7 @@ module ViewComponent
       end
 
       templates.each do |template|
-        component.define_method(
-          template[:safe_method_name],
-          component.instance_method(
-            template[:method_name]
-          )
-        )
+        component.define_method(template[:safe_method_name], component.instance_method(template[:method_name]))
 
         format_conditional =
           if template[:format] == :html
