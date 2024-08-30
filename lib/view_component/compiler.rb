@@ -228,10 +228,10 @@ module ViewComponent
               type: :file,
               path: path,
               lineno: 0,
-              format: pieces[1..-2].join(".").split("+").first&.to_sym,
               source: nil,
-              variant: pieces[1..-2].join(".").split("+").second&.to_sym,
-              handler: pieces.last
+              handler: pieces.last,
+              format: pieces[1..-2].join(".").split("+").first&.to_sym,
+              variant: pieces[1..-2].join(".").split("+").second&.to_sym
             }
           end
 
@@ -240,10 +240,10 @@ module ViewComponent
               type: :inline,
               path: component.inline_template.path,
               lineno: component.inline_template.lineno,
-              format: nil,
               source: component.inline_template.source.dup,
-              variant: nil,
-              handler: component.inline_template.language
+              handler: component.inline_template.language,
+              format: nil,
+              variant: nil
             }
           end
 
