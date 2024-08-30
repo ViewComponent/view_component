@@ -100,7 +100,7 @@ module ViewComponent
       end
 
       templates.each do |template|
-        safe_name = "_#{call_method_name(template[:variant], template[:format])}_#{component.name.underscore.gsub("/", "__")}"
+        safe_name = safe_name_for(template[:variant], template[:format])
 
         component.define_method(
           safe_name,
@@ -127,7 +127,7 @@ module ViewComponent
       end
 
       variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
-        safe_name = "#{default_method_name}_#{normalized_variant_name(variant)}"
+        safe_name = safe_name_for(variant, nil)
         component.define_method(safe_name, component.instance_method(call_method_name(variant)))
 
         branches << ["variant&.to_sym == :'#{variant}'", safe_name]
@@ -322,6 +322,10 @@ module ViewComponent
       out << "_#{normalized_variant_name(variant)}" if variant.present?
       out << "_#{format}" if format.present? && format != :html && formats.length > 1
       out
+    end
+
+    def safe_name_for(variant, format)
+      "_#{call_method_name(variant, format)}_#{component.name.underscore.gsub("/", "__")}"
     end
 
     def normalized_variant_name(variant)
