@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add Kicksite to list of companies using ViewComponent.
+
+   *Adil Lari*
+
 * Allow overridden slot methods to use `super`.
 
     *Andrew Schwartz*
