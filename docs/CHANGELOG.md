@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 4.0.0
+
 * Add Kicksite to list of companies using ViewComponent.
 
    *Adil Lari*
