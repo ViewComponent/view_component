@@ -298,7 +298,7 @@ module ViewComponent
     end
 
     def default_method_name
-      @default_method_name ||= "_call_#{component.name.underscore.gsub("/", "__")}".to_sym
+      @default_method_name ||= safe_name_for(nil, nil)
     end
 
     class Template
