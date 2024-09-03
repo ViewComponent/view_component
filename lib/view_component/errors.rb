@@ -18,7 +18,7 @@ module ViewComponent
 
   class TemplateError < StandardError
     def initialize(errors)
-      super(errors.join(", "))
+      super(errors.join("\n"))
     end
   end
 

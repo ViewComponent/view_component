@@ -190,24 +190,16 @@ module ViewComponent
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
-          if templates.map { |template| "#{template[:variant]}_#{template[:format]}" }.tally.any? { |_, count| count > 1 }
-            errors <<
-              "More than one template found for #{component_class}. " \
-              "There can only be one default template file per component."
-          end
+          templates.
+            map { |template| [template[:variant], template[:format]] }.
+            tally.
+            select { |_, count| count > 1 }.
+            each do |tally|
+            variant, this_format = tally[0]
 
-          invalid_variants =
-            templates
-              .group_by { |template| template[:variant] }
-              .map { |variant, grouped| variant if grouped.length > 1 }
-              .compact
-              .sort
+            variant_string = " for variant #{variant}" if variant.present?
 
-          unless invalid_variants.empty?
-            errors <<
-              "More than one template found for #{"variant".pluralize(invalid_variants.count)} " \
-              "#{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
-              "There can only be one template file per variant."
+            errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component_class}. "
           end
 
           if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
