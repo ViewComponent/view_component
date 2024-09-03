@@ -122,13 +122,13 @@ module ViewComponent
       end
 
       if component.instance_methods.include?(:call)
-        component.define_method(default_method_name, component.instance_method(:call))
+        component.define_method(default_safe_method_name, component.instance_method(:call))
       end
 
       # Just use default method name if no conditional branches or if there is a single
       # conditional branch that just calls the default method_name
-      if branches.empty? || (branches.length == 1 && branches[0].last == default_method_name)
-        body = default_method_name
+      if branches.empty? || (branches.length == 1 && branches[0].last == default_safe_method_name)
+        body = default_safe_method_name
       else
         body = +""
 
@@ -136,7 +136,7 @@ module ViewComponent
           body << "#{(!body.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
         end
 
-        body << "else\n  #{default_method_name}\nend"
+        body << "else\n  #{default_safe_method_name}\nend"
       end
 
       redefinition_lock.synchronize do
@@ -297,8 +297,8 @@ module ViewComponent
       variant.to_s.gsub("-", "__").gsub(".", "___")
     end
 
-    def default_method_name
-      @default_method_name ||= safe_name_for(nil, nil)
+    def default_safe_method_name
+      @default_safe_method_name ||= safe_name_for(nil, nil)
     end
 
     class Template
