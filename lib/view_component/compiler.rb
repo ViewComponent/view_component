@@ -49,17 +49,15 @@ module ViewComponent
       end
 
       templates.each do |template|
-        redefinition_lock.synchronize do
-          component.silence_redefinition_of_method(template[:method_name])
-
-          # rubocop:disable Style/EvalWithLocation
-          component.class_eval <<-RUBY, template[:path], template[:lineno]
-          def #{template[:method_name]}
-            #{Template.new(component: component, path: template[:path], source: template[:source], extension: template[:handler], this_format: template[:format]).compiled_source}
-          end
-          RUBY
-          # rubocop:enable Style/EvalWithLocation
-        end
+        Template.new(
+          component: component,
+          path: template[:path],
+          source: template[:source],
+          extension: template[:handler],
+          this_format: template[:format],
+          variant: template[:variant],
+          lineno: template[:lineno]
+        ).compile_to_component(redefinition_lock)
       end
 
       define_render_template_for
@@ -302,9 +300,36 @@ module ViewComponent
     end
 
     class Template
-      def initialize(component:, path:, source:, extension:, this_format:)
-        @component, @path, @source, @extension, @this_format = component, path, source, extension, this_format
+      def initialize(component:, path:, source:, extension:, this_format:, lineno:, variant:)
+        @component, @path, @source, @extension, @this_format, @lineno, @variant = component, path, source, extension, this_format, lineno, variant
         @source ||= File.read(path)
+      end
+
+      def compile_to_component(redefinition_lock)
+        redefinition_lock.synchronize do
+          @component.silence_redefinition_of_method(call_method_name)
+
+          # rubocop:disable Style/EvalWithLocation
+          @component.class_eval <<-RUBY, @path, @lineno
+          def #{call_method_name}
+            #{compiled_source}
+          end
+          RUBY
+          # rubocop:enable Style/EvalWithLocation
+        end
+      end
+
+      private
+
+      def normalized_variant_name
+        @variant.to_s.gsub("-", "__").gsub(".", "___")
+      end
+
+      def call_method_name
+        out = +"call"
+        out << "_#{normalized_variant_name}" if @variant.present?
+        out << "_#{@this_format}" if @this_format.present? && @this_format != :html
+        out
       end
 
       def compiled_source
