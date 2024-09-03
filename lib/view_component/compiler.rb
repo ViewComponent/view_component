@@ -55,7 +55,7 @@ module ViewComponent
           # rubocop:disable Style/EvalWithLocation
           component.class_eval <<-RUBY, template[:path], template[:lineno]
           def #{template[:method_name]}
-            #{compiled_template(template)}
+            #{Template.new(component: component, path: template[:path], source: template[:source], extension: template[:handler], this_format: template[:format]).compiled_source}
           end
           RUBY
           # rubocop:enable Style/EvalWithLocation
@@ -282,37 +282,6 @@ module ViewComponent
       end
     end
 
-    def compiled_template(template)
-      handler = ActionView::Template.handler_for_extension(template[:handler])
-      template_source = template[:source] || File.read(template[:path])
-      template_source.rstrip! if component.strip_trailing_whitespace?
-
-      short_identifier = defined?(Rails.root) ? template[:path].sub("#{Rails.root}/", "") : template[:path]
-      type = ActionView::Template::Types[template[:format]]
-
-      if handler.method(:call).parameters.length > 1
-        handler.call(
-          OpenStruct.new(
-            format: template[:format],
-            identifier: template[:path],
-            short_identifier: short_identifier,
-            type: type
-          ),
-          template_source
-        )
-      # :nocov:
-      else
-        handler.call(
-          OpenStruct.new(
-            source: template_source,
-            identifier: template[:path],
-            type: type
-          )
-        )
-      end
-      # :nocov:
-    end
-
     def call_method_name(variant, format = nil)
       out = +"call"
       out << "_#{normalized_variant_name(variant)}" if variant.present?
@@ -330,6 +299,43 @@ module ViewComponent
 
     def default_method_name
       @default_method_name ||= "_call_#{component.name.underscore.gsub("/", "__")}".to_sym
+    end
+
+    class Template
+      def initialize(component:, path:, source:, extension:, this_format:)
+        @component, @path, @source, @extension, @this_format = component, path, source, extension, this_format
+        @source ||= File.read(path)
+      end
+
+      def compiled_source
+        handler = ActionView::Template.handler_for_extension(@extension)
+        @source.rstrip! if @component.strip_trailing_whitespace?
+
+        short_identifier = defined?(Rails.root) ? @path.sub("#{Rails.root}/", "") : @path
+        type = ActionView::Template::Types[@this_format]
+
+        if handler.method(:call).parameters.length > 1
+          handler.call(
+            OpenStruct.new(
+              format: @this_format,
+              identifier: @path,
+              short_identifier: short_identifier,
+              type: type
+            ),
+            @source
+          )
+        # :nocov:
+        else
+          handler.call(
+            OpenStruct.new(
+              source: @source,
+              identifier: @path,
+              type: type
+            )
+          )
+        end
+        # :nocov:
+      end
     end
   end
 end
