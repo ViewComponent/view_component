@@ -18,7 +18,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     compiler = ViewComponent::Compiler.new(ViewComponent::Base)
 
     ViewComponent::Base.stub(:sidecar_files, file_path) do
-      templates = compiler.send(:templates)
+      templates = compiler.send(:gather_templates)
 
       templates.each_with_index do |template, index|
         assert_equal(template[:path], file_path[index])

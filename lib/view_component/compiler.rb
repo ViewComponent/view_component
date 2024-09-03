@@ -27,6 +27,8 @@ module ViewComponent
       return if compiled? && !force
       return if component == ViewComponent::Base
 
+      gather_templates
+
       if (
         self.class.mode == DEVELOPMENT_MODE &&
         templates.empty? &&
@@ -74,7 +76,7 @@ module ViewComponent
 
     private
 
-    attr_reader :component, :redefinition_lock
+    attr_reader :component, :redefinition_lock, :templates
 
     def define_render_template_for
       branches = []
@@ -205,7 +207,7 @@ module ViewComponent
         end
     end
 
-    def templates
+    def gather_templates
       @templates ||=
         begin
           templates = component.sidecar_files(
