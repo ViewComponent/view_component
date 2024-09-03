@@ -13,14 +13,14 @@ module ViewComponent
 
     class_attribute :mode, default: PRODUCTION_MODE
 
-    def initialize(component_class)
-      @component_class = component_class
+    def initialize(component)
+      @component = component
       @redefinition_lock = Mutex.new
       @variants_rendering_templates = Set.new
     end
 
     def compiled?
-      CompileCache.compiled?(component_class)
+      CompileCache.compiled?(component)
     end
 
     def development?
@@ -29,10 +29,10 @@ module ViewComponent
 
     def compile(raise_errors: false, force: false)
       return if compiled? && !force
-      return if component_class == ViewComponent::Base
+      return if component == ViewComponent::Base
 
       if development? && templates.empty? && !has_inline_template? && !call_defined?
-        component_class.superclass.compile(raise_errors: raise_errors)
+        component.superclass.compile(raise_errors: raise_errors)
       end
 
       if template_errors.present?
@@ -42,25 +42,25 @@ module ViewComponent
       end
 
       if raise_errors
-        component_class.validate_initialization_parameters!
-        component_class.validate_collection_parameter!
+        component.validate_initialization_parameters!
+        component.validate_collection_parameter!
       end
 
       if has_inline_template?
         redefinition_lock.synchronize do
-          component_class.silence_redefinition_of_method("call")
+          component.silence_redefinition_of_method("call")
           # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, component_class.inline_template.path, component_class.inline_template.lineno
+          component.class_eval <<-RUBY, component.inline_template.path, component.inline_template.lineno
           def call
-            #{compiled_inline_template(component_class.inline_template)}
+            #{compiled_inline_template(component.inline_template)}
           end
           RUBY
           # rubocop:enable Style/EvalWithLocation
 
-          component_class.define_method(default_method_name, component_class.instance_method(:call))
+          component.define_method(default_method_name, component.instance_method(:call))
 
-          component_class.silence_redefinition_of_method("render_template_for")
-          component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          component.silence_redefinition_of_method("render_template_for")
+          component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def render_template_for(variant = nil, format = nil)
             #{default_method_name}
           end
@@ -72,9 +72,9 @@ module ViewComponent
           @variants_rendering_templates << template[:variant]
 
           redefinition_lock.synchronize do
-            component_class.silence_redefinition_of_method(method_name)
+            component.silence_redefinition_of_method(method_name)
             # rubocop:disable Style/EvalWithLocation
-            component_class.class_eval <<-RUBY, template[:path], 0
+            component.class_eval <<-RUBY, template[:path], 0
             def #{method_name}
               #{compiled_template(template[:path], template[:format])}
             end
@@ -86,15 +86,15 @@ module ViewComponent
         define_render_template_for
       end
 
-      component_class.registered_slots.each do |slot_name, config|
-        config[:default_method] = component_class.instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
+      component.registered_slots.each do |slot_name, config|
+        config[:default_method] = component.instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
 
-        component_class.registered_slots[slot_name] = config
+        component.registered_slots[slot_name] = config
       end
 
-      component_class.build_i18n_backend
+      component.build_i18n_backend
 
-      CompileCache.register(component_class)
+      CompileCache.register(component)
     end
 
     def renders_template_for_variant?(variant)
@@ -103,7 +103,7 @@ module ViewComponent
 
     private
 
-    attr_reader :component_class, :redefinition_lock
+    attr_reader :component, :redefinition_lock
 
     def define_render_template_for
       branches = []
@@ -117,9 +117,9 @@ module ViewComponent
         if safe_name == default_method_name
           next
         else
-          component_class.define_method(
+          component.define_method(
             safe_name,
-            component_class.instance_method(
+            component.instance_method(
               call_method_name(template[:variant], template[:format])
             )
           )
@@ -144,12 +144,12 @@ module ViewComponent
 
       variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
         safe_name = "#{default_method_name}_#{normalized_variant_name(variant)}"
-        component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
+        component.define_method(safe_name, component.instance_method(call_method_name(variant)))
 
         branches << ["variant&.to_sym == :'#{variant}'", safe_name]
       end
 
-      component_class.define_method(default_method_name, component_class.instance_method(:call))
+      component.define_method(default_method_name, component.instance_method(:call))
 
       # Just use default method name if no conditional branches or if there is a single
       # conditional branch that just calls the default method_name
@@ -166,8 +166,8 @@ module ViewComponent
       end
 
       redefinition_lock.synchronize do
-        component_class.silence_redefinition_of_method(:render_template_for)
-        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        component.silence_redefinition_of_method(:render_template_for)
+        component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil, format = nil)
           #{body}
         end
@@ -176,7 +176,7 @@ module ViewComponent
     end
 
     def has_inline_template?
-      component_class.respond_to?(:inline_template) && component_class.inline_template.present?
+      component.respond_to?(:inline_template) && component.inline_template.present?
     end
 
     def template_errors
@@ -185,7 +185,7 @@ module ViewComponent
           errors = []
 
           if (templates + inline_calls).empty? && !has_inline_template?
-            errors << "Couldn't find a template file or inline render method for #{component_class}."
+            errors << "Couldn't find a template file or inline render method for #{component}."
           end
 
           templates.
@@ -197,12 +197,12 @@ module ViewComponent
 
             variant_string = " for variant `#{variant}`" if variant.present?
 
-            errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component_class}. "
+            errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component}. "
           end
 
           if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
             errors <<
-              "Template file and inline render method found for #{component_class}. " \
+              "Template file and inline render method found for #{component}. " \
               "There can only be a template file or inline render method per component."
           end
 
@@ -216,7 +216,7 @@ module ViewComponent
               "Template #{"file".pluralize(count)} and inline render #{"method".pluralize(count)} " \
               "found for #{"variant".pluralize(count)} " \
               "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \
-              "in #{component_class}. " \
+              "in #{component}. " \
               "There can only be a template file or inline render method per variant."
           end
 
@@ -230,7 +230,7 @@ module ViewComponent
           unless colliding_variants.empty?
             errors <<
               "Colliding templates #{colliding_variants.sort.map { |v| "'#{v}'" }.to_sentence} " \
-              "found in #{component_class}."
+              "found in #{component}."
           end
 
           errors
@@ -242,7 +242,7 @@ module ViewComponent
         begin
           extensions = ActionView::Template.template_handler_extensions
 
-          component_class.sidecar_files(extensions).each_with_object([]) do |path, memo|
+          component.sidecar_files(extensions).each_with_object([]) do |path, memo|
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
@@ -261,8 +261,8 @@ module ViewComponent
           # finding inline calls
           view_component_ancestors =
             (
-              component_class.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } -
-              component_class.included_modules
+              component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } -
+              component.included_modules
             )
 
           view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
@@ -270,7 +270,7 @@ module ViewComponent
     end
 
     def inline_calls_defined_on_self
-      @inline_calls_defined_on_self ||= component_class.instance_methods(false).grep(/^call(_|$)/)
+      @inline_calls_defined_on_self ||= component.instance_methods(false).grep(/^call(_|$)/)
     end
 
     def formats
@@ -303,8 +303,8 @@ module ViewComponent
       compile_template(template, handler, file_path, format)
     end
 
-    def compile_template(template, handler, identifier = component_class.source_location, format = :html)
-      template.rstrip! if component_class.strip_trailing_whitespace?
+    def compile_template(template, handler, identifier = component.source_location, format = :html)
+      template.rstrip! if component.strip_trailing_whitespace?
 
       short_identifier = defined?(Rails.root) ? identifier.sub("#{Rails.root}/", "") : identifier
       type = ActionView::Template::Types[format]
@@ -344,12 +344,12 @@ module ViewComponent
     end
 
     def default_method_name
-      @default_method_name ||= "_call_#{component_class.name.underscore.gsub("/", "__")}".to_sym
+      @default_method_name ||= "_call_#{component.name.underscore.gsub("/", "__")}".to_sym
     end
 
     def call_defined?
-      component_class.instance_methods(false).include?(:call) ||
-        component_class.private_instance_methods(false).include?(:call)
+      component.instance_methods(false).include?(:call) ||
+        component.private_instance_methods(false).include?(:call)
     end
   end
 end
