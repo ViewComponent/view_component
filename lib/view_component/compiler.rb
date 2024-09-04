@@ -158,7 +158,7 @@ module ViewComponent
           end
 
           templates.
-            map { |template| [template[:variant], template[:format]] }.
+            map { |template| [template[:obj].variant, template[:obj].format] }.
             tally.
             select { |_, count| count > 1 }.
             each do |tally|
@@ -169,7 +169,7 @@ module ViewComponent
             errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component}. "
           end
 
-          if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
+          if templates.find { |template| template[:obj].variant.nil? } && inline_calls_defined_on_self.include?(:call)
             errors <<
               "Template file and inline render method found for #{component}. " \
               "There can only be a template file or inline render method per component."
