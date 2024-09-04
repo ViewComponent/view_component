@@ -359,6 +359,7 @@ module ViewComponent
 
       def source
         if @source_originally_nil
+          # Load file each time we look up #source in case the file has been modified
           File.read(@path)
         else
           @source
