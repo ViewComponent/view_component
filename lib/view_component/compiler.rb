@@ -49,7 +49,7 @@ module ViewComponent
       end
 
       templates.each do |template|
-        template[:obj].compile_to_component(redefinition_lock)
+        template.compile_to_component(redefinition_lock)
       end
 
       define_render_template_for
@@ -71,13 +71,13 @@ module ViewComponent
     def define_render_template_for
       branches = []
 
-      if template = templates.find { _1[:obj].inline? }
-        component.define_method(template[:obj].safe_method_name, component.instance_method(:call))
+      if template = templates.find { _1.inline? }
+        component.define_method(template.safe_method_name, component.instance_method(:call))
 
         component.silence_redefinition_of_method("render_template_for")
         component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil, format = nil)
-          #{template[:obj].safe_method_name}
+          #{template.safe_method_name}
         end
         RUBY
 
@@ -85,23 +85,23 @@ module ViewComponent
       end
 
       templates.each do |template|
-        component.define_method(template[:obj].safe_method_name, component.instance_method(template[:obj].call_method_name))
+        component.define_method(template.safe_method_name, component.instance_method(template.call_method_name))
 
         format_conditional =
-          if template[:obj].html?
+          if template.html?
             "(format == :html || format.nil?)"
           else
-            "format == #{template[:obj].format.inspect}"
+            "format == #{template.format.inspect}"
           end
 
         variant_conditional =
-          if template[:obj].variant.nil?
+          if template.variant.nil?
             "variant.nil?"
           else
-            "variant&.to_sym == :'#{template[:obj].variant}'"
+            "variant&.to_sym == :'#{template.variant}'"
           end
 
-        branches << ["#{variant_conditional} && #{format_conditional}", template[:obj].safe_method_name]
+        branches << ["#{variant_conditional} && #{format_conditional}", template.safe_method_name]
       end
 
       variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
@@ -149,7 +149,7 @@ module ViewComponent
           end
 
           templates.
-            map { |template| [template[:obj].variant, template[:obj].format] }.
+            map { |template| [template.variant, template.format] }.
             tally.
             select { |_, count| count > 1 }.
             each do |tally|
@@ -160,14 +160,14 @@ module ViewComponent
             errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component}. "
           end
 
-          if templates.find { |template| template[:obj].variant.nil? } && inline_calls_defined_on_self.include?(:call)
+          if templates.find { |template| template.variant.nil? } && inline_calls_defined_on_self.include?(:call)
             errors <<
               "Template file and inline render method found for #{component}. " \
               "There can only be a template file or inline render method per component."
           end
 
           duplicate_template_file_and_inline_variant_calls =
-            templates.pluck(:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
+            templates.map(&:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
 
           unless duplicate_template_file_and_inline_variant_calls.empty?
             count = duplicate_template_file_and_inline_variant_calls.count
@@ -205,55 +205,33 @@ module ViewComponent
           ).map do |path|
             pieces = File.basename(path).split(".")
 
-            out = {
+            out = Template.new(
+              component: component,
               type: :file,
               path: path,
               lineno: 0,
               source: nil,
-              handler: pieces.last,
-              format: pieces[1..-2].join(".").split("+").first&.to_sym,
+              extension: pieces.last,
+              this_format: pieces[1..-2].join(".").split("+").first&.to_sym,
               variant: pieces[1..-2].join(".").split("+").second&.to_sym
-            }
-
-            out[:obj] = Template.new(
-              component: component,
-              type: out[:type],
-              path: out[:path],
-              lineno: out[:lineno],
-              source: out[:source],
-              extension: out[:handler],
-              this_format: out[:format],
-              variant: out[:variant]
             )
 
-            @variants_rendering_templates << out[:obj].variant
+            @variants_rendering_templates << out.variant
 
             out
           end
 
           if component.inline_template.present?
-            out = {
+            templates << Template.new(
+              component: component,
               type: :inline,
               path: component.inline_template.path,
               lineno: component.inline_template.lineno,
               source: component.inline_template.source.dup,
-              handler: component.inline_template.language,
-              format: nil,
+              extension: component.inline_template.language,
+              this_format: nil,
               variant: nil
-            }
-
-            out[:obj] = Template.new(
-              component: component,
-              type: out[:type],
-              path: out[:path],
-              lineno: out[:lineno],
-              source: out[:source],
-              extension: out[:handler],
-              this_format: out[:format],
-              variant: out[:variant]
             )
-
-            templates << out
           end
 
           templates
@@ -281,7 +259,7 @@ module ViewComponent
 
     def variants
       @__vc_variants = (
-        templates.map { |template| template[:obj].variant } + variants_from_inline_calls(inline_calls)
+        templates.map { |template| template.variant } + variants_from_inline_calls(inline_calls)
       ).compact.uniq
     end
 
