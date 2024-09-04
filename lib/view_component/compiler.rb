@@ -47,7 +47,7 @@ module ViewComponent
         component.validate_collection_parameter!
       end
 
-      templates.each { _1.compile_to_component(redefinition_lock) }
+      templates.each(&:compile_to_component)
 
       define_render_template_for
 
@@ -196,6 +196,7 @@ module ViewComponent
             pieces = File.basename(path).split(".")
 
             out = Template.new(
+              redefinition_lock: redefinition_lock,
               component: component,
               type: :file,
               path: path,
@@ -213,6 +214,7 @@ module ViewComponent
 
           if component.inline_template.present?
             templates << Template.new(
+              redefinition_lock: redefinition_lock,
               component: component,
               type: :inline,
               path: component.inline_template.path,
@@ -281,13 +283,14 @@ module ViewComponent
     class Template
       attr_reader :variant
 
-      def initialize(component:, path:, source:, extension:, this_format:, lineno:, variant:, type:)
-        @component, @path, @source, @extension, @this_format, @lineno, @variant, @type = component, path, source, extension, this_format, lineno, variant, type
+      def initialize(redefinition_lock:, component:, path:, source:, extension:, this_format:, lineno:, variant:, type:)
+        @redefinition_lock, @component, @path, @source, @extension, @this_format, @lineno, @variant, @type =
+          redefinition_lock, component, path, source, extension, this_format, lineno, variant, type
         @source_originally_nil = @source.nil?
       end
 
-      def compile_to_component(redefinition_lock)
-        redefinition_lock.synchronize do
+      def compile_to_component
+        @redefinition_lock.synchronize do
           @component.silence_redefinition_of_method(call_method_name)
 
           # rubocop:disable Style/EvalWithLocation
