@@ -256,9 +256,7 @@ module ViewComponent
     end
 
     def variants
-      @__vc_variants = (
-        templates.map { |template| template.variant } + variants_from_inline_calls(inline_calls)
-      ).compact.uniq
+      @variants ||= templates.map(&:variant).compact.uniq
     end
 
     def variants_from_inline_calls(calls)
