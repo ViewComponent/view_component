@@ -24,8 +24,7 @@ module ViewComponent
     end
 
     def compile(raise_errors: false, force: false)
-      return if compiled? && !force
-      return if component == ViewComponent::Base
+      return if (compiled? && !force) || component == ViewComponent::Base
 
       gather_templates
 
