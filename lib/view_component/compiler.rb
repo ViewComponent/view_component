@@ -127,9 +127,7 @@ module ViewComponent
         begin
           errors = []
 
-          if (templates + inline_calls).empty?
-            errors << "Couldn't find a template file or inline render method for #{component}."
-          end
+          errors << "Couldn't find a template file or inline render method for #{component}." if templates.empty?
 
           templates.select { _1.type != :inline_call }.
             map { |template| [template.variant, template.format] }.
