@@ -97,10 +97,6 @@ module ViewComponent
           end
         end
 
-        if component.instance_methods.include?(:call)
-          component.define_method(default_safe_method_name, component.instance_method(:call))
-        end
-
         # Just use default method name if no conditional branches or if there is a single
         # conditional branch that just calls the default method_name
         if branches.empty? || (branches.length == 1 && branches[0].last == default_safe_method_name)
