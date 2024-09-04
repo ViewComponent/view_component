@@ -56,7 +56,8 @@ module ViewComponent
           extension: template[:handler],
           this_format: template[:format],
           variant: template[:variant],
-          lineno: template[:lineno]
+          lineno: template[:lineno],
+          type: template[:type]
         ).compile_to_component(redefinition_lock)
       end
 
@@ -225,11 +226,22 @@ module ViewComponent
 
             @variants_rendering_templates << out[:variant]
 
+            out[:obj] = Template.new(
+              component: component,
+              type: out[:type],
+              path: out[:path],
+              lineno: out[:lineno],
+              source: out[:source],
+              extension: out[:handler],
+              this_format: out[:format],
+              variant: out[:variant]
+            )
+
             out
           end
 
           if component.inline_template.present?
-            templates << {
+            out = {
               type: :inline,
               path: component.inline_template.path,
               lineno: component.inline_template.lineno,
@@ -238,6 +250,19 @@ module ViewComponent
               format: nil,
               variant: nil
             }
+
+            out[:obj] = Template.new(
+              component: component,
+              type: out[:type],
+              path: out[:path],
+              lineno: out[:lineno],
+              source: out[:source],
+              extension: out[:handler],
+              this_format: out[:format],
+              variant: out[:variant]
+            )
+
+            templates << out
           end
 
           templates.map! do |template|
@@ -300,8 +325,8 @@ module ViewComponent
     end
 
     class Template
-      def initialize(component:, path:, source:, extension:, this_format:, lineno:, variant:)
-        @component, @path, @source, @extension, @this_format, @lineno, @variant = component, path, source, extension, this_format, lineno, variant
+      def initialize(component:, path:, source:, extension:, this_format:, lineno:, variant:, type:)
+        @component, @path, @source, @extension, @this_format, @lineno, @variant, @type = component, path, source, extension, this_format, lineno, variant, type
         @source ||= File.read(path)
       end
 
