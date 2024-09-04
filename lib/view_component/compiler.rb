@@ -72,61 +72,54 @@ module ViewComponent
       if template = templates.find { _1.inline? }
         template.define_safe_method
 
-        component.silence_redefinition_of_method("render_template_for")
-        component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil, format = nil)
-          #{template.safe_method_name}
-        end
-        RUBY
-
-        return
-      end
-
-      branches = []
-
-      templates.each do |template|
-        template.define_safe_method
-
-        format_conditional =
-          if template.html?
-            "(format == :html || format.nil?)"
-          else
-            "format == #{template.format.inspect}"
-          end
-
-        variant_conditional =
-          if template.variant.nil?
-            "variant.nil?"
-          else
-            "variant&.to_sym == :'#{template.variant}'"
-          end
-
-        branches << ["#{variant_conditional} && #{format_conditional}", template.safe_method_name]
-      end
-
-      variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
-        safe_name = safe_name_for(variant, nil)
-        component.define_method(safe_name, component.instance_method(call_method_name(variant)))
-
-        branches << ["variant&.to_sym == :'#{variant}'", safe_name]
-      end
-
-      if component.instance_methods.include?(:call)
-        component.define_method(default_safe_method_name, component.instance_method(:call))
-      end
-
-      # Just use default method name if no conditional branches or if there is a single
-      # conditional branch that just calls the default method_name
-      if branches.empty? || (branches.length == 1 && branches[0].last == default_safe_method_name)
-        body = default_safe_method_name
+        body = template.safe_method_name
       else
-        body = +""
+        branches = []
 
-        branches.each do |conditional, method_body|
-          body << "#{(!body.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
+        templates.each do |template|
+          template.define_safe_method
+
+          format_conditional =
+            if template.html?
+              "(format == :html || format.nil?)"
+            else
+              "format == #{template.format.inspect}"
+            end
+
+          variant_conditional =
+            if template.variant.nil?
+              "variant.nil?"
+            else
+              "variant&.to_sym == :'#{template.variant}'"
+            end
+
+          branches << ["#{variant_conditional} && #{format_conditional}", template.safe_method_name]
         end
 
-        body << "else\n  #{default_safe_method_name}\nend"
+        variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
+          safe_name = safe_name_for(variant, nil)
+          component.define_method(safe_name, component.instance_method(call_method_name(variant)))
+
+          branches << ["variant&.to_sym == :'#{variant}'", safe_name]
+        end
+
+        if component.instance_methods.include?(:call)
+          component.define_method(default_safe_method_name, component.instance_method(:call))
+        end
+
+        # Just use default method name if no conditional branches or if there is a single
+        # conditional branch that just calls the default method_name
+        if branches.empty? || (branches.length == 1 && branches[0].last == default_safe_method_name)
+          body = default_safe_method_name
+        else
+          body = +""
+
+          branches.each do |conditional, method_body|
+            body << "#{(!body.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
+          end
+
+          body << "else\n  #{default_safe_method_name}\nend"
+        end
       end
 
       redefinition_lock.synchronize do
