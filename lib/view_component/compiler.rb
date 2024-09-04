@@ -108,7 +108,7 @@ module ViewComponent
             body << "#{(!body.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
           end
 
-          body << "else\n  #{default_safe_method_name}\nend"
+          body << "else\n  #{templates.find { _1.variant.nil? && _1.html? }.safe_method_name}\nend"
         end
       end
 
@@ -267,23 +267,8 @@ module ViewComponent
       end
     end
 
-    def call_method_name(variant, format = nil)
-      out = +"call"
-      out << "_#{normalized_variant_name(variant)}" if variant.present?
-      out << "_#{format}" if format.present? && format != :html
-      out
-    end
-
-    def safe_name_for(variant, format)
-      "_#{call_method_name(variant, format)}_#{component.name.underscore.gsub("/", "__")}"
-    end
-
     def normalized_variant_name(variant)
       variant.to_s.gsub("-", "__").gsub(".", "___")
-    end
-
-    def default_safe_method_name
-      @default_safe_method_name ||= safe_name_for(nil, nil)
     end
 
     class Template
