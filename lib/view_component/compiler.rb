@@ -80,13 +80,13 @@ module ViewComponent
     def define_render_template_for
       branches = []
 
-      if template = templates.find { _1[:type] == :inline }
-        component.define_method(template[:safe_method_name], component.instance_method(:call))
+      if template = templates.find { _1[:obj].inline? }
+        component.define_method(template[:obj].safe_method_name, component.instance_method(:call))
 
         component.silence_redefinition_of_method("render_template_for")
         component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil, format = nil)
-          #{template[:safe_method_name]}
+          #{template[:obj].safe_method_name}
         end
         RUBY
 
@@ -94,7 +94,7 @@ module ViewComponent
       end
 
       templates.each do |template|
-        component.define_method(template[:safe_method_name], component.instance_method(template[:method_name]))
+        component.define_method(template[:obj].safe_method_name, component.instance_method(template[:obj].call_method_name))
 
         format_conditional =
           if template[:format] == :html
@@ -344,10 +344,12 @@ module ViewComponent
         end
       end
 
-      private
+      def inline?
+        @type == :inline
+      end
 
-      def normalized_variant_name
-        @variant.to_s.gsub("-", "__").gsub(".", "___")
+      def safe_method_name
+        "_#{call_method_name}_#{@component.name.underscore.gsub("/", "__")}"
       end
 
       def call_method_name
@@ -355,6 +357,12 @@ module ViewComponent
         out << "_#{normalized_variant_name}" if @variant.present?
         out << "_#{@this_format}" if @this_format.present? && @this_format != :html
         out
+      end
+
+      private
+
+      def normalized_variant_name
+        @variant.to_s.gsub("-", "__").gsub(".", "___")
       end
 
       def compiled_source
