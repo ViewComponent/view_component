@@ -70,7 +70,7 @@ module ViewComponent
 
     def define_render_template_for
       if template = templates.find { _1.inline? }
-        component.define_method(template.safe_method_name, component.instance_method(:call))
+        template.define_safe_method
 
         component.silence_redefinition_of_method("render_template_for")
         component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -85,7 +85,7 @@ module ViewComponent
       branches = []
 
       templates.each do |template|
-        component.define_method(template.safe_method_name, component.instance_method(template.call_method_name))
+        template.define_safe_method
 
         format_conditional =
           if template.html?
@@ -331,6 +331,10 @@ module ViewComponent
         out << "_#{normalized_variant_name}" if @variant.present?
         out << "_#{@this_format}" if @this_format.present? && @this_format != :html
         out
+      end
+
+      def define_safe_method
+        @component.define_method(safe_method_name, @component.instance_method(call_method_name))
       end
 
       private
