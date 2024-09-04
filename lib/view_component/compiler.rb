@@ -100,7 +100,7 @@ module ViewComponent
           if template[:obj].html?
             "(format == :html || format.nil?)"
           else
-            "format == #{template[:format].inspect}"
+            "format == #{template[:obj].format.inspect}"
           end
 
         variant_conditional =
@@ -350,6 +350,10 @@ module ViewComponent
 
       def html?
         @this_format == :html
+      end
+
+      def format
+        @this_format
       end
 
       def safe_method_name
