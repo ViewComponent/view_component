@@ -49,16 +49,7 @@ module ViewComponent
       end
 
       templates.each do |template|
-        Template.new(
-          component: component,
-          path: template[:path],
-          source: template[:source],
-          extension: template[:handler],
-          this_format: template[:format],
-          variant: template[:variant],
-          lineno: template[:lineno],
-          type: template[:type]
-        ).compile_to_component(redefinition_lock)
+        template[:obj].compile_to_component(redefinition_lock)
       end
 
       define_render_template_for
@@ -324,7 +315,7 @@ module ViewComponent
 
       def initialize(component:, path:, source:, extension:, this_format:, lineno:, variant:, type:)
         @component, @path, @source, @extension, @this_format, @lineno, @variant, @type = component, path, source, extension, this_format, lineno, variant, type
-        @source ||= File.read(path)
+        @source_originally_nil = @source.nil?
       end
 
       def compile_to_component(redefinition_lock)
@@ -366,13 +357,22 @@ module ViewComponent
 
       private
 
+      def source
+        if @source_originally_nil
+          File.read(@path)
+        else
+          @source
+        end
+      end
+
       def normalized_variant_name
         @variant.to_s.gsub("-", "__").gsub(".", "___")
       end
 
       def compiled_source
         handler = ActionView::Template.handler_for_extension(@extension)
-        @source.rstrip! if @component.strip_trailing_whitespace?
+        this_source = source
+        this_source.rstrip! if @component.strip_trailing_whitespace?
 
         short_identifier = defined?(Rails.root) ? @path.sub("#{Rails.root}/", "") : @path
         type = ActionView::Template::Types[@this_format]
@@ -385,13 +385,13 @@ module ViewComponent
               short_identifier: short_identifier,
               type: type
             ),
-            @source
+            this_source
           )
         # :nocov:
         else
           handler.call(
             OpenStruct.new(
-              source: @source,
+              source: this_source,
               identifier: @path,
               type: type
             )
