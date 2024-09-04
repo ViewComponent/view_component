@@ -470,12 +470,12 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_includes(
       error.message,
-      "More than one HTML template found for variant test for TooManySidecarFilesForVariantComponent"
+      "More than one HTML template found for variant `test` for TooManySidecarFilesForVariantComponent"
     )
 
     assert_includes(
       error.message,
-      "More than one HTML template found for variant testing for TooManySidecarFilesForVariantComponent"
+      "More than one HTML template found for variant `testing` for TooManySidecarFilesForVariantComponent"
     )
   end
 

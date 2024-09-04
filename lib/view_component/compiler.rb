@@ -197,7 +197,7 @@ module ViewComponent
             each do |tally|
             variant, this_format = tally[0]
 
-            variant_string = " for variant #{variant}" if variant.present?
+            variant_string = " for variant `#{variant}`" if variant.present?
 
             errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component_class}. "
           end
