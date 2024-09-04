@@ -97,7 +97,7 @@ module ViewComponent
         component.define_method(template[:obj].safe_method_name, component.instance_method(template[:obj].call_method_name))
 
         format_conditional =
-          if template[:format] == :html
+          if template[:obj].html?
             "(format == :html || format.nil?)"
           else
             "format == #{template[:format].inspect}"
@@ -346,6 +346,10 @@ module ViewComponent
 
       def inline?
         @type == :inline
+      end
+
+      def html?
+        @this_format == :html
       end
 
       def safe_method_name
