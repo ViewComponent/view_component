@@ -224,8 +224,6 @@ module ViewComponent
               variant: pieces[1..-2].join(".").split("+").second&.to_sym
             }
 
-            @variants_rendering_templates << out[:variant]
-
             out[:obj] = Template.new(
               component: component,
               type: out[:type],
@@ -236,6 +234,8 @@ module ViewComponent
               this_format: out[:format],
               variant: out[:variant]
             )
+
+            @variants_rendering_templates << out[:obj].variant
 
             out
           end
@@ -290,7 +290,7 @@ module ViewComponent
 
     def variants
       @__vc_variants = (
-        templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
+        templates.map { |template| template[:obj].variant } + variants_from_inline_calls(inline_calls)
       ).compact.uniq
     end
 
