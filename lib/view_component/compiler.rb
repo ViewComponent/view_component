@@ -161,7 +161,7 @@ module ViewComponent
               "There can only be a template file or inline render method per variant."
           end
 
-          uniq_variants = variants.compact.uniq
+          uniq_variants = templates.map(&:variant).compact.uniq
           normalized_variants = uniq_variants.map { |variant| normalized_variant_name(variant) }
 
           colliding_variants = uniq_variants.select do |variant|
@@ -255,10 +255,6 @@ module ViewComponent
       @inline_calls_defined_on_self ||= component.instance_methods(false).grep(/^call(_|$)/)
     end
 
-    def variants
-      @variants ||= templates.map(&:variant).compact.uniq
-    end
-
     def variants_from_inline_calls(calls)
       calls.reject { |call| call == :call }.map do |variant_call|
         variant_call.to_s.sub("call_", "").to_sym
@@ -324,6 +320,10 @@ module ViewComponent
         @component.define_method(safe_method_name, @component.instance_method(call_method_name))
       end
 
+      def normalized_variant_name
+        @variant.to_s.gsub("-", "__").gsub(".", "___")
+      end
+
       private
 
       def source
@@ -333,10 +333,6 @@ module ViewComponent
         else
           @source
         end
-      end
-
-      def normalized_variant_name
-        @variant.to_s.gsub("-", "__").gsub(".", "___")
       end
 
       def compiled_source
