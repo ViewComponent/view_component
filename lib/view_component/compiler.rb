@@ -104,10 +104,10 @@ module ViewComponent
           end
 
         variant_conditional =
-          if template[:variant].nil?
+          if template[:obj].variant.nil?
             "variant.nil?"
           else
-            "variant&.to_sym == :'#{template[:variant]}'"
+            "variant&.to_sym == :'#{template[:obj].variant}'"
           end
 
         branches << ["#{variant_conditional} && #{format_conditional}", template[:safe_method_name]]
@@ -325,6 +325,8 @@ module ViewComponent
     end
 
     class Template
+      attr_reader :variant
+
       def initialize(component:, path:, source:, extension:, this_format:, lineno:, variant:, type:)
         @component, @path, @source, @extension, @this_format, @lineno, @variant, @type = component, path, source, extension, this_format, lineno, variant, type
         @source ||= File.read(path)
