@@ -69,8 +69,6 @@ module ViewComponent
     attr_reader :component, :redefinition_lock, :templates
 
     def define_render_template_for
-      branches = []
-
       if template = templates.find { _1.inline? }
         component.define_method(template.safe_method_name, component.instance_method(:call))
 
@@ -83,6 +81,8 @@ module ViewComponent
 
         return
       end
+
+      branches = []
 
       templates.each do |template|
         component.define_method(template.safe_method_name, component.instance_method(template.call_method_name))
