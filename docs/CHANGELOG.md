@@ -18,7 +18,7 @@ nav_order: 5
 
 * BREAKING: Require [non-EOL](https://www.ruby-lang.org/en/downloads/branches/) Ruby (`>= 3.1.0`).
 
-    * Joel Hawksley*
+    *Joel Hawksley*
 
 * Add basic internal testing for memory allocations.
 
