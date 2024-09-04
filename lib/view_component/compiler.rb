@@ -99,9 +99,7 @@ module ViewComponent
 
         # Just use default method name if no conditional branches or if there is a single
         # conditional branch that just calls the default method_name
-        if branches.empty?
-          body = default_safe_method_name
-        elsif branches.length == 1
+        if branches.length == 1
           body = branches[0].last
         else
           body = +""
