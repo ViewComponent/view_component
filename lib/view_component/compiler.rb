@@ -48,9 +48,7 @@ module ViewComponent
         component.validate_collection_parameter!
       end
 
-      templates.each do |template|
-        template.compile_to_component(redefinition_lock)
-      end
+      templates.each { _1.compile_to_component(redefinition_lock) }
 
       define_render_template_for
 
