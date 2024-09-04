@@ -30,7 +30,7 @@ module ViewComponent
 
       if (
         self.class.mode == DEVELOPMENT_MODE &&
-        templates.empty? &&
+        templates.select { _1.type != :inline_call }.empty? &&
         !(component.instance_methods(false).include?(:call) || component.private_instance_methods(false).include?(:call))
       )
         component.superclass.compile(raise_errors: raise_errors)
@@ -76,28 +76,25 @@ module ViewComponent
         templates.each do |template|
           template.define_safe_method
 
-          format_conditional =
-            if template.html?
-              "(format == :html || format.nil?)"
-            else
-              "format == #{template.format.inspect}"
-            end
+          if template.type == :inline_call
+            branches << ["variant&.to_sym == :'#{template.variant}'", template.safe_method_name]
+          else
+            format_conditional =
+              if template.html?
+                "(format == :html || format.nil?)"
+              else
+                "format == #{template.format.inspect}"
+              end
 
-          variant_conditional =
-            if template.variant.nil?
-              "variant.nil?"
-            else
-              "variant&.to_sym == :'#{template.variant}'"
-            end
+            variant_conditional =
+              if template.variant.nil?
+                "variant.nil?"
+              else
+                "variant&.to_sym == :'#{template.variant}'"
+              end
 
-          branches << ["#{variant_conditional} && #{format_conditional}", template.safe_method_name]
-        end
-
-        variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
-          safe_name = safe_name_for(variant, nil)
-          component.define_method(safe_name, component.instance_method(call_method_name(variant)))
-
-          branches << ["variant&.to_sym == :'#{variant}'", safe_name]
+            branches << ["#{variant_conditional} && #{format_conditional}", template.safe_method_name]
+          end
         end
 
         if component.instance_methods.include?(:call)
@@ -138,7 +135,7 @@ module ViewComponent
             errors << "Couldn't find a template file or inline render method for #{component}."
           end
 
-          templates.
+          templates.select { _1.type != :inline_call }.
             map { |template| [template.variant, template.format] }.
             tally.
             select { |_, count| count > 1 }.
@@ -150,14 +147,14 @@ module ViewComponent
             errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component}. "
           end
 
-          if templates.find { |template| template.variant.nil? } && inline_calls_defined_on_self.include?(:call)
+          if templates.find { _1.variant.nil? && _1.type != :inline_call } && inline_calls_defined_on_self.include?(:call)
             errors <<
               "Template file and inline render method found for #{component}. " \
               "There can only be a template file or inline render method per component."
           end
 
           duplicate_template_file_and_inline_variant_calls =
-            templates.map(&:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
+            templates.select { _1.type != :inline_call }.map(&:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
 
           unless duplicate_template_file_and_inline_variant_calls.empty?
             count = duplicate_template_file_and_inline_variant_calls.count
@@ -210,6 +207,21 @@ module ViewComponent
             @variants_rendering_templates << out.variant
 
             out
+          end
+
+          inline_calls.each do |method_name|
+            templates << Template.new(
+              redefinition_lock: redefinition_lock,
+              component: component,
+              type: :inline_call,
+              path: nil,
+              lineno: nil,
+              source: nil,
+              extension: nil,
+              this_format: :html,
+              variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
+              method_name: method_name
+            )
           end
 
           if component.inline_template.present?
@@ -281,15 +293,27 @@ module ViewComponent
     end
 
     class Template
-      attr_reader :variant
+      attr_reader :variant, :type, :call_method_name
 
-      def initialize(redefinition_lock:, component:, path:, source:, extension:, this_format:, lineno:, variant:, type:)
+      def initialize(redefinition_lock:, component:, path:, source:, extension:, this_format:, lineno:, variant:, type:, method_name: nil)
         @redefinition_lock, @component, @path, @source, @extension, @this_format, @lineno, @variant, @type =
           redefinition_lock, component, path, source, extension, this_format, lineno, variant, type
         @source_originally_nil = @source.nil?
+
+        @call_method_name =
+          if @method_name
+            @method_name
+          else
+            out = +"call"
+            out << "_#{normalized_variant_name}" if @variant.present?
+            out << "_#{@this_format}" if @this_format.present? && @this_format != :html
+            out
+          end
       end
 
       def compile_to_component
+        return if @type == :inline_call
+
         @redefinition_lock.synchronize do
           @component.silence_redefinition_of_method(call_method_name)
 
@@ -317,13 +341,6 @@ module ViewComponent
 
       def safe_method_name
         "_#{call_method_name}_#{@component.name.underscore.gsub("/", "__")}"
-      end
-
-      def call_method_name
-        out = +"call"
-        out << "_#{normalized_variant_name}" if @variant.present?
-        out << "_#{@this_format}" if @this_format.present? && @this_format != :html
-        out
       end
 
       def define_safe_method
