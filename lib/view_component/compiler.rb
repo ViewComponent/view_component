@@ -144,7 +144,10 @@ module ViewComponent
             errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component}. "
           end
 
-          if templates.find { _1.variant.nil? && _1.type != :inline_call } && inline_calls_defined_on_self.include?(:call)
+          if (
+            templates.any? { _1.variant.nil? && _1.type != :inline_call } &&
+            templates.any? { _1.variant.nil? && _1.type == :inline_call && _1.defined_on_self? }
+          )
             errors <<
               "Template file and inline render method found for #{component}. " \
               "There can only be a template file or inline render method per component."
@@ -226,7 +229,8 @@ module ViewComponent
               extension: nil,
               this_format: :html,
               variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
-              method_name: method_name
+              method_name: method_name,
+              defined_on_self: component.instance_methods(false).include?(method_name)
             )
           end
 
@@ -276,9 +280,9 @@ module ViewComponent
     class Template
       attr_reader :variant, :type, :call_method_name
 
-      def initialize(redefinition_lock:, component:, path:, source:, extension:, this_format:, lineno:, variant:, type:, method_name: nil)
-        @redefinition_lock, @component, @path, @source, @extension, @this_format, @lineno, @variant, @type =
-          redefinition_lock, component, path, source, extension, this_format, lineno, variant, type
+      def initialize(redefinition_lock:, component:, path:, source:, extension:, this_format:, lineno:, variant:, type:, method_name: nil, defined_on_self: true)
+        @redefinition_lock, @component, @path, @source, @extension, @this_format, @lineno, @variant, @type, @defined_on_self =
+          redefinition_lock, component, path, source, extension, this_format, lineno, variant, type, defined_on_self
         @source_originally_nil = @source.nil?
 
         @call_method_name =
@@ -330,6 +334,10 @@ module ViewComponent
 
       def normalized_variant_name
         @variant.to_s.gsub("-", "__").gsub(".", "___")
+      end
+
+      def defined_on_self?
+        @defined_on_self
       end
 
       private
