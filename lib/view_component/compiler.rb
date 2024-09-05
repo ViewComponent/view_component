@@ -154,7 +154,8 @@ module ViewComponent
           end
 
           duplicate_template_file_and_inline_variant_calls =
-            templates.select { _1.type != :inline_call }.map(&:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
+            templates.select { _1.type != :inline_call }.map(&:variant) &
+            templates.select { _1.type == :inline_call && _1.defined_on_self? }.map(&:variant)
 
           unless duplicate_template_file_and_inline_variant_calls.empty?
             count = duplicate_template_file_and_inline_variant_calls.count
@@ -265,16 +266,6 @@ module ViewComponent
 
           view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
         end
-    end
-
-    def inline_calls_defined_on_self
-      @inline_calls_defined_on_self ||= component.instance_methods(false).grep(/^call(_|$)/)
-    end
-
-    def variants_from_inline_calls(calls)
-      calls.reject { |call| call == :call }.map do |variant_call|
-        variant_call.to_s.sub("call_", "").to_sym
-      end
     end
 
     class Template
