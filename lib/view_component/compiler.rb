@@ -161,16 +161,25 @@ module ViewComponent
               "There can only be a template file or inline render method per variant."
           end
 
-          uniq_variants = templates.map(&:variant).compact.uniq
-          normalized_variants = uniq_variants.map { |variant| normalized_variant_name(variant) }
+          pairs =
+            templates.
+            map { [_1.variant, _1.normalized_variant_name] if _1.variant.present? }.
+            compact.
+            uniq { _1.first }
 
-          colliding_variants = uniq_variants.select do |variant|
-            normalized_variants.count(normalized_variant_name(variant)) > 1
-          end
+          colliding_normalized_variants =
+            pairs.map(&:last).
+            tally.
+            select { |_, count| count > 1 }.
+            keys.
+            map do |normalized_variant_name|
+              pairs.select { |pair| pair.last == normalized_variant_name }.
+              map { |pair| pair.first }
+            end
 
-          unless colliding_variants.empty?
+          colliding_normalized_variants.each do |variants|
             errors <<
-              "Colliding templates #{colliding_variants.sort.map { |v| "'#{v}'" }.to_sentence} " \
+              "Colliding templates #{variants.sort.map { |v| "'#{v}'" }.to_sentence} " \
               "found in #{component}."
           end
 
@@ -259,10 +268,6 @@ module ViewComponent
       calls.reject { |call| call == :call }.map do |variant_call|
         variant_call.to_s.sub("call_", "").to_sym
       end
-    end
-
-    def normalized_variant_name(variant)
-      variant.to_s.gsub("-", "__").gsub(".", "___")
     end
 
     class Template
