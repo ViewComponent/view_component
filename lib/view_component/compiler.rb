@@ -34,8 +34,8 @@ module ViewComponent
 
       gather_template_errors
 
-      if @template_errors.any?
-        raise TemplateError.new(@template_errors) if raise_errors
+      if template_errors.any?
+        raise TemplateError.new(template_errors) if raise_errors
 
         return
       end
@@ -62,7 +62,7 @@ module ViewComponent
 
     private
 
-    attr_reader :component, :redefinition_lock, :templates
+    attr_reader :component, :redefinition_lock, :templates, :template_errors
 
     def define_render_template_for
       if template = templates.find { _1.inline? }
