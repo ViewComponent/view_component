@@ -32,8 +32,10 @@ module ViewComponent
         component.superclass.compile(raise_errors: raise_errors)
       end
 
-      if template_errors.present?
-        raise TemplateError.new(template_errors) if raise_errors
+      gather_template_errors
+
+      if @template_errors.any?
+        raise TemplateError.new(@template_errors) if raise_errors
 
         return
       end
@@ -119,8 +121,8 @@ module ViewComponent
       end
     end
 
-    def template_errors
-      @__vc_template_errors ||=
+    def gather_template_errors
+      @template_errors =
         begin
           errors = []
 
