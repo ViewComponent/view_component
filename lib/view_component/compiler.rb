@@ -57,6 +57,7 @@ module ViewComponent
       CompileCache.register(component)
     end
 
+    # TODO this should probably take format into account
     def renders_template_for_variant?(variant)
       @variants_rendering_templates.include?(variant)
     end
