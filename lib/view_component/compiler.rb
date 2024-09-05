@@ -30,8 +30,7 @@ module ViewComponent
 
       if (
         self.class.mode == DEVELOPMENT_MODE &&
-        templates.select { _1.type != :inline_call }.empty? &&
-        !(component.instance_methods(false).include?(:call) || component.private_instance_methods(false).include?(:call))
+        templates.select { !(_1.type == :inline_call && !_1.defined_on_self?) }.empty?
       )
         component.superclass.compile(raise_errors: raise_errors)
       end
