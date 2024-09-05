@@ -219,6 +219,14 @@ module ViewComponent
             out
           end
 
+          view_component_ancestors =
+            (
+              component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } -
+              component.included_modules
+            )
+
+          inline_calls = view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
+
           inline_calls.each do |method_name|
             templates << Template.new(
               redefinition_lock: redefinition_lock,
@@ -250,21 +258,6 @@ module ViewComponent
           end
 
           templates
-        end
-    end
-
-    def inline_calls
-      @inline_calls ||=
-        begin
-          # Fetch only ViewComponent ancestor classes to limit the scope of
-          # finding inline calls
-          view_component_ancestors =
-            (
-              component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } -
-              component.included_modules
-            )
-
-          view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
         end
     end
 
