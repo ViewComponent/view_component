@@ -12,6 +12,10 @@ nav_order: 5
 
 ## 4.0.0
 
+* BREAKING: Require [non-EOL](https://endoflife.date/rails) Rails (`>= 7.0.0`).
+
+    *Joel Hawksley*
+
 * BREAKING: Require [non-EOL](https://www.ruby-lang.org/en/downloads/branches/) Ruby (`>= 3.1.0`).
 
     * Joel Hawksley*
