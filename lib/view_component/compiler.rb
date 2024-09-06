@@ -54,10 +54,10 @@ module ViewComponent
 
     private
 
-    attr_reader :component, :redefinition_lock, :templates
+    attr_reader :component, :templates
 
     def define_render_template_for
-      templates.each(&:compile_to_component)
+      templates.each { _1.compile_to_component(@redefinition_lock) }
 
       if template = templates.find { _1.inline? }
         body = template.safe_method_name
@@ -101,7 +101,7 @@ module ViewComponent
         end
       end
 
-      redefinition_lock.synchronize do
+      @redefinition_lock.synchronize do
         component.silence_redefinition_of_method(:render_template_for)
         component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil, format = nil)
@@ -183,7 +183,6 @@ module ViewComponent
             pieces = File.basename(path).split(".")
 
             out = Template.new(
-              redefinition_lock: redefinition_lock,
               component: component,
               type: :file,
               path: path,
@@ -206,7 +205,6 @@ module ViewComponent
 
           inline_calls.each do |method_name|
             templates << Template.new(
-              redefinition_lock: redefinition_lock,
               component: component,
               type: :inline_call,
               path: nil,
@@ -222,7 +220,6 @@ module ViewComponent
 
           if component.inline_template.present?
             templates << Template.new(
-              redefinition_lock: redefinition_lock,
               component: component,
               type: :inline,
               path: component.inline_template.path,
@@ -241,9 +238,9 @@ module ViewComponent
     class Template
       attr_reader :variant, :type, :call_method_name
 
-      def initialize(redefinition_lock:, component:, path:, source:, extension:, this_format:, lineno:, variant:, type:, method_name: nil, defined_on_self: true)
-        @redefinition_lock, @component, @path, @source, @extension, @this_format, @lineno, @variant, @type, @defined_on_self =
-          redefinition_lock, component, path, source, extension, this_format, lineno, variant, type, defined_on_self
+      def initialize(component:, path:, source:, extension:, this_format:, lineno:, variant:, type:, method_name: nil, defined_on_self: true)
+        @component, @path, @source, @extension, @this_format, @lineno, @variant, @type, @defined_on_self =
+          component, path, source, extension, this_format, lineno, variant, type, defined_on_self
         @source_originally_nil = @source.nil?
 
         @call_method_name =
@@ -257,9 +254,9 @@ module ViewComponent
           end
       end
 
-      def compile_to_component
+      def compile_to_component(redefinition_lock)
         if !inline_call?
-          @redefinition_lock.synchronize do
+          redefinition_lock.synchronize do
             @component.silence_redefinition_of_method(call_method_name)
 
             # rubocop:disable Style/EvalWithLocation
