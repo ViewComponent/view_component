@@ -28,7 +28,7 @@ module ViewComponent
 
       gather_templates
 
-      if self.class.mode == DEVELOPMENT_MODE && templates.none? { !(_1.type == :inline_call && !_1.defined_on_self?) }
+      if self.class.mode == DEVELOPMENT_MODE && templates.none? { !(_1.inline_call? && !_1.defined_on_self?) }
         component.superclass.compile(raise_errors: raise_errors)
       end
 
@@ -65,7 +65,7 @@ module ViewComponent
         branches = []
 
         templates.each do |template|
-          if template.type == :inline_call
+          if template.inline_call?
             branches << ["variant&.to_sym == :'#{template.variant}'", template.safe_method_name]
           else
             format_conditional =
@@ -119,7 +119,7 @@ module ViewComponent
       # We currently allow components to have both an inline call method and a template for a variant, with the
       # inline call method overriding the template. We should aim to change this in v4 to instead
       # raise an error.
-      templates.select { _1.type != :inline_call }.
+      templates.select { !_1.inline_call? }.
         map { |template| [template.variant, template.format] }.
         tally.
         select { |_, count| count > 1 }.
@@ -132,8 +132,8 @@ module ViewComponent
       end
 
       if (
-        templates.any? { _1.variant.nil? && _1.type != :inline_call } &&
-        templates.any? { _1.variant.nil? && _1.type == :inline_call && _1.defined_on_self? }
+        templates.any? { _1.variant.nil? && !_1.inline_call? } &&
+        templates.any? { _1.variant.nil? && _1.inline_call? && _1.defined_on_self? }
       )
         errors <<
           "Template file and inline render method found for #{component}. " \
@@ -141,8 +141,8 @@ module ViewComponent
       end
 
       duplicate_template_file_and_inline_variant_calls =
-        templates.select { _1.type != :inline_call }.map(&:variant) &
-        templates.select { _1.type == :inline_call && _1.defined_on_self? }.map(&:variant)
+        templates.select { !_1.inline_call? }.map(&:variant) &
+        templates.select { _1.inline_call? && _1.defined_on_self? }.map(&:variant)
 
       unless duplicate_template_file_and_inline_variant_calls.empty?
         count = duplicate_template_file_and_inline_variant_calls.count
@@ -269,7 +269,7 @@ module ViewComponent
       end
 
       def compile_to_component
-        if @type != :inline_call
+        if !inline_call?
           @redefinition_lock.synchronize do
             @component.silence_redefinition_of_method(call_method_name)
 
@@ -284,6 +284,10 @@ module ViewComponent
         end
 
         @component.define_method(safe_method_name, @component.instance_method(call_method_name))
+      end
+
+      def inline_call?
+        @type == :inline_call
       end
 
       def inline?
