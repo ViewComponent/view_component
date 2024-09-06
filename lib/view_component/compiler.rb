@@ -207,13 +207,10 @@ module ViewComponent
             out
           end
 
-          view_component_ancestors =
+          inline_calls =
             (
-              component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } -
-              component.included_modules
-            )
-
-          inline_calls = view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
+              component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - component.included_modules
+            ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
 
           inline_calls.each do |method_name|
             templates << Template.new(
