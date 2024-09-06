@@ -155,10 +155,7 @@ module ViewComponent
       end
 
       variant_pairs =
-        templates.
-        select { _1.variant.present? }.
-        map { [_1.variant, _1.normalized_variant_name] }.
-        uniq { _1.first }
+        templates.select { _1.variant.present? }.map { [_1.variant, _1.normalized_variant_name] }.uniq { _1.first }
 
       colliding_normalized_variants =
         variant_pairs.map(&:last).tally.select { |_, count| count > 1 }.keys.
