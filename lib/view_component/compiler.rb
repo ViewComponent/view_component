@@ -177,7 +177,6 @@ module ViewComponent
               type: :file,
               path: path,
               lineno: 0,
-              source: nil,
               extension: pieces.last,
               this_format: pieces[1..-2].join(".").split("+").first&.to_sym,
               variant: pieces[1..-2].join(".").split("+").second&.to_sym
@@ -197,10 +196,6 @@ module ViewComponent
             templates << Template.new(
               component: component,
               type: :inline_call,
-              path: nil,
-              lineno: nil,
-              source: nil,
-              extension: nil,
               this_format: :html,
               variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
               method_name: method_name,
@@ -216,8 +211,6 @@ module ViewComponent
               lineno: component.inline_template.lineno,
               source: component.inline_template.source.dup,
               extension: component.inline_template.language,
-              this_format: nil,
-              variant: nil
             )
           end
 
@@ -230,13 +223,13 @@ module ViewComponent
 
       def initialize(
         component:,
-        path:,
-        source:,
-        extension:,
-        this_format:,
-        lineno:,
-        variant:,
         type:,
+        this_format: nil,
+        variant: nil,
+        lineno: nil,
+        path: nil,
+        extension: nil,
+        source: nil,
         method_name: nil,
         defined_on_self: true
       )
