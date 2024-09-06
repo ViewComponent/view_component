@@ -157,8 +157,8 @@ module ViewComponent
 
       pairs =
         templates.
-        map { [_1.variant, _1.normalized_variant_name] if _1.variant.present? }.
-        compact.
+        select { _1.variant.present? }.
+        map { [_1.variant, _1.normalized_variant_name] }.
         uniq { _1.first }
 
       colliding_normalized_variants =
