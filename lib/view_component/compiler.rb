@@ -190,11 +190,11 @@ module ViewComponent
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
-          templates.
-            map { |template| [template[:variant], template[:format]] }.
-            tally.
-            select { |_, count| count > 1 }.
-            each do |tally|
+          templates
+            .map { |template| [template[:variant], template[:format]] }
+            .tally
+            .select { |_, count| count > 1 }
+            .each do |tally|
             variant, this_format = tally[0]
 
             variant_string = " for variant `#{variant}`" if variant.present?
