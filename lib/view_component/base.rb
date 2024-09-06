@@ -35,6 +35,7 @@ module ViewComponent
     include ViewComponent::WithContentHelper
 
     RESERVED_PARAMETER = :content
+    DEFAULT_FORMAT = :html
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers

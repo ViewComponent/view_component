@@ -68,7 +68,7 @@ module ViewComponent
                 "variant&.to_sym == #{template.variant.inspect}"
               else
                 [
-                  template.html? ? "(format == :html || format.nil?)" : "format == #{template.format.inspect}",
+                  template.default_format? ? "(format == #{ViewComponent::Base::DEFAULT_FORMAT.inspect} || format.nil?)" : "format == #{template.format.inspect}",
                   template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
                 ].join(" && ")
               end
@@ -82,7 +82,7 @@ module ViewComponent
             out = branches.each_with_object(+"") do |(conditional, branch_body), memo|
               memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{branch_body}\n"
             end
-            out << "else\n  #{templates.find { _1.variant.nil? && _1.html? }.safe_method_name}\nend"
+            out << "else\n  #{templates.find { _1.variant.nil? && _1.default_format? }.safe_method_name}\nend"
           end
         end
 
@@ -189,7 +189,7 @@ module ViewComponent
               templates << Template.new(
                 component: @component,
                 type: :inline_call,
-                this_format: :html,
+                this_format: ViewComponent::Base::DEFAULT_FORMAT,
                 variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
                 method_name: method_name,
                 defined_on_self: @component.instance_methods(false).include?(method_name)
@@ -236,7 +236,7 @@ module ViewComponent
           else
             out = +"call"
             out << "_#{normalized_variant_name}" if @variant.present?
-            out << "_#{@this_format}" if @this_format.present? && @this_format != :html
+            out << "_#{@this_format}" if @this_format.present? && @this_format != ViewComponent::Base::DEFAULT_FORMAT
             out
           end
       end
@@ -267,8 +267,8 @@ module ViewComponent
         @type == :inline
       end
 
-      def html?
-        @this_format == :html
+      def default_format?
+        @this_format == ViewComponent::Base::DEFAULT_FORMAT
       end
 
       def format
