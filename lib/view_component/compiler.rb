@@ -32,13 +32,7 @@ module ViewComponent
         component.superclass.compile(raise_errors: raise_errors)
       end
 
-      gather_template_errors
-
-      if template_errors.any?
-        raise TemplateError.new(template_errors) if raise_errors
-
-        return
-      end
+      return if gather_template_errors(raise_errors).any?
 
       if raise_errors
         component.validate_initialization_parameters!
@@ -62,7 +56,7 @@ module ViewComponent
 
     private
 
-    attr_reader :component, :redefinition_lock, :templates, :template_errors
+    attr_reader :component, :redefinition_lock, :templates
 
     def define_render_template_for
       if template = templates.find { _1.inline? }
@@ -121,76 +115,75 @@ module ViewComponent
       end
     end
 
-    def gather_template_errors
-      @template_errors =
-        begin
-          errors = []
+    def gather_template_errors(raise_errors)
+      errors = []
 
-          errors << "Couldn't find a template file or inline render method for #{component}." if templates.empty?
+      errors << "Couldn't find a template file or inline render method for #{component}." if templates.empty?
 
-          # We currently allow components to have both an inline call method and a template for a variant, with the
-          # inline call method overriding the template. We should aim to change this in v4 to instead
-          # raise an error.
-          templates.select { _1.type != :inline_call }.
-            map { |template| [template.variant, template.format] }.
-            tally.
-            select { |_, count| count > 1 }.
-            each do |tally|
-            variant, this_format = tally[0]
+      # We currently allow components to have both an inline call method and a template for a variant, with the
+      # inline call method overriding the template. We should aim to change this in v4 to instead
+      # raise an error.
+      templates.select { _1.type != :inline_call }.
+        map { |template| [template.variant, template.format] }.
+        tally.
+        select { |_, count| count > 1 }.
+        each do |tally|
+        variant, this_format = tally[0]
 
-            variant_string = " for variant `#{variant}`" if variant.present?
+        variant_string = " for variant `#{variant}`" if variant.present?
 
-            errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component}. "
-          end
+        errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component}. "
+      end
 
-          if (
-            templates.any? { _1.variant.nil? && _1.type != :inline_call } &&
-            templates.any? { _1.variant.nil? && _1.type == :inline_call && _1.defined_on_self? }
-          )
-            errors <<
-              "Template file and inline render method found for #{component}. " \
-              "There can only be a template file or inline render method per component."
-          end
+      if (
+        templates.any? { _1.variant.nil? && _1.type != :inline_call } &&
+        templates.any? { _1.variant.nil? && _1.type == :inline_call && _1.defined_on_self? }
+      )
+        errors <<
+          "Template file and inline render method found for #{component}. " \
+          "There can only be a template file or inline render method per component."
+      end
 
-          duplicate_template_file_and_inline_variant_calls =
-            templates.select { _1.type != :inline_call }.map(&:variant) &
-            templates.select { _1.type == :inline_call && _1.defined_on_self? }.map(&:variant)
+      duplicate_template_file_and_inline_variant_calls =
+        templates.select { _1.type != :inline_call }.map(&:variant) &
+        templates.select { _1.type == :inline_call && _1.defined_on_self? }.map(&:variant)
 
-          unless duplicate_template_file_and_inline_variant_calls.empty?
-            count = duplicate_template_file_and_inline_variant_calls.count
+      unless duplicate_template_file_and_inline_variant_calls.empty?
+        count = duplicate_template_file_and_inline_variant_calls.count
 
-            errors <<
-              "Template #{"file".pluralize(count)} and inline render #{"method".pluralize(count)} " \
-              "found for #{"variant".pluralize(count)} " \
-              "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \
-              "in #{component}. " \
-              "There can only be a template file or inline render method per variant."
-          end
+        errors <<
+          "Template #{"file".pluralize(count)} and inline render #{"method".pluralize(count)} " \
+          "found for #{"variant".pluralize(count)} " \
+          "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \
+          "in #{component}. " \
+          "There can only be a template file or inline render method per variant."
+      end
 
-          pairs =
-            templates.
-            map { [_1.variant, _1.normalized_variant_name] if _1.variant.present? }.
-            compact.
-            uniq { _1.first }
+      pairs =
+        templates.
+        map { [_1.variant, _1.normalized_variant_name] if _1.variant.present? }.
+        compact.
+        uniq { _1.first }
 
-          colliding_normalized_variants =
-            pairs.map(&:last).
-            tally.
-            select { |_, count| count > 1 }.
-            keys.
-            map do |normalized_variant_name|
-              pairs.select { |pair| pair.last == normalized_variant_name }.
-              map { |pair| pair.first }
-            end
-
-          colliding_normalized_variants.each do |variants|
-            errors <<
-              "Colliding templates #{variants.sort.map { |v| "'#{v}'" }.to_sentence} " \
-              "found in #{component}."
-          end
-
-          errors
+      colliding_normalized_variants =
+        pairs.map(&:last).
+        tally.
+        select { |_, count| count > 1 }.
+        keys.
+        map do |normalized_variant_name|
+          pairs.select { |pair| pair.last == normalized_variant_name }.
+          map { |pair| pair.first }
         end
+
+      colliding_normalized_variants.each do |variants|
+        errors <<
+          "Colliding templates #{variants.sort.map { |v| "'#{v}'" }.to_sentence} " \
+          "found in #{component}."
+      end
+
+      raise TemplateError.new(errors) if errors.any? && raise_errors
+
+      errors
     end
 
     def gather_templates
