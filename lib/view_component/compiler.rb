@@ -65,25 +65,17 @@ module ViewComponent
         branches = []
 
         templates.each do |template|
-          if template.inline_call?
-            branches << ["variant&.to_sym == #{template.variant.inspect}", template.safe_method_name]
-          else
-            format_conditional =
-              if template.html?
-                "(format == :html || format.nil?)"
-              else
-                "format == #{template.format.inspect}"
-              end
+          conditional =
+            if template.inline_call?
+              "variant&.to_sym == #{template.variant.inspect}"
+            else
+              [
+                template.html? ? "(format == :html || format.nil?)" : "format == #{template.format.inspect}",
+                template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
+              ].join(" && ")
+            end
 
-            variant_conditional =
-              if template.variant.nil?
-                "variant.nil?"
-              else
-                "variant&.to_sym == #{template.variant.inspect}"
-              end
-
-            branches << ["#{variant_conditional} && #{format_conditional}", template.safe_method_name]
-          end
+          branches << [conditional, template.safe_method_name]
         end
 
         # Just use default method name if no conditional branches or if there is a single
