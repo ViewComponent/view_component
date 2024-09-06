@@ -10,9 +10,13 @@ nav_order: 5
 
 ## main
 
+* Warn if using Ruby < 3.1 or Rails < 7.0, which will not be supported by ViewComponent v4.
+
+    *Joel Hawksley*
+
 * Add Kicksite to list of companies using ViewComponent.
 
-   *Adil Lari*
+    *Adil Lari*
 
 * Allow overridden slot methods to use `super`.
 
