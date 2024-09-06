@@ -187,21 +187,20 @@ module ViewComponent
             out
           end
 
-          inline_calls =
-            (
-              component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - component.included_modules
-            ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
-
-          inline_calls.each do |method_name|
-            templates << Template.new(
-              component: component,
-              type: :inline_call,
-              this_format: :html,
-              variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
-              method_name: method_name,
-              defined_on_self: component.instance_methods(false).include?(method_name)
-            )
-          end
+          (
+            component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - component.included_modules
+          ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.
+            uniq.
+            each do |method_name|
+              templates << Template.new(
+                component: component,
+                type: :inline_call,
+                this_format: :html,
+                variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
+                method_name: method_name,
+                defined_on_self: component.instance_methods(false).include?(method_name)
+              )
+            end
 
           if component.inline_template.present?
             templates << Template.new(
