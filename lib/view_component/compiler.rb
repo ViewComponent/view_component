@@ -59,39 +59,42 @@ module ViewComponent
     def define_render_template_for
       templates.each { _1.compile_to_component(@redefinition_lock) }
 
-      if template = templates.find { _1.inline? }
-        body = template.safe_method_name
-      else
-        branches = []
-
-        templates.each do |template|
-          conditional =
-            if template.inline_call?
-              "variant&.to_sym == #{template.variant.inspect}"
-            else
-              [
-                template.html? ? "(format == :html || format.nil?)" : "format == #{template.format.inspect}",
-                template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
-              ].join(" && ")
-            end
-
-          branches << [conditional, template.safe_method_name]
-        end
-
-        # Just use default method name if no conditional branches or if there is a single
-        # conditional branch that just calls the default method_name
-        if branches.length == 1
-          body = branches[0].last
+      body =
+        if template = templates.find { _1.inline? }
+          template.safe_method_name
         else
-          body = +""
+          branches = []
 
-          branches.each do |conditional, method_body|
-            body << "#{(!body.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
+          templates.each do |template|
+            conditional =
+              if template.inline_call?
+                "variant&.to_sym == #{template.variant.inspect}"
+              else
+                [
+                  template.html? ? "(format == :html || format.nil?)" : "format == #{template.format.inspect}",
+                  template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
+                ].join(" && ")
+              end
+
+            branches << [conditional, template.safe_method_name]
           end
 
-          body << "else\n  #{templates.find { _1.variant.nil? && _1.html? }.safe_method_name}\nend"
+          # Just use default method name if no conditional branches or if there is a single
+          # conditional branch that just calls the default method_name
+          if branches.length == 1
+            branches[0].last
+          else
+            out = +""
+
+            branches.each do |conditional, method_body|
+              out << "#{(!out.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
+            end
+
+            out << "else\n  #{templates.find { _1.variant.nil? && _1.html? }.safe_method_name}\nend"
+
+            out
+          end
         end
-      end
 
       @redefinition_lock.synchronize do
         component.silence_redefinition_of_method(:render_template_for)
