@@ -108,7 +108,7 @@ module ViewComponent
       if render?
         # Avoid allocating new string when output_preamble and output_postamble are blank
         rendered_template =
-          if compiler.renders_template_for_variant?(@__vc_variant)
+          if compiler.renders_template_for?(@__vc_variant, request&.format&.to_sym)
             render_template_for(@__vc_variant, request&.format&.to_sym)
           else
             maybe_escape_html(render_template_for(@__vc_variant, request&.format&.to_sym)) do

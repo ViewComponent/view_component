@@ -16,7 +16,7 @@ module ViewComponent
     def initialize(component_class)
       @component_class = component_class
       @redefinition_lock = Mutex.new
-      @variants_rendering_templates = Set.new
+      @rendered_templates = Set.new
     end
 
     def compiled?
@@ -69,7 +69,7 @@ module ViewComponent
       else
         templates.each do |template|
           method_name = call_method_name(template[:variant], template[:format])
-          @variants_rendering_templates << template[:variant]
+          @rendered_templates << [template[:variant], template[:format]]
 
           redefinition_lock.synchronize do
             component_class.silence_redefinition_of_method(method_name)
@@ -97,8 +97,8 @@ module ViewComponent
       CompileCache.register(component_class)
     end
 
-    def renders_template_for_variant?(variant)
-      @variants_rendering_templates.include?(variant)
+    def renders_template_for?(variant, format)
+      @rendered_templates.include?([variant, format])
     end
 
     private
