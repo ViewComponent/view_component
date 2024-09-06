@@ -59,7 +59,7 @@ module ViewComponent
     def define_render_template_for
       templates.each { _1.compile_to_component(@redefinition_lock) }
 
-      body =
+      method_body =
         if template = templates.find { _1.inline? }
           template.safe_method_name
         else
@@ -84,10 +84,9 @@ module ViewComponent
           if branches.one?
             branches.last.last
           else
-            out = branches.each_with_object(+"") do |(conditional, method_body), memo|
-              memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
+            out = branches.each_with_object(+"") do |(conditional, branch_body), memo|
+              memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{branch_body}\n"
             end
-
             out << "else\n  #{templates.find { _1.variant.nil? && _1.html? }.safe_method_name}\nend"
           end
         end
@@ -96,7 +95,7 @@ module ViewComponent
         component.silence_redefinition_of_method(:render_template_for)
         component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil, format = nil)
-          #{body}
+          #{method_body}
         end
         RUBY
       end
@@ -227,7 +226,7 @@ module ViewComponent
     end
 
     class Template
-      attr_reader :variant, :type, :call_method_name
+      attr_reader :variant, :type
 
       def initialize(
         component:,
@@ -303,6 +302,8 @@ module ViewComponent
       end
 
       private
+
+      attr_reader :call_method_name
 
       def source
         if @source_originally_nil
