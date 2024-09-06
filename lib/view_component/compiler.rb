@@ -140,19 +140,18 @@ module ViewComponent
           "There can only be a template file or inline render method per component."
       end
 
-      duplicate_template_file_and_inline_variant_calls =
+      duplicate_template_file_and_inline_call_variants =
         templates.select { !_1.inline_call? }.map(&:variant) &
         templates.select { _1.inline_call? && _1.defined_on_self? }.map(&:variant)
 
-      unless duplicate_template_file_and_inline_variant_calls.empty?
-        count = duplicate_template_file_and_inline_variant_calls.count
+      unless duplicate_template_file_and_inline_call_variants.empty?
+        count = duplicate_template_file_and_inline_call_variants.count
 
         errors <<
           "Template #{"file".pluralize(count)} and inline render #{"method".pluralize(count)} " \
           "found for #{"variant".pluralize(count)} " \
-          "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \
-          "in #{component}. " \
-          "There can only be a template file or inline render method per variant."
+          "#{duplicate_template_file_and_inline_call_variants.map { |v| "'#{v}'" }.to_sentence} " \
+          "in #{component}. There can only be a template file or inline render method per variant."
       end
 
       pairs =
@@ -162,19 +161,15 @@ module ViewComponent
         uniq { _1.first }
 
       colliding_normalized_variants =
-        pairs.map(&:last).
-        tally.
-        select { |_, count| count > 1 }.
-        keys.
+        pairs.map(&:last).tally.select { |_, count| count > 1 }.keys.
         map do |normalized_variant_name|
-          pairs.select { |pair| pair.last == normalized_variant_name }.
-          map { |pair| pair.first }
+          pairs.
+            select { |pair| pair.last == normalized_variant_name }.
+            map { |pair| pair.first }
         end
 
       colliding_normalized_variants.each do |variants|
-        errors <<
-          "Colliding templates #{variants.sort.map { |v| "'#{v}'" }.to_sentence} " \
-          "found in #{component}."
+        errors << "Colliding templates #{variants.sort.map { |v| "'#{v}'" }.to_sentence} found in #{component}."
       end
 
       raise TemplateError.new(errors) if errors.any? && raise_errors
