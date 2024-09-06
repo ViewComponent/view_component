@@ -64,5 +64,7 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency "net-imap"
     spec.add_development_dependency "net-pop"
     spec.add_development_dependency "net-smtp"
+  else
+    spec.post_install_message = "ViewComponent v4 will drop support for Ruby < 3.1 in 2025."
   end
 end
