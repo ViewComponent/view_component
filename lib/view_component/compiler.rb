@@ -154,18 +154,18 @@ module ViewComponent
           "in #{component}. There can only be a template file or inline render method per variant."
       end
 
-      pairs =
+      variant_pairs =
         templates.
         select { _1.variant.present? }.
         map { [_1.variant, _1.normalized_variant_name] }.
         uniq { _1.first }
 
       colliding_normalized_variants =
-        pairs.map(&:last).tally.select { |_, count| count > 1 }.keys.
+        variant_pairs.map(&:last).tally.select { |_, count| count > 1 }.keys.
         map do |normalized_variant_name|
-          pairs.
-            select { |pair| pair.last == normalized_variant_name }.
-            map { |pair| pair.first }
+          variant_pairs.
+            select { |variant_pair| variant_pair.last == normalized_variant_name }.
+            map { |variant_pair| variant_pair.first }
         end
 
       colliding_normalized_variants.each do |variants|
