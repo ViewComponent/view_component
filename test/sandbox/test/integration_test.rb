@@ -19,7 +19,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       get "/"
       assert_response :success
 
-      assert_includes response.body, "BEGIN app/components/erb_component.rb"
+      assert_includes response.body, "BEGIN app/components/erb_component.html.erb"
 
       assert_select("div", "Foo\n  bar")
     end
@@ -768,5 +768,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       warnings.any? { |warning| warning.include?("component was provided an HTML-unsafe postamble") },
       "Rendering UnsafePostambleComponent did not emit an HTML safety warning"
     )
+  end
+
+  def test_renders_multiple_format_component_as_html
+    get "/multiple_formats_component"
+
+    assert_includes response.body, "Hello, HTML!"
+  end
+
+  def test_renders_multiple_format_component_as_json
+    get "/multiple_formats_component.json"
+
+    assert_equal response.body, "{\"hello\":\"world\"}"
+  end
+
+  def test_renders_multiple_format_component_as_css
+    get "/multiple_formats_component.css"
+
+    assert_includes response.body, "Hello, CSS!"
   end
 end

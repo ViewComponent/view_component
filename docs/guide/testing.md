@@ -135,6 +135,20 @@ def test_render_component_for_tablet
 end
 ```
 
+## Request formats
+
+Use the `with_format` helper to test specific request formats:
+
+```ruby
+def test_render_component_as_json
+  with_format :json do
+    render_inline(MultipleFormatsComponent.new)
+
+    assert_equal(rendered_json["hello"], "world")
+  end
+end
+```
+
 ## Configuring the controller used in tests
 
 Since 2.27.0

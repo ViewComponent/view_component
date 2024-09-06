@@ -151,7 +151,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_jbuilder_template
-    with_request_url("/", format: :json) do
+    with_format(:json) do
       render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
     end
 
@@ -459,7 +459,7 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(TooManySidecarFilesComponent.new)
       end
 
-    assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
+    assert_includes error.message, "More than one HTML template found for TooManySidecarFilesComponent."
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
@@ -470,7 +470,12 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_includes(
       error.message,
-      "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
+      "More than one HTML template found for variant `test` for TooManySidecarFilesForVariantComponent"
+    )
+
+    assert_includes(
+      error.message,
+      "More than one HTML template found for variant `testing` for TooManySidecarFilesForVariantComponent"
     )
   end
 
@@ -538,7 +543,7 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_includes(
       error.message,
-      "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
+      "More than one HTML template found for TemplateAndSidecarDirectoryTemplateComponent."
     )
   end
 
@@ -1194,5 +1199,13 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(UseHelpersMacroComponent.new)
 
     assert_selector ".helper__named-prefix-message", text: "Hello macro named prefix helper method"
+  end
+
+  def test_with_format
+    with_format(:json) do
+      render_inline(MultipleFormatsComponent.new)
+
+      assert_equal(rendered_json["hello"], "world")
+    end
   end
 end

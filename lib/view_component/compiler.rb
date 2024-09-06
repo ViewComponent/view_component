@@ -16,7 +16,7 @@ module ViewComponent
     def initialize(component_class)
       @component_class = component_class
       @redefinition_lock = Mutex.new
-      @variants_rendering_templates = Set.new
+      @rendered_templates = Set.new
     end
 
     def compiled?
@@ -61,22 +61,22 @@ module ViewComponent
 
           component_class.silence_redefinition_of_method("render_template_for")
           component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def render_template_for(variant = nil)
+          def render_template_for(variant = nil, format = nil)
             _call_#{safe_class_name}
           end
           RUBY
         end
       else
         templates.each do |template|
-          method_name = call_method_name(template[:variant])
-          @variants_rendering_templates << template[:variant]
+          method_name = call_method_name(template[:variant], template[:format])
+          @rendered_templates << [template[:variant], template[:format]]
 
           redefinition_lock.synchronize do
             component_class.silence_redefinition_of_method(method_name)
             # rubocop:disable Style/EvalWithLocation
             component_class.class_eval <<-RUBY, template[:path], 0
             def #{method_name}
-              #{compiled_template(template[:path])}
+              #{compiled_template(template[:path], template[:format])}
             end
             RUBY
             # rubocop:enable Style/EvalWithLocation
@@ -97,8 +97,8 @@ module ViewComponent
       CompileCache.register(component_class)
     end
 
-    def renders_template_for_variant?(variant)
-      @variants_rendering_templates.include?(variant)
+    def renders_template_for?(variant, format)
+      @rendered_templates.include?([variant, format])
     end
 
     private
@@ -106,28 +106,71 @@ module ViewComponent
     attr_reader :component_class, :redefinition_lock
 
     def define_render_template_for
-      variant_elsifs = variants.compact.uniq.map do |variant|
-        safe_name = "_call_variant_#{normalized_variant_name(variant)}_#{safe_class_name}"
+      branches = []
+      default_method_name = "_call_#{safe_class_name}"
+
+      templates.each do |template|
+        safe_name = +"_call"
+        variant_name = normalized_variant_name(template[:variant])
+        safe_name << "_#{variant_name}" if variant_name.present?
+        safe_name << "_#{template[:format]}" if template[:format].present? && template[:format] != :html
+        safe_name << "_#{safe_class_name}"
+
+        if safe_name == default_method_name
+          next
+        else
+          component_class.define_method(
+            safe_name,
+            component_class.instance_method(
+              call_method_name(template[:variant], template[:format])
+            )
+          )
+        end
+
+        format_conditional =
+          if template[:format] == :html
+            "(format == :html || format.nil?)"
+          else
+            "format == #{template[:format].inspect}"
+          end
+
+        variant_conditional =
+          if template[:variant].nil?
+            "variant.nil?"
+          else
+            "variant&.to_sym == :'#{template[:variant]}'"
+          end
+
+        branches << ["#{variant_conditional} && #{format_conditional}", safe_name]
+      end
+
+      variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
+        safe_name = "_call_#{normalized_variant_name(variant)}_#{safe_class_name}"
         component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
 
-        "elsif variant.to_sym == :'#{variant}'\n    #{safe_name}"
-      end.join("\n")
+        branches << ["variant&.to_sym == :'#{variant}'", safe_name]
+      end
 
-      component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
+      component_class.define_method(:"#{default_method_name}", component_class.instance_method(:call))
 
-      body = <<-RUBY
-        if variant.nil?
-          _call_#{safe_class_name}
-        #{variant_elsifs}
-        else
-          _call_#{safe_class_name}
+      # Just use default method name if no conditional branches or if there is a single
+      # conditional branch that just calls the default method_name
+      if branches.empty? || (branches.length == 1 && branches[0].last == default_method_name)
+        body = default_method_name
+      else
+        body = +""
+
+        branches.each do |conditional, method_body|
+          body << "#{(!body.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
         end
-      RUBY
+
+        body << "else\n  #{default_method_name}\nend"
+      end
 
       redefinition_lock.synchronize do
         component_class.silence_redefinition_of_method(:render_template_for)
         component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil)
+        def render_template_for(variant = nil, format = nil)
           #{body}
         end
         RUBY
@@ -147,24 +190,16 @@ module ViewComponent
             errors << "Couldn't find a template file or inline render method for #{component_class}."
           end
 
-          if templates.count { |template| template[:variant].nil? } > 1
-            errors <<
-              "More than one template found for #{component_class}. " \
-              "There can only be one default template file per component."
-          end
+          templates
+            .map { |template| [template[:variant], template[:format]] }
+            .tally
+            .select { |_, count| count > 1 }
+            .each do |tally|
+            variant, this_format = tally[0]
 
-          invalid_variants =
-            templates
-              .group_by { |template| template[:variant] }
-              .map { |variant, grouped| variant if grouped.length > 1 }
-              .compact
-              .sort
+            variant_string = " for variant `#{variant}`" if variant.present?
 
-          unless invalid_variants.empty?
-            errors <<
-              "More than one template found for #{"variant".pluralize(invalid_variants.count)} " \
-              "#{invalid_variants.map { |v| "'#{v}'" }.to_sentence} in #{component_class}. " \
-              "There can only be one template file per variant."
+            errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component_class}. "
           end
 
           if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
@@ -213,6 +248,7 @@ module ViewComponent
             pieces = File.basename(path).split(".")
             memo << {
               path: path,
+              format: pieces[1..-2].join(".").split("+").first&.to_sym,
               variant: pieces[1..-2].join(".").split("+").second&.to_sym,
               handler: pieces.last
             }
@@ -239,6 +275,10 @@ module ViewComponent
       @inline_calls_defined_on_self ||= component_class.instance_methods(false).grep(/^call(_|$)/)
     end
 
+    def formats
+      @__vc_variants = (templates.map { |template| template[:format] }).compact.uniq
+    end
+
     def variants
       @__vc_variants = (
         templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
@@ -258,37 +298,54 @@ module ViewComponent
       compile_template(template, handler)
     end
 
-    def compiled_template(file_path)
+    def compiled_template(file_path, format)
       handler = ActionView::Template.handler_for_extension(File.extname(file_path).delete("."))
       template = File.read(file_path)
 
-      compile_template(template, handler)
+      compile_template(template, handler, file_path, format)
     end
 
-    def compile_template(template, handler)
+    def compile_template(template, handler, identifier = component_class.source_location, format = :html)
       template.rstrip! if component_class.strip_trailing_whitespace?
 
+      short_identifier = defined?(Rails.root) ? identifier.sub("#{Rails.root}/", "") : identifier
+      type = ActionView::Template::Types[format]
+
       if handler.method(:call).parameters.length > 1
-        handler.call(component_class, template)
+        handler.call(
+          OpenStruct.new(
+            format: format,
+            identifier: identifier,
+            short_identifier: short_identifier,
+            type: type
+          ),
+          template
+        )
       # :nocov:
       else
         handler.call(
           OpenStruct.new(
             source: template,
-            identifier: component_class.identifier,
-            type: component_class.type
+            identifier: identifier,
+            type: type
           )
         )
       end
       # :nocov:
     end
 
-    def call_method_name(variant)
-      if variant.present? && variants.include?(variant)
-        "call_#{normalized_variant_name(variant)}"
-      else
-        "call"
+    def call_method_name(variant, format = nil)
+      out = +"call"
+
+      if variant.present?
+        out << "_#{normalized_variant_name(variant)}"
       end
+
+      if format.present? && format != :html && formats.length > 1
+        out << "_#{format}"
+      end
+
+      out
     end
 
     def normalized_variant_name(variant)

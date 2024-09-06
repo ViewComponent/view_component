@@ -13,7 +13,7 @@ module ViewComponent # :nodoc:
         notification_name,
         {
           name: self.class.name,
-          identifier: self.class.identifier
+          identifier: self.class.source_location
         }
       ) do
         super

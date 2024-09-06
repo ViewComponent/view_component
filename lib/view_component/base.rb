@@ -107,7 +107,14 @@ module ViewComponent
 
       if render?
         # Avoid allocating new string when output_preamble and output_postamble are blank
-        rendered_template = safe_render_template_for(@__vc_variant).to_s
+        rendered_template =
+          if compiler.renders_template_for?(@__vc_variant, request&.format&.to_sym)
+            render_template_for(@__vc_variant, request&.format&.to_sym)
+          else
+            maybe_escape_html(render_template_for(@__vc_variant, request&.format&.to_sym)) do
+              Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
+            end
+          end.to_s
 
         if output_preamble.blank? && output_postamble.blank?
           rendered_template
@@ -330,16 +337,6 @@ module ViewComponent
       end
     end
 
-    def safe_render_template_for(variant)
-      if compiler.renders_template_for_variant?(variant)
-        render_template_for(variant)
-      else
-        maybe_escape_html(render_template_for(variant)) do
-          Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
-        end
-      end
-    end
-
     def safe_output_preamble
       maybe_escape_html(output_preamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe preamble. The preamble will be automatically escaped, but you may want to investigate.")
@@ -500,13 +497,6 @@ module ViewComponent
         Collection.new(self, collection, **args)
       end
 
-      # Provide identifier for ActionView template annotations
-      #
-      # @private
-      def short_identifier
-        @short_identifier ||= defined?(Rails.root) ? source_location.sub("#{Rails.root}/", "") : source_location
-      end
-
       # @private
       def inherited(child)
         # Compile so child will inherit compiled `call_*` template methods that
@@ -519,12 +509,12 @@ module ViewComponent
         # meaning it will not be called for any children and thus not compile their templates.
         if !child.instance_methods(false).include?(:render_template_for) && !child.compiled?
           child.class_eval <<~RUBY, __FILE__, __LINE__ + 1
-            def render_template_for(variant = nil)
+            def render_template_for(variant = nil, format = nil)
               # Force compilation here so the compiler always redefines render_template_for.
               # This is mostly a safeguard to prevent infinite recursion.
               self.class.compile(raise_errors: true, force: true)
               # .compile replaces this method; call the new one
-              render_template_for(variant)
+              render_template_for(variant, format)
             end
           RUBY
         end
@@ -584,22 +574,6 @@ module ViewComponent
       # @private
       def compiler
         @__vc_compiler ||= Compiler.new(self)
-      end
-
-      # we'll eventually want to update this to support other types
-      # @private
-      def type
-        "text/html"
-      end
-
-      # @private
-      def format
-        :html
-      end
-
-      # @private
-      def identifier
-        source_location
       end
 
       # Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):

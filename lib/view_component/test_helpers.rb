@@ -63,6 +63,16 @@ module ViewComponent
       Nokogiri::HTML.fragment(@rendered_content)
     end
 
+    # `JSON.parse`-d component output.
+    #
+    # ```ruby
+    # render_inline(MyJsonComponent.new)
+    # assert_equal(rendered_json["hello"], "world")
+    # ```
+    def rendered_json
+      JSON.parse(rendered_content)
+    end
+
     # Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
     # allowing for Capybara assertions to be used:
     #
@@ -153,6 +163,19 @@ module ViewComponent
       yield
     ensure
       @vc_test_controller = old_controller
+    end
+
+    # Set format of the current request
+    #
+    # ```ruby
+    # with_format(:json) do
+    #   render_inline(MyComponent.new)
+    # end
+    # ```
+    #
+    # @param format [Symbol] The format to be set for the provided block.
+    def with_format(format)
+      with_request_url("/", format: format) { yield }
     end
 
     # Set the URL of the current request (such as when using request-dependent path helpers):

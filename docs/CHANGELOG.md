@@ -10,6 +10,18 @@ nav_order: 5
 
 ## main
 
+* Add support for request formats.
+
+    *Joel Hawksley*
+
+* Add `rendered_json` test helper.
+
+    *Joel Hawksley*
+
+* Add `with_format` test helper.
+
+    *Joel Hawksley*
+
 * Warn if using Ruby < 3.1 or Rails < 7.0, which will not be supported by ViewComponent v4.
 
     *Joel Hawksley*
