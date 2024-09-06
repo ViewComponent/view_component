@@ -60,15 +60,11 @@ module ViewComponent
       templates.each(&:compile_to_component)
 
       if template = templates.find { _1.inline? }
-        template.define_safe_method
-
         body = template.safe_method_name
       else
         branches = []
 
         templates.each do |template|
-          template.define_safe_method
-
           if template.type == :inline_call
             branches << ["variant&.to_sym == :'#{template.variant}'", template.safe_method_name]
           else
@@ -273,19 +269,21 @@ module ViewComponent
       end
 
       def compile_to_component
-        return if @type == :inline_call
+        if @type != :inline_call
+          @redefinition_lock.synchronize do
+            @component.silence_redefinition_of_method(call_method_name)
 
-        @redefinition_lock.synchronize do
-          @component.silence_redefinition_of_method(call_method_name)
-
-          # rubocop:disable Style/EvalWithLocation
-          @component.class_eval <<-RUBY, @path, @lineno
-          def #{call_method_name}
-            #{compiled_source}
+            # rubocop:disable Style/EvalWithLocation
+            @component.class_eval <<-RUBY, @path, @lineno
+            def #{call_method_name}
+              #{compiled_source}
+            end
+            RUBY
+            # rubocop:enable Style/EvalWithLocation
           end
-          RUBY
-          # rubocop:enable Style/EvalWithLocation
         end
+
+        @component.define_method(safe_method_name, @component.instance_method(call_method_name))
       end
 
       def inline?
@@ -302,10 +300,6 @@ module ViewComponent
 
       def safe_method_name
         "_#{call_method_name}_#{@component.name.underscore.gsub("/", "__")}"
-      end
-
-      def define_safe_method
-        @component.define_method(safe_method_name, @component.instance_method(call_method_name))
       end
 
       def normalized_variant_name
