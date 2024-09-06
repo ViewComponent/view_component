@@ -112,7 +112,7 @@ module ViewComponent
         .tally
         .select { |_, count| count > 1 }
         .each do |tally|
-        variant, this_format = tally[0]
+        variant, this_format = tally.first
 
         variant_string = " for variant `#{variant}`" if variant.present?
 
