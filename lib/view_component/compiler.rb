@@ -84,15 +84,11 @@ module ViewComponent
           if branches.length == 1
             branches[0].last
           else
-            out = +""
-
-            branches.each do |conditional, method_body|
-              out << "#{(!out.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
+            out = branches.each_with_object(+"") do |(conditional, method_body), memo|
+              memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
             end
 
             out << "else\n  #{templates.find { _1.variant.nil? && _1.html? }.safe_method_name}\nend"
-
-            out
           end
         end
 
