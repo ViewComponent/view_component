@@ -238,7 +238,18 @@ module ViewComponent
     class Template
       attr_reader :variant, :type, :call_method_name
 
-      def initialize(component:, path:, source:, extension:, this_format:, lineno:, variant:, type:, method_name: nil, defined_on_self: true)
+      def initialize(
+        component:,
+        path:,
+        source:,
+        extension:,
+        this_format:,
+        lineno:,
+        variant:,
+        type:,
+        method_name: nil,
+        defined_on_self: true
+      )
         @component, @path, @source, @extension, @this_format, @lineno, @variant, @type, @defined_on_self =
           component, path, source, extension, this_format, lineno, variant, type, defined_on_self
         @source_originally_nil = @source.nil?
