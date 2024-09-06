@@ -66,7 +66,7 @@ module ViewComponent
 
         templates.each do |template|
           if template.inline_call?
-            branches << ["variant&.to_sym == :'#{template.variant}'", template.safe_method_name]
+            branches << ["variant&.to_sym == #{template.variant.inspect}", template.safe_method_name]
           else
             format_conditional =
               if template.html?
@@ -79,7 +79,7 @@ module ViewComponent
               if template.variant.nil?
                 "variant.nil?"
               else
-                "variant&.to_sym == :'#{template.variant}'"
+                "variant&.to_sym == #{template.variant.inspect}"
               end
 
             branches << ["#{variant_conditional} && #{format_conditional}", template.safe_method_name]
@@ -251,7 +251,7 @@ module ViewComponent
         defined_on_self: true
       )
         @component, @path, @source, @extension, @this_format, @lineno, @variant, @type, @defined_on_self =
-          component, path, source, extension, this_format, lineno, variant, type, defined_on_self
+          component, path, source, extension, this_format, lineno, variant&.to_sym, type, defined_on_self
         @source_originally_nil = @source.nil?
 
         @call_method_name =
