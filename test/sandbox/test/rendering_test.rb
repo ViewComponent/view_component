@@ -915,7 +915,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_compilation_in_development_mode
-    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+    with_compiler_production_mode(false) do
       with_new_cache do
         render_inline(MyComponent.new)
         assert_selector("div", text: "hello,world!")
@@ -924,7 +924,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_compilation_in_production_mode
-    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE) do
+    with_compiler_production_mode(true) do
       with_new_cache do
         render_inline(MyComponent.new)
         assert_selector("div", text: "hello,world!")
@@ -948,7 +948,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock_cache
-    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+    with_compiler_production_mode(false) do
       with_new_cache do
         render_inline(ContentEvalComponent.new) do
           ViewComponent::CompileCache.invalidate!
@@ -1073,7 +1073,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock
-    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+    with_compiler_production_mode(false) do
       with_new_cache do
         mutex = Mutex.new
 

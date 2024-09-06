@@ -4,14 +4,11 @@ require "concurrent-ruby"
 
 module ViewComponent
   class Compiler
-    # Compiler mode. Can be either:
-    # * development (a blocking mode which ensures thread safety when redefining the `call` method for components,
+    # Compiler production mode. Can be either:
+    # * false (a blocking mode which ensures thread safety when redefining the `call` method for components,
     #                default in Rails development and test mode)
-    # * production (a non-blocking mode, default in Rails production mode)
-    DEVELOPMENT_MODE = :development
-    PRODUCTION_MODE = :production
-
-    class_attribute :mode, default: PRODUCTION_MODE
+    # * true(a non-blocking mode, default in Rails production mode)
+    class_attribute :production_mode, default: true
 
     def initialize(component)
       @component = component
@@ -28,7 +25,7 @@ module ViewComponent
 
       gather_templates
 
-      if self.class.mode == DEVELOPMENT_MODE && @templates.none? { !(_1.inline_call? && !_1.defined_on_self?) }
+      if !self.class.production_mode && @templates.none? { !(_1.inline_call? && !_1.defined_on_self?) }
         @component.superclass.compile(raise_errors: raise_errors)
       end
 

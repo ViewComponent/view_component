@@ -172,12 +172,12 @@ def with_render_monkey_patch_config(enabled, &block)
   with_config_option(:render_monkey_patch_enabled, enabled, &block)
 end
 
-def with_compiler_mode(mode)
-  previous_mode = ViewComponent::Compiler.mode
-  ViewComponent::Compiler.mode = mode
+def with_compiler_production_mode(mode)
+  previous_mode = ViewComponent::Compiler.production_mode
+  ViewComponent::Compiler.production_mode = mode
   yield
 ensure
-  ViewComponent::Compiler.mode = previous_mode
+  ViewComponent::Compiler.production_mode = previous_mode
 end
 
 def capture_warnings(&block)

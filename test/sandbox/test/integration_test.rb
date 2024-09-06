@@ -670,7 +670,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       Rails.env = "production".inquiry
 
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal ViewComponent::Compiler::PRODUCTION_MODE, ViewComponent::Compiler.mode
+      assert_equal true, ViewComponent::Compiler.production_mode
     ensure
       Rails.env = old_env
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
@@ -680,12 +680,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_sets_the_compiler_mode_in_development_mode
     Rails.env.stub :development?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
+      assert_equal false, ViewComponent::Compiler.production_mode
     end
 
     Rails.env.stub :test?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
+      assert_equal false, ViewComponent::Compiler.production_mode
     end
   end
 
