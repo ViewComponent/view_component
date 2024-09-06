@@ -79,8 +79,6 @@ module ViewComponent
             branches << [conditional, template.safe_method_name]
           end
 
-          # Just use default method name if no conditional branches or if there is a single
-          # conditional branch that just calls the default method_name
           if branches.one?
             branches.last.last
           else
