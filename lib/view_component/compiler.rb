@@ -13,7 +13,7 @@ module ViewComponent
     def initialize(component)
       @component = component
       @redefinition_lock = Mutex.new
-      @variants_rendering_templates = Set.new
+      @rendered_templates = Set.new
     end
 
     def compiled?
@@ -44,9 +44,8 @@ module ViewComponent
       CompileCache.register(@component)
     end
 
-    # TODO this should probably take format into account
-    def renders_template_for_variant?(variant)
-      @variants_rendering_templates.include?(variant)
+    def renders_template_for?(variant, format)
+      @rendered_templates.include?([variant, format])
     end
 
     private
@@ -176,7 +175,7 @@ module ViewComponent
               variant: pieces[1..-2].join(".").split("+").second&.to_sym
             )
 
-            @variants_rendering_templates << out.variant
+            @rendered_templates << [out.variant, out.this_format]
 
             out
           end
@@ -212,7 +211,7 @@ module ViewComponent
     end
 
     class Template
-      attr_reader :variant, :type
+      attr_reader :variant, :this_format, :type
 
       def initialize(
         component:,
