@@ -81,8 +81,8 @@ module ViewComponent
 
           # Just use default method name if no conditional branches or if there is a single
           # conditional branch that just calls the default method_name
-          if branches.length == 1
-            branches[0].last
+          if branches.one?
+            branches.last.last
           else
             out = branches.each_with_object(+"") do |(conditional, method_body), memo|
               memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
