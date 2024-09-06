@@ -244,11 +244,11 @@ module ViewComponent
       def compile_to_component(redefinition_lock)
         if !inline_call?
           redefinition_lock.synchronize do
-            @component.silence_redefinition_of_method(call_method_name)
+            @component.silence_redefinition_of_method(@call_method_name)
 
             # rubocop:disable Style/EvalWithLocation
             @component.class_eval <<-RUBY, @path, @lineno
-            def #{call_method_name}
+            def #{@call_method_name}
               #{compiled_source}
             end
             RUBY
@@ -256,7 +256,7 @@ module ViewComponent
           end
         end
 
-        @component.define_method(safe_method_name, @component.instance_method(call_method_name))
+        @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
       end
 
       def inline_call?
@@ -276,7 +276,7 @@ module ViewComponent
       end
 
       def safe_method_name
-        "_#{call_method_name}_#{@component.name.underscore.gsub("/", "__")}"
+        "_#{@call_method_name}_#{@component.name.underscore.gsub("/", "__")}"
       end
 
       def normalized_variant_name
@@ -288,8 +288,6 @@ module ViewComponent
       end
 
       private
-
-      attr_reader :call_method_name
 
       def source
         if @source_originally_nil
