@@ -39,8 +39,6 @@ module ViewComponent
         component.validate_collection_parameter!
       end
 
-      templates.each(&:compile_to_component)
-
       define_render_template_for
 
       component.register_default_slots
@@ -59,6 +57,8 @@ module ViewComponent
     attr_reader :component, :redefinition_lock, :templates
 
     def define_render_template_for
+      templates.each(&:compile_to_component)
+
       if template = templates.find { _1.inline? }
         template.define_safe_method
 
