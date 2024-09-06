@@ -60,7 +60,7 @@ module ViewComponent
       templates.each { _1.compile_to_component(@redefinition_lock) }
 
       method_body =
-        if template = templates.find { _1.inline? }
+        if (template = templates.find { _1.inline? })
           template.safe_method_name
         else
           branches = []
@@ -109,11 +109,11 @@ module ViewComponent
       # We currently allow components to have both an inline call method and a template for a variant, with the
       # inline call method overriding the template. We should aim to change this in v4 to instead
       # raise an error.
-      templates.select { !_1.inline_call? }.
-        map { |template| [template.variant, template.format] }.
-        tally.
-        select { |_, count| count > 1 }.
-        each do |tally|
+      templates.select { !_1.inline_call? }
+        .map { |template| [template.variant, template.format] }
+        .tally
+        .select { |_, count| count > 1 }
+        .each do |tally|
         variant, this_format = tally[0]
 
         variant_string = " for variant `#{variant}`" if variant.present?
@@ -121,10 +121,9 @@ module ViewComponent
         errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component}. "
       end
 
-      if (
-        templates.any? { _1.variant.nil? && !_1.inline_call? } &&
-        templates.any? { _1.variant.nil? && _1.inline_call? && _1.defined_on_self? }
-      )
+      if templates.any? { _1.variant.nil? && !_1.inline_call? } &&
+          templates.any? { _1.variant.nil? && _1.inline_call? && _1.defined_on_self? }
+
         errors <<
           "Template file and inline render method found for #{component}. " \
           "There can only be a template file or inline render method per component."
@@ -148,11 +147,11 @@ module ViewComponent
         templates.select { _1.variant.present? }.map { [_1.variant, _1.normalized_variant_name] }.uniq { _1.first }
 
       colliding_normalized_variants =
-        variant_pairs.map(&:last).tally.select { |_, count| count > 1 }.keys.
-        map do |normalized_variant_name|
-          variant_pairs.
-            select { |variant_pair| variant_pair.last == normalized_variant_name }.
-            map { |variant_pair| variant_pair.first }
+        variant_pairs.map(&:last).tally.select { |_, count| count > 1 }.keys
+          .map do |normalized_variant_name|
+          variant_pairs
+            .select { |variant_pair| variant_pair.last == normalized_variant_name }
+            .map { |variant_pair| variant_pair.first }
         end
 
       colliding_normalized_variants.each do |variants|
@@ -189,9 +188,9 @@ module ViewComponent
 
           (
             component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - component.included_modules
-          ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.
-            uniq.
-            each do |method_name|
+          ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }
+            .uniq
+            .each do |method_name|
               templates << Template.new(
                 component: component,
                 type: :inline_call,
@@ -209,7 +208,7 @@ module ViewComponent
               path: component.inline_template.path,
               lineno: component.inline_template.lineno,
               source: component.inline_template.source.dup,
-              extension: component.inline_template.language,
+              extension: component.inline_template.language
             )
           end
 
