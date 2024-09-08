@@ -513,6 +513,18 @@ module ViewComponent
         # `compile` defines
         compile
 
+        child.include ActiveSupport::Configurable
+
+        if child.superclass == ViewComponent::Base
+          child.define_singleton_method(:config) do
+            @@config ||= Rails.application.config.view_component.inheritable_copy
+          end
+        else
+          child.define_singleton_method(:config) do
+            @@config ||= superclass.config.inheritable_copy
+          end
+        end
+
         # Give the child its own personal #render_template_for to protect against the case when
         # eager loading is disabled and the parent component is rendered before the child. In
         # such a scenario, the parent will override ViewComponent::Base#render_template_for,
