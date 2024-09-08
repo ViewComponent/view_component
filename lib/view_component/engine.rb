@@ -6,7 +6,7 @@ require "view_component/deprecation"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ViewComponent::Config.current
+    config.view_component = ViewComponent::Config.defaults
 
     if Rails.version.to_f < 8.0
       rake_tasks do
