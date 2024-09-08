@@ -520,9 +520,16 @@ module ViewComponent
         # `compile` defines
         compile
 
-        # Set strict_helpers_enabled from global config
+        child.include ActiveSupport::Configurable
+
         if child.superclass == ViewComponent::Base
-          child.__vc_strict_helpers_enabled = Rails.application.config.view_component.strict_helpers_enabled
+          child.define_singleton_method(:config) do
+            @@config ||= Rails.application.config.view_component.inheritable_copy
+          end
+        else
+          child.define_singleton_method(:config) do
+            @@config ||= superclass.config.inheritable_copy
+          end
         end
 
         # Give the child its own personal #render_template_for to protect against the case when
@@ -633,15 +640,6 @@ module ViewComponent
       # @return [Boolean]
       def strip_trailing_whitespace?
         __vc_strip_trailing_whitespace
-      end
-
-      # TODO
-      def strict_helpers_enabled=(value = true)
-        self.__vc_strict_helpers_enabled = value
-      end
-
-      def strict_helpers_enabled?
-        __vc_strict_helpers_enabled
       end
 
       # Ensure the component initializer accepts the
