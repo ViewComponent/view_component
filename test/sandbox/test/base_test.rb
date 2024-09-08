@@ -154,4 +154,21 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     MESSAGE
     assert !exception_message_regex.match?(exception.message)
   end
+
+  def test_strict_helpers_enabled
+    with_config_option(:strict_helpers_enabled, false) do
+      refute ViewComponent::Base.strict_helpers_enabled?, ".strict_helpers_enabled? should be false by default"
+      refute ViewComponent::Base.new.strict_helpers_enabled?, "#strict_helpers_enabled? should be false by default"
+      Rails.application.config.view_component.strict_helpers_enabled = true
+      refute ViewComponent::Base.strict_helpers_enabled?, ".strict_helpers_enabled? should not be changed by global config for ViewComponent::Base"
+      refute ViewComponent::Base.new.strict_helpers_enabled?, "#strict_helpers_enabled? should not be changed by global config for ViewComponent::Base"
+      top_level_component_class = Class.new(ViewComponent::Base)
+      assert top_level_component_class.strict_helpers_enabled?, ".strict_helpers_enabled? should inherit from global config"
+      assert top_level_component_class.new.strict_helpers_enabled?, "#strict_helpers_enabled? should inherit from global config"
+      top_level_component_class.strict_helpers_enabled = false
+      inherited_component_class = Class.new(top_level_component_class)
+      refute inherited_component_class.strict_helpers_enabled?, ".strict_helpers_enabled? should inherit from its parent"
+      refute inherited_component_class.new.strict_helpers_enabled?, "#strict_helpers_enabled? should inherit from its parent"
+    end
+  end
 end

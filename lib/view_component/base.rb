@@ -474,6 +474,7 @@ module ViewComponent
         # view files in a directory named like the component
         directory = File.dirname(source_location)
         filename = File.basename(source_location, ".rb")
+        return [] if name.blank?
         component_name = name.demodulize.underscore
 
         # Add support for nested components defined in the same file.
@@ -518,6 +519,11 @@ module ViewComponent
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
         compile
+
+        # Set strict_helpers_enabled from global config
+        if child.superclass == ViewComponent::Base
+          child.__vc_strict_helpers_enabled = Rails.application.config.view_component.strict_helpers_enabled
+        end
 
         # Give the child its own personal #render_template_for to protect against the case when
         # eager loading is disabled and the parent component is rendered before the child. In
@@ -627,6 +633,15 @@ module ViewComponent
       # @return [Boolean]
       def strip_trailing_whitespace?
         __vc_strip_trailing_whitespace
+      end
+
+      # TODO
+      def strict_helpers_enabled=(value = true)
+        self.__vc_strict_helpers_enabled = value
+      end
+
+      def strict_helpers_enabled?
+        __vc_strict_helpers_enabled
       end
 
       # Ensure the component initializer accepts the
