@@ -166,11 +166,13 @@ module ViewComponent
             ActionView::Template.template_handler_extensions
           ).map do |path|
             # Extract format and variant from template filename
-            # foo.html.erb => :html, nil
-            # foo.html+phone.erb => :html, :phone
-            # variants_component.html+mini.watch.erb => :html, :'mini.watch'
             this_format, variant =
-              File.basename(path).split(".")[1..-2].join(".").split("+").map(&:to_sym)
+              File
+                .basename(path)     # "variants_component.html+mini.watch.erb"
+                .split(".")[1..-2]  # ["html+mini", "watch"]
+                .join(".")          # "html+mini.watch"
+                .split("+")         # ["html", "mini.watch"]
+                .map(&:to_sym)      # [:html, :"mini.watch"]
 
             out = Template.new(
               component: @component,
