@@ -102,7 +102,7 @@ module ViewComponent
       # We currently allow components to have both an inline call method and a template for a variant, with the
       # inline call method overriding the template. We should aim to change this in v4 to instead
       # raise an error.
-      @templates.select { !_1.inline_call? }
+      @templates.reject(&:inline_call?)
         .map { |template| [template.variant, template.format] }
         .tally
         .select { |_, count| count > 1 }
