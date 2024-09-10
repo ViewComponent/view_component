@@ -122,6 +122,9 @@ module ViewComponent
           "There can only be a template file or inline render method per component."
       end
 
+      # If a template has inline calls, they can conflict with template files the component may use
+      # to render. This attempts to catch and raise that issue before run time. For example,
+      # `def render_mobile` would conflict with a sidecar template of `component.html+mobile.erb`
       duplicate_template_file_and_inline_call_variants =
         @templates.reject(&:inline_call?).map(&:variant) &
         @templates.select { _1.inline_call? && _1.defined_on_self? }.map(&:variant)
