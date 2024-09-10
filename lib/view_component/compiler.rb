@@ -114,9 +114,14 @@ module ViewComponent
         errors << "More than one #{this_format.upcase} template found#{variant_string} for #{@component}. "
       end
 
-      if @templates.any? { _1.variant.nil? && !_1.inline_call? } &&
-          @templates.any? { _1.variant.nil? && _1.inline_call? && _1.defined_on_self? }
+      default_template_types = @templates.reject(&:variant).each_with_object(Set.new) do |template, memo|
+        memo << :template_file if !template.inline_call?
+        memo << :inline_render if template.inline_call? && template.defined_on_self?
 
+        memo
+      end
+
+      if default_template_types.length > 1
         errors <<
           "Template file and inline render method found for #{@component}. " \
           "There can only be a template file or inline render method per component."
