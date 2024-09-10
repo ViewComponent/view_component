@@ -139,19 +139,13 @@ module ViewComponent
           "in #{@component}. There can only be a template file or inline render method per variant."
       end
 
-      variant_pairs =
-        @templates.select(&:variant).map { [_1.variant, _1.normalized_variant_name] }.uniq(&:first)
+      @templates.select(&:variant).each_with_object(Hash.new { |h,k| h[k] = Set.new }) do |template, memo|
+        memo[template.normalized_variant_name] << template.variant
+        memo
+      end.each do |_, variant_names|
+        next unless variant_names.length > 1
 
-      colliding_normalized_variants =
-        variant_pairs.map(&:last).tally.select { |_, count| count > 1 }.keys
-          .map do |normalized_variant_name|
-          variant_pairs
-            .select { |variant_pair| variant_pair.last == normalized_variant_name }
-            .map { |variant_pair| variant_pair.first }
-        end
-
-      colliding_normalized_variants.each do |variants|
-        errors << "Colliding templates #{variants.sort.map { |v| "'#{v}'" }.to_sentence} found in #{@component}."
+        errors << "Colliding templates #{variant_names.sort.map { |v| "'#{v}'" }.to_sentence} found in #{@component}."
       end
 
       raise TemplateError.new(errors) if errors.any? && raise_errors
