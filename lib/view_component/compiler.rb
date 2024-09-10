@@ -57,7 +57,7 @@ module ViewComponent
       @templates.each { _1.compile_to_component(@redefinition_lock) }
 
       method_body =
-        if (template = @templates.find { _1.inline? })
+        if (template = @templates.find(&:inline?))
           template.safe_method_name
         else
           branches = []
