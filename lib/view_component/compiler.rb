@@ -177,7 +177,7 @@ module ViewComponent
               type: :file,
               path: path,
               lineno: 0,
-              extension: File.extname(path)[1..-1],
+              extension: path.split('.').last,
               this_format: this_format,
               variant: variant
             )
