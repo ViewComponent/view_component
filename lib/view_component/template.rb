@@ -14,8 +14,17 @@ module ViewComponent
       method_name: nil,
       defined_on_self: true
     )
-      @component, @path, @source, @extension, @this_format, @lineno, @variant, @type, @defined_on_self =
-        component, path, source, extension, this_format, lineno, variant&.to_sym, type, defined_on_self
+      @component = component
+      @type = type
+      @this_format = this_format
+      @variant = variant&.to_sym
+      @lineno = lineno
+      @path = path
+      @extension = extension
+      @source = source
+      @method_name = method_name
+      @defined_on_self = defined_on_self
+
       @source_originally_nil = @source.nil?
 
       @call_method_name =
