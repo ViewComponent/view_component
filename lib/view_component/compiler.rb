@@ -165,16 +165,21 @@ module ViewComponent
           templates = @component.sidecar_files(
             ActionView::Template.template_handler_extensions
           ).map do |path|
-            pieces = File.basename(path).split(".")
+            # Extract format and variant from template filename
+            # foo.html.erb => :html, nil
+            # foo.html+phone.erb => :html, :phone
+            # variants_component.html+mini.watch.erb => :html, :'mini.watch'
+            this_format, variant =
+              File.basename(path).split(".")[1..-2].join(".").split("+").map(&:to_sym)
 
             out = Template.new(
               component: @component,
               type: :file,
               path: path,
               lineno: 0,
-              extension: pieces.last,
-              this_format: pieces[1..-2].join(".").split("+").first&.to_sym,
-              variant: pieces[1..-2].join(".").split("+").second&.to_sym
+              extension: File.extname(path)[1..-1],
+              this_format: this_format,
+              variant: variant
             )
 
             # TODO: We should consider inlining the HTML output safety logic into the compiled render_template_for
