@@ -26,7 +26,7 @@ module ViewComponent
 
       gather_templates
 
-      if self.class.development_mode && @templates.none? { !(_1.inline_call? && !_1.defined_on_self?) }
+      if self.class.development_mode && @templates.any?(&:requires_compiled_superclass?)
         @component.superclass.compile(raise_errors: raise_errors)
       end
 
@@ -257,6 +257,10 @@ module ViewComponent
         end
 
         @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
+      end
+
+      def requires_compiled_superclass?
+        inline_call? && !defined_on_self?
       end
 
       def inline_call?
