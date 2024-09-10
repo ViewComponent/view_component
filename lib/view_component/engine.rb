@@ -136,7 +136,7 @@ module ViewComponent
     end
 
     initializer "compiler mode" do |_app|
-      ViewComponent::Compiler.production_mode = !(Rails.env.development? || Rails.env.test?)
+      ViewComponent::Compiler.development_mode = (Rails.env.development? || Rails.env.test?)
     end
 
     config.after_initialize do |app|
