@@ -177,6 +177,8 @@ module ViewComponent
               variant: pieces[1..-2].join(".").split("+").second&.to_sym
             )
 
+            # TODO: We should consider inlining the HTML output safety logic into the compiled render_template_for
+            # instead of this indirect approach
             @rendered_templates << [out.variant, out.this_format]
 
             out
