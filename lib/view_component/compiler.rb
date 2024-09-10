@@ -144,7 +144,7 @@ module ViewComponent
           "in #{@component}. There can only be a template file or inline render method per variant."
       end
 
-      @templates.select(&:variant).each_with_object(Hash.new { |h,k| h[k] = Set.new }) do |template, memo|
+      @templates.select(&:variant).each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |template, memo|
         memo[template.normalized_variant_name] << template.variant
         memo
       end.each do |_, variant_names|
@@ -178,7 +178,7 @@ module ViewComponent
               type: :file,
               path: path,
               lineno: 0,
-              extension: path.split('.').last,
+              extension: path.split(".").last,
               this_format: this_format,
               variant: variant
             )
