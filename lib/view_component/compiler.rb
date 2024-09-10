@@ -123,7 +123,7 @@ module ViewComponent
       end
 
       duplicate_template_file_and_inline_call_variants =
-        @templates.select { !_1.inline_call? }.map(&:variant) &
+        @templates.reject(&:inline_call?).map(&:variant) &
         @templates.select { _1.inline_call? && _1.defined_on_self? }.map(&:variant)
 
       unless duplicate_template_file_and_inline_call_variants.empty?
@@ -137,7 +137,7 @@ module ViewComponent
       end
 
       variant_pairs =
-        @templates.select { _1.variant.present? }.map { [_1.variant, _1.normalized_variant_name] }.uniq(&:first)
+        @templates.select(&:variant).map { [_1.variant, _1.normalized_variant_name] }.uniq(&:first)
 
       colliding_normalized_variants =
         variant_pairs.map(&:last).tally.select { |_, count| count > 1 }.keys
