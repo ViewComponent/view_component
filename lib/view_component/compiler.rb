@@ -53,10 +53,6 @@ module ViewComponent
 
     attr_reader :templates
 
-    def component_instance_methods_on_self
-      @component_instance_methods_on_self ||= @component.instance_methods(false)
-    end
-
     def define_render_template_for
       @templates.each { _1.compile_to_component(@redefinition_lock) }
 
@@ -185,6 +181,8 @@ module ViewComponent
 
             out
           end
+
+          component_instance_methods_on_self = @component.instance_methods(false)
 
           (
             @component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - @component.included_modules
