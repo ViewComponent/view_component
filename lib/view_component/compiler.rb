@@ -53,6 +53,10 @@ module ViewComponent
 
     attr_reader :templates
 
+    def component_instance_methods_on_self
+      @component_instance_methods_on_self ||= @component.instance_methods(false)
+    end
+
     def define_render_template_for
       @templates.each { _1.compile_to_component(@redefinition_lock) }
 
@@ -193,7 +197,7 @@ module ViewComponent
                 this_format: ViewComponent::Base::DEFAULT_FORMAT,
                 variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
                 method_name: method_name,
-                defined_on_self: @component.instance_methods(false).include?(method_name)
+                defined_on_self: component_instance_methods_on_self.include?(method_name)
               )
             end
 
