@@ -54,7 +54,11 @@ module ViewComponent
     attr_reader :templates
 
     def define_render_template_for
-      @templates.each { _1.compile_to_component(@redefinition_lock) }
+      @templates.each do |template|
+        @redefinition_lock.synchronize do
+          template.compile_to_component
+        end
+      end
 
       method_body =
         if @templates.one?

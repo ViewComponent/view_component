@@ -38,19 +38,17 @@ module ViewComponent
         end
     end
 
-    def compile_to_component(redefinition_lock)
+    def compile_to_component
       if !inline_call?
-        redefinition_lock.synchronize do
-          @component.silence_redefinition_of_method(@call_method_name)
+        @component.silence_redefinition_of_method(@call_method_name)
 
-          # rubocop:disable Style/EvalWithLocation
-          @component.class_eval <<-RUBY, @path, @lineno
-          def #{@call_method_name}
-            #{compiled_source}
-          end
-          RUBY
-          # rubocop:enable Style/EvalWithLocation
+        # rubocop:disable Style/EvalWithLocation
+        @component.class_eval <<-RUBY, @path, @lineno
+        def #{@call_method_name}
+          #{compiled_source}
         end
+        RUBY
+        # rubocop:enable Style/EvalWithLocation
       end
 
       @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
