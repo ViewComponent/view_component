@@ -11,6 +11,7 @@ require "view_component/inline_template"
 require "view_component/preview"
 require "view_component/slotable"
 require "view_component/slotable_default"
+require "view_component/template"
 require "view_component/translatable"
 require "view_component/with_content_helper"
 require "view_component/use_helpers"
@@ -35,6 +36,7 @@ module ViewComponent
     include ViewComponent::WithContentHelper
 
     RESERVED_PARAMETER = :content
+    VC_INTERNAL_DEFAULT_FORMAT = :html
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -106,7 +108,6 @@ module ViewComponent
       before_render
 
       if render?
-        # Avoid allocating new string when output_preamble and output_postamble are blank
         rendered_template =
           if compiler.renders_template_for?(@__vc_variant, request&.format&.to_sym)
             render_template_for(@__vc_variant, request&.format&.to_sym)
@@ -116,6 +117,7 @@ module ViewComponent
             end
           end.to_s
 
+        # Avoid allocating new string when output_preamble and output_postamble are blank
         if output_preamble.blank? && output_postamble.blank?
           rendered_template
         else
@@ -562,10 +564,6 @@ module ViewComponent
         compile unless compiled?
       end
 
-      # Compile templates to instance methods, assuming they haven't been compiled already.
-      #
-      # Do as much work as possible in this step, as doing so reduces the amount
-      # of work done each time a component is rendered.
       # @private
       def compile(raise_errors: false, force: false)
         compiler.compile(raise_errors: raise_errors, force: force)

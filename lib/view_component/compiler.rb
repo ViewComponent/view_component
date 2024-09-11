@@ -4,97 +4,45 @@ require "concurrent-ruby"
 
 module ViewComponent
   class Compiler
-    # Compiler mode. Can be either:
-    # * development (a blocking mode which ensures thread safety when redefining the `call` method for components,
+    # Compiler development mode. Can be either:
+    # * true (a blocking mode which ensures thread safety when redefining the `call` method for components,
     #                default in Rails development and test mode)
-    # * production (a non-blocking mode, default in Rails production mode)
-    DEVELOPMENT_MODE = :development
-    PRODUCTION_MODE = :production
+    # * false(a non-blocking mode, default in Rails production mode)
+    class_attribute :development_mode, default: false
 
-    class_attribute :mode, default: PRODUCTION_MODE
-
-    def initialize(component_class)
-      @component_class = component_class
+    def initialize(component)
+      @component = component
       @redefinition_lock = Mutex.new
       @rendered_templates = Set.new
     end
 
     def compiled?
-      CompileCache.compiled?(component_class)
-    end
-
-    def development?
-      self.class.mode == DEVELOPMENT_MODE
+      CompileCache.compiled?(@component)
     end
 
     def compile(raise_errors: false, force: false)
       return if compiled? && !force
-      return if component_class == ViewComponent::Base
+      return if @component == ViewComponent::Base
 
-      component_class.superclass.compile(raise_errors: raise_errors) if should_compile_superclass?
+      gather_templates
 
-      if template_errors.present?
-        raise TemplateError.new(template_errors) if raise_errors
-
-        return false
+      if self.class.development_mode && @templates.any?(&:requires_compiled_superclass?)
+        @component.superclass.compile(raise_errors: raise_errors)
       end
+
+      return if gather_template_errors(raise_errors).any?
 
       if raise_errors
-        component_class.validate_initialization_parameters!
-        component_class.validate_collection_parameter!
+        @component.validate_initialization_parameters!
+        @component.validate_collection_parameter!
       end
 
-      if has_inline_template?
-        template = component_class.inline_template
+      define_render_template_for
 
-        redefinition_lock.synchronize do
-          component_class.silence_redefinition_of_method("call")
-          # rubocop:disable Style/EvalWithLocation
-          component_class.class_eval <<-RUBY, template.path, template.lineno
-          def call
-            #{compiled_inline_template(template)}
-          end
-          RUBY
-          # rubocop:enable Style/EvalWithLocation
+      @component.register_default_slots
+      @component.build_i18n_backend
 
-          component_class.define_method(:"_call_#{safe_class_name}", component_class.instance_method(:call))
-
-          component_class.silence_redefinition_of_method("render_template_for")
-          component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def render_template_for(variant = nil, format = nil)
-            _call_#{safe_class_name}
-          end
-          RUBY
-        end
-      else
-        templates.each do |template|
-          method_name = call_method_name(template[:variant], template[:format])
-          @rendered_templates << [template[:variant], template[:format]]
-
-          redefinition_lock.synchronize do
-            component_class.silence_redefinition_of_method(method_name)
-            # rubocop:disable Style/EvalWithLocation
-            component_class.class_eval <<-RUBY, template[:path], 0
-            def #{method_name}
-              #{compiled_template(template[:path], template[:format])}
-            end
-            RUBY
-            # rubocop:enable Style/EvalWithLocation
-          end
-        end
-
-        define_render_template_for
-      end
-
-      component_class.registered_slots.each do |slot_name, config|
-        config[:default_method] = component_class.instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
-
-        component_class.registered_slots[slot_name] = config
-      end
-
-      component_class.build_i18n_backend
-
-      CompileCache.register(component_class)
+      CompileCache.register(@component)
     end
 
     def renders_template_for?(variant, format)
@@ -103,266 +51,181 @@ module ViewComponent
 
     private
 
-    attr_reader :component_class, :redefinition_lock
+    attr_reader :templates
 
     def define_render_template_for
-      branches = []
-      default_method_name = "_call_#{safe_class_name}"
+      @templates.each do |template|
+        @redefinition_lock.synchronize do
+          template.compile_to_component
+        end
+      end
 
-      templates.each do |template|
-        safe_name = +"_call"
-        variant_name = normalized_variant_name(template[:variant])
-        safe_name << "_#{variant_name}" if variant_name.present?
-        safe_name << "_#{template[:format]}" if template[:format].present? && template[:format] != :html
-        safe_name << "_#{safe_class_name}"
-
-        if safe_name == default_method_name
-          next
+      method_body =
+        if @templates.one?
+          @templates.first.safe_method_name
+        elsif (template = @templates.find(&:inline?))
+          template.safe_method_name
         else
-          component_class.define_method(
-            safe_name,
-            component_class.instance_method(
-              call_method_name(template[:variant], template[:format])
-            )
-          )
-        end
+          branches = []
 
-        format_conditional =
-          if template[:format] == :html
-            "(format == :html || format.nil?)"
-          else
-            "format == #{template[:format].inspect}"
+          @templates.each do |template|
+            conditional =
+              if template.inline_call?
+                "variant&.to_sym == #{template.variant.inspect}"
+              else
+                [
+                  template.default_format? ? "(format == #{ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT.inspect} || format.nil?)" : "format == #{template.format.inspect}",
+                  template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
+                ].join(" && ")
+              end
+
+            branches << [conditional, template.safe_method_name]
           end
 
-        variant_conditional =
-          if template[:variant].nil?
-            "variant.nil?"
-          else
-            "variant&.to_sym == :'#{template[:variant]}'"
+          out = branches.each_with_object(+"") do |(conditional, branch_body), memo|
+            memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{branch_body}\n"
           end
-
-        branches << ["#{variant_conditional} && #{format_conditional}", safe_name]
-      end
-
-      variants_from_inline_calls(inline_calls).compact.uniq.each do |variant|
-        safe_name = "_call_#{normalized_variant_name(variant)}_#{safe_class_name}"
-        component_class.define_method(safe_name, component_class.instance_method(call_method_name(variant)))
-
-        branches << ["variant&.to_sym == :'#{variant}'", safe_name]
-      end
-
-      component_class.define_method(:"#{default_method_name}", component_class.instance_method(:call))
-
-      # Just use default method name if no conditional branches or if there is a single
-      # conditional branch that just calls the default method_name
-      if branches.empty? || (branches.length == 1 && branches[0].last == default_method_name)
-        body = default_method_name
-      else
-        body = +""
-
-        branches.each do |conditional, method_body|
-          body << "#{(!body.present?) ? "if" : "elsif"} #{conditional}\n  #{method_body}\n"
+          out << "else\n  #{templates.find { _1.variant.nil? && _1.default_format? }.safe_method_name}\nend"
         end
 
-        body << "else\n  #{default_method_name}\nend"
-      end
-
-      redefinition_lock.synchronize do
-        component_class.silence_redefinition_of_method(:render_template_for)
-        component_class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      @redefinition_lock.synchronize do
+        @component.silence_redefinition_of_method(:render_template_for)
+        @component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def render_template_for(variant = nil, format = nil)
-          #{body}
+          #{method_body}
         end
         RUBY
       end
     end
 
-    def has_inline_template?
-      component_class.respond_to?(:inline_template) && component_class.inline_template.present?
+    def gather_template_errors(raise_errors)
+      errors = []
+
+      errors << "Couldn't find a template file or inline render method for #{@component}." if @templates.empty?
+
+      # We currently allow components to have both an inline call method and a template for a variant, with the
+      # inline call method overriding the template. We should aim to change this in v4 to instead
+      # raise an error.
+      @templates.reject(&:inline_call?)
+        .map { |template| [template.variant, template.format] }
+        .tally
+        .select { |_, count| count > 1 }
+        .each do |tally|
+        variant, this_format = tally.first
+
+        variant_string = " for variant `#{variant}`" if variant.present?
+
+        errors << "More than one #{this_format.upcase} template found#{variant_string} for #{@component}. "
+      end
+
+      default_template_types = @templates.each_with_object(Set.new) do |template, memo|
+        next if template.variant
+
+        memo << :template_file if !template.inline_call?
+        memo << :inline_render if template.inline_call? && template.defined_on_self?
+
+        memo
+      end
+
+      if default_template_types.length > 1
+        errors <<
+          "Template file and inline render method found for #{@component}. " \
+          "There can only be a template file or inline render method per component."
+      end
+
+      # If a template has inline calls, they can conflict with template files the component may use
+      # to render. This attempts to catch and raise that issue before run time. For example,
+      # `def render_mobile` would conflict with a sidecar template of `component.html+mobile.erb`
+      duplicate_template_file_and_inline_call_variants =
+        @templates.reject(&:inline_call?).map(&:variant) &
+        @templates.select { _1.inline_call? && _1.defined_on_self? }.map(&:variant)
+
+      unless duplicate_template_file_and_inline_call_variants.empty?
+        count = duplicate_template_file_and_inline_call_variants.count
+
+        errors <<
+          "Template #{"file".pluralize(count)} and inline render #{"method".pluralize(count)} " \
+          "found for #{"variant".pluralize(count)} " \
+          "#{duplicate_template_file_and_inline_call_variants.map { |v| "'#{v}'" }.to_sentence} " \
+          "in #{@component}. There can only be a template file or inline render method per variant."
+      end
+
+      @templates.select(&:variant).each_with_object(Hash.new { |h, k| h[k] = Set.new }) do |template, memo|
+        memo[template.normalized_variant_name] << template.variant
+        memo
+      end.each do |_, variant_names|
+        next unless variant_names.length > 1
+
+        errors << "Colliding templates #{variant_names.sort.map { |v| "'#{v}'" }.to_sentence} found in #{@component}."
+      end
+
+      raise TemplateError.new(errors) if errors.any? && raise_errors
+
+      errors
     end
 
-    def template_errors
-      @__vc_template_errors ||=
+    def gather_templates
+      @templates ||=
         begin
-          errors = []
+          templates = @component.sidecar_files(
+            ActionView::Template.template_handler_extensions
+          ).map do |path|
+            # Extract format and variant from template filename
+            this_format, variant =
+              File
+                .basename(path)     # "variants_component.html+mini.watch.erb"
+                .split(".")[1..-2]  # ["html+mini", "watch"]
+                .join(".")          # "html+mini.watch"
+                .split("+")         # ["html", "mini.watch"]
+                .map(&:to_sym)      # [:html, :"mini.watch"]
 
-          if (templates + inline_calls).empty? && !has_inline_template?
-            errors << "Couldn't find a template file or inline render method for #{component_class}."
+            out = Template.new(
+              component: @component,
+              type: :file,
+              path: path,
+              lineno: 0,
+              extension: path.split(".").last,
+              this_format: this_format,
+              variant: variant
+            )
+
+            # TODO: We should consider inlining the HTML output safety logic into the compiled render_template_for
+            # instead of this indirect approach
+            @rendered_templates << [out.variant, out.this_format]
+
+            out
+          end
+
+          component_instance_methods_on_self = @component.instance_methods(false)
+
+          (
+            @component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } - @component.included_modules
+          ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }
+            .uniq
+            .each do |method_name|
+              templates << Template.new(
+                component: @component,
+                type: :inline_call,
+                this_format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT,
+                variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
+                method_name: method_name,
+                defined_on_self: component_instance_methods_on_self.include?(method_name)
+              )
+            end
+
+          if @component.inline_template.present?
+            templates << Template.new(
+              component: @component,
+              type: :inline,
+              path: @component.inline_template.path,
+              lineno: @component.inline_template.lineno,
+              source: @component.inline_template.source.dup,
+              extension: @component.inline_template.language
+            )
           end
 
           templates
-            .map { |template| [template[:variant], template[:format]] }
-            .tally
-            .select { |_, count| count > 1 }
-            .each do |tally|
-            variant, this_format = tally[0]
-
-            variant_string = " for variant `#{variant}`" if variant.present?
-
-            errors << "More than one #{this_format.upcase} template found#{variant_string} for #{component_class}. "
-          end
-
-          if templates.find { |template| template[:variant].nil? } && inline_calls_defined_on_self.include?(:call)
-            errors <<
-              "Template file and inline render method found for #{component_class}. " \
-              "There can only be a template file or inline render method per component."
-          end
-
-          duplicate_template_file_and_inline_variant_calls =
-            templates.pluck(:variant) & variants_from_inline_calls(inline_calls_defined_on_self)
-
-          unless duplicate_template_file_and_inline_variant_calls.empty?
-            count = duplicate_template_file_and_inline_variant_calls.count
-
-            errors <<
-              "Template #{"file".pluralize(count)} and inline render #{"method".pluralize(count)} " \
-              "found for #{"variant".pluralize(count)} " \
-              "#{duplicate_template_file_and_inline_variant_calls.map { |v| "'#{v}'" }.to_sentence} " \
-              "in #{component_class}. " \
-              "There can only be a template file or inline render method per variant."
-          end
-
-          uniq_variants = variants.compact.uniq
-          normalized_variants = uniq_variants.map { |variant| normalized_variant_name(variant) }
-
-          colliding_variants = uniq_variants.select do |variant|
-            normalized_variants.count(normalized_variant_name(variant)) > 1
-          end
-
-          unless colliding_variants.empty?
-            errors <<
-              "Colliding templates #{colliding_variants.sort.map { |v| "'#{v}'" }.to_sentence} " \
-              "found in #{component_class}."
-          end
-
-          errors
         end
-    end
-
-    def templates
-      @templates ||=
-        begin
-          extensions = ActionView::Template.template_handler_extensions
-
-          component_class.sidecar_files(extensions).each_with_object([]) do |path, memo|
-            pieces = File.basename(path).split(".")
-            memo << {
-              path: path,
-              format: pieces[1..-2].join(".").split("+").first&.to_sym,
-              variant: pieces[1..-2].join(".").split("+").second&.to_sym,
-              handler: pieces.last
-            }
-          end
-        end
-    end
-
-    def inline_calls
-      @inline_calls ||=
-        begin
-          # Fetch only ViewComponent ancestor classes to limit the scope of
-          # finding inline calls
-          view_component_ancestors =
-            (
-              component_class.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base } -
-              component_class.included_modules
-            )
-
-          view_component_ancestors.flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }.uniq
-        end
-    end
-
-    def inline_calls_defined_on_self
-      @inline_calls_defined_on_self ||= component_class.instance_methods(false).grep(/^call(_|$)/)
-    end
-
-    def formats
-      @__vc_variants = (templates.map { |template| template[:format] }).compact.uniq
-    end
-
-    def variants
-      @__vc_variants = (
-        templates.map { |template| template[:variant] } + variants_from_inline_calls(inline_calls)
-      ).compact.uniq
-    end
-
-    def variants_from_inline_calls(calls)
-      calls.reject { |call| call == :call }.map do |variant_call|
-        variant_call.to_s.sub("call_", "").to_sym
-      end
-    end
-
-    def compiled_inline_template(template)
-      handler = ActionView::Template.handler_for_extension(template.language)
-      template = template.source.dup
-
-      compile_template(template, handler)
-    end
-
-    def compiled_template(file_path, format)
-      handler = ActionView::Template.handler_for_extension(File.extname(file_path).delete("."))
-      template = File.read(file_path)
-
-      compile_template(template, handler, file_path, format)
-    end
-
-    def compile_template(template, handler, identifier = component_class.source_location, format = :html)
-      template.rstrip! if component_class.strip_trailing_whitespace?
-
-      short_identifier = defined?(Rails.root) ? identifier.sub("#{Rails.root}/", "") : identifier
-      type = ActionView::Template::Types[format]
-
-      if handler.method(:call).parameters.length > 1
-        handler.call(
-          OpenStruct.new(
-            format: format,
-            identifier: identifier,
-            short_identifier: short_identifier,
-            type: type
-          ),
-          template
-        )
-      # :nocov:
-      else
-        handler.call(
-          OpenStruct.new(
-            source: template,
-            identifier: identifier,
-            type: type
-          )
-        )
-      end
-      # :nocov:
-    end
-
-    def call_method_name(variant, format = nil)
-      out = +"call"
-
-      if variant.present?
-        out << "_#{normalized_variant_name(variant)}"
-      end
-
-      if format.present? && format != :html && formats.length > 1
-        out << "_#{format}"
-      end
-
-      out
-    end
-
-    def normalized_variant_name(variant)
-      variant.to_s.gsub("-", "__").gsub(".", "___")
-    end
-
-    def safe_class_name
-      @safe_class_name ||= component_class.name.underscore.gsub("/", "__")
-    end
-
-    def should_compile_superclass?
-      development? && templates.empty? && !has_inline_template? && !call_defined?
-    end
-
-    def call_defined?
-      component_class.instance_methods(false).include?(:call) ||
-        component_class.private_instance_methods(false).include?(:call)
     end
   end
 end
