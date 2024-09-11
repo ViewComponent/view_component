@@ -33,7 +33,7 @@ module ViewComponent
         else
           out = +"call"
           out << "_#{normalized_variant_name}" if @variant.present?
-          out << "_#{@this_format}" if @this_format.present? && @this_format != ViewComponent::Base::DEFAULT_FORMAT
+          out << "_#{@this_format}" if @this_format.present? && @this_format != ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
           out
         end
     end
@@ -69,7 +69,7 @@ module ViewComponent
     end
 
     def default_format?
-      @this_format == ViewComponent::Base::DEFAULT_FORMAT
+      @this_format == ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
     end
 
     def format

@@ -70,7 +70,7 @@ module ViewComponent
                 "variant&.to_sym == #{template.variant.inspect}"
               else
                 [
-                  template.default_format? ? "(format == #{ViewComponent::Base::DEFAULT_FORMAT.inspect} || format.nil?)" : "format == #{template.format.inspect}",
+                  template.default_format? ? "(format == #{ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT.inspect} || format.nil?)" : "format == #{template.format.inspect}",
                   template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
                 ].join(" && ")
               end
@@ -200,7 +200,7 @@ module ViewComponent
               templates << Template.new(
                 component: @component,
                 type: :inline_call,
-                this_format: ViewComponent::Base::DEFAULT_FORMAT,
+                this_format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT,
                 variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
                 method_name: method_name,
                 defined_on_self: component_instance_methods_on_self.include?(method_name)

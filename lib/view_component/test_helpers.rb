@@ -205,7 +205,7 @@ module ViewComponent
     # @param full_path [String] The path to set for the current request.
     # @param host [String] The host to set for the current request.
     # @param method [String] The request method to set for the current request.
-    def with_request_url(full_path, host: nil, method: nil, format: ViewComponent::Base::DEFAULT_FORMAT)
+    def with_request_url(full_path, host: nil, method: nil, format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT)
       old_request_host = vc_test_request.host
       old_request_method = vc_test_request.request_method
       old_request_path_info = vc_test_request.path_info
