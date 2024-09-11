@@ -118,7 +118,9 @@ module ViewComponent
         errors << "More than one #{this_format.upcase} template found#{variant_string} for #{@component}. "
       end
 
-      default_template_types = @templates.reject(&:variant).each_with_object(Set.new) do |template, memo|
+      default_template_types = @templates.each_with_object(Set.new) do |template, memo|
+        next if template.variant
+
         memo << :template_file if !template.inline_call?
         memo << :inline_render if template.inline_call? && template.defined_on_self?
 
