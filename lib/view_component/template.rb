@@ -1,3 +1,5 @@
+require "ostruct"
+
 module ViewComponent
   class Template
     attr_reader :variant, :this_format, :type
