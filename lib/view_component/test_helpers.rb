@@ -155,7 +155,7 @@ module ViewComponent
     # end
     # ```
     #
-    # @param klass [ActionController::Base] The controller to be used.
+    # @param klass [Class<ActionController::Base>] The controller to be used.
     def with_controller_class(klass)
       old_controller = defined?(@vc_test_controller) && @vc_test_controller
 
