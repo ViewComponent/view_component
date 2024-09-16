@@ -42,6 +42,10 @@ nav_order: 5
 
     *Petrik de Heus*
 
+* Fixed type declaration for `ViewComponent::TestHelpers.with_controller_class` parameter.
+
+    *Graham Rogers*
+
 ## 3.14.0
 
 * Defer to built-in caching for language environment setup, rather than manually using `actions/cache` in CI.
