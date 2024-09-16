@@ -107,13 +107,13 @@ module ViewComponent
 
       if handler.method(:call).parameters.length > 1
         handler.call(
-          OpenStruct.new(format: @this_format, identifier: @path, short_identifier: short_identifier, type: type),
+          Struct.new(format: @this_format, identifier: @path, short_identifier: short_identifier, type: type),
           this_source
         )
       # :nocov:
       # TODO: Remove in v4
       else
-        handler.call(OpenStruct.new(source: this_source, identifier: @path, type: type))
+        handler.call(Struct.new(source: this_source, identifier: @path, type: type))
       end
       # :nocov:
     end
