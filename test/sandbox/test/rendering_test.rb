@@ -10,7 +10,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_inline_allocations
-    assert_allocations("3.3" => 129, "3.2" => 129, "3.1" => 129, "3.0" => 129) do
+    assert_allocations("3.3" => 116, "3.2" => 115, "3.1" => 115, "3.0" => 125) do
       render_inline(MyComponent.new)
     end
 
