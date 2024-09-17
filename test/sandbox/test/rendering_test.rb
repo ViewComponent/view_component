@@ -10,10 +10,12 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_inline_allocations
-    assert_allocations("3.4.0" => 107, "3.3.5" => 116, "3.3.0" => 129, "3.2.5" => 115, "3.1.6" => 115, "3.0.7" => 125) do
-      ViewComponent::CompileCache.cache.delete(MyComponent)
-      MyComponent.ensure_compiled
+    # Stabilize compilation status ahead of testing allocations to simulate rendering
+    # performance with compiled component
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+    MyComponent.ensure_compiled
 
+    assert_allocations("3.4.0" => 107, "3.3.5" => 116, "3.3.0" => 129, "3.2.5" => 115, "3.1.6" => 115, "3.0.7" => 125) do
       render_inline(MyComponent.new)
     end
 
