@@ -192,7 +192,7 @@ require "allocation_stats"
 def assert_allocations(count_map, &block)
   trace = AllocationStats.trace(&block)
   total = trace.allocations.all.size
-  count = count_map[RUBY_VERSION.split(".").take(2).join(".")]
+  count = count_map[RUBY_VERSION]
 
   assert_equal count, total, "Expected #{count} allocations, got #{total} allocations for Ruby #{RUBY_VERSION}"
 end
