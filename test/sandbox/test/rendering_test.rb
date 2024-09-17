@@ -725,34 +725,28 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_component_with_invalid_parameter_names
-    old_cache = ViewComponent::CompileCache.cache
-    ViewComponent::CompileCache.cache = Set.new
+    with_new_cache do
+      exception =
+        assert_raises ViewComponent::ReservedParameterError do
+          InvalidParametersComponent.compile(raise_errors: true)
+        end
 
-    exception =
-      assert_raises ViewComponent::ReservedParameterError do
-        InvalidParametersComponent.compile(raise_errors: true)
-      end
-
-    assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
-  ensure
-    ViewComponent::CompileCache.cache = old_cache
+      assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
+    end
   end
 
   def test_component_with_invalid_named_parameter_names
-    old_cache = ViewComponent::CompileCache.cache
-    ViewComponent::CompileCache.cache = Set.new
+    with_new_cache do
+      exception =
+        assert_raises ViewComponent::ReservedParameterError do
+          InvalidNamedParametersComponent.compile(raise_errors: true)
+        end
 
-    exception =
-      assert_raises ViewComponent::ReservedParameterError do
-        InvalidNamedParametersComponent.compile(raise_errors: true)
-      end
-
-    assert_match(
-      /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
-      exception.message
-    )
-  ensure
-    ViewComponent::CompileCache.cache = old_cache
+      assert_match(
+        /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
+        exception.message
+      )
+    end
   end
 
   def test_collection_component_with_trailing_comma_attr_reader
