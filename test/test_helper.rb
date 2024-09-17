@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "allocation_stats"
 require "simplecov"
 require "simplecov-console"
 require "rails/version"
@@ -187,7 +188,6 @@ def capture_warnings(&block)
     end
   end
 end
-require "allocation_stats"
 
 def assert_allocations(count_map, &block)
   trace = AllocationStats.trace(&block)
