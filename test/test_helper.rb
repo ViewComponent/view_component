@@ -187,3 +187,12 @@ def capture_warnings(&block)
     end
   end
 end
+require "allocation_stats"
+
+def assert_allocations(count_map, &block)
+  trace = AllocationStats.trace(&block)
+  total = trace.allocations.all.size
+  count = count_map[RUBY_VERSION.split(".").take(2).join(".")]
+
+  assert_equal count, total, "Expected #{count} allocations, got #{total} allocations"
+end

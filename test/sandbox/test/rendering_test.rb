@@ -9,6 +9,14 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
+  def test_render_inline_allocations
+    assert_allocations("3.3" => 129, "3.2" => 129, "3.1" => 129, "3.0" => 129) do
+      render_inline(MyComponent.new)
+    end
+
+    assert_selector("div", text: "hello,world!")
+  end
+
   def test_render_in_view_context
     render_in_view_context { render(MyComponent.new) }
 
