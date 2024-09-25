@@ -27,20 +27,20 @@ module ViewComponent
       gather_templates
 
       if self.class.development_mode && @templates.any?(&:requires_compiled_superclass?)
-        @component.superclass.compile(raise_errors: raise_errors)
+        @component.superclass.__vc_compile(raise_errors: raise_errors)
       end
 
       return if gather_template_errors(raise_errors).any?
 
       if raise_errors
-        @component.validate_initialization_parameters!
-        @component.validate_collection_parameter!
+        @component.__vc_validate_initialization_parameters!
+        @component.__vc_validate_collection_parameter!
       end
 
       define_render_template_for
 
-      @component.register_default_slots
-      @component.build_i18n_backend
+      @component.__vc_register_default_slots
+      @component.__vc_build_i18n_backend
 
       CompileCache.register(@component)
     end
