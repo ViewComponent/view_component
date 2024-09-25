@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add basic internal testing for memory allocations.
+
+    *Joel Hawksley*
+
 * Add support for request formats.
 
     *Joel Hawksley*
