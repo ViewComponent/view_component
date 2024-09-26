@@ -79,12 +79,14 @@ class RenderingTest < ViewComponent::TestCase
   def test_render_without_template
     render_inline(InlineComponent.new)
 
+    assert_predicate InlineComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
   def test_render_child_without_template
     render_inline(InlineChildComponent.new)
 
+    assert_predicate InlineChildComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
@@ -205,6 +207,7 @@ class RenderingTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantComponent.new)
 
+      assert_predicate InlineVariantComponent, :__vc_compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
   end
@@ -213,6 +216,7 @@ class RenderingTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantChildComponent.new)
 
+      assert_predicate InlineVariantChildComponent, :__vc_compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
   end
@@ -775,6 +779,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_inherited_inline_component_inherits_inline_method
     render_inline(InlineInheritedComponent.new)
 
+    assert_predicate InlineInheritedComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
