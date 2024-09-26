@@ -169,12 +169,12 @@ module ViewComponent
       end
 
       # :nocov:
-      if RUBY_VERSION < "3.0.0"
-        ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 3.0.0", "ViewComponent 4.0 will remove support for Ruby versions < 3.0.0 ")
+      if RUBY_VERSION < "3.2.0"
+        ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 3.2.0", "ViewComponent v4 will remove support for Ruby versions < 3.2.0 no earlier than April 1, 2025")
       end
 
-      if Rails.version.to_f < 6.1
-        ViewComponent::Deprecation.deprecation_warning("Support for Rails versions < 6.1", "ViewComponent 4.0 will remove support for Rails versions < 6.1 ")
+      if Rails.version.to_f < 7.1
+        ViewComponent::Deprecation.deprecation_warning("Support for Rails versions < 7.1", "ViewComponent v4 will remove support for Rails versions < 7.1 no earlier than April 1, 2025")
       end
       # :nocov:
 
