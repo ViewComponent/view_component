@@ -10,8 +10,6 @@ nav_order: 6
 
 ViewComponent supports all actively supported versions of [Ruby](https://endoflife.date/ruby) (>= 3.2) and [Ruby on Rails](https://endoflife.date/rails) (>= 7.1).
 
-While ViewComponent may still work with End-of-Life versions of Ruby and Ruby, they're not actively supported and no longer tested. We will still accept patches on a case-by-case basis to support older Ruby & Rails versions based on the complexity and maintenance burden.
-
 ## Template languages
 
 ViewComponent is tested against ERB, Haml, and Slim, but it should support most Rails template handlers.
