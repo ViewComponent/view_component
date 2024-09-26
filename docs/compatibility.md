@@ -14,21 +14,6 @@ ViewComponent supports all actively supported versions of [Ruby](https://endofli
 
 ViewComponent is tested against ERB, Haml, and Slim, but it should support most Rails template handlers.
 
-## Disabling the render monkey patch (Rails < 6.1)
-
-Since 2.13.0
-{: .label }
-
-To [avoid conflicts](https://github.com/viewcomponent/view_component/issues/288) between ViewComponent and other gems that also monkey patch the `render` method, it's possible to configure ViewComponent to not include the render monkey patch:
-
-`config.view_component.render_monkey_patch_enabled = false # defaults to true`
-
-With the monkey patch disabled, use `render_component` (or  `render_component_to_string`) instead:
-
-```erb
-<%= render_component Component.new(message: "bar") %>
-```
-
 ## Bridgetown (Static Site Generator)
 
 [Bridgetown](https://www.bridgetownrb.com/) supports ViewComponent via an experimental shim provided by the [bridgetown-view-component gem](https://github.com/bridgetownrb/bridgetown-view-component). More information available [here](https://www.bridgetownrb.com/docs/components/ruby#need-compatibility-with-rails-try-viewcomponent-experimental).

@@ -15,7 +15,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    assert_allocations("3.4.0" => 107, "3.3.5" => 116, "3.3.0" => 129, "3.2.5" => 115, "3.1.6" => 115, "3.0.7" => 125) do
+    assert_allocations("3.4.0" => 107, "3.3.5" => 116, "3.3.0" => 125, "3.2.5" => 115) do
       render_inline(MyComponent.new)
     end
 
@@ -117,8 +117,6 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_renders_haml_with_html_formatted_slot
-    skip if Rails::VERSION::STRING < "6.1"
-
     render_inline(HamlHtmlFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted one")
@@ -269,15 +267,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_helper_method_within_nested_component
     render_inline(ContainerComponent.new)
-
     assert_text("Hello helper method")
-  end
-
-  def test_renders_helper_method_within_nested_component_with_disabled_monkey_patch
-    with_render_monkey_patch_config(false) do
-      render_inline(ContainerComponent.new)
-      assert_text("Hello helper method")
-    end
   end
 
   def test_renders_path_helper
