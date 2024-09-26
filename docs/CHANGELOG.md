@@ -20,8 +20,6 @@ nav_order: 5
 
     *Joel Hawksley*
 
-    *Joel Hawksley*
-
 * Add basic internal testing for memory allocations.
 
     *Joel Hawksley*
