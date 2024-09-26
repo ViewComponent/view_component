@@ -8,7 +8,7 @@ nav_order: 6
 
 ## Ruby & Rails
 
-ViewComponent supports all actively supported versions of [Ruby](https://endoflife.date/ruby) (>= 3.2) and [Ruby on Rails](https://endoflife.date/rails) (>= 7.1).
+ViewComponent supports all actively supported versions of [Ruby](https://endoflife.date/ruby) (>= 3.2) and [Ruby on Rails](https://endoflife.date/rails) (>= 7.1). Changes to the minimum Ruby and Rails versions will be made in major releases only.
 
 ## Template languages
 
