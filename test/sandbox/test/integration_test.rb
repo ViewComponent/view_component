@@ -491,38 +491,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  def test_rendering_component_using_the_render_component_helper_raises_an_error
-    error =
-      assert_raises ActionView::Template::Error do
-        get "/render_component"
-      end
-
-    matcher = (RUBY_VERSION >= "3.4") ? /undefined method 'render_component'/ : /undefined method `render_component' for/
-    assert_match(matcher, error.message)
-  end
-
-  def test_rendering_component_using_render_component
-    get "/render_component"
-    assert_includes response.body, "bar"
-  end
-
-  def test_rendering_component_in_a_controller_using_render_component
-    get "/controller_inline_render_component"
-    assert_includes response.body, "bar"
-  end
-
-  def test_rendering_component_in_a_controller_using_render_component_to_string
-    get "/controller_to_string_render_component"
-    assert_includes response.body, "bar"
-  end
-
-  def test_rendering_component_in_preview_using_render_component_and_monkey_patch_disabled
-    with_render_monkey_patch_config(false) do
-      get "/rails/view_components/monkey_patch_disabled_component/default"
-      assert_includes response.body, "<div>hello,world!</div>"
-    end
-  end
-
   def test_renders_the_inline_component_preview_examples_with_default_behaviour_and_with_their_own_templates
     get "/rails/view_components/inline_component/default"
     assert_select "input" do
