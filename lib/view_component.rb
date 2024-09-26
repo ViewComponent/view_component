@@ -22,8 +22,8 @@ module ViewComponent
   autoload :SystemTestCase
   autoload :Translatable
 
-  if defined?(Rails) && Rails.version < "7.0"
-    Kernel.warn("ViewComponent v4 will drop support for Rails < 7.0 in 2025.")
+  if defined?(Rails) && Rails.version < "7.1"
+    Kernel.warn("ViewComponent v4 will drop support for Rails < 7.1 no earlier than April 1, 2025.")
   end
 end
 

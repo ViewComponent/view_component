@@ -26,7 +26,7 @@ nav_order: 5
 
     *Joel Hawksley*
 
-* Warn if using Ruby < 3.1 or Rails < 7.0, which will not be supported by ViewComponent v4.
+* Warn if using Ruby < 3.2 or Rails < 7.1, which will not be supported by ViewComponent v4.
 
     *Joel Hawksley*
 
