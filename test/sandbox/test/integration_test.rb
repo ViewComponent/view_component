@@ -14,15 +14,13 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "Foo\n  bar")
   end
 
-  if Rails.version.to_f >= 6.1
-    def test_rendering_component_with_template_annotations_enabled
-      get "/"
-      assert_response :success
+  def test_rendering_component_with_template_annotations_enabled
+    get "/"
+    assert_response :success
 
-      assert_includes response.body, "BEGIN app/components/erb_component.html.erb"
+    assert_includes response.body, "BEGIN app/components/erb_component.html.erb"
 
-      assert_select("div", "Foo\n  bar")
-    end
+    assert_select("div", "Foo\n  bar")
   end
 
   def test_rendering_component_in_a_controller
@@ -493,39 +491,35 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  if Rails.version.to_f >= 6.1
-    def test_rendering_component_using_the_render_component_helper_raises_an_error
-      error =
-        assert_raises ActionView::Template::Error do
-          get "/render_component"
-        end
+  def test_rendering_component_using_the_render_component_helper_raises_an_error
+    error =
+      assert_raises ActionView::Template::Error do
+        get "/render_component"
+      end
 
-      matcher = (RUBY_VERSION >= "3.4") ? /undefined method 'render_component'/ : /undefined method `render_component' for/
-      assert_match(matcher, error.message)
-    end
+    matcher = (RUBY_VERSION >= "3.4") ? /undefined method 'render_component'/ : /undefined method `render_component' for/
+    assert_match(matcher, error.message)
   end
 
-  if Rails.version.to_f < 6.1
-    def test_rendering_component_using_render_component
-      get "/render_component"
-      assert_includes response.body, "bar"
-    end
+  def test_rendering_component_using_render_component
+    get "/render_component"
+    assert_includes response.body, "bar"
+  end
 
-    def test_rendering_component_in_a_controller_using_render_component
-      get "/controller_inline_render_component"
-      assert_includes response.body, "bar"
-    end
+  def test_rendering_component_in_a_controller_using_render_component
+    get "/controller_inline_render_component"
+    assert_includes response.body, "bar"
+  end
 
-    def test_rendering_component_in_a_controller_using_render_component_to_string
-      get "/controller_to_string_render_component"
-      assert_includes response.body, "bar"
-    end
+  def test_rendering_component_in_a_controller_using_render_component_to_string
+    get "/controller_to_string_render_component"
+    assert_includes response.body, "bar"
+  end
 
-    def test_rendering_component_in_preview_using_render_component_and_monkey_patch_disabled
-      with_render_monkey_patch_config(false) do
-        get "/rails/view_components/monkey_patch_disabled_component/default"
-        assert_includes response.body, "<div>hello,world!</div>"
-      end
+  def test_rendering_component_in_preview_using_render_component_and_monkey_patch_disabled
+    with_render_monkey_patch_config(false) do
+      get "/rails/view_components/monkey_patch_disabled_component/default"
+      assert_includes response.body, "<div>hello,world!</div>"
     end
   end
 
@@ -617,8 +611,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_an_inline_component_preview_using_a_haml_template
-    skip if Rails::VERSION::STRING < "6.1"
-
     get "/rails/view_components/inline_component/with_haml"
     assert_select "h1", "Some HAML here"
     assert_select "input[name=?]", "name"
@@ -631,8 +623,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_mix_of_haml_and_erb
-    skip if Rails::VERSION::STRING < "6.1"
-
     get "/nested_haml"
     assert_response :success
     assert_select ".foo > .bar > .baz > .quux > .haml-div"
@@ -647,8 +637,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_preview_template_using_haml_params_from_url_custom_template_and_locals
-    skip if Rails::VERSION::STRING < "6.1"
-
     get "/rails/view_components/inline_component/with_several_options?form_title=Title from params"
 
     assert_select "form" do
