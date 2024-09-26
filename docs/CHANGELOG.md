@@ -20,6 +20,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* BREAKING: Remove `render_component` and `render` monkey patch configured with `render_monkey_patch_enabled`.
+
+    *Joel Hawksley*
+
 * Add basic internal testing for memory allocations.
 
     *Joel Hawksley*

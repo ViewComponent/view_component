@@ -365,13 +365,6 @@ module ViewComponent
     # configured on a per-test basis using `with_controller_class`.
     #
 
-    # Set if render monkey patches should be included or not in Rails <6.1:
-    #
-    # ```ruby
-    # config.view_component.render_monkey_patch_enabled = false
-    # ```
-    #
-
     # Path for component files
     #
     # ```ruby
