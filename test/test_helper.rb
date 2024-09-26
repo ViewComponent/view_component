@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "allocation_stats"
 require "simplecov"
 require "simplecov-console"
 require "rails/version"
@@ -186,4 +187,12 @@ def capture_warnings(&block)
       block.call
     end
   end
+end
+
+def assert_allocations(count_map, &block)
+  trace = AllocationStats.trace(&block)
+  total = trace.allocations.all.size
+  count = count_map[RUBY_VERSION]
+
+  assert_equal count, total, "Expected #{count} allocations, got #{total} allocations for Ruby #{RUBY_VERSION}"
 end

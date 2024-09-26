@@ -76,6 +76,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    allocation_stats (0.1.5)
     ansi (1.5.0)
     appraisal (2.5.0)
       bundler
@@ -330,6 +331,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  allocation_stats (~> 0.1.5)
   appraisal (~> 2.4)
   benchmark-ips (~> 2.13.0)
   better_html

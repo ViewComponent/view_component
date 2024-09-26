@@ -9,6 +9,19 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
+  def test_render_inline_allocations
+    # Stabilize compilation status ahead of testing allocations to simulate rendering
+    # performance with compiled component
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+    MyComponent.__vc_ensure_compiled
+
+    assert_allocations("3.4.0" => 107, "3.3.5" => 116, "3.3.0" => 129, "3.2.5" => 115, "3.1.6" => 115, "3.0.7" => 125) do
+      render_inline(MyComponent.new)
+    end
+
+    assert_selector("div", text: "hello,world!")
+  end
+
   def test_render_in_view_context
     render_in_view_context { render(MyComponent.new) }
 
@@ -717,34 +730,28 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_component_with_invalid_parameter_names
-    old_cache = ViewComponent::CompileCache.cache
-    ViewComponent::CompileCache.cache = Set.new
+    with_new_cache do
+      exception =
+        assert_raises ViewComponent::ReservedParameterError do
+          InvalidParametersComponent.__vc_compile(raise_errors: true)
+        end
 
-    exception =
-      assert_raises ViewComponent::ReservedParameterError do
-        InvalidParametersComponent.__vc_compile(raise_errors: true)
-      end
-
-    assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
-  ensure
-    ViewComponent::CompileCache.cache = old_cache
+      assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
+    end
   end
 
   def test_component_with_invalid_named_parameter_names
-    old_cache = ViewComponent::CompileCache.cache
-    ViewComponent::CompileCache.cache = Set.new
+    with_new_cache do
+      exception =
+        assert_raises ViewComponent::ReservedParameterError do
+          InvalidNamedParametersComponent.__vc_compile(raise_errors: true)
+        end
 
-    exception =
-      assert_raises ViewComponent::ReservedParameterError do
-        InvalidNamedParametersComponent.__vc_compile(raise_errors: true)
-      end
-
-    assert_match(
-      /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
-      exception.message
-    )
-  ensure
-    ViewComponent::CompileCache.cache = old_cache
+      assert_match(
+        /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
+        exception.message
+      )
+    end
   end
 
   def test_collection_component_with_trailing_comma_attr_reader
