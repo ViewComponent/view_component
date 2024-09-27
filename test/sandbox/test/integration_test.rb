@@ -511,25 +511,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_does_not_render_additional_newline
-    skip unless Rails::VERSION::MAJOR >= 7
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
       get "/rails/view_components/display_inline_component/with_newline"
       assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   ensure
-    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false
   end
 
   def test_does_not_render_additional_newline_with_render_in
-    skip unless Rails::VERSION::MAJOR >= 7
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
       get "/rails/view_components/display_inline_component/with_newline_render_in"
       assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   ensure
-    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false
   end
 
   # This test documents a bug that reports an incompatibility with the turbo-rails gem's `turbo_stream` helper.
