@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `ostruct` to gemspec file to suppress stdlib removal warning.
+
+  *Jonathan Underwood*
+
 ## 3.15.0
 
 * Add basic internal testing for memory allocations.
