@@ -574,6 +574,15 @@ module ViewComponent
         @__vc_compiler ||= Compiler.new(self)
       end
 
+      # @private
+      def identifier
+        # :nocov:
+        Kernel.warn("WARNING: The #{self.class}.identifier is undocumented and was meant for internal framework usage only. As it is no longer used by the framework it will be removed in a coming non-breaking ViewComponent release.")
+
+        source_location
+        # :nocov:
+      end
+
       # Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
       #
       # ```ruby
