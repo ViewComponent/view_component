@@ -348,7 +348,7 @@ DEPENDENCIES
   net-imap
   net-pop
   net-smtp
-  ostruct (~> 0.6)
+  ostruct
   pry (~> 0.13)
   puma (~> 6)
   rails (~> 7.0.0)
