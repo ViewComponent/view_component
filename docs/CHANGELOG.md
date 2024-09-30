@@ -12,7 +12,7 @@ nav_order: 5
 
 * Add `ostruct` to gemspec file to suppress stdlib removal warning.
 
-  *Jonathan Underwood*
+    *Jonathan Underwood*
 
 ## 3.15.0
 
