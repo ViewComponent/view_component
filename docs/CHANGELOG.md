@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Re-add `@private`, undocumented `.identifier` method that was only meant for internal framework use but was used by some downstream consumers. This method will be removed in a coming minor release.
+
+    *Joel Hawksley*
+
 ## 3.15.0
 
 * Add basic internal testing for memory allocations.
