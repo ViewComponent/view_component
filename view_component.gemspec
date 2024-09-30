@@ -45,7 +45,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "jbuilder", "~> 2"
   spec.add_development_dependency "m", "~> 1"
   spec.add_development_dependency "minitest", "~> 5.18"
-  spec.add_development_dependency "ostruct", "~> 0.6"
   spec.add_development_dependency "pry", "~> 0.13"
   spec.add_development_dependency "puma", "~> 6"
   spec.add_development_dependency "rake", "~> 13.0"
@@ -66,5 +65,9 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency "net-imap"
     spec.add_development_dependency "net-pop"
     spec.add_development_dependency "net-smtp"
+  end
+
+  if RUBY_VERSION >= "3.3"
+    spec.add_development_dependency "ostruct"
   end
 end
