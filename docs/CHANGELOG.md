@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.16.0
+
 * Add template information to multiple template error messages.
 
     *Joel Hawksley*
