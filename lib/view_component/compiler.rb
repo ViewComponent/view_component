@@ -159,7 +159,7 @@ module ViewComponent
         errors << "Colliding templates #{variant_names.sort.map { |v| "'#{v}'" }.to_sentence} found in #{@component}."
       end
 
-      raise TemplateError.new(errors) if errors.any? && raise_errors
+      raise TemplateError.new(errors, @templates) if errors.any? && raise_errors
 
       errors
     end
