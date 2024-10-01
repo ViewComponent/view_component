@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add template information to multiple template error messages.
+
+    *Joel Hawksley*
+
 * Add `ostruct` to gemspec file to suppress stdlib removal warning.
 
     *Jonathan Underwood*
