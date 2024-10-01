@@ -22,7 +22,7 @@ module ViewComponent
 
       if templates
         message << "\n"
-        message << "Templates:"
+        message << "Templates:\n"
         message << templates.map(&:inspect).join("\n")
       end
 
