@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `ostruct` to gemspec file to suppress stdlib removal warning.
+
+    *Jonathan Underwood*
+
 ## 3.15.1
 
 * Re-add `@private`, undocumented `.identifier` method that was only meant for internal framework use but was used by some downstream consumers. This method will be removed in a coming minor release.

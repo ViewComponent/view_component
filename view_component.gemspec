@@ -66,4 +66,8 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency "net-pop"
     spec.add_development_dependency "net-smtp"
   end
+
+  if RUBY_VERSION >= "3.3"
+    spec.add_development_dependency "ostruct"
+  end
 end
