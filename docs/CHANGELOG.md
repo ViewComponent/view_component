@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add typescript support to stimulus generator + fix bug not adding stimulus controller to erb when stimulus is activated by default.
+
+    *Denis Pasin*
+
 ## 3.16.0
 
 * Add template information to multiple template error messages.
