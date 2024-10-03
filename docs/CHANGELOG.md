@@ -10,9 +10,17 @@ nav_order: 5
 
 ## main
 
-* Fix bug where implicit locales in component filenames throw a `NameError`
+* Fix bug where implicit locales in component filenames threw a `NameError`.
 
   *Chloe Fons*
+
+* Fix bug where stimulus controller was not added to ERB when stimulus was activated by default.
+
+    *Denis Pasin*
+
+* Add typescript support to stimulus generator.
+
+    *Denis Pasin*
 
 ## 3.16.0
 

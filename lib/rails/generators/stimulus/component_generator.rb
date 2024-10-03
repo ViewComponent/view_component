@@ -9,9 +9,10 @@ module Stimulus
 
       source_root File.expand_path("templates", __dir__)
       class_option :sidecar, type: :boolean, default: false
+      class_option :typescript, type: :boolean, default: false
 
       def create_stimulus_controller
-        template "component_controller.js", destination
+        template "component_controller.#{filetype}", destination
       end
 
       def stimulus_module
@@ -22,11 +23,15 @@ module Stimulus
 
       private
 
+      def filetype
+        typescript? ? "ts" : "js"
+      end
+
       def destination
         if sidecar?
-          File.join(component_path, class_path, "#{file_name}_component", "#{file_name}_component_controller.js")
+          File.join(component_path, class_path, "#{file_name}_component", "#{file_name}_component_controller.#{filetype}")
         else
-          File.join(component_path, class_path, "#{file_name}_component_controller.js")
+          File.join(component_path, class_path, "#{file_name}_component_controller.#{filetype}")
         end
       end
 

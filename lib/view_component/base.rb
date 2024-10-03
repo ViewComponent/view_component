@@ -412,6 +412,14 @@ module ViewComponent
     # config.view_component.generate.stimulus_controller = true
     # ```
     #
+    # #### `#typescript`
+    #
+    # Generate TypeScript files instead of JavaScript files:
+    #
+    # ```ruby
+    # config.view_component.generate.typescript = true
+    # ```
+    #
     # #### #locale
     #
     # Always generate translations file alongside the component:
