@@ -10,7 +10,11 @@ nav_order: 5
 
 ## main
 
-* Add typescript support to stimulus generator + fix bug not adding stimulus controller to erb when stimulus is activated by default.
+* Fix bug where stimulus controller was not added to ERB when stimulus was activated by default.
+
+    *Denis Pasin*
+
+* Add typescript support to stimulus generator.
 
     *Denis Pasin*
 

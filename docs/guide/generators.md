@@ -110,9 +110,9 @@ bin/rails generate component Example title --stimulus
 
 To always generate a Stimulus controller, set `config.view_component.generate.stimulus_controller = true`.
 
-To generate a TypeScript controller instead of a JavaScript controller, either :
+To generate a TypeScript controller instead of a JavaScript controller, either:
 
-- Pass `--typescript` option to the generate
+- Pass the `--typescript` option
 - Set `config.view_component.generate.typescript = true`
 
 ### Generate [locale files](/guide/translations.html)
