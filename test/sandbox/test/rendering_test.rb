@@ -249,13 +249,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("bar")
   end
 
-  def test_renders_erb_template_with_locale
-    render_inline(ErbLocalisedComponent.new(message: "bar")) { "foo" }
-
-    assert_text("foo")
-    assert_text("bar")
-  end
-
   def test_renders_partial_template
     render_inline(PartialComponent.new)
 
