@@ -1220,4 +1220,10 @@ class RenderingTest < ViewComponent::TestCase
       assert_equal(rendered_json["hello"], "world")
     end
   end
+
+  def test_localised_component
+    render_inline(LocalisedComponent.new)
+
+    assert_selector("div", text: "salut,monde!")
+  end
 end

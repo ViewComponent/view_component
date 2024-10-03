@@ -35,7 +35,7 @@ module ViewComponent
         else
           out = +"call"
           out << "_#{normalized_variant_name}" if @variant.present?
-          out << "_#{@this_format}" if @this_format.present? && @this_format != ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
+          out << "_#{@this_format}" if @this_format.present? && format_without_locale != ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
           out
         end
     end
@@ -70,6 +70,10 @@ module ViewComponent
 
     def default_format?
       @this_format == ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
+    end
+
+    def format_without_locale
+      @this_format.to_s.split(".").last.to_sym
     end
 
     def format
