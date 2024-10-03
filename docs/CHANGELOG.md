@@ -12,7 +12,7 @@ nav_order: 5
 
 * Fix bug where implicit locales in component filenames threw a `NameError`.
 
-  *Chloe Fons*
+    *Chloe Fons*
 
 * Fix bug where stimulus controller was not added to ERB when stimulus was activated by default.
 
