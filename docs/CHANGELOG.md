@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix bug where implicit locales in component filenames throw a `NameError`
+
+  *Chloe Fons*
+
 ## 3.16.0
 
 * Add template information to multiple template error messages.
