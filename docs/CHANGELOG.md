@@ -18,6 +18,10 @@ nav_order: 5
 
     *Denis Pasin*
 
+* Fix the example of #vc_test_request in the API reference to use the correct method name.
+
+    *Alberto Rocha*
+
 ## 3.16.0
 
 * Add template information to multiple template error messages.
