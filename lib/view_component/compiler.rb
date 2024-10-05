@@ -21,6 +21,7 @@ module ViewComponent
     end
 
     def compile(raise_errors: false, force: false)
+      raise TemplateError.new(template_errors) if compiled? && raise_errors && template_errors.any?
       return if compiled? && !force
       return if @component == ViewComponent::Base
 
@@ -30,7 +31,9 @@ module ViewComponent
         @component.superclass.compile(raise_errors: raise_errors)
       end
 
-      return if gather_template_errors(raise_errors).any?
+      if template_errors.present?
+        raise TemplateError.new(template_errors) if raise_errors
+      end
 
       if raise_errors
         @component.validate_initialization_parameters!
@@ -98,8 +101,8 @@ module ViewComponent
       end
     end
 
-    def gather_template_errors(raise_errors)
-      @_errors ||= begin
+    def template_errors
+      @_template_errors ||= begin
         errors = []
 
         errors << "Couldn't find a template file or inline render method for #{@component}." if @templates.empty?
@@ -159,8 +162,6 @@ module ViewComponent
 
           errors << "Colliding templates #{variant_names.sort.map { |v| "'#{v}'" }.to_sentence} found in #{@component}."
         end
-
-        raise TemplateError.new(errors, @templates) if errors.any? && raise_errors
 
         errors
       end
