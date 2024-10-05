@@ -21,7 +21,6 @@ module ViewComponent
     end
 
     def compile(raise_errors: false, force: false)
-      raise TemplateError.new(template_errors) if compiled? && raise_errors && template_errors.any?
       return if compiled? && !force
       return if @component == ViewComponent::Base
 
@@ -33,6 +32,8 @@ module ViewComponent
 
       if template_errors.present?
         raise TemplateError.new(template_errors) if raise_errors
+
+        return false
       end
 
       if raise_errors
