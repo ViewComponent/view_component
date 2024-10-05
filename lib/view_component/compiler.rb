@@ -88,7 +88,9 @@ module ViewComponent
           out = branches.each_with_object(+"") do |(conditional, branch_body), memo|
             memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{branch_body}\n"
           end
-          out << "else\n  #{templates.find { _1.variant.nil? && _1.default_format? }.safe_method_name}\nend"
+          if default_template = templates.find { _1.variant.nil? && _1.default_format? }
+            out << "else\n  #{default_template.safe_method_name}\nend"
+          end
         end
 
       @redefinition_lock.synchronize do
