@@ -33,6 +33,7 @@ module ViewComponent
       if template_errors.present?
         raise TemplateError.new(template_errors) if raise_errors
 
+        # this return is load bearing, and prevents the component from being considered "compiled?"
         return false
       end
 
