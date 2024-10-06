@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "action_view"
-require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
@@ -231,7 +230,6 @@ module ViewComponent
     # @return [ActionView::Base]
     def helpers
       raise HelpersCalledBeforeRenderError if view_context.nil?
-
       # Attempt to re-use the original view_context passed to the first
       # component rendered in the rendering pipeline. This prevents the
       # instantiation of a new view_context via `controller.view_context` which
@@ -522,15 +520,13 @@ module ViewComponent
         # `compile` defines
         compile
 
-        child.include ActiveSupport::Configurable
-
         if child.superclass == ViewComponent::Base
-          child.define_singleton_method(:config) do
-            @@config ||= Rails.application.config.view_component.inheritable_copy
+          child.define_singleton_method(:component_config) do
+            @@component_config ||= Rails.application.config.view_component.inheritable_copy
           end
         else
-          child.define_singleton_method(:config) do
-            @@config ||= superclass.config.inheritable_copy
+          child.define_singleton_method(:component_config) do
+            @@component_config ||= superclass.component_config.inheritable_copy
           end
         end
 
