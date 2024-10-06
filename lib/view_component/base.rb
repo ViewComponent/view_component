@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "action_view"
-require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
@@ -47,6 +46,8 @@ module ViewComponent
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
     self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
+
+    delegate :component_config, to: :class
 
     attr_accessor :__vc_original_view_context
 
@@ -234,7 +235,6 @@ module ViewComponent
     # @return [ActionView::Base]
     def helpers
       raise HelpersCalledBeforeRenderError if view_context.nil?
-
       # Attempt to re-use the original view_context passed to the first
       # component rendered in the rendering pipeline. This prevents the
       # instantiation of a new view_context via `controller.view_context` which
@@ -513,15 +513,13 @@ module ViewComponent
         # `compile` defines
         compile
 
-        child.include ActiveSupport::Configurable
-
         if child.superclass == ViewComponent::Base
-          child.define_singleton_method(:config) do
-            @@config ||= Rails.application.config.view_component.inheritable_copy
+          child.define_singleton_method(:component_config) do
+            @@component_config ||= Rails.application.config.view_component.inheritable_copy
           end
         else
-          child.define_singleton_method(:config) do
-            @@config ||= superclass.config.inheritable_copy
+          child.define_singleton_method(:component_config) do
+            @@component_config ||= superclass.component_config.inheritable_copy
           end
         end
 
@@ -557,7 +555,7 @@ module ViewComponent
         # If Rails application is loaded, removes the first part of the path and the extension.
         if defined?(Rails) && Rails.application
           child.virtual_path = child.source_location.gsub(
-            /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
+            /(.*#{Regexp.quote(GlobalConfig.view_component_path)})|(\.rb)/, ""
           )
         end
 

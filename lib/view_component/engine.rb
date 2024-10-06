@@ -15,7 +15,7 @@ module ViewComponent
     else
       initializer "view_component.stats_directories" do |app|
         require "rails/code_statistics"
-        dir = ViewComponent::Base.view_component_path
+        dir = GlobalConfig.view_component_path
         Rails::CodeStatistics.register_directory("ViewComponents", dir)
       end
     end
