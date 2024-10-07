@@ -14,6 +14,10 @@ nav_order: 5
 
     *Chloe Fons*
 
+* Use struct instead openstruct in lib code.
+
+    *Oleksii Vasyliev*
+
 * Fix bug where stimulus controller was not added to ERB when stimulus was activated by default.
 
     *Denis Pasin*
@@ -21,6 +25,10 @@ nav_order: 5
 * Add typescript support to stimulus generator.
 
     *Denis Pasin*
+
+* Fix the example of #vc_test_request in the API reference to use the correct method name.
+
+    *Alberto Rocha*
 
 ## 3.16.0
 

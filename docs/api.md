@@ -343,7 +343,7 @@ Access the request used by `render_inline`:
 
 ```ruby
 test "component does not render in Firefox" do
-  request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
+  vc_test_request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
   render_inline(NoFirefoxComponent.new)
   refute_component_rendered
 end

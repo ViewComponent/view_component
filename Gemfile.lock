@@ -83,6 +83,7 @@ GEM
       rake
       thor (>= 0.14.0)
     ast (2.4.2)
+    base64 (0.2.0)
     benchmark-ips (2.13.0)
     better_html (2.1.1)
       actionview (>= 6.0)
@@ -91,6 +92,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
+    bigdecimal (3.1.8)
     builder (3.3.0)
     capybara (3.40.0)
       addressable
@@ -113,6 +115,7 @@ GEM
       reline (>= 0.3.8)
     diff-lcs (1.5.1)
     docile (1.4.1)
+    drb (2.2.1)
     erb_lint (0.6.0)
       activesupport
       better_html (>= 2.0.1)
@@ -161,6 +164,7 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
     minitest (5.25.1)
+    mutex_m (0.2.0)
     net-imap (0.4.16)
       date
       net-protocol
@@ -334,17 +338,21 @@ PLATFORMS
 DEPENDENCIES
   allocation_stats (~> 0.1.5)
   appraisal (~> 2.4)
+  base64
   benchmark-ips (~> 2.13.0)
   better_html
+  bigdecimal
   bundler (~> 2)
   capybara (~> 3)
   cuprite (~> 0.15)
   debug
+  drb
   erb_lint
   haml (~> 6)
   jbuilder (~> 2)
   m (~> 1)
   minitest (~> 5.18)
+  mutex_m
   net-imap
   net-pop
   net-smtp
