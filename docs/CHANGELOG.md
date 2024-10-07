@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Use struct instead openstruct in lib code.
+
+    *Oleksii Vasyliev*
+
 * Fix bug where stimulus controller was not added to ERB when stimulus was activated by default.
 
     *Denis Pasin*
