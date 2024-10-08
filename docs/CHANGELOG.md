@@ -10,6 +10,12 @@ nav_order: 5
 
 ## main
 
+* Make accommodations for component-local config to be introduced in future.
+
+  BREAKING: Assigning to `ViewComponent::Base.config` will no longer work. Instead, assign to `Rails.application.config`.
+
+    *Simon Fish*
+
 * Use struct instead openstruct in lib code.
 
     *Oleksii Vasyliev*
