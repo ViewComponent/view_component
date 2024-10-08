@@ -23,7 +23,7 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
-      %i[generate preview_controller preview_route show_previews_source].each do |config_option|
+      %i[generate preview_controller preview_route].each do |config_option|
         options[config_option] ||= ViewComponent::Base.public_send(config_option)
       end
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
