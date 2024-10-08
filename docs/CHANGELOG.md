@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.17.0
+
 * Use struct instead openstruct in lib code.
 
     *Oleksii Vasyliev*
