@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix bug where implicit locales in component filenames threw a `NameError`.
+
+    *Chloe Fons*
+
 * Use struct instead openstruct in lib code.
 
     *Oleksii Vasyliev*

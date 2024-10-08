@@ -228,6 +228,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/allan-pires?s=64" alt="allan-pires" width="32" />
 <img src="https://avatars.githubusercontent.com/jasonkim?s=64" alt="jasonkim" width="32" />
 <img src="https://avatars.githubusercontent.com/tkowalewski" alt="tkowalewski" width="32" />
+<img src="https://avatars.githubusercontent.com/chloe-meister" alt="chloe-meister" width="32" />
 <img src="https://avatars.githubusercontent.com/zaratan" alt="zaratan" width="32" />
 
 ## Who uses ViewComponent?
