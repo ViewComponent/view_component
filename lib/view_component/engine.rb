@@ -15,8 +15,14 @@ module ViewComponent
     else
       initializer "view_component.stats_directories" do |app|
         require "rails/code_statistics"
-        dir = ViewComponent::Base.view_component_path
-        Rails::CodeStatistics.register_directory("ViewComponents", dir)
+
+        if Rails.root.join(ViewComponent::Base.view_component_path).directory?
+          Rails::CodeStatistics.register_directory("ViewComponents", ViewComponent::Base.view_component_path)
+        end
+
+        if Rails.root.join("test/components").directory?
+          Rails::CodeStatistics.register_directory("ViewComponent tests", "test/components", test_directory: true)
+        end
       end
     end
 

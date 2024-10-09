@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Register tests directory for rails stats
+
+    *Javier Aranda*
+
 * Fix `preview_paths` in docs.
 
     *Javier Aranda*
