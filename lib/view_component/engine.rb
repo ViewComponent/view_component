@@ -6,7 +6,7 @@ require "view_component/deprecation"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ViewComponent::Config.current
+    config.view_component = ViewComponent::Config.defaults
 
     if Rails.version.to_f < 8.0
       rake_tasks do
@@ -15,7 +15,7 @@ module ViewComponent
     else
       initializer "view_component.stats_directories" do |app|
         require "rails/code_statistics"
-        dir = ViewComponent::Base.view_component_path
+        dir = GlobalConfig.view_component_path
         Rails::CodeStatistics.register_directory("ViewComponents", dir)
       end
     end
@@ -23,7 +23,7 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
-      %i[generate preview_controller preview_route show_previews_source].each do |config_option|
+      %i[generate preview_controller preview_route].each do |config_option|
         options[config_option] ||= ViewComponent::Base.public_send(config_option)
       end
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?

@@ -250,7 +250,8 @@ module ViewComponent
     #
     # @return [ActionController::Base]
     def vc_test_controller
-      @vc_test_controller ||= __vc_test_helpers_build_controller(Base.test_controller.constantize)
+      config_source = defined?(Rails) ? Rails.application.config.view_component : ViewComponent::Base
+      @vc_test_controller ||= __vc_test_helpers_build_controller(config_source.test_controller.constantize)
     end
 
     # Access the request used by `render_inline`:
