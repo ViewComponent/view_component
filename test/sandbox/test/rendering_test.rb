@@ -1277,9 +1277,12 @@ class RenderingTest < ViewComponent::TestCase
       render_inline(MultipleFormatsComponent.new)
 
       assert_equal(rendered_json["hello"], "world")
+    end
   end
 
-  def test_strict_helpers
+  # Since helpers_enabled is true by default, we assume that the converse case
+  # is covered. If that default changes, tests should generally be updated.
+  def test_helpers_proxy_raises_if_helpers_disabled
     with_helpers_enabled_config(false) do
       assert_raises ViewComponent::StrictHelperError do
         render_inline(HelpersProxyComponent.new)
@@ -1311,6 +1314,16 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_nothing_raised do
       render_inline(mock_component.new)
+    end
+  end
+
+  def test_helpers_proxy_raises_if_strict_helpers_enabled
+    with_helpers_enabled_config(true) do
+      with_strict_helpers_config(true) do
+        assert_raises ViewComponent::StrictHelperError do
+          render_inline(HelpersProxyComponent.new)
+        end
+      end
     end
   end
 end
