@@ -14,7 +14,6 @@ nav_order: 5
 
     *Daniel Vu Dao*
 
-
 * Fix `preview_paths` in docs.
 
     *Javier Aranda*
