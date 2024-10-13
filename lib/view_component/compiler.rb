@@ -47,7 +47,6 @@ module ViewComponent
           @component.validate_collection_parameter!
         end
 
-
         define_render_template_for
 
         @component.register_default_slots
