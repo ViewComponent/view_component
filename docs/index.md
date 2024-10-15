@@ -264,6 +264,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
 * [Mon Ami](https://www.monami.io)
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
+* [Niva](https://www.niva.co/)
 * [OBLSK](https://oblsk.com/)
 * [openSUSE Open Build Service](https://openbuildservice.org/)
 * [Ophelos](https://ophelos.com)

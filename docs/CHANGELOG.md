@@ -10,9 +10,14 @@ nav_order: 5
 
 ## main
 
-* Register tests directory for rails stats
+* Register tests directory for `rails stats`.
 
     *Javier Aranda*
+
+* Add [Niva]([niva.co](https://www.niva.co/)) to companies who use `ViewComponent`.
+
+    *Daniel Vu Dao*
+
 
 * Fix `preview_paths` in docs.
 
