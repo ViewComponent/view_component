@@ -185,7 +185,7 @@ module ViewComponent
               path: path,
               lineno: 0,
               extension: path.split(".").last,
-              this_format: this_format,
+              this_format: this_format.to_s.split(".").last&.to_sym, # strip locale from this_format, see #2113
               variant: variant
             )
 
