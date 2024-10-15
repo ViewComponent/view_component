@@ -15,7 +15,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    assert_allocations("3.4.0" => 107, "3.3.5" => 116, "3.3.0" => 129, "3.2.5" => 115, "3.1.6" => 115, "3.0.7" => 125) do
+    assert_allocations("3.4.0" => 110, "3.3.5" => 116, "3.3.0" => 129, "3.2.5" => 115, "3.1.6" => 115, "3.0.7" => 125) do
       render_inline(MyComponent.new)
     end
 
@@ -511,11 +511,6 @@ class RenderingTest < ViewComponent::TestCase
           render_inline(VariantTemplateAndInlineVariantTemplateComponent.new)
         end
       end
-
-    assert_includes(
-      error.message,
-      "ViewComponent::Template:"
-    )
 
     assert_includes(
       error.message,

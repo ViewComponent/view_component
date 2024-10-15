@@ -68,6 +68,10 @@ Gem::Specification.new do |spec|
   end
 
   if RUBY_VERSION >= "3.3"
+    spec.add_development_dependency "base64"
+    spec.add_development_dependency "bigdecimal"
+    spec.add_development_dependency "drb"
+    spec.add_development_dependency "mutex_m"
     spec.add_development_dependency "ostruct"
   end
 end
