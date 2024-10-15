@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Register ViewComponent tests directory for `rails stats`.
+
+    *Javier Aranda*
+
 * Wrap entire compile step in a mutex to make it more resilient to race conditions.
 
     *Blake Williams*
