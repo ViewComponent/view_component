@@ -14,7 +14,6 @@ require "view_component/slotable"
 require "view_component/template"
 require "view_component/translatable"
 require "view_component/with_content_helper"
-require "view_component/cache_on"
 
 module ActionView
   class OutputBuffer
@@ -56,7 +55,6 @@ module ViewComponent
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
-    include ViewComponent::CacheOn
 
     RESERVED_PARAMETER = :content
     VC_INTERNAL_DEFAULT_FORMAT = :html
@@ -81,7 +79,7 @@ module ViewComponent
     attr_accessor :__vc_original_view_context
     attr_reader :current_template
 
-    # TODO
+    # Compoents can have a cache key that is used to cache the rendered output.
     #
     # @return [String]
     def cache_key
@@ -384,7 +382,6 @@ module ViewComponent
       defined?(@view_context) && @view_context && @__vc_render_in_block
     end
 
-    # TODO
     def __vc_render_template(rendered_template)
       # Avoid allocating new string when output_preamble and output_postamble are blank
       if output_preamble.blank? && output_postamble.blank?
