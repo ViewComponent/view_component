@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Register tests directory for `rails stats`.
+* Register ViewComponent tests directory for `rails stats`.
 
     *Javier Aranda*
 
