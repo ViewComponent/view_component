@@ -111,7 +111,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "div", "hello world"
       assert_response :success
 
-      compile_method_lines = UncompilableComponent.method(:compile).source.split("\n")
+      compile_method_lines = UncompilableComponent.method(:__vc_compile).source.split("\n")
       compile_method_lines.insert(1, 'raise "this should not happen" if self.name == "UncompilableComponent"')
       UncompilableComponent.instance_eval compile_method_lines.join("\n")
 

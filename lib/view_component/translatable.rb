@@ -13,7 +13,7 @@ module ViewComponent
     TRANSLATION_EXTENSIONS = %w[yml yaml].freeze
 
     included do
-      class_attribute :i18n_backend, instance_writer: false, instance_predicate: false
+      class_attribute :__vc_i18n_backend, instance_writer: false, instance_predicate: false
     end
 
     class_methods do
@@ -21,8 +21,8 @@ module ViewComponent
         @i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
       end
 
-      def build_i18n_backend
-        return if compiled?
+      def __vc_build_i18n_backend
+        return if __vc_compiled?
 
         # We need to load the translations files from the ancestors so a component
         # can inherit translations from its parent and is able to overwrite them.
@@ -33,7 +33,7 @@ module ViewComponent
         end
 
         # In development it will become nil if the translations file is removed
-        self.i18n_backend = if translation_files.any?
+        self.__vc_i18n_backend = if translation_files.any?
           I18nBackend.new(
             i18n_scope: i18n_scope,
             load_paths: translation_files
@@ -52,12 +52,12 @@ module ViewComponent
       def translate(key = nil, **options)
         return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
-        ensure_compiled
+        __vc_ensure_compiled
 
         locale = options.delete(:locale) || ::I18n.locale
         key = i18n_key(key, options.delete(:scope))
 
-        i18n_backend.translate(locale, key, options)
+        __vc_i18n_backend.translate(locale, key, options)
       end
 
       alias_method :t, :translate
@@ -91,7 +91,7 @@ module ViewComponent
     def translate(key = nil, **options)
       raise ViewComponent::TranslateCalledBeforeRenderError if view_context.nil?
 
-      return super unless i18n_backend
+      return super unless __vc_i18n_backend
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
       locale = options.delete(:locale) || ::I18n.locale
@@ -103,7 +103,7 @@ module ViewComponent
       if key.start_with?(i18n_scope + ".")
         translated =
           catch(:exception) do
-            i18n_backend.translate(locale, key, options)
+            __vc_i18n_backend.translate(locale, key, options)
           end
 
         # Fallback to the global translations

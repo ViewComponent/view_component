@@ -16,8 +16,8 @@ module ViewComponent
     # Setup component slot state
     included do
       # Hash of registered Slots
-      class_attribute :registered_slots
-      self.registered_slots = {}
+      class_attribute :__vc_registered_slots
+      self.__vc_registered_slots = {}
     end
 
     class_methods do
@@ -78,7 +78,7 @@ module ViewComponent
         validate_singular_slot_name(slot_name)
 
         if callable.is_a?(Hash) && callable.key?(:types)
-          register_polymorphic_slot(slot_name, callable[:types], collection: false)
+          __vc_register_polymorphic_slot(slot_name, callable[:types], collection: false)
         else
           validate_plural_slot_name(ActiveSupport::Inflector.pluralize(slot_name).to_sym)
 
@@ -148,7 +148,7 @@ module ViewComponent
         validate_plural_slot_name(slot_name)
 
         if callable.is_a?(Hash) && callable.key?(:types)
-          register_polymorphic_slot(slot_name, callable[:types], collection: true)
+          __vc_register_polymorphic_slot(slot_name, callable[:types], collection: true)
         else
           singular_name = ActiveSupport::Inflector.singularize(slot_name)
           validate_singular_slot_name(ActiveSupport::Inflector.singularize(slot_name).to_sym)
@@ -189,12 +189,12 @@ module ViewComponent
       end
 
       def slot_type(slot_name)
-        registered_slot = registered_slots[slot_name]
+        registered_slot = __vc_registered_slots[slot_name]
         if registered_slot
           registered_slot[:collection] ? :collection : :single
         else
           plural_slot_name = ActiveSupport::Inflector.pluralize(slot_name).to_sym
-          plural_registered_slot = registered_slots[plural_slot_name]
+          plural_registered_slot = __vc_registered_slots[plural_slot_name]
           plural_registered_slot&.fetch(:collection) ? :collection_item : nil
         end
       end
@@ -202,7 +202,7 @@ module ViewComponent
       def inherited(child)
         # Clone slot configuration into child class
         # see #test_slots_pollution
-        child.registered_slots = registered_slots.clone
+        child.__vc_registered_slots = __vc_registered_slots.clone
 
         # Add a module for slot methods, allowing them to be overriden by the component class
         # see #test_slot_name_can_be_overriden
@@ -215,7 +215,7 @@ module ViewComponent
         super
       end
 
-      def register_polymorphic_slot(slot_name, types, collection:)
+      def __vc_register_polymorphic_slot(slot_name, types, collection:)
         self::GeneratedSlotMethods.define_method(slot_name) do
           get_slot(slot_name)
         end
@@ -262,25 +262,25 @@ module ViewComponent
           end
         end
 
-        registered_slots[slot_name] = {
+        __vc_registered_slots[slot_name] = {
           collection: collection,
           renderable_hash: renderable_hash
         }
       end
 
       # Called by the compiler, as instance methods are not defined when slots are first registered
-      def register_default_slots
-        registered_slots.each do |slot_name, config|
+      def __vc_register_default_slots
+        __vc_registered_slots.each do |slot_name, config|
           config[:default_method] = instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
 
-          registered_slots[slot_name] = config
+          __vc_registered_slots[slot_name] = config
         end
       end
 
       private
 
       def register_slot(slot_name, **kwargs)
-        registered_slots[slot_name] = define_slot(slot_name, **kwargs)
+        __vc_registered_slots[slot_name] = define_slot(slot_name, **kwargs)
       end
 
       def define_slot(slot_name, collection:, callable:)
@@ -332,7 +332,7 @@ module ViewComponent
       end
 
       def raise_if_slot_registered(slot_name)
-        if registered_slots.key?(slot_name)
+        if __vc_registered_slots.key?(slot_name)
           # TODO remove? This breaks overriding slots when slots are inherited
           raise RedefinedSlotError.new(name, slot_name)
         end
@@ -359,7 +359,7 @@ module ViewComponent
     def get_slot(slot_name)
       content unless content_evaluated? # ensure content is loaded so slots will be defined
 
-      slot = self.class.registered_slots[slot_name]
+      slot = self.class.__vc_registered_slots[slot_name]
       @__vc_set_slots ||= {}
 
       if @__vc_set_slots[slot_name]
@@ -372,7 +372,7 @@ module ViewComponent
     end
 
     def set_slot(slot_name, slot_definition = nil, *args, &block)
-      slot_definition ||= self.class.registered_slots[slot_name]
+      slot_definition ||= self.class.__vc_registered_slots[slot_name]
       slot = Slot.new(self)
 
       # Passing the block to the sub-component wrapper like this has two
@@ -430,7 +430,7 @@ module ViewComponent
     ruby2_keywords(:set_slot) if respond_to?(:ruby2_keywords, true)
 
     def set_polymorphic_slot(slot_name, poly_type = nil, *args, &block)
-      slot_definition = self.class.registered_slots[slot_name]
+      slot_definition = self.class.__vc_registered_slots[slot_name]
 
       if !slot_definition[:collection] && (defined?(@__vc_set_slots) && @__vc_set_slots[slot_name])
         raise ContentAlreadySetForPolymorphicSlotError.new(slot_name)
