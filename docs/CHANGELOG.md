@@ -14,6 +14,10 @@ nav_order: 5
 
     *Blake Williams*
 
+* Add [Niva]([niva.co](https://www.niva.co/)) to companies who use `ViewComponent`.
+
+    *Daniel Vu Dao*
+
 * Fix `preview_paths` in docs.
 
     *Javier Aranda*
