@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Wrap entire compile step in a mutex to make it more resilient to race conditions.
+
+    *Blake Williams*
+
 * Add [Niva]([niva.co](https://www.niva.co/)) to companies who use `ViewComponent`.
 
     *Daniel Vu Dao*

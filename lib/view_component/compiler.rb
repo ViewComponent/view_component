@@ -12,7 +12,7 @@ module ViewComponent
 
     def initialize(component)
       @component = component
-      @redefinition_lock = Mutex.new
+      @lock = Mutex.new
       @rendered_templates = Set.new
     end
 
@@ -24,30 +24,36 @@ module ViewComponent
       return if compiled? && !force
       return if @component == ViewComponent::Base
 
-      gather_templates
+      @lock.synchronize do
+        # this check is duplicated so that concurrent compile calls can still
+        # early exit
+        return if compiled? && !force
 
-      if self.class.development_mode && @templates.any?(&:requires_compiled_superclass?)
-        @component.superclass.compile(raise_errors: raise_errors)
+        gather_templates
+
+        if self.class.development_mode && @templates.any?(&:requires_compiled_superclass?)
+          @component.superclass.compile(raise_errors: raise_errors)
+        end
+
+        if template_errors.present?
+          raise TemplateError.new(template_errors) if raise_errors
+
+          # this return is load bearing, and prevents the component from being considered "compiled?"
+          return false
+        end
+
+        if raise_errors
+          @component.validate_initialization_parameters!
+          @component.validate_collection_parameter!
+        end
+
+        define_render_template_for
+
+        @component.register_default_slots
+        @component.build_i18n_backend
+
+        CompileCache.register(@component)
       end
-
-      if template_errors.present?
-        raise TemplateError.new(template_errors) if raise_errors
-
-        # this return is load bearing, and prevents the component from being considered "compiled?"
-        return false
-      end
-
-      if raise_errors
-        @component.validate_initialization_parameters!
-        @component.validate_collection_parameter!
-      end
-
-      define_render_template_for
-
-      @component.register_default_slots
-      @component.build_i18n_backend
-
-      CompileCache.register(@component)
     end
 
     def renders_template_for?(variant, format)
@@ -60,9 +66,7 @@ module ViewComponent
 
     def define_render_template_for
       @templates.each do |template|
-        @redefinition_lock.synchronize do
-          template.compile_to_component
-        end
+        template.compile_to_component
       end
 
       method_body =
@@ -93,14 +97,12 @@ module ViewComponent
           out << "else\n  #{templates.find { _1.variant.nil? && _1.default_format? }.safe_method_name}\nend"
         end
 
-      @redefinition_lock.synchronize do
-        @component.silence_redefinition_of_method(:render_template_for)
-        @component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def render_template_for(variant = nil, format = nil)
-          #{method_body}
-        end
-        RUBY
+      @component.silence_redefinition_of_method(:render_template_for)
+      @component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      def render_template_for(variant = nil, format = nil)
+        #{method_body}
       end
+      RUBY
     end
 
     def template_errors
