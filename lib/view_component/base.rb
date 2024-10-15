@@ -87,8 +87,6 @@ module ViewComponent
         Digest::MD5.hexdigest(
           __vc_cache_args.map { |method| send(method) }.join("-")
         )
-      else
-        nil
       end
     end
 
