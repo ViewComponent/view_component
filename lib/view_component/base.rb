@@ -81,6 +81,19 @@ module ViewComponent
     attr_accessor :__vc_original_view_context
     attr_reader :current_template
 
+    # TODO
+    #
+    # @return [String]
+    def cache_key
+      @vc_cache_key = if defined?(__vc_cache_args)
+        Digest::MD5.hexdigest(
+          __vc_cache_args.map { |method| send(method) }.join("-")
+        )
+      else
+        nil
+      end
+    end
+
     # Components render in their own view context. Helpers and other functionality
     # require a reference to the original Rails view context, an instance of
     # `ActionView::Base`. Use this method to set a reference to the original
@@ -371,6 +384,16 @@ module ViewComponent
       defined?(@view_context) && @view_context && @__vc_render_in_block
     end
 
+    # TODO
+    def __vc_render_template(rendered_template)
+      # Avoid allocating new string when output_preamble and output_postamble are blank
+      if output_preamble.blank? && output_postamble.blank?
+        rendered_template
+      else
+        safe_output_preamble + rendered_template + safe_output_postamble
+      end
+    end
+
     def __vc_content_set_by_with_content_defined?
       defined?(@__vc_content_set_by_with_content)
     end
@@ -521,6 +544,14 @@ module ViewComponent
         sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
+      end
+
+      def cache_on(*args)
+        class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def __vc_cache_args
+            #{args}
+          end
+        RUBY
       end
 
       # Render a component for each element in a collection ([documentation](/guide/collections)):
