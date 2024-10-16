@@ -15,7 +15,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    assert_allocations("3.4.0" => 107, "3.3.5" => 116, "3.3.0" => 125, "3.2.5" => 115) do
+    assert_allocations("3.4.0" => 110, "3.3.5" => 116, "3.3.0" => 125, "3.2.5" => 115) do
       render_inline(MyComponent.new)
     end
 
@@ -1204,5 +1204,17 @@ class RenderingTest < ViewComponent::TestCase
 
       assert_equal(rendered_json["hello"], "world")
     end
+  end
+
+  def test_localised_component
+    render_inline(LocalisedComponent.new)
+
+    assert_selector("div", text: "salut,monde!")
+  end
+
+  def test_request_param
+    render_inline(RequestParamComponent.new(request: "foo"))
+
+    assert_text("foo")
   end
 end

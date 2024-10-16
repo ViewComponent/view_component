@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    view_component (3.14.0)
+    view_component (3.17.0)
       activesupport (>= 7.1.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
@@ -188,6 +188,7 @@ GEM
     nokogiri (1.16.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    ostruct (0.6.0)
     parallel (1.26.3)
     parser (3.3.5.0)
       ast (~> 2.4.1)
@@ -353,20 +354,25 @@ PLATFORMS
 DEPENDENCIES
   allocation_stats (~> 0.1.5)
   appraisal (~> 2.4)
+  base64
   benchmark-ips (~> 2.13.0)
   better_html
+  bigdecimal
   bundler (~> 2)
   capybara (~> 3)
   cuprite (~> 0.15)
   debug
+  drb
   erb_lint
   haml (~> 6)
   jbuilder (~> 2)
   m (~> 1)
   minitest (~> 5.18)
+  mutex_m
   net-imap
   net-pop
   net-smtp
+  ostruct
   pry (~> 0.13)
   puma (~> 6)
   rails (~> 7.1.0)

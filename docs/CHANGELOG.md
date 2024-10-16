@@ -24,6 +24,70 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Enable components to use `@request` and `request` methods/ivars.
+
+    *Blake Williams*
+
+* Fix bug where implicit locales in component filenames threw a `NameError`.
+
+    *Chloe Fons*
+
+* Register ViewComponent tests directory for `rails stats`.
+
+    *Javier Aranda*
+
+* Wrap entire compile step in a mutex to make it more resilient to race conditions.
+
+    *Blake Williams*
+
+* Add [Niva]([niva.co](https://www.niva.co/)) to companies who use `ViewComponent`.
+
+    *Daniel Vu Dao*
+
+* Fix `preview_paths` in docs.
+
+    *Javier Aranda*
+
+## 3.17.0
+
+* Use struct instead openstruct in lib code.
+
+    *Oleksii Vasyliev*
+
+* Fix bug where stimulus controller was not added to ERB when stimulus was activated by default.
+
+    *Denis Pasin*
+
+* Add typescript support to stimulus generator.
+
+    *Denis Pasin*
+
+* Fix the example of #vc_test_request in the API reference to use the correct method name.
+
+    *Alberto Rocha*
+
+* Fix development mode race condition that caused an invalid duplicate template error.
+
+    *Blake Williams*
+
+## 3.16.0
+
+* Add template information to multiple template error messages.
+
+    *Joel Hawksley*
+
+* Add `ostruct` to gemspec file to suppress stdlib removal warning.
+
+    *Jonathan Underwood*
+
+## 3.15.1
+
+* Re-add `@private`, undocumented `.identifier` method that was only meant for internal framework use but was used by some downstream consumers. This method will be removed in a coming minor release.
+
+    *Joel Hawksley*
+
+## 3.15.0
+
 * Add basic internal testing for memory allocations.
 
     *Joel Hawksley*
@@ -40,7 +104,7 @@ nav_order: 5
 
     *Joel Hawksley*
 
-* Warn if using Ruby < 3.1 or Rails < 7.0, which will not be supported by ViewComponent v4.
+* Warn if using Ruby < 3.2 or Rails < 7.1, which won't be supported by ViewComponent v4, to be released no earlier than April 1, 2025.
 
     *Joel Hawksley*
 

@@ -109,10 +109,10 @@ module ViewComponent
 
       if render?
         rendered_template =
-          if compiler.renders_template_for?(@__vc_variant, request&.format&.to_sym)
-            render_template_for(@__vc_variant, request&.format&.to_sym)
+          if compiler.renders_template_for?(@__vc_variant, __vc_request&.format&.to_sym)
+            render_template_for(@__vc_variant, __vc_request&.format&.to_sym)
           else
-            maybe_escape_html(render_template_for(@__vc_variant, request&.format&.to_sym)) do
+            maybe_escape_html(render_template_for(@__vc_variant, __vc_request&.format&.to_sym)) do
               Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
             end
           end.to_s
@@ -286,7 +286,14 @@ module ViewComponent
     #
     # @return [ActionDispatch::Request]
     def request
-      @request ||= controller.request if controller.respond_to?(:request)
+      __vc_request
+    end
+
+    # Enables consumers to override request/@request
+    #
+    # @private
+    def __vc_request
+      @__vc_request ||= controller.request if controller.respond_to?(:request)
     end
 
     # The content passed to the component instance as a block.
@@ -328,7 +335,7 @@ module ViewComponent
     end
 
     def maybe_escape_html(text)
-      return text if request && !request.format.html?
+      return text if __vc_request && !__vc_request.format.html?
       return text if text.blank?
 
       if text.html_safe?
@@ -403,6 +410,14 @@ module ViewComponent
     #
     # ```ruby
     # config.view_component.generate.stimulus_controller = true
+    # ```
+    #
+    # #### `#typescript`
+    #
+    # Generate TypeScript files instead of JavaScript files:
+    #
+    # ```ruby
+    # config.view_component.generate.typescript = true
     # ```
     #
     # #### #locale
@@ -565,6 +580,15 @@ module ViewComponent
       # @private
       def compiler
         @__vc_compiler ||= Compiler.new(self)
+      end
+
+      # @private
+      def identifier
+        # :nocov:
+        Kernel.warn("WARNING: The #{self.class}.identifier is undocumented and was meant for internal framework usage only. As it is no longer used by the framework it will be removed in a coming non-breaking ViewComponent release.")
+
+        source_location
+        # :nocov:
       end
 
       # Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):

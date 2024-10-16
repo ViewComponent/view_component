@@ -47,6 +47,12 @@ module ViewComponent
       #
       #     config.view_component.generate.stimulus_controller = true
       #
+      # #### `#typescript`
+      #
+      # Generate TypeScript files instead of JavaScript files:
+      #
+      #     config.view_component.generate.typescript = true
+      #
       # #### `#locale`
       #
       # Always generate translations file alongside the component:
@@ -139,7 +145,7 @@ module ViewComponent
       # @!attribute preview_paths
       # @return [Array<String>]
       # The locations in which component previews will be looked up.
-      # Defaults to `['test/component/previews']` relative to your Rails root.
+      # Defaults to `['test/components/previews']` relative to your Rails root.
 
       # @!attribute test_controller
       # @return [String]
