@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Enable components to use `@request` and `request` methods/ivars.
+
+    *Blake Williams*
+
 * Fix bug where implicit locales in component filenames threw a `NameError`.
 
     *Chloe Fons*
