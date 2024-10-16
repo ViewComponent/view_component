@@ -45,10 +45,13 @@ module ViewComponent
     delegate :content_security_policy_nonce, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
+    class_attribute :__vc_cache_dependencies, instance_accessor: false, instance_predicate: false, default: []
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
     self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
 
     attr_accessor :__vc_original_view_context
+
+
 
     # Components render in their own view context. Helpers and other functionality
     # require a reference to the original Rails view context, an instance of
@@ -117,11 +120,12 @@ module ViewComponent
             end
           end.to_s
 
-        # Avoid allocating new string when output_preamble and output_postamble are blank
-        if output_preamble.blank? && output_postamble.blank?
-          rendered_template
+        if view_cache_dependencies.present?
+          Rails.cache.fetch(view_cache_dependencies) do
+            __vc_render_template(rendered_template)
+          end
         else
-          safe_output_preamble + rendered_template + safe_output_postamble
+          __vc_render_template(rendered_template)
         end
       else
         ""
@@ -271,8 +275,10 @@ module ViewComponent
     # For caching, such as #cache_if
     # @private
     def view_cache_dependencies
-      []
+      self.class.view_cache_dependencies
     end
+
+    alias_method :component_cache_dependencies, :view_cache_dependencies
 
     # For caching, such as #cache_if
     #
@@ -324,6 +330,15 @@ module ViewComponent
 
     def __vc_render_in_block_provided?
       defined?(@view_context) && @view_context && @__vc_render_in_block
+    end
+
+    def __vc_render_template(rendered_template)
+      # Avoid allocating new string when output_preamble and output_postamble are blank
+      if output_preamble.blank? && output_postamble.blank?
+        rendered_template
+      else
+        safe_output_preamble + rendered_template + safe_output_postamble
+      end
     end
 
     def __vc_content_set_by_with_content_defined?
@@ -500,6 +515,18 @@ module ViewComponent
         sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
         (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files).uniq
+      end
+
+
+
+      def cache_on(*args)
+        self.__vc_cache_dependencies.push(*args)
+      end
+
+      def view_cache_dependencies
+        return unless __vc_cache_dependencies.any?
+
+        __vc_cache_dependencies.map { |dep| send(dep) }.compact
       end
 
       # Render a component for each element in a collection ([documentation](/guide/collections)):
