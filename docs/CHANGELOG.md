@@ -34,6 +34,10 @@ nav_order: 5
 
     *Javier Aranda*
 
+* Allow rendering `with_collection` to accept an optional `spacer_component` to be rendered between each item.
+
+    *Nick Coyne*
+
 ## 3.17.0
 
 * Use struct instead openstruct in lib code.

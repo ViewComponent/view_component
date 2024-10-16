@@ -113,6 +113,9 @@ end
 
 ## Spacer Components
 
+Since 3.18.0
+{: .label }
+
 You can also specify a component to be rendered between instances of the main component by using the :spacer_component option:
 
 ```erb
