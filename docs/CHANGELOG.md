@@ -10,6 +10,20 @@ nav_order: 5
 
 ## main
 
+## 4.0.0
+
+* BREAKING: Require [non-EOL](https://endoflife.date/rails) Rails (`>= 7.1.0`).
+
+    *Joel Hawksley*
+
+* BREAKING: Require [non-EOL](https://www.ruby-lang.org/en/downloads/branches/) Ruby (`>= 3.2.0`).
+
+    *Joel Hawksley*
+
+* BREAKING: Remove `render_component` and `render` monkey patch configured with `render_monkey_patch_enabled`.
+
+    *Joel Hawksley*
+
 * Enable components to use `@request` and `request` methods/ivars.
 
     *Blake Williams*
