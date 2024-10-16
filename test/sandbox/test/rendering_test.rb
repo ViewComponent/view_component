@@ -1227,4 +1227,14 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_text("foo")
   end
+
+  def test_turbo_stream_format_custom_variant
+    with_format(:turbo_stream) do
+      with_variant(:custom) do
+        render_inline(TurboStreamFormatComponent.new)
+
+        assert_text("Hi turbo stream custom!")
+      end
+    end
+  end
 end
