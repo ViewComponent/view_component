@@ -109,10 +109,10 @@ module ViewComponent
 
       if render?
         rendered_template =
-          if compiler.renders_template_for?(@__vc_variant, request&.format&.to_sym)
-            render_template_for(@__vc_variant, request&.format&.to_sym)
+          if compiler.renders_template_for?(@__vc_variant, __vc_request&.format&.to_sym)
+            render_template_for(@__vc_variant, __vc_request&.format&.to_sym)
           else
-            maybe_escape_html(render_template_for(@__vc_variant, request&.format&.to_sym)) do
+            maybe_escape_html(render_template_for(@__vc_variant, __vc_request&.format&.to_sym)) do
               Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
             end
           end.to_s
@@ -286,7 +286,14 @@ module ViewComponent
     #
     # @return [ActionDispatch::Request]
     def request
-      @request ||= controller.request if controller.respond_to?(:request)
+      __vc_request
+    end
+
+    # Enables consumers to override request/@request
+    #
+    # @private
+    def __vc_request
+      @__request ||= controller.request if controller.respond_to?(:request)
     end
 
     # The content passed to the component instance as a block.
@@ -328,7 +335,7 @@ module ViewComponent
     end
 
     def maybe_escape_html(text)
-      return text if request && !request.format.html?
+      return text if __vc_request && !__vc_request.format.html?
       return text if text.blank?
 
       if text.html_safe?
