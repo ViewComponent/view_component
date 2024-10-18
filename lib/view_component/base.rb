@@ -509,9 +509,10 @@ module ViewComponent
       # ```
       #
       # @param collection [Enumerable] A list of items to pass the ViewComponent one at a time.
+      # @param spacer_component [ViewComponent::Base] A spacer component to be rendered.
       # @param args [Arguments] Arguments to pass to the ViewComponent every time.
-      def with_collection(collection, **args)
-        Collection.new(self, collection, **args)
+      def with_collection(collection, spacer_component: nil, **args)
+        Collection.new(self, collection, spacer_component, **args)
       end
 
       # @private
