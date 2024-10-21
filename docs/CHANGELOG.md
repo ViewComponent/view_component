@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Make accommodations for component-local config to be introduced in future.
+
+    *Simon Fish*
+
 * Relax Active Support version constraint in gemspec.
 
     *Simon Fish*
