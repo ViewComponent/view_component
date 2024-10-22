@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.19.0
+
 * Relax Active Support version constraint in gemspec.
 
     *Simon Fish*
