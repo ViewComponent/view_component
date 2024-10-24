@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Allow rendering `with_collection` to accept an optional `spacer_component` to be rendered between each item.
+
+    *Nick Coyne*
+
 ## 3.19.0
 
 * Relax Active Support version constraint in gemspec.
