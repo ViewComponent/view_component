@@ -10,6 +10,14 @@ nav_order: 5
 
 ## main
 
+## 3.19.0
+
+* Relax Active Support version constraint in gemspec.
+
+    *Simon Fish*
+
+## 3.18.0
+
 * Enable components to use `@request` and `request` methods/ivars.
 
     *Blake Williams*
