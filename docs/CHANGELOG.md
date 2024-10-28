@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Remove OpenStruct from codebase
+* Remove OpenStruct from codebase.
 
     *Oleksii Vasyliev*
 
