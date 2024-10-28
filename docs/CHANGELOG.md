@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Remove OpenStruct from codebase.
+
+    *Oleksii Vasyliev*
+
 ## 3.19.0
 
 * Relax Active Support version constraint in gemspec.

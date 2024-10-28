@@ -43,11 +43,11 @@ class IntegrationExamplesController < ActionController::Base
   end
 
   def products
-    @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    @products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
   end
 
   def inline_products
-    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
 
     render(ProductComponent.with_collection(products, notice: "Today only"))
   end
