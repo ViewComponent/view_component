@@ -69,40 +69,45 @@ module ViewComponent
         template.compile_to_component
       end
 
-      method_body =
-        if @templates.one?
-          @templates.first.safe_method_name
-        elsif (template = @templates.find(&:inline?))
-          template.safe_method_name
-        else
-          branches = []
-
-          @templates.each do |template|
-            conditional =
-              if template.inline_call?
-                "variant&.to_sym == #{template.variant.inspect}"
-              else
-                [
-                  template.default_format? ? "(format == #{ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT.inspect} || format.nil?)" : "format == #{template.format.inspect}",
-                  template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
-                ].join(" && ")
-              end
-
-            branches << [conditional, template.safe_method_name]
-          end
-
-          out = branches.each_with_object(+"") do |(conditional, branch_body), memo|
-            memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{branch_body}\n"
-          end
-          out << "else\n  #{templates.find { _1.variant.nil? && _1.default_format? }.safe_method_name}\nend"
-        end
-
       @component.silence_redefinition_of_method(:render_template_for)
-      @component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-      def render_template_for(variant = nil, format = nil)
-        #{method_body}
+
+      if @templates.one?
+        @component.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def render_template_for(variant = nil, format = nil)
+            #{@templates.first.safe_method_name}
+          end
+        RUBY
+      elsif (template = @templates.find(&:inline?))
+        @component.class_eval <<~RUBY, __FILE__, __LINE__ + 1
+          def render_template_for(variant = nil, format = nil)
+            #{template.safe_method_name}
+          end
+        RUBY
+      else
+        templates = @templates
+        @component.define_method(:render_template_for) do |*|
+          # Note: using a private method to extract details from lookup context
+          # This last changed in 2016 when it was changed from protected to
+          # private but it may not be stable in the future.
+          requested_details = ActionView::TemplateDetails::Requested.new(
+            # TODO should options ({}) allow user arguments for format/variant/locale?
+            # could we use the cache key that is returned as the second argument?
+            **lookup_context.send(:detail_args_for, {}).first
+          )
+
+          filtered_templates = templates.select do |template|
+            template.details.matches?(requested_details)
+          end
+
+          if filtered_templates.count > 1
+            filtered_templates.sort_by! do |template|
+              template.details.sort_key_for(requested_details)
+            end
+          end
+
+          send(filtered_templates.first.safe_method_name)
+        end
       end
-      RUBY
     end
 
     def template_errors

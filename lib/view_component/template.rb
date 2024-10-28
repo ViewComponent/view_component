@@ -5,7 +5,7 @@ module ViewComponent
     DataWithSource = Struct.new(:format, :identifier, :short_identifier, :type, keyword_init: true)
     DataNoSource = Struct.new(:source, :identifier, :type, keyword_init: true)
 
-    attr_reader :variant, :this_format, :type
+    attr_reader :variant, :this_format, :type, :details
 
     def initialize(
       component:,
@@ -31,6 +31,13 @@ module ViewComponent
       @defined_on_self = defined_on_self
 
       @source_originally_nil = @source.nil?
+
+      @details = ActionView::TemplateDetails.new(
+        nil, # currently view components doesn't extract locale from the file path
+        extension&.to_sym, # e.g. erb, jbuilder, etc
+        @this_format,
+        @variant
+      )
 
       @call_method_name =
         if @method_name
