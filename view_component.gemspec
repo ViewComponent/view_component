@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.7.0"
 
-  spec.add_runtime_dependency "activesupport", [">= 5.2.0", "< 8.0"]
+  spec.add_runtime_dependency "activesupport", [">= 5.2.0", "< 8.1"]
   spec.add_runtime_dependency "method_source", "~> 1.0"
   spec.add_runtime_dependency "concurrent-ruby", "~> 1.0"
   spec.add_development_dependency "allocation_stats", "~> 0.1.5"
@@ -72,6 +72,5 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency "bigdecimal"
     spec.add_development_dependency "drb"
     spec.add_development_dependency "mutex_m"
-    spec.add_development_dependency "ostruct"
   end
 end
