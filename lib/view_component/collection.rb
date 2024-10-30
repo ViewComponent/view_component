@@ -73,9 +73,8 @@ module ViewComponent
 
     def rendered_spacer(view_context)
       if @spacer_component
-        spacer = @spacer_component.new
-        spacer.set_original_view_context(__vc_original_view_context)
-        spacer.render_in(view_context)
+        @spacer_component.set_original_view_context(__vc_original_view_context)
+        @spacer_component.render_in(view_context)
       else
         ""
       end

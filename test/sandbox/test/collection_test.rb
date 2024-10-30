@@ -43,7 +43,7 @@ module ViewComponent
     end
 
     def test_supports_collection_with_spacer_component
-      render_inline(ProductComponent.with_collection(@products, spacer_component: SpacerComponent))
+      render_inline(ProductComponent.with_collection(@products, spacer_component: SpacerComponent.new))
       assert_selector("hr", count: 1)
     end
   end

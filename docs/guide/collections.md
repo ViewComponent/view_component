@@ -116,10 +116,10 @@ end
 Since 3.20.0
 {: .label }
 
-You can also specify a component to be rendered between instances of the main component by using the :spacer_component option:
+You can also specify a component instance to be rendered between instances of the main component by using the :spacer_component option:
 
 ```erb
-<%= render(ProductComponent.with_collection(@products, spacer_component: SpacerComponent)) %>
+<%= render(ProductComponent.with_collection(@products, spacer_component: SpacerComponent.new)) %>
 
 ```
 
