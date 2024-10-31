@@ -636,7 +636,7 @@ module ViewComponent
       # validate that the default parameter name
       # is accepted, as support for collection
       # rendering is optional.
-      # @private TODO: add documentation
+      # @private
       def validate_collection_parameter!(validate_default: false)
         parameter = validate_default ? collection_parameter : provided_collection_parameter
 
@@ -656,7 +656,7 @@ module ViewComponent
       # Ensure the component initializer doesn't define
       # invalid parameters that could override the framework's
       # methods.
-      # @private TODO: add documentation
+      # @private
       def validate_initialization_parameters!
         return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
 
