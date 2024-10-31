@@ -18,6 +18,7 @@
 /test/sandbox/log/*
 /test/tmp/*
 /.yardoc
+.DS_Store
 
 ## Specific to RubyMotion:
 .dat*
