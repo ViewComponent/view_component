@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Ensure HTML output safety wrapper is used for all inline templates.
+
+    *Joel Hawksley*
+
 ## 3.20.0
 
 * Allow rendering `with_collection` to accept an optional `spacer_component` to be rendered between each item.
