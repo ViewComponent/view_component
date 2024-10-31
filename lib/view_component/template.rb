@@ -59,7 +59,7 @@ module ViewComponent
       @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
     end
 
-    def safe_method_name_escaped
+    def safe_method_name_call
       return safe_method_name unless inline_call?
 
       "maybe_escape_html(#{safe_method_name}) " \
