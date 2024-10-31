@@ -111,16 +111,15 @@ class ProductComponent < ViewComponent::Base
 end
 ```
 
-## Spacer Components
+## Spacer components
 
 Since 3.20.0
 {: .label }
 
-You can also specify a component instance to be rendered between instances of the main component by using the :spacer_component option:
+Set `:spacer_component` as an instantiated component to render between items:
 
 ```erb
 <%= render(ProductComponent.with_collection(@products, spacer_component: SpacerComponent.new)) %>
-
 ```
 
-ViewComponent will render the SpacerComponent component between each pair of ProductComponent components.
+Which will render the SpacerComponent component between `ProductComponent`s.
