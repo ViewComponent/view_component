@@ -23,7 +23,7 @@ module ViewComponent
     end
 
     def setup
-      @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+      @products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
       @collection = ProductComponent.with_collection(@products, notice: "secondhand")
     end
 
