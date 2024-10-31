@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.20.0
+
 * Allow rendering `with_collection` to accept an optional `spacer_component` to be rendered between each item.
 
     *Nick Coyne*
