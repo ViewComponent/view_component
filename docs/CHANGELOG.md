@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Allow rendering `with_collection` to accept an optional `spacer_component` to be rendered between each item.
+
+    *Nick Coyne*
+
 * Remove OpenStruct from codebase.
 
     *Oleksii Vasyliev*

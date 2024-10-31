@@ -16,6 +16,12 @@ module ViewComponent
       end
     end
 
+    class SpacerComponent < ViewComponent::Base
+      def call
+        "<hr>".html_safe
+      end
+    end
+
     def setup
       @products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
       @collection = ProductComponent.with_collection(@products, notice: "secondhand")
@@ -34,6 +40,11 @@ module ViewComponent
       render_inline(ProductComponent.with_collection(@products))
       assert_selector("*[data-name='#{@products.first.name}']", text: @products.first.name)
       assert_selector("*[data-name='#{@products.last.name}']", text: @products.last.name)
+    end
+
+    def test_supports_collection_with_spacer_component
+      render_inline(ProductComponent.with_collection(@products, spacer_component: SpacerComponent.new))
+      assert_selector("hr", count: 1)
     end
   end
 end
