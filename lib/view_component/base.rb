@@ -351,10 +351,6 @@ module ViewComponent
       end
     end
 
-    def compiler
-      @compiler ||= self.class.compiler
-    end
-
     # Set the controller used for testing components:
     #
     # ```ruby
