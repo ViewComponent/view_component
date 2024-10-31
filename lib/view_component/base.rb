@@ -108,14 +108,7 @@ module ViewComponent
       before_render
 
       if render?
-        rendered_template =
-          if compiler.renders_template_for?(@__vc_variant, __vc_request&.format&.to_sym)
-            render_template_for(@__vc_variant, __vc_request&.format&.to_sym)
-          else
-            maybe_escape_html(render_template_for(@__vc_variant, __vc_request&.format&.to_sym)) do
-              Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. The output will be automatically escaped, but you may want to investigate.")
-            end
-          end.to_s
+        rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
 
         # Avoid allocating new string when output_preamble and output_postamble are blank
         if output_preamble.blank? && output_postamble.blank?
