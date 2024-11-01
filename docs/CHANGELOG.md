@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Ensure HTML output safety wrapper is used for all inline templates.
+
+    *Joel Hawksley*
+
 * Expose `.identifier` method as part of public API.
 
     *Joel Hawksley*
