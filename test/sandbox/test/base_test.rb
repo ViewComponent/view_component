@@ -3,6 +3,10 @@
 require "test_helper"
 
 class ViewComponent::Base::UnitTest < Minitest::Test
+  def test_identifier
+    assert(MyComponent.identifier.include?("test/sandbox/app/components/my_component.rb"))
+  end
+
   def skip_templates_parses_all_types_of_paths
     file_path = [
       "/Users/fake.user/path/to.templates/component/test_component.html+phone.erb",

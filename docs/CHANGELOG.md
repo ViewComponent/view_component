@@ -14,6 +14,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Expose `.identifier` method as part of public API.
+
+    *Joel Hawksley*
+
 ## 3.20.0
 
 * Allow rendering `with_collection` to accept an optional `spacer_component` to be rendered between each item.

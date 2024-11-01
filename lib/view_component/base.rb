@@ -446,8 +446,16 @@ module ViewComponent
     #  Defaults to `false`.
 
     class << self
+      # The file path of the component Ruby file.
+      #
+      # @return [String]
+      attr_reader :identifier
+
       # @private
-      attr_accessor :source_location, :virtual_path
+      attr_writer :identifier
+
+      # @private
+      attr_accessor :virtual_path
 
       # Find sidecar files for the given extensions.
       #
@@ -457,13 +465,13 @@ module ViewComponent
       # For example, one might collect sidecar CSS files that need to be compiled.
       # @param extensions [Array<String>] Extensions of which to return matching sidecar files.
       def sidecar_files(extensions)
-        return [] unless source_location
+        return [] unless identifier
 
         extensions = extensions.join(",")
 
         # view files in a directory named like the component
-        directory = File.dirname(source_location)
-        filename = File.basename(source_location, ".rb")
+        directory = File.dirname(identifier)
+        filename = File.basename(identifier, ".rb")
         component_name = name.demodulize.underscore
 
         # Add support for nested components defined in the same file.
@@ -488,7 +496,7 @@ module ViewComponent
 
         sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
-        (sidecar_files - [source_location] + sidecar_directory_files + nested_component_files).uniq
+        (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
       end
 
       # Render a component for each element in a collection ([documentation](/guide/collections)):
@@ -537,11 +545,11 @@ module ViewComponent
         # has been re-defined by the consuming application, likely in ApplicationComponent.
         # We use `base_label` method here instead of `label` to avoid cases where the method
         # owner is included in a prefix like `ApplicationComponent.inherited`.
-        child.source_location = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
+        child.identifier = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
 
         # If Rails application is loaded, removes the first part of the path and the extension.
         if defined?(Rails) && Rails.application
-          child.virtual_path = child.source_location.gsub(
+          child.virtual_path = child.identifier.gsub(
             /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
           )
         end
@@ -577,15 +585,6 @@ module ViewComponent
       # @private
       def compiler
         @__vc_compiler ||= Compiler.new(self)
-      end
-
-      # @private
-      def identifier
-        # :nocov:
-        Kernel.warn("WARNING: The #{self.class}.identifier is undocumented and was meant for internal framework usage only. As it is no longer used by the framework it will be removed in a coming non-breaking ViewComponent release.")
-
-        source_location
-        # :nocov:
       end
 
       # Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
