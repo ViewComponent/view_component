@@ -14,7 +14,6 @@ module ViewComponent
       lineno: nil,
       path: nil,
       extension: nil,
-      source: nil,
       method_name: nil,
       defined_on_self: true
     )
@@ -24,11 +23,8 @@ module ViewComponent
       @lineno = lineno
       @path = path
       @extension = extension
-      @source = source
       @method_name = method_name
       @defined_on_self = defined_on_self
-
-      @source_originally_nil = @source.nil?
 
       @call_method_name =
         if @method_name
@@ -65,17 +61,25 @@ module ViewComponent
       def type
         :file
       end
+
+      # Load file each time we look up #source in case the file has been modified
+      def source
+        ::File.read(@path)
+      end
     end
 
     class Inline < Template
+      attr_reader :source
+
       def initialize(component:, inline_template:)
         super(
           component: component,
           path: inline_template.path,
           lineno: inline_template.lineno,
-          source: inline_template.source.dup,
           extension: inline_template.language
         )
+
+        @source = inline_template.source.dup
       end
 
       def type
@@ -156,15 +160,6 @@ module ViewComponent
     end
 
     private
-
-    def source
-      if @source_originally_nil
-        # Load file each time we look up #source in case the file has been modified
-        ::File.read(@path)
-      else
-        @source
-      end
-    end
 
     def compiled_source
       handler = ActionView::Template.handler_for_extension(@extension)
