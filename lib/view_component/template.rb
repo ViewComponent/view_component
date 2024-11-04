@@ -5,23 +5,21 @@ module ViewComponent
     DataWithSource = Struct.new(:format, :identifier, :short_identifier, :type, keyword_init: true)
     DataNoSource = Struct.new(:source, :identifier, :type, keyword_init: true)
 
-    attr_reader :variant, :this_format
+    attr_reader :details
+
+    delegate :format, :variant, to: :details
 
     def initialize(
       component:,
-      this_format: nil,
-      variant: nil,
+      details:,
       lineno: nil,
       path: nil,
-      extension: nil,
       method_name: nil
     )
       @component = component
-      @this_format = this_format
-      @variant = variant&.to_sym
+      @details = details
       @lineno = lineno
       @path = path
-      @extension = extension
       @method_name = method_name
 
       @call_method_name =
@@ -29,21 +27,19 @@ module ViewComponent
           @method_name
         else
           out = +"call"
-          out << "_#{normalized_variant_name}" if @variant.present?
-          out << "_#{@this_format}" if @this_format.present? && @this_format != ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
+          out << "_#{normalized_variant_name}" if variant.present?
+          out << "_#{format}" if format.present? && format != ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
           out
         end
     end
 
     class File < Template
-      def initialize(component:, path:, details:)
+      def initialize(component:, details:, path:)
         super(
           component: component,
+          details: details,
           path: path,
-          lineno: 0,
-          extension: details.handler.to_s,
-          this_format: details.format,
-          variant: details.variant
+          lineno: 0
         )
       end
 
@@ -61,11 +57,13 @@ module ViewComponent
       attr_reader :source
 
       def initialize(component:, inline_template:)
+        details = ActionView::TemplateDetails.new(nil, inline_template.language.to_sym, nil, nil)
+
         super(
           component: component,
+          details: details,
           path: inline_template.path,
           lineno: inline_template.lineno,
-          extension: inline_template.language
         )
 
         @source = inline_template.source.dup
@@ -78,11 +76,13 @@ module ViewComponent
 
     class InlineCall < Template
       def initialize(component:, method_name:, defined_on_self:)
+        variant = method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil
+        details = ActionView::TemplateDetails.new(nil, nil, nil, variant)
+
         super(
           component: component,
-          this_format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT,
-          variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
-          method_name: method_name,
+          details: details,
+          method_name: method_name
         )
 
         @defined_on_self = defined_on_self
@@ -136,11 +136,7 @@ module ViewComponent
     end
 
     def default_format?
-      @this_format == ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
-    end
-
-    def format
-      @this_format
+      format.nil? || format == ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
     end
 
     def safe_method_name
@@ -148,22 +144,23 @@ module ViewComponent
     end
 
     def normalized_variant_name
-      @variant.to_s.gsub("-", "__")
+      variant.to_s.gsub("-", "__")
     end
 
     private
 
     def compiled_source
-      handler = ActionView::Template.handler_for_extension(@extension)
+      handler = details.handler_class
       this_source = source
       this_source.rstrip! if @component.strip_trailing_whitespace?
 
       short_identifier = defined?(Rails.root) ? @path.sub("#{Rails.root}/", "") : @path
-      type = ActionView::Template::Types[@this_format]
+      format = self.format || ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
+      type = ActionView::Template::Types[format]
 
       if handler.method(:call).parameters.length > 1
         handler.call(
-          DataWithSource.new(format: @this_format, identifier: @path, short_identifier: short_identifier, type: type),
+          DataWithSource.new(format: format, identifier: @path, short_identifier: short_identifier, type: type),
           this_source
         )
       # :nocov:
