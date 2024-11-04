@@ -13,7 +13,6 @@ module ViewComponent
     def initialize(component)
       @component = component
       @lock = Mutex.new
-      @rendered_templates = Set.new
     end
 
     def compiled?
@@ -56,10 +55,6 @@ module ViewComponent
       end
     end
 
-    def renders_template_for?(variant, format)
-      @rendered_templates.include?([variant, format])
-    end
-
     private
 
     attr_reader :templates
@@ -71,9 +66,9 @@ module ViewComponent
 
       method_body =
         if @templates.one?
-          @templates.first.safe_method_name
+          @templates.first.safe_method_name_call
         elsif (template = @templates.find(&:inline?))
-          template.safe_method_name
+          template.safe_method_name_call
         else
           branches = []
 
@@ -88,13 +83,13 @@ module ViewComponent
                 ].join(" && ")
               end
 
-            branches << [conditional, template.safe_method_name]
+            branches << [conditional, template.safe_method_name_call]
           end
 
           out = branches.each_with_object(+"") do |(conditional, branch_body), memo|
             memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{branch_body}\n"
           end
-          out << "else\n  #{templates.find { _1.variant.nil? && _1.default_format? }.safe_method_name}\nend"
+          out << "else\n  #{templates.find { _1.variant.nil? && _1.default_format? }.safe_method_name_call}\nend"
         end
 
       @component.silence_redefinition_of_method(:render_template_for)
@@ -195,10 +190,6 @@ module ViewComponent
               this_format: this_format.to_s.split(".").last&.to_sym, # strip locale from this_format, see #2113
               variant: variant
             )
-
-            # TODO: We should consider inlining the HTML output safety logic into the compiled render_template_for
-            # instead of this indirect approach
-            @rendered_templates << [out.variant, out.this_format]
 
             out
           end

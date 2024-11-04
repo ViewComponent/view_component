@@ -24,6 +24,32 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Ensure HTML output safety wrapper is used for all inline templates.
+
+    *Joel Hawksley*
+
+* Expose `.identifier` method as part of public API.
+
+    *Joel Hawksley*
+
+## 3.20.0
+
+* Allow rendering `with_collection` to accept an optional `spacer_component` to be rendered between each item.
+
+    *Nick Coyne*
+
+* Remove OpenStruct from codebase.
+
+    *Oleksii Vasyliev*
+
+## 3.19.0
+
+* Relax Active Support version constraint in gemspec.
+
+    *Simon Fish*
+
+## 3.18.0
+
 * Enable components to use `@request` and `request` methods/ivars.
 
     *Blake Williams*

@@ -15,7 +15,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    assert_allocations("3.4.0" => 110, "3.3.5" => 116, "3.3.0" => 125, "3.2.5" => 115) do
+    assert_allocations("3.4.0" => 109, "3.3.5" => 115, "3.3.0" => 127, "3.2.6" => 114) do
       render_inline(MyComponent.new)
     end
 
@@ -577,7 +577,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_collection
-    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     render_inline(ProductComponent.with_collection(products, notice: "On sale"))
 
     assert_selector("h1", text: "Product", count: 2)
@@ -589,7 +589,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_collection_custom_collection_parameter_name
-    coupons = [OpenStruct.new(percent_off: 20), OpenStruct.new(percent_off: 50)]
+    coupons = [Coupon.new(percent_off: 20), Coupon.new(percent_off: 50)]
     render_inline(ProductCouponComponent.with_collection(coupons))
 
     assert_selector("h3", text: "20%")
@@ -598,8 +598,8 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_custom_collection_parameter_name_counter
     photos = [
-      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
-      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+      Photo.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      Photo.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
     ]
     render_inline(CollectionCounterComponent.with_collection(photos))
 
@@ -612,8 +612,8 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_custom_collection_parameter_name_iteration
     photos = [
-      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
-      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+      Photo.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      Photo.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
     ]
     render_inline(CollectionIterationComponent.with_collection(photos))
 
@@ -626,8 +626,8 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_custom_collection_parameter_name_iteration_extend_other_component
     photos = [
-      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
-      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+      Photo.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      Photo.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
     ]
     render_inline(CollectionIterationExtendComponent.with_collection(photos))
 
@@ -640,8 +640,8 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_custom_collection_parameter_name_iteration_extend_other_component_override
     photos = [
-      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
-      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+      Photo.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      Photo.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
     ]
     render_inline(CollectionIterationExtendOverrideComponent.with_collection(photos))
 
@@ -670,7 +670,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_collection_missing_arg
-    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     exception =
       assert_raises ArgumentError do
         render_inline(ProductComponent.with_collection(products))
@@ -681,7 +681,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_single_item_from_collection
-    product = OpenStruct.new(name: "Mints")
+    product = Product.new(name: "Mints")
     render_inline(ProductComponent.new(product: product, notice: "On sale"))
 
     assert_selector("h1", text: "Product", count: 1)
@@ -698,7 +698,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_collection_component_missing_default_parameter_name
     assert_raises ViewComponent::MissingCollectionArgumentError do
       render_inline(
-        MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
+        MissingDefaultCollectionParameterComponent.with_collection([Product.new(name: "Mints")])
       )
     end
   end
@@ -706,7 +706,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_collection_component_missing_custom_parameter_name_with_activemodel
     assert_raises ViewComponent::MissingCollectionArgumentError do
       render_inline(
-        MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+        MissingCollectionParameterWithActiveModelComponent.with_collection([Product.new(name: "Mints")])
       )
     end
   end
@@ -714,7 +714,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_collection_component_present_custom_parameter_name_with_activemodel
     assert_nothing_raised do
       render_inline(
-        CollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+        CollectionParameterWithActiveModelComponent.with_collection([Product.new(name: "Mints")])
       )
     end
   end

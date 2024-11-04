@@ -162,6 +162,7 @@ main() {
     add_changed_files $major $minor $patch
     commit $major $minor $patch
     push $major $minor $patch
+    exit 0
   done
 }
 
