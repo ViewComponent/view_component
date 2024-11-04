@@ -5,11 +5,10 @@ module ViewComponent
     DataWithSource = Struct.new(:format, :identifier, :short_identifier, :type, keyword_init: true)
     DataNoSource = Struct.new(:source, :identifier, :type, keyword_init: true)
 
-    attr_reader :variant, :this_format, :type
+    attr_reader :variant, :this_format
 
     def initialize(
       component:,
-      type:,
       this_format: nil,
       variant: nil,
       lineno: nil,
@@ -20,7 +19,6 @@ module ViewComponent
       defined_on_self: true
     )
       @component = component
-      @type = type
       @this_format = this_format
       @variant = variant&.to_sym
       @lineno = lineno
@@ -41,6 +39,24 @@ module ViewComponent
           out << "_#{@this_format}" if @this_format.present? && @this_format != ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
           out
         end
+    end
+
+    class File < Template
+      def type
+        :file
+      end
+    end
+
+    class Inline < Template
+      def type
+        :inline
+      end
+    end
+
+    class InlineCall < Template
+      def type
+        :inline_call
+      end
     end
 
     def compile_to_component
@@ -72,11 +88,11 @@ module ViewComponent
     end
 
     def inline_call?
-      @type == :inline_call
+      type == :inline_call
     end
 
     def inline?
-      @type == :inline
+      type == :inline
     end
 
     def default_format?
@@ -104,7 +120,7 @@ module ViewComponent
     def source
       if @source_originally_nil
         # Load file each time we look up #source in case the file has been modified
-        File.read(@path)
+        ::File.read(@path)
       else
         @source
       end
