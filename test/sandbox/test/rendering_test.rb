@@ -198,14 +198,6 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
-  def test_renders_component_with_variant_containing_a_dot
-    with_variant :"mini.watch" do
-      render_inline(VariantsComponent.new)
-
-      assert_text("Mini Watch with dot")
-    end
-  end
-
   def test_renders_default_template_when_variant_template_is_not_present
     with_variant :variant_without_template do
       render_inline(VariantsComponent.new)

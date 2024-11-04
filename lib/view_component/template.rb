@@ -36,23 +36,14 @@ module ViewComponent
     end
 
     class File < Template
-      def initialize(component:, path:)
-        # Extract format and variant from template filename
-        this_format, variant =
-          ::File
-            .basename(path)     # "variants_component.html+mini.watch.erb"
-            .split(".")[1..-2]  # ["html+mini", "watch"]
-            .join(".")          # "html+mini.watch"
-            .split("+")         # ["html", "mini.watch"]
-            .map(&:to_sym)      # [:html, :"mini.watch"]
-
+      def initialize(component:, path:, details:)
         super(
           component: component,
           path: path,
           lineno: 0,
-          extension: path.split(".").last,
-          this_format: this_format.to_s.split(".").last&.to_sym, # strip locale from this_format, see #2113
-          variant: variant
+          extension: details.handler.to_s,
+          this_format: details.format,
+          variant: details.variant
         )
       end
 
@@ -157,7 +148,7 @@ module ViewComponent
     end
 
     def normalized_variant_name
-      @variant.to_s.gsub("-", "__").gsub(".", "___")
+      @variant.to_s.gsub("-", "__")
     end
 
     private

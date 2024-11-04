@@ -169,10 +169,12 @@ module ViewComponent
     def gather_templates
       @templates ||=
         begin
+          path_parser = ActionView::Resolver::PathParser.new
           templates = @component.sidecar_files(
             ActionView::Template.template_handler_extensions
           ).map do |path|
-            out = Template::File.new(component: @component, path: path)
+            details = path_parser.parse(path).details
+            out = Template::File.new(component: @component, path: path, details: details)
 
             out
           end
