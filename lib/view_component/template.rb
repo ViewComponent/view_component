@@ -42,18 +42,58 @@ module ViewComponent
     end
 
     class File < Template
+      def initialize(component:, path:)
+        # Extract format and variant from template filename
+        this_format, variant =
+          ::File
+            .basename(path)     # "variants_component.html+mini.watch.erb"
+            .split(".")[1..-2]  # ["html+mini", "watch"]
+            .join(".")          # "html+mini.watch"
+            .split("+")         # ["html", "mini.watch"]
+            .map(&:to_sym)      # [:html, :"mini.watch"]
+
+        super(
+          component: component,
+          path: path,
+          lineno: 0,
+          extension: path.split(".").last,
+          this_format: this_format.to_s.split(".").last&.to_sym, # strip locale from this_format, see #2113
+          variant: variant
+        )
+      end
+
       def type
         :file
       end
     end
 
     class Inline < Template
+      def initialize(component:, inline_template:)
+        super(
+          component: component,
+          path: inline_template.path,
+          lineno: inline_template.lineno,
+          source: inline_template.source.dup,
+          extension: inline_template.language
+        )
+      end
+
       def type
         :inline
       end
     end
 
     class InlineCall < Template
+      def initialize(component:, method_name:, defined_on_self:)
+        super(
+          component: component,
+          this_format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT,
+          variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
+          method_name: method_name,
+          defined_on_self: defined_on_self
+        )
+      end
+
       def type
         :inline_call
       end
