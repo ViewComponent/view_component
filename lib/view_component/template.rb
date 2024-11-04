@@ -14,8 +14,7 @@ module ViewComponent
       lineno: nil,
       path: nil,
       extension: nil,
-      method_name: nil,
-      defined_on_self: true
+      method_name: nil
     )
       @component = component
       @this_format = this_format
@@ -24,7 +23,6 @@ module ViewComponent
       @path = path
       @extension = extension
       @method_name = method_name
-      @defined_on_self = defined_on_self
 
       @call_method_name =
         if @method_name
@@ -94,8 +92,9 @@ module ViewComponent
           this_format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT,
           variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
           method_name: method_name,
-          defined_on_self: defined_on_self
         )
+
+        @defined_on_self = defined_on_self
       end
 
       def type
@@ -104,6 +103,10 @@ module ViewComponent
 
       def compile_to_component
         @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
+      end
+
+      def defined_on_self?
+        @defined_on_self
       end
     end
 
@@ -155,10 +158,6 @@ module ViewComponent
 
     def normalized_variant_name
       @variant.to_s.gsub("-", "__").gsub(".", "___")
-    end
-
-    def defined_on_self?
-      @defined_on_self
     end
 
     private
