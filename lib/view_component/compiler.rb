@@ -55,6 +55,23 @@ module ViewComponent
       end
     end
 
+    # @return all matching compiled templates, in priority order based on the requested details from LookupContext
+    #
+    # @param [ActionView::TemplateDetails::Requested] requested_details i.e. locales, formats, variants
+    def find_templates_for(requested_details)
+      filtered_templates = @templates.select do |template|
+        template.details.matches?(requested_details)
+      end
+
+      if filtered_templates.count > 1
+        filtered_templates.sort_by! do |template|
+          template.details.sort_key_for(requested_details)
+        end
+      end
+
+      filtered_templates
+    end
+
     private
 
     attr_reader :templates
@@ -64,40 +81,25 @@ module ViewComponent
         template.compile_to_component
       end
 
-      method_body =
-        if @templates.one?
-          @templates.first.safe_method_name_call
-        elsif (template = @templates.find(&:inline?))
-          template.safe_method_name_call
-        else
-          branches = []
-
-          @templates.each do |template|
-            conditional =
-              if template.inline_call?
-                "variant&.to_sym == #{template.variant.inspect}"
-              else
-                [
-                  template.default_format? ? "(format == #{ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT.inspect} || format.nil?)" : "format == #{template.format.inspect}",
-                  template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
-                ].join(" && ")
-              end
-
-            branches << [conditional, template.safe_method_name_call]
-          end
-
-          out = branches.each_with_object(+"") do |(conditional, branch_body), memo|
-            memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{branch_body}\n"
-          end
-          out << "else\n  #{templates.find { _1.variant.nil? && _1.default_format? }.safe_method_name_call}\nend"
-        end
-
       @component.silence_redefinition_of_method(:render_template_for)
-      @component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-      def render_template_for(variant = nil, format = nil)
-        #{method_body}
+
+      if @templates.one?
+        template = @templates.first
+        safe_call = template.safe_method_name_call
+        @component.define_method(:render_template_for) do |_|
+          @current_template = template
+          instance_exec(&safe_call)
+        end
+      else
+        compiler = self
+        @component.define_method(:render_template_for) do |details|
+          if (@current_template = compiler.find_templates_for(details).first)
+            instance_exec(&@current_template.safe_method_name_call)
+          else
+            raise MissingTemplateError.new(self.class.name, details)
+          end
+        end
       end
-      RUBY
     end
 
     def template_errors
@@ -168,15 +170,18 @@ module ViewComponent
 
     def gather_templates
       @templates ||=
-        begin
+        if @component.inline_template.present?
+          [Template::Inline.new(
+            component: @component,
+            inline_template: @component.inline_template
+          )]
+        else
           path_parser = ActionView::Resolver::PathParser.new
           templates = @component.sidecar_files(
             ActionView::Template.template_handler_extensions
           ).map do |path|
             details = path_parser.parse(path).details
-            out = Template::File.new(component: @component, path: path, details: details)
-
-            out
+            Template::File.new(component: @component, path: path, details: details)
           end
 
           component_instance_methods_on_self = @component.instance_methods(false)
@@ -186,17 +191,10 @@ module ViewComponent
           ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }
             .uniq
             .each do |method_name|
-              templates << Template::InlineCall.new(
-                component: @component,
-                method_name: method_name,
-                defined_on_self: component_instance_methods_on_self.include?(method_name)
-              )
-            end
-
-          if @component.inline_template.present?
-            templates << Template::Inline.new(
+            templates << Template::InlineCall.new(
               component: @component,
-              inline_template: @component.inline_template
+              method_name: method_name,
+              defined_on_self: component_instance_methods_on_self.include?(method_name)
             )
           end
 

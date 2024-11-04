@@ -28,6 +28,17 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* BREAKING: Use ActionView's `lookup_context` for picking templates instead of the request format.
+
+  3.15 added support for using templates that match the request format, i.e. if `/resource.csv` is requested then
+  ViewComponents would pick `_component.csv.erb` over `_component.html.erb`.
+
+  With this release, the request format is no longer considered and instead ViewComponent will use the Rails logic
+  for picking the most appropriate template type, i.e. the csv template will be used if it matches the `Accept` header
+  or because the controller uses a `respond_to` block to pick the response format.
+
+    *Stephen Nelson*
+
 * Ensure HTML output safety wrapper is used for all inline templates.
 
     *Joel Hawksley*

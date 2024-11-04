@@ -7,30 +7,14 @@ module ViewComponent
 
     attr_reader :details
 
-    delegate :format, :variant, to: :details
+    delegate :virtual_path, to: :@component
+    delegate :format, :variant, to: :@details
 
-    def initialize(
-      component:,
-      details:,
-      lineno: nil,
-      path: nil,
-      method_name: nil
-    )
+    def initialize(component:, details:, lineno: nil, path: nil)
       @component = component
       @details = details
       @lineno = lineno
       @path = path
-      @method_name = method_name
-
-      @call_method_name =
-        if @method_name
-          @method_name
-        else
-          out = +"call"
-          out << "_#{normalized_variant_name}" if variant.present?
-          out << "_#{format}" if format.present? && format != ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
-          out
-        end
     end
 
     class File < Template
@@ -79,12 +63,9 @@ module ViewComponent
         variant = method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil
         details = ActionView::TemplateDetails.new(nil, nil, nil, variant)
 
-        super(
-          component: component,
-          details: details,
-          method_name: method_name
-        )
+        super(component: component, details: details)
 
+        @call_method_name = method_name
         @defined_on_self = defined_on_self
       end
 
@@ -96,19 +77,29 @@ module ViewComponent
         @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
       end
 
+      def safe_method_name_call
+        m = safe_method_name
+        proc do
+          maybe_escape_html(send(m)) do
+            Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. " \
+                          "The output will be automatically escaped, but you may want to investigate.")
+          end
+        end
+      end
+
       def defined_on_self?
         @defined_on_self
       end
     end
 
     def compile_to_component
-      @component.silence_redefinition_of_method(@call_method_name)
+      @component.silence_redefinition_of_method(call_method_name)
 
       # rubocop:disable Style/EvalWithLocation
-      @component.class_eval <<-RUBY, @path, @lineno
-      def #{@call_method_name}
-        #{compiled_source}
-      end
+      @component.class_eval <<~RUBY, @path, @lineno
+        def #{call_method_name}
+          #{compiled_source}
+        end
       RUBY
       # rubocop:enable Style/EvalWithLocation
 
@@ -116,11 +107,8 @@ module ViewComponent
     end
 
     def safe_method_name_call
-      return safe_method_name unless inline_call?
-
-      "maybe_escape_html(#{safe_method_name}) " \
-      "{ Kernel.warn('WARNING: The #{@component} component rendered HTML-unsafe output. " \
-      "The output will be automatically escaped, but you may want to investigate.') } "
+      m = safe_method_name
+      proc { send(m) }
     end
 
     def requires_compiled_superclass?
@@ -131,16 +119,19 @@ module ViewComponent
       type == :inline_call
     end
 
-    def inline?
-      type == :inline
-    end
-
     def default_format?
       format.nil? || format == ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
     end
+    alias_method :html?, :default_format?
+
+    def call_method_name
+      @call_method_name ||=
+        ["call", (normalized_variant_name if variant.present?), (format unless default_format?)]
+          .compact.join("_").to_sym
+    end
 
     def safe_method_name
-      "_#{@call_method_name}_#{@component.name.underscore.gsub("/", "__")}"
+      "_#{call_method_name}_#{@component.name.underscore.gsub("/", "__")}"
     end
 
     def normalized_variant_name
