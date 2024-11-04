@@ -101,20 +101,22 @@ module ViewComponent
       def type
         :inline_call
       end
+
+      def compile_to_component
+        @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
+      end
     end
 
     def compile_to_component
-      if !inline_call?
-        @component.silence_redefinition_of_method(@call_method_name)
+      @component.silence_redefinition_of_method(@call_method_name)
 
-        # rubocop:disable Style/EvalWithLocation
-        @component.class_eval <<-RUBY, @path, @lineno
-        def #{@call_method_name}
-          #{compiled_source}
-        end
-        RUBY
-        # rubocop:enable Style/EvalWithLocation
+      # rubocop:disable Style/EvalWithLocation
+      @component.class_eval <<-RUBY, @path, @lineno
+      def #{@call_method_name}
+        #{compiled_source}
       end
+      RUBY
+      # rubocop:enable Style/EvalWithLocation
 
       @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
     end
