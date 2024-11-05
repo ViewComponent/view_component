@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "action_view"
+require "view_component/cacheable"
 require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
@@ -55,6 +56,7 @@ module ViewComponent
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
+    include ViewComponent::Cacheable
 
     RESERVED_PARAMETER = :content
     VC_INTERNAL_DEFAULT_FORMAT = :html
@@ -390,15 +392,6 @@ module ViewComponent
       defined?(@view_context) && @view_context && @__vc_render_in_block
     end
 
-    def __vc_render_template(rendered_template)
-      # Avoid allocating new string when output_preamble and output_postamble are blank
-      if output_preamble.blank? && output_postamble.blank?
-        rendered_template
-      else
-        safe_output_preamble + rendered_template + safe_output_postamble
-      end
-    end
-
     def __vc_content_set_by_with_content_defined?
       defined?(@__vc_content_set_by_with_content)
     end
@@ -618,8 +611,6 @@ module ViewComponent
           vc_ancestor_calls.unshift(instance_method(:render_template_for))
           child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
         end
-
-        child.__vc_cache_dependencies = __vc_cache_dependencies.dup
 
         super
       end
