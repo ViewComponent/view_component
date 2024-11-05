@@ -270,14 +270,6 @@ module ViewComponent
     end
 
     # For caching, such as #cache_if
-    # @private
-    def view_cache_dependencies
-      self.class.view_cache_dependencies
-    end
-
-    alias_method :component_cache_dependencies, :view_cache_dependencies
-
-    # For caching, such as #cache_if
     #
     # @private
     def format
@@ -299,6 +291,9 @@ module ViewComponent
       @__vc_request ||= controller.request if controller.respond_to?(:request)
     end
 
+    # For caching, such as #cache_if
+    #
+    # @private
     def view_cache_dependencies
       return unless __vc_cache_dependencies.present? && __vc_cache_dependencies.any?
 
@@ -483,8 +478,6 @@ module ViewComponent
       # @private
       attr_accessor :virtual_path
 
-
-
       # Find sidecar files for the given extensions.
       #
       # The provided array of extensions is expected to contain
@@ -596,7 +589,7 @@ module ViewComponent
           child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
         end
 
-        child.__vc_cache_dependencies = self.__vc_cache_dependencies.dup
+        child.__vc_cache_dependencies = __vc_cache_dependencies.dup
 
         super
       end
