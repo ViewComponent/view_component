@@ -320,6 +320,15 @@ module ViewComponent
     # For caching, such as #cache_if
     #
     # @private
+    def view_cache_dependencies
+      return unless __vc_cache_dependencies.present? && __vc_cache_dependencies.any?
+
+      __vc_cache_dependencies.filter_map { |dep| send(dep) }
+    end
+
+    # For caching, such as #cache_if
+    #
+    # @private
     def format
       @__vc_variant if defined?(@__vc_variant)
     end
