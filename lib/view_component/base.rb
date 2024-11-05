@@ -346,6 +346,12 @@ module ViewComponent
       @__vc_request ||= controller.request if controller.respond_to?(:request)
     end
 
+    def view_cache_dependencies
+      return unless __vc_cache_dependencies.present? && __vc_cache_dependencies.any?
+
+      __vc_cache_dependencies.filter_map { |dep| send(dep) }
+    end
+
     # The content passed to the component instance as a block.
     #
     # @return [String]
@@ -608,6 +614,8 @@ module ViewComponent
           vc_ancestor_calls.unshift(instance_method(:render_template_for))
           child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
         end
+
+        child.__vc_cache_dependencies = __vc_cache_dependencies.dup
 
         super
       end
