@@ -438,6 +438,7 @@ module ViewComponent
     # ```
     #
     #  Defaults to `false`.
+
     class << self
       # The file path of the component Ruby file.
       #
