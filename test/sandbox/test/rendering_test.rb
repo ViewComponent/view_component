@@ -15,7 +15,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    assert_allocations("3.4.0" => 109, "3.3.5" => 115, "3.3.0" => 127, "3.2.6" => 114, "3.1.6" => 114, "3.0.7" => 123) do
+    assert_allocations("3.4.0" => 109, "3.3.6" => 115, "3.3.0" => 127, "3.2.6" => 114, "3.1.6" => 114, "3.0.7" => 123) do
       render_inline(MyComponent.new)
     end
 
