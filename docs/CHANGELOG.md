@@ -24,6 +24,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* BREAKING: Remove support for variant names containing `.` to be consistent with Rails.
+
+    *Stephen Nelson*
+
 * Ensure HTML output safety wrapper is used for all inline templates.
 
     *Joel Hawksley*
