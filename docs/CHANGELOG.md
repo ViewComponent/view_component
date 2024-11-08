@@ -28,6 +28,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* BREAKING: Use ActionView's `lookup_context` for picking templates instead of the request format.
+
+    *Stephen Nelson*
+
 * Ensure HTML output safety wrapper is used for all inline templates.
 
     *Joel Hawksley*
