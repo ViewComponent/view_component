@@ -3,11 +3,11 @@
 
 A framework for building reusable, testable & encapsulated view components in Ruby on Rails.
 
-[![Gurubase](https://img.shields.io/badge/Gurubase-Ask%20ViewComponent%20Guru-006BFF)](https://gurubase.io/g/viewcomponent)
-
 ## Documentation
 
 See [viewcomponent.org](https://viewcomponent.org/) for documentation.
+
+You can also [Ask ViewComponent Guru](https://gurubase.io/g/viewcomponent), it is a ViewComponent-focused AI to answer your questions.
 
 ## Contributing
 
