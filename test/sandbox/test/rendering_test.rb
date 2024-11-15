@@ -15,7 +15,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    assert_allocations("3.4.0" => 109, "3.3.6" => 115, "3.3.0" => 127, "3.2.6" => 114, "3.1.6" => 114, "3.0.7" => 123) do
+    assert_allocations("3.4.0" => 109, "3.3.6" => 115, "3.3.0" => 124, "3.2.6" => 114) do
       render_inline(MyComponent.new)
     end
 
@@ -117,8 +117,6 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_renders_haml_with_html_formatted_slot
-    skip if Rails::VERSION::STRING < "6.1"
-
     render_inline(HamlHtmlFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted one")
@@ -200,14 +198,6 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
-  def test_renders_component_with_variant_containing_a_dot
-    with_variant :"mini.watch" do
-      render_inline(VariantsComponent.new)
-
-      assert_text("Mini Watch with dot")
-    end
-  end
-
   def test_renders_default_template_when_variant_template_is_not_present
     with_variant :variant_without_template do
       render_inline(VariantsComponent.new)
@@ -269,15 +259,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_helper_method_within_nested_component
     render_inline(ContainerComponent.new)
-
     assert_text("Hello helper method")
-  end
-
-  def test_renders_helper_method_within_nested_component_with_disabled_monkey_patch
-    with_render_monkey_patch_config(false) do
-      render_inline(ContainerComponent.new)
-      assert_text("Hello helper method")
-    end
   end
 
   def test_renders_path_helper

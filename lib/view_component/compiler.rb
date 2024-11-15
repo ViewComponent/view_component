@@ -169,27 +169,12 @@ module ViewComponent
     def gather_templates
       @templates ||=
         begin
+          path_parser = ActionView::Resolver::PathParser.new
           templates = @component.sidecar_files(
             ActionView::Template.template_handler_extensions
           ).map do |path|
-            # Extract format and variant from template filename
-            this_format, variant =
-              File
-                .basename(path)     # "variants_component.html+mini.watch.erb"
-                .split(".")[1..-2]  # ["html+mini", "watch"]
-                .join(".")          # "html+mini.watch"
-                .split("+")         # ["html", "mini.watch"]
-                .map(&:to_sym)      # [:html, :"mini.watch"]
-
-            out = Template.new(
-              component: @component,
-              type: :file,
-              path: path,
-              lineno: 0,
-              extension: path.split(".").last,
-              this_format: this_format.to_s.split(".").last&.to_sym, # strip locale from this_format, see #2113
-              variant: variant
-            )
+            details = path_parser.parse(path).details
+            out = Template::File.new(component: @component, path: path, details: details)
 
             out
           end
@@ -201,24 +186,17 @@ module ViewComponent
           ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }
             .uniq
             .each do |method_name|
-              templates << Template.new(
+              templates << Template::InlineCall.new(
                 component: @component,
-                type: :inline_call,
-                this_format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT,
-                variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
                 method_name: method_name,
                 defined_on_self: component_instance_methods_on_self.include?(method_name)
               )
             end
 
           if @component.inline_template.present?
-            templates << Template.new(
+            templates << Template::Inline.new(
               component: @component,
-              type: :inline,
-              path: @component.inline_template.path,
-              lineno: @component.inline_template.lineno,
-              source: @component.inline_template.source.dup,
-              extension: @component.inline_template.language
+              inline_template: @component.inline_template
             )
           end
 

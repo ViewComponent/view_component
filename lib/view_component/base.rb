@@ -361,13 +361,6 @@ module ViewComponent
     # configured on a per-test basis using `with_controller_class`.
     #
 
-    # Set if render monkey patches should be included or not in Rails <6.1:
-    #
-    # ```ruby
-    # config.view_component.render_monkey_patch_enabled = false
-    # ```
-    #
-
     # Path for component files
     #
     # ```ruby
@@ -685,8 +678,6 @@ module ViewComponent
 
       def initialize_parameter_names
         return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
-
-        return attribute_types.keys.map(&:to_sym) if Rails::VERSION::MAJOR <= 5 && respond_to?(:attribute_types)
 
         initialize_parameters.map(&:last)
       end
