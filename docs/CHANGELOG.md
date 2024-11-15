@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `--skip-suffix` option to component generator
+    
+    *KAWAKAMI Moeki*
+
 * Ensure HTML output safety wrapper is used for all inline templates.
 
     *Joel Hawksley*
