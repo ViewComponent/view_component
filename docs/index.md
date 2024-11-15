@@ -239,6 +239,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Avo Admin for Rails](https://avohq.io/rails-admin)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
+* [Buildkite](https://buildkite.com)
 * [Bump.sh](https://bump.sh)
 * [Causey](https://www.causey.app/) (100+ components)
 * [CharlieHR](https://www.charliehr.com/)
