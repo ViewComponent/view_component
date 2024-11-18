@@ -8,5 +8,6 @@ gem "net-smtp", require: false
 gem "net-imap", require: false
 gem "net-pop", require: false
 gem "turbo-rails", "~> 1"
+gem "sprockets-rails", "~> 3.4.2"
 
 gemspec path: "../"
