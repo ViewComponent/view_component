@@ -351,8 +351,6 @@ class RenderingTest < ViewComponent::TestCase
     else
       assert_match(%r{http://assets.example.com/application.css}, render_inline(component).text)
     end
-
-
   end
 
   def test_template_changes_are_not_reflected_if_cache_is_not_cleared
