@@ -7,7 +7,7 @@ require "action_cable/engine" # Remove when hotwired/turbo-rails#74 is resolved
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
-require "sprockets/railtie" if (Rails.version.to_f <= 7.2 || !ENV['BENCHMARK'].present?)
+require "sprockets/railtie" if Rails.version.to_f <= 7.2 || !ENV["BENCHMARK"].present?
 # require "propshaft/railtie" if Rails.version.to_f >= 7.2
 
 require "turbo-rails"
