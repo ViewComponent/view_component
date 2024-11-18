@@ -28,6 +28,11 @@ appraise "rails-7.2" do
   gem "tailwindcss-rails", "~> 2.0"
 end
 
+appraise "rails-8.0" do
+  gem "rails", "~> 8.0"
+  gem "tailwindcss-rails", "~> 2.0"
+end
+
 appraise "rails-main" do
   gem "rails", github: "rails/rails", branch: "main"
   gem "tailwindcss-rails", "~> 2.0"
