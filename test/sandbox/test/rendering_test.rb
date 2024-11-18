@@ -330,16 +330,23 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_component_with_asset_url
     component = AssetComponent.new
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+    if Rails.version.to_f <= 7.2
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
 
-    component.config.asset_host = nil
-    assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
+      #  cant do this in Rails 8 https://github.com/rails/propshaft/pull/59
+      component.config.asset_host = nil
+      assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
 
-    component.config.asset_host = "http://assets.example.com"
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+      component.config.asset_host = "http://assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
 
-    component.config.asset_host = "assets.example.com"
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+      component.config.asset_host = "assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+    else
+      assert_match(%r{http://assets.example.com/application.css}, render_inline(component).text)
+    end
+
+
   end
 
   def test_template_changes_are_not_reflected_if_cache_is_not_cleared
