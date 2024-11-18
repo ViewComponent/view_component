@@ -35,6 +35,7 @@ module ViewComponent
       end
     end
 
+    include ViewComponent::Cacheable
     include ViewComponent::InlineTemplate
     include ViewComponent::UseHelpers
     include ViewComponent::Slotable
