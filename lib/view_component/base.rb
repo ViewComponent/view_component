@@ -51,7 +51,6 @@ module ViewComponent
     include Rails.application.routes.url_helpers if defined?(Rails) && Rails.application
     include ERB::Escape
     include ActiveSupport::CoreExt::ERBUtil
-
     include ViewComponent::InlineTemplate
     include ViewComponent::Slotable
     include ViewComponent::Translatable
