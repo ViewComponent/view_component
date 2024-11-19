@@ -16,9 +16,9 @@ jobs:
       with:
         ruby-version: 3.3
         bundler-cache: true
-    env:
-      BENCHMARK: true
     - name: Run benchmarks
+      env:
+        BENCHMARK: true
       run: |
         bundle exec rake partial_benchmark
         bundle exec rake translatable_benchmark
