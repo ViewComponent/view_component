@@ -20,7 +20,7 @@ nav_order: 5
 
 * Add rails 8 support
 
-    *Reegan Viljoen
+    *Reegan Viljoen*
 
 ## 3.20.0
 
