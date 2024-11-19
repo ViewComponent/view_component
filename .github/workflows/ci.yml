@@ -9,6 +9,8 @@ on:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
+    env:
+      BUNDLE_GEMFILE: gemfiles/rails_8.0.gemfile
     steps:
     - uses: actions/checkout@v4.1.1
     - name: Setup Ruby
