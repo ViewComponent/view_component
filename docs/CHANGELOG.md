@@ -18,7 +18,7 @@ nav_order: 5
 
     *Joel Hawksley*
 
-* Add rails 8 support
+* Add rails 8 support to CI.
 
     *Reegan Viljoen*
 
