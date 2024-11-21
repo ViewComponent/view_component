@@ -338,7 +338,7 @@ class RenderingTest < ViewComponent::TestCase
 
     if Rails.version.to_f < 8.0
 
-      #  Propshaft doesn't allow setting custom hosts so this only works in Rails < 8
+      # Propshaft doesn't allow setting custom hosts so this only works in Rails < 8
       # TODO: Revisit this comment for v4 to see if we need to make any deprecations
       component.config.asset_host = nil
       assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
