@@ -7,6 +7,7 @@ module ViewComponent
   extend ActiveSupport::Autoload
 
   autoload :Base
+  autoload :Metal
   autoload :CaptureCompatibility
   autoload :Compiler
   autoload :CompileCache
