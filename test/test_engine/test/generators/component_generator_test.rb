@@ -17,4 +17,14 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
       assert_no_match(/def initialize/, component)
     end
   end
+
+  def test_component_without_suffix
+    run_generator %w[example --skip-suffix]
+
+    assert_file "app/components/test_engine/example.rb" do |component|
+      assert_match(/module TestEngine/, component)
+      assert_match(/class Example < ViewComponent::Base/, component)
+      assert_no_match(/def initialize/, component)
+    end
+  end
 end

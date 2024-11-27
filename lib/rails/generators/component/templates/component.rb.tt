@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 <% module_namespacing do -%>
-class <%= class_name %>Component < <%= parent_class %>
+class <%= class_name %><%= options[:skip_suffix] ? "" : "Component" %> < <%= parent_class %>
 <%- if initialize_signature -%>
   def initialize(<%= initialize_signature %>)
     <%= initialize_body %>
