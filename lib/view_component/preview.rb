@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "active_support/core_ext/object/blank"
 require "active_support/descendants_tracker"
 
 module ViewComponent # :nodoc:
@@ -12,6 +13,12 @@ module ViewComponent # :nodoc:
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::AssetTagHelper
     extend ActiveSupport::DescendantsTracker
+
+    attr_reader :params
+
+    def initialize(params = {})
+      @params = params
+    end
 
     def render(component, **args, &block)
       {
@@ -43,8 +50,16 @@ module ViewComponent # :nodoc:
       # Returns the arguments for rendering of the component in its layout
       def render_args(example, params: {})
         example_params_names = instance_method(example).parameters.map(&:last)
-        provided_params = params.slice(*example_params_names).to_h.symbolize_keys
-        result = provided_params.empty? ? new.public_send(example) : new.public_send(example, **provided_params)
+
+        result =
+          if example_params_names.blank?
+            new(params).public_send(example)
+          else
+            Deprecation.deprecation_warning("Preview variant arguments are deprecated, user params instead")
+            provided_params = params.slice(*example_params_names).to_h.symbolize_keys
+            new(params).public_send(example, **provided_params)
+          end
+
         result ||= {}
         result[:template] = preview_example_template_path(example) if result[:template].nil?
         @layout = nil unless defined?(@layout)
