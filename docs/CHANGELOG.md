@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add documentation for JavaScript and CSS without webpacker
+
+    *Jason Kotchoff*
+
 * Ensure HTML output safety wrapper is used for all inline templates.
 
     *Joel Hawksley*
