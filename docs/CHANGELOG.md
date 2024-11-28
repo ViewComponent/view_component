@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add first class component cache.
+
+    *Reegan Viljoen*
+
 * Ensure HTML output safety wrapper is used for all inline templates.
 
     *Joel Hawksley*
