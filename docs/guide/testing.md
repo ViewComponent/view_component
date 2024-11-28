@@ -30,6 +30,21 @@ _Note: `assert_selector` only matches on visible elements by default. To match o
 
 For debugging purposes, the `rendered_content` test helper outputs the rendered HTML.
 
+## Adding Test Helpers (RSpec)
+
+This will allow for helpers like `render_inline` to work in your tests.
+
+```ruby
+# spec/rails_helper.rb
+require 'view_component/test_helpers'
+
+RSpec.configure do |config|
+  # ...
+
+  config.include ViewComponent::TestHelpers, type: :component
+end
+```
+
 ## Testing Slots
 
 ```ruby
