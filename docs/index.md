@@ -254,6 +254,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [FlightLogger](https://flightlogger.net/)
 * [Framework](https://frame.work/)
 * [FreeAgent](https://www.freeagent.com)
+* [FreeATS](https://www.freeats.com/)
 * [G2](https://www.g2.com/) (200+ components)
 * [Getblock](https://getblock.io/)
 * [GitHub](https://github.com/) (900+ components used 15k+ times)

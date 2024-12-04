@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add FreeATS to list of companies using ViewComponent.
+
+    *Ilia Liamshin*
+
 * Ensure HTML output safety wrapper is used for all inline templates.
 
     *Joel Hawksley*
