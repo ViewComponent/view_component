@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add FreeATS to list of companies using ViewComponent
+* Add FreeATS to list of companies using ViewComponent.
 
     *Ilia Liamshin*
 
