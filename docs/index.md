@@ -286,6 +286,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Shogun](https://getshogun.com/)
 * [SpendHQ](https://www.spendhq.com/)
 * [Spina CMS](https://spinacms.com/)
+* [Spring](https://spring.net/)
 * [Startup Jobs](https://startup.jobs/)
 * [Teamtailor](https://teamtailor.com/)
 * [Topkey](https://topkey.io/)
