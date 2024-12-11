@@ -26,6 +26,10 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Updates ActionText compatibility documentation to reference `rich_textarea_tag` for Rails 8.0 support.
+
+    *Alvin Crespo*
+
 ## 3.20.0
 
 * Allow rendering `with_collection` to accept an optional `spacer_component` to be rendered between each item.
