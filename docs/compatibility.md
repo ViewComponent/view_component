@@ -37,7 +37,7 @@ With the monkey patch disabled, use `render_component` (or  `render_component_to
 
 ## ActionText
 
-Using `rich_text_area` from ActionText in a ViewComponent will result in this error:
+Using `rich_textarea` from ActionText in a ViewComponent will result in this error:
 
 `undefined method "rich_textarea_tag"`
 
