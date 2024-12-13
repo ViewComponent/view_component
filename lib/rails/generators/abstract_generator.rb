@@ -29,6 +29,10 @@ module ViewComponent
     end
 
     def component_path
+      if !File.exist?(ViewComponent::Base.config.view_component_path)
+        warning_text = "The folder '#{ViewComponent::Base.config.view_component_path}' does not exist and it will be created now.\nPlease note that you will need to restart your Rails server before Rails can load your new component."
+        puts "\e[33m#{warning_text}\e[0m"
+      end
       ViewComponent::Base.config.view_component_path
     end
 
