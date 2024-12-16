@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Fix setting custom `preview_paths`.
+
+    *Thomas von Deyen*
+
 * Improve handling of malformed component edge case when mocking components in tests.
 
     *Martin Meyerhoff*, *Joel Hawksley*
