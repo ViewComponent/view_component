@@ -271,6 +271,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Niva](https://www.niva.co/)
 * [OBLSK](https://oblsk.com/)
 * [openSUSE Open Build Service](https://openbuildservice.org/)
+* [OpenProject](https://www.openproject.org/)
 * [Ophelos](https://ophelos.com)
 * [Orbit](https://orbit.love)
 * [PeopleForce](https://peopleforce.io)
