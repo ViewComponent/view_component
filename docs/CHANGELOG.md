@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Relax ActiveSupport version constraint to allow 8.0.
+
+    *Mohamad Alhaj Rahmoun*
+
 ## 2.83.0
 
 * Ensure HTML output safety.
