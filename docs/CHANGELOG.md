@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Add `--skip-suffix` option to component generator
+* Add `--skip-suffix` option to component generator.
 
     *KAWAKAMI Moeki*
 
