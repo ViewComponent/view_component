@@ -10,7 +10,7 @@ nav_order: 5
 
 ## main
 
-* Updates docs/guide/testing.md to include an example of how to use with RSpec
+* Updates testing docs to include an example of how to use with RSpec.
 
     *Rylan Bowers*
 
