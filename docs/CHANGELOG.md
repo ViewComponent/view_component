@@ -14,6 +14,10 @@ nav_order: 5
 
     *KAWAKAMI Moeki*
 
+* Add FreeATS to list of companies using ViewComponent.
+
+    *Ilia Liamshin*
+
 * Ensure HTML output safety wrapper is used for all inline templates.
 
     *Joel Hawksley*
@@ -21,6 +25,14 @@ nav_order: 5
 * Expose `.identifier` method as part of public API.
 
     *Joel Hawksley*
+
+* Add rails 8 support to CI.
+
+    *Reegan Viljoen*
+
+* Updates ActionText compatibility documentation to reference `rich_textarea_tag` for Rails 8.0 support.
+
+    *Alvin Crespo*
 
 ## 3.20.0
 

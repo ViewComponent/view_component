@@ -2,12 +2,9 @@
 
 source "https://rubygems.org"
 
-gem "rails", "~> 6.1"
+gem "rails", "~> 8.0"
 gem "tailwindcss-rails", "~> 2.0"
-gem "net-smtp", require: false
-gem "net-imap", require: false
-gem "net-pop", require: false
 gem "turbo-rails", "~> 1"
-gem "sprockets-rails", "~> 3.4.2"
+gem "propshaft", "~> 1.1.0"
 
 gemspec path: "../"

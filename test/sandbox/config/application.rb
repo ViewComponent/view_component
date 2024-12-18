@@ -7,7 +7,8 @@ require "action_cable/engine" # Remove when hotwired/turbo-rails#74 is resolved
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
-require "sprockets/railtie"
+require "sprockets/railtie" if Rails.version.to_f < 8.0
+require "propshaft" if Rails.version.to_f >= 8.0
 
 require "turbo-rails"
 
