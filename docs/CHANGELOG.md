@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Updates docs/guide/testing.md to include an example of how to use with RSpec
+
+    *Rylan Bowers*
+
 * Add `--skip-suffix` option to component generator.
 
     *KAWAKAMI Moeki*

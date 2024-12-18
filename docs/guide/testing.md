@@ -36,7 +36,7 @@ To enable ViewComponent test helpers in RSpec, add:
 
 ```ruby
 # spec/rails_helper.rb
-require 'view_component/test_helpers'
+require "view_component/test_helpers"
 
 RSpec.configure do |config|
   # ...
