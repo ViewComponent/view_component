@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add `--skip-suffix` option to component generator.
+
+    *KAWAKAMI Moeki*
+
 * Add FreeATS to list of companies using ViewComponent.
 
     *Ilia Liamshin*
