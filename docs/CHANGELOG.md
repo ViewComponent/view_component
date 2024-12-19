@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Do not prefix release tags with `v`, per recommendation from @bkuhlmann.
+
+    *Joel Hawksley*
+
 ## 3.21.0
 
 * Updates testing docs to include an example of how to use with RSpec.
