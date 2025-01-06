@@ -14,6 +14,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Add ruby 3.4 support to CI.
+
+    *Reegan Viljoen*
+
 ## 3.21.0
 
 * Updates testing docs to include an example of how to use with RSpec.
