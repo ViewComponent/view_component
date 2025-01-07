@@ -54,4 +54,6 @@ Sandbox::Application.configure do
   config.action_view.annotate_rendered_view_with_filenames = true if Rails.version.to_f >= 6.1
 
   config.eager_load = true
+
+  config.active_support.to_time_preserves_timezone = :zone
 end
