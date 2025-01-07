@@ -1227,4 +1227,15 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_text("foo")
   end
+
+  def test_render_anonymous_component_without_template
+    location = caller(1, 1).first
+    mock_component = Class.new(MyComponent)
+    mock_component.define_singleton_method(:name) { "Foo" }
+    mock_component.define_singleton_method(:to_s) { "#{name} (#{location})" }
+
+    assert_nothing_raised do
+      render_inline(mock_component.new)
+    end
+  end
 end
