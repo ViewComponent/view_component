@@ -15,7 +15,11 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    assert_allocations("3.4.0" => 109, "3.3.6" => 115, "3.3.0" => 127, "3.2.6" => 114, "3.1.6" => 114, "3.0.7" => 123) do
+    allocations = (Rails.version.to_f >= 8.0) ?
+      {"3.5.0" => 117, "3.4.1" => 117, "3.3.6" => 129} :
+      {"3.3.6" => 120, "3.3.0" => 120, "3.2.6" => 118, "3.1.6" => 118, "3.0.7" => 127}
+
+    assert_allocations(**allocations) do
       render_inline(MyComponent.new)
     end
 
@@ -332,14 +336,19 @@ class RenderingTest < ViewComponent::TestCase
     component = AssetComponent.new
     assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
 
-    component.config.asset_host = nil
-    assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
+    if Rails.version.to_f < 8.0
 
-    component.config.asset_host = "http://assets.example.com"
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+      # Propshaft doesn't allow setting custom hosts so this only works in Rails < 8
+      # TODO: Revisit this comment for v4 to see if we need to make any deprecations
+      component.config.asset_host = nil
+      assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
 
-    component.config.asset_host = "assets.example.com"
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+      component.config.asset_host = "http://assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+
+      component.config.asset_host = "assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+    end
   end
 
   def test_template_changes_are_not_reflected_if_cache_is_not_cleared
