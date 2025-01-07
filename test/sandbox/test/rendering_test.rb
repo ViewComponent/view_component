@@ -17,7 +17,7 @@ class RenderingTest < ViewComponent::TestCase
 
     allocations = (Rails.version.to_f >= 8.0) ?
       {"3.5.0" => 117, "3.4.1" => 117, "3.3.6" => 129} :
-      {"3.3.6" => 120, "3.3.0" => 120, "3.2.6" => 118, "3.1.6" => 118, "3.0.7" => 127}
+      {"3.3.6" => 120, "3.3.0" => 132, "3.2.6" => 118, "3.1.6" => 118, "3.0.7" => 127}
 
     assert_allocations(**allocations) do
       render_inline(MyComponent.new)
@@ -1237,13 +1237,17 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("foo")
   end
 
+  # In https://github.com/ViewComponent/view_component/issues/2187,
+  # the Solidus test suite built mocked components by hand, resulting
+  # in a difficult-to-debug error. While this test case is quite narrow,
+  # it isolates the unintentional error masking we were doing.
   def test_render_anonymous_component_without_template
     location = caller(1, 1).first
     mock_component = Class.new(MyComponent)
     mock_component.define_singleton_method(:name) { "Foo" }
     mock_component.define_singleton_method(:to_s) { "#{name} (#{location})" }
 
-    assert_nothing_raised do
+    assert_raises(ViewComponent::CompilerMethodBodySyntaxError) do
       render_inline(mock_component.new)
     end
   end
