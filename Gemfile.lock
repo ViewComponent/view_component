@@ -382,7 +382,7 @@ DEPENDENCIES
   propshaft (~> 1.1.0)
   pry (~> 0.13)
   puma (~> 6)
-  rails (~> 8.0.1)
+  rails (~> 8)
   rake (~> 13.0)
   rspec-rails (~> 5)
   rubocop-md (~> 1)
