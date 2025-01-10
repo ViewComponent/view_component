@@ -17,7 +17,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
     lookup_context = Minitest::Mock.new
     lookup_context.expect(:find_template, mock_template, [template_identifier])
 
-    template_data = PreviewHelper.find_template_data(
+    template_data = PreviewHelper.find_template_data_for_preview_source(
       lookup_context: lookup_context,
       template_identifier: template_identifier
     )
@@ -40,7 +40,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
       lookup_context = Minitest::Mock.new
       lookup_context.expect(:find_template, mock_template, [template_identifier])
 
-      template_data = PreviewHelper.find_template_data(
+      template_data = PreviewHelper.find_template_data_for_preview_source(
         lookup_context: lookup_context,
         template_identifier: template_identifier
       )
@@ -68,7 +68,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
         mock = Minitest::Mock.new
         mock.expect :map, [expected_template_path]
         ViewComponent::Base.stub(:preview_paths, mock) do
-          template_data = PreviewHelper.find_template_data(
+          template_data = PreviewHelper.find_template_data_for_preview_source(
             lookup_context: lookup_context,
             template_identifier: template_identifier
           )
@@ -96,7 +96,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
         mock.expect :map, [expected_template_path]
         Rails.application.config.view_component.stub(:preview_paths, mock) do
           File.stub(:read, expected_source, [expected_template_path]) do
-            template_data = PreviewHelper.find_template_data(
+            template_data = PreviewHelper.find_template_data_for_preview_source(
               lookup_context: lookup_context,
               template_identifier: template_identifier
             )
@@ -122,7 +122,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock.expect :map, []
       Rails.application.config.view_component.stub :preview_paths, mock do
         exception = assert_raises ViewComponent::NoMatchingTemplatesForPreviewError do
-          PreviewHelper.find_template_data(
+          PreviewHelper.find_template_data_for_preview_source(
             lookup_context: lookup_context,
             template_identifier: template_identifier
           )
@@ -146,7 +146,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
       mock.expect :map, [template_identifier + ".html.haml", template_identifier + ".html.erb"]
       Rails.application.config.view_component.stub :preview_paths, mock do
         exception = assert_raises ViewComponent::MultipleMatchingTemplatesForPreviewError do
-          PreviewHelper.find_template_data(
+          PreviewHelper.find_template_data_for_preview_source(
             lookup_context: lookup_context,
             template_identifier: template_identifier
           )
