@@ -72,5 +72,6 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency "bigdecimal"
     spec.add_development_dependency "drb"
     spec.add_development_dependency "mutex_m"
+    spec.add_development_dependency "propshaft", "~> 1.1.0"
   end
 end

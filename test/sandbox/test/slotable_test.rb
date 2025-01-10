@@ -298,8 +298,10 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_lambda_slot_with_missing_block
-    render_inline(SlotsComponent.new(classes: "mt-4")) do |component|
-      component.with_footer(classes: "text-blue")
+    assert_nothing_raised do
+      render_inline(SlotsComponent.new(classes: "mt-4")) do |component|
+        component.with_footer(classes: "text-blue")
+      end
     end
   end
 
