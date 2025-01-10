@@ -17,8 +17,10 @@ module ViewComponent
       if include_all_helpers
         helper :all
       else
+        # :nocov:
         # Always provide the #view_source helper
         helper PreviewHelper
+        # :nocov:
       end
     end
 
