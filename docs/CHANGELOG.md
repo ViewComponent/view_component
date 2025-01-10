@@ -226,7 +226,7 @@ nav_order: 5
 
     *Reegan Viljoen*
 
-* Fix a bug where component previews would crash with "undefined local variable or method `preview_source`".
+* Fix a bug where component previews would crash with "undefined local variable or method `preview_source`."
 
     *Henning Koch*
 
