@@ -19,7 +19,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       get "/"
       assert_response :success
 
-      assert_includes response.body, "BEGIN app/components/erb_component.rb"
+      assert_includes response.body, "BEGIN app/components/erb_component.html.erb"
 
       assert_select("div", "Foo\n  bar")
     end
@@ -570,6 +570,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
   end
 
+  # This test documents a bug that reports an incompatibility with the turbo-rails gem's `turbo_stream` helper.
+  # This helper may work if the `capture_compatibility_patch` is enabled.
+  # Prefer `tag.turbo_stream` instead if you do not have the patch enabled already.
+  def test_render_component_in_turbo_stream
+    without_template_annotations do
+      get turbo_stream_path, headers: {"HTTP_ACCEPT" => "text/vnd.turbo-stream.html"}
+      expected_response_body = <<~TURBOSTREAM
+        <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
+      TURBOSTREAM
+      if ViewComponent::Base.config.capture_compatibility_patch_enabled
+        assert_equal expected_response_body, response.body
+      else
+        assert_not_equal expected_response_body, response.body
+      end
+    end
+  end
+
   def test_renders_the_preview_example_with_its_own_template_and_a_layout
     get "/rails/view_components/my_component/inside_banner"
     assert_includes response.body, "ViewComponent - Admin - Test"
@@ -653,7 +670,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       Rails.env = "production".inquiry
 
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal ViewComponent::Compiler::PRODUCTION_MODE, ViewComponent::Compiler.mode
+      assert_equal false, ViewComponent::Compiler.development_mode
     ensure
       Rails.env = old_env
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
@@ -663,12 +680,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_sets_the_compiler_mode_in_development_mode
     Rails.env.stub :development?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
+      assert_equal true, ViewComponent::Compiler.development_mode
     end
 
     Rails.env.stub :test?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal ViewComponent::Compiler::DEVELOPMENT_MODE, ViewComponent::Compiler.mode
+      assert_equal true, ViewComponent::Compiler.development_mode
     end
   end
 
@@ -751,5 +768,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       warnings.any? { |warning| warning.include?("component was provided an HTML-unsafe postamble") },
       "Rendering UnsafePostambleComponent did not emit an HTML safety warning"
     )
+  end
+
+  def test_renders_multiple_format_component_as_html
+    get "/multiple_formats_component"
+
+    assert_includes response.body, "Hello, HTML!"
+  end
+
+  def test_renders_multiple_format_component_as_json
+    get "/multiple_formats_component.json"
+
+    assert_equal response.body, "{\"hello\":\"world\"}"
+  end
+
+  def test_renders_multiple_format_component_as_css
+    get "/multiple_formats_component.css"
+
+    assert_includes response.body, "Hello, CSS!"
   end
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "allocation_stats"
 require "simplecov"
 require "simplecov-console"
 require "rails/version"
@@ -172,12 +173,12 @@ def with_render_monkey_patch_config(enabled, &block)
   with_config_option(:render_monkey_patch_enabled, enabled, &block)
 end
 
-def with_compiler_mode(mode)
-  previous_mode = ViewComponent::Compiler.mode
-  ViewComponent::Compiler.mode = mode
+def with_compiler_development_mode(mode)
+  previous_mode = ViewComponent::Compiler.development_mode
+  ViewComponent::Compiler.development_mode = mode
   yield
 ensure
-  ViewComponent::Compiler.mode = previous_mode
+  ViewComponent::Compiler.development_mode = previous_mode
 end
 
 def capture_warnings(&block)
@@ -186,4 +187,12 @@ def capture_warnings(&block)
       block.call
     end
   end
+end
+
+def assert_allocations(count_map, &block)
+  trace = AllocationStats.trace(&block)
+  total = trace.allocations.all.size
+  count = count_map[RUBY_VERSION]
+
+  assert_equal count, total, "Expected #{count} allocations, got #{total} allocations for Ruby #{RUBY_VERSION}"
 end

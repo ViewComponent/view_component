@@ -298,8 +298,10 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_lambda_slot_with_missing_block
-    render_inline(SlotsComponent.new(classes: "mt-4")) do |component|
-      component.with_footer(classes: "text-blue")
+    assert_nothing_raised do
+      render_inline(SlotsComponent.new(classes: "mt-4")) do |component|
+        component.with_footer(classes: "text-blue")
+      end
     end
   end
 
@@ -763,5 +765,60 @@ class SlotableTest < ViewComponent::TestCase
     render_inline(ForwardingSlotWrapperComponent.new)
 
     assert_text "Target content", count: 1
+  end
+
+  def test_slotable_default
+    render_inline(SlotableDefaultComponent.new)
+
+    assert_text "hello,world!", count: 1
+  end
+
+  def test_slotable_default_override
+    component = SlotableDefaultComponent.new
+    component.with_header_content("foo")
+
+    render_inline(component)
+
+    assert_text "foo", count: 1
+  end
+
+  def test_slotable_default_instance
+    render_inline(SlotableDefaultInstanceComponent.new)
+
+    assert_text "hello,world!", count: 1
+  end
+
+  def test_slot_name_can_be_overriden
+    # Uses overridden `title` slot method
+    render_inline(SlotNameOverrideComponent.new(title: "Simple Title"))
+
+    assert_selector(".title", text: "Simple Title")
+  end
+
+  def test_slot_name_override_can_use_super
+    # Uses standard `title` slot method via `super`
+    render_inline(SlotNameOverrideComponent.new) do |component|
+      component.with_title do
+        "Block Title with More Complexity"
+      end
+    end
+
+    assert_selector(".title", text: "Block Title with More Complexity")
+  end
+
+  def overriden_slot_name_predicate_returns_false_when_not_set
+    render_inline(SlotNameOverrideComponent.new)
+
+    refute_selector(".title")
+  end
+
+  def test_overridden_slot_name_can_be_inherited
+    render_inline(SlotNameOverrideComponent::SubComponent.new(title: "lowercase"))
+
+    assert_selector(".title", text: "LOWERCASE")
+  end
+
+  def test_slot_name_methods_are_not_shared_accross_components
+    assert_not_equal SlotsComponent.instance_method(:title).owner, SlotNameOverrideComponent::OtherComponent.instance_method(:title).owner
   end
 end

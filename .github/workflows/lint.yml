@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Vale
-        uses: errata-ai/vale-action@38bf078c328061f59879b347ca344a718a736018
+        uses: errata-ai/vale-action@d89dee975228ae261d22c15adcd03578634d429c
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   markdown:
@@ -70,7 +70,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.2
+        ruby-version: 3.4
     - uses: actions/cache@v4
       with:
         path: vendor/bundle

@@ -15,6 +15,8 @@ class ExampleComponentTest < ViewComponent::TestCase
   def test_render_component
     render_inline(ExampleComponent.new(title: "my title")) { "Hello, World!" }
 
+    assert_component_rendered
+
     assert_selector("span[title='my title']", text: "Hello, World!")
     # or, to just assert against the text:
     assert_text("Hello, World!")
@@ -27,6 +29,21 @@ end
 _Note: `assert_selector` only matches on visible elements by default. To match on elements regardless of visibility, add `visible: false`. See the [Capybara documentation](https://rubydoc.info/github/jnicklas/capybara/Capybara/Node/Matchers) for more details._
 
 For debugging purposes, the `rendered_content` test helper outputs the rendered HTML.
+
+## Use with RSpec
+
+To enable ViewComponent test helpers in RSpec, add:
+
+```ruby
+# spec/rails_helper.rb
+require "view_component/test_helpers"
+
+RSpec.configure do |config|
+  # ...
+
+  config.include ViewComponent::TestHelpers, type: :component
+end
+```
 
 ## Testing Slots
 
@@ -129,6 +146,20 @@ def test_render_component_for_tablet
     render_inline(ExampleComponent.new(title: "my title")) { "Hello, tablets!" }
 
     assert_selector("span[title='my title']", text: "Hello, tablets!")
+  end
+end
+```
+
+## Request formats
+
+Use the `with_format` helper to test specific request formats:
+
+```ruby
+def test_render_component_as_json
+  with_format :json do
+    render_inline(MultipleFormatsComponent.new)
+
+    assert_equal(rendered_json["hello"], "world")
   end
 end
 ```

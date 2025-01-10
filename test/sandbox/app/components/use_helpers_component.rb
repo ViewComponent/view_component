@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class UseHelpersComponent < ViewComponent::Base
-  use_helpers :message
+  use_helper :message
 end

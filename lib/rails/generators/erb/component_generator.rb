@@ -24,7 +24,7 @@ module Erb
       private
 
       def data_attributes
-        if options["stimulus"]
+        if stimulus?
           " data-controller=\"#{stimulus_controller}\""
         end
       end

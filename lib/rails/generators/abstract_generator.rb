@@ -33,7 +33,7 @@ module ViewComponent
     end
 
     def stimulus_controller
-      if options["stimulus"]
+      if stimulus?
         File.join(destination_directory, destination_file_name)
           .sub("#{component_path}/", "")
           .tr("_", "-")
@@ -43,6 +43,14 @@ module ViewComponent
 
     def sidecar?
       options["sidecar"] || ViewComponent::Base.config.generate.sidecar
+    end
+
+    def stimulus?
+      options["stimulus"] || ViewComponent::Base.config.generate.stimulus_controller
+    end
+
+    def typescript?
+      options["typescript"] || ViewComponent::Base.config.generate.typescript
     end
   end
 end

@@ -7,7 +7,6 @@ module ViewComponent
     include Enumerable
     attr_reader :component
 
-    delegate :format, to: :component
     delegate :size, to: :@collection
 
     attr_accessor :__vc_original_view_context
@@ -20,7 +19,7 @@ module ViewComponent
       components.map do |component|
         component.set_original_view_context(__vc_original_view_context)
         component.render_in(view_context, &block)
-      end.join.html_safe
+      end.join(rendered_spacer(view_context)).html_safe
     end
 
     def components
@@ -41,11 +40,18 @@ module ViewComponent
       components.each(&block)
     end
 
+    # Rails expects us to define `format` on all renderables,
+    # but we do not know the `format` of a ViewComponent until runtime.
+    def format
+      nil
+    end
+
     private
 
-    def initialize(component, object, **options)
+    def initialize(component, object, spacer_component, **options)
       @component = component
       @collection = collection_variable(object || [])
+      @spacer_component = spacer_component
       @options = options
     end
 
@@ -63,6 +69,15 @@ module ViewComponent
       item_options[component.collection_iteration_parameter] = iterator.dup if component.iteration_argument_present?
 
       @options.merge(item_options)
+    end
+
+    def rendered_spacer(view_context)
+      if @spacer_component
+        @spacer_component.set_original_view_context(__vc_original_view_context)
+        @spacer_component.render_in(view_context)
+      else
+        ""
+      end
     end
   end
 end

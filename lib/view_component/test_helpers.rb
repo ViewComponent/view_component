@@ -14,6 +14,10 @@ module ViewComponent
       def refute_component_rendered
         assert_no_selector("body")
       end
+
+      def assert_component_rendered
+        assert_selector("body")
+      end
     rescue LoadError
       # We don't have a test case for running an application without capybara installed.
       # It's probably fine to leave this without coverage.
@@ -57,6 +61,16 @@ module ViewComponent
       # :nocov:
 
       Nokogiri::HTML.fragment(@rendered_content)
+    end
+
+    # `JSON.parse`-d component output.
+    #
+    # ```ruby
+    # render_inline(MyJsonComponent.new)
+    # assert_equal(rendered_json["hello"], "world")
+    # ```
+    def rendered_json
+      JSON.parse(rendered_content)
     end
 
     # Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
@@ -141,7 +155,7 @@ module ViewComponent
     # end
     # ```
     #
-    # @param klass [ActionController::Base] The controller to be used.
+    # @param klass [Class<ActionController::Base>] The controller to be used.
     def with_controller_class(klass)
       old_controller = defined?(@vc_test_controller) && @vc_test_controller
 
@@ -149,6 +163,19 @@ module ViewComponent
       yield
     ensure
       @vc_test_controller = old_controller
+    end
+
+    # Set format of the current request
+    #
+    # ```ruby
+    # with_format(:json) do
+    #   render_inline(MyComponent.new)
+    # end
+    # ```
+    #
+    # @param format [Symbol] The format to be set for the provided block.
+    def with_format(format)
+      with_request_url("/", format: format) { yield }
     end
 
     # Set the URL of the current request (such as when using request-dependent path helpers):
@@ -178,7 +205,7 @@ module ViewComponent
     # @param full_path [String] The path to set for the current request.
     # @param host [String] The host to set for the current request.
     # @param method [String] The request method to set for the current request.
-    def with_request_url(full_path, host: nil, method: nil, format: :html)
+    def with_request_url(full_path, host: nil, method: nil, format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT)
       old_request_host = vc_test_request.host
       old_request_method = vc_test_request.request_method
       old_request_path_info = vc_test_request.path_info

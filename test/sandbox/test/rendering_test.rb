@@ -9,6 +9,23 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
+  def test_render_inline_allocations
+    # Stabilize compilation status ahead of testing allocations to simulate rendering
+    # performance with compiled component
+    ViewComponent::CompileCache.cache.delete(MyComponent)
+    MyComponent.ensure_compiled
+
+    allocations = (Rails.version.to_f >= 8.0) ?
+      {"3.5.0" => 117, "3.4.1" => 117, "3.3.6" => 129} :
+      {"3.3.6" => 120, "3.3.0" => 120, "3.2.6" => 118, "3.1.6" => 118, "3.0.7" => 127}
+
+    assert_allocations(**allocations) do
+      render_inline(MyComponent.new)
+    end
+
+    assert_selector("div", text: "hello,world!")
+  end
+
   def test_render_in_view_context
     render_in_view_context { render(MyComponent.new) }
 
@@ -151,7 +168,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_jbuilder_template
-    with_request_url("/", format: :json) do
+    with_format(:json) do
       render_inline(JbuilderComponent.new(message: "bar")) { "foo" }
     end
 
@@ -319,14 +336,19 @@ class RenderingTest < ViewComponent::TestCase
     component = AssetComponent.new
     assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
 
-    component.config.asset_host = nil
-    assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
+    if Rails.version.to_f < 8.0
 
-    component.config.asset_host = "http://assets.example.com"
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+      # Propshaft doesn't allow setting custom hosts so this only works in Rails < 8
+      # TODO: Revisit this comment for v4 to see if we need to make any deprecations
+      component.config.asset_host = nil
+      assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
 
-    component.config.asset_host = "assets.example.com"
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+      component.config.asset_host = "http://assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+
+      component.config.asset_host = "assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+    end
   end
 
   def test_template_changes_are_not_reflected_if_cache_is_not_cleared
@@ -400,6 +422,7 @@ class RenderingTest < ViewComponent::TestCase
       "Content"
     end
 
+    assert_component_rendered
     assert_text("Content")
   end
 
@@ -458,7 +481,7 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(TooManySidecarFilesComponent.new)
       end
 
-    assert_includes error.message, "More than one template found for TooManySidecarFilesComponent."
+    assert_includes error.message, "More than one HTML template found for TooManySidecarFilesComponent."
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_for_a_variant_is_present
@@ -469,7 +492,12 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_includes(
       error.message,
-      "More than one template found for variants 'test' and 'testing' in TooManySidecarFilesForVariantComponent"
+      "More than one HTML template found for variant `test` for TooManySidecarFilesForVariantComponent"
+    )
+
+    assert_includes(
+      error.message,
+      "More than one HTML template found for variant `testing` for TooManySidecarFilesForVariantComponent"
     )
   end
 
@@ -537,7 +565,7 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_includes(
       error.message,
-      "More than one template found for TemplateAndSidecarDirectoryTemplateComponent."
+      "More than one HTML template found for TemplateAndSidecarDirectoryTemplateComponent."
     )
   end
 
@@ -563,11 +591,12 @@ class RenderingTest < ViewComponent::TestCase
         render_inline(ExceptionInTemplateComponent.new)
       end
 
-    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace.first
+    component_error_index = (Rails::VERSION::STRING < "8.0") ? 0 : 1
+    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[component_error_index]
   end
 
   def test_render_collection
-    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     render_inline(ProductComponent.with_collection(products, notice: "On sale"))
 
     assert_selector("h1", text: "Product", count: 2)
@@ -579,7 +608,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_collection_custom_collection_parameter_name
-    coupons = [OpenStruct.new(percent_off: 20), OpenStruct.new(percent_off: 50)]
+    coupons = [Coupon.new(percent_off: 20), Coupon.new(percent_off: 50)]
     render_inline(ProductCouponComponent.with_collection(coupons))
 
     assert_selector("h3", text: "20%")
@@ -588,8 +617,8 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_custom_collection_parameter_name_counter
     photos = [
-      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
-      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+      Photo.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      Photo.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
     ]
     render_inline(CollectionCounterComponent.with_collection(photos))
 
@@ -602,8 +631,8 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_custom_collection_parameter_name_iteration
     photos = [
-      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
-      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+      Photo.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      Photo.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
     ]
     render_inline(CollectionIterationComponent.with_collection(photos))
 
@@ -616,8 +645,8 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_custom_collection_parameter_name_iteration_extend_other_component
     photos = [
-      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
-      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+      Photo.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      Photo.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
     ]
     render_inline(CollectionIterationExtendComponent.with_collection(photos))
 
@@ -630,8 +659,8 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_collection_custom_collection_parameter_name_iteration_extend_other_component_override
     photos = [
-      OpenStruct.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
-      OpenStruct.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
+      Photo.new(title: "Flowers", caption: "Yellow flowers", url: "https://example.com/flowers.jpg"),
+      Photo.new(title: "Mountains", caption: "Mountains at sunset", url: "https://example.com/mountains.jpg")
     ]
     render_inline(CollectionIterationExtendOverrideComponent.with_collection(photos))
 
@@ -660,7 +689,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_collection_missing_arg
-    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     exception =
       assert_raises ArgumentError do
         render_inline(ProductComponent.with_collection(products))
@@ -671,7 +700,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_single_item_from_collection
-    product = OpenStruct.new(name: "Mints")
+    product = Product.new(name: "Mints")
     render_inline(ProductComponent.new(product: product, notice: "On sale"))
 
     assert_selector("h1", text: "Product", count: 1)
@@ -688,7 +717,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_collection_component_missing_default_parameter_name
     assert_raises ViewComponent::MissingCollectionArgumentError do
       render_inline(
-        MissingDefaultCollectionParameterComponent.with_collection([OpenStruct.new(name: "Mints")])
+        MissingDefaultCollectionParameterComponent.with_collection([Product.new(name: "Mints")])
       )
     end
   end
@@ -696,7 +725,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_collection_component_missing_custom_parameter_name_with_activemodel
     assert_raises ViewComponent::MissingCollectionArgumentError do
       render_inline(
-        MissingCollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+        MissingCollectionParameterWithActiveModelComponent.with_collection([Product.new(name: "Mints")])
       )
     end
   end
@@ -704,40 +733,34 @@ class RenderingTest < ViewComponent::TestCase
   def test_collection_component_present_custom_parameter_name_with_activemodel
     assert_nothing_raised do
       render_inline(
-        CollectionParameterWithActiveModelComponent.with_collection([OpenStruct.new(name: "Mints")])
+        CollectionParameterWithActiveModelComponent.with_collection([Product.new(name: "Mints")])
       )
     end
   end
 
   def test_component_with_invalid_parameter_names
-    old_cache = ViewComponent::CompileCache.cache
-    ViewComponent::CompileCache.cache = Set.new
+    with_new_cache do
+      exception =
+        assert_raises ViewComponent::ReservedParameterError do
+          InvalidParametersComponent.compile(raise_errors: true)
+        end
 
-    exception =
-      assert_raises ViewComponent::ReservedParameterError do
-        InvalidParametersComponent.compile(raise_errors: true)
-      end
-
-    assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
-  ensure
-    ViewComponent::CompileCache.cache = old_cache
+      assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
+    end
   end
 
   def test_component_with_invalid_named_parameter_names
-    old_cache = ViewComponent::CompileCache.cache
-    ViewComponent::CompileCache.cache = Set.new
+    with_new_cache do
+      exception =
+        assert_raises ViewComponent::ReservedParameterError do
+          InvalidNamedParametersComponent.compile(raise_errors: true)
+        end
 
-    exception =
-      assert_raises ViewComponent::ReservedParameterError do
-        InvalidNamedParametersComponent.compile(raise_errors: true)
-      end
-
-    assert_match(
-      /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
-      exception.message
-    )
-  ensure
-    ViewComponent::CompileCache.cache = old_cache
+      assert_match(
+        /InvalidNamedParametersComponent initializer can't accept the parameter `content`/,
+        exception.message
+      )
+    end
   end
 
   def test_collection_component_with_trailing_comma_attr_reader
@@ -908,7 +931,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_compilation_in_development_mode
-    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
+    with_compiler_development_mode(true) do
       with_new_cache do
         render_inline(MyComponent.new)
         assert_selector("div", text: "hello,world!")
@@ -917,7 +940,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_compilation_in_production_mode
-    with_compiler_mode(ViewComponent::Compiler::PRODUCTION_MODE) do
+    with_compiler_development_mode(false) do
       with_new_cache do
         render_inline(MyComponent.new)
         assert_selector("div", text: "hello,world!")
@@ -941,11 +964,13 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock_cache
-    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
-      with_new_cache do
-        render_inline(ContentEvalComponent.new) do
-          ViewComponent::CompileCache.invalidate!
-          render_inline(ContentEvalComponent.new)
+    assert_nothing_raised do
+      with_compiler_development_mode(true) do
+        with_new_cache do
+          render_inline(ContentEvalComponent.new) do
+            ViewComponent::CompileCache.invalidate!
+            render_inline(ContentEvalComponent.new)
+          end
         end
       end
     end
@@ -1066,27 +1091,29 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock
-    with_compiler_mode(ViewComponent::Compiler::DEVELOPMENT_MODE) do
-      with_new_cache do
-        mutex = Mutex.new
+    assert_nothing_raised do
+      with_compiler_development_mode(true) do
+        with_new_cache do
+          mutex = Mutex.new
 
-        t1 = Thread.new do
-          mutex.synchronize do
-            sleep 0.02
-            render_inline(ContentEvalComponent.new)
-          end
-        end
-
-        t = Thread.new do
-          render_inline(ContentEvalComponent.new) do
+          t1 = Thread.new do
             mutex.synchronize do
-              sleep 0.01
+              sleep 0.02
+              render_inline(ContentEvalComponent.new)
             end
           end
-        end
 
-        t1.join
-        t.join
+          t = Thread.new do
+            render_inline(ContentEvalComponent.new) do
+              mutex.synchronize do
+                sleep 0.01
+              end
+            end
+          end
+
+          t1.join
+          t.join
+        end
       end
     end
   end
@@ -1120,5 +1147,97 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
+  end
+
+  def test_use_helpers_macros
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__message", text: "Hello helper method"
+  end
+
+  def test_use_helpers_macros_with_args
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__args-message", text: "Hello macro helper method"
+  end
+
+  def test_use_helpers_macros_with_kwargs
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__kwargs-message", text: "Hello macro kwargs helper method"
+  end
+
+  def test_use_helpers_with_block
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__block-message", text: "Hello block helper method"
+  end
+
+  def test_use_helper_macros
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__message", text: "Hello helper method"
+  end
+
+  def test_use_helper_macros_with_args
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__args-message", text: "Hello macro helper method"
+  end
+
+  def test_use_helper_macros_with_kwargs
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__kwargs-message", text: "Hello macro kwargs helper method"
+  end
+
+  def test_use_helper_macros_with_block
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__block-message", text: "Hello block helper method"
+  end
+
+  def test_use_helper_macros_with_prefix
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__prefix-message", text: "Hello macro prefix helper method"
+  end
+
+  def test_use_helper_macros_with_named_prefix
+    render_inline(UseHelperMacroComponent.new)
+
+    assert_selector ".helper__prefix-message", text: "Hello macro named prefix helper method"
+  end
+
+  def test_use_helpers_macros_with_prefix
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__prefix-message", text: "Hello macro prefix helper method"
+  end
+
+  def test_use_helpers_macros_with_named_prefix
+    render_inline(UseHelpersMacroComponent.new)
+
+    assert_selector ".helper__named-prefix-message", text: "Hello macro named prefix helper method"
+  end
+
+  def test_with_format
+    with_format(:json) do
+      render_inline(MultipleFormatsComponent.new)
+
+      assert_equal(rendered_json["hello"], "world")
+    end
+  end
+
+  def test_localised_component
+    render_inline(LocalisedComponent.new)
+
+    assert_selector("div", text: "salut,monde!")
+  end
+
+  def test_request_param
+    render_inline(RequestParamComponent.new(request: "foo"))
+
+    assert_text("foo")
   end
 end

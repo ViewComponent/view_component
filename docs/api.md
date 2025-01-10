@@ -236,7 +236,7 @@ Defaults to `ViewComponentsController`.
 ### `.preview_paths`
 
 The locations in which component previews will be looked up.
-Defaults to `['test/component/previews']` relative to your Rails root.
+Defaults to `['test/components/previews']` relative to your Rails root.
 
 ### `.preview_route`
 
@@ -343,7 +343,7 @@ Access the request used by `render_inline`:
 
 ```ruby
 test "component does not render in Firefox" do
-  request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
+  vc_test_request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
   render_inline(NoFirefoxComponent.new)
   refute_component_rendered
 end

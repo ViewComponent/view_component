@@ -8,8 +8,22 @@ module ViewComponent
   class Engine < Rails::Engine # :nodoc:
     config.view_component = ViewComponent::Config.current
 
-    rake_tasks do
-      load "view_component/rails/tasks/view_component.rake"
+    if Rails.version.to_f < 8.0
+      rake_tasks do
+        load "view_component/rails/tasks/view_component.rake"
+      end
+    else
+      initializer "view_component.stats_directories" do |app|
+        require "rails/code_statistics"
+
+        if Rails.root.join(ViewComponent::Base.view_component_path).directory?
+          Rails::CodeStatistics.register_directory("ViewComponents", ViewComponent::Base.view_component_path)
+        end
+
+        if Rails.root.join("test/components").directory?
+          Rails::CodeStatistics.register_directory("ViewComponent tests", "test/components", test_directory: true)
+        end
+      end
     end
 
     initializer "view_component.set_configs" do |app|
@@ -128,11 +142,7 @@ module ViewComponent
     end
 
     initializer "compiler mode" do |_app|
-      ViewComponent::Compiler.mode = if Rails.env.development? || Rails.env.test?
-        ViewComponent::Compiler::DEVELOPMENT_MODE
-      else
-        ViewComponent::Compiler::PRODUCTION_MODE
-      end
+      ViewComponent::Compiler.development_mode = (Rails.env.development? || Rails.env.test?)
     end
 
     config.after_initialize do |app|
@@ -165,12 +175,12 @@ module ViewComponent
       end
 
       # :nocov:
-      if RUBY_VERSION < "3.0.0"
-        ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 3.0.0", "ViewComponent 4.0 will remove support for Ruby versions < 3.0.0 ")
+      if RUBY_VERSION < "3.2.0"
+        ViewComponent::Deprecation.deprecation_warning("Support for Ruby versions < 3.2.0", "ViewComponent v4 will remove support for Ruby versions < 3.2.0 no earlier than April 1, 2025")
       end
 
-      if Rails.version.to_f < 6.1
-        ViewComponent::Deprecation.deprecation_warning("Support for Rails versions < 6.1", "ViewComponent 4.0 will remove support for Rails versions < 6.1 ")
+      if Rails.version.to_f < 7.1
+        ViewComponent::Deprecation.deprecation_warning("Support for Rails versions < 7.1", "ViewComponent v4 will remove support for Rails versions < 7.1 no earlier than April 1, 2025")
       end
       # :nocov:
 

@@ -3,10 +3,14 @@
 require File.expand_path("boot", __dir__)
 
 require "active_model/railtie"
+require "action_cable/engine" # Remove when hotwired/turbo-rails#74 is resolved
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "action_view/railtie"
-require "sprockets/railtie"
+require "sprockets/railtie" if Rails.version.to_f < 8.0
+require "propshaft" if Rails.version.to_f >= 8.0
+
+require "turbo-rails"
 
 # Track when different Rails frameworks get loaded.
 # Ideally, none of them should be loaded until after initialization is complete.

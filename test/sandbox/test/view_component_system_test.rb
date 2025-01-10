@@ -34,14 +34,16 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
   end
 
   def test_components_with_slots
-    with_rendered_component_path(render_inline(SlotsComponent.new) do |component|
-      component.with_title do
-        "This is my title!"
-      end
-    end) do |path|
-      visit path
+    assert_nothing_raised do
+      with_rendered_component_path(render_inline(SlotsComponent.new) do |component|
+        component.with_title do
+          "This is my title!"
+        end
+      end) do |path|
+        visit path
 
-      find(".title", text: "This is my title!")
+        find(".title", text: "This is my title!")
+      end
     end
   end
 

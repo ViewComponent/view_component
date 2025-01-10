@@ -48,6 +48,12 @@ module ViewComponent
       #
       #     config.view_component.generate.stimulus_controller = true
       #
+      # #### `#typescript`
+      #
+      # Generate TypeScript files instead of JavaScript files:
+      #
+      #     config.view_component.generate.typescript = true
+      #
       # #### `#locale`
       #
       # Always generate translations file alongside the component:
@@ -146,7 +152,7 @@ module ViewComponent
       # @!attribute preview_paths
       # @return [Array<String>]
       # The locations in which component previews will be looked up.
-      # Defaults to `['test/component/previews']` relative to your Rails root.
+      # Defaults to `['test/components/previews']` relative to your Rails root.
 
       # @!attribute test_controller
       # @return [String]
@@ -168,9 +174,27 @@ module ViewComponent
       # Defaults to `false`.
 
       def default_preview_paths
+        (default_rails_preview_paths + default_rails_engines_preview_paths).uniq
+      end
+
+      def default_rails_preview_paths
         return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
 
         ["#{Rails.root}/test/components/previews"]
+      end
+
+      def default_rails_engines_preview_paths
+        return [] unless defined?(Rails::Engine)
+
+        registered_rails_engines_with_previews.map do |descendant|
+          "#{descendant.root}/test/components/previews"
+        end
+      end
+
+      def registered_rails_engines_with_previews
+        Rails::Engine.descendants.select do |descendant|
+          defined?(descendant.root) && Dir.exist?("#{descendant.root}/test/components/previews")
+        end
       end
 
       def default_generate_options

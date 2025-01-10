@@ -102,7 +102,7 @@ module ViewComponent # :nodoc:
 
       def load_previews
         Array(preview_paths).each do |preview_path|
-          Dir["#{preview_path}/**/*_preview.rb"].sort.each { |file| require_dependency file }
+          Dir["#{preview_path}/**/*preview.rb"].sort.each { |file| require_dependency file }
         end
       end
 

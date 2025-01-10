@@ -43,11 +43,11 @@ class IntegrationExamplesController < ActionController::Base
   end
 
   def products
-    @products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    @products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
   end
 
   def inline_products
-    products = [OpenStruct.new(name: "Radio clock"), OpenStruct.new(name: "Mints")]
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
 
     render(ProductComponent.with_collection(products, notice: "Today only"))
   end
@@ -70,5 +70,13 @@ class IntegrationExamplesController < ActionController::Base
 
   def unsafe_postamble_component
     render(UnsafePostambleComponent.new)
+  end
+
+  def multiple_formats_component
+    render(MultipleFormatsComponent.new)
+  end
+
+  def turbo_stream
+    respond_to { |format| format.turbo_stream { render TurboStreamComponent.new } }
   end
 end

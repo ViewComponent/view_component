@@ -182,6 +182,8 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/nicolas-brousse?s=64" alt="nicolas-brousse" width="32" />
 <img src="https://avatars.githubusercontent.com/nielsslot?s=64" alt="nshki" width="32" />
 <img src="https://avatars.githubusercontent.com/nshki?s=64" alt="nshki" width="32" />
+<img src="https://avatars.githubusercontent.com/ozydingo?s=64" alt="ozydingo" width="32" />
+<img src="https://avatars.githubusercontent.com/p8?s=64" alt="p8" width="32" />
 <img src="https://avatars.githubusercontent.com/patrickarnett?s=64" alt="patrickarnett" width="32" />
 <img src="https://avatars.githubusercontent.com/rainerborene?s=64" alt="rainerborene" width="32" />
 <img src="https://avatars.githubusercontent.com/rdavid1099?s=64" alt="rdavid1099" width="32" />
@@ -225,14 +227,21 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/neanias?s=64" alt="neanias" width="32" />
 <img src="https://avatars.githubusercontent.com/allan-pires?s=64" alt="allan-pires" width="32" />
 <img src="https://avatars.githubusercontent.com/jasonkim?s=64" alt="jasonkim" width="32" />
+<img src="https://avatars.githubusercontent.com/tkowalewski" alt="tkowalewski" width="32" />
+<img src="https://avatars.githubusercontent.com/chloe-meister" alt="chloe-meister" width="32" />
+<img src="https://avatars.githubusercontent.com/zaratan" alt="zaratan" width="32" />
+<img src="https://avatars.githubusercontent.com/kawakamimoeki" alt="kawakamimoeki" width="32" />
 
 ## Who uses ViewComponent?
 
+* [Aboard HR](https://aboardhr.com/)
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
 * [Avo Admin for Rails](https://avohq.io/rails-admin)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
+* [Buildkite](https://buildkite.com)
+* [Bump.sh](https://bump.sh)
 * [Causey](https://www.causey.app/) (100+ components)
 * [CharlieHR](https://www.charliehr.com/)
 * [City of Paris](https://www.paris.fr/)
@@ -240,24 +249,30 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Cometeer](https://cometeer.com/)
 * [Consul](https://consulproject.org/en/)
 * [Cults.](https://cults3d.com/)
+* [Defacto](https://www.defacto.nl)
+* [DotRuby](https://www.dotruby.com)
 * [Eagerworks](https://eagerworks.com/)
 * [FlightLogger](https://flightlogger.net/)
 * [Framework](https://frame.work/)
 * [FreeAgent](https://www.freeagent.com)
+* [FreeATS](https://www.freeats.com/)
 * [G2](https://www.g2.com/) (200+ components)
 * [Getblock](https://getblock.io/)
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
 * [Keenly](https://www.keenly.so) (100+ components)
+* [Kicksite](https://kicksite.com/)
 * [Krystal](https://krystal.uk)
 * [Litmus](https://litmus.engineering/)
 * [Login.gov](https://github.com/18F/identity-idp)
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
 * [Mon Ami](https://www.monami.io)
 * [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
+* [Niva](https://www.niva.co/)
 * [OBLSK](https://oblsk.com/)
 * [openSUSE Open Build Service](https://openbuildservice.org/)
+* [OpenProject](https://www.openproject.org/)
 * [Ophelos](https://ophelos.com)
 * [Orbit](https://orbit.love)
 * [PeopleForce](https://peopleforce.io)
@@ -273,7 +288,9 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Shogun](https://getshogun.com/)
 * [SpendHQ](https://www.spendhq.com/)
 * [Spina CMS](https://spinacms.com/)
+* [Spring](https://spring.net/)
 * [Startup Jobs](https://startup.jobs/)
+* [Teamtailor](https://teamtailor.com/)
 * [Topkey](https://topkey.io/)
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
