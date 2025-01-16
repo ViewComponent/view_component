@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Remove JS and CSS docs as they proved difficult to maintain and lacked consensus.
+
+    *Joel Hawksley*
+
 * Do not prefix release tags with `v`, per recommendation from @bkuhlmann.
 
     *Joel Hawksley*
