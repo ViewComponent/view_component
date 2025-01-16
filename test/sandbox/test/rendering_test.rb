@@ -15,7 +15,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    assert_allocations("3.4.0" => 109, "3.3.6" => 115, "3.3.0" => 124, "3.2.6" => 114) do
+    assert_allocations("3.5.0" => 104, "3.4.1" => 107, "3.3.6" => 107, "3.2.6" => 105) do
       render_inline(MyComponent.new)
     end
 
@@ -184,6 +184,14 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_component_with_variant
     with_variant :phone do
+      render_inline(VariantsComponent.new)
+
+      assert_text("Phone")
+    end
+  end
+
+  def test_renders_component_with_multiple_variants
+    with_variant :app, :phone do
       render_inline(VariantsComponent.new)
 
       assert_text("Phone")
@@ -1198,6 +1206,20 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_with_format_missing
+    with_format(:xml) do
+      exception =
+        assert_raises ViewComponent::MissingTemplateError do
+          render_inline(MultipleFormatsComponent.new)
+        end
+
+      assert_includes(
+        exception.message,
+        "No templates for MultipleFormatsComponent match the request"
+      )
+    end
+  end
+
   def test_localised_component
     render_inline(LocalisedComponent.new)
 
@@ -1208,5 +1230,15 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(RequestParamComponent.new(request: "foo"))
 
     assert_text("foo")
+  end
+
+  def test_turbo_stream_format_custom_variant
+    with_format(:turbo_stream, :html) do
+      with_variant(:custom) do
+        render_inline(TurboStreamFormatComponent.new)
+
+        assert_text("Hi turbo stream custom!")
+      end
+    end
   end
 end

@@ -127,11 +127,11 @@ module ViewComponent
     # end
     # ```
     #
-    # @param variant [Symbol] The variant to be set for the provided block.
-    def with_variant(variant)
+    # @param variants [Symbol[]] The variants to be set for the provided block.
+    def with_variant(*variants)
       old_variants = vc_test_controller.view_context.lookup_context.variants
 
-      vc_test_controller.view_context.lookup_context.variants = variant
+      vc_test_controller.view_context.lookup_context.variants += variants
       yield
     ensure
       vc_test_controller.view_context.lookup_context.variants = old_variants
@@ -164,9 +164,14 @@ module ViewComponent
     # end
     # ```
     #
-    # @param format [Symbol] The format to be set for the provided block.
-    def with_format(format)
-      with_request_url("/", format: format) { yield }
+    # @param formats [Symbol[]] The format(s) to be set for the provided block.
+    def with_format(*formats)
+      old_formats = vc_test_controller.view_context.lookup_context.formats
+
+      vc_test_controller.view_context.lookup_context.formats = formats
+      yield
+    ensure
+      vc_test_controller.view_context.lookup_context.formats = old_formats
     end
 
     # Set the URL of the current request (such as when using request-dependent path helpers):
@@ -196,7 +201,7 @@ module ViewComponent
     # @param full_path [String] The path to set for the current request.
     # @param host [String] The host to set for the current request.
     # @param method [String] The request method to set for the current request.
-    def with_request_url(full_path, host: nil, method: nil, format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT)
+    def with_request_url(full_path, host: nil, method: nil)
       old_request_host = vc_test_request.host
       old_request_method = vc_test_request.request_method
       old_request_path_info = vc_test_request.path_info
@@ -216,7 +221,6 @@ module ViewComponent
       vc_test_request.set_header("action_dispatch.request.query_parameters",
         Rack::Utils.parse_nested_query(query).with_indifferent_access)
       vc_test_request.set_header(Rack::QUERY_STRING, query)
-      vc_test_request.format = format
       yield
     ensure
       vc_test_request.host = old_request_host
