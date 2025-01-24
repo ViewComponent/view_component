@@ -12,6 +12,8 @@ gem "debug"
 
 gem "tailwindcss-rails", "~> 2.0"
 
+gem "sprockets-rails", "~> 3.4.2"
+
 group :test do
   gem "cuprite", "~> 0.15"
   gem "puma", "~> 6"

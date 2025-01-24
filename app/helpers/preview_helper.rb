@@ -18,7 +18,7 @@ module PreviewHelper
     serve_static_preview_assets? ? asset_path("prism.min.js", skip_pipeline: true) : "https://cdn.jsdelivr.net/npm/prismjs@1.28.0/prism.min.js"
   end
 
-  def find_template_data(lookup_context:, template_identifier:)
+  def find_template_data_for_preview_source(lookup_context:, template_identifier:)
     template = lookup_context.find_template(template_identifier)
 
     {

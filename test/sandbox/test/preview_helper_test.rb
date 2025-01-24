@@ -17,7 +17,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
     lookup_context = Minitest::Mock.new
     lookup_context.expect(:find_template, mock_template, [template_identifier])
 
-    template_data = PreviewHelper.find_template_data(
+    template_data = PreviewHelper.find_template_data_for_preview_source(
       lookup_context: lookup_context,
       template_identifier: template_identifier
     )
@@ -40,7 +40,7 @@ class PreviewHelperTest < ActiveSupport::TestCase
       lookup_context = Minitest::Mock.new
       lookup_context.expect(:find_template, mock_template, [template_identifier])
 
-      template_data = PreviewHelper.find_template_data(
+      template_data = PreviewHelper.find_template_data_for_preview_source(
         lookup_context: lookup_context,
         template_identifier: template_identifier
       )

@@ -15,7 +15,11 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    assert_allocations("3.5.0" => 104, "3.4.1" => 107, "3.3.6" => 107, "3.2.6" => 105) do
+    allocations = (Rails.version.to_f >= 8.0) ?
+      {"3.5.0" => 117, "3.4.1" => 104, "3.3.7" => 129} :
+      {"3.3.7" => 120, "3.3.0" => 120, "3.2.6" => 118, "3.1.6" => 118, "3.0.7" => 127}
+
+    assert_allocations(**allocations) do
       render_inline(MyComponent.new)
     end
 
@@ -322,14 +326,19 @@ class RenderingTest < ViewComponent::TestCase
     component = AssetComponent.new
     assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
 
-    component.config.asset_host = nil
-    assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
+    if Rails.version.to_f < 8.0
 
-    component.config.asset_host = "http://assets.example.com"
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+      # Propshaft doesn't allow setting custom hosts so this only works in Rails < 8
+      # TODO: Revisit this comment for v4 to see if we need to make any deprecations
+      component.config.asset_host = nil
+      assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
 
-    component.config.asset_host = "assets.example.com"
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+      component.config.asset_host = "http://assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+
+      component.config.asset_host = "assets.example.com"
+      assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+    end
   end
 
   def test_template_changes_are_not_reflected_if_cache_is_not_cleared
@@ -945,11 +954,13 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock_cache
-    with_compiler_development_mode(true) do
-      with_new_cache do
-        render_inline(ContentEvalComponent.new) do
-          ViewComponent::CompileCache.invalidate!
-          render_inline(ContentEvalComponent.new)
+    assert_nothing_raised do
+      with_compiler_development_mode(true) do
+        with_new_cache do
+          render_inline(ContentEvalComponent.new) do
+            ViewComponent::CompileCache.invalidate!
+            render_inline(ContentEvalComponent.new)
+          end
         end
       end
     end
@@ -1070,27 +1081,29 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock
-    with_compiler_development_mode(true) do
-      with_new_cache do
-        mutex = Mutex.new
+    assert_nothing_raised do
+      with_compiler_development_mode(true) do
+        with_new_cache do
+          mutex = Mutex.new
 
-        t1 = Thread.new do
-          mutex.synchronize do
-            sleep 0.02
-            render_inline(ContentEvalComponent.new)
-          end
-        end
-
-        t = Thread.new do
-          render_inline(ContentEvalComponent.new) do
+          t1 = Thread.new do
             mutex.synchronize do
-              sleep 0.01
+              sleep 0.02
+              render_inline(ContentEvalComponent.new)
             end
           end
-        end
 
-        t1.join
-        t.join
+          t = Thread.new do
+            render_inline(ContentEvalComponent.new) do
+              mutex.synchronize do
+                sleep 0.01
+              end
+            end
+          end
+
+          t1.join
+          t.join
+        end
       end
     end
   end

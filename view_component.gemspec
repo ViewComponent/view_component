@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "activesupport", [">= 7.1.0", "< 8.1"]
   spec.add_runtime_dependency "method_source", "~> 1.0"
-  spec.add_runtime_dependency "concurrent-ruby", "~> 1.0"
+  spec.add_runtime_dependency "concurrent-ruby", "1.3.4" # lock version that supports Rails 6.1
   spec.add_development_dependency "allocation_stats", "~> 0.1.5"
   spec.add_development_dependency "appraisal", "~> 2.4"
   spec.add_development_dependency "benchmark-ips", "~> 2.13.0"
@@ -51,11 +51,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-rails", "~> 5"
   spec.add_development_dependency "rubocop-md", "~> 1"
   spec.add_development_dependency "selenium-webdriver", "4.9.0"
+  spec.add_development_dependency "sprockets-rails", "~> 3.4.2"
   spec.add_development_dependency "standard", "~> 1"
   spec.add_development_dependency "simplecov", "~> 0.22.0"
   spec.add_development_dependency "simplecov-console", "~> 0.9.1"
   spec.add_development_dependency "slim", "~> 5.1"
-  spec.add_development_dependency "sprockets-rails", "~> 3.4.2"
   spec.add_development_dependency "turbo-rails", "~> 1"
   spec.add_development_dependency "warning"
   spec.add_development_dependency "yard", "~> 0.9.34"
@@ -70,5 +70,6 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency "bigdecimal"
     spec.add_development_dependency "drb"
     spec.add_development_dependency "mutex_m"
+    spec.add_development_dependency "propshaft", "~> 1.1.0"
   end
 end

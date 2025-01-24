@@ -14,7 +14,14 @@ module ViewComponent
 
       # Including helpers here ensures that we're loading the
       # latest version of helpers if code-reloading is enabled
-      helper :all if include_all_helpers
+      if include_all_helpers
+        helper :all
+      else
+        # :nocov:
+        # Always provide the #view_source helper
+        helper PreviewHelper
+        # :nocov:
+      end
     end
 
     def index

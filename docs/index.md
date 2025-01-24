@@ -231,6 +231,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/tkowalewski" alt="tkowalewski" width="32" />
 <img src="https://avatars.githubusercontent.com/chloe-meister" alt="chloe-meister" width="32" />
 <img src="https://avatars.githubusercontent.com/zaratan" alt="zaratan" width="32" />
+<img src="https://avatars.githubusercontent.com/kawakamimoeki" alt="kawakamimoeki" width="32" />
 
 ## Who uses ViewComponent?
 
@@ -240,6 +241,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Avo Admin for Rails](https://avohq.io/rails-admin)
 * [Bearer](https://www.bearer.com/) (70+ components)
 * [Brightline](https://hellobrightline.com)
+* [Buildkite](https://buildkite.com)
 * [Bump.sh](https://bump.sh)
 * [Causey](https://www.causey.app/) (100+ components)
 * [CharlieHR](https://www.charliehr.com/)
@@ -248,11 +250,13 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Cometeer](https://cometeer.com/)
 * [Consul](https://consulproject.org/en/)
 * [Cults.](https://cults3d.com/)
+* [Defacto](https://www.defacto.nl)
 * [DotRuby](https://www.dotruby.com)
 * [Eagerworks](https://eagerworks.com/)
 * [FlightLogger](https://flightlogger.net/)
 * [Framework](https://frame.work/)
 * [FreeAgent](https://www.freeagent.com)
+* [FreeATS](https://www.freeats.com/)
 * [G2](https://www.g2.com/) (200+ components)
 * [Getblock](https://getblock.io/)
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
@@ -269,6 +273,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Niva](https://www.niva.co/)
 * [OBLSK](https://oblsk.com/)
 * [openSUSE Open Build Service](https://openbuildservice.org/)
+* [OpenProject](https://www.openproject.org/)
 * [Ophelos](https://ophelos.com)
 * [Orbit](https://orbit.love)
 * [PeopleForce](https://peopleforce.io)
@@ -284,6 +289,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Shogun](https://getshogun.com/)
 * [SpendHQ](https://www.spendhq.com/)
 * [Spina CMS](https://spinacms.com/)
+* [Spring](https://spring.net/)
 * [Startup Jobs](https://startup.jobs/)
 * [Teamtailor](https://teamtailor.com/)
 * [Topkey](https://topkey.io/)
