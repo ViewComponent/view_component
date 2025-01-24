@@ -29,7 +29,7 @@ It would be lovely if we could support rendering ViewComponents in Jekyll, as it
 
 ## Issues resolved by the optional capture compatibility patch
 
-If you're experiencing issues with duplicated content or malformed HTML output, the capture compatibility patch may resolve these.
+If you're experiencing issues with duplicated content or malformed HTML output (such as using `concat` in a helper), the capture compatibility patch may resolve these.
 
 [Set `config.view_component.capture_compatibility_patch_enabled` to `true`](https://viewcomponent.org/api.html#capture_compatibility_patch_enabled) to resolve these issues.
 
