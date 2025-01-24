@@ -39,6 +39,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* Add experimental support for sub-templates.
+
+    *Felipe Sateler*, *Jose Solás Moreno*, *Rob Sterner*, *Joel Hawksley*
+
 * Remove JS and CSS docs as they proved difficult to maintain and lacked consensus.
 
     *Joel Hawksley*

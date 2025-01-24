@@ -192,3 +192,63 @@ class MyComponent < ViewComponent::Base
   strip_trailing_whitespace(false)
 end
 ```
+
+## (Experimental) Sub-templates
+
+Since 4.0.0
+{: .label }
+
+Experimental
+{: .label .label-yellow }
+
+ViewComponents can render sub-templates defined in the sidecar directory:
+
+```text
+app/components
+├── ...
+├── test_component.rb
+├── test_component
+|   ├── list.html.erb
+|   └── summary.html.erb
+├── ...
+```
+
+Templates are compiled to private methods in the format `render_#{template_basename}_template`:
+
+```ruby
+# components/test_component.rb
+class TestComponent < ViewComponent::Base
+  include ViewComponent::Subtemplate
+
+  def initialize(mode:)
+    @mode = mode
+  end
+
+  def call
+    case @mode
+    when :list
+      render_list_template(multiple: false)
+    when :multilist
+      render_list_template(multiple: true)
+    when :summary
+      render_summary_template("friend!")
+    end
+  end
+end
+```
+
+To define which parameters a sub-template accepts, use the [Rails Strict Locals](https://edgeguides.rubyonrails.org/action_view_overview.html#strict-locals) syntax.
+
+_Note: Unlike Rails, a missing `locals` declaration means the template takes no arguments._
+
+```erb
+<%# components/test_component/list.html.erb %>
+<%# locals: (multiple:) %->
+The mode is: <%= @mode %> The parameter is <%= multiple %>.
+```
+
+```erb
+<%# components/test_component/summary.html.erb %>
+<%# locals: (string:) %>
+<div>The items are: <%= @items.to_sentence %>, <%= string %></div>
+```

@@ -1254,4 +1254,17 @@ class RenderingTest < ViewComponent::TestCase
       end
     end
   end
+
+  def test_render_sub_templates
+    render_inline(SubTemplatesComponent.new(number: 5, string: "parameter string"))
+
+    assert_selector("div.container") do
+      assert_selector("div", text: "The items are: Apple, Banana, and Pear, parameter string")
+      assert_selector("ul[data-number=5]") do
+        assert_selector("li", text: "Apple")
+        assert_selector("li", text: "Banana")
+        assert_selector("li", text: "Pear")
+      end
+    end
+  end
 end

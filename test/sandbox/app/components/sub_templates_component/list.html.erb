@@ -1,0 +1,6 @@
+<%# locals: (number:) %>
+<ul data-number="<%= number %>">
+  <% @items.each do |item| %>
+    <li><%= item %></li>
+  <% end %>
+</ul>

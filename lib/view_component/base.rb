@@ -12,6 +12,7 @@ require "view_component/preview"
 require "view_component/request_details"
 require "view_component/slotable"
 require "view_component/slotable_default"
+require "view_component/subtemplate"
 require "view_component/template"
 require "view_component/translatable"
 require "view_component/with_content_helper"
@@ -488,7 +489,7 @@ module ViewComponent
         # view files in the same directory as the component
         sidecar_files = Dir["#{directory}/#{component_name}.*{#{extensions}}"]
 
-        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
+        sidecar_directory_files = Dir["#{directory}/#{component_name}/*.*{#{extensions}}"]
 
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
       end

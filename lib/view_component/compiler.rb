@@ -30,6 +30,10 @@ module ViewComponent
 
         gather_templates
 
+        if @component == SubTemplatesComponent
+
+        end
+
         if self.class.development_mode && @templates.any?(&:requires_compiled_superclass?)
           @component.superclass.compile(raise_errors: raise_errors)
         end
