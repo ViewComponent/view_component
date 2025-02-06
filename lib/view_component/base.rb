@@ -289,7 +289,6 @@ module ViewComponent
     def __vc_request
       @__vc_request ||= controller.request
     rescue NoMethodError
-      nil
     end
 
     # The content passed to the component instance as a block.
