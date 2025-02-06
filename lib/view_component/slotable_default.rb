@@ -8,7 +8,7 @@ module ViewComponent
       renderable_value = send(default_method)
       slot = Slot.new(self)
 
-      if renderable_value.respond_to?(:render_in)
+      if renderable_value.class.method_defined?(:render_in)
         slot.__vc_component_instance = renderable_value
       else
         slot.__vc_content = renderable_value
