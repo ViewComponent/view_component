@@ -680,7 +680,7 @@ module ViewComponent
       end
 
       def initialize_parameter_names
-        return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
+        return attribute_names.map(&:to_sym) if method_defined?(:attribute_names)
 
         initialize_parameters.map(&:last)
       end
