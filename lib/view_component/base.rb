@@ -287,7 +287,9 @@ module ViewComponent
     #
     # @private
     def __vc_request
-      @__vc_request ||= controller.request if controller.respond_to?(:request)
+      @__vc_request ||= controller.request
+    rescue NoMethodError
+      nil
     end
 
     # The content passed to the component instance as a block.
