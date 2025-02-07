@@ -261,6 +261,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
+* [HomeStyler AI](https://homestyler.ai)
 * [Keenly](https://www.keenly.so) (100+ components)
 * [Kicksite](https://kicksite.com/)
 * [Krystal](https://krystal.uk)
