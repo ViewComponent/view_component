@@ -246,7 +246,7 @@ module ViewComponent
         super
       rescue => e # rubocop:disable Style/RescueStandardError
         e.set_backtrace e.backtrace.tap(&:shift)
-        raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && helpers.respond_to?(method_name)
+        raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && helpers.methods.include?(method_name.to_sym)
           #{e.message}
 
           You may be trying to call a method provided as a view helper. Did you mean `helpers.#{method_name}'?
@@ -287,7 +287,8 @@ module ViewComponent
     #
     # @private
     def __vc_request
-      @__vc_request ||= controller.request if controller.respond_to?(:request)
+      @__vc_request ||= controller.request
+    rescue NoMethodError
     end
 
     # The content passed to the component instance as a block.
@@ -678,7 +679,7 @@ module ViewComponent
       end
 
       def initialize_parameter_names
-        return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
+        return attribute_names.map(&:to_sym) if method_defined?(:attribute_names)
 
         initialize_parameters.map(&:last)
       end

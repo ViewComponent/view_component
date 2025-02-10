@@ -127,7 +127,7 @@ module ViewComponent
     private
 
     def html_safe_translation(translation)
-      if translation.respond_to?(:map)
+      if translation.class.method_defined?(:map)
         translation.map { |element| html_safe_translation(element) }
       else
         # It's assumed here that objects loaded by the i18n backend will respond to `#html_safe?`.

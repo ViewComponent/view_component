@@ -194,7 +194,7 @@ class SlotableTest < ViewComponent::TestCase
       end
     end
 
-    assert component.items.first.respond_to?(:classes)
+    assert_not_nil component.items.first.classes
   end
 
   def test_slot_forwards_kwargs_to_component

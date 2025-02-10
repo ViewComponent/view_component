@@ -56,7 +56,7 @@ module ViewComponent
     end
 
     def collection_variable(object)
-      if object.respond_to?(:to_ary)
+      if object.class.method_defined?(:to_ary)
         object.to_ary
       else
         raise InvalidCollectionArgumentError

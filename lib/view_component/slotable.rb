@@ -168,7 +168,7 @@ module ViewComponent
 
           define_method :"with_#{slot_name}" do |collection_args = nil, &block|
             collection_args.map do |args|
-              if args.respond_to?(:to_hash)
+              if args.class.method_defined?(:to_hash)
                 set_slot(slot_name, nil, **args, &block)
               else
                 set_slot(slot_name, nil, *args, &block)
