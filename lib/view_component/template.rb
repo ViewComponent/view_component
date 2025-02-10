@@ -80,7 +80,7 @@ module ViewComponent
     end
 
     def default_format?
-      @this_format == ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
+      @this_format == ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT || @this_format == :turbo_stream
     end
 
     def format

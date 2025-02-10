@@ -78,7 +78,7 @@ module ViewComponent
                 "variant&.to_sym == #{template.variant.inspect}"
               else
                 [
-                  template.default_format? ? "(format == #{ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT.inspect} || format.nil?)" : "format == #{template.format.inspect}",
+                  template.default_format? ? "(format == #{ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT.inspect} || format == :turbo_stream || format.nil?)" : "format == #{template.format.inspect}",
                   template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
                 ].join(" && ")
               end
@@ -95,6 +95,7 @@ module ViewComponent
       @component.silence_redefinition_of_method(:render_template_for)
       @component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
       def render_template_for(variant = nil, format = nil)
+        Rails.logger.info("Rendering template for variant: \#{variant}, format: \#{format}")
         #{method_body}
       end
       RUBY
