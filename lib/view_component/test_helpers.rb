@@ -60,7 +60,7 @@ module ViewComponent
 
       # :nocov:
 
-      Nokogiri::HTML.fragment(@rendered_content)
+      html_document_class.fragment(@rendered_content)
     end
 
     # `JSON.parse`-d component output.
@@ -107,7 +107,7 @@ module ViewComponent
 
       @rendered_content = result
 
-      Nokogiri::HTML.fragment(@rendered_content)
+      html_document_class.fragment(@rendered_content)
     end
 
     # Execute the given block in the view context (using `instance_exec`).
@@ -124,7 +124,7 @@ module ViewComponent
     def render_in_view_context(*args, &block)
       @page = nil
       @rendered_content = vc_test_controller.view_context.instance_exec(*args, &block)
-      Nokogiri::HTML.fragment(@rendered_content)
+      html_document_class.fragment(@rendered_content)
     end
     ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
 
@@ -297,5 +297,13 @@ module ViewComponent
       raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
     end
     # :nocov:
+
+    def html_document_class
+      @html_document_class ||= if Rails.application.config.view_component.use_html5_parsing
+        Nokogiri::HTML5
+      else
+        Nokogiri::HTML4
+      end
+    end
   end
 end
