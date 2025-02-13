@@ -25,7 +25,8 @@ module ViewComponent
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
           default_preview_layout: nil,
-          capture_compatibility_patch_enabled: false
+          capture_compatibility_patch_enabled: false,
+          use_html5_parsing: false
         })
       end
 
@@ -125,6 +126,11 @@ module ViewComponent
       # or are made more publicly available via `"render.view_component"`.
       # Will default to `false` in next major version.
       # Defaults to `true`.
+
+      # @!attribute use_html5_parsing
+      # @return [Boolean]
+      # Whether `Nokogiri::HTML5` is used for parsing generated view component HTML in test.
+      # Defaults to `false`.
 
       # @!attribute render_monkey_patch_enabled
       # @return [Boolean] Whether the #render method should be monkey patched.

@@ -272,6 +272,11 @@ or are made more publicly available via `"render.view_component"`.
 Will default to `false` in next major version.
 Defaults to `true`.
 
+### `.use_html5_parsing`
+
+Whether `Nokogiri::HTML5` is used for parsing generated view component HTML in test.
+Defaults to `false`.
+
 ### `.view_component_path`
 
 The path in which components, their templates, and their sidecars should

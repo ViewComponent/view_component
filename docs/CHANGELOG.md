@@ -26,6 +26,10 @@ nav_order: 5
 
     *JP Balarini*
 
+* Support opt-in Nokogiri HTML5 parsing in view components rendered for test
+
+    *Noah Silvera*
+
 ## 3.21.0
 
 * Updates testing docs to include an example of how to use with RSpec.
