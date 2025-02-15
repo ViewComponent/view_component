@@ -12,6 +12,10 @@ nav_order: 5
 
 ## 4.0.0
 
+* BREAKING: Make most configuration local to component instances.
+
+    Simon Fish
+
 * BREAKING: Require [non-EOL](https://endoflife.date/rails) Rails (`>= 7.1.0`).
 
     *Joel Hawksley*
