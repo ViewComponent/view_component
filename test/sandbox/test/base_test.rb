@@ -145,4 +145,18 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     MESSAGE
     assert !exception_message_regex.match?(exception.message)
   end
+
+  def test_configuration_dsl
+    component_class = Class.new(ViewComponent::Base) do
+      configure do
+        preview.paths = ["expected_path"]
+      end
+    end
+
+    assert_equal ConfigBaseComponent.new.config.preview.paths, ["expected_path"]
+  end
+
+  def test_inherited_configuration
+    assert_equal InheritedConfigComponent.new.config.preview.paths, ["expected_path", "another_expected_path"]
+  end
 end
