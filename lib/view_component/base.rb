@@ -19,14 +19,16 @@ require "view_component/use_helpers"
 
 module ViewComponent
   class Base < ActionView::Base
+    # Returns the current config.
+    #
+    # @return [ActiveSupport::OrderedOptions]
+    class_attribute :config, default: ViewComponent::Config.defaults
+
     class << self
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
-      # Returns the current config.
-      #
-      # @return [ActiveSupport::OrderedOptions]
-      def config
-        ViewComponent::Config.current
+      def configure(&block)
+        config.instance_eval(&block)
       end
     end
 
@@ -40,7 +42,7 @@ module ViewComponent
     VC_INTERNAL_DEFAULT_FORMAT = :html
 
     # For CSRF authenticity tokens in forms
-    delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
+    delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
 
     # For Content Security Policy nonces
     delegate :content_security_policy_nonce, to: :helpers

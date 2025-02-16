@@ -15,6 +15,9 @@ module ViewComponent
           generate: default_generate_options,
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
+          preview: ActiveSupport::OrderedOptions.new({
+            paths: default_preview_paths
+          }),
           show_previews_source: false,
           instrumentation_enabled: false,
           use_deprecated_instrumentation_name: true,
