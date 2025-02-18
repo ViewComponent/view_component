@@ -187,13 +187,6 @@ module ViewComponent
           defined?(descendant.root) && Dir.exist?("#{descendant.root}/test/components/previews")
         end
       end
-
-      def default_generate_options
-        options = ActiveSupport::OrderedOptions.new(false)
-        options.preview_path = ""
-        options.view_component_paths = ["app/components"]
-        options
-      end
     end
 
     def initialize
