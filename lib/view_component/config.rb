@@ -21,7 +21,6 @@ module ViewComponent
           show_previews_source: false,
           instrumentation_enabled: false,
           use_deprecated_instrumentation_name: true,
-          view_component_path: "app/components",
           component_parent_class: nil,
           show_previews: Rails.env.development? || Rails.env.test?,
           preview_paths: default_preview_paths,
@@ -199,6 +198,7 @@ module ViewComponent
       def default_generate_options
         options = ActiveSupport::OrderedOptions.new(false)
         options.preview_path = ""
+        options.view_component_paths = ["app/components"]
         options
       end
     end

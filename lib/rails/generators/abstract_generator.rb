@@ -29,7 +29,8 @@ module ViewComponent
     end
 
     def component_path
-      Rails.application.config.view_component.view_component_path
+      # FIXME: Doesn't yet handle multiple component paths
+      Rails.application.config.view_component.generate.view_component_paths!.first
     end
 
     def stimulus_controller

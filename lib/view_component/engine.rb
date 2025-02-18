@@ -8,7 +8,10 @@ module ViewComponent
   class Engine < Rails::Engine # :nodoc:
     config.view_component = ActiveSupport::OrderedOptions[
       path: "app/components",
-      generate: ActiveSupport::OrderedOptions.new(false).tap { |generate| generate.preview_path = "" },
+      generate: ActiveSupport::OrderedOptions.new(false).tap do |generate|
+        generate.preview_path = ""
+        generate.view_component_paths = ["app/components"]
+      end,
       previews: ActiveSupport::OrderedOptions[
         show: true,
         controller: "ViewComponentsController",
@@ -48,7 +51,7 @@ module ViewComponent
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
       options.show_previews = options.previews.show!
       options.default_preview_layout = options.previews.default_layout
-      options.view_component_path = options.path!
+      options.view_component_paths = options.generate.view_component_paths!
 
       # This is still necessary because when `config.view_component` is declared, `Rails.root` is unspecified.
       # if options.show_previews
@@ -128,17 +131,17 @@ module ViewComponent
 
       if options.show_previews
         app.routes.prepend do
-          preview_controller = options.preview_controller.sub(/Controller$/, "").underscore
+          preview_controller = options.previews.controller!.sub(/Controller$/, "").underscore
 
           get(
-            options.preview_route,
+            options.previews.route!,
             to: "#{preview_controller}#index",
             as: :preview_view_components,
             internal: true
           )
 
           get(
-            "#{options.preview_route}/*path",
+            "#{options.previews.route!}/*path",
             to: "#{preview_controller}#previews",
             as: :preview_view_component,
             internal: true

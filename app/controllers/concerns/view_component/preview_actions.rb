@@ -54,12 +54,12 @@ module ViewComponent
 
     # :doc:
     def default_preview_layout
-      Rails.application.config.view_component.default_preview_layout
+      Rails.application.config.view_component.previews.default_layout
     end
 
     # :doc:
     def show_previews?
-      Rails.application.config.view_component.show_previews
+      Rails.application.config.view_component.previews.show
     end
 
     # :doc:

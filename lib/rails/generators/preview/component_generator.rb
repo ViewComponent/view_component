@@ -10,7 +10,7 @@ module Preview
       check_class_collision suffix: "ComponentPreview"
 
       def create_preview_file
-        preview_paths = Rails.application.config.view_component.preview_paths
+        preview_paths = Rails.application.config.view_component.previews.paths
         optional_path = options[:preview_path]
         return if preview_paths.count > 1 && optional_path.blank?
 

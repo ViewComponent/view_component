@@ -551,7 +551,7 @@ module ViewComponent
         # TODO: probably a way to rework this, seems like it's load order dependent at the moment?
         if defined?(Rails) && Rails.application
           child.virtual_path = child.identifier.gsub(
-            /(.*#{Regexp.quote(Rails.application.config.view_component.view_component_path)})|(\.rb)/, ""
+            /(.*#{Regexp.quote(Rails.application.config.view_component.generate.view_component_paths!.first)})|(\.rb)/, ""
           )
         end
 

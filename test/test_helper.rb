@@ -68,35 +68,39 @@ end
 # @yield Test code to run
 # @return [void]
 def with_preview_paths(new_value, &block)
-  with_config_option(:preview_paths, new_value, &block)
+  old_value = Rails.application.config.view_component.previews.paths
+  Rails.application.config.view_component.previews.paths = new_value
+  yield
+ensure
+  Rails.application.config.view_component.previews.paths = old_value
 end
 
 def with_preview_route(new_value)
-  old_value = Rails.application.config.view_component.preview_route
-  Rails.application.config.view_component.preview_route = new_value
+  old_value = Rails.application.config.view_component.previews.route
+  Rails.application.config.view_component.previews.route = new_value
   app.reloader.reload!
   yield
 ensure
-  Rails.application.config.view_component.preview_route = old_value
+  Rails.application.config.view_component.previews.route = old_value
   app.reloader.reload!
 end
 
 def with_preview_controller(new_value)
-  old_value = Rails.application.config.view_component.preview_controller
-  Rails.application.config.view_component.preview_controller = new_value
+  old_value = Rails.application.config.view_component.previews.controller
+  Rails.application.config.view_component.previews.controller = new_value
   app.reloader.reload!
   yield
 ensure
-  Rails.application.config.view_component.preview_controller = old_value
+  Rails.application.config.view_component.previews.controller = old_value
   app.reloader.reload!
 end
 
 def with_custom_component_path(new_value, &block)
-  with_config_option(:view_component_path, new_value, &block)
+  with_generate_option(:view_component_paths, [new_value], &block)
 end
 
 def with_custom_component_parent_class(new_value, &block)
-  with_config_option(:component_parent_class, new_value, &block)
+  with_generate_option(:component_parent_class, new_value, &block)
 end
 
 def with_application_component_class
@@ -139,6 +143,16 @@ ensure
   ViewComponent::CompileCache.cache = old_cache
 end
 
+def with_default_preview_layout(new_value, &block)
+  old_value = Rails.application.config.view_component.previews.default_layout
+  Rails.application.config.view_component.previews.default_layout = new_value
+  app.reloader.reload!
+  yield
+ensure
+  Rails.application.config.view_component.previews.default_layout = old_value
+  app.reloader.reload!
+end
+
 def without_template_annotations(&block)
   if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
     old_value = ActionView::Base.annotate_rendered_view_with_filenames
@@ -163,10 +177,6 @@ def modify_file(file, content)
   ensure
     File.open(filename, "wb+") { |f| f.write(old_content) }
   end
-end
-
-def with_default_preview_layout(layout, &block)
-  with_config_option(:default_preview_layout, layout, &block)
 end
 
 def with_compiler_development_mode(mode)
