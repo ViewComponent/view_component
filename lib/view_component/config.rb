@@ -14,7 +14,8 @@ module ViewComponent
         ActiveSupport::OrderedOptions[
           generate: ActiveSupport::OrderedOptions[
             preview_path: "",
-            view_component_paths: ["app/components"]
+            view_component_paths: ["app/components"],
+            use_component_path_for_rspec_tests: false
           ],
           previews: ActiveSupport::OrderedOptions[
             show: true,
@@ -24,7 +25,8 @@ module ViewComponent
             paths: ViewComponent::Config.default_preview_paths,
             default_layout: nil
           ],
-          instrumentation_enabled: false
+          instrumentation_enabled: false,
+          capture_compatibility_patch_enabled: false
         ]
       end
 
