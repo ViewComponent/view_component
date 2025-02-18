@@ -14,9 +14,10 @@ module Rails
 
       class_option :inline, type: :boolean, default: false
       class_option :locale, type: :boolean, default: Rails.application.config.view_component.generate.locale
-      class_option :parent, type: :string, desc: "The parent class for the generated component"
+      class_option :parent, type: :string, desc: "The parent class for the generated component",
+        default: Rails.application.config.view_component.generate.component_parent_class
       class_option :preview, type: :boolean, default: Rails.application.config.view_component.generate.preview
-      class_option :sidecar, type: :boolean, default: false
+      class_option :sidecar, type: :boolean, default: Rails.application.config.view_component.generate.sidecar
       class_option :stimulus, type: :boolean,
         default: Rails.application.config.view_component.generate.stimulus_controller
       class_option :skip_suffix, type: :boolean, default: false

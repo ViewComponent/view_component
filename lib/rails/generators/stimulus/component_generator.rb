@@ -8,8 +8,8 @@ module Stimulus
       include ViewComponent::AbstractGenerator
 
       source_root File.expand_path("templates", __dir__)
-      class_option :sidecar, type: :boolean, default: false
-      class_option :typescript, type: :boolean, default: false
+      class_option :sidecar, type: :boolean, default: Rails.application.config.view_component.generate.sidecar
+      class_option :typescript, type: :boolean, default: Rails.application.config.view_component.generate.typescript
 
       def create_stimulus_controller
         template "component_controller.#{filetype}", destination
