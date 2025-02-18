@@ -22,15 +22,13 @@ module ViewComponent
     # Returns the current config.
     #
     # @return [ActiveSupport::OrderedOptions]
-    class_attribute :config, default: ViewComponent::Config.defaults
+    class_attribute :configuration, default: ViewComponent::Config.defaults
 
     class << self
-      # delegate(*ViewComponent::Config.defaults.keys, to: :config)
-
       def configure(&block)
-        new_config = config.dup
-        new_config.instance_eval(&block)
-        # self.config = new_config
+        # deep_dup necessary to prevent configuration changes from children leaking up to
+        # parents.
+        self.configuration = self.configuration.deep_dup.tap { |c| c.instance_eval(&block) }
       end
     end
 
@@ -43,8 +41,12 @@ module ViewComponent
     RESERVED_PARAMETER = :content
     VC_INTERNAL_DEFAULT_FORMAT = :html
 
+    def config
+      Rails.application.config
+    end
+
     # For CSRF authenticity tokens in forms
-    delegate :form_authenticity_token, :protect_against_forgery?, to: :helpers
+    delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
     # For Content Security Policy nonces
     delegate :content_security_policy_nonce, to: :helpers

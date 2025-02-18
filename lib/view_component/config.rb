@@ -15,9 +15,9 @@ module ViewComponent
           generate: default_generate_options,
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
-          preview: ActiveSupport::OrderedOptions.new({
+          preview: ActiveSupport::OrderedOptions[
             paths: default_preview_paths
-          }),
+          ],
           show_previews_source: false,
           instrumentation_enabled: false,
           use_deprecated_instrumentation_name: true,
@@ -100,6 +100,11 @@ module ViewComponent
       # For example, if the `view_component_path` is
       # `app/views/components`, then the generator will create a new spec file
       # in `spec/views/components/` rather than the default `spec/components/`.
+      
+      # @!attribute preview
+      # @return [String]
+      # The subset of configuration options relating to previews.
+      # TODO: Document.
 
       # @!attribute preview_controller
       # @return [String]
