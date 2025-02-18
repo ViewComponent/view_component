@@ -245,7 +245,7 @@ module ViewComponent
     #
     # @return [ActionController::Base]
     def vc_test_controller
-      @vc_test_controller ||= __vc_test_helpers_build_controller(Base.test_controller.constantize)
+      @vc_test_controller ||= __vc_test_helpers_build_controller(Rails.application.config.view_component.test_controller.constantize)
     end
 
     # Access the request used by `render_inline`:

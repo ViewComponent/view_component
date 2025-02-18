@@ -174,8 +174,6 @@ module ViewComponent
       end
 
       def default_rails_preview_paths
-        return [] unless defined?(Rails.root) && Dir.exist?("#{Rails.root}/test/components/previews")
-
         ["#{Rails.root}/test/components/previews"]
       end
 

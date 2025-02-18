@@ -539,7 +539,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       expected_response_body = <<~TURBOSTREAM
         <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
       TURBOSTREAM
-      if ViewComponent::Base.config.capture_compatibility_patch_enabled
+      if Rails.application.config.view_component.capture_compatibility_patch_enabled
         assert_equal expected_response_body, response.body
       else
         assert_not_equal expected_response_body, response.body
@@ -668,25 +668,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     ActionController::Base.perform_caching = false
     Rails.cache.clear
-  end
-
-  def test_config_options_shared_between_base_and_engine
-    config_entrypoints = [Rails.application.config.view_component, ViewComponent::Base.config]
-    2.times do
-      config_entrypoints.first.yield_self do |config|
-        {
-          generate: config.generate.dup.tap { |c| c.sidecar = true },
-          preview_controller: "SomeOtherController",
-          preview_route: "/some/other/route",
-          show_previews_source: true
-        }.each do |option, value|
-          with_config_option(option, value, config_entrypoint: config) do
-            assert_equal(config.public_send(option), config_entrypoints.second.public_send(option))
-          end
-        end
-      end
-      config_entrypoints.rotate!
-    end
   end
 
   def test_path_traversal_raises_error

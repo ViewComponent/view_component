@@ -25,10 +25,12 @@ module ViewComponent
     class_attribute :config, default: ViewComponent::Config.defaults
 
     class << self
-      delegate(*ViewComponent::Config.defaults.keys, to: :config)
+      # delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
       def configure(&block)
-        config.instance_eval(&block)
+        new_config = config.dup
+        new_config.instance_eval(&block)
+        # self.config = new_config
       end
     end
 
@@ -510,10 +512,6 @@ module ViewComponent
 
       # @private
       def inherited(child)
-        # Inherit configuration of parent class. This does mean that changing config options on the
-        # parent at runtime will not be synced to the child.
-        child.config = self.config
-
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
         compile
@@ -548,9 +546,10 @@ module ViewComponent
         child.identifier = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
 
         # If Rails application is loaded, removes the first part of the path and the extension.
+        # TODO: probably a way to rework this, seems like it's load order dependent at the moment?
         if defined?(Rails) && Rails.application
           child.virtual_path = child.identifier.gsub(
-            /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
+            /(.*#{Regexp.quote(Rails.application.config.view_component.view_component_path)})|(\.rb)/, ""
           )
         end
 

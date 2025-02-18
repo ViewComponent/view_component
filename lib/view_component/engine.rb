@@ -6,7 +6,19 @@ require "view_component/deprecation"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ViewComponent::Config.current
+    config.view_component = ActiveSupport::OrderedOptions[
+      path: "app/components",
+      generate: ActiveSupport::OrderedOptions.new(false).tap { |generate| generate.preview_path = "" },
+      previews: ActiveSupport::OrderedOptions[
+        show: true,
+        controller: "ViewComponentsController",
+        route: "/rails/view_components",
+        show_source: (Rails.env.development? || Rails.env.test?),
+        paths: ViewComponent::Config.default_preview_paths, # TODO: change how we're sourcing this.
+        default_layout: nil
+      ],
+      preview_paths: ViewComponent::Config.default_preview_paths # TODO: change how we're sourcing this.
+    ]
 
     if Rails.version.to_f < 8.0
       rake_tasks do
@@ -16,8 +28,8 @@ module ViewComponent
       initializer "view_component.stats_directories" do |app|
         require "rails/code_statistics"
 
-        if Rails.root.join(ViewComponent::Base.view_component_path).directory?
-          Rails::CodeStatistics.register_directory("ViewComponents", ViewComponent::Base.view_component_path)
+        if Rails.root.join(Rails.application.config.view_component.path).directory?
+          Rails::CodeStatistics.register_directory("ViewComponents", Rails.application.config.view_component.path)
         end
 
         if Rails.root.join("test/components").directory?
@@ -29,24 +41,31 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
-      %i[generate preview_controller preview_route show_previews_source].each do |config_option|
-        options[config_option] ||= ViewComponent::Base.public_send(config_option)
-      end
+      # TODO: Remove all these legacy config routes
+      options.preview_controller = options.previews.controller!
+      options.preview_route = options.previews.route!
+      options.show_previews_source = options.previews.show_source!
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
-      options.show_previews = (Rails.env.development? || Rails.env.test?) if options.show_previews.nil?
+      options.show_previews = options.previews.show!
+      options.default_preview_layout = options.previews.default_layout
+      options.view_component_path = options.path!
 
-      if options.show_previews
-        # This is still necessary because when `config.view_component` is declared, `Rails.root` is unspecified.
-        options.preview_paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?(
-          "#{Rails.root}/test/components/previews"
-        )
+      # This is still necessary because when `config.view_component` is declared, `Rails.root` is unspecified.
+      # if options.show_previews
+      options.previews.paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && (
+        "#{Rails.root}/test/components/previews"
+      )
+      options.preview_paths = options.previews.paths!
+      
+      # TODO: Custom error type, more informative error here
+      #       Also maybe there's a better time to call this.
+      # raise "Preview directories must exist" if options.show_previews && !options.preview_paths.all? { |path| Dir.exist?(path) }
 
-        if options.show_previews_source
-          require "method_source"
+      if options.show_previews && options.show_previews_source
+        require "method_source"
 
-          app.config.to_prepare do
-            MethodSource.instance_variable_set(:@lines_for_file, {})
-          end
+        app.config.to_prepare do
+          MethodSource.instance_variable_set(:@lines_for_file, {})
         end
       end
     end

@@ -48,6 +48,6 @@ module PreviewHelper
   # :nocov:
 
   def serve_static_preview_assets?
-    ViewComponent::Base.config.show_previews && Rails.application.config.public_file_server.enabled
+    Rails.application.config.view_component.show_previews && Rails.application.config.public_file_server.enabled
   end
 end

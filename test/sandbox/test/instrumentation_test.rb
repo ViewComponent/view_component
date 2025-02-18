@@ -20,13 +20,15 @@ class InstrumentationTest < ViewComponent::TestCase
   end
 
   def test_instrumentation_with_deprecated_name
-    events = []
-    ActiveSupport::Notifications.subscribe("!render.view_component") do |*args|
-      events << ActiveSupport::Notifications::Event.new(*args)
-    end
-    render_inline(InstrumentationComponent.new)
+    with_config_option(:use_deprecated_instrumentation_name, true) do
+      events = []
+      ActiveSupport::Notifications.subscribe("!render.view_component") do |*args|
+        events << ActiveSupport::Notifications::Event.new(*args)
+      end
+      render_inline(InstrumentationComponent.new)
 
-    assert_equal(events.size, 1)
-    assert_equal("!render.view_component", events[0].name)
+      assert_equal(events.size, 1)
+      assert_equal("!render.view_component", events[0].name)
+    end
   end
 end
