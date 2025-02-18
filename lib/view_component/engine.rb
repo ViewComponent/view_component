@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "rails"
-require "view_component/config"
+require "view_component/application_config"
 require "view_component/deprecation"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ViewComponent::Config.default
+    config.view_component = ViewComponent::ApplicationConfig.default
 
     if Rails.version.to_f < 8.0
       rake_tasks do

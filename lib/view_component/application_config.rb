@@ -3,7 +3,7 @@
 require "view_component/deprecation"
 
 module ViewComponent
-  class Config
+  class ApplicationConfig
     class << self
       # `new` without any arguments initializes the default configuration, but
       # it's important to differentiate in case that's no longer the case in
@@ -29,7 +29,7 @@ module ViewComponent
             controller: "ViewComponentsController",
             route: "/rails/view_components",
             show_source: (Rails.env.development? || Rails.env.test?),
-            paths: ViewComponent::Config.default_preview_paths,
+            paths: default_preview_paths,
             default_layout: nil
           ],
           instrumentation_enabled: false,

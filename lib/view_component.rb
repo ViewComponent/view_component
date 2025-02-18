@@ -6,12 +6,12 @@ require "active_support/dependencies/autoload"
 module ViewComponent
   extend ActiveSupport::Autoload
 
+  autoload :ApplicationConfig
   autoload :Base
   autoload :CaptureCompatibility
   autoload :Compiler
   autoload :CompileCache
   autoload :ComponentError
-  autoload :Config
   autoload :Deprecation
   autoload :InlineTemplate
   autoload :Instrumentation

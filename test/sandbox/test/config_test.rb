@@ -5,7 +5,7 @@ require "test_helper"
 module ViewComponent
   class ConfigTest < TestCase
     def setup
-      @config = ViewComponent::Config.new
+      @config = ViewComponent::ApplicationConfig.new
     end
 
     def test_defaults_are_correct
@@ -39,9 +39,9 @@ module ViewComponent
       Rake::Task["yard"].execute
       configuration_methods_to_document = YARD::RegistryStore.new.tap do |store|
         store.load!(".yardoc")
-      end.get("ViewComponent::Config").meths.select(&:reader?).reject { |meth| meth.name == :config }
-      default_options = ViewComponent::Config.defaults.keys
-      accessors = ViewComponent::Config.instance_methods(false).reject do |method_name|
+      end.get("ViewComponent::ApplicationConfig").meths.select(&:reader?).reject { |meth| meth.name == :config }
+      default_options = ViewComponent::ApplicationConfig.defaults.keys
+      accessors = ViewComponent::ApplicationConfig.instance_methods(false).reject do |method_name|
         method_name.to_s.end_with?("=") || method_name == :method_missing
       end
       options_defined_on_instance = Set[*default_options, *accessors]
