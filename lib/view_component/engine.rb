@@ -6,22 +6,7 @@ require "view_component/deprecation"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
-    config.view_component = ActiveSupport::OrderedOptions[
-      path: "app/components",
-      generate: ActiveSupport::OrderedOptions.new(false).tap do |generate|
-        generate.preview_path = ""
-        generate.view_component_paths = ["app/components"]
-      end,
-      previews: ActiveSupport::OrderedOptions[
-        show: true,
-        controller: "ViewComponentsController",
-        route: "/rails/view_components",
-        show_source: (Rails.env.development? || Rails.env.test?),
-        paths: ViewComponent::Config.default_preview_paths, # TODO: change how we're sourcing this.
-        default_layout: nil
-      ],
-      preview_paths: ViewComponent::Config.default_preview_paths # TODO: change how we're sourcing this.
-    ]
+    config.view_component = ViewComponent::Config.default
 
     if Rails.version.to_f < 8.0
       rake_tasks do
@@ -31,8 +16,8 @@ module ViewComponent
       initializer "view_component.stats_directories" do |app|
         require "rails/code_statistics"
 
-        if Rails.root.join(Rails.application.config.view_component.path).directory?
-          Rails::CodeStatistics.register_directory("ViewComponents", Rails.application.config.view_component.path)
+        if Rails.root.join(Rails.application.config.view_component.generate.view_component_paths!.first).directory?
+          Rails::CodeStatistics.register_directory("ViewComponents", Rails.application.config.view_component.generate.view_component_paths!.first)
         end
 
         if Rails.root.join("test/components").directory?
@@ -44,27 +29,16 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
-      # TODO: Remove all these legacy config routes
-      options.preview_controller = options.previews.controller!
-      options.preview_route = options.previews.route!
-      options.show_previews_source = options.previews.show_source!
-      options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
-      options.show_previews = options.previews.show!
-      options.default_preview_layout = options.previews.default_layout
-      options.view_component_paths = options.generate.view_component_paths!
-
       # This is still necessary because when `config.view_component` is declared, `Rails.root` is unspecified.
-      # if options.show_previews
       options.previews.paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && (
         "#{Rails.root}/test/components/previews"
       )
-      options.preview_paths = options.previews.paths!
       
       # TODO: Custom error type, more informative error here
       #       Also maybe there's a better time to call this.
       # raise "Preview directories must exist" if options.show_previews && !options.preview_paths.all? { |path| Dir.exist?(path) }
 
-      if options.show_previews && options.show_previews_source
+      if options.previews.show && options.previews.show_source
         require "method_source"
 
         app.config.to_prepare do
@@ -94,8 +68,8 @@ module ViewComponent
     initializer "view_component.set_autoload_paths" do |app|
       options = app.config.view_component
 
-      if options.show_previews && !options.preview_paths.empty?
-        paths_to_add = options.preview_paths - ActiveSupport::Dependencies.autoload_paths
+      if options.previews.show && !options.previews.paths.empty?
+        paths_to_add = options.previews.paths - ActiveSupport::Dependencies.autoload_paths
         ActiveSupport::Dependencies.autoload_paths.concat(paths_to_add) if paths_to_add.any?
       end
     end
@@ -113,7 +87,7 @@ module ViewComponent
     end
 
     def serve_static_preview_assets?(app_config)
-      app_config.view_component.show_previews && app_config.public_file_server.enabled
+      app_config.view_component.previews.show && app_config.public_file_server.enabled
     end
 
     initializer "compiler mode" do |_app|
@@ -123,7 +97,7 @@ module ViewComponent
     config.after_initialize do |app|
       options = app.config.view_component
 
-      if options.show_previews
+      if options.previews.show
         app.routes.prepend do
           preview_controller = options.previews.controller!.sub(/Controller$/, "").underscore
 

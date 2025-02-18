@@ -30,10 +30,10 @@ Sandbox::Application.configure do
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection = false
 
-  config.view_component.show_previews = true
+  config.view_component.previews.show = true
 
   config.view_component.previews.paths << "#{Rails.root}/lib/component_previews"
-  config.view_component.show_previews_source = true
+  config.view_component.previews.show_source = true
   config.view_component.test_controller = "IntegrationExamplesController"
   config.view_component.capture_compatibility_patch_enabled = ENV["CAPTURE_PATCH_ENABLED"] == "true"
 

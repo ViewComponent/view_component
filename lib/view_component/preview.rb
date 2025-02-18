@@ -107,7 +107,7 @@ module ViewComponent # :nodoc:
       private
 
       def preview_paths
-        Rails.application.config.view_component.preview_paths
+        Rails.application.config.view_component.previews.paths
       end
     end
   end

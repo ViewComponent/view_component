@@ -19,10 +19,19 @@ require "view_component/use_helpers"
 
 module ViewComponent
   class Base < ActionView::Base
+    class Configuration
+      def initialize
+        @config = ActiveSupport::OrderedOptions[
+          preview: ActiveSupport::OrderedOptions[paths: []]
+        ]
+      end
+
+      delegate :preview, to: :@config
+    end
     # Returns the current config.
     #
     # @return [ActiveSupport::OrderedOptions]
-    class_attribute :configuration, default: ViewComponent::Config.defaults
+    class_attribute :configuration, default: ViewComponent::Base::Configuration.new
 
     class << self
       def configure(&block)

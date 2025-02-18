@@ -11,22 +11,21 @@ module ViewComponent
       alias_method :default, :new
 
       def defaults
-        ActiveSupport::OrderedOptions.new.merge!({
-          generate: default_generate_options,
-          preview_controller: "ViewComponentsController",
-          preview_route: "/rails/view_components",
-          preview: ActiveSupport::OrderedOptions[
-            paths: default_preview_paths
+        ActiveSupport::OrderedOptions[
+          generate: ActiveSupport::OrderedOptions[
+            preview_path: "",
+            view_component_paths: ["app/components"]
           ],
-          show_previews_source: false,
-          instrumentation_enabled: false,
-          component_parent_class: nil,
-          show_previews: Rails.env.development? || Rails.env.test?,
-          preview_paths: default_preview_paths,
-          test_controller: "ApplicationController",
-          default_preview_layout: nil,
-          capture_compatibility_patch_enabled: false
-        })
+          previews: ActiveSupport::OrderedOptions[
+            show: true,
+            controller: "ViewComponentsController",
+            route: "/rails/view_components",
+            show_source: (Rails.env.development? || Rails.env.test?),
+            paths: ViewComponent::Config.default_preview_paths,
+            default_layout: nil
+          ],
+          instrumentation_enabled: false
+        ]
       end
 
       # @!attribute generate
@@ -99,7 +98,7 @@ module ViewComponent
       # `app/views/components`, then the generator will create a new spec file
       # in `spec/views/components/` rather than the default `spec/components/`.
       
-      # @!attribute preview
+      # @!attribute previews
       # @return [String]
       # The subset of configuration options relating to previews.
       # TODO: Document.
@@ -194,14 +193,6 @@ module ViewComponent
         options
       end
     end
-
-    # @!attribute current
-    # @return [ViewComponent::Config]
-    # Returns the current ViewComponent::Config. This is persisted against this
-    # class so that config options remain accessible before the rest of
-    # ViewComponent has loaded. Defaults to an instance of ViewComponent::Config
-    # with all other documented defaults set.
-    class_attribute :current, default: defaults, instance_predicate: false
 
     def initialize
       @config = self.class.defaults
