@@ -9,7 +9,18 @@ module ViewComponent
     end
 
     def test_defaults_are_correct
-      assert_equal @config.generate, {preview_path: "", view_component_paths: ["app/components"], use_component_path_for_rspec_tests: false}
+      assert_equal @config.generate, {
+        sidecar: false,
+        stimulus_controller: false,
+        typescript: false,
+        locale: false,
+        distinct_locale_files: false,
+        preview: false,
+        preview_path: "",
+        use_component_path_for_rspec_tests: false,
+        view_component_paths: ["app/components"],
+        component_parent_class: nil,
+      }
       assert_equal @config.previews.controller, "ViewComponentsController"
       assert_equal @config.previews.route, "/rails/view_components"
       assert_equal @config.previews.show_source, true

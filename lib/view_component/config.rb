@@ -13,12 +13,19 @@ module ViewComponent
       def defaults
         ActiveSupport::OrderedOptions[
           generate: ActiveSupport::OrderedOptions[
+            sidecar: false,
+            stimulus_controller: false,
+            typescript: false,
+            locale: false,
+            distinct_locale_files: false,
+            preview: false,
             preview_path: "",
+            use_component_path_for_rspec_tests: false,
             view_component_paths: ["app/components"],
-            use_component_path_for_rspec_tests: false
+            component_parent_class: nil
           ],
           previews: ActiveSupport::OrderedOptions[
-            show: true,
+            show: (Rails.env.development? || Rails.env.test?),
             controller: "ViewComponentsController",
             route: "/rails/view_components",
             show_source: (Rails.env.development? || Rails.env.test?),
@@ -26,7 +33,8 @@ module ViewComponent
             default_layout: nil
           ],
           instrumentation_enabled: false,
-          capture_compatibility_patch_enabled: false
+          test_controller: "ApplicationController",
+          capture_compatibility_patch_enabled: false,
         ]
       end
 
@@ -99,65 +107,70 @@ module ViewComponent
       # For example, if the `view_component_path` is
       # `app/views/components`, then the generator will create a new spec file
       # in `spec/views/components/` rather than the default `spec/components/`.
+      #
+      # #### `#view_component_path``
+      #
+      # The path in which components, their templates, and their sidecars should
+      # be stored:
+      #
+      #      config.view_component.generate.view_component_paths = "app/components"
+      #
+      # Defaults to `"app/components"`.
+      # TODO: It looks like this was actually the default path generators would use.
+      #       I think it's used elsewhere inside `base.rb` for some reason, though.
+      #
+      # #### `#component_parent_class`
+      # 
+      # The parent class from which generated components will inherit.
+      # Defaults to `nil`. If this is falsy, generators will use
+      # `"ApplicationComponent"` if defined, `"ViewComponent::Base"` otherwise.
+
       
       # @!attribute previews
       # @return [String]
       # The subset of configuration options relating to previews.
-      # TODO: Document.
-
-      # @!attribute preview_controller
-      # @return [String]
+      #
+      # #### `#show`
+      #
+      # Whether component previews are enabled.
+      # Defaults to `true` in development and test environments.
+      #
+      # #### `#controller`
+      #
       # The controller used for previewing components.
       # Defaults to `ViewComponentsController`.
-
-      # @!attribute preview_route
-      # @return [String]
+      #
+      # #### `route`
+      #
       # The entry route for component previews.
       # Defaults to `"/rails/view_components"`.
-
-      # @!attribute show_previews_source
-      # @return [Boolean]
+      #
+      # #### `show_source`
+      #
       # Whether to display source code previews in component previews.
       # Defaults to `false`.
+      # 
+      # #### `paths`
+      #
+      # The locations in which component previews will be looked up.
+      # Defaults to `['test/components/previews']` relative to your Rails root.
+      #
+      # #### `#default_layout`
+      # 
+      # A custom default layout used for the previews index page and individual
+      # previews.
+      # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
 
       # @!attribute instrumentation_enabled
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
 
-      # @!attribute view_component_path
-      # @return [String]
-      # The path in which components, their templates, and their sidecars should
-      # be stored.
-      # Defaults to `"app/components"`.
-
-      # @!attribute component_parent_class
-      # @return [String]
-      # The parent class from which generated components will inherit.
-      # Defaults to `nil`. If this is falsy, generators will use
-      # `"ApplicationComponent"` if defined, `"ViewComponent::Base"` otherwise.
-
-      # @!attribute show_previews
-      # @return [Boolean]
-      # Whether component previews are enabled.
-      # Defaults to `true` in development and test environments.
-
-      # @!attribute preview_paths
-      # @return [Array<String>]
-      # The locations in which component previews will be looked up.
-      # Defaults to `['test/components/previews']` relative to your Rails root.
-
       # @!attribute test_controller
       # @return [String]
       # The controller used for testing components.
       # Can also be configured on a per-test basis using `#with_controller_class`.
       # Defaults to `ApplicationController`.
-
-      # @!attribute default_preview_layout
-      # @return [String]
-      # A custom default layout used for the previews index page and individual
-      # previews.
-      # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
 
       # @!attribute capture_compatibility_patch_enabled
       # @return [Boolean]
