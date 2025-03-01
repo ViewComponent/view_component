@@ -147,10 +147,10 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   end
 
   def test_configuration_dsl
-    # assert_equal ["expected_path"], ConfigBaseComponent.new.configuration.preview.paths
+    assert_equal "SomeController", ConfigBaseComponent.new.configuration.test_controller
   end
 
   def test_inherited_configuration
-    # assert_equal ["expected_path", "another_expected_path"], InheritedConfigComponent.new.configuration.preview.paths
+    assert_equal "AnotherController", InheritedConfigComponent.new.configuration.test_controller
   end
 end

@@ -22,23 +22,35 @@ module ViewComponent
     class Configuration
       def initialize
         @config = ActiveSupport::OrderedOptions[
-          preview: ActiveSupport::OrderedOptions[paths: []]
+          test_controller: "ApplicationController"
         ]
       end
 
-      delegate :preview, to: :@config
+      delegate_missing_to :@config
+
+      def deep_dup
+        new.instance_variable_set(:@config, @config.deep_dup)
+      end
     end
     # Returns the current config.
     #
     # @return [ActiveSupport::OrderedOptions]
-    class_attribute :configuration, default: ViewComponent::Base::Configuration.new
-
-    class << self
-      def configure(&block)
-        # deep_dup necessary to prevent configuration changes from children leaking up to
-        # parents.
-        self.configuration = self.configuration.deep_dup.tap { |c| c.instance_eval(&block) }
+    def self.configuration
+      @_configuration ||= if respond_to?(:superclass) && superclass.respond_to?(:configuration)
+        superclass.configuration.inheritable_copy
+      else
+        # create a new "anonymous" class that will host the compiled reader methods
+        Class.new(ActiveSupport::Configurable::Configuration).new
       end
+    end
+
+    def configuration
+      @_configuration ||= self.class.configuration.inheritable_copy
+    end
+
+    def self.configure(&block)
+      configuration.instance_eval(&block)
+      configuration.compile_methods!
     end
 
     include ViewComponent::InlineTemplate
@@ -572,6 +584,10 @@ module ViewComponent
 
           vc_ancestor_calls.unshift(instance_method(:render_template_for))
           child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
+        end
+
+        child.class_eval do
+          @_configuration = nil
         end
 
         super
