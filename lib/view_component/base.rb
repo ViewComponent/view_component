@@ -571,9 +571,10 @@ module ViewComponent
         # If Rails application is loaded, removes the first part of the path and the extension.
         # TODO: probably a way to rework this, seems like it's load order dependent at the moment?
         if defined?(Rails) && Rails.application
-          child.virtual_path = child.identifier.gsub(
-            /(.*#{Regexp.quote(Rails.application.config.view_component.generate.view_component_paths!.first)})|(\.rb)/, ""
-          )
+          child.virtual_path = Rails.application.config.view_component.generate.view_component_paths!
+            .inject(child.identifier) do |identifier, path|
+            identifier.gsub(/.*#{Regexp.quote(path)}/, "")
+          end
         end
 
         # Set collection parameter to the extended component
