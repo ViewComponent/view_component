@@ -51,6 +51,10 @@ nav_order: 5
 
     *Reegan Viljoen*
 
+* Add HomeStyler AI to list of companies using ViewComponent.
+
+    *JP Balarini*
+
 ## 3.21.0
 
 * Updates testing docs to include an example of how to use with RSpec.
