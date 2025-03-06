@@ -12,6 +12,15 @@ nav_order: 5
 
 ## 4.0.0
 
+* BREAKING: Move generators to a ViewComponent namespace.
+
+  Before, ViewComponent generators pollute the generator namespace with a bunch of top level items, and claim the generic "component" name.
+
+  Now, generators live in a "view_component" module/namespace, so what was before `rails g
+  component` is now `rails g view_component:component`.
+
+    *Paul Sadauskas*
+
 * BREAKING: Require [non-EOL](https://endoflife.date/rails) Rails (`>= 7.1.0`).
 
     *Joel Hawksley*
