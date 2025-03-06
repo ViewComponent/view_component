@@ -2,10 +2,10 @@
 
 require "action_view"
 require "active_support/configurable"
+require "view_component/application_config"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
-require "view_component/config"
 require "view_component/errors"
 require "view_component/inline_template"
 require "view_component/preview"
@@ -19,15 +19,38 @@ require "view_component/use_helpers"
 
 module ViewComponent
   class Base < ActionView::Base
-    class << self
-      delegate(*ViewComponent::Config.defaults.keys, to: :config)
-
-      # Returns the current config.
-      #
-      # @return [ActiveSupport::OrderedOptions]
-      def config
-        ViewComponent::Config.current
+    class Configuration
+      def initialize
+        @config = ActiveSupport::OrderedOptions[
+          test_controller: "ApplicationController"
+        ]
       end
+
+      delegate_missing_to :@config
+
+      def deep_dup
+        new.instance_variable_set(:@config, @config.deep_dup)
+      end
+    end
+    # Returns the current config.
+    #
+    # @return [ActiveSupport::OrderedOptions]
+    def self.configuration
+      @_configuration ||= if respond_to?(:superclass) && superclass.respond_to?(:configuration)
+        superclass.configuration.inheritable_copy
+      else
+        # create a new "anonymous" class that will host the compiled reader methods
+        Class.new(ActiveSupport::Configurable::Configuration).new
+      end
+    end
+
+    def configuration
+      @_configuration ||= self.class.configuration.inheritable_copy
+    end
+
+    def self.configure(&block)
+      configuration.instance_eval(&block)
+      configuration.compile_methods!
     end
 
     include ViewComponent::InlineTemplate
@@ -38,6 +61,10 @@ module ViewComponent
 
     RESERVED_PARAMETER = :content
     VC_INTERNAL_DEFAULT_FORMAT = :html
+
+    def config
+      Rails.application.config
+    end
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -542,10 +569,12 @@ module ViewComponent
         child.identifier = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
 
         # If Rails application is loaded, removes the first part of the path and the extension.
+        # TODO: probably a way to rework this, seems like it's load order dependent at the moment?
         if defined?(Rails) && Rails.application
-          child.virtual_path = child.identifier.gsub(
-            /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
-          )
+          child.virtual_path = Rails.application.config.view_component.generate.view_component_paths!
+            .inject(child.identifier) do |identifier, path|
+            identifier.gsub(/.*#{Regexp.quote(path)}/, "")
+          end
         end
 
         # Set collection parameter to the extended component
@@ -556,6 +585,10 @@ module ViewComponent
 
           vc_ancestor_calls.unshift(instance_method(:render_template_for))
           child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
+        end
+
+        child.class_eval do
+          @_configuration = nil
         end
 
         super

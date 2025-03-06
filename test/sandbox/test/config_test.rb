@@ -5,18 +5,29 @@ require "test_helper"
 module ViewComponent
   class ConfigTest < TestCase
     def setup
-      @config = ViewComponent::Config.new
+      @config = ViewComponent::ApplicationConfig.new
     end
 
     def test_defaults_are_correct
-      assert_equal @config.generate, {preview_path: ""}
-      assert_equal @config.preview_controller, "ViewComponentsController"
-      assert_equal @config.preview_route, "/rails/view_components"
-      assert_equal @config.show_previews_source, false
+      assert_equal @config.generate, {
+        sidecar: false,
+        stimulus_controller: false,
+        typescript: false,
+        locale: false,
+        distinct_locale_files: false,
+        preview: false,
+        preview_path: "",
+        use_component_path_for_rspec_tests: false,
+        view_component_paths: ["app/components"],
+        component_parent_class: nil,
+      }
+      assert_equal @config.previews.controller, "ViewComponentsController"
+      assert_equal @config.previews.route, "/rails/view_components"
+      assert_equal @config.previews.show_source, true
       assert_equal @config.instrumentation_enabled, false
-      assert_equal @config.use_deprecated_instrumentation_name, true
-      assert_equal @config.show_previews, true
-      assert_equal @config.preview_paths, ["#{Rails.root}/test/components/previews"]
+      assert_equal @config.capture_compatibility_patch_enabled, false
+      assert_equal @config.previews.show, true
+      assert_equal @config.previews.paths, ["#{Rails.root}/test/components/previews"]
     end
 
     def test_all_methods_are_documented
@@ -28,9 +39,9 @@ module ViewComponent
       Rake::Task["yard"].execute
       configuration_methods_to_document = YARD::RegistryStore.new.tap do |store|
         store.load!(".yardoc")
-      end.get("ViewComponent::Config").meths.select(&:reader?).reject { |meth| meth.name == :config }
-      default_options = ViewComponent::Config.defaults.keys
-      accessors = ViewComponent::Config.instance_methods(false).reject do |method_name|
+      end.get("ViewComponent::ApplicationConfig").meths.select(&:reader?).reject { |meth| meth.name == :config }
+      default_options = ViewComponent::ApplicationConfig.defaults.keys
+      accessors = ViewComponent::ApplicationConfig.instance_methods(false).reject do |method_name|
         method_name.to_s.end_with?("=") || method_name == :method_missing
       end
       options_defined_on_instance = Set[*default_options, *accessors]

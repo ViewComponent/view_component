@@ -29,7 +29,8 @@ module ViewComponent
     end
 
     def component_path
-      ViewComponent::Base.config.view_component_path
+      # FIXME: Doesn't yet handle multiple component paths
+      Rails.application.config.view_component.generate.view_component_paths!.first
     end
 
     def stimulus_controller
@@ -42,15 +43,15 @@ module ViewComponent
     end
 
     def sidecar?
-      options["sidecar"] || ViewComponent::Base.config.generate.sidecar
+      options["sidecar"] || Rails.application.config.view_component.generate.sidecar
     end
 
     def stimulus?
-      options["stimulus"] || ViewComponent::Base.config.generate.stimulus_controller
+      options["stimulus"] || Rails.application.config.view_component.generate.stimulus_controller
     end
 
     def typescript?
-      options["typescript"] || ViewComponent::Base.config.generate.typescript
+      options["typescript"] || Rails.application.config.view_component.generate.typescript
     end
   end
 end

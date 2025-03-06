@@ -145,4 +145,12 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     MESSAGE
     assert !exception_message_regex.match?(exception.message)
   end
+
+  def test_configuration_dsl
+    assert_equal "SomeController", ConfigBaseComponent.new.configuration.test_controller
+  end
+
+  def test_inherited_configuration
+    assert_equal "AnotherController", InheritedConfigComponent.new.configuration.test_controller
+  end
 end
