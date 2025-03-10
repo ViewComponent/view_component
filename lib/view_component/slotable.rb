@@ -429,7 +429,7 @@ module ViewComponent
     end
     ruby2_keywords(:set_slot) if respond_to?(:ruby2_keywords, true)
 
-    def set_polymorphic_slot(slot_name, poly_type = nil, *args, &block)
+    def set_polymorphic_slot(slot_name, poly_type = nil, ...)
       slot_definition = self.class.registered_slots[slot_name]
 
       if !slot_definition[:collection] && (defined?(@__vc_set_slots) && @__vc_set_slots[slot_name])
@@ -438,8 +438,7 @@ module ViewComponent
 
       poly_def = slot_definition[:renderable_hash][poly_type]
 
-      set_slot(slot_name, poly_def, *args, &block)
+      set_slot(slot_name, poly_def, ...)
     end
-    ruby2_keywords(:set_polymorphic_slot) if respond_to?(:ruby2_keywords, true)
   end
 end
