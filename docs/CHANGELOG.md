@@ -12,6 +12,10 @@ nav_order: 5
 
 ## 4.0.0
 
+* BREAKING: Use `Nokogiri::HTML5` instead of `Nokogiri::HTML4` for test helpers.
+
+    *Noah Silvera*, *Joel Hawksley*
+
 * BREAKING: Move generators to a ViewComponent namespace.
 
   Before, ViewComponent generators pollute the generator namespace with a bunch of top level items, and claim the generic "component" name.
