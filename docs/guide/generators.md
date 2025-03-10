@@ -11,7 +11,7 @@ The generator accepts a component name and a list of arguments.
 To create an `ExampleComponent` with `title` and `content` attributes:
 
 ```console
-bin/rails generate component Example title content
+bin/rails generate view_component:component Example title content
 
       create  app/components/example_component.rb
       invoke  test_unit
@@ -25,7 +25,7 @@ bin/rails generate component Example title content
 To generate a namespaced `Sections::ExampleComponent`:
 
 ```console
-bin/rails generate component Sections::Example title content
+bin/rails generate view_component:component Sections::Example title content
 
       create  app/components/sections/example_component.rb
       invoke  test_unit
@@ -51,7 +51,7 @@ config.eager_load_paths << Rails.root.join("app/views/components")
 ViewComponent includes template generators for the `erb`, `haml`, and `slim` template engines and will default to the template engine specified in `config.generators.template_engine`.
 
 ```console
-bin/rails generate component Example title --template-engine slim
+bin/rails generate view_component:component Example title --template-engine slim
 
       create  app/components/example_component.rb
       invoke  test_unit
@@ -65,7 +65,7 @@ bin/rails generate component Example title --template-engine slim
 By default, `config.generators.test_framework` is used.
 
 ```console
-bin/rails generate component Example title --test-framework rspec
+bin/rails generate view_component:component Example title --test-framework rspec
 
       create  app/components/example_component.rb
       invoke  rspec
@@ -80,7 +80,7 @@ Since 2.25.0
 {: .label }
 
 ```console
-bin/rails generate component Example title --preview
+bin/rails generate view_component:component Example title --preview
 
       create  app/components/example_component.rb
       invoke  test_unit
@@ -97,7 +97,7 @@ Since 2.38.0
 {: .label }
 
 ```console
-bin/rails generate component Example title --stimulus
+bin/rails generate view_component:component Example title --stimulus
 
       create  app/components/example_component.rb
       invoke  test_unit
@@ -121,7 +121,7 @@ Since 2.47.0
 {: .label }
 
 ```console
-bin/rails generate component Example title --locale
+bin/rails generate view_component:component Example title --locale
 
       create  app/components/example_component.rb
       invoke  test_unit
@@ -142,7 +142,7 @@ Since 2.16.0
 {: .label }
 
 ```console
-bin/rails generate component Example title --sidecar
+bin/rails generate view_component:component Example title --sidecar
 
       create  app/components/example_component.rb
       invoke  test_unit
@@ -159,7 +159,7 @@ Since 2.24.0
 {: .label }
 
 ```console
-bin/rails generate component Example title --inline
+bin/rails generate view_component:component Example title --inline
 
       create  app/components/example_component.rb
       invoke  test_unit
@@ -175,7 +175,7 @@ Since 2.41.0
 By default, `ApplicationComponent` is used if defined, `ViewComponent::Base` otherwise.
 
 ```console
-bin/rails generate component Example title content --parent MyBaseComponent
+bin/rails generate view_component:component Example title content --parent MyBaseComponent
 
       create  app/components/example_component.rb
       invoke  test_unit
