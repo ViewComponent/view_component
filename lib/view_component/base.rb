@@ -201,7 +201,7 @@ module ViewComponent
     #
     # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
     # of the component. This is due to the partials compiled template method existing in the parent `view_context`,
-    #  and not the component's `view_context`.
+    # and not the component's `view_context`.
     #
     # @private
     def render(options = {}, args = {}, &block)

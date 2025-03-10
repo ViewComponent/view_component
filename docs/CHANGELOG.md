@@ -52,6 +52,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* Remove unnecessary `respond_to` checks.
+
+    *Tiago Menegaz*, *Joel Hawksley*
+
 * Add Content Harmony & Learn To Be to list of companies using ViewComponent.
 
     *Kane Jamison*
