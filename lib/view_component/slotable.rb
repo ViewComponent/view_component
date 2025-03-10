@@ -250,10 +250,9 @@ module ViewComponent
             raise AlreadyDefinedPolymorphicSlotSetterError.new(setter_method_name, poly_slot_name)
           end
 
-          define_method(setter_method_name) do |*args, &block|
-            set_polymorphic_slot(slot_name, poly_type, *args, &block)
+          define_method(setter_method_name) do |*args, **kwargs, &block|
+            set_polymorphic_slot(slot_name, poly_type, *args, **kwargs, &block)
           end
-          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
           define_method :"with_#{poly_slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
