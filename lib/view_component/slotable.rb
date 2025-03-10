@@ -84,10 +84,9 @@ module ViewComponent
 
           setter_method_name = :"with_#{slot_name}"
 
-          define_method setter_method_name do |*args, &block|
-            set_slot(slot_name, nil, *args, &block)
+          define_method setter_method_name do |*args, **kwargs, &block|
+            set_slot(slot_name, nil, *args, **kwargs, &block)
           end
-          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
           self::GeneratedSlotMethods.define_method slot_name do
             get_slot(slot_name)
@@ -155,10 +154,9 @@ module ViewComponent
 
           setter_method_name = :"with_#{singular_name}"
 
-          define_method setter_method_name do |*args, &block|
-            set_slot(slot_name, nil, *args, &block)
+          define_method setter_method_name do |*args, **kwargs, &block|
+            set_slot(slot_name, nil, *args, **kwargs, &block)
           end
-          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
           define_method :"with_#{singular_name}_content" do |content|
             send(setter_method_name) { content.to_s }
