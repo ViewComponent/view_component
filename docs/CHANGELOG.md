@@ -52,6 +52,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* Remove unnecessary usage of `ruby2_keywords`.
+
+    *Joel Hawksley*
+
 * Remove unnecessary `respond_to` checks.
 
     *Tiago Menegaz*, *Joel Hawksley*
