@@ -46,12 +46,12 @@ module ViewComponent
     # ```
     #
     # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
-    # @return [Nokogiri::HTML]
+    # @return [Nokogiri::HTML5]
     def render_inline(component, **args, &block)
       @page = nil
       @rendered_content = vc_test_controller.view_context.render(component, args, &block)
 
-      Nokogiri::HTML.fragment(@rendered_content)
+      Nokogiri::HTML5.fragment(@rendered_content)
     end
 
     # `JSON.parse`-d component output.
@@ -82,7 +82,7 @@ module ViewComponent
     # @param name [String] The name of the preview to be rendered.
     # @param from [ViewComponent::Preview] The class of the preview to be rendered.
     # @param params [Hash] Parameters to be passed to the preview.
-    # @return [Nokogiri::HTML]
+    # @return [Nokogiri::HTML5]
     def render_preview(name, from: __vc_test_helpers_preview_class, params: {})
       previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.preview_controller.constantize)
 
@@ -98,7 +98,7 @@ module ViewComponent
 
       @rendered_content = result
 
-      Nokogiri::HTML.fragment(@rendered_content)
+      Nokogiri::HTML5.fragment(@rendered_content)
     end
 
     # Execute the given block in the view context (using `instance_exec`).
@@ -115,7 +115,7 @@ module ViewComponent
     def render_in_view_context(*args, &block)
       @page = nil
       @rendered_content = vc_test_controller.view_context.instance_exec(*args, &block)
-      Nokogiri::HTML.fragment(@rendered_content)
+      Nokogiri::HTML5.fragment(@rendered_content)
     end
     ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
 
