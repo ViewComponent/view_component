@@ -140,18 +140,14 @@ ensure
 end
 
 def without_template_annotations(&block)
-  if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
-    old_value = ActionView::Base.annotate_rendered_view_with_filenames
-    ActionView::Base.annotate_rendered_view_with_filenames = false
-    app.reloader.reload! if defined?(app)
+  old_value = ActionView::Base.annotate_rendered_view_with_filenames
+  ActionView::Base.annotate_rendered_view_with_filenames = false
+  app.reloader.reload! if defined?(app)
 
-    with_new_cache(&block)
+  with_new_cache(&block)
 
-    ActionView::Base.annotate_rendered_view_with_filenames = old_value
-    app.reloader.reload! if defined?(app)
-  else
-    yield
-  end
+  ActionView::Base.annotate_rendered_view_with_filenames = old_value
+  app.reloader.reload! if defined?(app)
 end
 
 def modify_file(file, content)

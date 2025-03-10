@@ -13,16 +13,9 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://viewcomponent.org"
   spec.license = "MIT"
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "https://rubygems.org"
-    spec.metadata["source_code_uri"] = "https://github.com/viewcomponent/view_component"
-    spec.metadata["changelog_uri"] = "https://github.com/ViewComponent/view_component/blob/main/docs/CHANGELOG.md"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
+  spec.metadata["source_code_uri"] = "https://github.com/viewcomponent/view_component"
+  spec.metadata["changelog_uri"] = "https://github.com/ViewComponent/view_component/blob/main/docs/CHANGELOG.md"
 
   spec.files = Dir["LICENSE.txt", "README.md", "app/**/*", "docs/CHANGELOG.md", "lib/**/*"]
   spec.require_paths = ["lib"]
