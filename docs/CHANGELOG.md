@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Add Content Harmony & Learn To Be to list of companies using ViewComponent.
+
+    *Kane Jamison*
+
 * Remove JS and CSS docs as they proved difficult to maintain and lacked consensus.
 
     *Joel Hawksley*
