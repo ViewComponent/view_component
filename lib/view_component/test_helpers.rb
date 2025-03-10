@@ -112,12 +112,11 @@ module ViewComponent
     #
     # assert_text("Hello, World!")
     # ```
-    def render_in_view_context(*args, &block)
+    def render_in_view_context(...)
       @page = nil
-      @rendered_content = vc_test_controller.view_context.instance_exec(*args, &block)
+      @rendered_content = vc_test_controller.view_context.instance_exec(...)
       Nokogiri::HTML5.fragment(@rendered_content)
     end
-    ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
 
     # Set the Action Pack request variant for the given block:
     #
