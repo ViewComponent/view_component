@@ -14,6 +14,12 @@ nav_order: 5
 
     *Kane Jamison*
 
+* Clarify error message about render-dependent logic.
+
+  Error messages about render-dependent logic were sometimes inaccurate, saying `during initialization` despite also being raised after a component had been initialized but before it was rendered.
+
+    *Joel Hawksley*
+
 * Remove JS and CSS docs as they proved difficult to maintain and lacked consensus.
 
     *Joel Hawksley*
