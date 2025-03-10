@@ -193,7 +193,7 @@ module ViewComponent
 
   class TranslateCalledBeforeRenderError < BaseError
     MESSAGE =
-      "`#translate` can't be used during initialization as it depends " \
+      "`#translate` can't be used before rendering as it depends " \
       "on the view context that only exists once a ViewComponent is passed to " \
       "the Rails render pipeline.\n\n" \
       "It's sometimes possible to fix this issue by moving code dependent on " \
@@ -202,7 +202,7 @@ module ViewComponent
 
   class HelpersCalledBeforeRenderError < BaseError
     MESSAGE =
-      "`#helpers` can't be used during initialization as it depends " \
+      "`#helpers` can't be used before rendering as it depends " \
       "on the view context that only exists once a ViewComponent is passed to " \
       "the Rails render pipeline.\n\n" \
       "It's sometimes possible to fix this issue by moving code dependent on " \
@@ -211,7 +211,7 @@ module ViewComponent
 
   class ControllerCalledBeforeRenderError < BaseError
     MESSAGE =
-      "`#controller` can't be used during initialization, as it depends " \
+      "`#controller` can't be used before rendering, as it depends " \
       "on the view context that only exists once a ViewComponent is passed to " \
       "the Rails render pipeline.\n\n" \
       "It's sometimes possible to fix this issue by moving code dependent on " \

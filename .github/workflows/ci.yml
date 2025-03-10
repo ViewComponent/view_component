@@ -130,7 +130,7 @@ jobs:
         ruby-version: 3.4
         bundler-cache: true
     - name: Download coverage results
-      uses: actions/download-artifact@v4.1.8
+      uses: actions/download-artifact@v4.1.9
     - name: Collate simplecov
       run: |
         bundle exec rake coverage:report
