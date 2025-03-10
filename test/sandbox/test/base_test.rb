@@ -43,7 +43,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       assert_raises ViewComponent::HelpersCalledBeforeRenderError do
         component.helpers
       end
-    assert_includes err.message, "can't be used during initialization"
+    assert_includes err.message, "can't be used before rendering"
   end
 
   def test_calling_controller_outside_render_raises
@@ -53,7 +53,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
         component.controller
       end
 
-    assert_includes err.message, "can't be used during initialization"
+    assert_includes err.message, "can't be used before rendering"
   end
 
   def test_sidecar_files
