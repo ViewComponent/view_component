@@ -12,13 +12,12 @@ module ViewComponent::UseHelpers
       helper_method_name = full_helper_method_name(helper_method, prefix: prefix, source: from)
 
       class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-        def #{helper_method_name}(*args, &block)
+        def #{helper_method_name}(...)
           raise HelpersCalledBeforeRenderError if view_context.nil?
 
           #{define_helper(helper_method: helper_method, source: from)}
         end
       RUBY
-      ruby2_keywords(helper_method_name) if respond_to?(:ruby2_keywords, true)
     end
 
     private
@@ -34,9 +33,9 @@ module ViewComponent::UseHelpers
     end
 
     def define_helper(helper_method:, source:)
-      return "__vc_original_view_context.#{helper_method}(*args, &block)" unless source.present?
+      return "__vc_original_view_context.#{helper_method}(...)" unless source.present?
 
-      "#{source}.instance_method(:#{helper_method}).bind(self).call(*args, &block)"
+      "#{source}.instance_method(:#{helper_method}).bind(self).call(...)"
     end
   end
 end
