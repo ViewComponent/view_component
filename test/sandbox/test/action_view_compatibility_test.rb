@@ -23,6 +23,7 @@ class ViewComponent::ActionViewCompatibilityTest < ViewComponent::TestCase
 
   def test_form_without_compatibility_does_not_raise
     skip unless Rails.application.config.view_component.capture_compatibility_patch_enabled
+
     render_inline(IncompatibleFormComponent.new)
 
     # Bad selector should be present, at least until fixed upstream or included by default
