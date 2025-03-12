@@ -16,7 +16,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.3
+        ruby-version: 3.4
         bundler-cache: true
     - name: Run benchmarks
       run: |
@@ -113,7 +113,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.3
+        ruby-version: 3.4
         bundler-cache: true
         working-directory: 'view_component'
     - uses: actions/setup-node@v4
@@ -139,10 +139,10 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.3
+        ruby-version: 3.4
         bundler-cache: true
     - name: Download coverage results
-      uses: actions/download-artifact@v4.1.8
+      uses: actions/download-artifact@v4.1.9
     - name: Collate simplecov
       run: |
         bundle exec rake coverage:report

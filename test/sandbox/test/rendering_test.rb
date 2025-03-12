@@ -394,7 +394,7 @@ class RenderingTest < ViewComponent::TestCase
       assert_raises ViewComponent::TranslateCalledBeforeRenderError do
         render_inline(InitializerTranslationsComponent.new)
       end
-    assert_includes err.message, "can't be used during initialization"
+    assert_includes err.message, "can't be used before rendering"
   end
 
   def test_renders_component_with_rb_in_its_name
@@ -964,11 +964,13 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock_cache
-    with_compiler_development_mode(true) do
-      with_new_cache do
-        render_inline(ContentEvalComponent.new) do
-          ViewComponent::CompileCache.invalidate!
-          render_inline(ContentEvalComponent.new)
+    assert_nothing_raised do
+      with_compiler_development_mode(true) do
+        with_new_cache do
+          render_inline(ContentEvalComponent.new) do
+            ViewComponent::CompileCache.invalidate!
+            render_inline(ContentEvalComponent.new)
+          end
         end
       end
     end
@@ -1089,27 +1091,29 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock
-    with_compiler_development_mode(true) do
-      with_new_cache do
-        mutex = Mutex.new
+    assert_nothing_raised do
+      with_compiler_development_mode(true) do
+        with_new_cache do
+          mutex = Mutex.new
 
-        t1 = Thread.new do
-          mutex.synchronize do
-            sleep 0.02
-            render_inline(ContentEvalComponent.new)
-          end
-        end
-
-        t = Thread.new do
-          render_inline(ContentEvalComponent.new) do
+          t1 = Thread.new do
             mutex.synchronize do
-              sleep 0.01
+              sleep 0.02
+              render_inline(ContentEvalComponent.new)
             end
           end
-        end
 
-        t1.join
-        t.join
+          t = Thread.new do
+            render_inline(ContentEvalComponent.new) do
+              mutex.synchronize do
+                sleep 0.01
+              end
+            end
+          end
+
+          t1.join
+          t.join
+        end
       end
     end
   end

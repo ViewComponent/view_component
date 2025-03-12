@@ -14,6 +14,20 @@ nav_order: 5
 
     *Martin Meyerhoff*, *Joel Hawksley*
 
+* Add Content Harmony & Learn To Be to list of companies using ViewComponent.
+
+    *Kane Jamison*
+
+* Clarify error message about render-dependent logic.
+
+  Error messages about render-dependent logic were sometimes inaccurate, saying `during initialization` despite also being raised after a component had been initialized but before it was rendered.
+
+    *Joel Hawksley*
+
+* Remove JS and CSS docs as they proved difficult to maintain and lacked consensus.
+
+    *Joel Hawksley*
+
 * Do not prefix release tags with `v`, per recommendation from @bkuhlmann.
 
     *Joel Hawksley*
@@ -21,6 +35,10 @@ nav_order: 5
 * Add ruby 3.4 support to CI.
 
     *Reegan Viljoen*
+
+* Add HomeStyler AI to list of companies using ViewComponent.
+
+    *JP Balarini*
 
 ## 3.21.0
 
@@ -229,6 +247,10 @@ nav_order: 5
 * Fixed ruby head matcher issue.
 
     *Reegan Viljoen*
+
+* Fix a bug where component previews would crash with "undefined local variable or method `preview_source`."
+
+    *Henning Koch*
 
 ## 3.12.1
 

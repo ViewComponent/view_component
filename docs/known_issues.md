@@ -6,9 +6,30 @@ nav_order: 9
 
 # Known issues
 
+_There remain several known issues with ViewComponent. We'd be thrilled to see you consider solutions to these thorny bugs!_
+
+## Limited i18n support
+
+ViewComponent currently only supports sidecar translation files. In some cases, it could be useful to support centralized translations using namespacing:
+
+```yml
+en:
+  view_components:
+    login_form:
+      submit: "Log in"
+    nav:
+      user_info:
+        login: "Log in"
+        logout: "Log out"
+```
+
+## Lack of Jekyll support
+
+It would be lovely if we could support rendering ViewComponents in Jekyll, as it would enable the reuse of ViewComponents across static and dynamic (Rails-based) sites.
+
 ## Issues resolved by the optional capture compatibility patch
 
-If you're experiencing issues with duplicated content or malformed HTML output, the capture compatibility patch may resolve these.
+If you're experiencing issues with duplicated content or malformed HTML output (such as using `concat` in a helper), the capture compatibility patch may resolve these.
 
 [Set `config.view_component.capture_compatibility_patch_enabled` to `true`](https://viewcomponent.org/api.html#capture_compatibility_patch_enabled) to resolve these issues.
 
