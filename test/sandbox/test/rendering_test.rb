@@ -16,8 +16,8 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5.0" => 115, "3.4.2" => 117, "3.3.7" => 129} :
-      {"3.3.7" => 120, "3.3.0" => 120, "3.2.7" => 118, "3.1.6" => 118, "3.0.7" => 127}
+      {"3.5.0" => 73, "3.4.2" => 75, "3.3.7" => 76} :
+      {"3.3.7" => 75, "3.2.7" => 74}
 
     assert_allocations(**allocations) do
       render_inline(MyComponent.new)
@@ -121,8 +121,6 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_renders_haml_with_html_formatted_slot
-    skip if Rails::VERSION::STRING < "6.1"
-
     render_inline(HamlHtmlFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted one")
@@ -196,19 +194,19 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_renders_component_with_multiple_variants
+    with_variant :app, :phone do
+      render_inline(VariantsComponent.new)
+
+      assert_text("Phone")
+    end
+  end
+
   def test_renders_component_with_variant_containing_a_dash
     with_variant :"mini-watch" do
       render_inline(VariantsComponent.new)
 
       assert_text("Mini Watch with dash")
-    end
-  end
-
-  def test_renders_component_with_variant_containing_a_dot
-    with_variant :"mini.watch" do
-      render_inline(VariantsComponent.new)
-
-      assert_text("Mini Watch with dot")
     end
   end
 
@@ -273,15 +271,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_helper_method_within_nested_component
     render_inline(ContainerComponent.new)
-
     assert_text("Hello helper method")
-  end
-
-  def test_renders_helper_method_within_nested_component_with_disabled_monkey_patch
-    with_render_monkey_patch_config(false) do
-      render_inline(ContainerComponent.new)
-      assert_text("Hello helper method")
-    end
   end
 
   def test_renders_path_helper
@@ -444,7 +434,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_compiles_unrendered_component
     # The UnreferencedComponent will get compiled at boot,
     # but that might have been thrown away if code-reloading is enabled
-    skip unless Rails.env.cache_classes?
+    skip unless Rails.application.config.cache_classes
 
     assert UnreferencedComponent.compiled?
   end
@@ -452,7 +442,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_compiles_components_without_initializers
     # MissingInitializerComponent will get compiled at boot,
     # but that might have been thrown away if code-reloading is enabled
-    skip unless Rails.env.cache_classes?
+    skip unless Rails.application.config.cache_classes
 
     assert MissingInitializerComponent.compiled?
   end
@@ -1229,6 +1219,20 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_with_format_missing
+    with_format(:xml) do
+      exception =
+        assert_raises ViewComponent::MissingTemplateError do
+          render_inline(MultipleFormatsComponent.new)
+        end
+
+      assert_includes(
+        exception.message,
+        "No templates for MultipleFormatsComponent match the request"
+      )
+    end
+  end
+
   def test_localised_component
     render_inline(LocalisedComponent.new)
 
@@ -1239,5 +1243,15 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(RequestParamComponent.new(request: "foo"))
 
     assert_text("foo")
+  end
+
+  def test_turbo_stream_format_custom_variant
+    with_format(:turbo_stream, :html) do
+      with_variant(:custom) do
+        render_inline(TurboStreamFormatComponent.new)
+
+        assert_text("Hi turbo stream custom!")
+      end
+    end
   end
 end
