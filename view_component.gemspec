@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "method_source", "~> 1.0"
   spec.add_runtime_dependency "concurrent-ruby", "~> 1"
   spec.add_development_dependency "allocation_stats"
-  spec.add_development_dependency "appraisal", "~> 2.4"
+  spec.add_development_dependency "appraisal", "~> 2"
   spec.add_development_dependency "benchmark-ips", "~> 2.13.0"
   spec.add_development_dependency "better_html"
   spec.add_development_dependency "bundler", "~> 2"

@@ -366,7 +366,7 @@ PLATFORMS
 
 DEPENDENCIES
   allocation_stats
-  appraisal (~> 2.4)
+  appraisal (~> 2)
   base64
   benchmark-ips (~> 2.13.0)
   better_html
