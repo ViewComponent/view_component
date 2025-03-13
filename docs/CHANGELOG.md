@@ -56,6 +56,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Test against `turbo-rails` `v2`.
+
+    *Joel Hawksley*
+
 * Remove unnecessary usage of `ruby2_keywords`.
 
     *Joel Hawksley*
