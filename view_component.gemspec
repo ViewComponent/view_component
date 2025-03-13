@@ -38,9 +38,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "m", "~> 1"
   spec.add_development_dependency "minitest", "~> 5"
   spec.add_development_dependency "puma", "~> 6"
-  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rake", "~> 13"
   spec.add_development_dependency "rspec-rails", "~> 5"
-  spec.add_development_dependency "rubocop-md", "~> 1"
+  spec.add_development_dependency "rubocop-md", "~> 2"
   spec.add_development_dependency "selenium-webdriver", "~> 4"
   spec.add_development_dependency "simplecov-console", "< 1"
   spec.add_development_dependency "simplecov", "< 1"
@@ -53,10 +53,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "yard", "< 1"
 
   if RUBY_VERSION >= "3.3"
-    spec.add_development_dependency "base64"
-    spec.add_development_dependency "bigdecimal"
-    spec.add_development_dependency "drb"
-    spec.add_development_dependency "mutex_m"
     spec.add_development_dependency "propshaft", "~> 1"
   end
 end
