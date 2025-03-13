@@ -47,7 +47,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "slim", "~> 5"
   spec.add_development_dependency "sprockets-rails", "~> 3"
   spec.add_development_dependency "standard", "~> 1"
-  spec.add_development_dependency "turbo-rails", "~> 1"
+  spec.add_development_dependency "turbo-rails", "~> 2"
   spec.add_development_dependency "warning"
   spec.add_development_dependency "yard-activesupport-concern", "< 1"
   spec.add_development_dependency "yard", "< 1"
