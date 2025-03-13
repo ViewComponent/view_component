@@ -117,9 +117,6 @@ GEM
       capybara (~> 3.0)
       ferrum (~> 0.15.0)
     date (3.4.1)
-    debug (1.10.0)
-      irb (~> 1.10)
-      reline (>= 0.3.8)
     diff-lcs (1.6.0)
     docile (1.4.1)
     drb (2.2.1)
@@ -374,7 +371,6 @@ DEPENDENCIES
   bundler (~> 2)
   capybara (~> 3)
   cuprite
-  debug
   drb
   erb_lint
   haml (~> 6)
@@ -382,9 +378,6 @@ DEPENDENCIES
   m (~> 1)
   minitest (~> 5)
   mutex_m
-  net-imap
-  net-pop
-  net-smtp
   propshaft (~> 1)
   puma (~> 6)
   rails (~> 8)
