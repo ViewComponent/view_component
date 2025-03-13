@@ -4,7 +4,7 @@ PATH
     view_component (3.21.0)
       activesupport (>= 7.1.0, < 8.1)
       concurrent-ruby (~> 1)
-      method_source (~> 1.0)
+      method_source (~> 1)
 
 GEM
   remote: https://rubygems.org/
