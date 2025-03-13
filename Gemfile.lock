@@ -380,7 +380,7 @@ DEPENDENCIES
   haml (~> 6)
   jbuilder (~> 2)
   m (~> 1)
-  minitest (~> 5.18)
+  minitest (~> 5)
   mutex_m
   net-imap
   net-pop
