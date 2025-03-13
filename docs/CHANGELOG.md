@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Improve handling of malformed component edge case when mocking components in tests.
+
+    *Martin Meyerhoff*, *Joel Hawksley*
+
 * Add Content Harmony & Learn To Be to list of companies using ViewComponent.
 
     *Kane Jamison*
