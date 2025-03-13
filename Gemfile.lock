@@ -373,7 +373,7 @@ DEPENDENCIES
   bigdecimal
   bundler (~> 2)
   capybara (~> 3)
-  cuprite (~> 0.15)
+  cuprite
   debug
   drb
   erb_lint

@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "better_html"
   spec.add_development_dependency "bundler", "~> 2"
   spec.add_development_dependency "capybara", "~> 3"
-  spec.add_development_dependency "cuprite", "~> 0.15"
+  spec.add_development_dependency "cuprite"
   spec.add_development_dependency "debug"
   spec.add_development_dependency "erb_lint"
   spec.add_development_dependency "haml", "~> 6"
