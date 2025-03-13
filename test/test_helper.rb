@@ -43,7 +43,7 @@ require "capybara/cuprite"
 
 # Rails registers its own driver named "cuprite" which will overwrite the one we
 # register here. Avoid the problem by registering the driver with a distinct name.
-Capybara.register_driver(:cuprite) do |app|
+Capybara.register_driver(:system_test_driver) do |app|
   # Add the process_timeout option to prevent failures due to the browser
   # taking too long to start up.
   Capybara::Cuprite::Driver.new(app, {process_timeout: 60, timeout: 30})
