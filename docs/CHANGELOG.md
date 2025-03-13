@@ -60,6 +60,10 @@ nav_order: 5
 
     *Joel Hawksley*
 
+* Test against `rspec-rails` `v7`.
+
+    *Joel Hawksley*
+
 * Remove unnecessary usage of `ruby2_keywords`.
 
     *Joel Hawksley*
