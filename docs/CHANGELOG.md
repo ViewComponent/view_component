@@ -52,6 +52,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* Clean up project dependencies, relaxing versions of development gems.
+
+    *Joel Hawksley*
+
 * Remove unnecessary usage of `ruby2_keywords`.
 
     *Joel Hawksley*
