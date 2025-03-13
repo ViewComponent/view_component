@@ -63,8 +63,8 @@ module ViewComponent
       return safe_method_name unless inline_call?
 
       "maybe_escape_html(#{safe_method_name}) " \
-      "{ Kernel.warn('WARNING: The #{@component} component rendered HTML-unsafe output. " \
-      "The output will be automatically escaped, but you may want to investigate.') } "
+      "{ Kernel.warn(\"WARNING: The #{@component} component rendered HTML-unsafe output. " \
+      "The output will be automatically escaped, but you may want to investigate.\") } "
     end
 
     def requires_compiled_superclass?

@@ -230,6 +230,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/tkowalewski" alt="tkowalewski" width="32" />
 <img src="https://avatars.githubusercontent.com/chloe-meister" alt="chloe-meister" width="32" />
 <img src="https://avatars.githubusercontent.com/zaratan" alt="zaratan" width="32" />
+<img src="https://avatars.githubusercontent.com/kawakamimoeki" alt="kawakamimoeki" width="32" />
 
 ## Who uses ViewComponent?
 
@@ -247,6 +248,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Clio](https://www.clio.com/)
 * [Cometeer](https://cometeer.com/)
 * [Consul](https://consulproject.org/en/)
+* [Content Harmony](https://www.contentharmony.com/)
 * [Cults.](https://cults3d.com/)
 * [Defacto](https://www.defacto.nl)
 * [DotRuby](https://www.dotruby.com)
@@ -260,9 +262,11 @@ ViewComponent is built by over a hundred members of the community, including:
 * [GitHub](https://github.com/) (900+ components used 15k+ times)
 * [GitLab](https://gitlab.com/)
 * [HappyCo](https://happy.co)
+* [HomeStyler AI](https://homestyler.ai)
 * [Keenly](https://www.keenly.so) (100+ components)
 * [Kicksite](https://kicksite.com/)
 * [Krystal](https://krystal.uk)
+* [Learn To Be](https://www.learntobe.org/) (100+ components)
 * [Litmus](https://litmus.engineering/)
 * [Login.gov](https://github.com/18F/identity-idp)
 * [Mission Met Center](https://www.missionmet.com/mission-met-center)
@@ -291,6 +295,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Startup Jobs](https://startup.jobs/)
 * [Teamtailor](https://teamtailor.com/)
 * [Topkey](https://topkey.io/)
+* [Web3 Jobs](https://web3.career)
 * [Wecasa](https://www.wecasa.fr/)
 * [WIP](https://wip.co/)
 * [Within3](https://www.within3.com/)

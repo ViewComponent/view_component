@@ -16,8 +16,8 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.4.0" => 110, "3.3.6" => 129} :
-      {"3.3.6" => 120, "3.3.0" => 120, "3.2.6" => 118, "3.1.6" => 118, "3.0.7" => 127}
+      {"3.5.0" => 115, "3.4.2" => 117, "3.3.7" => 129} :
+      {"3.3.7" => 120, "3.3.0" => 132, "3.2.7" => 118, "3.1.6" => 118, "3.0.7" => 127}
 
     assert_allocations(**allocations) do
       render_inline(MyComponent.new)
@@ -394,7 +394,7 @@ class RenderingTest < ViewComponent::TestCase
       assert_raises ViewComponent::TranslateCalledBeforeRenderError do
         render_inline(InitializerTranslationsComponent.new)
       end
-    assert_includes err.message, "can't be used during initialization"
+    assert_includes err.message, "can't be used before rendering"
   end
 
   def test_renders_component_with_rb_in_its_name
@@ -964,11 +964,13 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock_cache
-    with_compiler_development_mode(true) do
-      with_new_cache do
-        render_inline(ContentEvalComponent.new) do
-          ViewComponent::CompileCache.invalidate!
-          render_inline(ContentEvalComponent.new)
+    assert_nothing_raised do
+      with_compiler_development_mode(true) do
+        with_new_cache do
+          render_inline(ContentEvalComponent.new) do
+            ViewComponent::CompileCache.invalidate!
+            render_inline(ContentEvalComponent.new)
+          end
         end
       end
     end
@@ -1089,27 +1091,29 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_concurrency_deadlock
-    with_compiler_development_mode(true) do
-      with_new_cache do
-        mutex = Mutex.new
+    assert_nothing_raised do
+      with_compiler_development_mode(true) do
+        with_new_cache do
+          mutex = Mutex.new
 
-        t1 = Thread.new do
-          mutex.synchronize do
-            sleep 0.02
-            render_inline(ContentEvalComponent.new)
-          end
-        end
-
-        t = Thread.new do
-          render_inline(ContentEvalComponent.new) do
+          t1 = Thread.new do
             mutex.synchronize do
-              sleep 0.01
+              sleep 0.02
+              render_inline(ContentEvalComponent.new)
             end
           end
-        end
 
-        t1.join
-        t.join
+          t = Thread.new do
+            render_inline(ContentEvalComponent.new) do
+              mutex.synchronize do
+                sleep 0.01
+              end
+            end
+          end
+
+          t1.join
+          t.join
+        end
       end
     end
   end
@@ -1235,5 +1239,20 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(RequestParamComponent.new(request: "foo"))
 
     assert_text("foo")
+  end
+
+  # In https://github.com/ViewComponent/view_component/issues/2187,
+  # the Solidus test suite built mocked components by hand, resulting
+  # in a difficult-to-debug error. While this test case is quite narrow,
+  # it isolates the unintentional error masking we were doing.
+  def test_render_anonymous_component_without_template
+    location = caller(1, 1).first
+    mock_component = Class.new(MyComponent)
+    mock_component.define_singleton_method(:name) { "Foo" }
+    mock_component.define_singleton_method(:to_s) { "#{name} (#{location})" }
+
+    assert_nothing_raised do
+      render_inline(mock_component.new)
+    end
   end
 end

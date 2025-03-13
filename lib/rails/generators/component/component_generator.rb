@@ -19,9 +19,10 @@ module Rails
       class_option :sidecar, type: :boolean, default: false
       class_option :stimulus, type: :boolean,
         default: ViewComponent::Base.config.generate.stimulus_controller
+      class_option :skip_suffix, type: :boolean, default: false
 
       def create_component_file
-        template "component.rb", File.join(component_path, class_path, "#{file_name}_component.rb")
+        template "component.rb", File.join(component_path, class_path, "#{file_name}#{options[:skip_suffix] ? "" : "_component"}.rb")
       end
 
       hook_for :test_framework
