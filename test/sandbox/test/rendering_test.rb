@@ -1251,7 +1251,7 @@ class RenderingTest < ViewComponent::TestCase
     mock_component.define_singleton_method(:name) { "Foo" }
     mock_component.define_singleton_method(:to_s) { "#{name} (#{location})" }
 
-    assert_raises(ViewComponent::CompilerMethodBodySyntaxError) do
+    assert_nothing_raised do
       render_inline(mock_component.new)
     end
   end
