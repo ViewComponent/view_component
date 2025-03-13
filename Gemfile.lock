@@ -365,7 +365,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  allocation_stats (~> 0.1.5)
+  allocation_stats
   appraisal (~> 2.4)
   base64
   benchmark-ips (~> 2.13.0)
