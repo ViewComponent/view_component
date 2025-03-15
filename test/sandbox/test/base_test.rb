@@ -197,4 +197,12 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     assert_equal "AnotherController", TestAlreadyConfigurableModule::SomeComponent.test_controller
     assert_equal "AnotherController", TestAlreadyConfiguredModule::SomeComponent.test_controller
   end
+
+  def test_component_local_config_is_inheritable
+    assert_equal false, ViewComponent::Base.configuration.strip_trailing_whitespace
+    # This component doesn't call configure, so it should inherit the defaults.
+    assert_equal false, AnotherComponent.configuration.strip_trailing_whitespace
+    # This component overrides the defaults.
+    assert_equal true, ConfigurableComponent.configuration.strip_trailing_whitespace
+  end
 end

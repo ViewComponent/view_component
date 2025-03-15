@@ -3,22 +3,31 @@
 module ViewComponent
   module ComponentLocalConfig
     class Configuration
-      def initialize
-        @config = ActiveSupport::OrderedOptions[
+      def self.defaults
+        ActiveSupport::Configurable::Configuration[
           strip_trailing_whitespace: false
         ]
+      end
+
+      def initialize(config = defaults)
+        @config = config
       end
 
       delegate_missing_to :@config
 
       def inheritable_copy
-        new.instance_variable_set(:@config, @config.inheritable_copy)
+        self.class.new(@config.inheritable_copy)
       end
+
+      private
+
+      delegate :defaults, to: :class
     end
 
     extend ActiveSupport::Concern
 
     included do
+      # :nocov:
       def configuration
         @_configuration ||= self.class.configuration.inheritable_copy
       end
@@ -29,6 +38,7 @@ module ViewComponent
         child.instance_variable_set(:@_configuration, nil)
         super
       end
+      # :nocov:
     end
 
     class_methods do
@@ -37,7 +47,7 @@ module ViewComponent
           superclass.configuration.inheritable_copy
         else
           # create a new "anonymous" class that will host the compiled reader methods
-          Class.new(ActiveSupport::Configurable::Configuration).new
+          ViewComponent::ComponentLocalConfig::Configuration.new
         end
       end
 
