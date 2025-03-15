@@ -5,6 +5,7 @@ require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
+require "view_component/component_local_config"
 require "view_component/config"
 require "view_component/errors"
 require "view_component/inline_template"
@@ -38,6 +39,7 @@ module ViewComponent
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
+    include ViewComponent::ComponentLocalConfig
 
     RESERVED_PARAMETER = :content
     VC_INTERNAL_DEFAULT_FORMAT = :html
