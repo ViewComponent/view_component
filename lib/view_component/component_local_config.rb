@@ -4,7 +4,9 @@ module ViewComponent
   module ComponentLocalConfig
     class Configuration
       def initialize
-        @config = ActiveSupport::OrderedOptions[]
+        @config = ActiveSupport::OrderedOptions[
+          strip_trailing_whitespace: false
+        ]
       end
 
       delegate_missing_to :@config
