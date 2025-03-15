@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Introduce component-local config and migrate trim_trailing_whitespace to use it under the hood.
+
+    *Simon Fish*
+
 * Improve handling of malformed component edge case when mocking components in tests.
 
     *Martin Meyerhoff*, *Joel Hawksley*

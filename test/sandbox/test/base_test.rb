@@ -146,4 +146,12 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     MESSAGE
     assert !exception_message_regex.match?(exception.message)
   end
+
+  def test_component_local_config_is_inheritable
+    assert_equal false, ViewComponent::Base.configuration.strip_trailing_whitespace
+    # This component doesn't call configure, so it should inherit the defaults.
+    # assert_equal false, AnotherComponent.configuration.strip_trailing_whitespace
+    # This component overrides the defaults.
+    assert_equal true, ConfigurableComponent.configuration.strip_trailing_whitespace
+  end
 end
