@@ -10,6 +10,10 @@ nav_order: 5
 
 ## main
 
+* Introduce component-local config and migrate `strip_trailing_whitespace` to use it under the hood.
+
+    *Simon Fish*
+
 * Add unused mechanism for inheriting config from parent modules to enable future engine-local configuration.
 
     *Simon Fish*
