@@ -146,4 +146,30 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     MESSAGE
     assert !exception_message_regex.match?(exception.message)
   end
+
+  module TestModuleWithoutConfig
+    class SomeComponent < ViewComponent::Base
+
+    end
+  end
+
+  # Config defined on top-level module as opposed to engine.
+  module TestModuleWithConfig
+    include ActiveSupport::Configurable
+
+    configure do |config|
+      # To get this green.
+      config.view_component = ActiveSupport::InheritableOptions.new
+      config.view_component.test_controller = "AnotherController"
+    end
+
+    class SomeComponent < ViewComponent::Base
+    end
+  end
+
+  def test_uses_module_configuration
+    # We override this ourselves in test/sandbox/config/environments/test.rb.
+    assert_equal "IntegrationExamplesController", TestModuleWithoutConfig::SomeComponent.test_controller
+    assert_equal "AnotherController", TestModuleWithConfig::SomeComponent.test_controller
+  end
 end
