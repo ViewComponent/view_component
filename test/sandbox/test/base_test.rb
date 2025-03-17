@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "view_component/configurable"
 
 class ViewComponent::Base::UnitTest < Minitest::Test
   def test_identifier
@@ -149,19 +150,41 @@ class ViewComponent::Base::UnitTest < Minitest::Test
 
   module TestModuleWithoutConfig
     class SomeComponent < ViewComponent::Base
-
     end
   end
 
   # Config defined on top-level module as opposed to engine.
   module TestModuleWithConfig
+    include ViewComponent::Configurable
+
+    configure do |config|
+      config.view_component.test_controller = "AnotherController"
+    end
+
+    class SomeComponent < ViewComponent::Base
+    end
+  end
+
+  module TestAlreadyConfigurableModule
+    include ActiveSupport::Configurable
+    include ViewComponent::Configurable
+
+    configure do |config|
+      config.view_component.test_controller = "AnotherController"
+    end
+
+    class SomeComponent < ViewComponent::Base
+    end
+  end
+
+  module TestAlreadyConfiguredModule
     include ActiveSupport::Configurable
 
     configure do |config|
-      # To get this green.
-      config.view_component = ActiveSupport::InheritableOptions.new
-      config.view_component.test_controller = "AnotherController"
+      config.view_component = ActiveSupport::InheritableOptions[test_controller: "AnotherController"]
     end
+
+    include ViewComponent::Configurable
 
     class SomeComponent < ViewComponent::Base
     end
@@ -171,5 +194,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     # We override this ourselves in test/sandbox/config/environments/test.rb.
     assert_equal "IntegrationExamplesController", TestModuleWithoutConfig::SomeComponent.test_controller
     assert_equal "AnotherController", TestModuleWithConfig::SomeComponent.test_controller
+    assert_equal "AnotherController", TestAlreadyConfigurableModule::SomeComponent.test_controller
+    assert_equal "AnotherController", TestAlreadyConfiguredModule::SomeComponent.test_controller
   end
 end
