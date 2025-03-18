@@ -25,6 +25,10 @@ module ViewComponent
       #
       # @return [ActiveSupport::OrderedOptions]
       def config
+        module_parents.each do |m|
+          config = m.try(:config).try(:view_component)
+          return config if config
+        end
         ViewComponent::Config.current
       end
     end
