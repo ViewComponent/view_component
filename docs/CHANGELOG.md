@@ -52,6 +52,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* Remove unnecessary `#format` methods that returned `nil`.
+
+    *Joel Hawksley*
+
 * Clean up project dependencies, relaxing versions of development gems.
 
     *Joel Hawksley*
