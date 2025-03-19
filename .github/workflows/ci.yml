@@ -71,6 +71,11 @@ jobs:
           - ruby_version: "head"
             rails_version: "main"
             mode: "capture_patch_enabled"
+          - ruby_version: "head"
+            rails_version: "main"
+            mode: "capture_patch_enabled"
+            layout_patch: "true"
+
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
@@ -92,6 +97,7 @@ jobs:
         RAILS_VERSION: ${{ matrix.rails_version }}
         RUBY_VERSION: ${{ matrix.ruby_version }}
         CAPTURE_PATCH_ENABLED: ${{ matrix.mode == 'capture_patch_enabled' && 'true' || 'false' }}
+        RENDER_LAYOUT_PATCH_ENABLED: ${{ matrix.layout_patch == 'true' || 'false' }}
     - name: Upload coverage results
       uses: actions/upload-artifact@v4.4.0
       if: always()

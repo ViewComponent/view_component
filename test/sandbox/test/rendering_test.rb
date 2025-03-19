@@ -1257,9 +1257,11 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_layout_attribute
-    render_inline(MyComponent.new, layout: LayoutComponent.new)
+    if Rails.version.to_f >= 6.1 && ViewComponent::Base.config.render_layout_monkey_patch_enabled
+      render_inline(MyComponent.new, layout: LayoutComponent.new)
 
-    assert_selector("div", text: "hello,world!")
-    assert_selector(".layout__container")
+      assert_selector("div", text: "hello,world!")
+      assert_selector(".layout__container")
+    end
   end
 end

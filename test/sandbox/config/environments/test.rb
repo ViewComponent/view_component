@@ -34,6 +34,7 @@ Sandbox::Application.configure do
 
   config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
   config.view_component.render_monkey_patch_enabled = true
+  config.view_component.render_layout_monkey_patch_enabled = ENV["RENDER_LAYOUT_PATCH_ENABLED"] == "true"
   config.view_component.show_previews_source = true
   config.view_component.test_controller = "IntegrationExamplesController"
   config.view_component.capture_compatibility_patch_enabled = ENV["CAPTURE_PATCH_ENABLED"] == "true"

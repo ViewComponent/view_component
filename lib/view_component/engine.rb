@@ -34,6 +34,7 @@ module ViewComponent
       end
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
       options.render_monkey_patch_enabled = true if options.render_monkey_patch_enabled.nil?
+      options.render_layout_monkey_patch_enabled = false if options.render_layout_monkey_patch_enabled.nil?
       options.show_previews = (Rails.env.development? || Rails.env.test?) if options.show_previews.nil?
 
       if options.show_previews
@@ -112,7 +113,7 @@ module ViewComponent
     end
 
     initializer "view_component.monkey_patch_render_layout" do |app|
-      next if Rails.version.to_f <= 6.1
+      next if Rails.version.to_f <= 6.1 || !app.config.view_component.render_layout_monkey_patch_enabled
 
       ActiveSupport.on_load(:action_view) do
         require "view_component/render_layout_monkey_patch.rb"

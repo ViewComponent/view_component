@@ -19,6 +19,7 @@ module ViewComponent
           instrumentation_enabled: false,
           use_deprecated_instrumentation_name: true,
           render_monkey_patch_enabled: true,
+          render_layout_monkey_patch_enabled: false,
           view_component_path: "app/components",
           component_parent_class: nil,
           show_previews: Rails.env.development? || Rails.env.test?,
@@ -127,6 +128,12 @@ module ViewComponent
       # Defaults to `true`.
 
       # @!attribute render_monkey_patch_enabled
+      # @return [Boolean] Whether the #render method should be monkey patched.
+      # If this is disabled, use `#render_component` or
+      # `#render_component_to_string` instead.
+      # Defaults to `true`.
+
+      # @!attribute render_layout_monkey_patch_enabled
       # @return [Boolean] Whether the #render method should be monkey patched.
       # If this is disabled, use `#render_component` or
       # `#render_component_to_string` instead.
