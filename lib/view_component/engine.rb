@@ -111,7 +111,7 @@ module ViewComponent
       # :nocov:
     end
 
-    initializer "view_component.monkey_patch_render_collection" do |app|
+    initializer "view_component.monkey_patch_render_layout" do |app|
       next if Rails.version.to_f <= 6.1
 
       ActiveSupport.on_load(:action_view) do
