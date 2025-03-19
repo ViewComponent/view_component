@@ -111,6 +111,16 @@ module ViewComponent
       # :nocov:
     end
 
+    initializer "view_component.monkey_patch_render_collection" do |app|
+      next if Rails.version.to_f <= 6.1
+
+      ActiveSupport.on_load(:action_view) do
+        require "view_component/render_layout_monkey_patch.rb"
+        ActionView::Base.prepend ViewComponent::RenderLayoutMonkeyPatch
+      end
+      # :nocov:
+    end
+
     initializer "view_component.include_render_component" do |_app|
       next if Rails.version.to_f >= 6.1
 

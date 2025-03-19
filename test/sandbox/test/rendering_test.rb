@@ -1255,4 +1255,11 @@ class RenderingTest < ViewComponent::TestCase
       render_inline(mock_component.new)
     end
   end
+
+  def test_layout_attribute
+    render_inline(MyComponent.new, layout: LayoutComponent.new)
+
+    assert_selector("div", text: "hello,world!")
+    assert_selector(".layout__container")
+  end
 end
