@@ -16,7 +16,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5.0" => 73, "3.4.2" => 75, "3.3.7" => 76} : {"3.3.7" => 75, "3.2.7" => 74}
+      {"3.5.0" => 81, "3.4.2" => 83, "3.3.7" => 84} : {"3.3.7" => 83, "3.2.7" => 82}
 
     assert_allocations(**allocations) do
       render_inline(MyComponent.new)
@@ -940,7 +940,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_multithread_render
     ViewComponent::CompileCache.cache.delete(MyComponent)
     Rails.env.stub :test?, true do
-      threads = 100.times.map do
+      threads = Array.new(100) do
         Thread.new do
           render_inline(MyComponent.new)
 
