@@ -88,7 +88,7 @@ GEM
       bundler
       rake
       thor (>= 0.14.0)
-    ast (2.4.2)
+    ast (2.4.3)
     base64 (0.2.0)
     benchmark (0.4.0)
     benchmark-ips (2.14.0)
@@ -168,7 +168,6 @@ GEM
     matrix (0.4.2)
     method_source (1.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.8)
     minitest (5.25.5)
     net-imap (0.5.6)
       date
@@ -180,8 +179,21 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.18.3)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.18.5-aarch64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.5-aarch64-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.18.5-arm-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.5-arm-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.18.5-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.18.5-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.18.5-x86_64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.5-x86_64-linux-musl)
       racc (~> 1.4)
     parallel (1.26.3)
     parser (3.3.7.1)
@@ -279,7 +291,7 @@ GEM
       rubocop-ast (>= 1.38.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.38.1)
+    rubocop-ast (1.40.0)
       parser (>= 3.3.1.0)
     rubocop-md (2.0.0)
       lint_roller (~> 1.1)
@@ -362,7 +374,14 @@ GEM
     zeitwerk (2.7.2)
 
 PLATFORMS
-  ruby
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-gnu
+  arm-linux-musl
+  arm64-darwin
+  x86_64-darwin
+  x86_64-linux-gnu
+  x86_64-linux-musl
 
 DEPENDENCIES
   allocation_stats
@@ -397,7 +416,7 @@ DEPENDENCIES
   yard-activesupport-concern (< 1)
 
 RUBY VERSION
-   ruby 3.4.1p0
+   ruby 3.4.2p28
 
 BUNDLED WITH
-   2.5.3
+   2.6.2

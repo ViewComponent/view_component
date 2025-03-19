@@ -16,8 +16,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5.0" => 73, "3.4.2" => 75, "3.3.7" => 76} :
-      {"3.3.7" => 75, "3.2.7" => 74}
+      {"3.5.0" => 73, "3.4.2" => 75, "3.3.7" => 76} : {"3.3.7" => 75, "3.2.7" => 74}
 
     assert_allocations(**allocations) do
       render_inline(MyComponent.new)
@@ -1252,6 +1251,21 @@ class RenderingTest < ViewComponent::TestCase
 
         assert_text("Hi turbo stream custom!")
       end
+    end
+  end
+
+  # In https://github.com/ViewComponent/view_component/issues/2187,
+  # the Solidus test suite built mocked components by hand, resulting
+  # in a difficult-to-debug error. While this test case is quite narrow,
+  # it isolates the unintentional error masking we were doing.
+  def test_render_anonymous_component_without_template
+    location = caller(1, 1).first
+    mock_component = Class.new(MyComponent)
+    mock_component.define_singleton_method(:name) { "Foo" }
+    mock_component.define_singleton_method(:to_s) { "#{name} (#{location})" }
+
+    assert_nothing_raised do
+      render_inline(mock_component.new)
     end
   end
 end

@@ -72,6 +72,14 @@ nav_order: 5
 
     *Tiago Menegaz*, *Joel Hawksley*
 
+* Add unused mechanism for inheriting config from parent modules to enable future engine-local configuration.
+
+    *Simon Fish*
+
+* Improve handling of malformed component edge case when mocking components in tests.
+
+    *Martin Meyerhoff*, *Joel Hawksley*
+
 * Add Content Harmony & Learn To Be to list of companies using ViewComponent.
 
     *Kane Jamison*
