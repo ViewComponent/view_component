@@ -620,21 +620,21 @@ module ViewComponent
 
             ```rb
             class #{self.class.name} < ViewComponent::Base
-              configure do |config|
+              configure_view_component do |config|
                 config.strip_trailing_whitespace = #{value}
               end
             end
             ```
           )
         )
-        configuration.strip_trailing_whitespace = value
+        view_component_config.strip_trailing_whitespace = value
       end
 
       # Whether trailing whitespace will be stripped before compilation.
       #
       # @return [Boolean]
       def strip_trailing_whitespace?
-        configuration.strip_trailing_whitespace
+        view_component_config.strip_trailing_whitespace
       end
 
       # Ensure the component initializer accepts the
