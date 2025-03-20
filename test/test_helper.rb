@@ -43,7 +43,7 @@ require "capybara/cuprite"
 
 # Rails registers its own driver named "cuprite" which will overwrite the one we
 # register here. Avoid the problem by registering the driver with a distinct name.
-Capybara.register_driver(:vc_cuprite) do |app|
+Capybara.register_driver(:system_test_driver) do |app|
   # Add the process_timeout option to prevent failures due to the browser
   # taking too long to start up.
   Capybara::Cuprite::Driver.new(app, {process_timeout: 60, timeout: 30})
@@ -140,18 +140,14 @@ ensure
 end
 
 def without_template_annotations(&block)
-  if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
-    old_value = ActionView::Base.annotate_rendered_view_with_filenames
-    ActionView::Base.annotate_rendered_view_with_filenames = false
-    app.reloader.reload! if defined?(app)
+  old_value = ActionView::Base.annotate_rendered_view_with_filenames
+  ActionView::Base.annotate_rendered_view_with_filenames = false
+  app.reloader.reload! if defined?(app)
 
-    with_new_cache(&block)
+  with_new_cache(&block)
 
-    ActionView::Base.annotate_rendered_view_with_filenames = old_value
-    app.reloader.reload! if defined?(app)
-  else
-    yield
-  end
+  ActionView::Base.annotate_rendered_view_with_filenames = old_value
+  app.reloader.reload! if defined?(app)
 end
 
 def modify_file(file, content)
@@ -169,10 +165,6 @@ def with_default_preview_layout(layout, &block)
   with_config_option(:default_preview_layout, layout, &block)
 end
 
-def with_render_monkey_patch_config(enabled, &block)
-  with_config_option(:render_monkey_patch_enabled, enabled, &block)
-end
-
 def with_compiler_development_mode(mode)
   previous_mode = ViewComponent::Compiler.development_mode
   ViewComponent::Compiler.development_mode = mode
@@ -184,7 +176,7 @@ end
 def capture_warnings(&block)
   [].tap do |warnings|
     Kernel.stub(:warn, ->(msg) { warnings << msg }) do
-      block.call
+      yield
     end
   end
 end

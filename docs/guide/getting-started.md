@@ -29,7 +29,7 @@ Use the component generator to create a new ViewComponent.
 The generator accepts a component name and a list of arguments:
 
 ```console
-bin/rails generate component Example title
+bin/rails generate view_component:component Example title
 
       invoke  test_unit
       create  test/components/example_component_test.rb

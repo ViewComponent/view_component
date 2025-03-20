@@ -10,7 +10,7 @@ module ViewComponent
       around_action :set_locale, only: :previews
       before_action :require_local!, unless: :show_previews?
 
-      content_security_policy(false) if respond_to?(:content_security_policy)
+      content_security_policy(false)
 
       # Including helpers here ensures that we're loading the
       # latest version of helpers if code-reloading is enabled
