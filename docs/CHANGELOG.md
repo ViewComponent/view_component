@@ -1,5 +1,6 @@
 ---
 layout: default
+title: Changelog
 nav_order: 6
 ---
 
@@ -327,7 +328,7 @@ nav_order: 6
 
 ## 3.9.0
 
-* Don't break `rails stats` if ViewComponent path is missing.
+* Don’t break `rails stats` if ViewComponent path is missing.
 
     *Claudio Baccigalupo*
 
@@ -566,7 +567,7 @@ nav_order: 6
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
 
-We're so grateful for all the work of community members to get us to this release. Whether it's filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn't be more proud of what we're building together :heart:
+We're so grateful for all the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
 
 This release makes the following breaking changes, many of which have long been deprecated:
 
@@ -805,7 +806,7 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
 
-We're so grateful for all the work of community members to get us to this release. Whether it's filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn't be more proud of what we're building together :heart:
+We're so grateful for all the work of community members to get us to this release. Whether it’s filing bug reports, designing APIs in long-winded discussion threads, or writing code itself, ViewComponent is built by the community, for the community. We couldn’t be more proud of what we’re building together :heart:
 
 This release makes the following breaking changes, many of which have long been deprecated:
 
