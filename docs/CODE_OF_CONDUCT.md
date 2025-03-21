@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Code of conduct
-nav_order: 6
+nav_order: 7
 ---
 
 # Contributor Covenant Code of Conduct
