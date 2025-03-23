@@ -381,11 +381,7 @@ This release makes the following breaking changes:
 
     *Reegan Viljoen*
 
-* Add HomeStyler AI to list of companies using ViewComponent.
-
-    *JP Balarini*
-
-* Add first class component cache.
+* Add experimental support for caching.
 
     *Reegan Viljoen*
 

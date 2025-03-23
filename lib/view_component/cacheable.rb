@@ -15,7 +15,7 @@ module ViewComponent::Cacheable
       __vc_cache_dependencies.filter_map { |dep| send(dep) }
     end
 
-    # For handeling the output_preamble and output_postamble
+    # For handling the output_preamble and output_postamble
     #
     # @private
     def __vc_render_template(rendered_template)
@@ -27,7 +27,7 @@ module ViewComponent::Cacheable
       end
     end
 
-    # For determing if a template is rendered with cache or not
+    # Render component from cache if possible
     #
     # @private
     def __vc_render_cacheable(rendered_template)
