@@ -14,7 +14,7 @@ _A general guide to building component-driven UI in Rails. Consider it to be mor
 
 ViewComponent was created to help manage the growing complexity of the GitHub.com view layer, which accumulated thousands of templates over the years, almost entirely through copy-pasting. A lack of abstraction made it challenging to make sweeping design, accessibility, and behavior improvements.
 
-ViewComponent provides a way to isolate common UI patterns for reuse, helping to improve the quality and consistency of the customer experience, especially when it comes to accessibility.
+ViewComponent provides a way to isolate common UI patterns for reuse, helping to improve the quality and consistency of Rails applications.
 
 ### ViewComponent is to UI what ActiveRecord is to SQL
 
@@ -22,7 +22,9 @@ ViewComponent brings [conceptual compression](https://m.signalvnoise.com/concept
 
 ### ViewComponent exposes existing complexity
 
-Refactoring a view to being a ViewComponent often exposes existing complexity. For example, a ViewComponent may need numerous arguments to be rendered, revealing the number of dependencies in the existing view code. This is good! Refactoring to use ViewComponent increases comprehension of view code and provides a foundation for further improvement.
+Converting an existing view/partial to a ViewComponent often exposes existing complexity. For example, a ViewComponent may need numerous arguments to be rendered, revealing the number of dependencies in the existing view code.
+
+This is good! Refactoring to use ViewComponent improves comprehension and provides a foundation for further improvement.
 
 ## Organization
 
@@ -44,7 +46,7 @@ For example, `User::AvatarComponent` accepts a `User` ActiveRecord object and re
 
 "Good frameworks are extracted, not invented" - [DHH](https://dhh.dk/arc/000416.html)
 
-Just as ViewComponent itself was extracted from GitHub.com, experience has shown that the best general-purpose components are extracted once they've proven helpful across more than one area:
+Just as ViewComponent itself was extracted from GitHub.com, general-purpose components are best extracted once they've proven helpful across more than one area:
 
 1. Single use-case component implemented.
 2. Component adapted for general use in multiple locations in the application.
@@ -70,7 +72,7 @@ ViewComponents have less value in single-use cases like replacing a `show` view.
 
 When migrating an entire route to use ViewComponents, work from the bottom up, extracting portions of the page into ViewComponents first.
 
-### Prefer tests against rendered content, not instance methods
+### Test against rendered content, not instance methods
 
 ViewComponent tests should use `render_inline` and assert against the rendered output. While it can be useful to test specific component instance methods directly, it's more valuable to write assertions against what is shown to the end user:
 
@@ -105,7 +107,7 @@ end
 
 ### Prefer ViewComponents over partials
 
-Use ViewComponents in place of partials, as ViewComponents allow us to test reused view code directly (via unit tests) instead of through each place a partial is reused.
+Use ViewComponents in place of partials.
 
 ### Prefer ViewComponents over HTML-generating helpers
 
@@ -153,34 +155,9 @@ end
 <% message = "Hello, #{name}" %>
 ```
 
-### Pass an object instead of 3+ object attributes
-
-ViewComponents should be passed individual object attributes unless three or more attributes are needed from the object, in which case the entire object should be passed:
-
-```ruby
-# good
-class MyComponent < ViewComponent::Base
-  def initialize(repository:)
-    #...
-  end
-end
-
-# bad
-class MyComponent < ViewComponent::Base
-  def initialize(repository_name:, repository_owner:, repository_created_at:)
-    #...
-  end
-end
-```
-
 ### Prefer slots over passing markup as an argument
 
-Prefer using slots to passing markup to components. Passing markup as an argument bypasses the HTML sanitization provided by Rails, creating the potential for security issues:
-
-```erb
-# bad
-<%= render MyComponent.new(name: "<strong>Hello, world!</strong>".html_safe) %>
-```
+Prefer using slots for providing markup to components. Passing markup as an argument bypasses the HTML sanitization provided by Rails, creating the potential for security issues:
 
 ```erb
 # good
@@ -189,4 +166,9 @@ Prefer using slots to passing markup to components. Passing markup as an argumen
     <strong>Hello, world!</strong>
   <% end %>
 <% end %>
+```
+
+```erb
+# bad
+<%= render MyComponent.new(name: "<strong>Hello, world!</strong>".html_safe) %>
 ```
