@@ -88,9 +88,6 @@ module ViewComponent
 
       @lookup_context ||= view_context.lookup_context
 
-      # required for path helpers in older Rails versions
-      @view_renderer ||= view_context.view_renderer
-
       # For content_for
       @view_flow ||= view_context.view_flow
 
