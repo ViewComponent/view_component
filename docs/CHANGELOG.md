@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Changelog
-nav_order: 6
+nav_order: 5
 ---
 
 <!-- Add unreleased changes under the "main" heading. -->
@@ -9,6 +9,10 @@ nav_order: 6
 # Changelog
 
 ## main
+
+* Rewrite `ViewComponents at GitHub` documentation as more general `Best practices`.
+
+    *Phil Schalm*, *Joel Hawksley*
 
 * Add unused mechanism for inheriting config from parent modules to enable future engine-local configuration.
 

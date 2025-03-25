@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Known issues
-nav_order: 10
+nav_order: 9
 ---
 
 # Known issues
