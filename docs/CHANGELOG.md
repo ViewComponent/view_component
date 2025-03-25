@@ -10,6 +10,8 @@ nav_order: 5
 
 ## main
 
+## 3.22.0
+
 * Rewrite `ViewComponents at GitHub` documentation as more general `Best practices`.
 
     *Phil Schalm*, *Joel Hawksley*
