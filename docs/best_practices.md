@@ -50,7 +50,7 @@ Just as ViewComponent itself was extracted from GitHub.com, general-purpose comp
 
 1. Single use-case component implemented.
 2. Component adapted for general use in multiple locations in the application.
-3. Component extracted into a general-purpose ViewComponent, potentially in a separate gem.
+3. Component extracted into a general-purpose ViewComponent in `app/lib` or a separate gem.
 
 ### Reduce permutations
 
@@ -74,7 +74,7 @@ When migrating an entire route to use ViewComponents, work from the bottom up, e
 
 ### Test against rendered content, not instance methods
 
-ViewComponent tests should use `render_inline` and assert against the rendered output. While it can be useful to test specific component instance methods directly, it's more valuable to write assertions against what is shown to the end user:
+ViewComponent tests should use `render_inline` and assert against the rendered output. While it can be useful to test specific component instance methods directly, it's more valuable to write assertions against what's shown to the end user:
 
 ```ruby
 # good
