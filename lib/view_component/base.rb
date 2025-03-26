@@ -129,7 +129,6 @@ module ViewComponent
       @current_template = old_current_template
     end
 
-
     # Subclass components that call `super` inside their template code will cause a
     # double render if they emit the result.
     #
