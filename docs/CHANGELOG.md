@@ -76,6 +76,12 @@ nav_order: 5
 
     *Tiago Menegaz*, *Joel Hawksley*
 
+## 3.22.0
+
+* Rewrite `ViewComponents at GitHub` documentation as more general `Best practices`.
+
+    *Phil Schalm*, *Joel Hawksley*
+
 * Add unused mechanism for inheriting config from parent modules to enable future engine-local configuration.
 
     *Simon Fish*
