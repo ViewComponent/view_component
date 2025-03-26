@@ -36,7 +36,7 @@ module ViewComponent::Cacheable
     end
 
     def inherited(child)
-      child.__vc_cache_dependencies = __vc_cache_dependencies.dup
+      child.__vc_cache_dependencies + __vc_cache_dependencies.dup if __vc_cache_dependencies.present?
 
       super
     end
