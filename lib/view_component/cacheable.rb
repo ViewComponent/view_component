@@ -15,17 +15,6 @@ module ViewComponent::Cacheable
       __vc_cache_dependencies.filter_map { |dep| send(dep) }
     end
 
-    # For handling the output_preamble and output_postamble
-    #
-    # @private
-    def __vc_render_template(rendered_template)
-      # Avoid allocating new string when output_preamble and output_postamble are blank
-      if output_preamble.blank? && output_postamble.blank?
-        rendered_template
-      else
-        safe_output_preamble + rendered_template + safe_output_postamble
-      end
-    end
 
     # Render component from cache if possible
     #
