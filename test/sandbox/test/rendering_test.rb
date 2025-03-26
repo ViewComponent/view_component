@@ -1340,7 +1340,7 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector(".cache-component__cache-message", text: "foo baz")
   end
 
-  def test_cache_component
+  def test_inherited_cache_component
     component = InheritedCacheComponent.new(foo: "foo", bar: "bar")
     render_inline(component)
 
