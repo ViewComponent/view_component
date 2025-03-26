@@ -15,7 +15,6 @@ module ViewComponent::Cacheable
       __vc_cache_dependencies.filter_map { |dep| send(dep) }
     end
 
-
     # Render component from cache if possible
     #
     # @private
