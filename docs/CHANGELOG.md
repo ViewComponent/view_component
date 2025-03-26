@@ -54,7 +54,7 @@ nav_order: 5
 
 * Updates testing docs to include an example of how to use with RSpec.
 
-    *Rylan Bowers*
+    *Rylanview_cache Bowers*
 
 * Add `--skip-suffix` option to component generator.
 
