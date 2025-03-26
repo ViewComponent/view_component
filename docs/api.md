@@ -248,11 +248,6 @@ Defaults to `"/rails/view_components"`.
 Whether component previews are enabled.
 Defaults to `true` in development and test environments.
 
-### `.show_previews_source`
-
-Whether to display source code previews in component previews.
-Defaults to `false`.
-
 ### `.test_controller`
 
 The controller used for testing components.

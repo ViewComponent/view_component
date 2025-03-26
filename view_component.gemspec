@@ -24,7 +24,6 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "activesupport", [">= 7.1.0", "< 8.1"]
   spec.add_runtime_dependency "concurrent-ruby", "~> 1"
-  spec.add_runtime_dependency "method_source", "~> 1"
   spec.add_development_dependency "allocation_stats"
   spec.add_development_dependency "appraisal", "~> 2"
   spec.add_development_dependency "benchmark-ips", "~> 2"
@@ -36,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "haml", "~> 6"
   spec.add_development_dependency "jbuilder", "~> 2"
   spec.add_development_dependency "m", "~> 1"
+  spec.add_development_dependency "method_source", "~> 1"
   spec.add_development_dependency "minitest", "~> 5"
   spec.add_development_dependency "puma", "~> 6"
   spec.add_development_dependency "rake", "~> 13"

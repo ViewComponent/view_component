@@ -12,6 +12,10 @@ nav_order: 5
 
 ## 4.0.0
 
+* BREAKING: Remove `preview_source` functionality. Consider using [Lookbook](https://lookbook.build/) instead.
+
+    *Joel Hawksley*
+
 * BREAKING: Use `Nokogiri::HTML5` instead of `Nokogiri::HTML4` for test helpers.
 
     *Noah Silvera*, *Joel Hawksley*

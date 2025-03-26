@@ -12,7 +12,6 @@ module ViewComponent
       assert_equal @config.generate, {preview_path: ""}
       assert_equal @config.preview_controller, "ViewComponentsController"
       assert_equal @config.preview_route, "/rails/view_components"
-      assert_equal @config.show_previews_source, false
       assert_equal @config.instrumentation_enabled, false
       assert_equal @config.use_deprecated_instrumentation_name, true
       assert_equal @config.show_previews, true

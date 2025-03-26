@@ -15,7 +15,6 @@ module ViewComponent
           generate: default_generate_options,
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
-          show_previews_source: false,
           instrumentation_enabled: false,
           use_deprecated_instrumentation_name: true,
           view_component_path: "app/components",
@@ -107,11 +106,6 @@ module ViewComponent
       # @return [String]
       # The entry route for component previews.
       # Defaults to `"/rails/view_components"`.
-
-      # @!attribute show_previews_source
-      # @return [Boolean]
-      # Whether to display source code previews in component previews.
-      # Defaults to `false`.
 
       # @!attribute instrumentation_enabled
       # @return [Boolean]

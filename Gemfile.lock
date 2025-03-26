@@ -4,7 +4,6 @@ PATH
     view_component (3.22.0)
       activesupport (>= 7.1.0, < 8.1)
       concurrent-ruby (~> 1)
-      method_source (~> 1)
 
 GEM
   remote: https://rubygems.org/
@@ -395,6 +394,7 @@ DEPENDENCIES
   haml (~> 6)
   jbuilder (~> 2)
   m (~> 1)
+  method_source (~> 1)
   minitest (~> 5)
   propshaft (~> 1)
   puma (~> 6)
