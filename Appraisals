@@ -22,5 +22,5 @@ end
 appraise "rails-main" do
   gem "rails", github: "rails/rails", branch: "main"
   gem "tailwindcss-rails", "~> 2"
-  gem "turbo-rails", "~> 1"
+  gem "turbo-rails", "~> 2"
 end
