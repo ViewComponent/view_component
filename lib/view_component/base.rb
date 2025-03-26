@@ -35,7 +35,6 @@ module ViewComponent
       end
     end
 
-    include ViewComponent::Cacheable
     include ViewComponent::InlineTemplate
     include ViewComponent::UseHelpers
     include ViewComponent::Slotable
@@ -118,13 +117,18 @@ module ViewComponent
 
       if render?
         rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
-        __vc_render_cacheable(rendered_template)
+        if respond_to?(:__vc_render_cacheable)
+          __vc_render_cacheable(rendered_template)
+        else
+          __vc_render_template(rendered_template)
+        end
       else
         ""
       end
     ensure
       @current_template = old_current_template
     end
+
 
     # Subclass components that call `super` inside their template code will cause a
     # double render if they emit the result.
@@ -264,6 +268,24 @@ module ViewComponent
     # @private
     def virtual_path
       self.class.virtual_path
+    end
+
+    # For caching, such as #cache_if
+    # @private
+    def view_cache_dependencies
+      []
+    end
+
+    # For handling the output_preamble and output_postamble
+    #
+    # @private
+    def __vc_render_template(rendered_template)
+      # Avoid allocating new string when output_preamble and output_postamble are blank
+      if output_preamble.blank? && output_postamble.blank?
+        rendered_template
+      else
+        safe_output_preamble + rendered_template + safe_output_postamble
+      end
     end
 
     # For caching, such as #cache_if
