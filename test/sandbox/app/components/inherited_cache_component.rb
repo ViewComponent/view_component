@@ -2,6 +2,6 @@
 
 class InheritedCacheComponent < CacheComponent
   def initialize(foo:, bar:)
-    super(foo: foo, bar: bar)
+    super
   end
 end
