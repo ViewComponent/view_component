@@ -26,7 +26,7 @@ In `v2.0.0`, `ActionView::Component` was renamed to `ViewComponent`, delineating
 
 ## November 2021: Polymorphic slots
 
-@camertron introduced Polymorphic slots, documenting the maintainer's decision:
+@camertron introduced Polymorphic slots, documenting the maintainers' decision:
 
 ### Polymorphic slots
 
