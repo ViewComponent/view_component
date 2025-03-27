@@ -12,7 +12,7 @@ module ViewComponent::Cacheable
     def view_cache_dependencies
       return if __vc_cache_dependencies.blank? || __vc_cache_dependencies.none?
 
-      __vc_cache_dependencies.filter_map { |dep| send(dep) }.join('-')
+      __vc_cache_dependencies.filter_map { |dep| send(dep) }.join("-")
     end
 
     # Render component from cache if possible
@@ -36,7 +36,7 @@ module ViewComponent::Cacheable
     end
 
     def inherited(child)
-      child.__vc_cache_dependencies =  __vc_cache_dependencies.dup
+      child.__vc_cache_dependencies = __vc_cache_dependencies.dup
 
       super
     end
