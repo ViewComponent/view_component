@@ -211,6 +211,6 @@ We've spoken about a few alternatives:
 
 The largest consequence of this change is that we'll need to deprecate the old setter usage (`header { "Hello world!"}`) in favor of the new setter API (`with_header { "Hello world!" }`).
 
-WE propose that we make at least one release with the new API and no deprecation
+We propose that we make at least one release with the new API and no deprecation
 warning followed by another release that includes the deprecation warning. This
 will give teams some time to migrate before running into deprecation warnings.
