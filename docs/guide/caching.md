@@ -30,13 +30,13 @@ end
 
 <p><%= Time.zone.now %>"></p>
 <p><%= "#{foo} #{bar}" %></p>
-
 ```
-will result in
+
+will result in:
+
 ```html
 <p>foo-bar</p>
 
 <p>2025-03-27 16:46:10 UTC</p>
 <p> foo bar</p>
 ```
-
