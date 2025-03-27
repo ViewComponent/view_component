@@ -60,6 +60,10 @@ When building ViewComponents, look for opportunities to consolidate similar patt
 
 Aim to minimize the amount of single-use view code. Every new component introduced adds to application maintenance burden.
 
+### Use -Component suffix
+
+While it means class names are longer and perhaps less readable, including the -`Component` suffix in component names makes it clear that the class is a component, following Rails convention of using suffixes for all non-model objects.
+
 ## Implementation
 
 ### Avoid inheritance
