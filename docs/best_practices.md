@@ -6,8 +6,6 @@ nav_order: 5
 
 # Best practices
 
-_A general guide to building component-driven UI in Rails. Consider it to be more opinion than fact._
-
 ## Philosophy
 
 ### Why ViewComponent exists
