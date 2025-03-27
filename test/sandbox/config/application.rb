@@ -9,7 +9,6 @@ require "action_mailer/railtie"
 require "action_view/railtie"
 require "sprockets/railtie" if Rails.version.to_f < 8.0
 require "propshaft" if Rails.version.to_f >= 8.0
-
 require "turbo-rails"
 
 # Track when different Rails frameworks get loaded.
