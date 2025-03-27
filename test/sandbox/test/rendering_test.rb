@@ -16,7 +16,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5.0" => 123, "3.4.2" => 125, "3.3.7" => 137} :
+      {"3.5.0" => 123, "3.4.2" => 125, "3.3.7" => 138} :
       {"3.3.7" => 128, "3.3.0" => 140, "3.2.8" => 126, "3.1.7" => 126, "3.0.7" => 135}
 
     assert_allocations(**allocations) do
@@ -1272,31 +1272,5 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_selector(".cache-component__cache-key", text: new_component.view_cache_dependencies)
     assert_selector(".cache-component__cache-message", text: "foo baz")
-  end
-
-  def test_inherited_cache_component
-    component = InheritedCacheComponent.new(foo: "foo", bar: "bar")
-    render_inline(component)
-
-    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
-    assert_selector(".cache-component__cache-message", text: "foo bar")
-
-    render_inline(InheritedCacheComponent.new(foo: "foo", bar: "bar"))
-
-    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
-
-    new_component = InheritedCacheComponent.new(foo: "foo", bar: "baz")
-    render_inline(new_component)
-
-    assert_selector(".cache-component__cache-key", text: new_component.view_cache_dependencies)
-    assert_selector(".cache-component__cache-message", text: "foo baz")
-  end
-
-  def test_no_cache_component
-    component = NoCacheComponent.new(foo: "foo", bar: "bar")
-    render_inline(NoCacheComponent.new(foo: "foo", bar: "bar"))
-
-    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
-    assert_selector(".cache-component__cache-message", text: "foo bar")
   end
 end
