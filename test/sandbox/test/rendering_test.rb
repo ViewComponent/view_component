@@ -17,7 +17,7 @@ class RenderingTest < ViewComponent::TestCase
 
     allocations = (Rails.version.to_f >= 8.0) ?
       {"3.5.0" => 123, "3.4.2" => 125, "3.3.7" => 137} :
-      {"3.3.7" => 128, "3.3.0" => 140, "3.2.7" => 126, "3.1.6" => 126, "3.0.7" => 135}
+      {"3.3.7" => 128, "3.3.0" => 140, "3.2.8" => 126, "3.1.7" => 126, "3.0.7" => 135}
 
     assert_allocations(**allocations) do
       render_inline(MyComponent.new)
