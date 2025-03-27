@@ -174,7 +174,7 @@ c.header.with_content("Hello world!") # undefined method `with_content' for nil:
 
 The above example shows off the gap in the slots API via `with_content`, but it's likely that as the library continues to grow this gap will appear in other valid use-cases.
 
-### Decision
+### Outcome
 
 Split the slots API into a getter and setter. Keeping the slot name as the getter makes the most sense, but the setter can be renamed to `with_#{slot_name}`.
 
@@ -207,7 +207,7 @@ We've spoken about a few alternatives:
     `with_content`, leaving the gap for future API's.
   * This API doesn't allow arguments to be passed 1-to-1 like the current setter API.
 
-### Consequences
+### Side effects
 
 The largest consequence of this change is that we'll need to deprecate the old setter usage (`header { "Hello world!"}`) in favor of the new setter API (`with_header { "Hello world!" }`).
 
