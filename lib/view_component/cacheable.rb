@@ -10,9 +10,9 @@ module ViewComponent::Cacheable
     #
     # @private
     def view_cache_dependencies
-      return if __vc_cache_dependencies.blank? || __vc_cache_dependencies.none?
+      return if __vc_cache_dependencies.blank? || __vc_cache_dependencies.none? || __vc_cache_dependencies.nil?
 
-      __vc_cache_dependencies.filter_map { |dep| send(dep) }.join("-")
+      __vc_cache_dependencies.filter_map { |dep| send(dep) }.join('-')
     end
 
     # Render component from cache if possible
