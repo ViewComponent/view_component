@@ -15,10 +15,8 @@ module ViewComponent
           generate: default_generate_options,
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
-          show_previews_source: false,
           instrumentation_enabled: false,
           use_deprecated_instrumentation_name: true,
-          render_monkey_patch_enabled: true,
           view_component_path: "app/components",
           component_parent_class: nil,
           show_previews: Rails.env.development? || Rails.env.test?,
@@ -109,11 +107,6 @@ module ViewComponent
       # The entry route for component previews.
       # Defaults to `"/rails/view_components"`.
 
-      # @!attribute show_previews_source
-      # @return [Boolean]
-      # Whether to display source code previews in component previews.
-      # Defaults to `false`.
-
       # @!attribute instrumentation_enabled
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
@@ -124,12 +117,6 @@ module ViewComponent
       # Whether ActiveSupport Notifications use the private name `"!render.view_component"`
       # or are made more publicly available via `"render.view_component"`.
       # Will default to `false` in next major version.
-      # Defaults to `true`.
-
-      # @!attribute render_monkey_patch_enabled
-      # @return [Boolean] Whether the #render method should be monkey patched.
-      # If this is disabled, use `#render_component` or
-      # `#render_component_to_string` instead.
       # Defaults to `true`.
 
       # @!attribute view_component_path

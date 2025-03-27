@@ -64,7 +64,7 @@ bundle exec m test/view_component/YOUR_COMPONENT_test.rb:line_number
 Specify one of the supported versions listed in [Appraisals](https://github.com/viewcomponent/view_component/blob/main/Appraisals):
 
 ```command
-bundle exec appraisal rails-5.2 rake
+bundle exec appraisal rails-8.0 rake
 ```
 
 ## Documentation
