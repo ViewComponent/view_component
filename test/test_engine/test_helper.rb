@@ -6,6 +6,7 @@ require "rails/version"
 
 if ENV["MEASURE_COVERAGE"]
   SimpleCov.start do
+    enable_coverage :branch
     command_name "minitest-rails-engine#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
 
     formatter SimpleCov::Formatter::Console
