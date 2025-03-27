@@ -208,18 +208,6 @@ Previews are enabled by default in test and development environments. To enable 
 config.view_component.show_previews = false
 ```
 
-## Source previews
-
-A source preview is a syntax highlighted source code example of the usage of a view component, shown below the preview.
-Source previews are disabled by default. To enable or disable source previews, use the `show_previews_source` option:
-
-```ruby
-# config/environments/test.rb
-config.view_component.show_previews_source = true
-```
-
-To render the source preview in a different location, use the view helper `preview_source` from within the preview template or preview layout.
-
 ## Use with RSpec
 
 When using previews with RSpec,  replace `test/components` with `spec/components` and update `preview_paths`:

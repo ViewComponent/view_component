@@ -29,7 +29,7 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
-      %i[generate preview_controller preview_route show_previews_source].each do |config_option|
+      %i[generate preview_controller preview_route].each do |config_option|
         options[config_option] ||= ViewComponent::Base.public_send(config_option)
       end
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
@@ -40,14 +40,6 @@ module ViewComponent
         options.preview_paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?(
           "#{Rails.root}/test/components/previews"
         )
-
-        if options.show_previews_source
-          require "method_source"
-
-          app.config.to_prepare do
-            MethodSource.instance_variable_set(:@lines_for_file, {})
-          end
-        end
       end
     end
 
@@ -88,16 +80,6 @@ module ViewComponent
       ActiveSupport.on_load(:after_initialize) do
         ViewComponent::Base.descendants.each(&:compile) if Rails.application.config.eager_load
       end
-    end
-
-    initializer "static assets" do |app|
-      if serve_static_preview_assets?(app.config)
-        app.middleware.use(::ActionDispatch::Static, "#{root}/app/assets/vendor")
-      end
-    end
-
-    def serve_static_preview_assets?(app_config)
-      app_config.view_component.show_previews && app_config.public_file_server.enabled
     end
 
     initializer "compiler mode" do |_app|

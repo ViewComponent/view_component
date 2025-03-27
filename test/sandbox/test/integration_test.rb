@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "method_source"
 require "test_helper"
 
 class IntegrationTest < ActionDispatch::IntegrationTest
@@ -405,26 +406,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "hello,world!")
   end
 
-  def test_renders_preview_source_without_template
-    get "/rails/view_components/preview_component/default"
-
-    assert_select ".view-component-source-example h2", "Source:"
-    assert_select ".view-component-source-example pre.source code"
-    assert_select ".language-ruby"
-    refute_match "&lt;%=", response.body
-    refute_match "%&gt", response.body
-  end
-
-  def test_renders_preview_source_with_template_from_layout
-    get "/rails/view_components/preview_source_from_layout_component/default_with_template"
-
-    assert_select ".view-component-source-example h2", "Source:"
-    assert_select ".view-component-source-example pre.source code"
-    assert_select ".language-erb"
-    assert_match "&lt;%=", response.body
-    assert_match "%&gt", response.body
-  end
-
   def test_renders_collections
     get "/products"
 
@@ -677,8 +658,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
         {
           generate: config.generate.dup.tap { |c| c.sidecar = true },
           preview_controller: "SomeOtherController",
-          preview_route: "/some/other/route",
-          show_previews_source: true
+          preview_route: "/some/other/route"
         }.each do |option, value|
           with_config_option(option, value, config_entrypoint: config) do
             assert_equal(config.public_send(option), config_entrypoints.second.public_send(option))

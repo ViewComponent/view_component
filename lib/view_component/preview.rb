@@ -92,12 +92,6 @@ module ViewComponent # :nodoc:
           .sub(/\..*$/, "")
       end
 
-      # Returns the method body for the example from the preview file.
-      def preview_source(example)
-        source = instance_method(example.to_sym).source.split("\n")
-        source[1...(source.size - 1)].join("\n")
-      end
-
       def load_previews
         Array(preview_paths).each do |preview_path|
           Dir["#{preview_path}/**/*preview.rb"].sort.each { |file| require_dependency file }
