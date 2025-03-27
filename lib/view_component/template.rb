@@ -3,7 +3,6 @@
 module ViewComponent
   class Template
     DataWithSource = Struct.new(:format, :identifier, :short_identifier, :type, keyword_init: true)
-    DataNoSource = Struct.new(:source, :identifier, :type, keyword_init: true)
 
     attr_reader :details
 
@@ -149,17 +148,7 @@ module ViewComponent
       format = self.format || ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
       type = ActionView::Template::Types[format]
 
-      if handler.method(:call).parameters.length > 1
-        handler.call(
-          DataWithSource.new(format: format, identifier: @path, short_identifier: short_identifier, type: type),
-          this_source
-        )
-      # :nocov:
-      # TODO: Remove in v4
-      else
-        handler.call(DataNoSource.new(source: this_source, identifier: @path, type: type))
-      end
-      # :nocov:
+      handler.call(DataWithSource.new(format:, identifier: @path, short_identifier:, type:), this_source)
     end
   end
 end
