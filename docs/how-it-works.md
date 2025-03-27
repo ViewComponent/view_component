@@ -24,7 +24,7 @@ Compiles to:
 ```ruby
 class MyComponent < ViewComponent::Base
   def _call_my_component
-    @output_buffer.append=( Time.now )
+    @output_buffer.append = (Time.now)
     @output_buffer
   end
 end
@@ -43,4 +43,3 @@ First, ViewComponent calls the `before_render` method, which gives ViewComponent
 Second, ViewComponent calls `render?`, returning early with an empty string if `render?` returns false.
 
 ViewComponent then renders the component template.
-
