@@ -5,7 +5,7 @@ Description:
 
 Example:
 ========
-    bin/rails generate component Profile name age
+    bin/rails generate view_component Profile name age
 
     creates a Profile component and test:
         Component:    app/components/profile_component.rb

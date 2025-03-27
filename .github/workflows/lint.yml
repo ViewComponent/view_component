@@ -74,7 +74,7 @@ jobs:
     - uses: actions/cache@v4
       with:
         path: vendor/bundle
-        key: gems-build-rails-7.1-ruby-3.2-${{ hashFiles('**/Gemfile.lock') }}
+        key: gems-build-rails-8-ruby-3.2-${{ hashFiles('**/Gemfile.lock') }}
     - name: Lint with Rubocop and ERB Lint
       run: |
         bundle config path vendor/bundle
@@ -82,4 +82,4 @@ jobs:
         bundle exec standardrb -r "rubocop-md"
         bundle exec erblint **/*.html.erb
       env:
-        RAILS_VERSION: '~> 7.1.0'
+        RAILS_VERSION: '~> 8'
