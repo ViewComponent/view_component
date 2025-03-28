@@ -609,6 +609,15 @@ module ViewComponent
       # end
       # ```
       #
+      # @deprecated Use the new component-local configuration option instead.
+      #   ```ruby
+      #   class MyComponent < ViewComponent::Base
+      #     configure_component do |config|
+      #       config.strip_trailing_whitespace = true
+      #     end
+      #   end
+      #   ```
+      #
       # @param value [Boolean] Whether to strip newlines.
       def strip_trailing_whitespace(value = true)
         ViewComponent::Deprecation.deprecation_warning(
