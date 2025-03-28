@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "action_view"
+require "view_component/cacheable"
 require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
@@ -113,12 +114,10 @@ module ViewComponent
 
       if render?
         rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
-
-        # Avoid allocating new string when output_preamble and output_postamble are blank
-        if output_preamble.blank? && output_postamble.blank?
-          rendered_template
+        if respond_to?(:__vc_render_cacheable)
+          __vc_render_cacheable(rendered_template)
         else
-          safe_output_preamble + rendered_template + safe_output_postamble
+          __vc_render_template(rendered_template)
         end
       else
         ""
@@ -269,6 +268,18 @@ module ViewComponent
     # @private
     def view_cache_dependencies
       []
+    end
+
+    # For handling the output_preamble and output_postamble
+    #
+    # @private
+    def __vc_render_template(rendered_template)
+      # Avoid allocating new string when output_preamble and output_postamble are blank
+      if output_preamble.blank? && output_postamble.blank?
+        rendered_template
+      else
+        safe_output_preamble + rendered_template + safe_output_postamble
+      end
     end
 
     # For caching, such as #cache_if
