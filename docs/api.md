@@ -14,6 +14,10 @@ nav_order: 3
 
 Returns the current config.
 
+### `.identifier` → [String]
+
+The file path of the component Ruby file.
+
 ### `.sidecar_files(extensions)`
 
 Find sidecar files for the given extensions.
@@ -23,7 +27,7 @@ strings starting without the dot, example: `["erb", "haml"]`.
 
 For example, one might collect sidecar CSS files that need to be compiled.
 
-### `.strip_trailing_whitespace(value = true)`
+### `.strip_trailing_whitespace(value = true)` (Deprecated)
 
 Strips trailing whitespace from templates before compiling them.
 
@@ -33,11 +37,21 @@ class MyComponent < ViewComponent::Base
 end
 ```
 
+_Use the new component-local configuration option instead.
+
+```ruby
+class MyComponent < ViewComponent::Base
+  configure_component do |config|
+    config.strip_trailing_whitespace = true
+  end
+end
+```_
+
 ### `.strip_trailing_whitespace?` → [Boolean]
 
 Whether trailing whitespace will be stripped before compilation.
 
-### `.with_collection(collection, **args)`
+### `.with_collection(collection, spacer_component: nil, **args)`
 
 Render a component for each element in a collection ([documentation](/guide/collections)):
 
@@ -78,13 +92,13 @@ that inhibits encapsulation & reuse, often making testing difficult.
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
 
-### `#output_preamble` → [String]
-
-Optional content to be returned before the rendered template.
-
 ### `#output_postamble` → [String]
 
 Optional content to be returned after the rendered template.
+
+### `#output_preamble` → [String]
+
+Optional content to be returned before the rendered template.
 
 ### `#render?` → [Boolean]
 
@@ -191,6 +205,12 @@ Always generate a Stimulus controller alongside the component:
 
     config.view_component.generate.stimulus_controller = true
 
+#### `#typescript`
+
+Generate TypeScript files instead of JavaScript files:
+
+    config.view_component.generate.typescript = true
+
 #### `#locale`
 
 Always generate translations file alongside the component:
@@ -222,6 +242,19 @@ Required when there is more than one path defined in preview_paths.
 Defaults to `""`. If this is blank, the generator will use
 `ViewComponent.config.preview_paths` if defined,
 `"test/components/previews"` otherwise
+
+#### `#use_component_path_for_rspec_tests`
+
+Whether to use the `config.view_component_path` when generating new
+RSpec component tests:
+
+    config.view_component.generate.use_component_path_for_rspec_tests = true
+
+When set to `true`, the generator will use the `view_component_path` to
+decide where to generate the new RSpec component test.
+For example, if the `view_component_path` is
+`app/views/components`, then the generator will create a new spec file
+in `spec/views/components/` rather than the default `spec/components/`.
 
 ### `.instrumentation_enabled`
 
@@ -325,6 +358,15 @@ In RSpec, `Preview` is appended to `described_class`.
 
 Returns the result of a render_inline call.
 
+### `#rendered_json`
+
+`JSON.parse`-d component output.
+
+```ruby
+render_inline(MyJsonComponent.new)
+assert_equal(rendered_json["hello"], "world")
+```
+
 ### `#vc_test_controller` → [ActionController::Base]
 
 Access the controller used by `render_inline`:
@@ -343,7 +385,7 @@ Access the request used by `render_inline`:
 
 ```ruby
 test "component does not render in Firefox" do
-  vc_test_request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
+  request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
   render_inline(NoFirefoxComponent.new)
   refute_component_rendered
 end
@@ -360,7 +402,17 @@ with_controller_class(UsersController) do
 end
 ```
 
-### `#with_request_url(full_path, host: nil, method: nil)`
+### `#with_format(format)`
+
+Set format of the current request
+
+```ruby
+with_format(:json) do
+  render_inline(MyComponent.new)
+end
+```
+
+### `#with_request_url(full_path, host: nil, method: nil, format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT)`
 
 Set the URL of the current request (such as when using request-dependent path helpers):
 
@@ -418,7 +470,7 @@ To fix this issue, either use the `content` accessor directly or choose a differ
 
 ### `ControllerCalledBeforeRenderError`
 
-`#controller` can't be used during initialization, as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
+`#controller` can't be used before rendering, as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
 It's sometimes possible to fix this issue by moving code dependent on `#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
 
@@ -444,7 +496,7 @@ See [the collections docs](https://viewcomponent.org/guide/collections.html) for
 
 ### `HelpersCalledBeforeRenderError`
 
-`#helpers` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
+`#helpers` can't be used before rendering as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
 It's sometimes possible to fix this issue by moving code dependent on `#helpers` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
 
@@ -528,7 +580,7 @@ ViewComponent SystemTest controller must only be called in a test environment fo
 
 ### `TranslateCalledBeforeRenderError`
 
-`#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
+`#translate` can't be used before rendering as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
 It's sometimes possible to fix this issue by moving code dependent on `#translate` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
 
