@@ -56,6 +56,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* Add test coverage for uncovered code.
+
+    *Joel Hawksley*
+
 * Remove unnecessary `#format` methods that returned `nil`.
 
     *Joel Hawksley*
