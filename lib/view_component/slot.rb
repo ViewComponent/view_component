@@ -106,9 +106,7 @@ module ViewComponent
     end
 
     def html_safe?
-      # :nocov:
       to_s.html_safe?
-      # :nocov:
     end
 
     def respond_to_missing?(symbol, include_all = false)
