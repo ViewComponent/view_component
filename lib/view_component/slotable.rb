@@ -333,7 +333,6 @@ module ViewComponent
 
       def raise_if_slot_registered(slot_name)
         if registered_slots.key?(slot_name)
-          # TODO remove? This breaks overriding slots when slots are inherited
           raise RedefinedSlotError.new(name, slot_name)
         end
       end
