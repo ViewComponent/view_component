@@ -18,18 +18,7 @@ module ViewComponent
       def assert_component_rendered
         assert_selector("body")
       end
-    rescue LoadError
-      # We don't have a test case for running an application without capybara installed.
-      # It's probably fine to leave this without coverage.
-      # :nocov:
-      if ENV["DEBUG"]
-        warn(
-          "WARNING in `ViewComponent::TestHelpers`: Add `capybara` " \
-          "to Gemfile to use Capybara assertions."
-        )
-      end
-
-      # :nocov:
+    rescue LoadError # We don't have a test case for running an application without capybara installed.
     end
 
     # Returns the result of a render_inline call.
