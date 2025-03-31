@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Changelog
-nav_order: 5
+nav_order: 6
 ---
 
 <!-- Add unreleased changes under the "main" heading. -->
@@ -9,6 +9,10 @@ nav_order: 5
 # Changelog
 
 ## main
+
+* Add documentation on how ViewComponent works.
+
+    *Joel Hawksley*
 
 ## 3.22.0
 
