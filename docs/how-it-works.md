@@ -32,7 +32,7 @@ end
 
 ### At component instantiation
 
-ViewComponent does not perform any actions at component instantiation.
+Component initializer runs if defined. ViewComponent does not perform any actions.
 
 ### At render
 
