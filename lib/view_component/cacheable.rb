@@ -18,8 +18,9 @@ module ViewComponent::Cacheable
     # Render component from cache if possible
     #
     # @private
-    def __vc_render_cacheable(rendered_template)
+    def __vc_render_cacheable(rendered_template, variant = nil, format = nil)
       if view_cache_dependencies.present?
+        view_cache_dependencies = view_cache_dependencies + [variant, format]
         Rails.cache.fetch(view_cache_dependencies) do
           __vc_render_template(rendered_template)
         end
