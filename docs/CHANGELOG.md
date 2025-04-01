@@ -50,15 +50,15 @@ nav_order: 6
 
     *Reegan Viljoen*
 
-* Add HomeStyler AI to list of companies using ViewComponent.
+* Add experimental support for caching.
 
-    *JP Balarini*
+    *Reegan Viljoen*
 
 ## 3.21.0
 
 * Updates testing docs to include an example of how to use with RSpec.
 
-    *Rylan Bowers*
+    *Rylanview_cache Bowers*
 
 * Add `--skip-suffix` option to component generator.
 
