@@ -19,7 +19,7 @@ module ViewComponent::Cacheable
     #
     # @private
     def __vc_render_cacheable(rendered_template)
-      if view_cache_dependencies != [:format, :__vc_format]
+      if __vc_cache_dependencies != [:format, :__vc_format]
         Rails.cache.fetch(view_cache_dependencies) do
           __vc_render_template(rendered_template)
         end
