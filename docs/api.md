@@ -503,10 +503,6 @@ To fix this issue, choose a different name.
 
 ViewComponent SystemTest controller attempted to load a file outside of the expected directory.
 
-### `SystemTestControllerOnlyAllowedInTestError`
-
-ViewComponent SystemTest controller must only be called in a test environment for security reasons.
-
 ### `TranslateCalledBeforeRenderError`
 
 `#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
