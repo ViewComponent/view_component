@@ -60,6 +60,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* `ViewComponentsSystemTestController` should not exist outside of test environment
+
+    *Joel Hawksley*
+
 * Remove unnecessary ENABLE_RELOADING test suite flag.
 
     *Joel Hawksley*
