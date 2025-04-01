@@ -46,7 +46,6 @@ module ViewComponent
     initializer "view_component.enable_instrumentation" do |app|
       ActiveSupport.on_load(:view_component) do
         if app.config.view_component.instrumentation_enabled.present?
-          # :nocov: Re-executing the below in tests duplicates initializers and causes order-dependent failures.
           ViewComponent::Base.prepend(ViewComponent::Instrumentation)
           if app.config.view_component.use_deprecated_instrumentation_name
             ViewComponent::Deprecation.deprecation_warning(
@@ -54,7 +53,6 @@ module ViewComponent
               "Use the new instrumentation key `render.view_component` instead. See https://viewcomponent.org/guide/instrumentation.html"
             )
           end
-          # :nocov:
         end
       end
     end
