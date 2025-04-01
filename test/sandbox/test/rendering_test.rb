@@ -16,10 +16,12 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5.0" => 77, "3.4.2" => 83, "3.3.7" => 84} : {"3.3.7" => 83, "3.2.8" => 82}
+      {"3.5.0" => 79, "3.4.2" => 85, "3.3.7" => 86} : {"3.3.7" => 85, "3.2.8" => 84}
 
-    assert_allocations(**allocations) do
-      render_inline(MyComponent.new)
+    with_instrumentation_enabled_option(false) do
+      assert_allocations(**allocations) do
+        render_inline(MyComponent.new)
+      end
     end
 
     assert_selector("div", text: "hello,world!")

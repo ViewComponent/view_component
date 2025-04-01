@@ -114,6 +114,14 @@ ensure
   Rails.application.config.view_component.generate[config_option] = old_value
 end
 
+def with_instrumentation_enabled_option(value)
+  old_value = Rails.application.config.view_component.instrumentation_enabled
+  Rails.application.config.view_component.instrumentation_enabled = value
+  yield
+ensure
+  Rails.application.config.view_component.instrumentation_enabled = old_value
+end
+
 def with_generate_sidecar(enabled, &block)
   with_generate_option(:sidecar, enabled, &block)
 end

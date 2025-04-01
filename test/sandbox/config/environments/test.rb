@@ -16,7 +16,7 @@ Sandbox::Application.configure do
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
 
-  config.cache_classes = false
+  config.cache_classes = true
 
   # Show full error reports and disable caching
   config.consider_all_requests_local = true
@@ -29,7 +29,7 @@ Sandbox::Application.configure do
   config.action_controller.allow_forgery_protection = false
 
   config.view_component.show_previews = true
-
+  config.view_component.instrumentation_enabled = true
   config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
   config.view_component.test_controller = "IntegrationExamplesController"
   config.view_component.capture_compatibility_patch_enabled = ENV["CAPTURE_PATCH_ENABLED"] == "true"
