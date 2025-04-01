@@ -56,6 +56,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* Remove unnecessary ENABLE_RELOADING test suite flag.
+
+    *Joel Hawksley*
+
 * Add test coverage for uncovered code.
 
     *Joel Hawksley*
