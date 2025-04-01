@@ -123,7 +123,7 @@ module ViewComponent
       # @return [Boolean]
       # Whether ActiveSupport Notifications use the private name `"!render.view_component"`
       # or are made more publicly available via `"render.view_component"`.
-      # Will default to `false` in next major version.
+      # Will be removed in next major version.
       # Defaults to `true`.
 
       # @!attribute render_monkey_patch_enabled

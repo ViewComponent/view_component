@@ -14,6 +14,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Clarify that `config.use_deprecated_instrumentation_name` will be removed in v4.
+
+    *Joel Hawksley*
+
 ## 3.22.0
 
 * Rewrite `ViewComponents at GitHub` documentation as more general `Best practices`.
