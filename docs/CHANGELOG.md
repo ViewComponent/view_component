@@ -12,6 +12,10 @@ nav_order: 5
 
 ## 4.0.0
 
+* BREAKING: Remove `use_deprecated_instrumentation_name` configuration option. Events will always use `render.view_component` name.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove `preview_source` functionality. Consider using [Lookbook](https://lookbook.build/) instead.
 
     *Joel Hawksley*
