@@ -4,7 +4,7 @@ module ViewComponent::Cacheable
   extend ActiveSupport::Concern
 
   included do
-    class_attribute :__vc_cache_dependencies, default: []
+    class_attribute :__vc_cache_dependencies, default: [:format, :__vc_format]
 
     # For caching, such as #cache_if
     #
@@ -18,9 +18,8 @@ module ViewComponent::Cacheable
     # Render component from cache if possible
     #
     # @private
-    def __vc_render_cacheable(rendered_template, variant = nil, format = nil)
-      if view_cache_dependencies.present?
-        view_cache_dependencies = view_cache_dependencies + [variant, format]
+    def __vc_render_cacheable(rendered_template)
+      if view_cache_dependencies != [:format, :__vc_format]
         Rails.cache.fetch(view_cache_dependencies) do
           __vc_render_template(rendered_template)
         end
