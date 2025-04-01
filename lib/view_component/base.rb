@@ -115,7 +115,7 @@ module ViewComponent
       if render?
         rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
         if respond_to?(:__vc_render_cacheable)
-          __vc_render_cacheable(rendered_template)
+          __vc_render_cacheable(rendered_template, @__vc_variant, __vc_request&.format&.to_sym)
         else
           __vc_render_template(rendered_template)
         end
