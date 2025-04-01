@@ -1339,4 +1339,12 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector(".cache-component__cache-key", text: new_component.view_cache_dependencies)
     assert_selector(".cache-component__cache-message", text: "foo baz")
   end
+
+  def test_no_cache_compoennt
+    component = NoCacheComponent.new(foo: "foo", bar: "bar")
+    render_inline(component)
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo bar")
+  end
 end
