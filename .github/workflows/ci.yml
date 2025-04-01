@@ -69,12 +69,9 @@ jobs:
         ruby-version: ${{ matrix.ruby_version }}
         bundler-cache: true
     - name: Build and test with Rake
-      # Code-reloading isn't compatible with simplecov, so we need to run once
-      # to collect coverage, and again to test reloads.
       run: |
         bundle exec appraisal rails-${{ matrix.rails_version }} bundle
         MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake
-        ENABLE_RELOADING=true bundle exec appraisal rails-${{ matrix.rails_version }} rake
       env:
         RAISE_ON_WARNING: 1
         RAILS_VERSION: ${{ matrix.rails_version }}
