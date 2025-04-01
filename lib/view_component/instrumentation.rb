@@ -9,6 +9,8 @@ module ViewComponent # :nodoc:
     end
 
     def render_in(view_context, &block)
+      return super if !Rails.application.config.view_component.instrumentation_enabled.present?
+
       ActiveSupport::Notifications.instrument(
         "render.view_component",
         {
