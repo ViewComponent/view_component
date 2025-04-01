@@ -46,7 +46,7 @@ module ViewComponent
     initializer "view_component.enable_instrumentation" do |app|
       ActiveSupport.on_load(:view_component) do
         if app.config.view_component.instrumentation_enabled.present?
-          ViewComponent::Base.prepend(ViewComponent::Instrumentation)
+          ViewComponent::Base.include(ViewComponent::Instrumentation)
         end
       end
     end

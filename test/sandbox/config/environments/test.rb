@@ -29,7 +29,7 @@ Sandbox::Application.configure do
   config.action_controller.allow_forgery_protection = false
 
   config.view_component.show_previews = true
-  config.view_component.instrumentation_enabled = false
+  config.view_component.instrumentation_enabled = true
   config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
   config.view_component.test_controller = "IntegrationExamplesController"
   config.view_component.capture_compatibility_patch_enabled = ENV["CAPTURE_PATCH_ENABLED"] == "true"
