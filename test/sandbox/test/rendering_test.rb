@@ -16,10 +16,18 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5.0" => 77, "3.4.2" => 83, "3.3.7" => 84} : {"3.3.7" => 83, "3.2.8" => 92}
+      {"3.5.0" => 77, "3.4.2" => 107, "3.3.7" => 84} : {"3.3.7" => 83, "3.2.8" => 92}
 
     assert_allocations(**allocations) do
+      events = []
+
+      ActiveSupport::Notifications.subscribe("render.view_component") do |*args|
+        events << ActiveSupport::Notifications::Event.new(*args)
+      end
+
       render_inline(MyComponent.new)
+
+      assert_equal(events.size, 1)
     end
 
     assert_selector("div", text: "hello,world!")

@@ -15,10 +15,7 @@ To enable ActiveSupport notifications, use the `instrumentation_enabled` option:
 # config/application.rb
 # Enable ActiveSupport notifications for all ViewComponents
 config.view_component.instrumentation_enabled = true
-config.view_component.use_deprecated_instrumentation_name = false
 ```
-
-Setting `use_deprecated_instrumentation_name` configures the event name. If `false` the name is `"render.view_component"`. If `true` (default) the deprecated `"!render.view_component"` will be used.
 
 Subscribe to the event:
 

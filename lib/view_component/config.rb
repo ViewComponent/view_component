@@ -16,7 +16,6 @@ module ViewComponent
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
           instrumentation_enabled: false,
-          use_deprecated_instrumentation_name: true,
           view_component_path: "app/components",
           component_parent_class: nil,
           show_previews: Rails.env.development? || Rails.env.test?,
@@ -111,13 +110,6 @@ module ViewComponent
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
-
-      # @!attribute use_deprecated_instrumentation_name
-      # @return [Boolean]
-      # Whether ActiveSupport Notifications use the private name `"!render.view_component"`
-      # or are made more publicly available via `"render.view_component"`.
-      # Will default to `false` in next major version.
-      # Defaults to `true`.
 
       # @!attribute view_component_path
       # @return [String]

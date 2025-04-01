@@ -47,12 +47,6 @@ module ViewComponent
       ActiveSupport.on_load(:view_component) do
         if app.config.view_component.instrumentation_enabled.present?
           ViewComponent::Base.prepend(ViewComponent::Instrumentation)
-          if app.config.view_component.use_deprecated_instrumentation_name
-            ViewComponent::Deprecation.deprecation_warning(
-              "!render.view_component",
-              "Use the new instrumentation key `render.view_component` instead. See https://viewcomponent.org/guide/instrumentation.html"
-            )
-          end
         end
       end
     end
