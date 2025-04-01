@@ -463,19 +463,11 @@ To fix this issue, create a template for the example.
 
 Inline templates can only be defined once per-component.
 
-### `MultipleMatchingTemplatesForPreviewError`
-
-Found multiple templates for TEMPLATE_IDENTIFIER.
-
 ### `NilWithContentError`
 
 No content provided to `#with_content` for ViewComponent::NilWithContentError.
 
 To fix this issue, pass a value.
-
-### `NoMatchingTemplatesForPreviewError`
-
-Found 0 matches for templates for TEMPLATE_IDENTIFIER.
 
 ### `RedefinedSlotError`
 

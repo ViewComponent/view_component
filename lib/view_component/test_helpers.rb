@@ -18,18 +18,7 @@ module ViewComponent
       def assert_component_rendered
         assert_selector("body")
       end
-    rescue LoadError
-      # We don't have a test case for running an application without capybara installed.
-      # It's probably fine to leave this without coverage.
-      # :nocov:
-      if ENV["DEBUG"]
-        warn(
-          "WARNING in `ViewComponent::TestHelpers`: Add `capybara` " \
-          "to Gemfile to use Capybara assertions."
-        )
-      end
-
-      # :nocov:
+    rescue LoadError # We don't have a test case for running an application without capybara installed.
     end
 
     # Returns the result of a render_inline call.
@@ -278,11 +267,9 @@ module ViewComponent
 
     def __vc_test_helpers_preview_class
       result = if respond_to?(:described_class)
-        # :nocov:
-        raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
+        raise ArgumentError.new("`render_preview` expected a described_class, but it is nil.") if described_class.nil?
 
         "#{described_class}Preview"
-        # :nocov:
       else
         self.class.name.gsub("Test", "Preview")
       end
@@ -290,6 +277,5 @@ module ViewComponent
     rescue NameError
       raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
     end
-    # :nocov:
   end
 end
