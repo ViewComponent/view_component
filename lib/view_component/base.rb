@@ -118,7 +118,7 @@ module ViewComponent
       if render?
         rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
         if respond_to?(:__vc_render_cacheable)
-          __vc_render_cacheable(rendered_template, @__vc_variant, __vc_request&.format&.to_sym)
+          __vc_render_cacheable(rendered_template)
         else
           __vc_render_template(rendered_template)
         end
@@ -307,6 +307,13 @@ module ViewComponent
     # @private
     def __vc_request
       @__vc_request ||= controller.request if controller.respond_to?(:request)
+    end
+
+    # Fo use in caching
+    #
+    # @private
+    def __vc_format
+      __vc_request&.format&.to_sym
     end
 
     # The content passed to the component instance as a block.
