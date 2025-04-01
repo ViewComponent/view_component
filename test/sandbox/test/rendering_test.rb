@@ -16,7 +16,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5.0" => 77, "3.4.2" => 107, "3.3.7" => 84} : {"3.3.7" => 83, "3.2.8" => 92}
+      {"3.5.0" => 77, "3.4.2" => 107, "3.3.7" => 84} : {"3.3.7" => 83, "3.2.8" => 106}
 
     assert_allocations(**allocations) do
       events = []
