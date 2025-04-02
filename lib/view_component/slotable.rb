@@ -12,6 +12,7 @@ module ViewComponent
       singular: %i[content render].freeze,
       plural: %i[contents renders].freeze
     }.freeze
+    private_constant :RESERVED_NAMES
 
     # Setup component slot state
     included do

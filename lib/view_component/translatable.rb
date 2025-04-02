@@ -9,7 +9,10 @@ module ViewComponent
     extend ActiveSupport::Concern
 
     HTML_SAFE_TRANSLATION_KEY = /(?:_|\b)html\z/
+    private_constant :HTML_SAFE_TRANSLATION_KEY
+
     TRANSLATION_EXTENSIONS = %w[yml yaml].freeze
+    private_constant :TRANSLATION_EXTENSIONS
 
     included do
       class_attribute :i18n_backend, instance_writer: false, instance_predicate: false
