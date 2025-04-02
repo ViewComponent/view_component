@@ -8,7 +8,7 @@ require "yard/mattr_accessor_handler"
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
-  t.test_files = FileList["test/sandbox/**/*_test.rb", "test/view_component/**/*_test.rb"]
+  t.test_files = FileList["test/sandbox/**/*_test.rb", "test/view_component/**/*_test.rb", "test/rake_test.rb"]
 end
 
 Rake::TestTask.new(:engine_test) do |t|
@@ -100,7 +100,14 @@ namespace :docs do
 
     error_keys = registry.keys.select { |key| key.to_s.include?("Error::MESSAGE") }.map(&:to_s)
 
-    docs = ActionController::Base.new.render_to_string(
+    require "action_controller/test_case"
+
+    request = ActionDispatch::TestRequest.create
+    request.session = ActionController::TestSession.new
+    controller = ActionController::Base.new
+    controller.request = request
+
+    docs = controller.render_to_string(
       ViewComponent::DocsBuilderComponent.new(
         sections: [
           ViewComponent::DocsBuilderComponent::Section.new(
