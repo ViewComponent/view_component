@@ -42,8 +42,8 @@ module ViewComponent
         end
 
         if raise_errors
-          @component.validate_initialization_parameters!
-          @component.validate_collection_parameter!
+          @component.__vc_validate_initialization_parameters!
+          @component.__vc_validate_collection_parameter!
         end
 
         define_render_template_for

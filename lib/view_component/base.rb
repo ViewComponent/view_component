@@ -610,8 +610,8 @@ module ViewComponent
       # is accepted, as support for collection
       # rendering is optional.
       # @private
-      def validate_collection_parameter!(validate_default: false)
-        parameter = validate_default ? collection_parameter : provided_collection_parameter
+      def __vc_validate_collection_parameter!(validate_default: false)
+        parameter = validate_default ? __vc_collection_parameter : provided_collection_parameter
 
         return unless parameter
         return if initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
@@ -630,35 +630,35 @@ module ViewComponent
       # invalid parameters that could override the framework's
       # methods.
       # @private
-      def validate_initialization_parameters!
+      def __vc_validate_initialization_parameters!
         return unless initialize_parameter_names.include?(:content)
 
         raise ReservedParameterError.new(name, :content)
       end
 
       # @private
-      def collection_parameter
+      def __vc_collection_parameter
         provided_collection_parameter || name && name.demodulize.underscore.chomp("_component").to_sym
       end
 
       # @private
-      def collection_counter_parameter
-        :"#{collection_parameter}_counter"
+      def __vc_collection_counter_parameter
+        :"#{__vc_collection_parameter}_counter"
       end
 
       # @private
-      def counter_argument_present?
-        initialize_parameter_names.include?(collection_counter_parameter)
+      def __vc_counter_argument_present?
+        initialize_parameter_names.include?(__vc_collection_counter_parameter)
       end
 
       # @private
-      def collection_iteration_parameter
-        :"#{collection_parameter}_iteration"
+      def __vc_collection_iteration_parameter
+        :"#{__vc_collection_parameter}_iteration"
       end
 
       # @private
-      def iteration_argument_present?
-        initialize_parameter_names.include?(collection_iteration_parameter)
+      def __vc_iteration_argument_present?
+        initialize_parameter_names.include?(__vc_collection_iteration_parameter)
       end
 
       private
