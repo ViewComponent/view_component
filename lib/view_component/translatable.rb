@@ -37,7 +37,7 @@ module ViewComponent
         # In development it will become nil if the translations file is removed
         self.__vc_i18n_backend = if translation_files.any?
           I18nBackend.new(
-            __vc_i18n_scope: __vc_i18n_scope,
+            scope: __vc_i18n_scope,
             load_paths: translation_files
           )
         end
