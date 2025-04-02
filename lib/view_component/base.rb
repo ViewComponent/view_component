@@ -40,9 +40,6 @@ module ViewComponent
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
 
-    RESERVED_PARAMETER = :content
-    VC_INTERNAL_DEFAULT_FORMAT = :html
-
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -634,9 +631,9 @@ module ViewComponent
       # methods.
       # @private
       def validate_initialization_parameters!
-        return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
+        return unless initialize_parameter_names.include?(:content)
 
-        raise ReservedParameterError.new(name, RESERVED_PARAMETER)
+        raise ReservedParameterError.new(name, :content)
       end
 
       # @private
