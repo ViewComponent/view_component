@@ -19,8 +19,8 @@ module ViewComponent
     end
 
     class_methods do
-      def i18n_scope
-        @i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
+      def __vc_i18n_scope
+        @__vc_i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
       end
 
       def __vc_build_i18n_backend
@@ -37,7 +37,7 @@ module ViewComponent
         # In development it will become nil if the translations file is removed
         self.__vc_i18n_backend = if translation_files.any?
           I18nBackend.new(
-            i18n_scope: i18n_scope,
+            __vc_i18n_scope: __vc_i18n_scope,
             load_paths: translation_files
           )
         end
@@ -47,7 +47,7 @@ module ViewComponent
         scope = scope.join(".") if scope.is_a? Array
         key = key&.to_s unless key.is_a?(String)
         key = "#{scope}.#{key}" if scope
-        key = "#{i18n_scope}#{key}" if key.start_with?(".")
+        key = "#{__vc_i18n_scope}#{key}" if key.start_with?(".")
         key
       end
 
@@ -68,8 +68,8 @@ module ViewComponent
     class I18nBackend < ::I18n::Backend::Simple
       EMPTY_HASH = {}.freeze
 
-      def initialize(i18n_scope:, load_paths:)
-        @i18n_scope = i18n_scope.split(".").map(&:to_sym)
+      def initialize(__vc_i18n_scope:, load_paths:)
+        @__vc_i18n_scope = __vc_i18n_scope.split(".").map(&:to_sym)
         @load_paths = load_paths
       end
 
@@ -79,7 +79,7 @@ module ViewComponent
       end
 
       def scope_data(data)
-        @i18n_scope.reverse_each do |part|
+        @__vc_i18n_scope.reverse_each do |part|
           data = {part => data}
         end
         data
@@ -102,7 +102,7 @@ module ViewComponent
 
       html_escape_translation_options!(options) if as_html
 
-      if key.start_with?(i18n_scope + ".")
+      if key.start_with?(__vc_i18n_scope + ".")
         translated =
           catch(:exception) do
             __vc_i18n_backend.translate(locale, key, options)
@@ -121,9 +121,9 @@ module ViewComponent
     end
     alias_method :t, :translate
 
-    # Exposes .i18n_scope as an instance method
-    def i18n_scope
-      self.class.i18n_scope
+    # Exposes .__vc_i18n_scope as an instance method
+    def __vc_i18n_scope
+      self.class.__vc_i18n_scope
     end
 
     private
