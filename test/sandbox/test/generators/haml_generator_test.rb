@@ -15,6 +15,8 @@ class HamlGeneratorTest < Rails::Generators::TestCase
   def test_component_generator
     run_generator
 
+    raise
+
     assert_file "app/components/user_component.html.haml" do |view|
       assert_match(/%div Add User template here/, view)
     end
