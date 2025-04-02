@@ -24,7 +24,7 @@ module ViewComponent
       end
 
       def build_i18n_backend
-        return if compiled?
+        return if __vc_compiled?
 
         # We need to load the translations files from the ancestors so a component
         # can inherit translations from its parent and is able to overwrite them.

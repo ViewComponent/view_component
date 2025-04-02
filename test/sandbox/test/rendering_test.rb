@@ -97,14 +97,14 @@ class RenderingTest < ViewComponent::TestCase
   def test_render_without_template
     render_inline(InlineComponent.new)
 
-    assert_predicate InlineComponent, :compiled?
+    assert_predicate InlineComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
   def test_render_child_without_template
     render_inline(InlineChildComponent.new)
 
-    assert_predicate InlineChildComponent, :compiled?
+    assert_predicate InlineChildComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
@@ -223,7 +223,7 @@ class RenderingTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantComponent.new)
 
-      assert_predicate InlineVariantComponent, :compiled?
+      assert_predicate InlineVariantComponent, :__vc_compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
   end
@@ -232,7 +232,7 @@ class RenderingTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantChildComponent.new)
 
-      assert_predicate InlineVariantChildComponent, :compiled?
+      assert_predicate InlineVariantChildComponent, :__vc_compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
   end
@@ -437,7 +437,7 @@ class RenderingTest < ViewComponent::TestCase
     # but that might have been thrown away if code-reloading is enabled
     skip unless Rails.application.config.cache_classes
 
-    assert UnreferencedComponent.compiled?
+    assert UnreferencedComponent.__vc_compiled?
   end
 
   def test_compiles_components_without_initializers
@@ -445,7 +445,7 @@ class RenderingTest < ViewComponent::TestCase
     # but that might have been thrown away if code-reloading is enabled
     skip unless Rails.application.config.cache_classes
 
-    assert MissingInitializerComponent.compiled?
+    assert MissingInitializerComponent.__vc_compiled?
   end
 
   def test_renders_when_initializer_is_not_defined
@@ -786,7 +786,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_inherited_inline_component_inherits_inline_method
     render_inline(InlineInheritedComponent.new)
 
-    assert_predicate InlineInheritedComponent, :compiled?
+    assert_predicate InlineInheritedComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 

@@ -507,7 +507,7 @@ module ViewComponent
         # eager loading is disabled and the parent component is rendered before the child. In
         # such a scenario, the parent will override ViewComponent::Base#render_template_for,
         # meaning it will not be called for any children and thus not compile their templates.
-        if !child.instance_methods(false).include?(:render_template_for) && !child.compiled?
+        if !child.instance_methods(false).include?(:render_template_for) && !child.__vc_compiled?
           child.class_eval <<~RUBY, __FILE__, __LINE__ + 1
             def render_template_for(requested_details)
               # Force compilation here so the compiler always redefines render_template_for.
@@ -553,13 +553,13 @@ module ViewComponent
       end
 
       # @private
-      def compiled?
+      def __vc_compiled?
         compiler.compiled?
       end
 
       # @private
       def ensure_compiled
-        compile unless compiled?
+        compile unless __vc_compiled?
       end
 
       # @private
