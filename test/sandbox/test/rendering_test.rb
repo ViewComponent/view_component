@@ -433,18 +433,10 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_compiles_unrendered_component
-    # The UnreferencedComponent will get compiled at boot,
-    # but that might have been thrown away if code-reloading is enabled
-    skip if Rails.application.config.enable_reloading
-
     assert UnreferencedComponent.compiled?
   end
 
   def test_compiles_components_without_initializers
-    # MissingInitializerComponent will get compiled at boot,
-    # but that might have been thrown away if code-reloading is enabled
-    skip if Rails.application.config.enable_reloading
-
     assert MissingInitializerComponent.compiled?
   end
 

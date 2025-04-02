@@ -16,7 +16,7 @@ Sandbox::Application.configure do
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
 
-  config.enable_reloading = true
+  config.enable_reloading = false
 
   # Show full error reports and disable caching
   config.consider_all_requests_local = true
