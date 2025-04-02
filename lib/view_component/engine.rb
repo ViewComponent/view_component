@@ -73,7 +73,7 @@ module ViewComponent
     end
 
     initializer "compiler mode" do |_app|
-      ViewComponent::Compiler.development_mode = (Rails.env.development? || Rails.env.test?)
+      ViewComponent::Compiler.__vc_development_mode = (Rails.env.development? || Rails.env.test?)
     end
 
     config.after_initialize do |app|

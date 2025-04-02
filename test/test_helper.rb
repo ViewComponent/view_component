@@ -174,11 +174,11 @@ def with_default_preview_layout(layout, &block)
 end
 
 def with_compiler_development_mode(mode)
-  previous_mode = ViewComponent::Compiler.development_mode
-  ViewComponent::Compiler.development_mode = mode
+  previous_mode = ViewComponent::Compiler.__vc_development_mode
+  ViewComponent::Compiler.__vc_development_mode = mode
   yield
 ensure
-  ViewComponent::Compiler.development_mode = previous_mode
+  ViewComponent::Compiler.__vc_development_mode = previous_mode
 end
 
 def capture_warnings(&block)
