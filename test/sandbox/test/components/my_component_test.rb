@@ -4,7 +4,7 @@ require "test_helper"
 
 class MyComponentTest < ViewComponent::TestCase
   def setup
-    ViewComponent::Preview.load_previews
+    ViewComponent::Preview.__vc_load_previews
   end
 
   def test_render_preview

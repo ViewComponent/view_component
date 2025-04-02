@@ -4,7 +4,7 @@ require "test_helper"
 
 class NilDescribedClassTest < ViewComponent::TestCase
   def setup
-    ViewComponent::Preview.load_previews
+    ViewComponent::Preview.__vc_load_previews
   end
 
   def described_class
