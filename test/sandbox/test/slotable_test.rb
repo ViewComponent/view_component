@@ -250,7 +250,7 @@ class SlotableTest < ViewComponent::TestCase
     new_component_class = Class.new(ViewComponent::Base)
     # this returned:
     # [SlotsComponent::Subtitle, SlotsComponent::Tab...]
-    assert_empty new_component_class.__vc_registered_slots
+    assert_empty new_component_class.registered_slots
   end
 
   def test_renders_slots_with_before_render_hook

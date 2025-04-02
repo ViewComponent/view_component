@@ -3,7 +3,7 @@ module ViewComponent
     def get_slot(slot_name)
       @__vc_set_slots ||= {}
 
-      return super unless !@__vc_set_slots[slot_name] && (default_method = __vc_registered_slots[slot_name][:default_method])
+      return super unless !@__vc_set_slots[slot_name] && (default_method = registered_slots[slot_name][:default_method])
 
       renderable_value = send(default_method)
       slot = Slot.new(self)
