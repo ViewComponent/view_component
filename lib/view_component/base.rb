@@ -554,7 +554,7 @@ module ViewComponent
 
       # @private
       def __vc_compiled?
-        compiler.compiled?
+        __vc_compiler.compiled?
       end
 
       # @private
@@ -564,11 +564,11 @@ module ViewComponent
 
       # @private
       def __vc_compile(raise_errors: false, force: false)
-        compiler.compile(raise_errors: raise_errors, force: force)
+        __vc_compiler.compile(raise_errors: raise_errors, force: force)
       end
 
       # @private
-      def compiler
+      def __vc_compiler
         @__vc_compiler ||= Compiler.new(self)
       end
 
