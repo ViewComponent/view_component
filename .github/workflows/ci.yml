@@ -72,8 +72,6 @@ jobs:
       run: |
         bundle exec appraisal rails-${{ matrix.rails_version }} bundle
         MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake
-        MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake test_rake
-        MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake test_engine
       env:
         RAISE_ON_WARNING: 1
         RAILS_VERSION: ${{ matrix.rails_version }}

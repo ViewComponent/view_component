@@ -147,4 +147,4 @@ namespace :docs do
   end
 end
 
-task default: [:test, :engine_test]
+task default: [:test, :test_engine, :test_rake]
