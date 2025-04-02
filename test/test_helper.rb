@@ -11,6 +11,7 @@ if ENV["MEASURE_COVERAGE"]
 
     formatter SimpleCov::Formatter::Console
   end
+  Rails.application.eager_load!
 end
 
 require "bundler/setup"
