@@ -31,7 +31,7 @@ module ViewComponent
         gather_templates
 
         if self.class.development_mode && @templates.any?(&:requires_compiled_superclass?)
-          @component.superclass.compile(raise_errors: raise_errors)
+          @component.superclass.__vc_compile(raise_errors: raise_errors)
         end
 
         if template_errors.present?

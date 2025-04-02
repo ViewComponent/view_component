@@ -75,7 +75,7 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, &block)
-      self.class.compile(raise_errors: true)
+      self.class.__vc_compile(raise_errors: true)
 
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
@@ -501,7 +501,7 @@ module ViewComponent
       def inherited(child)
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
-        compile
+        __vc_compile
 
         # Give the child its own personal #render_template_for to protect against the case when
         # eager loading is disabled and the parent component is rendered before the child. In
@@ -512,8 +512,8 @@ module ViewComponent
             def render_template_for(requested_details)
               # Force compilation here so the compiler always redefines render_template_for.
               # This is mostly a safeguard to prevent infinite recursion.
-              self.class.compile(raise_errors: true, force: true)
-              # .compile replaces this method; call the new one
+              self.class.__vc_compile(raise_errors: true, force: true)
+              # .__vc_compile replaces this method; call the new one
               render_template_for(requested_details)
             end
           RUBY
@@ -558,12 +558,12 @@ module ViewComponent
       end
 
       # @private
-      def ensure_compiled
-        compile unless __vc_compiled?
+      def __vc_ensure_compiled
+        __vc_compile unless __vc_compiled?
       end
 
       # @private
-      def compile(raise_errors: false, force: false)
+      def __vc_compile(raise_errors: false, force: false)
         compiler.compile(raise_errors: raise_errors, force: force)
       end
 

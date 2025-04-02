@@ -54,7 +54,7 @@ module ViewComponent
       def translate(key = nil, **options)
         return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
-        ensure_compiled
+        __vc_ensure_compiled
 
         locale = options.delete(:locale) || ::I18n.locale
         key = i18n_key(key, options.delete(:scope))
