@@ -211,6 +211,21 @@ module ViewComponent
         super
       end
 
+      # Called by the compiler, as instance methods are not defined when slots are first registered
+      def register_default_slots
+        __vc_registered_slots.each do |slot_name, config|
+          config[:default_method] = instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
+
+          __vc_registered_slots[slot_name] = config
+        end
+      end
+
+      private
+
+      def register_slot(slot_name, **kwargs)
+        __vc_registered_slots[slot_name] = define_slot(slot_name, **kwargs)
+      end
+
       def register_polymorphic_slot(slot_name, types, collection:)
         self::GeneratedSlotMethods.define_method(slot_name) do
           get_slot(slot_name)
@@ -261,21 +276,6 @@ module ViewComponent
           collection: collection,
           renderable_hash: renderable_hash
         }
-      end
-
-      # Called by the compiler, as instance methods are not defined when slots are first registered
-      def register_default_slots
-        __vc_registered_slots.each do |slot_name, config|
-          config[:default_method] = instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
-
-          __vc_registered_slots[slot_name] = config
-        end
-      end
-
-      private
-
-      def register_slot(slot_name, **kwargs)
-        __vc_registered_slots[slot_name] = define_slot(slot_name, **kwargs)
       end
 
       def define_slot(slot_name, collection:, callable:)
