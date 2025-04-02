@@ -8,10 +8,16 @@ require "yard/mattr_accessor_handler"
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
-  t.test_files = FileList["test/sandbox/**/*_test.rb", "test/view_component/**/*_test.rb"]
+  t.test_files = FileList["test/sandbox/**/*_test.rb"]
 end
 
-Rake::TestTask.new(:engine_test) do |t|
+Rake::TestTask.new(:test_rake) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/rake_test.rb"]
+end
+
+Rake::TestTask.new(:test_engine) do |t|
   t.libs << "test/test_engine"
   t.libs << "test/test_engine/lib"
   t.test_files = FileList["test/test_engine/**/*_test.rb"]
@@ -100,7 +106,14 @@ namespace :docs do
 
     error_keys = registry.keys.select { |key| key.to_s.include?("Error::MESSAGE") }.map(&:to_s)
 
-    docs = ActionController::Base.new.render_to_string(
+    require "action_controller/test_case"
+
+    request = ActionDispatch::TestRequest.create
+    request.session = ActionController::TestSession.new
+    controller = ActionController::Base.new
+    controller.request = request
+
+    docs = controller.render_to_string(
       ViewComponent::DocsBuilderComponent.new(
         sections: [
           ViewComponent::DocsBuilderComponent::Section.new(
@@ -128,10 +141,12 @@ namespace :docs do
       )
     ).chomp
 
-    File.open("docs/api.md", "w") do |f|
-      f.puts(docs)
+    if !ENV["RAILS_ENV"].present?
+      File.open("docs/api.md", "w") do |f|
+        f.puts(docs)
+      end
     end
   end
 end
 
-task default: [:test, :engine_test]
+task default: [:test, :test_engine, :test_rake]
