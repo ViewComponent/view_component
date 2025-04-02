@@ -5,15 +5,6 @@ require "simplecov"
 require "simplecov-console"
 require "rails/version"
 
-if ENV["MEASURE_COVERAGE"]
-  SimpleCov.start do
-    command_name "minitest-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
-
-    formatter SimpleCov::Formatter::Console
-  end
-  Rails.application.eager_load!
-end
-
 require "bundler/setup"
 require "pathname"
 require "minitest/autorun"
@@ -39,6 +30,15 @@ ViewComponent::Deprecation.behavior = :silence
 
 require File.expand_path("sandbox/config/environment.rb", __dir__)
 require "rails/test_help"
+
+if ENV["MEASURE_COVERAGE"]
+  SimpleCov.start do
+    command_name "minitest-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
+
+    formatter SimpleCov::Formatter::Console
+  end
+  Rails.application.eager_load!
+end
 
 require "capybara/cuprite"
 
