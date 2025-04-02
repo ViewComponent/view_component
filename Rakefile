@@ -141,8 +141,10 @@ namespace :docs do
       )
     ).chomp
 
-    File.open("docs/api.md", "w") do |f|
-      f.puts(docs)
+    if !ENV["RAILS_ENV"].present?
+      File.open("docs/api.md", "w") do |f|
+        f.puts(docs)
+      end
     end
   end
 end
