@@ -14,11 +14,8 @@ module ViewComponent
     }.freeze
     private_constant :RESERVED_NAMES
 
-    # Setup component slot state
     included do
-      # Hash of registered Slots
-      class_attribute :registered_slots
-      self.registered_slots = {}
+      class_attribute :registered_slots, default: {}
     end
 
     class_methods do
