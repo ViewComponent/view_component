@@ -68,8 +68,8 @@ module ViewComponent
     class I18nBackend < ::I18n::Backend::Simple
       EMPTY_HASH = {}.freeze
 
-      def initialize(__vc_i18n_scope:, load_paths:)
-        @__vc_i18n_scope = __vc_i18n_scope.split(".").map(&:to_sym)
+      def initialize(scope:, load_paths:)
+        @__vc_i18n_scope = scope.split(".").map(&:to_sym)
         @load_paths = load_paths
       end
 
