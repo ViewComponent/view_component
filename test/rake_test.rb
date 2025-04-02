@@ -11,6 +11,8 @@ module ViewComponent
       assert_nothing_raised do
         Rake::Task["docs:build"].invoke
       end
+
+      Rake::Task.clear
     end
   end
 end
