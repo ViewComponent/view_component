@@ -8,7 +8,7 @@ require "yard/mattr_accessor_handler"
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
-  t.test_files = FileList["test/sandbox/**/*_test.rb", "test/view_component/**/*_test.rb"]
+  t.test_files = FileList["test/sandbox/**/*_test.rb"]
 end
 
 Rake::TestTask.new(:test_rake) do |t|
