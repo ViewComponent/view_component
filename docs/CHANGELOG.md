@@ -60,6 +60,10 @@ nav_order: 5
 
     *Stephen Nelson*
 
+* BREAKING: Rename internal methods to have `__vc_` prefix if they should not be used by consumers. Make internal contants private. Make `Collection#components`, `Slotable#register_polymorphic_slot` private.
+
+    *Joel Hawksley*
+
 * `ViewComponentsSystemTestController` should not exist outside of test environment
 
     *Joel Hawksley*
