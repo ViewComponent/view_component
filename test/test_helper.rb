@@ -6,7 +6,7 @@ require "simplecov-console"
 require "rails/version"
 
 if ENV["MEASURE_COVERAGE"]
-  SimpleCov.start do
+  SimpleCov.start :rails do
     command_name "minitest-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
 
     formatter SimpleCov::Formatter::Console
