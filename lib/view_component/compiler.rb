@@ -49,7 +49,7 @@ module ViewComponent
         define_render_template_for
 
         @component.register_default_slots
-        @component.build_i18n_backend
+        @component.__vc_build_i18n_backend
 
         CompileCache.register(@component)
       end

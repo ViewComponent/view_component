@@ -23,7 +23,7 @@ module ViewComponent
         @i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
       end
 
-      def build_i18n_backend
+      def __vc_build_i18n_backend
         return if __vc_compiled?
 
         # We need to load the translations files from the ancestors so a component
