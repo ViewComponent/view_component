@@ -13,6 +13,8 @@ if ENV["MEASURE_COVERAGE"]
   end
 end
 
+require "view_component/version"
+
 ENV["RAILS_ENV"] = "test"
 require File.expand_path("sandbox/config/environment.rb", __dir__)
 require "rails/test_help"
