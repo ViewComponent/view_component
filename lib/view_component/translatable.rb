@@ -43,7 +43,7 @@ module ViewComponent
         end
       end
 
-      def i18n_key(key, scope = nil)
+      def __vc_i18n_key(key, scope = nil)
         scope = scope.join(".") if scope.is_a? Array
         key = key&.to_s unless key.is_a?(String)
         key = "#{scope}.#{key}" if scope
@@ -57,7 +57,7 @@ module ViewComponent
         __vc_ensure_compiled
 
         locale = options.delete(:locale) || ::I18n.locale
-        key = i18n_key(key, options.delete(:scope))
+        key = __vc_i18n_key(key, options.delete(:scope))
 
         __vc_i18n_backend.translate(locale, key, options)
       end
@@ -97,7 +97,7 @@ module ViewComponent
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
       locale = options.delete(:locale) || ::I18n.locale
-      key = self.class.i18n_key(key, options.delete(:scope))
+      key = self.class.__vc_i18n_key(key, options.delete(:scope))
       as_html = HTML_SAFE_TRANSLATION_KEY.match?(key)
 
       html_escape_translation_options!(options) if as_html
@@ -121,7 +121,6 @@ module ViewComponent
     end
     alias_method :t, :translate
 
-    # Exposes .__vc_i18n_scope as an instance method
     def __vc_i18n_scope
       self.class.__vc_i18n_scope
     end
