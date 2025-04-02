@@ -22,6 +22,12 @@ module ViewComponent
       end.join(rendered_spacer(view_context)).html_safe
     end
 
+    def each(&block)
+      components.each(&block)
+    end
+
+    private
+
     def components
       return @components if defined? @components
 
@@ -35,12 +41,6 @@ module ViewComponent
         end
       end
     end
-
-    def each(&block)
-      components.each(&block)
-    end
-
-    private
 
     def initialize(component, object, spacer_component, **options)
       @component = component
