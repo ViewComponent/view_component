@@ -217,4 +217,4 @@ will give teams some time to migrate before running into deprecation warnings.
 
 ## May 2024: ViewComponent 4
 
-ViewComponent 4 is released and the project is moved into Long-Term Support, recognizing the feature-completeness of framework.
+ViewComponent 4 is released and the project is moved into Long-Term Support, recognizing the feature-completeness of the framework.
