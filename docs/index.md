@@ -8,6 +8,8 @@ nav_order: 1
 
 A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
+_As of version 4, ViewComponent is in Long-Term Support and generally considered feature-complete._
+
 ## What's a ViewComponent?
 
 ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
