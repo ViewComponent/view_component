@@ -40,9 +40,6 @@ module ViewComponent
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
 
-    RESERVED_PARAMETER = :content
-    VC_INTERNAL_DEFAULT_FORMAT = :html
-
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -78,7 +75,7 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, &block)
-      self.class.compile(raise_errors: true)
+      self.class.__vc_compile(raise_errors: true)
 
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
@@ -504,19 +501,19 @@ module ViewComponent
       def inherited(child)
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
-        compile
+        __vc_compile
 
         # Give the child its own personal #render_template_for to protect against the case when
         # eager loading is disabled and the parent component is rendered before the child. In
         # such a scenario, the parent will override ViewComponent::Base#render_template_for,
         # meaning it will not be called for any children and thus not compile their templates.
-        if !child.instance_methods(false).include?(:render_template_for) && !child.compiled?
+        if !child.instance_methods(false).include?(:render_template_for) && !child.__vc_compiled?
           child.class_eval <<~RUBY, __FILE__, __LINE__ + 1
             def render_template_for(requested_details)
               # Force compilation here so the compiler always redefines render_template_for.
               # This is mostly a safeguard to prevent infinite recursion.
-              self.class.compile(raise_errors: true, force: true)
-              # .compile replaces this method; call the new one
+              self.class.__vc_compile(raise_errors: true, force: true)
+              # .__vc_compile replaces this method; call the new one
               render_template_for(requested_details)
             end
           RUBY
@@ -556,22 +553,22 @@ module ViewComponent
       end
 
       # @private
-      def compiled?
-        compiler.compiled?
+      def __vc_compiled?
+        __vc_compiler.compiled?
       end
 
       # @private
-      def ensure_compiled
-        compile unless compiled?
+      def __vc_ensure_compiled
+        __vc_compile unless __vc_compiled?
       end
 
       # @private
-      def compile(raise_errors: false, force: false)
-        compiler.compile(raise_errors: raise_errors, force: force)
+      def __vc_compile(raise_errors: false, force: false)
+        __vc_compiler.compile(raise_errors: raise_errors, force: force)
       end
 
       # @private
-      def compiler
+      def __vc_compiler
         @__vc_compiler ||= Compiler.new(self)
       end
 
@@ -613,8 +610,8 @@ module ViewComponent
       # is accepted, as support for collection
       # rendering is optional.
       # @private
-      def validate_collection_parameter!(validate_default: false)
-        parameter = validate_default ? collection_parameter : provided_collection_parameter
+      def __vc_validate_collection_parameter!(validate_default: false)
+        parameter = validate_default ? __vc_collection_parameter : provided_collection_parameter
 
         return unless parameter
         return if initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
@@ -633,35 +630,35 @@ module ViewComponent
       # invalid parameters that could override the framework's
       # methods.
       # @private
-      def validate_initialization_parameters!
-        return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
+      def __vc_validate_initialization_parameters!
+        return unless initialize_parameter_names.include?(:content)
 
-        raise ReservedParameterError.new(name, RESERVED_PARAMETER)
+        raise ReservedParameterError.new(name, :content)
       end
 
       # @private
-      def collection_parameter
+      def __vc_collection_parameter
         provided_collection_parameter || name && name.demodulize.underscore.chomp("_component").to_sym
       end
 
       # @private
-      def collection_counter_parameter
-        :"#{collection_parameter}_counter"
+      def __vc_collection_counter_parameter
+        :"#{__vc_collection_parameter}_counter"
       end
 
       # @private
-      def counter_argument_present?
-        initialize_parameter_names.include?(collection_counter_parameter)
+      def __vc_counter_argument_present?
+        initialize_parameter_names.include?(__vc_collection_counter_parameter)
       end
 
       # @private
-      def collection_iteration_parameter
-        :"#{collection_parameter}_iteration"
+      def __vc_collection_iteration_parameter
+        :"#{__vc_collection_parameter}_iteration"
       end
 
       # @private
-      def iteration_argument_present?
-        initialize_parameter_names.include?(collection_iteration_parameter)
+      def __vc_iteration_argument_present?
+        initialize_parameter_names.include?(__vc_collection_iteration_parameter)
       end
 
       private

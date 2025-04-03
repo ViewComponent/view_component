@@ -68,12 +68,12 @@ module ViewComponent
 
     initializer "view_component.eager_load_actions" do
       ActiveSupport.on_load(:after_initialize) do
-        ViewComponent::Base.descendants.each(&:compile) if Rails.application.config.eager_load
+        ViewComponent::Base.descendants.each(&:__vc_compile) if Rails.application.config.eager_load
       end
     end
 
     initializer "compiler mode" do |_app|
-      ViewComponent::Compiler.development_mode = (Rails.env.development? || Rails.env.test?)
+      ViewComponent::Compiler.__vc_development_mode = (Rails.env.development? || Rails.env.test?)
     end
 
     config.after_initialize do |app|

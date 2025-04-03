@@ -2,6 +2,9 @@
 
 module ViewComponent
   class Template
+    DEFAULT_FORMAT = :html
+    private_constant :DEFAULT_FORMAT
+
     DataWithSource = Struct.new(:format, :identifier, :short_identifier, :type, keyword_init: true)
 
     attr_reader :details
@@ -119,7 +122,7 @@ module ViewComponent
     end
 
     def default_format?
-      format.nil? || format == ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
+      format.nil? || format == DEFAULT_FORMAT
     end
     alias_method :html?, :default_format?
 
@@ -145,7 +148,7 @@ module ViewComponent
       this_source.rstrip! if @component.strip_trailing_whitespace?
 
       short_identifier = defined?(Rails.root) ? @path.sub("#{Rails.root}/", "") : @path
-      format = self.format || ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT
+      format = self.format || DEFAULT_FORMAT
       type = ActionView::Template::Types[format]
 
       handler.call(DataWithSource.new(format:, identifier: @path, short_identifier:, type:), this_source)

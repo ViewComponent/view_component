@@ -13,7 +13,7 @@ class RenderingTest < ViewComponent::TestCase
     # Stabilize compilation status ahead of testing allocations to simulate rendering
     # performance with compiled component
     ViewComponent::CompileCache.cache.delete(MyComponent)
-    MyComponent.ensure_compiled
+    MyComponent.__vc_ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
       {"3.5.0" => 79, "3.4.2" => 85, "3.3.7" => 86} : {"3.3.7" => 85, "3.2.8" => 84}
@@ -97,14 +97,14 @@ class RenderingTest < ViewComponent::TestCase
   def test_render_without_template
     render_inline(InlineComponent.new)
 
-    assert_predicate InlineComponent, :compiled?
+    assert_predicate InlineComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
   def test_render_child_without_template
     render_inline(InlineChildComponent.new)
 
-    assert_predicate InlineChildComponent, :compiled?
+    assert_predicate InlineChildComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
@@ -223,7 +223,7 @@ class RenderingTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantComponent.new)
 
-      assert_predicate InlineVariantComponent, :compiled?
+      assert_predicate InlineVariantComponent, :__vc_compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
   end
@@ -232,7 +232,7 @@ class RenderingTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantChildComponent.new)
 
-      assert_predicate InlineVariantChildComponent, :compiled?
+      assert_predicate InlineVariantChildComponent, :__vc_compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
   end
@@ -437,7 +437,7 @@ class RenderingTest < ViewComponent::TestCase
     # but that might have been thrown away if code-reloading is enabled
     skip unless Rails.application.config.cache_classes
 
-    assert UnreferencedComponent.compiled?
+    assert UnreferencedComponent.__vc_compiled?
   end
 
   def test_compiles_components_without_initializers
@@ -445,7 +445,7 @@ class RenderingTest < ViewComponent::TestCase
     # but that might have been thrown away if code-reloading is enabled
     skip unless Rails.application.config.cache_classes
 
-    assert MissingInitializerComponent.compiled?
+    assert MissingInitializerComponent.__vc_compiled?
   end
 
   def test_renders_when_initializer_is_not_defined
@@ -733,7 +733,7 @@ class RenderingTest < ViewComponent::TestCase
     with_new_cache do
       exception =
         assert_raises ViewComponent::ReservedParameterError do
-          InvalidParametersComponent.compile(raise_errors: true)
+          InvalidParametersComponent.__vc_compile(raise_errors: true)
         end
 
       assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
@@ -744,7 +744,7 @@ class RenderingTest < ViewComponent::TestCase
     with_new_cache do
       exception =
         assert_raises ViewComponent::ReservedParameterError do
-          InvalidNamedParametersComponent.compile(raise_errors: true)
+          InvalidNamedParametersComponent.__vc_compile(raise_errors: true)
         end
 
       assert_match(
@@ -786,7 +786,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_inherited_inline_component_inherits_inline_method
     render_inline(InlineInheritedComponent.new)
 
-    assert_predicate InlineInheritedComponent, :compiled?
+    assert_predicate InlineInheritedComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
@@ -975,7 +975,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_inherited_component_renders_when_lazy_loading
     # Simulate lazy loading by manually removing the classes in question. This will completely
-    # undo the changes made by self.class.compile and friends, forcing a compile the next time
+    # undo the changes made by self.class.__vc_compile and friends, forcing a compile the next time
     # #render_template_for is called. This shouldn't be necessary except in the test environment,
     # since eager loading is turned on here.
     Object.send(:remove_const, :MyComponent) if defined?(MyComponent)

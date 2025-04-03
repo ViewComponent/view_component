@@ -5,7 +5,7 @@ require "test_helper"
 
 class IntegrationTest < ActionDispatch::IntegrationTest
   def setup
-    ViewComponent::Preview.load_previews
+    ViewComponent::Preview.__vc_load_previews
   end
 
   def test_rendering_component_in_a_view
@@ -110,7 +110,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "div", "hello world"
       assert_response :success
 
-      compile_method_lines = UncompilableComponent.method(:compile).source.split("\n")
+      compile_method_lines = UncompilableComponent.method(:__vc_compile).source.split("\n")
       compile_method_lines.insert(1, 'raise "this should not happen" if self.name == "UncompilableComponent"')
       UncompilableComponent.instance_eval compile_method_lines.join("\n")
 
@@ -605,7 +605,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       Rails.env = "production".inquiry
 
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal false, ViewComponent::Compiler.development_mode
+      assert_equal false, ViewComponent::Compiler.__vc_development_mode
     ensure
       Rails.env = old_env
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
@@ -615,12 +615,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_sets_the_compiler_mode_in_development_mode
     Rails.env.stub :development?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal true, ViewComponent::Compiler.development_mode
+      assert_equal true, ViewComponent::Compiler.__vc_development_mode
     end
 
     Rails.env.stub :test?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal true, ViewComponent::Compiler.development_mode
+      assert_equal true, ViewComponent::Compiler.__vc_development_mode
     end
   end
 

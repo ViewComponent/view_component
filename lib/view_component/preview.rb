@@ -33,7 +33,7 @@ module ViewComponent # :nodoc:
     class << self
       # Returns all component preview classes.
       def all
-        load_previews
+        __vc_load_previews
 
         descendants
       end
@@ -92,7 +92,8 @@ module ViewComponent # :nodoc:
           .sub(/\..*$/, "")
       end
 
-      def load_previews
+      # @private
+      def __vc_load_previews
         Array(preview_paths).each do |preview_path|
           Dir["#{preview_path}/**/*preview.rb"].sort.each { |file| require_dependency file }
         end

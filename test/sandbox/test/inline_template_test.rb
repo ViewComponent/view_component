@@ -114,7 +114,7 @@ class InlineErbTest < ViewComponent::TestCase
   end
 
   test "inherits template_language" do
-    assert_equal "slim", InheritedInlineSlimComponent.inline_template_language
+    assert_equal "slim", InheritedInlineSlimComponent.__vc_inline_template_language
   end
 
   test "subclassed erb works" do
