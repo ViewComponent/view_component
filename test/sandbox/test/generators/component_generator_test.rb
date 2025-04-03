@@ -132,7 +132,6 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/user_component.html.erb"
   end
 
-
   def test_invoking_slim_template_engine
     run_generator %w[user --template-engine slim]
 

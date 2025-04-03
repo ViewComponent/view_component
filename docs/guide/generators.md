@@ -164,7 +164,6 @@ bin/rails generate view_component:component Example title --inline
       invoke  erb
 ```
 
-
 ### Use [call method](/guide/templates.html#call) (no template file)
 
 ```console

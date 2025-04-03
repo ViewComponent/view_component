@@ -3,7 +3,7 @@
 module ViewComponent
   module AbstractGenerator
     def copy_view_file
-      template("component.html.#{engine_name}", destination) unless (options["inline"] || options["call"])
+      template("component.html.#{engine_name}", destination) unless options["inline"] || options["call"]
     end
 
     private
