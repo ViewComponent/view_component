@@ -190,6 +190,8 @@ module ViewComponent
       true
     end
 
+    # Override the ActionView::Base initializer so that components
+    # do not need to define their own initializers.
     # @private
     def initialize(*)
     end

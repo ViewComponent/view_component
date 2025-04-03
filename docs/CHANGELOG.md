@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Changelog
-nav_order: 5
+nav_order: 6
 ---
 
 <!-- Add unreleased changes under the "main" heading. -->
@@ -99,6 +99,14 @@ nav_order: 5
 * Remove unnecessary `respond_to` checks.
 
     *Tiago Menegaz*, *Joel Hawksley*
+
+* Add documentation on how ViewComponent works.
+
+    *Joel Hawksley*
+
+* Clarify that `config.use_deprecated_instrumentation_name` will be removed in v4.
+
+    *Joel Hawksley*
 
 ## 3.22.0
 
