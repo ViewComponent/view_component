@@ -9,6 +9,7 @@ require "view_component/config"
 require "view_component/errors"
 require "view_component/inline_template"
 require "view_component/preview"
+require "view_component/request_details"
 require "view_component/slotable"
 require "view_component/slotable_default"
 require "view_component/template"
@@ -39,9 +40,6 @@ module ViewComponent
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
 
-    RESERVED_PARAMETER = :content
-    VC_INTERNAL_DEFAULT_FORMAT = :html
-
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -49,8 +47,7 @@ module ViewComponent
     delegate :content_security_policy_nonce, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
-    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
-    self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
+    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
     attr_accessor :__vc_original_view_context
 
@@ -67,6 +64,8 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
+    using RequestDetails
+
     # Entrypoint for rendering components.
     #
     # - `view_context`: ActionView context from calling view
@@ -76,7 +75,7 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, &block)
-      self.class.compile(raise_errors: true)
+      self.class.__vc_compile(raise_errors: true)
 
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
@@ -85,22 +84,18 @@ module ViewComponent
 
       @lookup_context ||= view_context.lookup_context
 
-      # required for path helpers in older Rails versions
-      @view_renderer ||= view_context.view_renderer
-
       # For content_for
       @view_flow ||= view_context.view_flow
 
       # For i18n
       @virtual_path ||= virtual_path
 
-      # For template variants (+phone, +desktop, etc.)
-      @__vc_variant ||= @lookup_context.variants.first
+      # Describes the inferred request constraints (locales, formats, variants)
+      @__vc_requested_details ||= @lookup_context.vc_requested_details
 
       # For caching, such as #cache_if
       @current_template = nil unless defined?(@current_template)
       old_current_template = @current_template
-      @current_template = self
 
       if block && defined?(@__vc_content_set_by_with_content)
         raise DuplicateContentError.new(self.class.name)
@@ -112,7 +107,7 @@ module ViewComponent
       before_render
 
       if render?
-        rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
+        rendered_template = render_template_for(@__vc_requested_details).to_s
 
         # Avoid allocating new string when output_preamble and output_postamble are blank
         if output_preamble.blank? && output_postamble.blank?
@@ -160,7 +155,7 @@ module ViewComponent
         target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
         @__vc_parent_render_level += 1
 
-        target_render.bind_call(self, @__vc_variant)
+        target_render.bind_call(self, @__vc_requested_details)
       ensure
         @__vc_parent_render_level -= 1
       end
@@ -205,7 +200,7 @@ module ViewComponent
     #
     # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
     # of the component. This is due to the partials compiled template method existing in the parent `view_context`,
-    #  and not the component's `view_context`.
+    # and not the component's `view_context`.
     #
     # @private
     def render(options = {}, args = {}, &block)
@@ -273,13 +268,6 @@ module ViewComponent
       []
     end
 
-    # For caching, such as #cache_if
-    #
-    # @private
-    def format
-      @__vc_variant if defined?(@__vc_variant)
-    end
-
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.
     #
@@ -292,7 +280,7 @@ module ViewComponent
     #
     # @private
     def __vc_request
-      @__vc_request ||= controller.request if controller.respond_to?(:request)
+      @__vc_request ||= controller.request
     end
 
     # The content passed to the component instance as a block.
@@ -334,7 +322,7 @@ module ViewComponent
     end
 
     def maybe_escape_html(text)
-      return text if __vc_request && !__vc_request.format.html?
+      return text if @current_template && !@current_template.html?
       return text if text.blank?
 
       if text.html_safe?
@@ -365,13 +353,6 @@ module ViewComponent
     #
     # Defaults to `nil`. If this is falsy, `"ApplicationController"` is used. Can also be
     # configured on a per-test basis using `with_controller_class`.
-    #
-
-    # Set if render monkey patches should be included or not in Rails <6.1:
-    #
-    # ```ruby
-    # config.view_component.render_monkey_patch_enabled = false
-    # ```
     #
 
     # Path for component files
@@ -522,20 +503,20 @@ module ViewComponent
       def inherited(child)
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
-        compile
+        __vc_compile
 
         # Give the child its own personal #render_template_for to protect against the case when
         # eager loading is disabled and the parent component is rendered before the child. In
         # such a scenario, the parent will override ViewComponent::Base#render_template_for,
         # meaning it will not be called for any children and thus not compile their templates.
-        if !child.instance_methods(false).include?(:render_template_for) && !child.compiled?
+        if !child.instance_methods(false).include?(:render_template_for) && !child.__vc_compiled?
           child.class_eval <<~RUBY, __FILE__, __LINE__ + 1
-            def render_template_for(variant = nil, format = nil)
+            def render_template_for(requested_details)
               # Force compilation here so the compiler always redefines render_template_for.
               # This is mostly a safeguard to prevent infinite recursion.
-              self.class.compile(raise_errors: true, force: true)
-              # .compile replaces this method; call the new one
-              render_template_for(variant, format)
+              self.class.__vc_compile(raise_errors: true, force: true)
+              # .__vc_compile replaces this method; call the new one
+              render_template_for(requested_details)
             end
           RUBY
         end
@@ -574,22 +555,22 @@ module ViewComponent
       end
 
       # @private
-      def compiled?
-        compiler.compiled?
+      def __vc_compiled?
+        __vc_compiler.compiled?
       end
 
       # @private
-      def ensure_compiled
-        compile unless compiled?
+      def __vc_ensure_compiled
+        __vc_compile unless __vc_compiled?
       end
 
       # @private
-      def compile(raise_errors: false, force: false)
-        compiler.compile(raise_errors: raise_errors, force: force)
+      def __vc_compile(raise_errors: false, force: false)
+        __vc_compiler.compile(raise_errors: raise_errors, force: force)
       end
 
       # @private
-      def compiler
+      def __vc_compiler
         @__vc_compiler ||= Compiler.new(self)
       end
 
@@ -631,8 +612,8 @@ module ViewComponent
       # is accepted, as support for collection
       # rendering is optional.
       # @private
-      def validate_collection_parameter!(validate_default: false)
-        parameter = validate_default ? collection_parameter : provided_collection_parameter
+      def __vc_validate_collection_parameter!(validate_default: false)
+        parameter = validate_default ? __vc_collection_parameter : provided_collection_parameter
 
         return unless parameter
         return if initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
@@ -651,35 +632,35 @@ module ViewComponent
       # invalid parameters that could override the framework's
       # methods.
       # @private
-      def validate_initialization_parameters!
-        return unless initialize_parameter_names.include?(RESERVED_PARAMETER)
+      def __vc_validate_initialization_parameters!
+        return unless initialize_parameter_names.include?(:content)
 
-        raise ReservedParameterError.new(name, RESERVED_PARAMETER)
+        raise ReservedParameterError.new(name, :content)
       end
 
       # @private
-      def collection_parameter
+      def __vc_collection_parameter
         provided_collection_parameter || name && name.demodulize.underscore.chomp("_component").to_sym
       end
 
       # @private
-      def collection_counter_parameter
-        :"#{collection_parameter}_counter"
+      def __vc_collection_counter_parameter
+        :"#{__vc_collection_parameter}_counter"
       end
 
       # @private
-      def counter_argument_present?
-        initialize_parameter_names.include?(collection_counter_parameter)
+      def __vc_counter_argument_present?
+        initialize_parameter_names.include?(__vc_collection_counter_parameter)
       end
 
       # @private
-      def collection_iteration_parameter
-        :"#{collection_parameter}_iteration"
+      def __vc_collection_iteration_parameter
+        :"#{__vc_collection_parameter}_iteration"
       end
 
       # @private
-      def iteration_argument_present?
-        initialize_parameter_names.include?(collection_iteration_parameter)
+      def __vc_iteration_argument_present?
+        initialize_parameter_names.include?(__vc_collection_iteration_parameter)
       end
 
       private
@@ -691,8 +672,6 @@ module ViewComponent
 
       def initialize_parameter_names
         return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
-
-        return attribute_types.keys.map(&:to_sym) if Rails::VERSION::MAJOR <= 5 && respond_to?(:attribute_types)
 
         initialize_parameters.map(&:last)
       end

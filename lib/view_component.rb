@@ -10,7 +10,6 @@ module ViewComponent
   autoload :CaptureCompatibility
   autoload :Compiler
   autoload :CompileCache
-  autoload :ComponentError
   autoload :Config
   autoload :Deprecation
   autoload :InlineTemplate

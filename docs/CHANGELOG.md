@@ -10,6 +10,96 @@ nav_order: 6
 
 ## main
 
+## 4.0.0
+
+* BREAKING: Remove `use_deprecated_instrumentation_name` configuration option. Events will always use `render.view_component` name.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove `preview_source` functionality. Consider using [Lookbook](https://lookbook.build/) instead.
+
+    *Joel Hawksley*
+
+* BREAKING: Use `Nokogiri::HTML5` instead of `Nokogiri::HTML4` for test helpers.
+
+    *Noah Silvera*, *Joel Hawksley*
+
+* BREAKING: Move generators to a ViewComponent namespace.
+
+  Before, ViewComponent generators pollute the generator namespace with a bunch of top level items, and claim the generic "component" name.
+
+  Now, generators live in a "view_component" module/namespace, so what was before `rails g
+  component` is now `rails g view_component:component`.
+
+    *Paul Sadauskas*
+
+* BREAKING: Require [non-EOL](https://endoflife.date/rails) Rails (`>= 7.1.0`).
+
+    *Joel Hawksley*
+
+* BREAKING: Require [non-EOL](https://www.ruby-lang.org/en/downloads/branches/) Ruby (`>= 3.2.0`).
+
+    *Joel Hawksley*
+
+* BREAKING: Remove `render_component` and `render` monkey patch configured with `render_monkey_patch_enabled`.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove support for variant names containing `.` to be consistent with Rails.
+
+    *Stephen Nelson*
+
+* BREAKING: Use ActionView's `lookup_context` for picking templates instead of the request format.
+
+  3.15 added support for using templates that match the request format, i.e. if `/resource.csv` is requested then
+  ViewComponents would pick `_component.csv.erb` over `_component.html.erb`.
+
+  With this release, the request format is no longer considered and instead ViewComponent will use the Rails logic
+  for picking the most appropriate template type, i.e. the csv template will be used if it matches the `Accept` header
+  or because the controller uses a `respond_to` block to pick the response format.
+
+    *Stephen Nelson*
+
+* BREAKING: Rename internal methods to have `__vc_` prefix if they shouldn't be used by consumers. Make internal constants private. Make `Collection#components`, `Slotable#register_polymorphic_slot` private. Remove unused `ComponentError` class.
+
+    *Joel Hawksley*
+
+* `ViewComponentsSystemTestController` should not exist outside of test environment
+
+    *Joel Hawksley*
+
+* Remove unnecessary ENABLE_RELOADING test suite flag.
+
+    *Joel Hawksley*
+
+* Add test coverage for uncovered code.
+
+    *Joel Hawksley*
+
+* Remove unnecessary `#format` methods that returned `nil`.
+
+    *Joel Hawksley*
+
+* Clean up project dependencies, relaxing versions of development gems.
+
+    *Joel Hawksley*
+
+* Test against `turbo-rails` `v2`.
+
+    *Joel Hawksley*
+
+* Test against `rspec-rails` `v7`.
+
+    *Joel Hawksley*
+
+* Remove unnecessary usage of `ruby2_keywords`.
+
+    *Joel Hawksley*
+
+* Remove unnecessary `respond_to` checks.
+
+    *Tiago Menegaz*, *Joel Hawksley*
+
 * Add documentation on how ViewComponent works.
 
     *Joel Hawksley*

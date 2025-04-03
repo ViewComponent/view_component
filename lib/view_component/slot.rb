@@ -101,15 +101,12 @@ module ViewComponent
     #   end
     # end
     #
-    def method_missing(symbol, *args, &block)
-      @__vc_component_instance.public_send(symbol, *args, &block)
+    def method_missing(symbol, *args, **kwargs, &block)
+      @__vc_component_instance.public_send(symbol, *args, **kwargs, &block)
     end
-    ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
 
     def html_safe?
-      # :nocov:
       to_s.html_safe?
-      # :nocov:
     end
 
     def respond_to_missing?(symbol, include_all = false)

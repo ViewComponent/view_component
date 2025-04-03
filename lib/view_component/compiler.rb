@@ -8,7 +8,7 @@ module ViewComponent
     # * true (a blocking mode which ensures thread safety when redefining the `call` method for components,
     #                default in Rails development and test mode)
     # * false(a non-blocking mode, default in Rails production mode)
-    class_attribute :development_mode, default: false
+    class_attribute :__vc_development_mode, default: false
 
     def initialize(component)
       @component = component
@@ -30,8 +30,8 @@ module ViewComponent
 
         gather_templates
 
-        if self.class.development_mode && @templates.any?(&:requires_compiled_superclass?)
-          @component.superclass.compile(raise_errors: raise_errors)
+        if self.class.__vc_development_mode && @templates.any?(&:requires_compiled_superclass?)
+          @component.superclass.__vc_compile(raise_errors: raise_errors)
         end
 
         if template_errors.present?
@@ -42,17 +42,34 @@ module ViewComponent
         end
 
         if raise_errors
-          @component.validate_initialization_parameters!
-          @component.validate_collection_parameter!
+          @component.__vc_validate_initialization_parameters!
+          @component.__vc_validate_collection_parameter!
         end
 
         define_render_template_for
 
         @component.register_default_slots
-        @component.build_i18n_backend
+        @component.__vc_build_i18n_backend
 
         CompileCache.register(@component)
       end
+    end
+
+    # @return all matching compiled templates, in priority order based on the requested details from LookupContext
+    #
+    # @param [ActionView::TemplateDetails::Requested] requested_details i.e. locales, formats, variants
+    def find_templates_for(requested_details)
+      filtered_templates = @templates.select do |template|
+        template.details.matches?(requested_details)
+      end
+
+      if filtered_templates.count > 1
+        filtered_templates.sort_by! do |template|
+          template.details.sort_key_for(requested_details)
+        end
+      end
+
+      filtered_templates
     end
 
     private
@@ -64,40 +81,25 @@ module ViewComponent
         template.compile_to_component
       end
 
-      method_body =
-        if @templates.one?
-          @templates.first.safe_method_name_call
-        elsif (template = @templates.find(&:inline?))
-          template.safe_method_name_call
-        else
-          branches = []
-
-          @templates.each do |template|
-            conditional =
-              if template.inline_call?
-                "variant&.to_sym == #{template.variant.inspect}"
-              else
-                [
-                  template.default_format? ? "(format == #{ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT.inspect} || format.nil?)" : "format == #{template.format.inspect}",
-                  template.variant.nil? ? "variant.nil?" : "variant&.to_sym == #{template.variant.inspect}"
-                ].join(" && ")
-              end
-
-            branches << [conditional, template.safe_method_name_call]
-          end
-
-          out = branches.each_with_object(+"") do |(conditional, branch_body), memo|
-            memo << "#{(!memo.present?) ? "if" : "elsif"} #{conditional}\n  #{branch_body}\n"
-          end
-          out << "else\n  #{templates.find { _1.variant.nil? && _1.default_format? }.safe_method_name_call}\nend"
-        end
-
       @component.silence_redefinition_of_method(:render_template_for)
-      @component.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-      def render_template_for(variant = nil, format = nil)
-        #{method_body}
+
+      if @templates.one?
+        template = @templates.first
+        safe_call = template.safe_method_name_call
+        @component.define_method(:render_template_for) do |_|
+          @current_template = template
+          instance_exec(&safe_call)
+        end
+      else
+        compiler = self
+        @component.define_method(:render_template_for) do |details|
+          if (@current_template = compiler.find_templates_for(details).first)
+            instance_exec(&@current_template.safe_method_name_call)
+          else
+            raise MissingTemplateError.new(self.class.name, details)
+          end
+        end
       end
-      RUBY
     end
 
     def template_errors
@@ -168,30 +170,18 @@ module ViewComponent
 
     def gather_templates
       @templates ||=
-        begin
+        if @component.inline_template.present?
+          [Template::Inline.new(
+            component: @component,
+            inline_template: @component.inline_template
+          )]
+        else
+          path_parser = ActionView::Resolver::PathParser.new
           templates = @component.sidecar_files(
             ActionView::Template.template_handler_extensions
           ).map do |path|
-            # Extract format and variant from template filename
-            this_format, variant =
-              File
-                .basename(path)     # "variants_component.html+mini.watch.erb"
-                .split(".")[1..-2]  # ["html+mini", "watch"]
-                .join(".")          # "html+mini.watch"
-                .split("+")         # ["html", "mini.watch"]
-                .map(&:to_sym)      # [:html, :"mini.watch"]
-
-            out = Template.new(
-              component: @component,
-              type: :file,
-              path: path,
-              lineno: 0,
-              extension: path.split(".").last,
-              this_format: this_format.to_s.split(".").last&.to_sym, # strip locale from this_format, see #2113
-              variant: variant
-            )
-
-            out
+            details = path_parser.parse(path).details
+            Template::File.new(component: @component, path: path, details: details)
           end
 
           component_instance_methods_on_self = @component.instance_methods(false)
@@ -201,24 +191,10 @@ module ViewComponent
           ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }
             .uniq
             .each do |method_name|
-              templates << Template.new(
-                component: @component,
-                type: :inline_call,
-                this_format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT,
-                variant: method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil,
-                method_name: method_name,
-                defined_on_self: component_instance_methods_on_self.include?(method_name)
-              )
-            end
-
-          if @component.inline_template.present?
-            templates << Template.new(
+            templates << Template::InlineCall.new(
               component: @component,
-              type: :inline,
-              path: @component.inline_template.path,
-              lineno: @component.inline_template.lineno,
-              source: @component.inline_template.source.dup,
-              extension: @component.inline_template.language
+              method_name: method_name,
+              defined_on_self: component_instance_methods_on_self.include?(method_name)
             )
           end
 

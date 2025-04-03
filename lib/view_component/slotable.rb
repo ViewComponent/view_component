@@ -12,12 +12,10 @@ module ViewComponent
       singular: %i[content render].freeze,
       plural: %i[contents renders].freeze
     }.freeze
+    private_constant :RESERVED_NAMES
 
-    # Setup component slot state
     included do
-      # Hash of registered Slots
-      class_attribute :registered_slots
-      self.registered_slots = {}
+      class_attribute :registered_slots, default: {}
     end
 
     class_methods do
@@ -84,10 +82,9 @@ module ViewComponent
 
           setter_method_name = :"with_#{slot_name}"
 
-          define_method setter_method_name do |*args, &block|
-            set_slot(slot_name, nil, *args, &block)
+          define_method setter_method_name do |*args, **kwargs, &block|
+            set_slot(slot_name, nil, *args, **kwargs, &block)
           end
-          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
           self::GeneratedSlotMethods.define_method slot_name do
             get_slot(slot_name)
@@ -155,10 +152,9 @@ module ViewComponent
 
           setter_method_name = :"with_#{singular_name}"
 
-          define_method setter_method_name do |*args, &block|
-            set_slot(slot_name, nil, *args, &block)
+          define_method setter_method_name do |*args, **kwargs, &block|
+            set_slot(slot_name, nil, *args, **kwargs, &block)
           end
-          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
           define_method :"with_#{singular_name}_content" do |content|
             send(setter_method_name) { content.to_s }
@@ -215,6 +211,21 @@ module ViewComponent
         super
       end
 
+      # Called by the compiler, as instance methods are not defined when slots are first registered
+      def register_default_slots
+        registered_slots.each do |slot_name, config|
+          config[:default_method] = instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
+
+          registered_slots[slot_name] = config
+        end
+      end
+
+      private
+
+      def register_slot(slot_name, **kwargs)
+        registered_slots[slot_name] = define_slot(slot_name, **kwargs)
+      end
+
       def register_polymorphic_slot(slot_name, types, collection:)
         self::GeneratedSlotMethods.define_method(slot_name) do
           get_slot(slot_name)
@@ -250,10 +261,9 @@ module ViewComponent
             raise AlreadyDefinedPolymorphicSlotSetterError.new(setter_method_name, poly_slot_name)
           end
 
-          define_method(setter_method_name) do |*args, &block|
-            set_polymorphic_slot(slot_name, poly_type, *args, &block)
+          define_method(setter_method_name) do |*args, **kwargs, &block|
+            set_polymorphic_slot(slot_name, poly_type, *args, **kwargs, &block)
           end
-          ruby2_keywords(setter_method_name) if respond_to?(:ruby2_keywords, true)
 
           define_method :"with_#{poly_slot_name}_content" do |content|
             send(setter_method_name) { content.to_s }
@@ -266,21 +276,6 @@ module ViewComponent
           collection: collection,
           renderable_hash: renderable_hash
         }
-      end
-
-      # Called by the compiler, as instance methods are not defined when slots are first registered
-      def register_default_slots
-        registered_slots.each do |slot_name, config|
-          config[:default_method] = instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
-
-          registered_slots[slot_name] = config
-        end
-      end
-
-      private
-
-      def register_slot(slot_name, **kwargs)
-        registered_slots[slot_name] = define_slot(slot_name, **kwargs)
       end
 
       def define_slot(slot_name, collection:, callable:)
@@ -370,7 +365,7 @@ module ViewComponent
       end
     end
 
-    def set_slot(slot_name, slot_definition = nil, *args, &block)
+    def set_slot(slot_name, slot_definition = nil, *args, **kwargs, &block)
       slot_definition ||= self.class.registered_slots[slot_name]
       slot = Slot.new(self)
 
@@ -387,11 +382,11 @@ module ViewComponent
 
       # If class
       if slot_definition[:renderable]
-        slot.__vc_component_instance = slot_definition[:renderable].new(*args)
+        slot.__vc_component_instance = slot_definition[:renderable].new(*args, **kwargs)
       # If class name as a string
       elsif slot_definition[:renderable_class_name]
         slot.__vc_component_instance =
-          self.class.const_get(slot_definition[:renderable_class_name]).new(*args)
+          self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
       # If passed a lambda
       elsif slot_definition[:renderable_function]
         # Use `bind(self)` to ensure lambda is executed in the context of the
@@ -400,11 +395,11 @@ module ViewComponent
         renderable_function = slot_definition[:renderable_function].bind(self)
         renderable_value =
           if block
-            renderable_function.call(*args) do |*rargs|
+            renderable_function.call(*args, **kwargs) do |*rargs|
               view_context.capture(*rargs, &block)
             end
           else
-            renderable_function.call(*args)
+            renderable_function.call(*args, **kwargs)
           end
 
         # Function calls can return components, so if it's a component handle it specially
@@ -426,9 +421,8 @@ module ViewComponent
 
       slot
     end
-    ruby2_keywords(:set_slot) if respond_to?(:ruby2_keywords, true)
 
-    def set_polymorphic_slot(slot_name, poly_type = nil, *args, &block)
+    def set_polymorphic_slot(slot_name, poly_type = nil, *args, **kwargs, &block)
       slot_definition = self.class.registered_slots[slot_name]
 
       if !slot_definition[:collection] && (defined?(@__vc_set_slots) && @__vc_set_slots[slot_name])
@@ -437,8 +431,7 @@ module ViewComponent
 
       poly_def = slot_definition[:renderable_hash][poly_type]
 
-      set_slot(slot_name, poly_def, *args, &block)
+      set_slot(slot_name, poly_def, *args, **kwargs, &block)
     end
-    ruby2_keywords(:set_polymorphic_slot) if respond_to?(:ruby2_keywords, true)
   end
 end

@@ -4,7 +4,6 @@ task stats: "view_component:statsetup"
 
 namespace :view_component do
   task :statsetup do
-    # :nocov:
     require "rails/code_statistics"
 
     if Rails.root.join(ViewComponent::Base.view_component_path).directory?
@@ -15,6 +14,5 @@ namespace :view_component do
       ::STATS_DIRECTORIES << ["ViewComponent tests", "test/components"]
       CodeStatistics::TEST_TYPES << "ViewComponent tests"
     end
-    # :nocov:
   end
 end
