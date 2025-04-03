@@ -214,3 +214,7 @@ The largest consequence of this change is that we'll need to deprecate the old s
 We propose that we make at least one release with the new API and no deprecation
 warning followed by another release that includes the deprecation warning. This
 will give teams some time to migrate before running into deprecation warnings.
+
+## May 2024: ViewComponent 4
+
+ViewComponent 4 is released and the project is moved into Long-Term Support, recognizing the feature-completeness of framework.

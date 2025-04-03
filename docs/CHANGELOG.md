@@ -12,6 +12,10 @@ nav_order: 6
 
 ## 4.0.0
 
+Almost six years after releasing [v1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we are proud to ship ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we are unlikely to accept further breaking changes or significant feature additions.
+
+This release makes the following breaking changes:
+
 * BREAKING: Remove `use_deprecated_instrumentation_name` configuration option. Events will always use `render.view_component` name.
 
     *Joel Hawksley*
