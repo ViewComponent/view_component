@@ -2,7 +2,12 @@
 
 <% module_namespacing do -%>
 class <%= class_name %><%= options[:skip_suffix] ? "" : "Component" %> < <%= parent_class %>
-<%- if initialize_signature -%>
+<%- if inline_template? -%>
+  <%= template_engine %>_template <<~ERB
+    <h1>Hello, World!</h1>
+  ERB
+<%- end -%>
+<%- if initialize_signature? -%>
   def initialize(<%= initialize_signature %>)
     <%= initialize_body %>
   end

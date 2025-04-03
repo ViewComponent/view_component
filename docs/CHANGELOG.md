@@ -12,6 +12,10 @@ nav_order: 6
 
 ## 4.0.0
 
+* BREAKING: `--inline` generator option now generates inline template. Use `--call` to generate `#call` method.
+
+    *Joel Hawksley*
+
 * BREAKING: Remove `use_deprecated_instrumentation_name` configuration option. Events will always use `render.view_component` name.
 
     *Joel Hawksley*

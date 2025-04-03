@@ -54,11 +54,22 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_component_with_call
+    run_generator %w[user name --call]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/def call/, component)
+    end
+
+    assert_no_file "app/components/user_component.html.erb"
+    assert_no_file "component.html.erb"
+  end
+
   def test_component_with_inline
     run_generator %w[user name --inline]
 
     assert_file "app/components/user_component.rb" do |component|
-      assert_match(/def call/, component)
+      assert_match(/erb_template/, component)
     end
 
     assert_no_file "app/components/user_component.html.erb"
@@ -121,10 +132,22 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/user_component.html.erb"
   end
 
+
   def test_invoking_slim_template_engine
     run_generator %w[user --template-engine slim]
 
     assert_file "app/components/user_component.html.slim"
+  end
+
+  def test_invoking_slim_template_engine_inline
+    run_generator %w[user --inline --template-engine slim]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/slim_template/, component)
+    end
+
+    assert_no_file "app/components/user_component.html.slim"
+    assert_no_file "component.html.erb"
   end
 
   def test_invoking_haml_template_engine
@@ -194,7 +217,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   end
 
   def test_component_with_stimulus_and_inline
-    run_generator %w[user --stimulus --inline]
+    run_generator %w[user --stimulus --call]
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/data: { controller: "user-component" }/, component)
@@ -222,7 +245,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   end
 
   def test_component_with_stimulus_and_sidecar_and_inline
-    run_generator %w[user --stimulus --sidecar --inline]
+    run_generator %w[user --stimulus --sidecar --call]
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/data: { controller: "user-component--user-component" }/, component)

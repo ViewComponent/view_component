@@ -48,8 +48,8 @@ class SlimGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_component_with_inline
-    run_generator %w[user name --inline]
+  def test_component_with_call
+    run_generator %w[user name --call]
 
     assert_no_file "app/components/user_component.html.slim"
   end

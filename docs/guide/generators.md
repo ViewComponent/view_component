@@ -153,13 +153,22 @@ bin/rails generate view_component:component Example title --sidecar
 
 To always generate in the sidecar directory, set `config.view_component.generate.sidecar = true`.
 
-### Use [inline rendering](/guide/templates.html#inline) (no template file)
-
-Since 2.24.0
-{: .label }
+### Use [inline template](/guide/templates.html#inline) (no template file)
 
 ```console
 bin/rails generate view_component:component Example title --inline
+
+      create  app/components/example_component.rb
+      invoke  test_unit
+      create    test/components/example_component_test.rb
+      invoke  erb
+```
+
+
+### Use [call method](/guide/templates.html#call) (no template file)
+
+```console
+bin/rails generate view_component:component Example title --call
 
       create  app/components/example_component.rb
       invoke  test_unit

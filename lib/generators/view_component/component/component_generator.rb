@@ -12,6 +12,7 @@ module ViewComponent
       argument :attributes, type: :array, default: [], banner: "attribute"
       check_class_collision suffix: "Component"
 
+      class_option :call, type: :boolean, default: false
       class_option :inline, type: :boolean, default: false
       class_option :locale, type: :boolean, default: ViewComponent::Base.config.generate.locale
       class_option :parent, type: :string, desc: "The parent class for the generated component"
@@ -45,6 +46,10 @@ module ViewComponent
         ViewComponent::Base.config.component_parent_class || default_parent_class
       end
 
+      def initialize_signature?
+        initialize_signature.present?
+      end
+
       def initialize_signature
         return if attributes.blank?
 
@@ -56,7 +61,15 @@ module ViewComponent
       end
 
       def initialize_call_method_for_inline?
+        options["call"]
+      end
+
+      def inline_template?
         options["inline"]
+      end
+
+      def template_engine
+        options["template_engine"]
       end
 
       def default_parent_class
