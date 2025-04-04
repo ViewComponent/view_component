@@ -40,8 +40,8 @@ class HamlGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/admins/user_component/user_component.html.haml"
   end
 
-  def test_component_with_inline
-    run_generator %w[user name --inline]
+  def test_component_with_call
+    run_generator %w[user name --call]
 
     assert_no_file "app/components/user_component.html.haml"
   end

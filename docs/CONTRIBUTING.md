@@ -8,7 +8,7 @@ nav_order: 9
 
 _ViewComponent is intended to be a safe, welcoming space for collaboration. By participating you agree to abide by the [Contributor Code of Conduct](CODE_OF_CONDUCT.md)._
 
-_As of version 4, ViewComponent is considered feature-complete. While contributions are always welcome, we are unlikely to accept further breaking changes or significant feature additions._
+_As of version 4, ViewComponent is considered feature-complete. While contributions are always welcome, we're unlikely to accept further breaking changes or significant feature additions._
 
 Hi there! We're thrilled that you'd like to contribute to ViewComponent. Your help is essential for keeping it great.
 
