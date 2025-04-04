@@ -18,6 +18,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Run RSpec tests in CI.
+
+    *Joel Hawksley*
+
 ## 3.22.0
 
 * Rewrite `ViewComponents at GitHub` documentation as more general `Best practices`.
