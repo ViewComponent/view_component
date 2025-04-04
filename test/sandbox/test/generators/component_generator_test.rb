@@ -142,7 +142,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     run_generator %w[user --inline --template-engine slim]
 
     assert_file "app/components/user_component.rb" do |component|
-      assert_match(/slim_template/, component)
+      assert_match(/slim_template <<~SLIM/, component)
     end
 
     assert_no_file "app/components/user_component.html.slim"

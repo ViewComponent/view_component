@@ -3,9 +3,9 @@
 <% module_namespacing do -%>
 class <%= class_name %><%= options[:skip_suffix] ? "" : "Component" %> < <%= parent_class %>
 <%- if inline_template? -%>
-  <%= template_engine %>_template <<~ERB
+  <%= template_engine %>_template <<~<%= template_engine.upcase %>
     <h1>Hello, World!</h1>
-  ERB
+  <%= template_engine.upcase %>
 <%- end -%>
 <%- if initialize_signature? -%>
   def initialize(<%= initialize_signature %>)
