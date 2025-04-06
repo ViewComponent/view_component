@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix generation of ViewComponent documentation that was broken due to HTML safety issues.
+
+  *Simon Fish*
+
 * Add documentation on how ViewComponent works.
 
     *Joel Hawksley*
