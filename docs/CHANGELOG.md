@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Document regenerating ViewComponent API documentation.
+
+  *Simon Fish*
+
 * Add documentation on how ViewComponent works.
 
     *Joel Hawksley*
