@@ -51,7 +51,7 @@ module ViewComponent
         end
       end
 
-      def configure_component(&block)
+      def configure_view_component(&block)
         view_component_config.instance_eval(&block)
         view_component_config.compile_methods!
       end

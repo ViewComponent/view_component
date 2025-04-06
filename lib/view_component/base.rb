@@ -615,7 +615,7 @@ module ViewComponent
       #
       #   ```ruby
       #   class MyComponent < ViewComponent::Base
-      #     configure_component do |config|
+      #     configure_view_component do |config|
       #       config.strip_trailing_whitespace = true
       #     end
       #   end

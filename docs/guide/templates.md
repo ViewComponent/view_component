@@ -186,12 +186,12 @@ To strip trailing whitespace from component templates, use the `strip_trailing_w
 ```ruby
 class MyComponent < ViewComponent::Base
   # do strip whitespace
-  configure_component do |config|
+  configure_view_component do |config|
     config.strip_trailing_whitespace = true
   end
 
   # don't strip whitespace
-  configure_component do |config|
+  configure_view_component do |config|
     config.strip_trailing_whitespace = false
   end
 end
