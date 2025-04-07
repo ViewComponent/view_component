@@ -142,4 +142,4 @@ namespace :docs do
   end
 end
 
-task default: [:test, :engine_test, :spec, :docs_test]
+task default: [:docs_test, :test, :engine_test, :spec]
