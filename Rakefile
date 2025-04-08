@@ -17,6 +17,12 @@ Rake::TestTask.new(:engine_test) do |t|
   t.test_files = FileList["test/test_engine/**/*_test.rb"]
 end
 
+Rake::TestTask.new(:docs_test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/docs/*_test.rb"]
+end
+
 begin
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:spec)
@@ -100,7 +106,7 @@ namespace :docs do
 
     error_keys = registry.keys.select { |key| key.to_s.include?("Error::MESSAGE") }.map(&:to_s)
 
-    docs = ActionController::Base.new.render_to_string(
+    docs = ActionController::Base.renderer.render(
       ViewComponent::DocsBuilderComponent.new(
         sections: [
           ViewComponent::DocsBuilderComponent::Section.new(
@@ -128,10 +134,12 @@ namespace :docs do
       )
     ).chomp
 
-    File.open("docs/api.md", "w") do |f|
-      f.puts(docs)
+    if ENV["RAILS_ENV"] != "test"
+      File.open("docs/api.md", "w") do |f|
+        f.puts(docs)
+      end
     end
   end
 end
 
-task default: [:test, :engine_test, :spec]
+task default: [:docs_test, :test, :engine_test, :spec]
