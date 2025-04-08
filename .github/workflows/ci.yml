@@ -107,6 +107,7 @@ jobs:
       with:
         repository: 'primer/view_components'
         path: 'primer_view_components'
+        ref: 'benchmark-warning'
     - uses: actions/checkout@v4.1.1
       with:
         path: 'view_component'
