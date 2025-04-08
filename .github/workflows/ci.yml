@@ -124,6 +124,7 @@ jobs:
     - name: Build and test with Rake
       run: |
         cd primer_view_components
+        script/test-setup
         script/test
       env:
         VIEW_COMPONENT_PATH: ../view_component
