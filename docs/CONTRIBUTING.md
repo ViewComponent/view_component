@@ -71,9 +71,7 @@ bundle exec appraisal rails-5.2 rake
 
 ### Previewing changes locally
 
-1. Run `bundle exec rake docs:build` to regenerate the API documentation if you have made changes
-  to method documentation (YARD comments) in the code.
-  Do not commit changes to `docs/api.md` – this file is regenerated as part of the release process.
+1. Run `bundle exec rake docs:build` to regenerate the API documentation if you have made changes to method documentation (YARD comments) in the code. Do not commit changes to `docs/api.md` – this file is regenerated as part of the release process.
 1. Navigate to `/docs`.
 1. Configure and install the dependencies: `bundle`.
 1. Run Jekyll: `bundle exec jekyll serve`.
