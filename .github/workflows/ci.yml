@@ -126,6 +126,13 @@ jobs:
         cd primer_view_components
         sudo apt-get install tmux
         gem install overmind
+        npm ci
+        bundle install
+        bundle exec rake static:dump
+        cd demo
+        npm ci
+        bundle install
+        cd ..
         script/test-setup
         script/test
       env:
