@@ -10,9 +10,13 @@ nav_order: 6
 
 ## main
 
+* Do not include internal `DocsBuilderComponent` or `YARD::MattrAccessorHandler` in published gem.
+
+    *Joel Hawksley*
+
 * Fix generation of ViewComponent documentation that was broken due to HTML safety issues.
 
-  *Simon Fish*
+    *Simon Fish*
 
 * Add documentation on how ViewComponent works.
 
