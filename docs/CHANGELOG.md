@@ -72,6 +72,10 @@ This release makes the following breaking changes:
 
     *Joel Hawksley*
 
+* Fix bug where request-aware helpers did not work outside of the request context.
+
+    *Joel Hawksley*, *Stephen Nelson*
+
 * `ViewComponentsSystemTestController` should not exist outside of test environment
 
     *Joel Hawksley*
