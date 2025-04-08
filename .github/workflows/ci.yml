@@ -124,6 +124,8 @@ jobs:
     - name: Build and test with Rake
       run: |
         cd primer_view_components
+        sudo apt-get install tmux
+        gem install overmind
         script/test-setup
         script/test
       env:
