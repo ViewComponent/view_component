@@ -123,6 +123,7 @@ jobs:
         cache-dependency-path: 'primer_view_components/package-lock.json'
     - name: Build and test with Rake
       run: |
+        cd primer_view_components
         script/test
       env:
         VIEW_COMPONENT_PATH: ../view_component
