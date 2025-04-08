@@ -129,10 +129,6 @@ jobs:
         npm ci
         bundle install
         bundle exec rake static:dump
-        cd demo
-        npm ci
-        bundle install
-        cd ..
         script/test-setup
         script/test
       env:
