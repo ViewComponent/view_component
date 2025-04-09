@@ -276,11 +276,10 @@ module ViewComponent
       __vc_request
     end
 
-    # Enables consumers to override request/@request
-    #
     # @private
     def __vc_request
-      @__vc_request ||= controller.request
+      # The current request (if present, as mailers/jobs/etc do not have a request)
+      @__vc_request ||= controller.request if controller.respond_to?(:request)
     end
 
     # The content passed to the component instance as a block.
