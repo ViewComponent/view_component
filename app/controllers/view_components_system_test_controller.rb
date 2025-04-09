@@ -24,4 +24,8 @@ if Rails.env.test?
       end
     end
   end
+else
+  class ViewComponentsSystemTestController # :nodoc:
+    # stub for Zeitwerk to load
+  end
 end

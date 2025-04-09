@@ -76,9 +76,9 @@ This release makes the following breaking changes:
 
     *Joel Hawksley*, *Stephen Nelson*
 
-* `ViewComponentsSystemTestController` should not exist outside of test environment
+* `ViewComponentsSystemTestController` should not be useable outside of test environment
 
-    *Joel Hawksley*
+    *Joel Hawksley*, *Stephen Nelson*
 
 * Remove unnecessary ENABLE_RELOADING test suite flag.
 
