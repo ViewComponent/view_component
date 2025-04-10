@@ -24,7 +24,15 @@ Gem::Specification.new do |spec|
       "public gem pushes."
   end
 
-  spec.files = Dir["LICENSE.txt", "README.md", "app/**/*", "docs/CHANGELOG.md", "lib/view_component/**/*", "lib/view_component/rails/**/*"]
+  spec.files = Dir[
+    "LICENSE.txt",
+    "README.md",
+    "app/**/*",
+    "docs/CHANGELOG.md",
+    "lib/rails/**/*.rb",
+    "lib/view_component.rb",
+    "lib/view_component/**/*.rb",
+  ]
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = ">= 2.7.0"
