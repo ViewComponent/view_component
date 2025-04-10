@@ -10,13 +10,17 @@ nav_order: 6
 
 ## main
 
+* Do not include internal `DocsBuilderComponent` or `YARD::MattrAccessorHandler` in published gem.
+
+    *Joel Hawksley*
+
 * Only lock to `concurrent-ruby` `1.3.4` for Rails 6.1.
 
     *Joel Hawksley*
 
 * Fix generation of ViewComponent documentation that was broken due to HTML safety issues.
 
-  *Simon Fish*
+    *Simon Fish*
 
 * Add documentation on how ViewComponent works.
 
