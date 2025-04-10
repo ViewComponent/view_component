@@ -14,6 +14,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Only lock to `concurrent-ruby` `1.3.4` for Rails 6.1.
+
+    *Joel Hawksley*
+
 * Fix generation of ViewComponent documentation that was broken due to HTML safety issues.
 
     *Simon Fish*

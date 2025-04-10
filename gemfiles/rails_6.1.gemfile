@@ -9,5 +9,6 @@ gem "net-imap", require: false
 gem "net-pop", require: false
 gem "turbo-rails", "~> 1"
 gem "sprockets-rails", "~> 3.4.2"
+gem "concurrent-ruby", "1.3.4"
 
 gemspec path: "../"
