@@ -1,7 +1,6 @@
 # frozen_string_literal: true
-
-if Rails.env.test?
-  class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
+class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
+  if Rails.env.test?
     before_action :validate_file_path
 
     def self.temp_dir
