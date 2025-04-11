@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Document regenerating ViewComponent API documentation.
+
+    *Simon Fish*
+
 * Do not include internal `DocsBuilderComponent` or `YARD::MattrAccessorHandler` in published gem.
 
     *Joel Hawksley*
