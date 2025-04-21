@@ -17,7 +17,7 @@ require "view_component/with_content_helper"
 require "view_component/use_helpers"
 
 module ViewComponent
-  class Base < ActionView::Base
+  class Base
     class << self
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
@@ -33,6 +33,8 @@ module ViewComponent
       end
     end
 
+    include ActionView::Helpers
+
     include ViewComponent::InlineTemplate
     include ViewComponent::UseHelpers
     include ViewComponent::Slotable
@@ -47,6 +49,9 @@ module ViewComponent
 
     # For Content Security Policy nonces
     delegate :content_security_policy_nonce, to: :helpers
+
+    # HTML construction methods
+    delegate :output_buffer, :html_escape, :lookup_context, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
@@ -64,7 +69,7 @@ module ViewComponent
     # @param view_context [ActionView::Base] The original view context.
     # @return [void]
     def set_original_view_context(view_context)
-      self.__vc_original_view_context = view_context
+      # no-op
     end
 
     # Entrypoint for rendering components.
@@ -211,7 +216,7 @@ module ViewComponent
     def render(options = {}, args = {}, &block)
       if options.respond_to?(:set_original_view_context)
         options.set_original_view_context(self.__vc_original_view_context)
-        super
+        @view_context.render(options, args, &block)
       else
         __vc_original_view_context.render(options, args, &block)
       end

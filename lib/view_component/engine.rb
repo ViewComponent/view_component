@@ -131,6 +131,14 @@ module ViewComponent
       # :nocov:
     end
 
+    initializer "view_component.propshaft_support" do |_app|
+      ActiveSupport.on_load(:view_component) do
+        if defined?(Propshaft)
+          include Propshaft::Helper
+        end
+      end
+    end
+
     initializer "static assets" do |app|
       if serve_static_preview_assets?(app.config)
         app.middleware.use(::ActionDispatch::Static, "#{root}/app/assets/vendor")

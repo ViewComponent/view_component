@@ -9,15 +9,8 @@ module ViewComponent
 
     delegate :size, to: :@collection
 
-    attr_accessor :__vc_original_view_context
-
-    def set_original_view_context(view_context)
-      self.__vc_original_view_context = view_context
-    end
-
     def render_in(view_context, &block)
       components.map do |component|
-        component.set_original_view_context(__vc_original_view_context)
         component.render_in(view_context, &block)
       end.join(rendered_spacer(view_context)).html_safe
     end
@@ -73,7 +66,6 @@ module ViewComponent
 
     def rendered_spacer(view_context)
       if @spacer_component
-        @spacer_component.set_original_view_context(__vc_original_view_context)
         @spacer_component.render_in(view_context)
       else
         ""
