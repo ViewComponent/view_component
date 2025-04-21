@@ -48,13 +48,10 @@ module ViewComponent
         @component.silence_redefinition_of_method(@call_method_name)
 
         # rubocop:disable Style/EvalWithLocation
-        @component.class_eval <<-RUBY, @path, @lineno - 2
+        @component.class_eval <<-RUBY, @path, @lineno - 1
         def #{@call_method_name}
-          __old_virtual_path__ = @view_context.instance_variable_get(:@virtual_path)
           @view_context.instance_variable_set(:@virtual_path, virtual_path)
           #{compiled_source}
-        ensure
-          @view_context.instance_variable_set(:@virtual_path, __old_virtual_path__)
         end
         RUBY
         # rubocop:enable Style/EvalWithLocation

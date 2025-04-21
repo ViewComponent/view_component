@@ -86,7 +86,7 @@ module ViewComponent
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
-      @output_buffer = ActionView::OutputBuffer.new
+      @output_buffer = view_context.output_buffer # ActionView::OutputBuffer.new
 
       @lookup_context ||= view_context.lookup_context
 
@@ -117,19 +117,32 @@ module ViewComponent
       before_render
 
       if render?
-        rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
+        capture_without_escaping do
+          rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
 
-        # Avoid allocating new string when output_preamble and output_postamble are blank
-        if output_preamble.blank? && output_postamble.blank?
-          rendered_template
-        else
-          safe_output_preamble + rendered_template + safe_output_postamble
+          # Avoid allocating new string when output_preamble and output_postamble are blank
+          if output_preamble.blank? && output_postamble.blank?
+            rendered_template
+          else
+            safe_output_preamble + rendered_template + safe_output_postamble
+          end
         end
       else
         ""
       end
     ensure
       @current_template = old_current_template
+    end
+
+    def capture_without_escaping(*args)
+      value = nil
+      buffer = @output_buffer.capture { value = yield(*args) }
+
+      if @output_buffer.equal?(value)
+        buffer
+      else
+        buffer.presence || value
+      end
     end
 
     # Subclass components that call `super` inside their template code will cause a
