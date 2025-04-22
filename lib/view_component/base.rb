@@ -35,6 +35,9 @@ module ViewComponent
 
     include ActionView::Helpers
 
+    include ERB::Escape
+    include ActiveSupport::CoreExt::ERBUtil
+
     include ViewComponent::InlineTemplate
     include ViewComponent::UseHelpers
     include ViewComponent::Slotable
@@ -51,7 +54,7 @@ module ViewComponent
     delegate :content_security_policy_nonce, to: :helpers
 
     # HTML construction methods
-    delegate :output_buffer, :html_escape, :lookup_context, :view_renderer, :view_flow, to: :helpers
+    delegate :output_buffer, :lookup_context, :view_renderer, :view_flow, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
