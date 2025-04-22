@@ -31,46 +31,18 @@ jobs:
         include:
           - ruby_version: "3.0"
             rails_version: "6.1"
-            mode: "capture_patch_enabled"
-          - ruby_version: "3.0"
-            rails_version: "6.1"
-            mode: "capture_patch_disabled"
           - ruby_version: "3.1"
             rails_version: "7.0"
-            mode: "capture_patch_enabled"
-          - ruby_version: "3.1"
-            rails_version: "7.0"
-            mode: "capture_patch_disabled"
           - ruby_version: "3.2"
             rails_version: "7.1"
-            mode: "capture_patch_enabled"
-          - ruby_version: "3.2"
-            rails_version: "7.1"
-            mode: "capture_patch_disabled"
           - ruby_version: "3.3"
             rails_version: "7.2"
-            mode: "capture_patch_disabled"
-          - ruby_version: "3.3"
-            rails_version: "7.2"
-            mode: "capture_patch_enabled"
           - ruby_version: "3.3"
             rails_version: "8.0"
-            mode: "capture_patch_disabled"
-          - ruby_version: "3.3"
-            rails_version: "8.0"
-            mode: "capture_patch_enabled"
           - ruby_version: "3.4"
             rails_version: "8.0"
-            mode: "capture_patch_disabled"
-          - ruby_version: "3.4"
-            rails_version: "8.0"
-            mode: "capture_patch_enabled"
           - ruby_version: "head"
             rails_version: "main"
-            mode: "capture_patch_disabled"
-          - ruby_version: "head"
-            rails_version: "main"
-            mode: "capture_patch_enabled"
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
@@ -91,7 +63,6 @@ jobs:
         RAISE_ON_WARNING: 1
         RAILS_VERSION: ${{ matrix.rails_version }}
         RUBY_VERSION: ${{ matrix.ruby_version }}
-        CAPTURE_PATCH_ENABLED: ${{ matrix.mode == 'capture_patch_enabled' && 'true' || 'false' }}
     - name: Upload coverage results
       uses: actions/upload-artifact@v4.4.0
       if: always()

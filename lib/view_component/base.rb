@@ -117,32 +117,25 @@ module ViewComponent
       before_render
 
       if render?
-        capture_without_escaping do
+        value = nil
+
+        @output_buffer.capture do
           rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
 
           # Avoid allocating new string when output_preamble and output_postamble are blank
-          if output_preamble.blank? && output_postamble.blank?
+          value = if output_preamble.blank? && output_postamble.blank?
             rendered_template
           else
             safe_output_preamble + rendered_template + safe_output_postamble
           end
         end
+
+        value
       else
         ""
       end
     ensure
       @current_template = old_current_template
-    end
-
-    def capture_without_escaping(*args)
-      value = nil
-      buffer = @output_buffer.capture { value = yield(*args) }
-
-      if @output_buffer.equal?(value)
-        buffer
-      else
-        buffer.presence || value
-      end
     end
 
     # Subclass components that call `super` inside their template code will cause a
