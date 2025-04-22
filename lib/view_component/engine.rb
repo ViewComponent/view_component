@@ -131,11 +131,27 @@ module ViewComponent
       end
     end
 
-    initializer "view_component.sprockets_support" do |_app|
+    config.after_initialize do |app|
       ActiveSupport.on_load(:view_component) do
         if defined?(Sprockets::Rails)
           include Sprockets::Rails::Helper
-          include Sprockets::Rails::Utils
+
+          # Copy relevant config to VC context
+          # See: https://github.com/rails/sprockets-rails/blob/266ec49f3c7c96018dd75f9dc4f9b62fe3f7eecf/lib/sprockets/railtie.rb#L245
+          self.debug_assets      = app.config.assets.debug
+          self.digest_assets     = app.config.assets.digest
+          self.assets_prefix     = app.config.assets.prefix
+          self.assets_precompile = app.config.assets.precompile
+
+          self.assets_environment = app.assets
+          self.assets_manifest = app.assets_manifest
+
+          self.resolve_assets_with = app.config.assets.resolve_with
+
+          self.check_precompiled_asset = app.config.assets.check_precompiled_asset
+          self.unknown_asset_fallback  = app.config.assets.unknown_asset_fallback
+          # Expose the app precompiled asset check to the view
+          self.precompiled_asset_checker = -> logical_path { app.asset_precompiled? logical_path }
         end
       end
     end
