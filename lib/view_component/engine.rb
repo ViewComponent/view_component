@@ -131,6 +131,15 @@ module ViewComponent
       end
     end
 
+    initializer "view_component.sprockets_support" do |_app|
+      ActiveSupport.on_load(:view_component) do
+        if defined?(Sprockets::Rails)
+          include Sprockets::Rails::Helper
+          include Sprockets::Rails::Utils
+        end
+      end
+    end
+
     initializer "static assets" do |app|
       if serve_static_preview_assets?(app.config)
         app.middleware.use(::ActionDispatch::Static, "#{root}/app/assets/vendor")
