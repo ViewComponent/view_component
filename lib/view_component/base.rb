@@ -51,7 +51,7 @@ module ViewComponent
     delegate :content_security_policy_nonce, to: :helpers
 
     # HTML construction methods
-    delegate :output_buffer, :html_escape, :lookup_context, to: :helpers
+    delegate :output_buffer, :html_escape, :lookup_context, :view_renderer, :view_flow, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
@@ -86,7 +86,7 @@ module ViewComponent
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
-      @output_buffer = view_context.output_buffer # ActionView::OutputBuffer.new
+      @output_buffer = view_context.output_buffer
 
       @lookup_context ||= view_context.lookup_context
 
