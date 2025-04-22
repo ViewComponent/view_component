@@ -122,8 +122,8 @@ module ViewComponent
       if render?
         value = nil
 
-        # @output_buffer.capture do
-        old_buffer = @output_buffer.capture_start
+        @output_buffer.with_buffer do
+        # old_buffer = @output_buffer.capture_start
           rendered_template = render_template_for(@__vc_variant, __vc_request&.format&.to_sym).to_s
 
           # Avoid allocating new string when output_preamble and output_postamble are blank
@@ -132,8 +132,8 @@ module ViewComponent
           else
             safe_output_preamble + rendered_template + safe_output_postamble
           end
-        @output_buffer.capture_end(old_buffer)
-        # end
+        # @output_buffer.capture_end(old_buffer)
+        end
 
         value
       else
