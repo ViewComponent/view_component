@@ -1280,9 +1280,6 @@ class RenderingTest < ViewComponent::TestCase
 
     render_inline(component)
 
-    puts component.instance_variables.last
-    binding.irb
-
     assert_equal(component.instance_variables.last, :@name)
   end
 end

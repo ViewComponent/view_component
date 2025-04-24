@@ -19,8 +19,33 @@ require "view_component/use_helpers"
 
 module ViewComponent
   class Base < ActionView::Base
+    VC_PRE_ALLOCATED_INSTANCE_VARIABLES = [
+      :@current_template,
+      :@output_buffer,
+      :@lookup_context,
+      :@view_flow,
+      :@view_context,
+      :@virtual_path,
+      :@__vc_render_in_block,
+      :@__vc_requested_details,
+      :@__vc_original_view_context,
+    ]
+    private_constant :VC_PRE_ALLOCATED_INSTANCE_VARIABLES
+
     class << self
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
+
+      # Redefine `new` so we can pre-allocate instance variables to optimize
+      # for Ruby object shapes.
+      def new(...)
+        instance = allocate
+        VC_PRE_ALLOCATED_INSTANCE_VARIABLES.each do |instance_variable|
+          instance.instance_variable_set(instance_variable, nil)
+        end
+        instance.instance_variable_set(:@__vc_content_evaluated, false)
+        instance.send(:initialize, ...)
+        instance
+      end
 
       # Returns the current config.
       #
@@ -64,18 +89,6 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
-    # Redefine `new` so we can pre-allocate instance variables to optimize
-    # for Ruby object shapes.
-    def self.new(...)
-      instance = allocate
-      instance.instance_variable_set(:@output_buffer, nil)
-      instance.instance_variable_set(:@lookup_context, nil)
-      instance.instance_variable_set(:@view_context, nil)
-      instance.instance_variable_set(:@__vc_original_view_context, nil)
-      instance.send(:initialize, ...)
-      instance
-    end
-
     using RequestDetails
 
     # Entrypoint for rendering components.
@@ -106,14 +119,12 @@ module ViewComponent
       @__vc_requested_details ||= @lookup_context.vc_requested_details
 
       # For caching, such as #cache_if
-      @current_template = nil unless defined?(@current_template)
       old_current_template = @current_template
 
       if block && defined?(@__vc_content_set_by_with_content)
         raise DuplicateContentError.new(self.class.name)
       end
 
-      @__vc_content_evaluated = false
       @__vc_render_in_block = block
 
       before_render
@@ -329,7 +340,7 @@ module ViewComponent
     end
 
     def content_evaluated?
-      defined?(@__vc_content_evaluated) && @__vc_content_evaluated
+      @__vc_content_evaluated
     end
 
     def maybe_escape_html(text)
