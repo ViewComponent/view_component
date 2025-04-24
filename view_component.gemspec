@@ -17,7 +17,15 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = "https://github.com/viewcomponent/view_component"
   spec.metadata["changelog_uri"] = "https://github.com/ViewComponent/view_component/blob/main/docs/CHANGELOG.md"
 
-  spec.files = Dir["LICENSE.txt", "README.md", "app/**/*", "docs/CHANGELOG.md", "lib/**/*"]
+  spec.files = Dir[
+    "LICENSE.txt",
+    "README.md",
+    "app/**/*",
+    "docs/CHANGELOG.md",
+    "lib/rails/**/*.rb",
+    "lib/view_component.rb",
+    "lib/view_component/**/*.rb",
+  ]
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = ">= 3.2.0"

@@ -425,7 +425,7 @@ module ViewComponent
     def set_polymorphic_slot(slot_name, poly_type = nil, *args, **kwargs, &block)
       slot_definition = self.class.registered_slots[slot_name]
 
-      if !slot_definition[:collection] && (defined?(@__vc_set_slots) && @__vc_set_slots[slot_name])
+      if !slot_definition[:collection] && defined?(@__vc_set_slots) && @__vc_set_slots[slot_name]
         raise ContentAlreadySetForPolymorphicSlotError.new(slot_name)
       end
 
