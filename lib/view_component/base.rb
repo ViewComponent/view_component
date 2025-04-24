@@ -27,6 +27,7 @@ module ViewComponent
       :@view_context,
       :@virtual_path,
       :@__vc_content,
+      :@__vc_content_set_by_with_content,
       :@__vc_render_in_block,
       :@__vc_requested_details,
       :@__vc_original_view_context,
@@ -123,7 +124,7 @@ module ViewComponent
       # For caching, such as #cache_if
       old_current_template = @current_template
 
-      if block && defined?(@__vc_content_set_by_with_content)
+      if block && __vc_content_set_by_with_content?
         raise DuplicateContentError.new(self.class.name)
       end
 
@@ -317,7 +318,7 @@ module ViewComponent
       @__vc_content =
         if __vc_render_in_block_provided?
           view_context.capture(self, &@__vc_render_in_block)
-        elsif __vc_content_set_by_with_content_defined?
+        elsif __vc_content_set_by_with_content?
           @__vc_content_set_by_with_content
         end
     end
@@ -326,7 +327,7 @@ module ViewComponent
     #
     # @return [Boolean]
     def content?
-      __vc_render_in_block_provided? || __vc_content_set_by_with_content_defined?
+      __vc_render_in_block_provided? || __vc_content_set_by_with_content?
     end
 
     private
@@ -337,8 +338,8 @@ module ViewComponent
       defined?(@view_context) && @view_context && @__vc_render_in_block
     end
 
-    def __vc_content_set_by_with_content_defined?
-      defined?(@__vc_content_set_by_with_content)
+    def __vc_content_set_by_with_content?
+      !@__vc_content_set_by_with_content.nil?
     end
 
     def content_evaluated?
