@@ -9,15 +9,18 @@ module ViewComponent
     attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content
 
     def initialize(parent)
+      @content = nil
+      @__vc_component_instance = nil
       @__vc_content = nil
+      @__vc_content_block = nil
       @__vc_content_set_by_with_content = nil
       @parent = parent
     end
 
     def content?
-      return true if defined?(@__vc_content) && @__vc_content.present?
-      return true if defined?(@__vc_content_set_by_with_content) && @__vc_content_set_by_with_content.present?
-      return true if defined?(@__vc_content_block) && @__vc_content_block.present?
+      return true if @__vc_content.present?
+      return true if @__vc_content_set_by_with_content.present?
+      return true if @__vc_content_block.present?
       return false if !__vc_component_instance?
 
       @__vc_component_instance.content?
@@ -45,11 +48,11 @@ module ViewComponent
     # If there is no slot renderable, we evaluate the block passed to
     # the slot and return it.
     def to_s
-      return @content if defined?(@content)
+      return @content if !@content.nil?
 
       view_context = @parent.send(:view_context)
 
-      if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content) && !@__vc_content_set_by_with_content.nil?
+      if !@__vc_content_block.nil? && !@__vc_content_set_by_with_content.nil? && !@__vc_content_set_by_with_content.nil?
         raise DuplicateSlotContentError.new(self.class.name)
       end
 
@@ -57,7 +60,7 @@ module ViewComponent
         if __vc_component_instance?
           @__vc_component_instance.__vc_original_view_context = @parent.__vc_original_view_context
 
-          if defined?(@__vc_content_block)
+          if !@__vc_content_block.nil?
             # render_in is faster than `parent.render`
             @__vc_component_instance.render_in(view_context) do |*args|
               return @__vc_content_block.call(*args) if @__vc_content_block&.source_location.nil?
@@ -73,11 +76,11 @@ module ViewComponent
           else
             @__vc_component_instance.render_in(view_context)
           end
-        elsif defined?(@__vc_content) && !@__vc_content.nil?
+        elsif !@__vc_content.nil?
           @__vc_content
-        elsif defined?(@__vc_content_block)
+        elsif !@__vc_content_block.nil?
           view_context.capture(&@__vc_content_block)
-        elsif defined?(@__vc_content_set_by_with_content) && !@__vc_content_set_by_with_content.nil?
+        elsif !@__vc_content_set_by_with_content.nil?
           @__vc_content_set_by_with_content
         end
 
@@ -118,7 +121,7 @@ module ViewComponent
     private
 
     def __vc_component_instance?
-      defined?(@__vc_component_instance)
+      !@__vc_component_instance.nil?
     end
   end
 end

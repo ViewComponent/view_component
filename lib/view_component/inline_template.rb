@@ -9,7 +9,7 @@ module ViewComponent # :nodoc:
       def method_missing(method, *args)
         return super if !method.end_with?("_template")
 
-        if defined?(@__vc_inline_template_defined) && @__vc_inline_template_defined
+        if @__vc_inline_template_defined
           raise MultipleInlineTemplatesError
         end
 
@@ -38,11 +38,11 @@ module ViewComponent # :nodoc:
       end
 
       def inline_template
-        @__vc_inline_template if defined?(@__vc_inline_template)
+        @__vc_inline_template
       end
 
       def __vc_inline_template_language
-        @__vc_inline_template_language if defined?(@__vc_inline_template_language)
+        @__vc_inline_template_language
       end
 
       def inherited(subclass)

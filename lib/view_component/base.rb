@@ -31,6 +31,8 @@ module ViewComponent
       :@__vc_content,
       :@__vc_content_set_by_with_content,
       :@__vc_helpers,
+      :@__vc_inline_template,
+      :@__vc_inline_template_defined,
       :@__vc_render_in_block,
       :@__vc_request,
       :@__vc_requested_details,
@@ -338,7 +340,7 @@ module ViewComponent
     attr_reader :view_context
 
     def __vc_render_in_block_provided?
-      defined?(@view_context) && @view_context && @__vc_render_in_block
+      @view_context && @__vc_render_in_block
     end
 
     def __vc_content_set_by_with_content?
