@@ -30,7 +30,6 @@ module ViewComponent
       :@__vc_render_in_block,
       :@__vc_requested_details,
       :@__vc_original_view_context,
-      :@__vc_set_slots
     ]
     private_constant :VC_PRE_ALLOCATED_INSTANCE_VARIABLES
 
@@ -45,6 +44,7 @@ module ViewComponent
           instance.instance_variable_set(instance_variable, nil)
         end
         instance.instance_variable_set(:@__vc_content_evaluated, false)
+        instance.instance_variable_set(:@__vc_set_slots, {})
         instance.send(:initialize, ...)
         instance
       end

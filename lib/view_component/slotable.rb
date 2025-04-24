@@ -354,7 +354,6 @@ module ViewComponent
       content unless content_evaluated? # ensure content is loaded so slots will be defined
 
       slot = self.class.registered_slots[slot_name]
-      @__vc_set_slots ||= {}
 
       if @__vc_set_slots[slot_name]
         return @__vc_set_slots[slot_name]
@@ -409,8 +408,6 @@ module ViewComponent
           slot.__vc_content = renderable_value
         end
       end
-
-      @__vc_set_slots ||= {}
 
       if slot_definition[:collection]
         @__vc_set_slots[slot_name] ||= []
