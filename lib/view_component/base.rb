@@ -19,27 +19,6 @@ require "view_component/use_helpers"
 
 module ViewComponent
   class Base < ActionView::Base
-    VC_PRE_ALLOCATED_INSTANCE_VARIABLES = [
-      :@current_template,
-      :@output_buffer,
-      :@lookup_context,
-      :@view_flow,
-      :@view_context,
-      :@virtual_path,
-      :@__vc_ancestor_calls,
-      :@__vc_controller,
-      :@__vc_content,
-      :@__vc_content_set_by_with_content,
-      :@__vc_helpers,
-      :@__vc_inline_template,
-      :@__vc_inline_template_defined,
-      :@__vc_render_in_block,
-      :@__vc_request,
-      :@__vc_requested_details,
-      :@__vc_original_view_context,
-    ]
-    private_constant :VC_PRE_ALLOCATED_INSTANCE_VARIABLES
-
     class << self
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
@@ -47,12 +26,7 @@ module ViewComponent
       # for Ruby object shapes.
       def new(...)
         instance = allocate
-        VC_PRE_ALLOCATED_INSTANCE_VARIABLES.each do |instance_variable|
-          instance.instance_variable_set(instance_variable, nil)
-        end
-        instance.instance_variable_set(:@__vc_content_evaluated, false)
-        instance.instance_variable_set(:@__vc_set_slots, {})
-        instance.instance_variable_set(:@__vc_parent_render_level, 0)
+        instance.__vc_pre_allocate_instance_variables
         instance.send(:initialize, ...)
         instance
       end
@@ -67,6 +41,29 @@ module ViewComponent
         end
         ViewComponent::Config.current
       end
+    end
+
+    def __vc_pre_allocate_instance_variables
+      @__vc_parent_render_level = 0
+      @__vc_set_slots = {}
+      @__vc_content_evaluated = false
+      @current_template = nil
+      @output_buffer = nil
+      @lookup_context = nil
+      @view_flow = nil
+      @view_context = nil
+      @virtual_path = nil
+      @__vc_ancestor_calls = nil
+      @__vc_controller = nil
+      @__vc_content = nil
+      @__vc_content_set_by_with_content = nil
+      @__vc_helpers = nil
+      @__vc_inline_template = nil
+      @__vc_inline_template_defined = nil
+      @__vc_render_in_block = nil
+      @__vc_request = nil
+      @__vc_requested_details = nil
+      @__vc_original_view_context = nil
     end
 
     include ViewComponent::InlineTemplate
