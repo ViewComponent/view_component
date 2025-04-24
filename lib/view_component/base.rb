@@ -26,9 +26,11 @@ module ViewComponent
       :@view_flow,
       :@view_context,
       :@virtual_path,
+      :@__vc_content,
       :@__vc_render_in_block,
       :@__vc_requested_details,
       :@__vc_original_view_context,
+      :@__vc_set_slots
     ]
     private_constant :VC_PRE_ALLOCATED_INSTANCE_VARIABLES
 
@@ -310,7 +312,7 @@ module ViewComponent
     # @return [String]
     def content
       @__vc_content_evaluated = true
-      return @__vc_content if defined?(@__vc_content) && !@__vc_content.nil?
+      return @__vc_content if !@__vc_content.nil?
 
       @__vc_content =
         if __vc_render_in_block_provided?
