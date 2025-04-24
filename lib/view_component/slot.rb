@@ -10,6 +10,7 @@ module ViewComponent
 
     def initialize(parent)
       @__vc_content = nil
+      @__vc_content_set_by_with_content = nil
       @parent = parent
     end
 
@@ -48,7 +49,7 @@ module ViewComponent
 
       view_context = @parent.send(:view_context)
 
-      if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content)
+      if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content) && !@__vc_content_set_by_with_content.nil?
         raise DuplicateSlotContentError.new(self.class.name)
       end
 
@@ -76,7 +77,7 @@ module ViewComponent
           @__vc_content
         elsif defined?(@__vc_content_block)
           view_context.capture(&@__vc_content_block)
-        elsif defined?(@__vc_content_set_by_with_content)
+        elsif defined?(@__vc_content_set_by_with_content) && !@__vc_content_set_by_with_content.nil?
           @__vc_content_set_by_with_content
         end
 

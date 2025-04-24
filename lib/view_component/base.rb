@@ -64,6 +64,15 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
+    # Redefine `new` so we can pre-allocate instance variables to optimize
+    # for Ruby object shapes.
+    def self.new(...)
+      instance = allocate
+      instance.instance_variable_set(:@__vc_original_view_context, nil)
+      instance.send(:initialize, ...)
+      instance
+    end
+
     using RequestDetails
 
     # Entrypoint for rendering components.
