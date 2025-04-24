@@ -26,9 +26,13 @@ module ViewComponent
       :@view_flow,
       :@view_context,
       :@virtual_path,
+      :@__vc_ancestor_calls,
+      :@__vc_controller,
       :@__vc_content,
       :@__vc_content_set_by_with_content,
+      :@__vc_helpers,
       :@__vc_render_in_block,
+      :@__vc_request,
       :@__vc_requested_details,
       :@__vc_original_view_context,
     ]
@@ -46,6 +50,7 @@ module ViewComponent
         end
         instance.instance_variable_set(:@__vc_content_evaluated, false)
         instance.instance_variable_set(:@__vc_set_slots, {})
+        instance.instance_variable_set(:@__vc_parent_render_level, 0)
         instance.send(:initialize, ...)
         instance
       end
@@ -175,8 +180,6 @@ module ViewComponent
     #
     # When rendering the parent inside an .erb template, use `#render_parent` instead.
     def render_parent_to_string
-      @__vc_parent_render_level ||= 0 # ensure a good starting value
-
       begin
         target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
         @__vc_parent_render_level += 1
@@ -570,7 +573,7 @@ module ViewComponent
         child.with_collection_parameter provided_collection_parameter
 
         if instance_methods(false).include?(:render_template_for)
-          vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
+          vc_ancestor_calls = !@__vc_ancestor_calls.nil? ? @__vc_ancestor_calls.dup : []
 
           vc_ancestor_calls.unshift(instance_method(:render_template_for))
           child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
