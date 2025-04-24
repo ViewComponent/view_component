@@ -68,6 +68,8 @@ module ViewComponent
     # for Ruby object shapes.
     def self.new(...)
       instance = allocate
+      instance.instance_variable_set(:@output_buffer, nil)
+      instance.instance_variable_set(:@view_context, nil)
       instance.instance_variable_set(:@__vc_original_view_context, nil)
       instance.send(:initialize, ...)
       instance

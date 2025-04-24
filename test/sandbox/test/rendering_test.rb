@@ -1270,4 +1270,19 @@ class RenderingTest < ViewComponent::TestCase
       render_inline(mock_component.new)
     end
   end
+
+  # Ensure that we pre-initialize all internal instance variables
+  # before rendering the component, maximizing the chance that
+  # Ruby will be able to use the more streamlined instance variable
+  # lookup enabled by object shapes.
+  def test_object_shapes
+    component = ObjectShapesComponent.new(name: SecureRandom.hex(10))
+
+    render_inline(component)
+
+    puts component.instance_variables.last
+    binding.irb
+
+    assert_equal(component.instance_variables.last, :@name)
+  end
 end
