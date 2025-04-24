@@ -287,7 +287,7 @@ module ViewComponent
     # @return [String]
     def content
       @__vc_content_evaluated = true
-      return @__vc_content if defined?(@__vc_content)
+      return @__vc_content if defined?(@__vc_content) && !@__vc_content.nil?
 
       @__vc_content =
         if __vc_render_in_block_provided?

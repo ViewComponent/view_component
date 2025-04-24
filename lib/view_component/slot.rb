@@ -9,6 +9,7 @@ module ViewComponent
     attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content
 
     def initialize(parent)
+      @__vc_content = nil
       @parent = parent
     end
 
@@ -71,7 +72,7 @@ module ViewComponent
           else
             @__vc_component_instance.render_in(view_context)
           end
-        elsif defined?(@__vc_content)
+        elsif defined?(@__vc_content) && !@__vc_content.nil?
           @__vc_content
         elsif defined?(@__vc_content_block)
           view_context.capture(&@__vc_content_block)
