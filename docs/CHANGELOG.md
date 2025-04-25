@@ -10,7 +10,13 @@ nav_order: 6
 
 ## main
 
-## 4.0.0
+## 4.0.0.alpha2
+
+* Add `#current_template` accessor and `Template#path` for diagnostic usage.
+
+    *Joel Hawksley*
+
+## 4.0.0.alpha1
 
 Almost six years after releasing [v1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions.
 
@@ -133,10 +139,6 @@ This release makes the following breaking changes:
     *Joel Hawksley*
 
 * Run RSpec tests in CI.
-
-    *Joel Hawksley*
-
-* Add `#current_template` accessor and `Template#path` for diagnostic usage.
 
     *Joel Hawksley*
 
