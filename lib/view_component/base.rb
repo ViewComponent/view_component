@@ -50,6 +50,7 @@ module ViewComponent
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
     attr_accessor :__vc_original_view_context
+    attr_reader :current_template
 
     # Components render in their own view context. Helpers and other functionality
     # require a reference to the original Rails view context, an instance of
