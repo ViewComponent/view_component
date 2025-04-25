@@ -2,8 +2,8 @@
 
 module ViewComponent
   module VERSION
-    MAJOR = 3
-    MINOR = 22
+    MAJOR = ruby
+    MINOR = 4
     PATCH = 0
     PRE = nil
 

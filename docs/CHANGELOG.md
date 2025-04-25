@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## ruby.4.0
+
 * Do not include internal `DocsBuilderComponent` or `YARD::MattrAccessorHandler` in published gem.
 
     *Joel Hawksley*
