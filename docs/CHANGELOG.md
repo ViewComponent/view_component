@@ -136,6 +136,10 @@ This release makes the following breaking changes:
 
     *Joel Hawksley*
 
+* Add `#current_template` accessor and `Template#path` for diagnostic usage.
+
+    *Joel Hawksley*
+
 ## 3.22.0
 
 * Rewrite `ViewComponents at GitHub` documentation as more general `Best practices`.

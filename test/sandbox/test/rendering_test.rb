@@ -1270,4 +1270,12 @@ class RenderingTest < ViewComponent::TestCase
       render_inline(mock_component.new)
     end
   end
+
+  def test_current_template
+    component = CurrentTemplateComponent.new
+
+    render_inline(component)
+
+    assert(rendered_content.include?("current_template_component.html.erb"))
+  end
 end

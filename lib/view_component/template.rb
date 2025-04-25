@@ -7,7 +7,7 @@ module ViewComponent
 
     DataWithSource = Struct.new(:format, :identifier, :short_identifier, :type, keyword_init: true)
 
-    attr_reader :details
+    attr_reader :details, :path
 
     delegate :virtual_path, to: :@component
     delegate :format, :variant, to: :@details
