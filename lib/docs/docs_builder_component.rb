@@ -24,7 +24,7 @@ module ViewComponent
       end
 
       def call
-        <<~DOCS.chomp
+        <<~DOCS.chomp.html_safe
           `#{klass_name}`
 
           #{error_message}
@@ -67,7 +67,7 @@ module ViewComponent
       end
 
       def docstring_and_deprecation_text
-        <<~DOCS.strip
+        <<~DOCS.strip.html_safe
           #{docstring}
 
           #{"_#{deprecation_text}_" if deprecated?}
@@ -75,7 +75,7 @@ module ViewComponent
       end
 
       def call
-        <<~DOCS.chomp
+        <<~DOCS.chomp.html_safe
           `#{separator}#{signature_or_name}`#{types}#{suffix}
 
           #{docstring_and_deprecation_text}
