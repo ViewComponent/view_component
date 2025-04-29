@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Introduce component-local config and migrate `strip_trailing_whitespace` to use it under the hood.
+
+    *Simon Fish*
+
 * Add docs about Slack channel in Ruby Central workspace. (Join us! #oss-view-component). Email joelhawksley@github.com for an invite.
 
     *Joel Hawksley
