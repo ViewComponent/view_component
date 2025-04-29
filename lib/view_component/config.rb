@@ -21,8 +21,7 @@ module ViewComponent
           show_previews: Rails.env.development? || Rails.env.test?,
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
-          default_preview_layout: nil,
-          capture_compatibility_patch_enabled: false
+          default_preview_layout: nil
         })
       end
 
@@ -144,13 +143,6 @@ module ViewComponent
       # A custom default layout used for the previews index page and individual
       # previews.
       # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
-
-      # @!attribute capture_compatibility_patch_enabled
-      # @return [Boolean]
-      # Enables the experimental capture compatibility patch that makes ViewComponent
-      # compatible with forms, capture, and other built-ins.
-      # previews.
-      # Defaults to `false`.
 
       def default_preview_paths
         (default_rails_preview_paths + default_rails_engines_preview_paths).uniq

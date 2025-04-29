@@ -16,7 +16,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5.0" => 79, "3.4.3" => 85, "3.3.8" => 86} : {"3.3.8" => 85, "3.2.8" => 84}
+      {"3.5.0" => 78, "3.4.3" => 84} : {"3.3.8" => 84, "3.2.8" => 83}
 
     with_instrumentation_enabled_option(false) do
       assert_allocations(**allocations) do
@@ -1053,20 +1053,6 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
-  end
-
-  def test_renders_objects_in_component_view_context
-    not_a_component = RendersNonComponent::NotAComponent.new
-    component = RendersNonComponent.new(not_a_component: not_a_component)
-
-    render_inline(component)
-
-    assert_selector "span", text: "I'm not a component"
-
-    assert(
-      not_a_component.render_in_view_context == component,
-      "Component-like object was not rendered in the parent component's view context"
-    )
   end
 
   def test_renders_nested_collection

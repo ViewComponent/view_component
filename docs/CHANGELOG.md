@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* BREAKING: Remove dependency on `ActionView::Base`, eliminating the need for capture compatibility patch.
+
+    *Cameron Dutro*, *Joel Hawksley*
+
 ## 4.0.0.alpha2
 
 * Add `#current_template` accessor and `Template#path` for diagnostic usage.

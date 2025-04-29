@@ -142,13 +142,6 @@ so helpers, etc work as expected.
 
 ## Configuration
 
-### `.capture_compatibility_patch_enabled`
-
-Enables the experimental capture compatibility patch that makes ViewComponent
-compatible with forms, capture, and other built-ins.
-previews.
-Defaults to `false`.
-
 ### `.component_parent_class`
 
 The parent class from which generated components will inherit.

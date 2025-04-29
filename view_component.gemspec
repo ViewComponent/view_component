@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
     "docs/CHANGELOG.md",
     "lib/rails/**/*.rb",
     "lib/view_component.rb",
-    "lib/view_component/**/*.rb",
+    "lib/view_component/**/*.rb"
   ]
   spec.require_paths = ["lib"]
 
