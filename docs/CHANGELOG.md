@@ -10,7 +10,13 @@ nav_order: 6
 
 ## main
 
-## 4.0.0
+## 4.0.0.alpha2
+
+* Add `#current_template` accessor and `Template#path` for diagnostic usage.
+
+    *Joel Hawksley*
+
+## 4.0.0.alpha1
 
 Almost six years after releasing [v1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions.
 
@@ -111,6 +117,14 @@ This release makes the following breaking changes:
 * Remove unnecessary `respond_to` checks.
 
     *Tiago Menegaz*, *Joel Hawksley*
+
+* Introduce component-local config and migrate `strip_trailing_whitespace` to use it under the hood.
+
+    *Simon Fish*
+
+* Add docs about Slack channel in Ruby Central workspace. (Join us! #oss-view-component). Email joelhawksley@github.com for an invite.
+
+    *Joel Hawksley
 
 * Do not include internal `DocsBuilderComponent` or `YARD::MattrAccessorHandler` in published gem.
 

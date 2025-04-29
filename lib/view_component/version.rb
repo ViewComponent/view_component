@@ -5,7 +5,7 @@ module ViewComponent
     MAJOR = 4
     MINOR = 0
     PATCH = 0
-    PRE = "alpha1"
+    PRE = "alpha2"
 
     STRING = [MAJOR, MINOR, PATCH, PRE].compact.join(".")
   end

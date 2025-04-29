@@ -1282,4 +1282,12 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_equal(component.instance_variables.last, :@name)
   end
+
+  def test_current_template
+    component = CurrentTemplateComponent.new
+
+    render_inline(component)
+
+    assert(rendered_content.include?("current_template_component.html.erb"))
+  end
 end
