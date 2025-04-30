@@ -5,6 +5,7 @@ require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
+require "view_component/component_local_config"
 require "view_component/config"
 require "view_component/errors"
 require "view_component/inline_template"
@@ -56,6 +57,7 @@ module ViewComponent
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
+    include ViewComponent::ComponentLocalConfig
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -65,9 +67,6 @@ module ViewComponent
 
     # For Content Security Policy nonces
     delegate :content_security_policy_nonce, to: :helpers
-
-    # Config option that strips trailing whitespace in templates before compiling them.
-    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
     attr_accessor :__vc_original_view_context
     attr_reader :current_template
@@ -620,16 +619,38 @@ module ViewComponent
       # end
       # ```
       #
+      # @deprecated Use the new component-local configuration option instead.
+      #
+      #   ```ruby
+      #   class MyComponent < ViewComponent::Base
+      #     configure_view_component do |config|
+      #       config.strip_trailing_whitespace = true
+      #     end
+      #   end
+      #   ```
+      #
       # @param value [Boolean] Whether to strip newlines.
       def strip_trailing_whitespace(value = true)
-        self.__vc_strip_trailing_whitespace = value
+        ViewComponent::Deprecation.deprecation_warning(
+          "strip_trailing_whitespace",
+          <<~DOC
+            Use the new component-local configuration option instead:
+
+            class #{self.class.name} < ViewComponent::Base
+              configure_view_component do |config|
+                config.strip_trailing_whitespace = #{value}
+              end
+            end
+          DOC
+        )
+        view_component_config.strip_trailing_whitespace = value
       end
 
       # Whether trailing whitespace will be stripped before compilation.
       #
       # @return [Boolean]
       def strip_trailing_whitespace?
-        __vc_strip_trailing_whitespace
+        view_component_config.strip_trailing_whitespace
       end
 
       # Ensure the component initializer accepts the
