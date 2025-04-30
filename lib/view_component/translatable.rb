@@ -93,7 +93,7 @@ module ViewComponent
     def translate(key = nil, **options)
       raise ViewComponent::TranslateCalledBeforeRenderError if view_context.nil?
 
-      return super unless __vc_i18n_backend
+      return @view_context.translate(key, **options) unless __vc_i18n_backend
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
       locale = options.delete(:locale) || ::I18n.locale
@@ -110,13 +110,13 @@ module ViewComponent
 
         # Fallback to the global translations
         if translated.is_a? ::I18n::MissingTranslation
-          return super(key, locale: locale, **options)
+          return @view_context.translate(key, locale: locale, **options)
         end
 
         translated = html_safe_translation(translated) if as_html
         translated
       else
-        super(key, locale: locale, **options)
+        @view_context.translate(key, locale: locale, **options)
       end
     end
     alias_method :t, :translate

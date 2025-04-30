@@ -18,8 +18,21 @@ require "view_component/translatable"
 require "view_component/with_content_helper"
 require "view_component/use_helpers"
 
+module ActionView
+  class OutputBuffer
+    def with_buffer(buf = nil)
+      new_buffer = buf || +""
+      old_buffer, @raw_buffer = @raw_buffer, new_buffer
+      yield
+      new_buffer
+    ensure
+      @raw_buffer = old_buffer
+    end
+  end
+end
+
 module ViewComponent
-  class Base < ActionView::Base
+  class Base
     class << self
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
@@ -35,6 +48,10 @@ module ViewComponent
       end
     end
 
+    include ActionView::Helpers
+    include ERB::Escape
+    include ActiveSupport::CoreExt::ERBUtil
+
     include ViewComponent::InlineTemplate
     include ViewComponent::UseHelpers
     include ViewComponent::Slotable
@@ -44,6 +61,9 @@ module ViewComponent
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
+
+    # HTML construction methods
+    delegate :output_buffer, :lookup_context, :view_renderer, :view_flow, to: :helpers
 
     # For Content Security Policy nonces
     delegate :content_security_policy_nonce, to: :helpers
@@ -61,7 +81,7 @@ module ViewComponent
     # @param view_context [ActionView::Base] The original view context.
     # @return [void]
     def set_original_view_context(view_context)
-      self.__vc_original_view_context = view_context
+      # noop
     end
 
     using RequestDetails
@@ -80,7 +100,7 @@ module ViewComponent
       @view_context = view_context
       self.__vc_original_view_context ||= view_context
 
-      @output_buffer = ActionView::OutputBuffer.new
+      @output_buffer = view_context.output_buffer
 
       @lookup_context ||= view_context.lookup_context
 
@@ -107,14 +127,20 @@ module ViewComponent
       before_render
 
       if render?
-        rendered_template = render_template_for(@__vc_requested_details).to_s
+        value = nil
 
-        # Avoid allocating new string when output_preamble and output_postamble are blank
-        if output_preamble.blank? && output_postamble.blank?
-          rendered_template
-        else
-          safe_output_preamble + rendered_template + safe_output_postamble
+        @output_buffer.with_buffer do
+          rendered_template = render_template_for(@__vc_requested_details).to_s
+
+          # Avoid allocating new string when output_preamble and output_postamble are blank
+          value = if output_preamble.blank? && output_postamble.blank?
+            rendered_template
+          else
+            safe_output_preamble + rendered_template + safe_output_postamble
+          end
         end
+
+        value
       else
         ""
       end
@@ -206,7 +232,7 @@ module ViewComponent
     def render(options = {}, args = {}, &block)
       if options.respond_to?(:set_original_view_context)
         options.set_original_view_context(self.__vc_original_view_context)
-        super
+        @view_context.render(options, args, &block)
       else
         __vc_original_view_context.render(options, args, &block)
       end
