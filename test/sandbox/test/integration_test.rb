@@ -512,7 +512,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   # This test documents a bug that reports an incompatibility with the turbo-rails gem's `turbo_stream` helper.
-  # This helper may work if the `capture_compatibility_patch` is enabled.
   # Prefer `tag.turbo_stream` instead if you do not have the patch enabled already.
   def test_render_component_in_turbo_stream
     without_template_annotations do
@@ -520,11 +519,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       expected_response_body = <<~TURBOSTREAM
         <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
       TURBOSTREAM
-      if ViewComponent::Base.config.capture_compatibility_patch_enabled
-        assert_equal expected_response_body, response.body
-      else
-        assert_not_equal expected_response_body, response.body
-      end
+
+      assert_equal expected_response_body, response.body
     end
   end
 

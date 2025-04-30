@@ -51,18 +51,45 @@ module ViewComponent
       end
     end
 
-    initializer "view_component.enable_capture_patch" do |app|
-      ActiveSupport.on_load(:view_component) do
-        ActionView::Base.include(ViewComponent::CaptureCompatibility) if app.config.view_component.capture_compatibility_patch_enabled
-      end
-    end
-
     initializer "view_component.set_autoload_paths" do |app|
       options = app.config.view_component
 
       if options.show_previews && !options.preview_paths.empty?
         paths_to_add = options.preview_paths - ActiveSupport::Dependencies.autoload_paths
         ActiveSupport::Dependencies.autoload_paths.concat(paths_to_add) if paths_to_add.any?
+      end
+    end
+
+    initializer "view_component.propshaft_support" do |_app|
+      ActiveSupport.on_load(:view_component) do
+        if defined?(Propshaft)
+          include Propshaft::Helper
+        end
+      end
+    end
+
+    config.after_initialize do |app|
+      ActiveSupport.on_load(:view_component) do
+        if defined?(Sprockets::Rails)
+          include Sprockets::Rails::Helper
+
+          # Copy relevant config to VC context
+          # See: https://github.com/rails/sprockets-rails/blob/266ec49f3c7c96018dd75f9dc4f9b62fe3f7eecf/lib/sprockets/railtie.rb#L245
+          self.debug_assets = app.config.assets.debug
+          self.digest_assets = app.config.assets.digest
+          self.assets_prefix = app.config.assets.prefix
+          self.assets_precompile = app.config.assets.precompile
+
+          self.assets_environment = app.assets
+          self.assets_manifest = app.assets_manifest
+
+          self.resolve_assets_with = app.config.assets.resolve_with
+
+          self.check_precompiled_asset = app.config.assets.check_precompiled_asset
+          self.unknown_asset_fallback = app.config.assets.unknown_asset_fallback
+          # Expose the app precompiled asset check to the view
+          self.precompiled_asset_checker = ->(logical_path) { app.asset_precompiled? logical_path }
+        end
       end
     end
 
