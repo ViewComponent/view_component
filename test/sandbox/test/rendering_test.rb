@@ -30,7 +30,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5" => 80, "3.4" => 86, "3.3" => 89} : {"3.3" => 88, "3.2" => 87}
+      {"3.5" => 79, "3.4" => 85} : {"3.3" => 87, "3.2" => 86}
 
     with_instrumentation_enabled_option(false) do
       assert_allocations(**allocations) do
