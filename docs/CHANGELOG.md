@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add internal optimization for Ruby object shapes.
+
+    *Adam Hess*, *Joel Hawksley*
+
 ## 4.0.0.alpha2
 
 * Add `#current_template` accessor and `Template#path` for diagnostic usage.
