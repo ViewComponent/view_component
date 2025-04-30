@@ -3,6 +3,20 @@
 require "test_helper"
 
 class RenderingTest < ViewComponent::TestCase
+  def self.new(...)
+    instance = allocate
+    instance.__allocate_instance_variables
+    instance.send(:initialize, ...)
+    instance
+  end
+
+  def __allocate_instance_variables
+    @page = nil
+    @rendered_content = nil
+    @vc_test_controller = nil
+    @vc_test_request = nil
+  end
+
   def test_render_inline
     render_inline(MyComponent.new)
 
