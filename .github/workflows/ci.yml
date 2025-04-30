@@ -91,7 +91,7 @@ jobs:
         bundle && bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '7.1.1'
+        RAILS_VERSION: '7.1.5'
         PARALLEL_WORKERS: '1'
   coverage:
     needs: test
