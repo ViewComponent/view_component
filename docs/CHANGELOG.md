@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.0.0.alpha3
+
 * BREAKING: Remove dependency on `ActionView::Base`, eliminating the need for capture compatibility patch.
 
     *Cameron Dutro*
