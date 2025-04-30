@@ -41,7 +41,6 @@ module ViewComponent
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
     include ViewComponent::ComponentLocalConfig
-    include ViewComponent::Cacheable
 
     RESERVED_PARAMETER = :content
     VC_INTERNAL_DEFAULT_FORMAT = :html
