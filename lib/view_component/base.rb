@@ -179,14 +179,12 @@ module ViewComponent
     #
     # When rendering the parent inside an .erb template, use `#render_parent` instead.
     def render_parent_to_string
-      begin
-        target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
-        @__vc_parent_render_level += 1
+      target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
+      @__vc_parent_render_level += 1
 
-        target_render.bind_call(self, @__vc_requested_details)
-      ensure
-        @__vc_parent_render_level -= 1
-      end
+      target_render.bind_call(self, @__vc_requested_details)
+    ensure
+      @__vc_parent_render_level -= 1
     end
 
     # Optional content to be returned before the rendered template.
@@ -572,7 +570,7 @@ module ViewComponent
         child.with_collection_parameter provided_collection_parameter
 
         if instance_methods(false).include?(:render_template_for)
-          vc_ancestor_calls = !@__vc_ancestor_calls.nil? ? @__vc_ancestor_calls.dup : []
+          vc_ancestor_calls = (!@__vc_ancestor_calls.nil?) ? @__vc_ancestor_calls.dup : []
 
           vc_ancestor_calls.unshift(instance_method(:render_template_for))
           child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
