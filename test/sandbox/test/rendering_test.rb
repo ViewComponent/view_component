@@ -15,11 +15,8 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.__vc_ensure_compiled
 
-    allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5" => 78, "3.4" => 84, "3.3" => 86} : {"3.3" => 84, "3.2" => 83}
-
     with_instrumentation_enabled_option(false) do
-      assert_allocations(**allocations) do
+      assert_allocations({"3.5" => 78, "3.4" => 84, "3.3" => 84, "3.2" => 83}) do
         render_inline(MyComponent.new)
       end
     end
