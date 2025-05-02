@@ -12,7 +12,7 @@ module ViewComponent::Cacheable
     def view_cache_dependencies
       return if __vc_cache_dependencies.blank? || __vc_cache_dependencies.none? || __vc_cache_dependencies.nil?
 
-      __vc_cache_dependencies.filter_map { |dep| retrieve_cache_key(send(dep)) }.join("&")
+      retrieve_cache_key(__vc_cache_dependencies)
     end
 
     # Render component from cache if possible
@@ -36,7 +36,7 @@ module ViewComponent::Cacheable
       when key.respond_to?(:cache_key) then key.cache_key
       when key.is_a?(Array) then key.map { |element| retrieve_cache_key(element) }.to_param
       when key.respond_to?(:to_a) then retrieve_cache_key(key.to_a)
-      else key.to_param
+      else public_send(key).to_param
       end.to_s
     end
   end
