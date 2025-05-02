@@ -4,7 +4,7 @@ module ViewComponent::Cacheable
   extend ActiveSupport::Concern
 
   included do
-    class_attribute :__vc_cache_dependencies, default: [:format, :__vc_format]
+    class_attribute :__vc_cache_dependencies, default: [:format, :__vc_format, :identifier]
 
     # For caching, such as #cache_if
     #
@@ -36,7 +36,7 @@ module ViewComponent::Cacheable
       when key.respond_to?(:cache_key) then key.cache_key
       when key.is_a?(Array) then key.map { |element| retrieve_cache_key(element) }.to_param
       when key.respond_to?(:to_a) then retrieve_cache_key(key.to_a)
-      else public_send(key).to_param
+      when respond_to?(key) then public_send(key).to_param
       end.to_s
     end
   end
