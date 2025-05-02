@@ -351,17 +351,32 @@ module ViewComponent
     end
 
     def get_slot(slot_name)
-      content unless content_evaluated? # ensure content is loaded so slots will be defined
-
-      slot = self.class.registered_slots[slot_name]
       @__vc_set_slots ||= {}
 
-      if @__vc_set_slots[slot_name]
-        return @__vc_set_slots[slot_name]
-      end
+      if !@__vc_set_slots[slot_name] && (default_method = registered_slots[slot_name][:default_method])
+        renderable_value = send(default_method)
+        slot = Slot.new(self)
 
-      if slot[:collection]
-        []
+        if renderable_value.respond_to?(:render_in)
+          slot.__vc_component_instance = renderable_value
+        else
+          slot.__vc_content = renderable_value
+        end
+
+        slot
+      else
+        content unless content_evaluated? # ensure content is loaded so slots will be defined
+
+        slot = self.class.registered_slots[slot_name]
+        @__vc_set_slots ||= {}
+
+        if @__vc_set_slots[slot_name]
+          return @__vc_set_slots[slot_name]
+        end
+
+        if slot[:collection]
+          []
+        end
       end
     end
 
