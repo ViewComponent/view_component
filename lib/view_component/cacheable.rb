@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
+require 'set'
+
 module ViewComponent::Cacheable
   extend ActiveSupport::Concern
 
   included do
-    class_attribute :__vc_cache_dependencies, default: [:format, :__vc_format, :identifier]
+    class_attribute :__vc_cache_dependencies, default: Set[:format, :__vc_format, :identifier]
 
     # For caching, such as #cache_if
     #
@@ -33,7 +35,7 @@ module ViewComponent::Cacheable
   class_methods do
     # For caching the component
     def cache_on(*args)
-      __vc_cache_dependencies.push(*args)
+      __vc_cache_dependencies.merge(args)
     end
 
     def inherited(child)
