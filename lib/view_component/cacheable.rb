@@ -24,7 +24,7 @@ module ViewComponent::Cacheable
     # @private
     def __vc_render_cacheable(rendered_template)
       if __vc_cache_dependencies != [:format, :__vc_format]
-        CachingRegistry.track_caching do
+        ViewComponent::CachingRegistry.track_caching do
            template_fragment(rendered_template)
         end
       else
