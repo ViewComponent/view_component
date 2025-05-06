@@ -1,4 +1,5 @@
-  
+# frozen_string_literal: true
+ 
 module ViewComponent
   module CachingRegistry # :nodoc:
     extend self
