@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require 'set'
-require 'view_component/cache_registry'
+require "set"
+require "view_component/cache_registry"
+require "view_component/cache_digestor"
 
 module ViewComponent::Cacheable
   extend ActiveSupport::Concern
@@ -25,7 +26,7 @@ module ViewComponent::Cacheable
     def __vc_render_cacheable(rendered_template)
       if __vc_cache_dependencies != [:format, :__vc_format]
         ViewComponent::CachingRegistry.track_caching do
-           template_fragment(rendered_template)
+          template_fragment(rendered_template)
         end
       else
         __vc_render_template(rendered_template)
@@ -43,12 +44,12 @@ module ViewComponent::Cacheable
     end
 
     def read_fragment(rendered_template)
-      Rails.cache.fetch(view_cache_dependencies) 
+      Rails.cache.fetch(component_digest)
     end
 
     def write_fragment(rendered_template)
       content = __vc_render_template(rendered_template)
-      Rails.cache.fetch(view_cache_dependencies) do
+      Rails.cache.fetch(component_digest) do
         content
       end
       content
@@ -59,6 +60,11 @@ module ViewComponent::Cacheable
       cache_key.flatten!(1)
       cache_key.compact!
       cache_key
+    end
+
+    def component_digest
+      component_name = self.class.name.demodulize.underscore
+      ViewComponent::CacheDigestor.digest(name: component_name, format: format, finder: @lookup_context, dependencies: view_cache_dependencies)
     end
   end
 
