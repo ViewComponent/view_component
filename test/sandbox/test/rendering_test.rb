@@ -19,7 +19,7 @@ class RenderingTest < ViewComponent::TestCase
       if Rails.version.to_f < 8.0
         {"3.3.8" => 128, "3.3.0" => 140, "3.2.8" => 126, "3.1.7" => 126, "3.0.7" => 135}
       elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
-        {"3.5.0" => 121, "3.4.3" => 125, "3.3.8" => 137}
+        {"3.5.0" => 121, "3.4.3" => 125, "3.3.8" => 138}
       else
         {"3.4.3" => 123}
       end
@@ -1259,5 +1259,35 @@ class RenderingTest < ViewComponent::TestCase
     assert_nothing_raised do
       render_inline(mock_component.new)
     end
+  end
+
+  def test_cache_component
+    return if Rails.version < "7.0"
+
+    component = CacheComponent.new(foo: "foo", bar: "bar")
+    render_inline(component)
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo bar")
+
+    render_inline(CacheComponent.new(foo: "foo", bar: "bar"))
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+
+    new_component = CacheComponent.new(foo: "foo", bar: "baz")
+    render_inline(new_component)
+
+    assert_selector(".cache-component__cache-key", text: new_component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo baz")
+  end
+
+  def test_no_cache_compoennt
+    return if Rails.version < "7.0"
+
+    component = NoCacheComponent.new(foo: "foo", bar: "bar")
+    render_inline(component)
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo bar")
   end
 end
