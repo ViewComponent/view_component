@@ -1262,6 +1262,8 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_cache_component
+    return if Rails.version < "7.0"
+
     component = CacheComponent.new(foo: "foo", bar: "bar")
     render_inline(component)
 
@@ -1280,6 +1282,8 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_no_cache_compoennt
+    return if Rails.version < "7.0"
+
     component = NoCacheComponent.new(foo: "foo", bar: "bar")
     render_inline(component)
 
