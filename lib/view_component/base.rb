@@ -304,7 +304,7 @@ module ViewComponent
       @__vc_request ||= controller.request if controller.respond_to?(:request)
     end
 
-    # Fo use in caching
+    # For use in caching
     #
     # @private
     def __vc_format
