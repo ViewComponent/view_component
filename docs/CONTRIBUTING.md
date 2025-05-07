@@ -16,6 +16,10 @@ Maintainers tend to focus on areas of the project that are useful to them and th
 
 Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [MIT license](https://github.com/viewcomponent/view_component/blob/main/LICENSE.txt).
 
+## Slack community
+
+While we prefer using Issues, Discussions, and PRs on GitHub, there is a ViewComponent Slack channel on the Ruby Central workspace: #oss-view-component. Reach out to joelhawksley@github.com for an invite.
+
 ## Reporting bugs
 
 When opening an issue to describe a bug, it's helpful to provide steps to reproduce it, either with failing tests in a pull request, or by sharing a repository that demonstrates the issue.

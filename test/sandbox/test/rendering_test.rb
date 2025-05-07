@@ -15,9 +15,14 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.ensure_compiled
 
-    allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5.0" => 119, "3.4.3" => 125, "3.3.8" => 137} :
-      {"3.3.8" => 128, "3.3.0" => 140, "3.2.8" => 126, "3.1.7" => 126, "3.0.7" => 135}
+    allocations =
+      if Rails.version.to_f < 8.0
+        {"3.3.8" => 128, "3.3.0" => 140, "3.2.8" => 126, "3.1.7" => 126, "3.0.7" => 135}
+      elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
+        {"3.5.0" => 121, "3.4.3" => 125, "3.3.8" => 137}
+      else
+        {"3.4.3" => 123}
+      end
 
     assert_allocations(**allocations) do
       render_inline(MyComponent.new)
