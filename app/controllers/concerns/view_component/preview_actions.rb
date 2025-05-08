@@ -102,7 +102,7 @@ module ViewComponent
     end
 
     def prepend_preview_examples_view_path
-      prepend_view_path(ViewComponent::Base.preview_paths)
+      prepend_view_path(ViewComponent::Base.config.preview_paths)
     end
   end
 end

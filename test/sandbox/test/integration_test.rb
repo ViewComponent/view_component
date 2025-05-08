@@ -579,7 +579,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       expected_response_body = <<~TURBOSTREAM
         <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
       TURBOSTREAM
-      if ViewComponent::Base.config.capture_compatibility_patch_enabled
+      if ViewComponent::GlobalConfig.capture_compatibility_patch_enabled
         assert_equal expected_response_body, response.body
       else
         assert_not_equal expected_response_body, response.body
@@ -716,8 +716,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
   end
 
-  def test_config_options_shared_between_base_and_engine
-    config_entrypoints = [Rails.application.config.view_component, ViewComponent::Base.config]
+  def test_globalconfig_is_proxy_for_rails_app_config
+    config_entrypoints = [Rails.application.config.view_component, ViewComponent::GlobalConfig]
     2.times do
       config_entrypoints.first.yield_self do |config|
         {
