@@ -95,7 +95,7 @@ class TranslatableTest < ViewComponent::TestCase
     ) do
       assert_equal "MISSING", translate(".hello", default: "MISSING")
       assert_equal "Hello from Rails translations!", translate("hello")
-      assert_nil TranslatableComponent.i18n_backend
+      assert_nil TranslatableComponent.__vc_i18n_backend
     end
   ensure
     ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)

@@ -32,7 +32,6 @@ module ViewComponent # :nodoc:
 
         @__vc_inline_template_defined = true
       end
-      ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
 
       def respond_to_missing?(method, include_all = false)
         method.end_with?("_template") || super
@@ -42,13 +41,13 @@ module ViewComponent # :nodoc:
         @__vc_inline_template if defined?(@__vc_inline_template)
       end
 
-      def inline_template_language
+      def __vc_inline_template_language
         @__vc_inline_template_language if defined?(@__vc_inline_template_language)
       end
 
       def inherited(subclass)
         super
-        subclass.instance_variable_set(:@__vc_inline_template_language, inline_template_language)
+        subclass.instance_variable_set(:@__vc_inline_template_language, __vc_inline_template_language)
       end
     end
   end

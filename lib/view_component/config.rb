@@ -15,17 +15,13 @@ module ViewComponent
           generate: default_generate_options,
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
-          show_previews_source: false,
           instrumentation_enabled: false,
-          use_deprecated_instrumentation_name: true,
-          render_monkey_patch_enabled: true,
           view_component_path: "app/components",
           component_parent_class: nil,
           show_previews: Rails.env.development? || Rails.env.test?,
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
-          default_preview_layout: nil,
-          capture_compatibility_patch_enabled: false
+          default_preview_layout: nil
         })
       end
 
@@ -109,28 +105,10 @@ module ViewComponent
       # The entry route for component previews.
       # Defaults to `"/rails/view_components"`.
 
-      # @!attribute show_previews_source
-      # @return [Boolean]
-      # Whether to display source code previews in component previews.
-      # Defaults to `false`.
-
       # @!attribute instrumentation_enabled
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
-
-      # @!attribute use_deprecated_instrumentation_name
-      # @return [Boolean]
-      # Whether ActiveSupport Notifications use the private name `"!render.view_component"`
-      # or are made more publicly available via `"render.view_component"`.
-      # Will be removed in next major version.
-      # Defaults to `true`.
-
-      # @!attribute render_monkey_patch_enabled
-      # @return [Boolean] Whether the #render method should be monkey patched.
-      # If this is disabled, use `#render_component` or
-      # `#render_component_to_string` instead.
-      # Defaults to `true`.
 
       # @!attribute view_component_path
       # @return [String]
@@ -165,13 +143,6 @@ module ViewComponent
       # A custom default layout used for the previews index page and individual
       # previews.
       # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
-
-      # @!attribute capture_compatibility_patch_enabled
-      # @return [Boolean]
-      # Enables the experimental capture compatibility patch that makes ViewComponent
-      # compatible with forms, capture, and other built-ins.
-      # previews.
-      # Defaults to `false`.
 
       def default_preview_paths
         (default_rails_preview_paths + default_rails_engines_preview_paths).uniq

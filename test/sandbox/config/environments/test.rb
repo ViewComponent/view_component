@@ -16,27 +16,22 @@ Sandbox::Application.configure do
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
 
-  # `cache_classes=false` is necessary to test code-reloading for people using VC in development.
-  # However, it's incompatible with collecting simplecov coverage reports.
-  config.cache_classes = !ENV["ENABLE_RELOADING"]
+  config.cache_classes = true
 
   # Show full error reports and disable caching
   config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
 
   # Raise exceptions instead of rendering exception templates
-  config.action_dispatch.show_exceptions = (Rails::VERSION::STRING < "7.1") ? false : :none
+  config.action_dispatch.show_exceptions = :none
 
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection = false
 
   config.view_component.show_previews = true
-
+  config.view_component.instrumentation_enabled = true
   config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
-  config.view_component.render_monkey_patch_enabled = true
-  config.view_component.show_previews_source = true
   config.view_component.test_controller = "IntegrationExamplesController"
-  config.view_component.capture_compatibility_patch_enabled = ENV["CAPTURE_PATCH_ENABLED"] == "true"
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
@@ -51,7 +46,7 @@ Sandbox::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
-  config.action_view.annotate_rendered_view_with_filenames = true if Rails.version.to_f >= 6.1
+  config.action_view.annotate_rendered_view_with_filenames = true
 
   config.eager_load = true
 
