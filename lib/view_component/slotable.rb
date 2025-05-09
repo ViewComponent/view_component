@@ -365,12 +365,10 @@ module ViewComponent
         end
 
         slot
-      else
-        if @__vc_set_slots[slot_name]
-          @__vc_set_slots[slot_name]
-        elsif self.class.registered_slots[slot_name][:collection]
-          []
-        end
+      elsif @__vc_set_slots[slot_name]
+        @__vc_set_slots[slot_name]
+      elsif self.class.registered_slots[slot_name][:collection]
+        []
       end
     end
 
