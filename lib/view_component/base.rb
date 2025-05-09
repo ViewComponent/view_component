@@ -215,12 +215,6 @@ module ViewComponent
       true
     end
 
-    # Override the ActionView::Base initializer so that components
-    # do not need to define their own initializers.
-    # @private
-    def initialize(*)
-    end
-
     # Re-use original view_context if we're not rendering a component.
     #
     # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
