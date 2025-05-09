@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix setting custom `preview_paths`.
+
+    *Thomas von Deyen*
+
 * Introduce component-local config and migrate `strip_trailing_whitespace` to use it under the hood.
 
     *Simon Fish*
