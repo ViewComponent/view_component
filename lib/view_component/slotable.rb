@@ -333,7 +333,6 @@ module ViewComponent
 
       def raise_if_slot_registered(slot_name)
         if registered_slots.key?(slot_name)
-          # TODO remove? This breaks overriding slots when slots are inherited
           raise RedefinedSlotError.new(name, slot_name)
         end
       end
@@ -432,7 +431,7 @@ module ViewComponent
     def set_polymorphic_slot(slot_name, poly_type = nil, *args, &block)
       slot_definition = self.class.registered_slots[slot_name]
 
-      if !slot_definition[:collection] && (defined?(@__vc_set_slots) && @__vc_set_slots[slot_name])
+      if !slot_definition[:collection] && defined?(@__vc_set_slots) && @__vc_set_slots[slot_name]
         raise ContentAlreadySetForPolymorphicSlotError.new(slot_name)
       end
 

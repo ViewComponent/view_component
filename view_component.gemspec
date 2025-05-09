@@ -24,14 +24,26 @@ Gem::Specification.new do |spec|
       "public gem pushes."
   end
 
-  spec.files = Dir["LICENSE.txt", "README.md", "app/**/*", "docs/CHANGELOG.md", "lib/**/*"]
+  spec.files = Dir[
+    "LICENSE.txt",
+    "README.md",
+    "app/**/*",
+    "docs/CHANGELOG.md",
+    "lib/rails/**/*.rb",
+    "lib/view_component.rb",
+    "lib/view_component/**/*.rb"
+  ]
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = ">= 2.7.0"
 
   spec.add_runtime_dependency "activesupport", [">= 5.2.0", "< 8.1"]
   spec.add_runtime_dependency "method_source", "~> 1.0"
-  spec.add_runtime_dependency "concurrent-ruby", "1.3.4" # lock version that supports Rails 6.1
+  if ENV["RAILS_VERSION"] == "6.1"
+    spec.add_runtime_dependency "concurrent-ruby", "1.3.4" # lock version that supports Rails 6.1
+  else
+    spec.add_runtime_dependency "concurrent-ruby", "~> 1"
+  end
   spec.add_development_dependency "allocation_stats", "~> 0.1.5"
   spec.add_development_dependency "appraisal", "~> 2.4"
   spec.add_development_dependency "benchmark-ips", "~> 2.13.0"

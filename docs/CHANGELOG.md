@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Changelog
-nav_order: 5
+nav_order: 6
 ---
 
 <!-- Add unreleased changes under the "main" heading. -->
@@ -13,6 +13,48 @@ nav_order: 5
 * Fix setting custom `preview_paths`.
 
     *Thomas von Deyen*
+
+* Introduce component-local config and migrate `strip_trailing_whitespace` to use it under the hood.
+
+    *Simon Fish*
+
+* Add docs about Slack channel in Ruby Central workspace. (Join us! #oss-view-component). Email joelhawksley@github.com for an invite.
+
+    *Joel Hawksley
+
+* Do not include internal `DocsBuilderComponent` or `YARD::MattrAccessorHandler` in published gem.
+
+    *Joel Hawksley*
+
+* Only lock to `concurrent-ruby` `1.3.4` for Rails 6.1.
+
+    *Joel Hawksley*
+
+* Fix generation of ViewComponent documentation that was broken due to HTML safety issues.
+
+    *Simon Fish*
+
+* Add documentation on how ViewComponent works.
+
+    *Joel Hawksley*
+
+* Clarify that `config.use_deprecated_instrumentation_name` will be removed in v4.
+
+    *Joel Hawksley*
+
+* Run RSpec tests in CI.
+
+    *Joel Hawksley*
+
+## 3.22.0
+
+* Rewrite `ViewComponents at GitHub` documentation as more general `Best practices`.
+
+    *Phil Schalm*, *Joel Hawksley*
+
+* Add unused mechanism for inheriting config from parent modules to enable future engine-local configuration.
+
+    *Simon Fish*
 
 * Improve handling of malformed component edge case when mocking components in tests.
 

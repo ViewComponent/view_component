@@ -65,11 +65,17 @@ jobs:
           - ruby_version: "3.4"
             rails_version: "8.0"
             mode: "capture_patch_enabled"
-          - ruby_version: "head"
+          - ruby_version: "3.4"
             rails_version: "main"
             mode: "capture_patch_disabled"
-          - ruby_version: "head"
+          - ruby_version: "3.4"
             rails_version: "main"
+            mode: "capture_patch_enabled"
+          - ruby_version: "3.5"
+            rails_version: "8.0"
+            mode: "capture_patch_disabled"
+          - ruby_version: "3.5"
+            rails_version: "8.0"
             mode: "capture_patch_enabled"
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
@@ -118,7 +124,7 @@ jobs:
         working-directory: 'view_component'
     - uses: actions/setup-node@v4
       with:
-        node-version: 16
+        node-version: 20
         cache: 'npm'
         cache-dependency-path: 'primer_view_components/package-lock.json'
     - name: Build and test with Rake
@@ -142,7 +148,7 @@ jobs:
         ruby-version: 3.4
         bundler-cache: true
     - name: Download coverage results
-      uses: actions/download-artifact@v4.1.9
+      uses: actions/download-artifact@v4.3.0
     - name: Collate simplecov
       run: |
         bundle exec rake coverage:report

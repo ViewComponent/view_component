@@ -4,6 +4,7 @@ appraise "rails-6.1" do
   gem "rails", "~> 6.1"
   gem "tailwindcss-rails", "~> 2.0"
   gem "sprockets-rails", "~> 3.4.2"
+  gem "concurrent-ruby", "1.3.4"
 
   # Required for Ruby 3.1.0
   gem "net-smtp", require: false

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Contributing
-nav_order: 7
+nav_order: 9
 ---
 
 # Contributing
@@ -15,6 +15,10 @@ If you have any substantial changes that you would like to make, please [open an
 Maintainers tend to focus on areas of the project that are useful to them and their employers, but we're happy to pair with members of the community to enable work on other parts.
 
 Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [MIT license](https://github.com/viewcomponent/view_component/blob/main/LICENSE.txt).
+
+## Slack community
+
+While we prefer using Issues, Discussions, and PRs on GitHub, there is a ViewComponent Slack channel on the Ruby Central workspace: #oss-view-component. Reach out to joelhawksley@github.com for an invite.
 
 ## Reporting bugs
 
