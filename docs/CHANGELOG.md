@@ -18,6 +18,10 @@ nav_order: 6
 
     *Bill Watts*, *Joel Hawksley*
 
+* BREAKING: Remove default initializer from `ViewComponent::Base`. Previously, `ViewComponent::Base` defined a catch-all initializer that allowed components without an initializer defined to be passed arbitrary arguments.
+
+    *Joel Hawksley*
+
 ## 4.0.0.alpha3
 
 * BREAKING: Remove dependency on `ActionView::Base`, eliminating the need for capture compatibility patch.
