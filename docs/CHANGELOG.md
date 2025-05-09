@@ -14,6 +14,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Fix bug in `SlotableDefault` where default could not be overridden when content was passed as a block.
+
+    *Bill Watts*, *Joel Hawksley*
+
 ## 4.0.0.alpha3
 
 * BREAKING: Remove dependency on `ActionView::Base`, eliminating the need for capture compatibility patch.

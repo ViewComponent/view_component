@@ -352,6 +352,7 @@ module ViewComponent
 
     def get_slot(slot_name)
       @__vc_set_slots ||= {}
+      content unless content_evaluated? # ensure content is loaded so slots will be defined
 
       if !@__vc_set_slots[slot_name] && (default_method = registered_slots[slot_name][:default_method])
         renderable_value = send(default_method)
@@ -365,8 +366,6 @@ module ViewComponent
 
         slot
       else
-        content unless content_evaluated? # ensure content is loaded so slots will be defined
-
         slot = self.class.registered_slots[slot_name]
         @__vc_set_slots ||= {}
 
