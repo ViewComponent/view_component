@@ -717,4 +717,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_includes response.body, "Hello, CSS!"
   end
+
+  def test_slotable_default_override
+    get "/slotable_default_override"
+
+    assert_includes response.body, "foo"
+  end
 end
