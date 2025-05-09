@@ -14,7 +14,7 @@ nav_order: 6
 
     *Joel Hawksley*
 
-* Fix bug in `SlotableDefault` where default could not be overridden when content was passed as a block.
+* Fix bug in `SlotableDefault` where default couldn't be overridden when content was passed as a block.
 
     *Bill Watts*, *Joel Hawksley*
 
