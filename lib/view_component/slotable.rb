@@ -358,7 +358,7 @@ module ViewComponent
       return @__vc_set_slots[slot_name] if @__vc_set_slots[slot_name]
 
       # If there is a default method for the slot, call it
-      if default_method = registered_slots[slot_name][:default_method]
+      if (default_method = registered_slots[slot_name][:default_method])
         renderable_value = send(default_method)
         slot = Slot.new(self)
 
