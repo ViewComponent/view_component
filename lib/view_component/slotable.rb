@@ -366,16 +366,10 @@ module ViewComponent
 
         slot
       else
+        return @__vc_set_slots[slot_name] if @__vc_set_slots[slot_name]
+
         slot = self.class.registered_slots[slot_name]
-        @__vc_set_slots ||= {}
-
-        if @__vc_set_slots[slot_name]
-          return @__vc_set_slots[slot_name]
-        end
-
-        if slot[:collection]
-          []
-        end
+        [] if slot[:collection]
       end
     end
 
