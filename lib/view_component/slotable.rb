@@ -354,7 +354,11 @@ module ViewComponent
       @__vc_set_slots ||= {}
       content unless content_evaluated? # ensure content is loaded so slots will be defined
 
-      if !@__vc_set_slots[slot_name] && (default_method = registered_slots[slot_name][:default_method])
+      # If the slot is set, return it
+      return @__vc_set_slots[slot_name] if @__vc_set_slots[slot_name]
+
+      # If there is a default method for the slot, call it
+      if default_method = registered_slots[slot_name][:default_method]
         renderable_value = send(default_method)
         slot = Slot.new(self)
 
@@ -365,9 +369,8 @@ module ViewComponent
         end
 
         slot
-      elsif @__vc_set_slots[slot_name]
-        @__vc_set_slots[slot_name]
       elsif self.class.registered_slots[slot_name][:collection]
+        # If empty slot is a collection, return an empty array
         []
       end
     end
