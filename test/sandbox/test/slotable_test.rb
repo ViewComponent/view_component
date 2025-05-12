@@ -147,7 +147,7 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_sub_component_with_positional_args
-    render_inline(SlotsWithPosArgComponent.new(classes: "mt-4")) do |component|
+    render_inline(SlotsWithPosArgComponent.new) do |component|
       component.with_item("my item", classes: "hello") { "My rad item" }
     end
 
