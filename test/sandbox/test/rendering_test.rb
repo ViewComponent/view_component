@@ -24,6 +24,12 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
+  def test_initialize_super
+    render_inline(InitializeSuperComponent.new)
+
+    assert_selector("div", text: "hello,world!")
+  end
+
   def test_render_in_view_context
     render_in_view_context { render(MyComponent.new) }
 
