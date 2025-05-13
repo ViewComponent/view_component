@@ -32,7 +32,6 @@ Sandbox::Application.configure do
 
   config.view_component.show_previews = true
 
-  config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
   config.view_component.render_monkey_patch_enabled = true
   config.view_component.show_previews_source = true
   config.view_component.test_controller = "IntegrationExamplesController"

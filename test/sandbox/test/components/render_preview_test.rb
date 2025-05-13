@@ -24,4 +24,10 @@ class RenderPreviewTest < ViewComponent::TestCase
 
     assert_selector("div", text: "subclass")
   end
+
+  def test_render_preview_custom_path
+    render_preview(:default, from: MyComponentLibPreview)
+
+    assert_selector("div", text: "hello,world!")
+  end
 end
