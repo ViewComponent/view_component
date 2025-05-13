@@ -30,7 +30,6 @@ Sandbox::Application.configure do
 
   config.view_component.show_previews = true
   config.view_component.instrumentation_enabled = true
-  config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
   config.view_component.test_controller = "IntegrationExamplesController"
 
   # Tell Action Mailer not to deliver emails to the real world.

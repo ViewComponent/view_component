@@ -267,7 +267,7 @@ module ViewComponent
         raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && helpers.respond_to?(method_name)
           #{e.message}
 
-          You may be trying to call a method provided as a view helper. Did you mean `helpers.#{method_name}'?
+          You may be trying to call a method provided as a view helper. Did you mean `helpers.#{method_name}`?
         MESSAGE
 
         raise
