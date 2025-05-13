@@ -64,4 +64,8 @@ Gem::Specification.new do |spec|
   if RUBY_VERSION >= "3.3"
     spec.add_development_dependency "propshaft", "~> 1"
   end
+
+  if RUBY_VERSION >= "3.5"
+    spec.add_development_dependency "cgi"
+  end
 end
