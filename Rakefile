@@ -4,6 +4,7 @@ require "bundler/gem_tasks"
 require "rake/testtask"
 require "yard"
 require "yard/mattr_accessor_handler"
+require "cgi/cookie"
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
