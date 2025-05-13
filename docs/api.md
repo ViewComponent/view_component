@@ -247,12 +247,6 @@ The controller used for testing components.
 Can also be configured on a per-test basis using `#with_controller_class`.
 Defaults to `ApplicationController`.
 
-### `.view_component_path`
-
-The path in which components, their templates, and their sidecars should
-be stored.
-Defaults to `"app/components"`.
-
 ## ViewComponent::TestHelpers
 
 ### `#render_in_view_context(*args, &block)`

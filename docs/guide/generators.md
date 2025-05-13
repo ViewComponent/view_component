@@ -38,11 +38,11 @@ bin/rails generate view_component:component Sections::Example title content
 
 You can specify options when running the generator. To alter the default values project-wide, define the configuration settings described in [API docs](/api.html#configuration).
 
-Generated ViewComponents are added to `app/components` by default. Set `config.view_component.view_component_path` to use a different path. Note that you need to add the same path to `config.eager_load_paths` as well.
+Generated ViewComponents are added to `app/components` by default. Set `config.view_component.generate.path` to use a different path.
 
 ```ruby
 # config/application.rb
-config.view_component.view_component_path = "app/views/components"
+config.view_component.generate.path = "app/views/components"
 config.eager_load_paths << Rails.root.join("app/views/components")
 ```
 

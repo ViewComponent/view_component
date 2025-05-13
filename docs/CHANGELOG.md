@@ -22,6 +22,14 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* BREAKING: `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove broken integration with `rails stats` that ignored components outside of `app/components`.
+
+    *Joel Hawksley*
+
 ## 4.0.0.alpha3
 
 * BREAKING: Remove dependency on `ActionView::Base`, eliminating the need for capture compatibility patch.

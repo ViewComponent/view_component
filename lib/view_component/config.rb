@@ -16,7 +16,6 @@ module ViewComponent
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
           instrumentation_enabled: false,
-          view_component_path: "app/components",
           component_parent_class: nil,
           show_previews: Rails.env.development? || Rails.env.test?,
           preview_paths: default_preview_paths,
@@ -31,6 +30,12 @@ module ViewComponent
       #
       # All options under this namespace default to `false` unless otherwise
       # stated.
+      #
+      # #### `#path`
+      #
+      # Where to put generated components. Defaults to `app/components`:
+      #
+      #     config.view_component.generate.path = "lib/components"
       #
       # #### `#sidecar`
       #
@@ -84,14 +89,14 @@ module ViewComponent
       #
       # #### `#use_component_path_for_rspec_tests`
       #
-      # Whether to use the `config.view_component_path` when generating new
+      # Whether to use `config.generate.path` when generating new
       # RSpec component tests:
       #
       #     config.view_component.generate.use_component_path_for_rspec_tests = true
       #
-      # When set to `true`, the generator will use the `view_component_path` to
+      # When set to `true`, the generator will use the `path` to
       # decide where to generate the new RSpec component test.
-      # For example, if the `view_component_path` is
+      # For example, if the `path` is
       # `app/views/components`, then the generator will create a new spec file
       # in `spec/views/components/` rather than the default `spec/components/`.
 
@@ -109,12 +114,6 @@ module ViewComponent
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
-
-      # @!attribute view_component_path
-      # @return [String]
-      # The path in which components, their templates, and their sidecars should
-      # be stored.
-      # Defaults to `"app/components"`.
 
       # @!attribute component_parent_class
       # @return [String]
@@ -171,6 +170,7 @@ module ViewComponent
       def default_generate_options
         options = ActiveSupport::OrderedOptions.new(false)
         options.preview_path = ""
+        options.path = "app/components"
         options
       end
     end
