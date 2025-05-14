@@ -12,7 +12,6 @@ require "view_component/inline_template"
 require "view_component/preview"
 require "view_component/request_details"
 require "view_component/slotable"
-require "view_component/slotable_default"
 require "view_component/template"
 require "view_component/translatable"
 require "view_component/with_content_helper"
@@ -242,12 +241,6 @@ module ViewComponent
       true
     end
 
-    # Override the ActionView::Base initializer so that components
-    # do not need to define their own initializers.
-    # @private
-    def initialize(*)
-    end
-
     # Re-use original view_context if we're not rendering a component.
     #
     # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
@@ -300,7 +293,7 @@ module ViewComponent
         raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && helpers.respond_to?(method_name)
           #{e.message}
 
-          You may be trying to call a method provided as a view helper. Did you mean `helpers.#{method_name}'?
+          You may be trying to call a method provided as a view helper. Did you mean `helpers.#{method_name}`?
         MESSAGE
 
         raise
@@ -404,15 +397,6 @@ module ViewComponent
     #
     # Defaults to `nil`. If this is falsy, `"ApplicationController"` is used. Can also be
     # configured on a per-test basis using `with_controller_class`.
-    #
-
-    # Path for component files
-    #
-    # ```ruby
-    # config.view_component.view_component_path = "app/my_components"
-    # ```
-    #
-    # Defaults to `nil`. If this is falsy, `app/components` is used.
     #
 
     # Parent class for generated components
@@ -584,13 +568,7 @@ module ViewComponent
         # We use `base_label` method here instead of `label` to avoid cases where the method
         # owner is included in a prefix like `ApplicationComponent.inherited`.
         child.identifier = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
-
-        # If Rails application is loaded, removes the first part of the path and the extension.
-        if defined?(Rails) && Rails.application
-          child.virtual_path = child.identifier.gsub(
-            /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
-          )
-        end
+        child.virtual_path = child.name&.underscore
 
         # Set collection parameter to the extended component
         child.with_collection_parameter provided_collection_parameter

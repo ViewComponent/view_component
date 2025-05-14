@@ -717,4 +717,16 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_includes response.body, "Hello, CSS!"
   end
+
+  def test_slotable_default_override
+    get "/slotable_default_override"
+
+    assert_includes response.body, "foo"
+  end
+
+  def test_renders_preview_from_custom_preview_path
+    get "/rails/view_components/my_component_lib/default"
+
+    assert_select "div", "hello,world!"
+  end
 end

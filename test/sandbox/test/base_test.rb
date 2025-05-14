@@ -121,7 +121,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     exception_message_regex = Regexp.new <<~MESSAGE.chomp, Regexp::MULTILINE
       undefined method `current_user' for .*
 
-      You may be trying to call a method provided as a view helper. Did you mean `helpers.current_user'?
+      You may be trying to call a method provided as a view helper. Did you mean `helpers.current_user`?
     MESSAGE
     assert !exception_message_regex.match?(exception.message)
   end
@@ -134,7 +134,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       end
     }
     exception = assert_raises(NameError) { ReferencesMethodOnHelpersComponent.new.render_in(view_context) }
-    exception_advice = "You may be trying to call a method provided as a view helper. Did you mean `helpers.current_user'?"
+    exception_advice = "You may be trying to call a method provided as a view helper. Did you mean `helpers.current_user`?"
     assert exception.message.include?(exception_advice)
   end
 
@@ -142,7 +142,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     view_context = ActionController::Base.new.view_context
     exception = assert_raises(NameError) { ReferencesMethodOnHelpersComponent.new.render_in(view_context) }
     exception_message_regex = Regexp.new <<~MESSAGE.chomp
-      You may be trying to call a method provided as a view helper\\. Did you mean `helpers.current_user'\\?$
+      You may be trying to call a method provided as a view helper\\. Did you mean `helpers.current_user`\\?$
     MESSAGE
     assert !exception_message_regex.match?(exception.message)
   end

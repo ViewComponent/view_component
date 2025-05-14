@@ -29,7 +29,7 @@ module ViewComponent
     end
 
     def component_path
-      ViewComponent::Base.config.view_component_path
+      ViewComponent::Base.config.generate.path
     end
 
     def stimulus_controller

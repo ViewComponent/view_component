@@ -101,7 +101,6 @@ namespace :docs do
     require "rails"
     require "action_controller"
     require "view_component"
-    ViewComponent::Base.config.view_component_path = "docs"
     require "docs/docs_builder_component"
 
     error_keys = registry.keys.select { |key| key.to_s.include?("Error::MESSAGE") }.map(&:to_s)

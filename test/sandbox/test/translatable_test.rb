@@ -17,6 +17,21 @@ class TranslatableTest < ViewComponent::TestCase
     assert_selector("p.global.nested", text: "This is coming from Rails")
   end
 
+  def test_isolated_translations_in_module
+    render_inline(ExampleModule::TranslatableModuleComponent.new)
+
+    assert_selector("p.sidecar.shared-key", text: "Hello from sidecar translations!")
+    assert_selector("p.sidecar.nested", text: "This is coming from the sidecar")
+    assert_selector("p.sidecar.missing", text: "This is coming from Rails")
+
+    assert_selector("p.helpers.shared-key", text: "Hello from Rails translations!")
+    assert_selector("p.helpers.nested", text: "This is coming from Rails")
+    assert_selector("p.helpers.relative", text: "Relative key from Rails for module")
+
+    assert_selector("p.global.shared-key", text: "Hello from Rails translations!")
+    assert_selector("p.global.nested", text: "This is coming from Rails")
+  end
+
   def test_multi_key_support
     assert_equal(
       [

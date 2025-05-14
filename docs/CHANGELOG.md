@@ -10,9 +10,31 @@ nav_order: 6
 
 ## main
 
+* BREAKING: `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
+
+    *Joel Hawksley*
+
+* BREAKING: Remove broken integration with `rails stats` that ignored components outside of `app/components`.
+
+    *Joel Hawksley*
+
 * Add internal optimization for Ruby object shapes.
 
     *Adam Hess*, *Joel Hawksley*
+
+## 4.0.0.alpha4
+
+* BREAKING: Remove default initializer from `ViewComponent::Base`. Previously, `ViewComponent::Base` defined a catch-all initializer that allowed components without an initializer defined to be passed arbitrary arguments.
+
+    *Joel Hawksley*
+
+* Graduate `SlotableDefault` to be included by default.
+
+    *Joel Hawksley*
+
+* Fix bug in `SlotableDefault` where default couldn't be overridden when content was passed as a block.
+
+    *Bill Watts*, *Joel Hawksley*
 
 ## 4.0.0.alpha3
 

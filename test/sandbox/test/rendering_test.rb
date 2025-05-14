@@ -29,14 +29,17 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.__vc_ensure_compiled
 
-    allocations = (Rails.version.to_f >= 8.0) ?
-      {"3.5" => 79, "3.4" => 85} : {"3.3" => 87, "3.2" => 86}
-
     with_instrumentation_enabled_option(false) do
-      assert_allocations(**allocations) do
+      assert_allocations({"3.5" => 79, "3.4" => 84, "3.3" => 84, "3.2" => 83}) do
         render_inline(MyComponent.new)
       end
     end
+
+    assert_selector("div", text: "hello,world!")
+  end
+
+  def test_initialize_super
+    render_inline(InitializeSuperComponent.new)
 
     assert_selector("div", text: "hello,world!")
   end
