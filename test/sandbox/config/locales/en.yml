@@ -6,6 +6,10 @@ en:
     title: Lorem ipsum
     subtitle: More lorem ipsum
 
+  example_module:
+    translatable_module_component:
+      relative_rails_key: Relative key from Rails for module
+
   translatable_component:
     relative_rails_key: Relative key from Rails
 

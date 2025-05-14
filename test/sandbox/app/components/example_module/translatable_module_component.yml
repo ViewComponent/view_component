@@ -1,0 +1,21 @@
+en:
+  hello: "Hello from sidecar translations!"
+
+  hello_html: "Hello from <strong>sidecar translations</strong>!"
+
+  interpolated_html: "There are %{horse_count} horses in the <strong>barn</strong>!"
+
+  html: "hello <em>world</em>!"
+
+  from:
+    sidecar: This is coming from the sidecar
+
+  list:
+    - This
+    - returns
+    - a list
+
+  list_html:
+    - <em>This</em>
+    - returns
+    - a list with <strong>embedded</strong> HTML

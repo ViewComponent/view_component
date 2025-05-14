@@ -373,15 +373,6 @@ module ViewComponent
     # configured on a per-test basis using `with_controller_class`.
     #
 
-    # Path for component files
-    #
-    # ```ruby
-    # config.view_component.view_component_path = "app/my_components"
-    # ```
-    #
-    # Defaults to `nil`. If this is falsy, `app/components` is used.
-    #
-
     # Parent class for generated components
     #
     # ```ruby
@@ -551,13 +542,7 @@ module ViewComponent
         # We use `base_label` method here instead of `label` to avoid cases where the method
         # owner is included in a prefix like `ApplicationComponent.inherited`.
         child.identifier = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
-
-        # If Rails application is loaded, removes the first part of the path and the extension.
-        if defined?(Rails) && Rails.application
-          child.virtual_path = child.identifier.gsub(
-            /(.*#{Regexp.quote(ViewComponent::Base.config.view_component_path)})|(\.rb)/, ""
-          )
-        end
+        child.virtual_path = child.name&.underscore
 
         # Set collection parameter to the extended component
         child.with_collection_parameter provided_collection_parameter
