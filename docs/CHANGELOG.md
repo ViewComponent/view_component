@@ -10,6 +10,12 @@ nav_order: 6
 
 ## main
 
+## 4.0.0.alpha4
+
+* BREAKING: Remove default initializer from `ViewComponent::Base`. Previously, `ViewComponent::Base` defined a catch-all initializer that allowed components without an initializer defined to be passed arbitrary arguments.
+
+    *Joel Hawksley*
+
 * Graduate `SlotableDefault` to be included by default.
 
     *Joel Hawksley*
@@ -17,10 +23,6 @@ nav_order: 6
 * Fix bug in `SlotableDefault` where default couldn't be overridden when content was passed as a block.
 
     *Bill Watts*, *Joel Hawksley*
-
-* BREAKING: Remove default initializer from `ViewComponent::Base`. Previously, `ViewComponent::Base` defined a catch-all initializer that allowed components without an initializer defined to be passed arbitrary arguments.
-
-    *Joel Hawksley*
 
 ## 4.0.0.alpha3
 
