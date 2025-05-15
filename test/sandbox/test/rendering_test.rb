@@ -30,7 +30,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 79, "3.4" => 84, "3.3" => 86, "3.2" => 85}) do
+      assert_allocations({"3.5" => 75, "3.4" => 80, "3.3" => 82, "3.2" => 81}) do
         render_inline(MyComponent.new)
       end
     end
