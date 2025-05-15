@@ -11,7 +11,7 @@ module ViewComponent
       alias_method :default, :new
 
       def defaults
-        ActiveSupport::OrderedOptions.new.merge!({
+        ActiveSupport::InheritableOptions.new({
           generate: default_generate_options,
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
@@ -25,7 +25,11 @@ module ViewComponent
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
           default_preview_layout: nil,
-          capture_compatibility_patch_enabled: false
+          capture_compatibility_patch_enabled: false,
+          helpers_enabled: true,
+          component_defaults: ActiveSupport::InheritableOptions.new({
+            strict_helpers_enabled: false
+          })
         })
       end
 
@@ -172,6 +176,11 @@ module ViewComponent
       # compatible with forms, capture, and other built-ins.
       # previews.
       # Defaults to `false`.
+
+      # @!attribute helpers_enabled
+      # @return [Boolean]
+      # Enables the use of #helpers
+      # Defaults to `True`.
 
       def default_preview_paths
         (default_rails_preview_paths + default_rails_engines_preview_paths).uniq
