@@ -42,6 +42,21 @@ Global Rails translations are available as well:
 <%= t("my.global.translation") %>
 ```
 
+Including translations namespaced under the component name:
+
+```yml
+# config/locales/en.yml
+en:
+  my_module:
+    example_component:
+      hello: "Hello world!"
+```
+
+```erb
+<%# app/components/my_module/example_component.html.erb %>
+<%= t(".hello") %>
+```
+
 Access global translations via `helpers` or `I18n`:
 
 ```erb
