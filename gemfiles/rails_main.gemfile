@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 
 gem "rails", github: "rails/rails", branch: "main"
+gem "rack", git: "https://github.com/rack/rack", ref: "8a4475a9f416a72e5b02bd7817e4a8ed684f29b0"
 gem "tailwindcss-rails", "~> 2"
 gem "turbo-rails", "~> 2"
 
