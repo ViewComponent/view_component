@@ -3,6 +3,20 @@
 require "test_helper"
 
 class RenderingTest < ViewComponent::TestCase
+  def self.new(...)
+    instance = allocate
+    instance.__allocate_instance_variables
+    instance.send(:initialize, ...)
+    instance
+  end
+
+  def __allocate_instance_variables
+    @page = nil
+    @rendered_content = nil
+    @vc_test_controller = nil
+    @vc_test_request = nil
+  end
+
   def test_render_inline
     render_inline(MyComponent.new)
 
@@ -16,7 +30,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 78, "3.4" => 83, "3.3" => 83, "3.2" => 82}) do
+      assert_allocations({"3.5" => 79, "3.4" => 84, "3.3" => 86, "3.2" => 85}) do
         render_inline(MyComponent.new)
       end
     end
@@ -1258,6 +1272,18 @@ class RenderingTest < ViewComponent::TestCase
     assert_nothing_raised do
       render_inline(mock_component.new)
     end
+  end
+
+  # Ensure that we pre-initialize all internal instance variables
+  # before rendering the component, maximizing the chance that
+  # Ruby will be able to use the more streamlined instance variable
+  # lookup enabled by object shapes.
+  def test_object_shapes
+    component = ObjectShapesComponent.new(name: SecureRandom.hex(10))
+
+    render_inline(component)
+
+    assert_equal(component.instance_variables.last, :@name)
   end
 
   def test_current_template

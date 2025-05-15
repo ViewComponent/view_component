@@ -35,6 +35,15 @@ module ViewComponent
     class << self
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
+      # Redefine `new` so we can pre-allocate instance variables to optimize
+      # for Ruby object shapes.
+      def new(...)
+        instance = allocate
+        instance.__vc_pre_allocate_instance_variables
+        instance.send(:initialize, ...)
+        instance
+      end
+
       # Returns the current config.
       #
       # @return [ActiveSupport::OrderedOptions]
@@ -45,6 +54,29 @@ module ViewComponent
         end
         ViewComponent::Config.current
       end
+    end
+
+    def __vc_pre_allocate_instance_variables
+      @__vc_parent_render_level = 0
+      @__vc_set_slots = {}
+      @__vc_content_evaluated = false
+      @current_template = nil
+      @output_buffer = nil
+      @lookup_context = nil
+      @view_flow = nil
+      @view_context = nil
+      @virtual_path = nil
+      @__vc_ancestor_calls = nil
+      @__vc_controller = nil
+      @__vc_content = :unset # some behaviors depend on checking for nil
+      @__vc_content_set_by_with_content = nil
+      @__vc_helpers = nil
+      @__vc_inline_template = nil
+      @__vc_inline_template_defined = nil
+      @__vc_render_in_block = nil
+      @__vc_request = nil
+      @__vc_requested_details = nil
+      @__vc_original_view_context = nil
     end
 
     include ActionView::Helpers
@@ -113,14 +145,12 @@ module ViewComponent
       @__vc_requested_details ||= @lookup_context.vc_requested_details
 
       # For caching, such as #cache_if
-      @current_template = nil unless defined?(@current_template)
       old_current_template = @current_template
 
-      if block && defined?(@__vc_content_set_by_with_content)
+      if block && __vc_content_set_by_with_content?
         raise DuplicateContentError.new(self.class.name)
       end
 
-      @__vc_content_evaluated = false
       @__vc_render_in_block = block
 
       before_render
@@ -174,16 +204,12 @@ module ViewComponent
     #
     # When rendering the parent inside an .erb template, use `#render_parent` instead.
     def render_parent_to_string
-      @__vc_parent_render_level ||= 0 # ensure a good starting value
+      target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
+      @__vc_parent_render_level += 1
 
-      begin
-        target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
-        @__vc_parent_render_level += 1
-
-        target_render.bind_call(self, @__vc_requested_details)
-      ensure
-        @__vc_parent_render_level -= 1
-      end
+      target_render.bind_call(self, @__vc_requested_details)
+    ensure
+      @__vc_parent_render_level -= 1
     end
 
     # Optional content to be returned before the rendered template.
@@ -306,12 +332,12 @@ module ViewComponent
     # @return [String]
     def content
       @__vc_content_evaluated = true
-      return @__vc_content if defined?(@__vc_content)
+      return @__vc_content if @__vc_content != :unset
 
       @__vc_content =
         if __vc_render_in_block_provided?
           view_context.capture(self, &@__vc_render_in_block)
-        elsif __vc_content_set_by_with_content_defined?
+        elsif __vc_content_set_by_with_content?
           @__vc_content_set_by_with_content
         end
     end
@@ -320,7 +346,7 @@ module ViewComponent
     #
     # @return [Boolean]
     def content?
-      __vc_render_in_block_provided? || __vc_content_set_by_with_content_defined?
+      __vc_render_in_block_provided? || __vc_content_set_by_with_content?
     end
 
     private
@@ -328,15 +354,15 @@ module ViewComponent
     attr_reader :view_context
 
     def __vc_render_in_block_provided?
-      defined?(@view_context) && @view_context && @__vc_render_in_block
+      @view_context && @__vc_render_in_block
     end
 
-    def __vc_content_set_by_with_content_defined?
-      defined?(@__vc_content_set_by_with_content)
+    def __vc_content_set_by_with_content?
+      !@__vc_content_set_by_with_content.nil?
     end
 
     def content_evaluated?
-      defined?(@__vc_content_evaluated) && @__vc_content_evaluated
+      @__vc_content_evaluated
     end
 
     def maybe_escape_html(text)
@@ -548,7 +574,7 @@ module ViewComponent
         child.with_collection_parameter provided_collection_parameter
 
         if instance_methods(false).include?(:render_template_for)
-          vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
+          vc_ancestor_calls = (!@__vc_ancestor_calls.nil?) ? @__vc_ancestor_calls.dup : []
 
           vc_ancestor_calls.unshift(instance_method(:render_template_for))
           child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)

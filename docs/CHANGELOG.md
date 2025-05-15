@@ -18,6 +18,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Add internal optimization for Ruby object shapes.
+
+    *Adam Hess*, *Joel Hawksley*
+
 ## 4.0.0.alpha4
 
 * BREAKING: Remove default initializer from `ViewComponent::Base`. Previously, `ViewComponent::Base` defined a catch-all initializer that allowed components without an initializer defined to be passed arbitrary arguments.
