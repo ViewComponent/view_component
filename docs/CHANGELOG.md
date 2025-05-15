@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.0.0.alpha5
+
 * BREAKING: `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
 
     *Joel Hawksley*
