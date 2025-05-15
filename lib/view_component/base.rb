@@ -68,7 +68,7 @@ module ViewComponent
       @virtual_path = nil
       @__vc_ancestor_calls = nil
       @__vc_controller = nil
-      @__vc_content = nil
+      @__vc_content = :unset # some behaviors depend on checking for nil
       @__vc_content_set_by_with_content = nil
       @__vc_helpers = nil
       @__vc_inline_template = nil
@@ -332,7 +332,7 @@ module ViewComponent
     # @return [String]
     def content
       @__vc_content_evaluated = true
-      return @__vc_content if !@__vc_content.nil?
+      return @__vc_content if @__vc_content != :unset
 
       @__vc_content =
         if __vc_render_in_block_provided?

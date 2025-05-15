@@ -843,6 +843,6 @@ class SlotableTest < ViewComponent::TestCase
 
     render_inline(component)
 
-    assert_equal(component.instance_variables.last, :@classes)
+    assert_equal(:@classes, component.instance_variables.last)
   end
 end
