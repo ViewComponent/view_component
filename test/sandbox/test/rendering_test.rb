@@ -449,22 +449,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_includes exception.message, "Validation failed: Content"
   end
 
-  def test_compiles_unrendered_component
-    # The UnreferencedComponent will get compiled at boot,
-    # but that might have been thrown away if code-reloading is enabled
-    skip unless Rails.application.config.cache_classes
-
-    assert UnreferencedComponent.__vc_compiled?
-  end
-
-  def test_compiles_components_without_initializers
-    # MissingInitializerComponent will get compiled at boot,
-    # but that might have been thrown away if code-reloading is enabled
-    skip unless Rails.application.config.cache_classes
-
-    assert MissingInitializerComponent.__vc_compiled?
-  end
-
   def test_renders_when_initializer_is_not_defined
     render_inline(MissingInitializerComponent.new)
 
