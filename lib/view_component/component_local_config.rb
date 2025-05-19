@@ -27,7 +27,6 @@ module ViewComponent
     extend ActiveSupport::Concern
 
     included do
-      # :nocov:
       def view_component_config
         @__vc_config ||= self.class.view_component_config.inheritable_copy
       end
@@ -38,7 +37,6 @@ module ViewComponent
         child.instance_variable_set(:@__vc_config, nil)
         super
       end
-      # :nocov:
     end
 
     class_methods do
