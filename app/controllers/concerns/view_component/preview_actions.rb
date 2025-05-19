@@ -64,7 +64,11 @@ module ViewComponent
       if preview
         @preview = ViewComponent::Preview.find(preview)
       else
+        # TODO: This branch is covered in #test_returns_404_when_preview_does_not_exist,
+        # but Simplecov doesn't always mark it as covered.
+        # :nocov:
         raise AbstractController::ActionNotFound, "Component preview '#{params[:path]}' not found."
+        # :nocov:
       end
     end
 
