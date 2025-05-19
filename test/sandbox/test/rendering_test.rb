@@ -131,6 +131,12 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_render_empty_component_with_annotations
+    render_inline(EmptyComponent.new)
+
+    assert_includes rendered_content, "empty_component.rb"
+  end
+
   def test_renders_slim_template
     render_inline(SlimComponent.new(message: "bar")) { "foo" }
 
