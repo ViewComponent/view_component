@@ -1260,4 +1260,27 @@ class RenderingTest < ViewComponent::TestCase
       render_inline(mock_component.new)
     end
   end
+
+  class CustomView < ActionView::Base
+    def hi
+      "Hi!"
+    end
+  end
+
+  class GreetingComponent < ViewComponent::Base
+    def call
+      # Calling `hi` directly doesn't work because ViewComponent::Base doesn't
+      # inherit from ActionView::Base:
+      #
+      #   hi # raises: undefined method `hi' for #<GreetingComponent....
+      #
+      helpers.hi
+    end
+  end
+
+  def test_custom_base
+    custom_view = CustomView.with_empty_template_cache.with_view_paths []
+
+    assert_includes("Hi!", custom_view.render(GreetingComponent.new))
+  end
 end
