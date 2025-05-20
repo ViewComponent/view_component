@@ -19,6 +19,8 @@
 /test/tmp/*
 /.yardoc
 .DS_Store
+Gemfile.lock
+.tool-versions
 
 ## Specific to RubyMotion:
 .dat*
