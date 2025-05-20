@@ -108,10 +108,7 @@ module ViewComponent
 
         errors << "Couldn't find a template file or inline render method for #{@component}." if @templates.empty?
 
-        # We currently allow components to have both an inline call method and a template for a variant, with the
-        # inline call method overriding the template. We should aim to change this in v4 to instead
-        # raise an error.
-        @templates.reject(&:inline_call?)
+        @templates
           .map { |template| [template.variant, template.format] }
           .tally
           .select { |_, count| count > 1 }

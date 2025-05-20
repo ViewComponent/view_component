@@ -467,6 +467,15 @@ class RenderingTest < ViewComponent::TestCase
     )
   end
 
+  def test_raises_error_when_inline_and_sidecar_template_conflict
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(InlineSidecarConflictComponent.new)
+      end
+
+    assert_includes error.message, "Template file and inline render method found for InlineSidecarConflictComponent."
+  end
+
   def test_raises_error_when_more_than_one_sidecar_template_is_present
     error =
       assert_raises ViewComponent::TemplateError do
