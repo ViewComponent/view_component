@@ -405,16 +405,6 @@ module ViewComponent
     # configured on a per-test basis using `with_controller_class`.
     #
 
-    # Parent class for generated components
-    #
-    # ```ruby
-    # config.view_component.component_parent_class = "MyBaseComponent"
-    # ```
-    #
-    # Defaults to nil. If this is falsy, generators will use
-    # "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
-    #
-
     # Configuration for generators.
     #
     # All options under this namespace default to `false` unless otherwise
@@ -472,6 +462,18 @@ module ViewComponent
     # ```
     #
     #  Defaults to `false`.
+    #
+    # #### component_parent_class
+    #
+    # Parent class for generated components
+    #
+    # ```ruby
+    # config.view_component.generate.component_parent_class = "MyBaseComponent"
+    # ```
+    #
+    # Defaults to nil. If this is falsy, generators will use
+    # "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
+    #
 
     class << self
       # The file path of the component Ruby file.

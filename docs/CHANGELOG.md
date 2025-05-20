@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* BREAKING: `config.component_parent_class` is now `config.generate.component_parent_class`, moving the generator-specific option to generator configruation namespace.
+
+    *Joel Hawksley*
+
 * Add template annotations for components with `def call`.
 
     *Joel Hawksley*
