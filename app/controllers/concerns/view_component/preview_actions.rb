@@ -10,18 +10,11 @@ module ViewComponent
       around_action :set_locale, only: :previews
       before_action :require_local!, unless: :show_previews?
 
-      content_security_policy(false) if respond_to?(:content_security_policy)
+      content_security_policy(false)
 
       # Including helpers here ensures that we're loading the
       # latest version of helpers if code-reloading is enabled
-      if include_all_helpers
-        helper :all
-      else
-        # :nocov:
-        # Always provide the #view_source helper
-        helper PreviewHelper
-        # :nocov:
-      end
+      helper :all if include_all_helpers
     end
 
     def index
@@ -71,7 +64,11 @@ module ViewComponent
       if preview
         @preview = ViewComponent::Preview.find(preview)
       else
+        # TODO: This branch is covered in #test_returns_404_when_preview_does_not_exist,
+        # but Simplecov doesn't always mark it as covered.
+        # :nocov:
         raise AbstractController::ActionNotFound, "Component preview '#{params[:path]}' not found."
+        # :nocov:
       end
     end
 

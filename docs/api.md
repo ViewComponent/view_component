@@ -142,13 +142,6 @@ so helpers, etc work as expected.
 
 ## Configuration
 
-### `.capture_compatibility_patch_enabled`
-
-Enables the experimental capture compatibility patch that makes ViewComponent
-compatible with forms, capture, and other built-ins.
-previews.
-Defaults to `false`.
-
 ### `.component_parent_class`
 
 The parent class from which generated components will inherit.
@@ -243,40 +236,16 @@ Defaults to `['test/components/previews']` relative to your Rails root.
 The entry route for component previews.
 Defaults to `"/rails/view_components"`.
 
-### `.render_monkey_patch_enabled`
-
-If this is disabled, use `#render_component` or
-`#render_component_to_string` instead.
-Defaults to `true`.
-
 ### `.show_previews`
 
 Whether component previews are enabled.
 Defaults to `true` in development and test environments.
-
-### `.show_previews_source`
-
-Whether to display source code previews in component previews.
-Defaults to `false`.
 
 ### `.test_controller`
 
 The controller used for testing components.
 Can also be configured on a per-test basis using `#with_controller_class`.
 Defaults to `ApplicationController`.
-
-### `.use_deprecated_instrumentation_name`
-
-Whether ActiveSupport Notifications use the private name `"!render.view_component"`
-or are made more publicly available via `"render.view_component"`.
-Will be removed in next major version.
-Defaults to `true`.
-
-### `.view_component_path`
-
-The path in which components, their templates, and their sidecars should
-be stored.
-Defaults to `"app/components"`.
 
 ## ViewComponent::TestHelpers
 
@@ -474,19 +443,11 @@ To fix this issue, create a template for the example.
 
 Inline templates can only be defined once per-component.
 
-### `MultipleMatchingTemplatesForPreviewError`
-
-Found multiple templates for TEMPLATE_IDENTIFIER.
-
 ### `NilWithContentError`
 
 No content provided to `#with_content` for ViewComponent::NilWithContentError.
 
 To fix this issue, pass a value.
-
-### `NoMatchingTemplatesForPreviewError`
-
-Found 0 matches for templates for TEMPLATE_IDENTIFIER.
 
 ### `RedefinedSlotError`
 
@@ -521,10 +482,6 @@ To fix this issue, choose a different name.
 ### `SystemTestControllerNefariousPathError`
 
 ViewComponent SystemTest controller attempted to load a file outside of the expected directory.
-
-### `SystemTestControllerOnlyAllowedInTestError`
-
-ViewComponent SystemTest controller must only be called in a test environment for security reasons.
 
 ### `TranslateCalledBeforeRenderError`
 

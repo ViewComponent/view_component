@@ -5,6 +5,8 @@ require "simplecov"
 require "simplecov-console"
 require "rails/version"
 
+Warning[:performance] = true if RUBY_VERSION >= "3.4"
+
 if ENV["MEASURE_COVERAGE"]
   SimpleCov.start do
     command_name "minitest-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
@@ -43,7 +45,7 @@ require "capybara/cuprite"
 
 # Rails registers its own driver named "cuprite" which will overwrite the one we
 # register here. Avoid the problem by registering the driver with a distinct name.
-Capybara.register_driver(:vc_cuprite) do |app|
+Capybara.register_driver(:system_test_driver) do |app|
   # Add the process_timeout option to prevent failures due to the browser
   # taking too long to start up.
   Capybara::Cuprite::Driver.new(app, {process_timeout: 60, timeout: 30})
@@ -92,11 +94,11 @@ ensure
 end
 
 def with_custom_component_path(new_value, &block)
-  with_config_option(:view_component_path, new_value, &block)
+  with_generate_option(:path, new_value, &block)
 end
 
 def with_custom_component_parent_class(new_value, &block)
-  with_config_option(:component_parent_class, new_value, &block)
+  with_generate_option(:component_parent_class, new_value, &block)
 end
 
 def with_application_component_class
@@ -112,6 +114,14 @@ def with_generate_option(config_option, value)
   yield
 ensure
   Rails.application.config.view_component.generate[config_option] = old_value
+end
+
+def with_instrumentation_enabled_option(value)
+  old_value = Rails.application.config.view_component.instrumentation_enabled
+  Rails.application.config.view_component.instrumentation_enabled = value
+  yield
+ensure
+  Rails.application.config.view_component.instrumentation_enabled = old_value
 end
 
 def with_generate_sidecar(enabled, &block)
@@ -140,18 +150,14 @@ ensure
 end
 
 def without_template_annotations(&block)
-  if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
-    old_value = ActionView::Base.annotate_rendered_view_with_filenames
-    ActionView::Base.annotate_rendered_view_with_filenames = false
-    app.reloader.reload! if defined?(app)
+  old_value = ActionView::Base.annotate_rendered_view_with_filenames
+  ActionView::Base.annotate_rendered_view_with_filenames = false
+  app.reloader.reload! if defined?(app)
 
-    with_new_cache(&block)
+  with_new_cache(&block)
 
-    ActionView::Base.annotate_rendered_view_with_filenames = old_value
-    app.reloader.reload! if defined?(app)
-  else
-    yield
-  end
+  ActionView::Base.annotate_rendered_view_with_filenames = old_value
+  app.reloader.reload! if defined?(app)
 end
 
 def modify_file(file, content)
@@ -169,22 +175,18 @@ def with_default_preview_layout(layout, &block)
   with_config_option(:default_preview_layout, layout, &block)
 end
 
-def with_render_monkey_patch_config(enabled, &block)
-  with_config_option(:render_monkey_patch_enabled, enabled, &block)
-end
-
 def with_compiler_development_mode(mode)
-  previous_mode = ViewComponent::Compiler.development_mode
-  ViewComponent::Compiler.development_mode = mode
+  previous_mode = ViewComponent::Compiler.__vc_development_mode
+  ViewComponent::Compiler.__vc_development_mode = mode
   yield
 ensure
-  ViewComponent::Compiler.development_mode = previous_mode
+  ViewComponent::Compiler.__vc_development_mode = previous_mode
 end
 
 def capture_warnings(&block)
   [].tap do |warnings|
     Kernel.stub(:warn, ->(msg) { warnings << msg }) do
-      block.call
+      yield
     end
   end
 end
@@ -192,7 +194,7 @@ end
 def assert_allocations(count_map, &block)
   trace = AllocationStats.trace(&block)
   total = trace.allocations.all.size
-  count = count_map[RUBY_VERSION]
+  count = count_map[RUBY_VERSION.split(".").first(2).join(".")]
 
   assert_equal count, total, "Expected #{count} allocations, got #{total} allocations for Ruby #{RUBY_VERSION}"
 end
