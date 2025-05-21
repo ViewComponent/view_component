@@ -4,7 +4,6 @@ source "https://rubygems.org"
 
 gem "rails", "~> 8.0"
 gem "tailwindcss-rails", "~> 2"
-gem "propshaft", "~> 1"
 gem "turbo-rails", "~> 2"
 
 group :development, :test do
@@ -21,6 +20,7 @@ group :development, :test do
   gem "m", "~> 1"
   gem "method_source", "~> 1"
   gem "minitest", "~> 5"
+  gem "propshaft", "~> 1"
   gem "puma", "~> 6"
   gem "rake", "~> 13"
   gem "redis"
