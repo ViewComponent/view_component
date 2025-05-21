@@ -170,7 +170,7 @@ module ViewComponent
           end
         end
 
-        if ActionView::Base.annotate_rendered_view_with_filenames && current_template.inline_call? && request.format == :html
+        if ActionView::Base.annotate_rendered_view_with_filenames && current_template.inline_call? && request&.format == :html
           identifier = defined?(Rails.root) ? self.class.identifier.sub("#{Rails.root}/", "") : self.class.identifier
           value = "<!-- BEGIN #{identifier} -->".html_safe + value + "<!-- END #{identifier} -->".html_safe
         end
