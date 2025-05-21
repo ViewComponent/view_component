@@ -181,18 +181,14 @@ end
 
 Code editors commonly add a trailing newline character to source files in keeping with the Unix standard. Including trailing whitespace in component templates can result in unwanted whitespace in the HTML, eg. if the component is rendered before the period at the end of a sentence.
 
-To strip trailing whitespace from component templates, use the `strip_trailing_whitespace` component-local config option.
+To strip trailing whitespace from component templates, use the `strip_trailing_whitespace` class method.
 
 ```ruby
 class MyComponent < ViewComponent::Base
   # do strip whitespace
-  configure_view_component do |config|
-    config.strip_trailing_whitespace = true
-  end
+  strip_trailing_whitespace
 
   # don't strip whitespace
-  configure_view_component do |config|
-    config.strip_trailing_whitespace = false
-  end
+  strip_trailing_whitespace(false)
 end
 ```
