@@ -13,13 +13,9 @@ module ViewComponent
       def defaults
         ActiveSupport::OrderedOptions.new.merge!({
           generate: default_generate_options,
-          preview_controller: "ViewComponentsController",
-          preview_route: "/rails/view_components",
+          previews: default_previews_options,
           instrumentation_enabled: false,
-          show_previews: Rails.env.development? || Rails.env.test?,
-          preview_paths: default_preview_paths,
-          test_controller: "ApplicationController",
-          default_preview_layout: nil
+          test_controller: "ApplicationController"
         })
       end
 
@@ -83,7 +79,7 @@ module ViewComponent
       #
       # Required when there is more than one path defined in preview_paths.
       # Defaults to `""`. If this is blank, the generator will use
-      # `ViewComponent.config.preview_paths` if defined,
+      # `ViewComponent.config.previews.paths` if defined,
       # `"test/components/previews"` otherwise
       #
       # #### `#use_component_path_for_rspec_tests`
@@ -99,42 +95,45 @@ module ViewComponent
       # `app/views/components`, then the generator will create a new spec file
       # in `spec/views/components/` rather than the default `spec/components/`.
 
-      # @!attribute preview_controller
-      # @return [String]
-      # The controller used for previewing components.
-      # Defaults to `ViewComponentsController`.
-
-      # @!attribute preview_route
-      # @return [String]
-      # The entry route for component previews.
-      # Defaults to `"/rails/view_components"`.
+      # @!attribute previews
+      # @return [ActiveSupport::OrderedOptions]
+      # The subset of configuration options relating to previews.
+      #
+      # #### `#controller`
+      #
+      # The controller used for previewing components. Defaults to `ViewComponentsController`:
+      #
+      #     config.view_component.previews.controller = "MyPreviewController"
+      #
+      # #### `#route`
+      #
+      # The entry route for component previews. Defaults to `/rails/view_components`:
+      #
+      #     config.view_component.previews.route = "/my_previews"
+      #
+      # #### `#enabled`
+      #
+      # Whether component previews are enabled. Defaults to `true` in development and test environments:
+      #
+      #     config.view_component.previews.enabled = false
+      #
+      # #### `#default_layout`
+      #
+      # A custom default layout used for the previews index page and individual previews. Defaults to `false`:
+      #
+      #     config.view_component.previews.default_layout = false
+      #
 
       # @!attribute instrumentation_enabled
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
 
-      # @!attribute show_previews
-      # @return [Boolean]
-      # Whether component previews are enabled.
-      # Defaults to `true` in development and test environments.
-
-      # @!attribute preview_paths
-      # @return [Array<String>]
-      # The locations in which component previews will be looked up.
-      # Defaults to `['test/components/previews']` relative to your Rails root.
-
       # @!attribute test_controller
       # @return [String]
       # The controller used for testing components.
       # Can also be configured on a per-test basis using `#with_controller_class`.
       # Defaults to `ApplicationController`.
-
-      # @!attribute default_preview_layout
-      # @return [String]
-      # A custom default layout used for the previews index page and individual
-      # previews.
-      # Defaults to `nil`. If this is falsy, `"component_preview"` is used.
 
       def default_preview_paths
         (default_rails_preview_paths + default_rails_engines_preview_paths).uniq
@@ -164,6 +163,16 @@ module ViewComponent
         options = ActiveSupport::OrderedOptions.new(false)
         options.preview_path = ""
         options.path = "app/components"
+        options
+      end
+
+      def default_previews_options
+        options = ActiveSupport::OrderedOptions.new(false)
+        options.controller = "ViewComponentsController"
+        options.route = "/rails/view_components"
+        options.enabled = Rails.env.development? || Rails.env.test?
+        options.default_layout = false
+        options.paths = default_preview_paths
         options
       end
     end

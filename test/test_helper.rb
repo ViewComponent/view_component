@@ -70,26 +70,26 @@ end
 # @yield Test code to run
 # @return [void]
 def with_preview_paths(new_value, &block)
-  with_config_option(:preview_paths, new_value, &block)
+  with_previews_option(:paths, new_value, &block)
 end
 
-def with_preview_route(new_value)
-  old_value = Rails.application.config.view_component.preview_route
-  Rails.application.config.view_component.preview_route = new_value
+def with_preview_route(new_value, &block)
+  old_value = Rails.application.config.view_component.previews.route
+  Rails.application.config.view_component.previews.route = new_value
   app.reloader.reload!
   yield
 ensure
-  Rails.application.config.view_component.preview_route = old_value
+  Rails.application.config.view_component.previews.route = old_value
   app.reloader.reload!
 end
 
-def with_preview_controller(new_value)
-  old_value = Rails.application.config.view_component.preview_controller
-  Rails.application.config.view_component.preview_controller = new_value
+def with_preview_controller(new_value, &block)
+  old_value = Rails.application.config.view_component.previews.controller
+  Rails.application.config.view_component.previews.controller = new_value
   app.reloader.reload!
   yield
 ensure
-  Rails.application.config.view_component.preview_controller = old_value
+  Rails.application.config.view_component.previews.controller = old_value
   app.reloader.reload!
 end
 
@@ -114,6 +114,14 @@ def with_generate_option(config_option, value)
   yield
 ensure
   Rails.application.config.view_component.generate[config_option] = old_value
+end
+
+def with_previews_option(config_option, value)
+  old_value = Rails.application.config.view_component.previews[config_option]
+  Rails.application.config.view_component.previews[config_option] = value
+  yield
+ensure
+  Rails.application.config.view_component.previews[config_option] = old_value
 end
 
 def with_instrumentation_enabled_option(value)
@@ -172,7 +180,7 @@ def modify_file(file, content)
 end
 
 def with_default_preview_layout(layout, &block)
-  with_config_option(:default_preview_layout, layout, &block)
+  with_previews_option(:default_layout, layout, &block)
 end
 
 def with_compiler_development_mode(mode)

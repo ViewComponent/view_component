@@ -649,8 +649,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       config_entrypoints.first.yield_self do |config|
         {
           generate: config.generate.dup.tap { |c| c.sidecar = true },
-          preview_controller: "SomeOtherController",
-          preview_route: "/some/other/route"
+          previews: config.previews.dup.tap { |c|
+            c.controller = "SomeOtherController"
+            c.route = "/some/other/route"
+          }
         }.each do |option, value|
           with_config_option(option, value, config_entrypoint: config) do
             assert_equal(config.public_send(option), config_entrypoints.second.public_send(option))

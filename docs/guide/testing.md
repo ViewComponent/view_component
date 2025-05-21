@@ -304,7 +304,7 @@ To use component previews:
 
 ```ruby
 # config/application.rb
-config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+config.view_component.previews.paths << "#{Rails.root}/spec/components/previews"
 ```
 
 ## Component system tests
