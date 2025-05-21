@@ -8,7 +8,6 @@ nav_order: 6
 
 # Changelog
 
-
 ## main
 
 * Introduce component-local config and migrate `strip_trailing_whitespace` to use it under the hood.
