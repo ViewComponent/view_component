@@ -16,7 +16,6 @@ module ViewComponent
           preview_controller: "ViewComponentsController",
           preview_route: "/rails/view_components",
           instrumentation_enabled: false,
-          component_parent_class: nil,
           show_previews: Rails.env.development? || Rails.env.test?,
           preview_paths: default_preview_paths,
           test_controller: "ApplicationController",
@@ -114,12 +113,6 @@ module ViewComponent
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
-
-      # @!attribute component_parent_class
-      # @return [String]
-      # The parent class from which generated components will inherit.
-      # Defaults to `nil`. If this is falsy, generators will use
-      # `"ApplicationComponent"` if defined, `"ViewComponent::Base"` otherwise.
 
       # @!attribute show_previews
       # @return [Boolean]

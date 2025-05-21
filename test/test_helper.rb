@@ -98,7 +98,7 @@ def with_custom_component_path(new_value, &block)
 end
 
 def with_custom_component_parent_class(new_value, &block)
-  with_config_option(:component_parent_class, new_value, &block)
+  with_generate_option(:component_parent_class, new_value, &block)
 end
 
 def with_application_component_class
