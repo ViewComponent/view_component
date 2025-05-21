@@ -97,6 +97,9 @@ module ViewComponent
     # HTML construction methods
     delegate :output_buffer, :lookup_context, :view_renderer, :view_flow, to: :helpers
 
+    # For Turbo::StreamsHelper
+    delegate :formats, :formats=, to: :helpers
+
     # For Content Security Policy nonces
     delegate :content_security_policy_nonce, to: :helpers
 

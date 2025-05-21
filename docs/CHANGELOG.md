@@ -14,6 +14,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Add support for including Turbo::StreamsHelper
+
+    *Stephen Nelson*
+
 ## 4.0.0.alpha5
 
 * BREAKING: `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
