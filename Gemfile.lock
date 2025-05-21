@@ -402,6 +402,7 @@ DEPENDENCIES
   propshaft (~> 1)
   puma (~> 6)
   rails (~> 8)
+  rails-dom-testing (~> 2.3.0)
   rake (~> 13)
   redis
   rspec-rails (~> 7)
