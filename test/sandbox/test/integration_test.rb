@@ -11,7 +11,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/"
     assert_response :success
 
-    assert_select("div", "Foo\n  bar")
+    assert_select("div", "Foo bar")
   end
 
   if Rails.version.to_f >= 6.1
@@ -21,7 +21,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
       assert_includes response.body, "BEGIN app/components/erb_component.html.erb"
 
-      assert_select("div", "Foo\n  bar")
+      assert_select("div", "Foo bar")
     end
   end
 
