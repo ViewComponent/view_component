@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 3.23.0
+
 * Add docs about Slack channel in Ruby Central workspace. (Join us! #oss-view-component). Email joelhawksley@github.com for an invite.
 
     *Joel Hawksley
