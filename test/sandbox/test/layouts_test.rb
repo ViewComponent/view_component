@@ -30,6 +30,6 @@ class LayoutsTest < ActionDispatch::IntegrationTest
   test "rendering with_content_for" do
     get "/layout_with_content_for"
     assert_response :success
-    assert_select 'body[data-layout="with_content_for"]', "Hello content for\n\n  Foo: bar"
+    assert_select 'body[data-layout="with_content_for"]', "Hello content for Foo: bar"
   end
 end

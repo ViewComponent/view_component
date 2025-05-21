@@ -12,7 +12,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/"
     assert_response :success
 
-    assert_select("div", "Foo\n  bar")
+    assert_select("div", "Foo bar")
   end
 
   def test_rendering_component_with_template_annotations_enabled
@@ -21,7 +21,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_includes response.body, "BEGIN app/components/erb_component.html.erb"
 
-    assert_select("div", "Foo\n  bar")
+    assert_select("div", "Foo bar")
   end
 
   def test_rendering_component_in_a_controller
