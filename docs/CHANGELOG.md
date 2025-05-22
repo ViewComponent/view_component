@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 3.23.1
+
 * Restore Rake tasks in published gem.
 
     *Franz Liedke*
