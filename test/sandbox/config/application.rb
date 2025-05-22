@@ -41,8 +41,8 @@ module Sandbox
 
     # Prepare test_set_no_duplicate_autoload_paths
     config.autoload_paths.push("#{config.root}/my/components/previews")
-    config.view_component.preview_paths << "#{config.root}/my/components/previews"
-    config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
+    config.view_component.previews.paths << "#{config.root}/my/components/previews"
+    config.view_component.previews.paths << "#{Rails.root}/lib/component_previews"
   end
 end
 

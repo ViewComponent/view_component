@@ -10,10 +10,10 @@ module ViewComponent
 
     def test_defaults_are_correct
       assert_equal @config.generate, {preview_path: "", path: "app/components"}
-      assert_equal @config.preview_controller, "ViewComponentsController"
-      assert_equal @config.preview_route, "/rails/view_components"
+      assert_equal @config.previews.controller, "ViewComponentsController"
+      assert_equal @config.previews.route, "/rails/view_components"
       assert_equal @config.instrumentation_enabled, false
-      assert_equal @config.preview_paths, ["#{Rails.root}/test/components/previews"]
+      assert_equal @config.previews.paths, ["#{Rails.root}/test/components/previews"]
     end
 
     def test_all_methods_are_documented

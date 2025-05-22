@@ -14,6 +14,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* BREAKING: Move previews-related configuration (`enabled`, `route`, `paths`, `default_layout`, `controller`) to under `previews` namespace.
+
+    *Joel Hawksley*
+
 * Add template annotations for components with `def call`.
 
     *Joel Hawksley*

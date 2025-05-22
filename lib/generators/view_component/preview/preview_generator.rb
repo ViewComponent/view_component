@@ -10,7 +10,7 @@ module ViewComponent
       check_class_collision suffix: "ComponentPreview"
 
       def create_preview_file
-        preview_paths = ViewComponent::Base.config.preview_paths
+        preview_paths = ViewComponent::Base.config.previews.paths
         optional_path = options[:preview_path]
         return if preview_paths.count > 1 && optional_path.blank?
 

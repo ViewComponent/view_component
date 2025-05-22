@@ -14,6 +14,15 @@ nav_order: 3
 
 Returns the current config.
 
+### `.identifier` → [String]
+
+The file path of the component Ruby file.
+
+### `.new(...)`
+
+Redefine `new` so we can pre-allocate instance variables to optimize
+for Ruby object shapes.
+
 ### `.sidecar_files(extensions)`
 
 Find sidecar files for the given extensions.
@@ -37,7 +46,7 @@ end
 
 Whether trailing whitespace will be stripped before compilation.
 
-### `.with_collection(collection, **args)`
+### `.with_collection(collection, spacer_component: nil, **args)`
 
 Render a component for each element in a collection ([documentation](/guide/collections)):
 
@@ -73,18 +82,22 @@ Whether `content` has been passed to the component.
 The current controller. Use sparingly as doing so introduces coupling
 that inhibits encapsulation & reuse, often making testing difficult.
 
+### `#current_template`
+
+Returns the value of attribute current_template.
+
 ### `#helpers` → [ActionView::Base]
 
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
 
-### `#output_preamble` → [String]
-
-Optional content to be returned before the rendered template.
-
 ### `#output_postamble` → [String]
 
 Optional content to be returned after the rendered template.
+
+### `#output_preamble` → [String]
+
+Optional content to be returned before the rendered template.
 
 ### `#render?` → [Boolean]
 
@@ -142,12 +155,6 @@ so helpers, etc work as expected.
 
 ## Configuration
 
-### `.component_parent_class`
-
-The parent class from which generated components will inherit.
-Defaults to `nil`. If this is falsy, generators will use
-`"ApplicationComponent"` if defined, `"ViewComponent::Base"` otherwise.
-
 ### `#config`
 
 Returns the value of attribute config.
@@ -159,18 +166,18 @@ class so that config options remain accessible before the rest of
 ViewComponent has loaded. Defaults to an instance of ViewComponent::Config
 with all other documented defaults set.
 
-### `.default_preview_layout`
-
-A custom default layout used for the previews index page and individual
-previews.
-Defaults to `nil`. If this is falsy, `"component_preview"` is used.
-
 ### `.generate`
 
 The subset of configuration options relating to generators.
 
 All options under this namespace default to `false` unless otherwise
 stated.
+
+#### `#path`
+
+Where to put generated components. Defaults to `app/components`:
+
+    config.view_component.generate.path = "lib/components"
 
 #### `#sidecar`
 
@@ -183,6 +190,12 @@ Always generate a component with a sidecar directory:
 Always generate a Stimulus controller alongside the component:
 
     config.view_component.generate.stimulus_controller = true
+
+#### `#typescript`
+
+Generate TypeScript files instead of JavaScript files:
+
+    config.view_component.generate.typescript = true
 
 #### `#locale`
 
@@ -213,33 +226,54 @@ Path to generate preview:
 
 Required when there is more than one path defined in preview_paths.
 Defaults to `""`. If this is blank, the generator will use
-`ViewComponent.config.preview_paths` if defined,
+`ViewComponent.config.previews.paths` if defined,
 `"test/components/previews"` otherwise
+
+#### `#use_component_path_for_rspec_tests`
+
+Whether to use `config.generate.path` when generating new
+RSpec component tests:
+
+    config.view_component.generate.use_component_path_for_rspec_tests = true
+
+When set to `true`, the generator will use the `path` to
+decide where to generate the new RSpec component test.
+For example, if the `path` is
+`app/views/components`, then the generator will create a new spec file
+in `spec/views/components/` rather than the default `spec/components/`.
 
 ### `.instrumentation_enabled`
 
 Whether ActiveSupport notifications are enabled.
 Defaults to `false`.
 
-### `.preview_controller`
+### `.previews`
 
-The controller used for previewing components.
-Defaults to `ViewComponentsController`.
+The subset of configuration options relating to previews.
 
-### `.preview_paths`
+#### `#controller`
 
-The locations in which component previews will be looked up.
-Defaults to `['test/components/previews']` relative to your Rails root.
+The controller used for previewing components. Defaults to `ViewComponentsController`:
 
-### `.preview_route`
+    config.view_component.previews.controller = "MyPreviewController"
 
-The entry route for component previews.
-Defaults to `"/rails/view_components"`.
+#### `#route`
 
-### `.show_previews`
+The entry route for component previews. Defaults to `/rails/view_components`:
 
-Whether component previews are enabled.
-Defaults to `true` in development and test environments.
+    config.view_component.previews.route = "/my_previews"
+
+#### `#enabled`
+
+Whether component previews are enabled. Defaults to `true` in development and test environments:
+
+    config.view_component.previews.enabled = false
+
+#### `#default_layout`
+
+A custom default layout used for the previews index page and individual previews. Defaults to `false`:
+
+    config.view_component.previews.default_layout = false
 
 ### `.test_controller`
 
@@ -249,7 +283,7 @@ Defaults to `ApplicationController`.
 
 ## ViewComponent::TestHelpers
 
-### `#render_in_view_context(*args, &block)`
+### `#render_in_view_context(...)`
 
 Execute the given block in the view context (using `instance_exec`).
 Internally sets `page` to be a `Capybara::Node::Simple`, allowing for
@@ -263,7 +297,7 @@ end
 assert_text("Hello, World!")
 ```
 
-### `#render_inline(component, **args, &block)` → [Nokogiri::HTML]
+### `#render_inline(component, **args, &block)` → [Nokogiri::HTML5]
 
 Render a component inline. Internally sets `page` to be a `Capybara::Node::Simple`,
 allowing for Capybara assertions to be used:
@@ -273,7 +307,7 @@ render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
 
-### `#render_preview(name, from: __vc_test_helpers_preview_class, params: {})` → [Nokogiri::HTML]
+### `#render_preview(name, from: __vc_test_helpers_preview_class, params: {})` → [Nokogiri::HTML5]
 
 Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
 allowing for Capybara assertions to be used:
@@ -294,6 +328,15 @@ In RSpec, `Preview` is appended to `described_class`.
 
 Returns the result of a render_inline call.
 
+### `#rendered_json`
+
+`JSON.parse`-d component output.
+
+```ruby
+render_inline(MyJsonComponent.new)
+assert_equal(rendered_json["hello"], "world")
+```
+
 ### `#vc_test_controller` → [ActionController::Base]
 
 Access the controller used by `render_inline`:
@@ -312,7 +355,7 @@ Access the request used by `render_inline`:
 
 ```ruby
 test "component does not render in Firefox" do
-  vc_test_request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
+  request.env["HTTP_USER_AGENT"] = "Mozilla/5.0"
   render_inline(NoFirefoxComponent.new)
   refute_component_rendered
 end
@@ -325,6 +368,16 @@ allowing access to controller-specific methods:
 
 ```ruby
 with_controller_class(UsersController) do
+  render_inline(MyComponent.new)
+end
+```
+
+### `#with_format(*formats)`
+
+Set format of the current request
+
+```ruby
+with_format(:json) do
   render_inline(MyComponent.new)
 end
 ```
@@ -355,7 +408,7 @@ with_request_url("/users/42", method: "POST") do
 end
 ```
 
-### `#with_variant(variant)`
+### `#with_variant(*variants)`
 
 Set the Action Pack request variant for the given block:
 
@@ -387,7 +440,7 @@ To fix this issue, either use the `content` accessor directly or choose a differ
 
 ### `ControllerCalledBeforeRenderError`
 
-`#controller` can't be used during initialization, as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
+`#controller` can't be used before rendering, as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
 It's sometimes possible to fix this issue by moving code dependent on `#controller` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
 
@@ -413,7 +466,7 @@ See [the collections docs](https://viewcomponent.org/guide/collections.html) for
 
 ### `HelpersCalledBeforeRenderError`
 
-`#helpers` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
+`#helpers` can't be used before rendering as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
 It's sometimes possible to fix this issue by moving code dependent on `#helpers` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
 
@@ -438,6 +491,12 @@ See [the collections docs](https://viewcomponent.org/guide/collections.html) for
 A preview template for example EXAMPLE doesn't exist.
 
 To fix this issue, create a template for the example.
+
+### `MissingTemplateError`
+
+No templates for COMPONENT match the request DETAIL.
+
+To fix this issue, provide a suitable template.
 
 ### `MultipleInlineTemplatesError`
 
@@ -485,7 +544,7 @@ ViewComponent SystemTest controller attempted to load a file outside of the expe
 
 ### `TranslateCalledBeforeRenderError`
 
-`#translate` can't be used during initialization as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
+`#translate` can't be used before rendering as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.
 
 It's sometimes possible to fix this issue by moving code dependent on `#translate` to a [`#before_render` method](https://viewcomponent.org/api.html#before_render--void).
 

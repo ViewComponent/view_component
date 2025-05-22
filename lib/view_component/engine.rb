@@ -11,7 +11,7 @@ module ViewComponent
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
 
-      %i[generate preview_controller preview_route].each do |config_option|
+      %i[generate previews].each do |config_option|
         options[config_option] ||= ViewComponent::Base.public_send(config_option)
       end
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
@@ -19,7 +19,7 @@ module ViewComponent
 
       if options.show_previews
         # This is still necessary because when `config.view_component` is declared, `Rails.root` is unspecified.
-        options.preview_paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?(
+        options.previews.paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?(
           "#{Rails.root}/test/components/previews"
         )
       end
@@ -36,8 +36,8 @@ module ViewComponent
     initializer "view_component.set_autoload_paths" do |app|
       options = app.config.view_component
 
-      if options.show_previews && !options.preview_paths.empty?
-        paths_to_add = options.preview_paths - ActiveSupport::Dependencies.autoload_paths
+      if options.show_previews && !options.previews.paths.empty?
+        paths_to_add = options.previews.paths - ActiveSupport::Dependencies.autoload_paths
         ActiveSupport::Dependencies.autoload_paths.concat(paths_to_add) if paths_to_add.any?
       end
     end
@@ -90,17 +90,17 @@ module ViewComponent
 
       if options.show_previews
         app.routes.prepend do
-          preview_controller = options.preview_controller.sub(/Controller$/, "").underscore
+          preview_controller = options.previews.controller.sub(/Controller$/, "").underscore
 
           get(
-            options.preview_route,
+            options.previews.route,
             to: "#{preview_controller}#index",
             as: :preview_view_components,
             internal: true
           )
 
           get(
-            "#{options.preview_route}/*path",
+            "#{options.previews.route}/*path",
             to: "#{preview_controller}#previews",
             as: :preview_view_component,
             internal: true
