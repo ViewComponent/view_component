@@ -30,7 +30,6 @@ Sandbox::Application.configure do
 
   config.view_component.show_previews = true
   config.view_component.instrumentation_enabled = true
-  config.view_component.test_controller = "IntegrationExamplesController"
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
