@@ -218,6 +218,14 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_renders_component_with_only_variant
+    with_variant :phone do
+      render_inline(OnlyVariantComponent.new)
+
+      assert_text("Phone")
+    end
+  end
+
   def test_renders_component_with_multiple_variants
     with_variant :app, :phone do
       render_inline(VariantsComponent.new)
