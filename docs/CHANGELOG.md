@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Restore Rake tasks in published gem.
+
+    *Franz Liedke*
+
 ## 3.23.0
 
 * Add docs about Slack channel in Ruby Central workspace. (Join us! #oss-view-component). Email joelhawksley@github.com for an invite.
