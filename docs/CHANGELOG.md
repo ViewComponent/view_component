@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* BREAKING: Remove `config.test_controller` in favor of `vc_test_controller_class` test helper method.
+
+    *Joel Hawksley*
+
 * BREAKING: `config.component_parent_class` is now `config.generate.component_parent_class`, moving the generator-specific option to the generator configuration namespace.
 
     *Joel Hawksley*

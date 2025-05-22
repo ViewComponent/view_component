@@ -233,7 +233,20 @@ module ViewComponent
     #
     # @return [ActionController::Base]
     def vc_test_controller
-      @vc_test_controller ||= __vc_test_helpers_build_controller(Base.test_controller.constantize)
+      @vc_test_controller ||= __vc_test_helpers_build_controller(vc_test_controller_class)
+    end
+
+    # Set the controller used by `render_inline`:
+    #
+    # ```ruby
+    # def vc_test_controller_class
+    #   MyTestController
+    # end
+    # ```
+    def vc_test_controller_class
+      return @__vc_test_controller_class if defined?(@__vc_test_controller_class)
+
+      defined?(ApplicationController) ? ApplicationController : ActionController::Base
     end
 
     # Access the request used by `render_inline`:

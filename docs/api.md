@@ -349,6 +349,16 @@ test "logged out user sees login link" do
 end
 ```
 
+### `#vc_test_controller_class`
+
+Set the controller used by `render_inline`:
+
+```ruby
+def vc_test_controller_class
+  MyTestController
+end
+```
+
 ### `#vc_test_request` → [ActionDispatch::TestRequest]
 
 Access the request used by `render_inline`:
