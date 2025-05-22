@@ -22,7 +22,7 @@ nav_order: 6
 
     *Joel Hawksley*
 
-* Add support for including Turbo::StreamsHelper
+* Add support for including Turbo::StreamsHelper.
 
     *Stephen Nelson*
 
