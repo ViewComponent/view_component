@@ -167,7 +167,7 @@ module ViewComponent
       end
 
       def default_previews_options
-        options = ActiveSupport::OrderedOptions.new(false)
+        options = ActiveSupport::OrderedOptions.new
         options.controller = "ViewComponentsController"
         options.route = "/rails/view_components"
         options.enabled = Rails.env.development? || Rails.env.test?
