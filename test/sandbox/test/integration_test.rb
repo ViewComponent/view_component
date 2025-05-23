@@ -793,4 +793,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_select "div", "hello,world!"
   end
+
+  def test_renders_slot_component_child_content_block
+    get "/slot_component_child_content_block"
+
+    assert_select ".accordion-item", "Items that have been classified."
+  end
 end

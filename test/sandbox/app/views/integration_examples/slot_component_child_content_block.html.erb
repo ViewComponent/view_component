@@ -1,0 +1,13 @@
+<%= render(AccordionComponent.new) do |accordion| %>
+  <% accordion.with_item title: :to_classify do %>
+    <p>Items that need to be classified.</p>
+  <% end %>
+
+  <% accordion.with_item title: :classified do %>
+    <p>Items that have been classified.</p>
+  <% end %>
+
+  <% accordion.with_item title: :rejected do %>
+    <p>Items that have been rejected.</p>
+  <% end %>
+<% end %>
