@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 3.23.2
+
 * Include .tt files in published gem. Fixes templates not being available when using generators.
 
     *Florian Aßmann*
