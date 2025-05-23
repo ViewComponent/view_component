@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Include .tt files in published gem. Fixes templates not being available when using generators.
+
+    *Florian Aßmann*
+
 ## 3.23.1
 
 * Restore Rake tasks in published gem.
