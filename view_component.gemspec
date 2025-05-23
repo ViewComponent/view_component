@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
     "app/**/*",
     "docs/CHANGELOG.md",
     "lib/rails/**/*.rb",
+    "lib/rails/**/*.tt",
     "lib/view_component.rb",
     "lib/view_component/**/*"
   ]
