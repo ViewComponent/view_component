@@ -172,6 +172,22 @@ This release makes the following breaking changes:
 
     *Simon Fish*
 
+* Reduce string allocations during compilation.
+
+    *Jonathan del Strother*
+
+## 3.23.2
+
+* Include .tt files in published gem. Fixes templates not being available when using generators.
+
+    *Florian Aßmann*
+
+## 3.23.1
+
+* Restore Rake tasks in published gem.
+
+    *Franz Liedke*
+
 ## 3.23.0
 
 * Add docs about Slack channel in Ruby Central workspace. (Join us! #oss-view-component). Email joelhawksley@github.com for an invite.

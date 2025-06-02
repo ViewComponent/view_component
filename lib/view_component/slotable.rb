@@ -214,7 +214,8 @@ module ViewComponent
       # Called by the compiler, as instance methods are not defined when slots are first registered
       def register_default_slots
         registered_slots.each do |slot_name, config|
-          config[:default_method] = instance_methods.find { |method_name| method_name == :"default_#{slot_name}" }
+          default_method_name = :"default_#{slot_name}"
+          config[:default_method] = instance_methods.find { |method_name| method_name == default_method_name }
 
           registered_slots[slot_name] = config
         end
