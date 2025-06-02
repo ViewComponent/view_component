@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Reduce string allocations during compilation.
+
+    *Jonathan del Strother*
+
 ## 3.23.2
 
 * Include .tt files in published gem. Fixes templates not being available when using generators.
