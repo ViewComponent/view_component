@@ -400,16 +400,6 @@ module ViewComponent
       end
     end
 
-    # Set the controller used for testing components:
-    #
-    # ```ruby
-    # config.view_component.test_controller = "MyTestController"
-    # ```
-    #
-    # Defaults to `nil`. If this is falsy, `"ApplicationController"` is used. Can also be
-    # configured on a per-test basis using `with_controller_class`.
-    #
-
     # Configuration for generators.
     #
     # All options under this namespace default to `false` unless otherwise

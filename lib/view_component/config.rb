@@ -14,8 +14,7 @@ module ViewComponent
         ActiveSupport::OrderedOptions.new.merge!({
           generate: default_generate_options,
           previews: default_previews_options,
-          instrumentation_enabled: false,
-          test_controller: "ApplicationController"
+          instrumentation_enabled: false
         })
       end
 
