@@ -85,27 +85,7 @@ ViewComponents use a standard Ruby initializer that clearly defines what's neede
 
 ### Performance
 
-Based on several [benchmarks](https://github.com/viewcomponent/view_component/blob/main/performance/partial_benchmark.rb), ViewComponents are ~10x faster than partials in real-world use-cases.
-
-The primary optimization is pre-compiling all ViewComponent templates at application boot, instead of at runtime like traditional Rails views.
-
-For example, the `MessageComponent` template is compiled onto the Ruby object:
-
-```ruby
-# app/components/message_component.rb
-class MessageComponent < ViewComponent::Base
-  def initialize(name:)
-    @name = name
-  end
-
-  def call
-    @output_buffer.safe_append = "<h1>Hello, ".freeze
-    @output_buffer.append = (@name)
-    @output_buffer.safe_append = "!</h1>".freeze
-    @output_buffer.to_s
-  end
-end
-```
+Based on several [benchmarks](https://github.com/viewcomponent/view_component/blob/main/performance/partial_benchmark.rb), ViewComponents are ~2-3x faster than partials in real-world use-cases.
 
 ### Code quality
 
