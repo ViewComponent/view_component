@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.0.0.alpha6
+
 * BREAKING: Remove `config.test_controller` in favor of `vc_test_controller_class` test helper method.
 
     *Joel Hawksley*
