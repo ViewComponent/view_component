@@ -30,6 +30,18 @@ nav_order: 6
 
     *Stephen Nelson*
 
+* Update documentation on performance to reflect more representative benchmark showing 2-3x speed increase over partials.
+
+    *Joel Hawksley*
+
+* Add documentation note about instrumentation negatively affecting performance.
+
+    *Joel Hawksley*
+
+* Revert object shapes optimization due to lack of evidence of improvement.
+
+    *Joel Hawksley*
+
 ## 4.0.0.alpha5
 
 * BREAKING: `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
@@ -39,10 +51,6 @@ nav_order: 6
 * BREAKING: Remove broken integration with `rails stats` that ignored components outside of `app/components`.
 
     *Joel Hawksley*
-
-* Add internal optimization for Ruby object shapes.
-
-    *Adam Hess*, *Joel Hawksley*
 
 ## 4.0.0.alpha4
 

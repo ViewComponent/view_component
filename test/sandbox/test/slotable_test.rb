@@ -821,28 +821,4 @@ class SlotableTest < ViewComponent::TestCase
   def test_slot_name_methods_are_not_shared_accross_components
     assert_not_equal SlotsComponent.instance_method(:title).owner, SlotNameOverrideComponent::OtherComponent.instance_method(:title).owner
   end
-
-  # Ensure that we pre-initialize all internal instance variables
-  # before rendering the component, maximizing the chance that
-  # Ruby will be able to use the more streamlined instance variable
-  # lookup enabled by object shapes.
-  def test_object_shapes
-    component = SlotsComponent.new(classes: "mt-4") do |component|
-      component.with_title.with_content("This is my title!")
-      component.with_subtitle.with_content("This is my subtitle!")
-      component.with_tab.with_content("Tab A")
-      component.with_tab.with_content("Tab B")
-      component.with_item.with_content("Item A")
-      component.with_item(highlighted: true).with_content("Item B")
-      component.with_item.with_content("Item C")
-
-      component.with_footer(classes: "text-blue") do
-        "This is the footer"
-      end
-    end
-
-    render_inline(component)
-
-    assert_equal(:@classes, component.instance_variables.last)
-  end
 end

@@ -5,8 +5,6 @@ require "simplecov"
 require "simplecov-console"
 require "rails/version"
 
-Warning[:performance] = true if RUBY_VERSION >= "3.4"
-
 if ENV["MEASURE_COVERAGE"]
   SimpleCov.start do
     command_name "minitest-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
