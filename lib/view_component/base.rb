@@ -14,7 +14,6 @@ require "view_component/slotable"
 require "view_component/template"
 require "view_component/translatable"
 require "view_component/with_content_helper"
-require "view_component/use_helpers"
 
 module ActionView
   class OutputBuffer
@@ -52,7 +51,6 @@ module ViewComponent
     include ActiveSupport::CoreExt::ERBUtil
 
     include ViewComponent::InlineTemplate
-    include ViewComponent::UseHelpers
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
