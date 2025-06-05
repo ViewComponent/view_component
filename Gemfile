@@ -18,6 +18,7 @@ group :development, :test do
   gem "bundler", "~> 2"
   gem "capybara", "~> 3"
   gem "cuprite"
+  gem "dry-initializer", require: true
   gem "erb_lint"
   gem "haml", "~> 6"
   gem "jbuilder", "~> 2"
