@@ -1241,4 +1241,10 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_includes("Hi!", custom_view.render(GreetingComponent.new))
   end
+
+  def test_dry_initializer
+    render_inline(ItemComponent.with_collection([Product.new(name: "Radio clock")]))
+
+    assert_text("Radio clock")
+  end
 end

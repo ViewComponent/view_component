@@ -119,6 +119,7 @@ GEM
     diff-lcs (1.6.2)
     docile (1.4.1)
     drb (2.2.3)
+    dry-initializer (3.2.0)
     erb (5.0.1)
     erb_lint (0.9.0)
       activesupport
@@ -393,6 +394,7 @@ DEPENDENCIES
   bundler (~> 2)
   capybara (~> 3)
   cuprite
+  dry-initializer
   erb_lint
   haml (~> 6)
   jbuilder (~> 2)
