@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Deprecate `use_helper(s)`. Use `include MyHelper` or `helpers.` proxy instead.
+
+    *Joel Hawksley*
+
 * Reduce string allocations during compilation.
 
     *Jonathan del Strother*

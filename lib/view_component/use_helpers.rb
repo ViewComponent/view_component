@@ -9,6 +9,11 @@ module ViewComponent::UseHelpers
     end
 
     def use_helper(helper_method, from: nil, prefix: false)
+      ViewComponent::Deprecation.deprecation_warning(
+        "use_helper(s)",
+        "Use `include MyHelper` or `helpers.` proxy instead."
+      )
+
       helper_method_name = full_helper_method_name(helper_method, prefix: prefix, source: from)
 
       class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
