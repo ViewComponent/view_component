@@ -1,6 +1,6 @@
 describe PreviewComponent do
   before do
-    ViewComponent::Preview.load_previews
+    ViewComponent::Preview.__vc_load_previews
   end
 
   it "renders the preview" do
@@ -12,7 +12,7 @@ end
 
 describe "PreviewComponent" do
   before do
-    ViewComponent::Preview.load_previews
+    ViewComponent::Preview.__vc_load_previews
   end
 
   it "raises an error" do

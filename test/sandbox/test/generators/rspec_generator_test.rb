@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "rails/generators/rspec/component_generator"
+require "generators/view_component/rspec/rspec_generator"
 
 Rails.application.load_generators
 
 class RSpecGeneratorTest < Rails::Generators::TestCase
-  tests Rspec::Generators::ComponentGenerator
+  tests ViewComponent::Generators::RspecGenerator
   destination Dir.mktmpdir
   setup :prepare_destination
 
@@ -60,7 +60,7 @@ class RSpecGeneratorTest < Rails::Generators::TestCase
 
   def test_generates_component_with_non_app_component_path
     with_generate_option(:use_component_path_for_rspec_tests, true) do
-      with_config_option(:view_component_path, "lib/views/components") do
+      with_custom_component_path("lib/views/components") do
         run_generator %w[Dummy data]
 
         assert_file "spec/components/dummy_component_spec.rb" do |content|
