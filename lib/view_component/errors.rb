@@ -65,18 +65,6 @@ module ViewComponent
     end
   end
 
-  class EmptyOrInvalidInitializerError < StandardError
-    MESSAGE =
-      "The COMPONENT initializer is empty or invalid. " \
-      "It must accept the parameter `PARAMETER` to render it as a collection.\n\n" \
-      "To fix this issue, update the initializer to accept `PARAMETER`.\n\n" \
-      "See [the collections docs](https://viewcomponent.org/guide/collections.html) for more information on rendering collections."
-
-    def initialize(klass_name, parameter)
-      super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("PARAMETER", parameter.to_s))
-    end
-  end
-
   class MissingCollectionArgumentError < StandardError
     MESSAGE =
       "The initializer for COMPONENT doesn't accept the parameter `PARAMETER`, " \
