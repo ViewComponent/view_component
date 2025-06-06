@@ -660,12 +660,12 @@ module ViewComponent
 
       # @private
       def collection_parameter
-        provided_collection_parameter || name && name.demodulize.underscore.chomp("_component").to_sym
+        @provided_collection_parameter ||= name && name.demodulize.underscore.chomp("_component").to_sym
       end
 
       # @private
       def collection_counter_parameter
-        :"#{collection_parameter}_counter"
+        @collection_counter_parameter ||= :"#{collection_parameter}_counter"
       end
 
       # @private
@@ -675,7 +675,7 @@ module ViewComponent
 
       # @private
       def collection_iteration_parameter
-        :"#{collection_parameter}_iteration"
+        @collection_iteration_parameter ||= :"#{collection_parameter}_iteration"
       end
 
       # @private
@@ -691,11 +691,12 @@ module ViewComponent
       end
 
       def initialize_parameter_names
-        return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
-
-        return attribute_types.keys.map(&:to_sym) if Rails::VERSION::MAJOR <= 5 && respond_to?(:attribute_types)
-
-        initialize_parameters.map(&:last)
+        @initialize_parameter_names ||=
+          if respond_to?(:attribute_names)
+            attribute_names.map(&:to_sym)
+          else
+            initialize_parameters.map(&:last)
+          end
       end
 
       def initialize_parameters
