@@ -47,7 +47,7 @@ module ViewComponent
     end
 
     include ActionView::Helpers
-    include Rails.application.routes.url_helpers
+    include Rails.application.routes.url_helpers if defined?(Rails) && Rails.application
     include ERB::Escape
     include ActiveSupport::CoreExt::ERBUtil
 
