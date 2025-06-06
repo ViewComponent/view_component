@@ -619,7 +619,13 @@ class RenderingTest < ViewComponent::TestCase
     ProductComponent.ensure_compiled
 
     allocations =
-      { "3.4.4" => 121 }
+      if Rails.version.to_f < 8.0
+        {"3.3.8" => 128, "3.2.8" => 125, "3.1.7" => 125, "3.0.7" => 122}
+      elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
+        {"3.5.0" => 121, "3.4.4" => 121, "3.3.8" => 128}
+      else
+        {"3.4.4" => 119}
+      end
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
