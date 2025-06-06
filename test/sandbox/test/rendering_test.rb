@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 69, "3.4" => 74, "3.3" => 73, "3.2" => 72}) do
+      assert_allocations({"3.5" => 69, "3.4" => 74, "3.3" => 72, "3.2" => 71}) do
         render_inline(MyComponent.new)
       end
     end
@@ -766,17 +766,6 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
-  def test_collection_component_with_trailing_comma_attr_reader
-    exception =
-      assert_raises ViewComponent::EmptyOrInvalidInitializerError do
-        render_inline(
-          ProductReaderOopsComponent.with_collection(["foo"])
-        )
-      end
-
-    assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
-  end
-
   def test_renders_component_using_rails_config
     render_inline(RailsConfigComponent.new)
 
@@ -1221,5 +1210,11 @@ class RenderingTest < ViewComponent::TestCase
     custom_view = CustomView.with_empty_template_cache.with_view_paths []
 
     assert_includes("Hi!", custom_view.render(GreetingComponent.new))
+  end
+
+  def test_dry_initializer
+    render_inline(ItemComponent.with_collection([Product.new(name: "Radio clock")]))
+
+    assert_text("Radio clock")
   end
 end
