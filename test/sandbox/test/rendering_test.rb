@@ -612,6 +612,23 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("p", text: "Mints counter: 1")
   end
 
+  def test_render_collection_inline_allocations
+    # Stabilize compilation status ahead of testing allocations to simulate rendering
+    # performance with compiled component
+    ViewComponent::CompileCache.cache.delete(ProductComponent)
+    ProductComponent.ensure_compiled
+
+    allocations =
+      { "3.4.4" => 264 }
+
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
+    notice = "On sale"
+    assert_allocations(**allocations) do
+      render_inline(ProductComponent.with_collection(products, notice: notice))
+    end
+    assert_selector("h1", text: "Product", count: 2)
+  end
+
   def test_render_collection_custom_collection_parameter_name
     coupons = [Coupon.new(percent_off: 20), Coupon.new(percent_off: 50)]
     render_inline(ProductCouponComponent.with_collection(coupons))
