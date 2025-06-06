@@ -675,7 +675,7 @@ module ViewComponent
 
       # @private
       def collection_iteration_parameter
-        :"#{collection_parameter}_iteration"
+        @collection_iteration_parameter ||= :"#{collection_parameter}_iteration"
       end
 
       # @private
