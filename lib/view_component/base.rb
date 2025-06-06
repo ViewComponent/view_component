@@ -694,8 +694,6 @@ module ViewComponent
         @initialize_parameter_names ||=
           if respond_to?(:attribute_names)
             attribute_names.map(&:to_sym)
-          elsif Rails::VERSION::MAJOR <= 5 && respond_to?(:attribute_types)
-            attribute_types.keys.map(&:to_sym)
           else
             initialize_parameters.map(&:last)
           end
