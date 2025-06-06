@@ -660,7 +660,7 @@ module ViewComponent
 
       # @private
       def collection_parameter
-        provided_collection_parameter || name && name.demodulize.underscore.chomp("_component").to_sym
+        @provided_collection_parameter ||= name && name.demodulize.underscore.chomp("_component").to_sym
       end
 
       # @private
