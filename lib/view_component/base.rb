@@ -665,7 +665,7 @@ module ViewComponent
 
       # @private
       def collection_counter_parameter
-        :"#{collection_parameter}_counter"
+        @collection_counter_parameter ||= :"#{collection_parameter}_counter"
       end
 
       # @private

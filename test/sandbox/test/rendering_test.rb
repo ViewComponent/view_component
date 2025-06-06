@@ -619,7 +619,7 @@ class RenderingTest < ViewComponent::TestCase
     ProductComponent.ensure_compiled
 
     allocations =
-      { "3.4.4" => 134 }
+      { "3.4.4" => 130 }
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
