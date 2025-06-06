@@ -619,10 +619,13 @@ class RenderingTest < ViewComponent::TestCase
     ProductComponent.ensure_compiled
 
     allocations =
-      { "3.4.4" => 264 }
+      { "3.4.4" => 211 }
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
+    # Ensure any one-time allocations are done
+    render_inline(ProductComponent.with_collection(products, notice: notice))
+
     assert_allocations(**allocations) do
       render_inline(ProductComponent.with_collection(products, notice: notice))
     end
