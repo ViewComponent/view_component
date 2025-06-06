@@ -89,7 +89,8 @@ module ViewComponent
 
     using RequestDetails
 
-    def initialize; end
+    def initialize
+    end
 
     # Entrypoint for rendering components.
     #
