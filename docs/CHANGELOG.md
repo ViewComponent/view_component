@@ -190,6 +190,10 @@ This release makes the following breaking changes:
 
     *Simon Fish*
 
+* Deprecate `use_helper(s)`. Use `include MyHelper` or `helpers.` proxy instead.
+
+    *Joel Hawksley*
+
 * Reduce string allocations during compilation.
 
     *Jonathan del Strother*

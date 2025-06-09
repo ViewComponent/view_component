@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 69, "3.4" => 74, "3.3" => 73, "3.2" => 72}) do
+      assert_allocations({"3.5" => 69, "3.4" => 72, "3.3" => 73, "3.2" => 72}) do
         render_inline(MyComponent.new)
       end
     end
@@ -608,6 +608,32 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("p", text: "On sale", count: 2)
     assert_selector("p", text: "Radio clock counter: 0")
     assert_selector("p", text: "Mints counter: 1")
+  end
+
+  def test_render_collection_inline_allocations
+    # Stabilize compilation status ahead of testing allocations to simulate rendering
+    # performance with compiled component
+    ViewComponent::CompileCache.cache.delete(ProductComponent)
+    ProductComponent.__vc_ensure_compiled
+
+    allocations =
+      if Rails.version.to_f < 8.0
+        {"3.3" => 128, "3.2" => 125}
+      elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
+        {"3.5" => 121, "3.4" => 121, "3.3" => 128}
+      else
+        {"3.4" => 82}
+      end
+
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
+    notice = "On sale"
+    # Ensure any one-time allocations are done
+    render_inline(ProductComponent.with_collection(products, notice: notice))
+
+    assert_allocations(**allocations) do
+      render_inline(ProductComponent.with_collection(products, notice: notice))
+    end
+    assert_selector("h1", text: "Product", count: 2)
   end
 
   def test_render_collection_custom_collection_parameter_name
