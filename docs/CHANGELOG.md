@@ -14,7 +14,7 @@ nav_order: 6
 
     *Joel Hawksley*
 
-* Validate compatibility with `Dry::Initializer` in test suite.
+* BREAKING: Support compatibility with `Dry::Initializer`. As a result, `EmptyOrInvalidInitializerError` will no longer be raised.
 
     *Joel Hawksley*
 
