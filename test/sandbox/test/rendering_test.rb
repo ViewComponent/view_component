@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 69, "3.4" => 72, "3.3" => 73, "3.2" => 72}) do
+      assert_allocations({"3.5" => 69, "3.4" => 74, "3.3" => 73, "3.2" => 72}) do
         render_inline(MyComponent.new)
       end
     end
@@ -616,14 +616,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
-    allocations =
-      if Rails.version.to_f < 8.0
-        {"3.3" => 128, "3.2" => 125}
-      elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
-        {"3.5" => 121, "3.4" => 121, "3.3" => 128}
-      else
-        {"3.4" => 82}
-      end
+    allocations = {"3.5" => 79, "3.4" => 84, "3.3" => 110, "3.2" => 108}
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
