@@ -466,14 +466,6 @@ It looks like a block was provided after calling `with_content` on COMPONENT, wh
 
 To fix this issue, use either `with_content` or a block.
 
-### `EmptyOrInvalidInitializerError`
-
-The COMPONENT initializer is empty or invalid. It must accept the parameter `PARAMETER` to render it as a collection.
-
-To fix this issue, update the initializer to accept `PARAMETER`.
-
-See [the collections docs](https://viewcomponent.org/guide/collections.html) for more information on rendering collections.
-
 ### `HelpersCalledBeforeRenderError`
 
 `#helpers` can't be used before rendering as it depends on the view context that only exists once a ViewComponent is passed to the Rails render pipeline.

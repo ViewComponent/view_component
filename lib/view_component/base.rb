@@ -47,6 +47,7 @@ module ViewComponent
     end
 
     include ActionView::Helpers
+    include Rails.application.routes.url_helpers if defined?(Rails) && Rails.application
     include ERB::Escape
     include ActiveSupport::CoreExt::ERBUtil
 
@@ -68,8 +69,7 @@ module ViewComponent
     delegate :content_security_policy_nonce, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
-    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
-    self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
+    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
     attr_accessor :__vc_original_view_context
     attr_reader :current_template
@@ -88,6 +88,11 @@ module ViewComponent
     end
 
     using RequestDetails
+
+    # Including `Rails.application.routes.url_helpers` defines an initializer that accepts (...),
+    # so we have to define our own empty initializer to overwrite it.
+    def initialize
+    end
 
     # Entrypoint for rendering components.
     #
@@ -510,6 +515,11 @@ module ViewComponent
       end
 
       # @private
+      def __vc_compile(raise_errors: false, force: false)
+        __vc_compiler.compile(raise_errors: raise_errors, force: force)
+      end
+
+      # @private
       def inherited(child)
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
@@ -529,12 +539,6 @@ module ViewComponent
               render_template_for(requested_details)
             end
           RUBY
-        end
-
-        # If Rails application is loaded, add application url_helpers to the component context
-        # we need to check this to use this gem as a dependency
-        if defined?(Rails) && Rails.application && !(child < Rails.application.routes.url_helpers)
-          child.include Rails.application.routes.url_helpers
         end
 
         # Derive the source location of the component Ruby file from the call stack.
@@ -566,11 +570,6 @@ module ViewComponent
       # @private
       def __vc_ensure_compiled
         __vc_compile unless __vc_compiled?
-      end
-
-      # @private
-      def __vc_compile(raise_errors: false, force: false)
-        __vc_compiler.compile(raise_errors: raise_errors, force: force)
       end
 
       # @private
@@ -622,13 +621,6 @@ module ViewComponent
         return unless parameter
         return if __vc_initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
 
-        # If Ruby can't parse the component class, then the initialize
-        # parameters will be empty and ViewComponent will not be able to render
-        # the component.
-        if initialize_parameters.empty?
-          raise EmptyOrInvalidInitializerError.new(name, parameter)
-        end
-
         raise MissingCollectionArgumentError.new(name, parameter)
       end
 
@@ -670,8 +662,7 @@ module ViewComponent
       private
 
       def splatted_keyword_argument_present?
-        initialize_parameters.flatten.include?(:keyrest) &&
-          !initialize_parameters.include?([:keyrest, :**]) # Un-named splatted keyword args don't count!
+        initialize_parameters.flatten.include?(:keyrest)
       end
 
       def __vc_initialize_parameter_names

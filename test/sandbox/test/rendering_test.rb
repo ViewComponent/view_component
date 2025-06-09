@@ -20,12 +20,34 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 69, "3.4" => 74, "3.3" => 73, "3.2" => 72}) do
+      assert_allocations({"3.5" => 69, "3.4" => 74, "3.3" => 72, "3.2" => 71}) do
         render_inline(MyComponent.new)
       end
     end
 
     assert_selector("div", text: "hello,world!")
+  end
+
+  def test_render_collection_inline_allocations
+    # Stabilize compilation status ahead of testing allocations to simulate rendering
+    # performance with compiled component
+    ViewComponent::CompileCache.cache.delete(ProductComponent)
+    ProductComponent.__vc_ensure_compiled
+
+    allocations = {"3.5" => 77, "3.4" => 82, "3.3" => 86, "3.2" => 84}
+
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
+    notice = "On sale"
+    # Ensure any one-time allocations are done
+    render_inline(ProductComponent.with_collection(products, notice: notice))
+
+    with_instrumentation_enabled_option(false) do
+      assert_allocations(**allocations) do
+        render_inline(ProductComponent.with_collection(products, notice: notice))
+      end
+    end
+
+    assert_selector("h1", text: "Product", count: 2)
   end
 
   def test_initialize_super
@@ -610,25 +632,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("p", text: "Mints counter: 1")
   end
 
-  def test_render_collection_inline_allocations
-    # Stabilize compilation status ahead of testing allocations to simulate rendering
-    # performance with compiled component
-    ViewComponent::CompileCache.cache.delete(ProductComponent)
-    ProductComponent.__vc_ensure_compiled
-
-    allocations = {"3.5" => 79, "3.4" => 84, "3.3" => 110, "3.2" => 108}
-
-    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
-    notice = "On sale"
-    # Ensure any one-time allocations are done
-    render_inline(ProductComponent.with_collection(products, notice: notice))
-
-    assert_allocations(**allocations) do
-      render_inline(ProductComponent.with_collection(products, notice: notice))
-    end
-    assert_selector("h1", text: "Product", count: 2)
-  end
-
   def test_render_collection_custom_collection_parameter_name
     coupons = [Coupon.new(percent_off: 20), Coupon.new(percent_off: 50)]
     render_inline(ProductCouponComponent.with_collection(coupons))
@@ -783,17 +786,6 @@ class RenderingTest < ViewComponent::TestCase
         exception.message
       )
     end
-  end
-
-  def test_collection_component_with_trailing_comma_attr_reader
-    exception =
-      assert_raises ViewComponent::EmptyOrInvalidInitializerError do
-        render_inline(
-          ProductReaderOopsComponent.with_collection(["foo"])
-        )
-      end
-
-    assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
 
   def test_renders_component_using_rails_config
@@ -1240,5 +1232,54 @@ class RenderingTest < ViewComponent::TestCase
     custom_view = CustomView.with_empty_template_cache.with_view_paths []
 
     assert_includes("Hi!", custom_view.render(GreetingComponent.new))
+  end
+
+  def test_dry_initializer
+    render_inline(ItemComponent.with_collection([Product.new(name: "Radio clock")]))
+
+    assert_text("Radio clock")
+  end
+
+  class DynamicComponentBase < ViewComponent::Base
+    def setup_component(**attributes)
+      # This method is somewhat contrived, it's intended to mimic features available in the dry-initializer gem.
+      model_name = self.class.name.demodulize.delete_suffix("Component").underscore.to_sym
+      instance_variable_set(:"@#{model_name}", attributes[model_name])
+      define_singleton_method(model_name) { instance_variable_get(:"@#{model_name}") }
+    end
+  end
+
+  class OrderComponent < DynamicComponentBase
+    def initialize(**)
+      setup_component(**)
+    end
+
+    def call
+      "<div data-name='#{order.name}'><h1>#{order.name}</h1></div>".html_safe
+    end
+  end
+
+  class CustomerComponent < DynamicComponentBase
+    def initialize(...)
+      setup_component(...)
+    end
+
+    def call
+      "<div data-name='#{customer.name}'><h1>#{customer.name}</h1></div>".html_safe
+    end
+  end
+
+  def test_supports_components_with_argument_forwarding
+    customers = [Product.new(name: "Taylor"), Product.new(name: "Rowan")]
+    render_inline(CustomerComponent.with_collection(customers))
+    assert_selector("*[data-name='#{customers.first.name}']", text: customers.first.name)
+    assert_selector("*[data-name='#{customers.last.name}']", text: customers.last.name)
+  end
+
+  def test_supports_components_with_unnamed_splatted_arguments
+    orders = [Product.new(name: "O-2024-0004"), Product.new(name: "B-2024-0714")]
+    render_inline(OrderComponent.with_collection(orders))
+    assert_selector("*[data-name='#{orders.first.name}']", text: orders.first.name)
+    assert_selector("*[data-name='#{orders.last.name}']", text: orders.last.name)
   end
 end
