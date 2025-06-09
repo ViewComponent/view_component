@@ -1239,4 +1239,47 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_text("Radio clock")
   end
+
+  class DynamicComponentBase < ViewComponent::Base
+    def setup_component(**attributes)
+      # This method is somewhat contrived, it's intended to mimic features available in the dry-initializer gem.
+      model_name = self.class.name.demodulize.delete_suffix('Component').underscore.to_sym
+      instance_variable_set(:"@#{model_name}", attributes[model_name])
+      define_singleton_method(model_name) { instance_variable_get(:"@#{model_name}") }
+    end
+  end
+
+  class OrderComponent < DynamicComponentBase
+    def initialize(**)
+      setup_component(**)
+    end
+
+    def call
+      "<div data-name='#{order.name}'><h1>#{order.name}</h1></div>".html_safe
+    end
+  end
+
+  class CustomerComponent < DynamicComponentBase
+    def initialize(...)
+      setup_component(...)
+    end
+
+    def call
+      "<div data-name='#{customer.name}'><h1>#{customer.name}</h1></div>".html_safe
+    end
+  end
+
+  def test_supports_components_with_argument_forwarding
+    customers = [Product.new(name: "Taylor"), Product.new(name: "Rowan")]
+    render_inline(CustomerComponent.with_collection(customers))
+    assert_selector("*[data-name='#{customers.first.name}']", text: customers.first.name)
+    assert_selector("*[data-name='#{customers.last.name}']", text: customers.last.name)
+  end
+
+  def test_supports_components_with_unnamed_splatted_arguments
+    orders = [Product.new(name: "O-2024-0004"), Product.new(name: "B-2024-0714")]
+    render_inline(OrderComponent.with_collection(orders))
+    assert_selector("*[data-name='#{orders.first.name}']", text: orders.first.name)
+    assert_selector("*[data-name='#{orders.last.name}']", text: orders.last.name)
+  end
 end
