@@ -1243,7 +1243,7 @@ class RenderingTest < ViewComponent::TestCase
   class DynamicComponentBase < ViewComponent::Base
     def setup_component(**attributes)
       # This method is somewhat contrived, it's intended to mimic features available in the dry-initializer gem.
-      model_name = self.class.name.demodulize.delete_suffix('Component').underscore.to_sym
+      model_name = self.class.name.demodulize.delete_suffix("Component").underscore.to_sym
       instance_variable_set(:"@#{model_name}", attributes[model_name])
       define_singleton_method(model_name) { instance_variable_get(:"@#{model_name}") }
     end
