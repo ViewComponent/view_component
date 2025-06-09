@@ -89,6 +89,8 @@ module ViewComponent
 
     using RequestDetails
 
+    # Including `Rails.application.routes.url_helpers` defines an initializer that accepts (...),
+    # so we have to define our own empty initializer to overwrite it.
     def initialize
     end
 
