@@ -620,7 +620,7 @@ module ViewComponent
         parameter = validate_default ? __vc_collection_parameter : provided_collection_parameter
 
         return unless parameter
-        return if initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
+        return if __vc_initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
 
         # If Ruby can't parse the component class, then the initialize
         # parameters will be empty and ViewComponent will not be able to render
@@ -637,34 +637,34 @@ module ViewComponent
       # methods.
       # @private
       def __vc_validate_initialization_parameters!
-        return unless initialize_parameter_names.include?(:content)
+        return unless __vc_initialize_parameter_names.include?(:content)
 
         raise ReservedParameterError.new(name, :content)
       end
 
       # @private
       def __vc_collection_parameter
-        provided_collection_parameter || name && name.demodulize.underscore.chomp("_component").to_sym
+        @provided_collection_parameter ||= name && name.demodulize.underscore.chomp("_component").to_sym
       end
 
       # @private
       def __vc_collection_counter_parameter
-        :"#{__vc_collection_parameter}_counter"
+        @__vc_collection_counter_parameter ||= :"#{__vc_collection_parameter}_counter"
       end
 
       # @private
       def __vc_counter_argument_present?
-        initialize_parameter_names.include?(__vc_collection_counter_parameter)
+        __vc_initialize_parameter_names.include?(__vc_collection_counter_parameter)
       end
 
       # @private
       def __vc_collection_iteration_parameter
-        :"#{__vc_collection_parameter}_iteration"
+        @__vc_collection_iteration_parameter ||= :"#{__vc_collection_parameter}_iteration"
       end
 
       # @private
       def __vc_iteration_argument_present?
-        initialize_parameter_names.include?(__vc_collection_iteration_parameter)
+        __vc_initialize_parameter_names.include?(__vc_collection_iteration_parameter)
       end
 
       private
@@ -674,10 +674,13 @@ module ViewComponent
           !initialize_parameters.include?([:keyrest, :**]) # Un-named splatted keyword args don't count!
       end
 
-      def initialize_parameter_names
-        return attribute_names.map(&:to_sym) if respond_to?(:attribute_names)
-
-        initialize_parameters.map(&:last)
+      def __vc_initialize_parameter_names
+        @__vc_initialize_parameter_names ||=
+          if respond_to?(:attribute_names)
+            attribute_names.map(&:to_sym)
+          else
+            initialize_parameters.map(&:last)
+          end
       end
 
       def initialize_parameters
