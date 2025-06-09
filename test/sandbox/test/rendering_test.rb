@@ -34,7 +34,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
-    allocations = {"3.5" => 79, "3.4" => 106, "3.3" => 110, "3.2" => 84}
+    allocations = {"3.5" => 77, "3.4" => 82, "3.3" => 86, "3.2" => 84}
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
