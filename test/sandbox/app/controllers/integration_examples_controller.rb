@@ -69,4 +69,11 @@ class IntegrationExamplesController < ActionController::Base
   def turbo_stream
     respond_to { |format| format.turbo_stream { render TurboStreamComponent.new } }
   end
+
+  def submit
+    render TurboContentTypeComponent.new(
+      message: "Submitted",
+      show_form: false
+    )#, content_type: "text/html"
+  end
 end
