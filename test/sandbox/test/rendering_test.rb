@@ -458,6 +458,31 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("Content")
   end
 
+  def test_conditional_rendering_combined_with_component_arg
+    render_inline(ConditionalContentWithArgComponent.new)
+
+    refute_component_rendered
+
+    render_inline(ConditionalContentWithArgComponent.new) do
+      "Content"
+    end
+
+    assert_component_rendered
+    assert_text("Content")
+
+    render_inline(ConditionalContentWithArgComponent.new(description: "foo")) do
+      "Content"
+    end
+
+    assert_component_rendered
+    assert_text("foo")
+
+    render_inline(ConditionalContentWithArgComponent.new(description: "bar"))
+
+    assert_component_rendered
+    assert_text("bar")
+  end
+
   def test_assert_select
     render_inline(MyComponent.new)
 
