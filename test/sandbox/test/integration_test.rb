@@ -744,4 +744,19 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     assert_select "div", "hello,world!"
   end
+
+  def test_modifying_previews_reflected_on_reload
+    get "/rails/view_components/preview_component/default"
+    assert_select "h1", text: "Lorem Ipsum"
+
+    new_file_contents = File.read("test/sandbox/test/components/previews/preview_component_preview.rb").gsub("Lorem Ipsum", "Changed!")
+
+    modify_file "test/components/previews/preview_component_preview.rb", new_file_contents do
+      get "/rails/view_components/preview_component/default"
+      assert_select "h1", text: "Changed!"
+    end
+
+    get "/rails/view_components/preview_component/default"
+    assert_select "h1", text: "Lorem Ipsum"
+  end
 end
