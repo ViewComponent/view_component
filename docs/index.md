@@ -255,6 +255,7 @@ ViewComponent is built by over a hundred members of the community, including:
 * [Keenly](https://www.keenly.so) (100+ components)
 * [Kicksite](https://kicksite.com/)
 * [Krystal](https://krystal.uk)
+* [Launch Scout](https://launchscout.com/)
 * [Learn To Be](https://www.learntobe.org/) (100+ components)
 * [Litmus](https://litmus.engineering/)
 * [Login.gov](https://github.com/18F/identity-idp)
