@@ -821,4 +821,14 @@ class SlotableTest < ViewComponent::TestCase
   def test_slot_name_methods_are_not_shared_accross_components
     assert_not_equal SlotsComponent.instance_method(:title).owner, SlotNameOverrideComponent::OtherComponent.instance_method(:title).owner
   end
+
+  def test_allows_marking_slot_as_last
+    render_inline(LastItemComponent.new) do |component|
+      component.with_item("animal")
+      component.with_item("feline")
+      component.with_item("cat")
+    end
+
+    assert_selector(".breadcrumb.active")
+  end
 end
