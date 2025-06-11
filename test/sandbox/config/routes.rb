@@ -15,6 +15,8 @@ Sandbox::Application.routes.draw do
   get :controller_inline_with_block, to: "integration_examples#controller_inline_with_block"
   get :controller_inline_baseline, to: "integration_examples#controller_inline_baseline"
   get :controller_to_string, to: "integration_examples#controller_to_string"
+  get :controller_inline_baseline_with_layout, to: "integration_examples#controller_inline_baseline_with_layout"
+  get :controller_to_string_with_layout, to: "integration_examples#controller_to_string_with_layout"
   get :layout_default, to: "layouts#default"
   get :layout_global_for_action, to: "layouts#global_for_action"
   get :layout_explicit_in_action, to: "layouts#explicit_in_action"
