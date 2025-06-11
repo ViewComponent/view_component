@@ -101,6 +101,8 @@ ViewComponents are Ruby objects, making it easy to follow (and enforce) code qua
 
 ## Contributors
 
+This should not trigger a changelog
+
 ViewComponent is built by over a hundred members of the community, including:
 
 <img src="https://avatars.githubusercontent.com/nickcoyne?s=64" alt="nickcoyne" width="32" />
