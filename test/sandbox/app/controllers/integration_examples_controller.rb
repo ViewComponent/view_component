@@ -23,9 +23,15 @@ class IntegrationExamplesController < ActionController::Base
   end
 
   def controller_to_string
-    render_to_string("integration_examples/_controller_inline", locals: {message: "bar"})
-
     render(plain: render_to_string(ControllerInlineComponent.new(message: "bar")))
+  end
+
+  def controller_inline_baseline_with_layout
+    render(ControllerInlineComponent.new(message: "bar"), layout: "application")
+  end
+
+  def controller_to_string_with_layout
+    render(plain: render_to_string(ControllerInlineComponent.new(message: "bar"), layout: "application"))
   end
 
   def helpers_proxy_component

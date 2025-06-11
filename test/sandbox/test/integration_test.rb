@@ -191,6 +191,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes to_string_response, baseline_response
   end
 
+  def test_rendering_component_in_a_controller_using_render_to_string_with_layout
+    get "/controller_inline_baseline_with_layout"
+
+    assert_select("body div", "bar")
+    assert_response :success
+
+    baseline_response = response.body
+
+    get "/controller_to_string_with_layout"
+    assert_select("body div", "bar")
+    assert_response :success
+
+    to_string_response = response.body
+
+    assert_includes to_string_response, baseline_response
+  end
+
   def test_rendering_component_with_content
     get "/content"
     assert_response :success
