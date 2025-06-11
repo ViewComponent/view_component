@@ -18,6 +18,21 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* BREAKING: Allow `with_content` to override content passed as a block. `DuplicateSlotContentError` will no longer be raised.
+
+    For example, slots can now have their content set with `with_content`:
+
+        ```ruby
+        render(ParentSlotComponent.new) do |parent|
+          parent.with_child do |child|
+            child.with_title { "Child Title" }
+            child.with_content("Child Content")
+          end
+        end
+        ```
+
+    *Joel Hawksley*
+
 ## 4.0.0.alpha6
 
 * BREAKING: Remove `config.test_controller` in favor of `vc_test_controller_class` test helper method.

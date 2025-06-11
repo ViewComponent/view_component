@@ -430,20 +430,6 @@ class SlotableTest < ViewComponent::TestCase
     end
   end
 
-  def test_raises_if_using_both_block_content_and_with_content
-    error =
-      assert_raises ViewComponent::DuplicateSlotContentError do
-        component = SlotsComponent.new
-        slot = component.with_title("some_argument")
-        slot.with_content("This is my title!")
-        slot.__vc_content_block = "some block"
-
-        render_inline(component)
-      end
-
-    assert_includes error.message, "It looks like a block was provided after calling"
-  end
-
   def test_renders_lambda_slot_with_no_args
     render_inline(SlotsWithEmptyLambdaComponent.new) do |component|
       component.with_item { "Item 1" }
@@ -830,5 +816,34 @@ class SlotableTest < ViewComponent::TestCase
     end
 
     assert_selector(".breadcrumb.active")
+  end
+
+  class ParentSlotComponent < ViewComponent::Base
+    erb_template <<~ERB
+      <div class="content"><%= content %></div>
+      <div class="child"><%= child %></div>
+    ERB
+
+    renders_one :child, "ChildSlotComponent"
+
+    class ChildSlotComponent < ViewComponent::Base
+      erb_template <<~ERB
+        <div class="child-title"><%= title %></div>
+        <div class="child-content"><%= content %></div>
+      ERB
+
+      renders_one :title
+    end
+  end
+
+  def test_render_slot_with_content
+    render_inline(ParentSlotComponent.new) do |parent|
+      parent.with_child do |child|
+        child.with_title { "Child Title" }
+        child.with_content("Child Content")
+      end
+    end
+
+    assert_selector(".child-content", text: "Child Content")
   end
 end

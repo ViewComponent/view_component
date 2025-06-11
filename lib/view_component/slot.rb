@@ -47,10 +47,6 @@ module ViewComponent
 
       view_context = @parent.send(:view_context)
 
-      if defined?(@__vc_content_block) && defined?(@__vc_content_set_by_with_content)
-        raise DuplicateSlotContentError.new(self.class.name)
-      end
-
       @content =
         if __vc_component_instance?
           @__vc_component_instance.__vc_original_view_context = @parent.__vc_original_view_context

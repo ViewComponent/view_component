@@ -318,15 +318,16 @@ module ViewComponent
     # The content passed to the component instance as a block.
     #
     # @return [String]
-    def content
+    def content(always_evaluate: true)
       @__vc_content_evaluated = true
-      return @__vc_content if defined?(@__vc_content)
+
+      return @__vc_content if defined?(@__vc_content) && !always_evaluate
 
       @__vc_content =
-        if __vc_render_in_block_provided?
-          view_context.capture(self, &@__vc_render_in_block)
-        elsif __vc_content_set_by_with_content_defined?
+        if __vc_content_set_by_with_content_defined?
           @__vc_content_set_by_with_content
+        elsif __vc_render_in_block_provided?
+          view_context.capture(self, &@__vc_render_in_block)
         end
     end
 
