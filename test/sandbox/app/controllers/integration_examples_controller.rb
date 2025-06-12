@@ -74,6 +74,6 @@ class IntegrationExamplesController < ActionController::Base
     render TurboContentTypeComponent.new(
       message: "Submitted",
       show_form: false
-    )#, content_type: "text/html"
+    )
   end
 end
