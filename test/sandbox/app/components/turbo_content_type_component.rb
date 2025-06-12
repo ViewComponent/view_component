@@ -4,16 +4,6 @@ class TurboContentTypeComponent < ViewComponent::Base
     @show_form = show_form
   end
 
-  def call
-    content_tag('turbo-frame', id: "test-frame") do
-      if show_form
-        form_content
-      else
-        content_tag(:div, @message, id: "result")
-      end
-    end
-  end
-
   private
 
   attr_reader :message, :show_form
