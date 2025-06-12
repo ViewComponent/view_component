@@ -837,13 +837,14 @@ class SlotableTest < ViewComponent::TestCase
   end
 
   def test_render_slot_with_content
-    render_inline(ParentSlotComponent.new) do |parent|
+    render_inline(ParentSlotComponent.new.with_content("Parent Content")) do |parent|
       parent.with_child do |child|
         child.with_title { "Child Title" }
         child.with_content("Child Content")
       end
     end
 
+    assert_selector(".content", text: "Parent Content")
     assert_selector(".child-content", text: "Child Content")
   end
 end

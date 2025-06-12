@@ -97,17 +97,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("span", text: "content")
   end
 
-  def test_raise_error_when_content_already_set
-    error =
-      assert_raises ViewComponent::DuplicateContentError do
-        render_inline(WrapperComponent.new.with_content("setter content")) do
-          "block content"
-        end
-      end
-
-    assert_includes error.message, "It looks like a block was provided after calling"
-  end
-
   def test_renders_content_given_as_argument
     render_inline(WrapperComponent.new.with_content("from arg"))
 

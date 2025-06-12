@@ -18,12 +18,12 @@ nav_order: 6
 
     *Joel Hawksley*
 
-* BREAKING: Allow `with_content` to override content passed as a block. `DuplicateSlotContentError` will no longer be raised.
+* BREAKING: Allow `with_content` to override content passed as a block. `DuplicateContentError` and `DuplicateSlotContentError` will no longer be raised.
 
-    For example, slots can now have their content set with `with_content`:
+    For example, components and slots can now have their content set with `with_content` even when used with block syntax:
 
         ```ruby
-        render(ParentSlotComponent.new) do |parent|
+        render(ParentSlotComponent.new.with_content("Parent Content")) do |parent|
           parent.with_child do |child|
             child.with_title { "Child Title" }
             child.with_content("Child Content")
