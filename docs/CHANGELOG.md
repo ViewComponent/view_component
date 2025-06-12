@@ -18,7 +18,7 @@ nav_order: 6
 
     *Joel Hawksley*
 
-* Fix bug where response format was not set causing issues with Turbo Frames.
+* Fix bug where response format wasn't set, which caused issues with Turbo Frames.
 
     *Joel Hawksley*
 
