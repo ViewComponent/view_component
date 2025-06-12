@@ -139,6 +139,9 @@ module ViewComponent
 
         @output_buffer.with_buffer do
           rendered_template = render_template_for(@__vc_requested_details).to_s
+            around_render do
+              render_template_for(@__vc_requested_details).to_s
+            end
 
           # Avoid allocating new string when output_preamble and output_postamble are blank
           value = if output_preamble.blank? && output_postamble.blank?
@@ -220,6 +223,10 @@ module ViewComponent
     # @return [void]
     def before_render
       # noop
+    end
+
+    def around_render
+      yield
     end
 
     # Override to determine whether the ViewComponent should render.
