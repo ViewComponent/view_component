@@ -8,6 +8,8 @@ nav_order: 1
 
 A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
+_As of version 4, ViewComponent is in Long-Term Support and generally considered feature-complete._
+
 ## What's a ViewComponent?
 
 ViewComponents are Ruby objects used to build markup. Think of them as an evolution of the presenter pattern, inspired by [React](https://reactjs.org/docs/react-component.html).
@@ -83,26 +85,12 @@ ViewComponents use a standard Ruby initializer that clearly defines what's neede
 
 ### Performance
 
-Based on several [benchmarks](https://github.com/viewcomponent/view_component/blob/main/performance/partial_benchmark.rb), ViewComponents are ~10x faster than partials in real-world use-cases.
+Based on several [benchmarks](https://github.com/viewcomponent/view_component/blob/main/performance/partial_benchmark.rb), ViewComponents are ~2.5x faster than partials:
 
-The primary optimization is pre-compiling all ViewComponent templates at application boot, instead of at runtime like traditional Rails views.
-
-For example, the `MessageComponent` template is compiled onto the Ruby object:
-
-```ruby
-# app/components/message_component.rb
-class MessageComponent < ViewComponent::Base
-  def initialize(name:)
-    @name = name
-  end
-
-  def call
-    @output_buffer.safe_append = "<h1>Hello, ".freeze
-    @output_buffer.append = (@name)
-    @output_buffer.safe_append = "!</h1>".freeze
-    @output_buffer.to_s
-  end
-end
+```console
+Comparison:
+  component:     6498.1 i/s
+    partial:     2676.5 i/s - 2.50x  slower
 ```
 
 ### Code quality
@@ -193,6 +181,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/sammyhenningsson?s=64" alt="sammyhenningsson" width="32" />
 <img src="https://avatars.githubusercontent.com/sampart?s=64" alt="sampart" width="32" />
 <img src="https://avatars.githubusercontent.com/seanpdoyle?s=64" alt="seanpdoyle" width="32" />
+<img src="https://avatars.githubusercontent.com/sfnelson?s=64" alt="sfnelson" width="32" />
 <img src="https://avatars.githubusercontent.com/simonrand?s=64" alt="simonrand" width="32" />
 <img src="https://avatars.githubusercontent.com/skryukov?s=64" alt="skryukov" width="32" />
 <img src="https://avatars.githubusercontent.com/smashwilson?s=64" alt="smashwilson" width="32" />
