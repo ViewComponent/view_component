@@ -48,6 +48,12 @@ module ViewComponent
 
         define_render_template_for
 
+        # Set the format if the component only responds to a single format.
+        # Unfortunately we cannot determine which format a multi-format
+        # component will respond to until render time, so those components
+        # will not set the response format.
+        #
+        # TODO: Investigate upstream changes necessary to support multi-format renderables
         unique_formats = templates.map(&:format).uniq
         @component.__vc_response_format = unique_formats.last if unique_formats.one?
 
