@@ -112,6 +112,7 @@ module ViewComponent
         errors << "Couldn't find a template file or inline render method for #{@component}." if @templates.empty?
 
         @templates
+          .reject { |template| template.inline_call? && !template.defined_on_self? }
           .map { |template| [template.variant, template.format] }
           .tally
           .select { |_, count| count > 1 }
