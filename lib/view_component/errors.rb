@@ -5,17 +5,6 @@ module ViewComponent
     end
   end
 
-  class DuplicateSlotContentError < StandardError
-    MESSAGE =
-      "It looks like a block was provided after calling `with_content` on COMPONENT, " \
-      "which means that ViewComponent doesn't know which content to use.\n\n" \
-      "To fix this issue, use either `with_content` or a block."
-
-    def initialize(klass_name)
-      super(MESSAGE.gsub("COMPONENT", klass_name.to_s))
-    end
-  end
-
   class TemplateError < StandardError
     def initialize(errors, templates = nil)
       message = errors.join("\n")
@@ -51,17 +40,6 @@ module ViewComponent
         handlers: request_detail.handlers
       }
       super(MESSAGE.gsub("COMPONENT", component).gsub("DETAIL", detail.inspect))
-    end
-  end
-
-  class DuplicateContentError < StandardError
-    MESSAGE =
-      "It looks like a block was provided after calling `with_content` on COMPONENT, " \
-      "which means that ViewComponent doesn't know which content to use.\n\n" \
-      "To fix this issue, use either `with_content` or a block."
-
-    def initialize(klass_name)
-      super(MESSAGE.gsub("COMPONENT", klass_name.to_s))
     end
   end
 

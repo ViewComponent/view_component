@@ -125,10 +125,6 @@ module ViewComponent
       @current_template = nil unless defined?(@current_template)
       old_current_template = @current_template
 
-      if block && defined?(@__vc_content_set_by_with_content)
-        raise DuplicateContentError.new(self.class.name)
-      end
-
       @__vc_content_evaluated = false
       @__vc_render_in_block = block
 
@@ -320,13 +316,22 @@ module ViewComponent
     # @return [String]
     def content
       @__vc_content_evaluated = true
-      return @__vc_content if defined?(@__vc_content)
+
+      if defined?(@__vc_content) && (!__vc_content_set_by_with_content_defined? || @__vc_content_set_to_with_content_value == true)
+        return @__vc_content
+      end
 
       @__vc_content =
-        if __vc_render_in_block_provided?
-          view_context.capture(self, &@__vc_render_in_block)
-        elsif __vc_content_set_by_with_content_defined?
+        if __vc_content_set_by_with_content_defined?
+          @__vc_content_set_to_with_content_value = true
+
+          if __vc_render_in_block_provided?
+            view_context.capture(self, &@__vc_render_in_block)
+          end
+
           @__vc_content_set_by_with_content
+        elsif __vc_render_in_block_provided?
+          view_context.capture(self, &@__vc_render_in_block)
         end
     end
 
