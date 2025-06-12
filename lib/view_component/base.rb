@@ -130,7 +130,6 @@ module ViewComponent
       end
 
       @__vc_content_evaluated = false
-      @__vc_content_set_to_with_content_value = false
       @__vc_render_in_block = block
 
       before_render
