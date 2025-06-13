@@ -271,9 +271,9 @@ Whether component previews are enabled. Defaults to `true` in development and te
 
 #### `#default_layout`
 
-A custom default layout used for the previews index page and individual previews. Defaults to `false`:
+A custom default layout used for the previews index page and individual previews. Defaults to `nil`:
 
-    config.view_component.previews.default_layout = false
+    config.view_component.previews.default_layout = "preview_layout"
 
 ### `.test_controller`
 
