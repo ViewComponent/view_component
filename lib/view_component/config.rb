@@ -118,9 +118,9 @@ module ViewComponent
       #
       # #### `#default_layout`
       #
-      # A custom default layout used for the previews index page and individual previews. Defaults to `false`:
+      # A custom default layout used for the previews index page and individual previews. Defaults to `nil`:
       #
-      #     config.view_component.previews.default_layout = false
+      #     config.view_component.previews.default_layout = "preview_layout"
       #
 
       # @!attribute instrumentation_enabled
@@ -170,7 +170,7 @@ module ViewComponent
         options.controller = "ViewComponentsController"
         options.route = "/rails/view_components"
         options.enabled = Rails.env.development? || Rails.env.test?
-        options.default_layout = false
+        options.default_layout = nil
         options.paths = default_preview_paths
         options
       end
