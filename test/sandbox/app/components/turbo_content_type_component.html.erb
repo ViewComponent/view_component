@@ -3,7 +3,7 @@
     <%= form_tag("/submit", method: :post, data: {turbo_frame: "test-frame"}) do %>
       <div>
         <h2><%= @message %></h2>
-        <%= text_field_tag("user_message", "", value: "Test message"), autocomplete: 'off' %>
+        <%= text_field_tag("user_message", "", value: "Test message", autocomplete: "off") %>
         <%= submit_tag("Submit", id: "submit") %>
       </div>
     <% end %>
