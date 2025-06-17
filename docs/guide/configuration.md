@@ -16,4 +16,4 @@ MyApplication.configure do
 end
 ```
 
-For a list of available options, see [/api](/api.html#configuration).
+For a list of available options, see [/api](/api#configuration).
