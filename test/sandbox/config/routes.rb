@@ -37,6 +37,8 @@ Sandbox::Application.routes.draw do
   get :turbo_content_type, to: "integration_examples#turbo_content_type"
   post :submit, to: "integration_examples#submit"
 
+  resources :posts
+
   constraints(lambda { |request| request.env["warden"].authenticate! }) do
     get :constraints_with_env, to: "integration_examples#index"
   end
