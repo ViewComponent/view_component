@@ -441,12 +441,12 @@ module ViewComponent
     #
     #  Defaults to `false`.
     #
-    # #### component_parent_class
+    # #### ßparent_class
     #
     # Parent class for generated components
     #
     # ```ruby
-    # config.view_component.generate.component_parent_class = "MyBaseComponent"
+    # config.view_component.generate.parent_class = "MyBaseComponent"
     # ```
     #
     # Defaults to nil. If this is falsy, generators will use

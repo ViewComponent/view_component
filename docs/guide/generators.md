@@ -192,7 +192,7 @@ bin/rails generate view_component:component Example title content --parent MyBas
       create    app/components/example_component.html.erb
 ```
 
-To always use a specific parent class, set `config.view_component.component_parent_class = "MyBaseComponent"`.
+To always use a specific parent class, set `config.view_component.parent_class = "MyBaseComponent"`.
 
 ### Skip collision check
 

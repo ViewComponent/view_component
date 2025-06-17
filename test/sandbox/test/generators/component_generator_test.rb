@@ -96,8 +96,8 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_component_with_parent_and_custom_component_parent_class
-    with_custom_component_parent_class("MyBaseComponent") do
+  def test_component_with_parent_and_custom_parent_class
+    with_custom_parent_class("MyBaseComponent") do
       run_generator %w[user --parent MyOtherBaseComponent]
 
       assert_file "app/components/user_component.rb" do |component|
@@ -181,8 +181,8 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_generating_components_with_custom_component_parent_class
-    with_custom_component_parent_class("MyBaseComponent") do
+  def test_generating_components_with_custom_parent_class
+    with_custom_parent_class("MyBaseComponent") do
       run_generator %w[user]
 
       assert_file "app/components/user_component.rb" do |component|
@@ -194,7 +194,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
 
   def test_generating_components_with_application_component_class_and_custom_parent_class
     with_application_component_class do
-      with_custom_component_parent_class("MyBaseComponent") do
+      with_custom_parent_class("MyBaseComponent") do
         run_generator %w[user]
 
         assert_file "app/components/user_component.rb" do |component|

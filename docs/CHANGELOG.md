@@ -18,6 +18,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* BREAKING: Rename `config.generate.component_parent_class` to `config.generate.parent_class`.
+
+    *Joel Hawksley*
+
 * Fix bug where `config.previews.enabled` did not function properly in production environments.
 
     *Joel Hawksley*

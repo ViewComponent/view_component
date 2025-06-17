@@ -275,12 +275,6 @@ A custom default layout used for the previews index page and individual previews
 
     config.view_component.previews.default_layout = "preview_layout"
 
-### `.test_controller`
-
-The controller used for testing components.
-Can also be configured on a per-test basis using `#with_controller_class`.
-Defaults to `ApplicationController`.
-
 ## ViewComponent::TestHelpers
 
 ### `#render_in_view_context(...)`
