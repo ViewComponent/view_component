@@ -71,6 +71,8 @@ module ViewComponent
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
+    class_attribute :__vc_response_format, instance_accessor: false, instance_predicate: false, default: nil
+
     attr_accessor :__vc_original_view_context
     attr_reader :current_template
 
@@ -335,6 +337,10 @@ module ViewComponent
     # @return [Boolean]
     def content?
       __vc_render_in_block_provided? || __vc_content_set_by_with_content_defined?
+    end
+
+    def format
+      self.class.__vc_response_format
     end
 
     private
