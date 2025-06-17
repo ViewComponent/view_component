@@ -22,6 +22,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Fix bug where `config.previews.enabled` did not function properly in production environments.
+
+    *Joel Hawksley*
+
 * `config.previews.default_layout` should default to nil.
 
     *Joel Hawksley*

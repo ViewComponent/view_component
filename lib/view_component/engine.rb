@@ -15,9 +15,9 @@ module ViewComponent
         options[config_option] ||= ViewComponent::Base.public_send(config_option)
       end
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
-      options.show_previews = (Rails.env.development? || Rails.env.test?) if options.show_previews.nil?
+      options.previews.enabled = (Rails.env.development? || Rails.env.test?) if options.previews.enabled.nil?
 
-      if options.show_previews
+      if options.previews.enabled
         # This is still necessary because when `config.view_component` is declared, `Rails.root` is unspecified.
         options.previews.paths << "#{Rails.root}/test/components/previews" if defined?(Rails.root) && Dir.exist?(
           "#{Rails.root}/test/components/previews"
@@ -36,7 +36,7 @@ module ViewComponent
     initializer "view_component.set_autoload_paths" do |app|
       options = app.config.view_component
 
-      if options.show_previews && !options.previews.paths.empty?
+      if options.previews.enabled && !options.previews.paths.empty?
         paths_to_add = options.previews.paths - ActiveSupport::Dependencies.autoload_paths
         ActiveSupport::Dependencies.autoload_paths.concat(paths_to_add) if paths_to_add.any?
       end
@@ -88,7 +88,7 @@ module ViewComponent
     config.after_initialize do |app|
       options = app.config.view_component
 
-      if options.show_previews
+      if options.previews.enabled
         app.routes.prepend do
           preview_controller = options.previews.controller.sub(/Controller$/, "").underscore
 

@@ -62,3 +62,9 @@ edit_user_path # implicitly depends on current request to provide `user`
 # good
 edit_user_path(user: current_user)
 ```
+
+Alternatively, use the `helpers` proxy:
+
+```ruby
+helpers.edit_user_path
+```

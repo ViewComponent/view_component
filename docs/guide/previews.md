@@ -201,11 +201,11 @@ end
 
 ## Enabling previews
 
-Previews are enabled by default in test and development environments. To enable or disable previews, use the `show_previews` option:
+Previews are enabled by default in test and development environments. To enable or disable previews, use the `previews.enabled` option:
 
 ```ruby
 # config/environments/test.rb
-config.view_component.show_previews = false
+config.view_component.previews.enabled = false
 ```
 
 ## Use with RSpec
