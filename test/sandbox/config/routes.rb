@@ -35,6 +35,8 @@ Sandbox::Application.routes.draw do
   get :slotable_default_override, to: "integration_examples#slotable_default_override"
   post :create, to: "integration_examples#create"
 
+  resources :posts
+
   constraints(lambda { |request| request.env["warden"].authenticate! }) do
     get :constraints_with_env, to: "integration_examples#index"
   end

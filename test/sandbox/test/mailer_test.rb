@@ -13,4 +13,9 @@ class MailerTest < ActionMailer::TestCase
     result = TestMailer.test_asset_email.deliver_now.body.to_s
     assert_includes result, "<div>/assets"
   end
+
+  def test_mailer_url_host
+    result = TestMailer.test_url_email.deliver_now.body.to_s
+    assert_includes result, "www.yourhost.com/posts"
+  end
 end
