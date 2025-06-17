@@ -18,6 +18,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Add test case for absolute URL path helpers in mailers.
+
+    *Joel Hawksley*
+
 * Fix bug where response format wasn't set, which caused issues with Turbo Frames.
 
     *Joel Hawksley*
