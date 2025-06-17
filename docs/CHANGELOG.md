@@ -18,6 +18,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Fix bug where `config.previews.enabled` did not function properly in production environments.
+
+    *Joel Hawksley*
+
 * Fix bug where response format wasn't set, which caused issues with Turbo Frames.
 
     *Joel Hawksley*
