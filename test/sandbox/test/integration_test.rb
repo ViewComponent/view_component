@@ -285,6 +285,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "Rendered"
   end
 
+  def test_previews_can_be_disabled
+    with_previews_option(:enabled, false) do
+      get "/rails/view_components/my_component/default"
+
+      assert_response 200
+    end
+  end
+
   def test_renders_component_preview
     get "/rails/view_components/my_component/default"
 

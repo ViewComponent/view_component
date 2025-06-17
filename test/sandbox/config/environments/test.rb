@@ -28,7 +28,6 @@ Sandbox::Application.configure do
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection = false
 
-  config.view_component.show_previews = true
   config.view_component.instrumentation_enabled = true
 
   # Tell Action Mailer not to deliver emails to the real world.

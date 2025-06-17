@@ -44,7 +44,7 @@ module Sandbox
     config.view_component.previews.paths << "#{config.root}/my/components/previews"
     config.view_component.previews.paths << "#{Rails.root}/lib/component_previews"
 
-    config.action_mailer.default_url_options = { :host => "www.yourhost.com" }
+    config.action_mailer.default_url_options = {host: "www.yourhost.com"}
   end
 end
 

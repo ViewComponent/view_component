@@ -8,7 +8,7 @@ module ViewComponent
       prepend_view_path File.expand_path("../../../views", __dir__)
 
       around_action :set_locale, only: :previews
-      before_action :require_local!, unless: :show_previews?
+      before_action :require_local!, unless: :previews_enabled?
 
       content_security_policy(false)
 
@@ -51,8 +51,8 @@ module ViewComponent
     end
 
     # :doc:
-    def show_previews?
-      ViewComponent::Base.config.show_previews
+    def previews_enabled?
+      ViewComponent::Base.config.previews.enabled
     end
 
     # :doc:
