@@ -22,6 +22,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* `config.previews.default_layout` should default to nil.
+
+    *Joel Hawksley*
+
 * Add test case for absolute URL path helpers in mailers.
 
     *Joel Hawksley*
