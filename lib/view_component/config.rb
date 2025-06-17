@@ -128,12 +128,6 @@ module ViewComponent
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
 
-      # @!attribute test_controller
-      # @return [String]
-      # The controller used for testing components.
-      # Can also be configured on a per-test basis using `#with_controller_class`.
-      # Defaults to `ApplicationController`.
-
       def default_preview_paths
         (default_rails_preview_paths + default_rails_engines_preview_paths).uniq
       end

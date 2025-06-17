@@ -43,7 +43,7 @@ module ViewComponent
       def parent_class
         return options[:parent] if options[:parent]
 
-        ViewComponent::Base.config.generate.component_parent_class || default_parent_class
+        ViewComponent::Base.config.generate.parent_class || default_parent_class
       end
 
       def initialize_signature?

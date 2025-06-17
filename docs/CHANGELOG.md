@@ -36,7 +36,7 @@ nav_order: 6
 
     *Joel Hawksley*
 
-* BREAKING: `config.component_parent_class` is now `config.generate.component_parent_class`, moving the generator-specific option to the generator configuration namespace.
+* BREAKING: `config.component_parent_class` is now `config.generate.parent_class`, moving the generator-specific option to the generator configuration namespace.
 
     *Joel Hawksley*
 
