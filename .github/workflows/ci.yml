@@ -48,7 +48,7 @@ jobs:
         bundler-cache: true
     - name: Build and test with Rake
       run: |
-        bundle exec appraisal rails-${{ matrix.rails_version }} bundle
+        bundle exec appraisal rails-${{ matrix.rails_version }} bundle --ignore_funding_requests
         MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake
       env:
         RAISE_ON_WARNING: 1
@@ -89,7 +89,7 @@ jobs:
         cd primer_view_components
         npm ci
         cd demo && npm ci && cd ..
-        bundle && bundle exec rake
+        bundle --ignore_funding_requests && bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
         RAILS_VERSION: '7.1.5'

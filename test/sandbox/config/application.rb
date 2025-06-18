@@ -37,11 +37,9 @@ require "jbuilder"
 
 module Sandbox
   class Application < Rails::Application
-    config.action_controller.asset_host = "http://assets.example.com"
+    config.load_defaults(8.1) if Rails::VERSION::MAJOR == 8 && Rails::VERSION::MINOR == 1
 
-    if config.action_controller.respond_to?(:escape_json_responses=)
-      config.action_controller.escape_json_responses = false
-    end
+    config.action_controller.asset_host = "http://assets.example.com"
 
     # Prepare test_set_no_duplicate_autoload_paths
     config.autoload_paths.push("#{config.root}/my/components/previews")
