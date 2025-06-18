@@ -20,7 +20,7 @@ module ViewComponent
       require "yard"
       require "rake"
       YARD::Rake::YardocTask.new do |t|
-        t.options = ["--no-output", "--no-stats", "--no-progress"]
+        t.options = ["--no-output", "--no-stats", "--no-progress", "-q"]
       end
       Rake::Task["yard"].execute
       configuration_methods_to_document = YARD::RegistryStore.new.tap do |store|

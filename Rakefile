@@ -63,14 +63,10 @@ namespace :docs do
   # Build api.md documentation page from YARD comments.
   task :build do
     YARD::Rake::YardocTask.new do |t|
-      t.options = ["--no-output"]
+      t.options = ["--no-output", "-q"]
     end
 
-    puts "Building YARD documentation."
-
     Rake::Task["yard"].execute
-
-    puts "Converting YARD documentation to Markdown files."
 
     registry = YARD::RegistryStore.new
     registry.load!(".yardoc")
