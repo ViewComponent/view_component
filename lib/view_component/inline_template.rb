@@ -37,7 +37,7 @@ module ViewComponent # :nodoc:
         method.end_with?("_template") || super
       end
 
-      def inline_template
+      def __vc_inline_template
         @__vc_inline_template if defined?(@__vc_inline_template)
       end
 

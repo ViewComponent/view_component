@@ -57,7 +57,7 @@ module ViewComponent
         unique_formats = templates.map(&:format).uniq
         @component.__vc_response_format = unique_formats.last if unique_formats.one?
 
-        @component.register_default_slots
+        @component.__vc_register_default_slots
         @component.__vc_build_i18n_backend
 
         CompileCache.register(@component)
@@ -177,10 +177,10 @@ module ViewComponent
 
     def gather_templates
       @templates ||=
-        if @component.inline_template.present?
+        if @component.__vc_inline_template.present?
           [Template::Inline.new(
             component: @component,
-            inline_template: @component.inline_template
+            inline_template: @component.__vc_inline_template
           )]
         else
           path_parser = ActionView::Resolver::PathParser.new

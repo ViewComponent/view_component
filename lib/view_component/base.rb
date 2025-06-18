@@ -146,7 +146,7 @@ module ViewComponent
           value = if output_preamble.blank? && output_postamble.blank?
             rendered_template
           else
-            safe_output_preamble + rendered_template + safe_output_postamble
+            __vc_safe_output_preamble + rendered_template + __vc_safe_output_postamble
           end
         end
 
@@ -355,11 +355,7 @@ module ViewComponent
       defined?(@__vc_content_set_by_with_content)
     end
 
-    def content_evaluated?
-      defined?(@__vc_content_evaluated) && @__vc_content_evaluated
-    end
-
-    def maybe_escape_html(text)
+    def __vc_maybe_escape_html(text)
       return text if @current_template && !@current_template.html?
       return text if text.blank?
 
@@ -371,14 +367,14 @@ module ViewComponent
       end
     end
 
-    def safe_output_preamble
-      maybe_escape_html(output_preamble) do
+    def __vc_safe_output_preamble
+      __vc_maybe_escape_html(output_preamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe preamble. The preamble will be automatically escaped, but you may want to investigate.")
       end
     end
 
-    def safe_output_postamble
-      maybe_escape_html(output_postamble) do
+    def __vc_safe_output_postamble
+      __vc_maybe_escape_html(output_postamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
       end
     end
@@ -556,7 +552,7 @@ module ViewComponent
         child.virtual_path = child.name&.underscore
 
         # Set collection parameter to the extended component
-        child.with_collection_parameter provided_collection_parameter
+        child.with_collection_parameter(__vc_provided_collection_parameter)
 
         if instance_methods(false).include?(:render_template_for)
           vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
@@ -591,8 +587,8 @@ module ViewComponent
       #
       # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
       def with_collection_parameter(parameter)
-        @provided_collection_parameter = parameter
-        @initialize_parameters = nil
+        @__vc_provided_collection_parameter = parameter
+        @__vc_initialize_parameters = nil
       end
 
       # Strips trailing whitespace from templates before compiling them.
@@ -622,10 +618,10 @@ module ViewComponent
       # rendering is optional.
       # @private
       def __vc_validate_collection_parameter!(validate_default: false)
-        parameter = validate_default ? __vc_collection_parameter : provided_collection_parameter
+        parameter = validate_default ? __vc_collection_parameter : __vc_provided_collection_parameter
 
         return unless parameter
-        return if __vc_initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
+        return if __vc_initialize_parameter_names.include?(parameter) || __vc_splatted_keyword_argument_present?
 
         raise MissingCollectionArgumentError.new(name, parameter)
       end
@@ -642,7 +638,7 @@ module ViewComponent
 
       # @private
       def __vc_collection_parameter
-        @provided_collection_parameter ||= name && name.demodulize.underscore.chomp("_component").to_sym
+        @__vc_provided_collection_parameter ||= name && name.demodulize.underscore.chomp("_component").to_sym
       end
 
       # @private
@@ -667,8 +663,8 @@ module ViewComponent
 
       private
 
-      def splatted_keyword_argument_present?
-        initialize_parameters.flatten.include?(:keyrest)
+      def __vc_splatted_keyword_argument_present?
+        __vc_initialize_parameters.flatten.include?(:keyrest)
       end
 
       def __vc_initialize_parameter_names
@@ -676,16 +672,16 @@ module ViewComponent
           if respond_to?(:attribute_names)
             attribute_names.map(&:to_sym)
           else
-            initialize_parameters.map(&:last)
+            __vc_initialize_parameters.map(&:last)
           end
       end
 
-      def initialize_parameters
-        @initialize_parameters ||= instance_method(:initialize).parameters
+      def __vc_initialize_parameters
+        @__vc_initialize_parameters ||= instance_method(:initialize).parameters
       end
 
-      def provided_collection_parameter
-        @provided_collection_parameter ||= nil
+      def __vc_provided_collection_parameter
+        @__vc_provided_collection_parameter ||= nil
       end
     end
 
