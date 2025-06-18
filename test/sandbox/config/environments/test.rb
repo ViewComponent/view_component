@@ -8,6 +8,8 @@ require "warning"
   Warning.ignore(//, /.*gems\/#{gem_name}-.*/)
 end
 
+Warning.ignore(/warning: parser\/current/)
+
 Sandbox::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
