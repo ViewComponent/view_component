@@ -146,7 +146,7 @@ module ViewComponent
           value = if output_preamble.blank? && output_postamble.blank?
             rendered_template
           else
-            safe_output_preamble + rendered_template + safe_output_postamble
+            __vc_safe_output_preamble + rendered_template + __vc_safe_output_postamble
           end
         end
 
@@ -367,13 +367,13 @@ module ViewComponent
       end
     end
 
-    def safe_output_preamble
+    def __vc_safe_output_preamble
       __vc_maybe_escape_html(output_preamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe preamble. The preamble will be automatically escaped, but you may want to investigate.")
       end
     end
 
-    def safe_output_postamble
+    def __vc_safe_output_postamble
       __vc_maybe_escape_html(output_postamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
       end
