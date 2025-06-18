@@ -70,12 +70,12 @@ module ViewComponent
 
       def initialize(scope:, load_paths:)
         @__vc_i18n_scope = scope.split(".").map(&:to_sym)
-        @load_paths = load_paths
+        @__vc_load_paths = load_paths
       end
 
       # Ensure the Simple backend won't load paths from ::I18n.load_path
       def load_translations
-        super(@load_paths)
+        super(@__vc_load_paths)
       end
 
       def scope_data(data)
