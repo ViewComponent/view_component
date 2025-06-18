@@ -355,7 +355,7 @@ module ViewComponent
       defined?(@__vc_content_set_by_with_content)
     end
 
-    def maybe_escape_html(text)
+    def __vc_maybe_escape_html(text)
       return text if @current_template && !@current_template.html?
       return text if text.blank?
 
@@ -368,13 +368,13 @@ module ViewComponent
     end
 
     def safe_output_preamble
-      maybe_escape_html(output_preamble) do
+      __vc_maybe_escape_html(output_preamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe preamble. The preamble will be automatically escaped, but you may want to investigate.")
       end
     end
 
     def safe_output_postamble
-      maybe_escape_html(output_postamble) do
+      __vc_maybe_escape_html(output_postamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
       end
     end

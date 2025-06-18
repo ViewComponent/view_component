@@ -82,7 +82,7 @@ module ViewComponent
       def safe_method_name_call
         m = safe_method_name
         proc do
-          maybe_escape_html(send(m)) do
+          __vc_maybe_escape_html(send(m)) do
             Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. " \
                           "The output will be automatically escaped, but you may want to investigate.")
           end
