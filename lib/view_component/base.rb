@@ -355,10 +355,6 @@ module ViewComponent
       defined?(@__vc_content_set_by_with_content)
     end
 
-    def content_evaluated?
-      defined?(@__vc_content_evaluated) && @__vc_content_evaluated
-    end
-
     def maybe_escape_html(text)
       return text if @current_template && !@current_template.html?
       return text if text.blank?

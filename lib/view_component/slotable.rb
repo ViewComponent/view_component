@@ -353,7 +353,7 @@ module ViewComponent
 
     def get_slot(slot_name)
       @__vc_set_slots ||= {}
-      content unless content_evaluated? # ensure content is loaded so slots will be defined
+      content unless defined?(@__vc_content_evaluated) && @__vc_content_evaluated # ensure content is loaded so slots will be defined
 
       # If the slot is set, return it
       return @__vc_set_slots[slot_name] if @__vc_set_slots[slot_name]
