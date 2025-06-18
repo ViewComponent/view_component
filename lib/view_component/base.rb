@@ -552,7 +552,7 @@ module ViewComponent
         child.virtual_path = child.name&.underscore
 
         # Set collection parameter to the extended component
-        child.with_collection_parameter(provided_collection_parameter)
+        child.with_collection_parameter(__vc_provided_collection_parameter)
 
         if instance_methods(false).include?(:render_template_for)
           vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
@@ -618,7 +618,7 @@ module ViewComponent
       # rendering is optional.
       # @private
       def __vc_validate_collection_parameter!(validate_default: false)
-        parameter = validate_default ? __vc_collection_parameter : provided_collection_parameter
+        parameter = validate_default ? __vc_collection_parameter : __vc_provided_collection_parameter
 
         return unless parameter
         return if __vc_initialize_parameter_names.include?(parameter) || __vc_splatted_keyword_argument_present?
@@ -680,7 +680,7 @@ module ViewComponent
         @__vc_initialize_parameters ||= instance_method(:initialize).parameters
       end
 
-      def provided_collection_parameter
+      def __vc_provided_collection_parameter
         @__vc_provided_collection_parameter ||= nil
       end
     end
