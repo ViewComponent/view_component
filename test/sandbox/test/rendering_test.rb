@@ -1253,7 +1253,7 @@ class RenderingTest < ViewComponent::TestCase
       #
       #   hi # raises: undefined method `hi' for #<GreetingComponent....
       #
-      helpers.hi
+      helpers.hi.html_safe
     end
   end
 

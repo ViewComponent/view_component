@@ -37,6 +37,8 @@ require "jbuilder"
 
 module Sandbox
   class Application < Rails::Application
+    config.load_defaults(8.1) if Rails::VERSION::MAJOR == 8 && Rails::VERSION::MINOR == 1
+
     config.action_controller.asset_host = "http://assets.example.com"
 
     # Prepare test_set_no_duplicate_autoload_paths

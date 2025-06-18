@@ -6,7 +6,7 @@ class ConditionalContentWithArgComponent < ViewComponent::Base
   end
 
   def call
-    description
+    description&.html_safe
   end
 
   private

@@ -4,9 +4,11 @@ require "warning"
 
 # Use https://github.com/jeremyevans/ruby-warning
 # to restrict warnings outside our control
-["mail", "activesupport", "yard"].each do |gem_name|
+["mail", "activesupport", "yard", "capybara"].each do |gem_name|
   Warning.ignore(//, /.*gems\/#{gem_name}-.*/)
 end
+
+Warning.ignore(/warning: parser\/current/)
 
 Sandbox::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb

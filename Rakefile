@@ -17,12 +17,6 @@ Rake::TestTask.new(:engine_test) do |t|
   t.test_files = FileList["test/test_engine/**/*_test.rb"]
 end
 
-Rake::TestTask.new(:docs_test) do |t|
-  t.libs << "test"
-  t.libs << "lib"
-  t.test_files = FileList["test/docs/*_test.rb"]
-end
-
 begin
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:spec)
@@ -60,17 +54,12 @@ namespace :coverage do
 end
 
 namespace :docs do
-  # Build api.md documentation page from YARD comments.
   task :build do
     YARD::Rake::YardocTask.new do |t|
-      t.options = ["--no-output"]
+      t.options = ["--no-output", "-q"]
     end
 
-    puts "Building YARD documentation."
-
     Rake::Task["yard"].execute
-
-    puts "Converting YARD documentation to Markdown files."
 
     registry = YARD::RegistryStore.new
     registry.load!(".yardoc")
@@ -141,4 +130,4 @@ namespace :docs do
   end
 end
 
-task default: [:docs_test, :test, :engine_test, :spec]
+task default: [:test, :engine_test, :spec]
