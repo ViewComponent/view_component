@@ -54,7 +54,6 @@ namespace :coverage do
 end
 
 namespace :docs do
-  # Build api.md documentation page from YARD comments.
   task :build do
     YARD::Rake::YardocTask.new do |t|
       t.options = ["--no-output", "-q"]
