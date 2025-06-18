@@ -621,7 +621,7 @@ module ViewComponent
         parameter = validate_default ? __vc_collection_parameter : provided_collection_parameter
 
         return unless parameter
-        return if __vc_initialize_parameter_names.include?(parameter) || splatted_keyword_argument_present?
+        return if __vc_initialize_parameter_names.include?(parameter) || __vc_splatted_keyword_argument_present?
 
         raise MissingCollectionArgumentError.new(name, parameter)
       end
@@ -663,7 +663,7 @@ module ViewComponent
 
       private
 
-      def splatted_keyword_argument_present?
+      def __vc_splatted_keyword_argument_present?
         initialize_parameters.flatten.include?(:keyrest)
       end
 
