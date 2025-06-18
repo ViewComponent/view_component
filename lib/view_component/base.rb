@@ -552,7 +552,7 @@ module ViewComponent
         child.virtual_path = child.name&.underscore
 
         # Set collection parameter to the extended component
-        child.with_collection_parameter provided_collection_parameter
+        child.with_collection_parameter(provided_collection_parameter)
 
         if instance_methods(false).include?(:render_template_for)
           vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
@@ -587,8 +587,8 @@ module ViewComponent
       #
       # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
       def with_collection_parameter(parameter)
-        @provided_collection_parameter = parameter
-        @initialize_parameters = nil
+        @__vc_provided_collection_parameter = parameter
+        @__vc_initialize_parameters = nil
       end
 
       # Strips trailing whitespace from templates before compiling them.
@@ -638,7 +638,7 @@ module ViewComponent
 
       # @private
       def __vc_collection_parameter
-        @provided_collection_parameter ||= name && name.demodulize.underscore.chomp("_component").to_sym
+        @__vc_provided_collection_parameter ||= name && name.demodulize.underscore.chomp("_component").to_sym
       end
 
       # @private
@@ -664,7 +664,7 @@ module ViewComponent
       private
 
       def __vc_splatted_keyword_argument_present?
-        initialize_parameters.flatten.include?(:keyrest)
+        __vc_initialize_parameters.flatten.include?(:keyrest)
       end
 
       def __vc_initialize_parameter_names
@@ -672,16 +672,16 @@ module ViewComponent
           if respond_to?(:attribute_names)
             attribute_names.map(&:to_sym)
           else
-            initialize_parameters.map(&:last)
+            __vc_initialize_parameters.map(&:last)
           end
       end
 
-      def initialize_parameters
-        @initialize_parameters ||= instance_method(:initialize).parameters
+      def __vc_initialize_parameters
+        @__vc_initialize_parameters ||= instance_method(:initialize).parameters
       end
 
       def provided_collection_parameter
-        @provided_collection_parameter ||= nil
+        @__vc_provided_collection_parameter ||= nil
       end
     end
 
