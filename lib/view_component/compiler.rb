@@ -57,7 +57,7 @@ module ViewComponent
         unique_formats = templates.map(&:format).uniq
         @component.__vc_response_format = unique_formats.last if unique_formats.one?
 
-        @component.register_default_slots
+        @component.__vc_register_default_slots
         @component.__vc_build_i18n_backend
 
         CompileCache.register(@component)
