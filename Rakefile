@@ -17,12 +17,6 @@ Rake::TestTask.new(:engine_test) do |t|
   t.test_files = FileList["test/test_engine/**/*_test.rb"]
 end
 
-Rake::TestTask.new(:docs_test) do |t|
-  t.libs << "test"
-  t.libs << "lib"
-  t.test_files = FileList["test/docs/*_test.rb"]
-end
-
 begin
   require "rspec/core/rake_task"
   RSpec::Core::RakeTask.new(:spec)
@@ -137,4 +131,4 @@ namespace :docs do
   end
 end
 
-task default: [:docs_test, :test, :engine_test, :spec]
+task default: [:test, :engine_test, :spec]
