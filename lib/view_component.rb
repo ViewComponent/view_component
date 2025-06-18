@@ -7,7 +7,6 @@ module ViewComponent
   extend ActiveSupport::Autoload
 
   autoload :Base
-  autoload :CaptureCompatibility
   autoload :Compiler
   autoload :CompileCache
   autoload :Config
@@ -15,11 +14,14 @@ module ViewComponent
   autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview
-  autoload :TestHelpers
-  autoload :SystemTestHelpers
-  autoload :TestCase
-  autoload :SystemTestCase
   autoload :Translatable
+
+  if Rails.env.test?
+    autoload :TestHelpers
+    autoload :SystemTestHelpers
+    autoload :TestCase
+    autoload :SystemTestCase
+  end
 end
 
 require "view_component/engine" if defined?(Rails::Engine)
