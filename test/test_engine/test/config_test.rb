@@ -3,7 +3,7 @@
 require_relative "../test_helper"
 
 module ViewComponent
-  class ConfigTest < TestCase
+  class ConfigTest < ActiveSupport::TestCase
     def setup
       @config = ViewComponent::Config.new
     end
