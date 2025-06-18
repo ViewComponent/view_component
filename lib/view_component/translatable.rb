@@ -100,7 +100,7 @@ module ViewComponent
       key = self.class.__vc_i18n_key(key, options.delete(:scope))
       as_html = HTML_SAFE_TRANSLATION_KEY.match?(key)
 
-      html_escape_translation_options!(options) if as_html
+      __vc_html_escape_translation_options!(options) if as_html
 
       if key.start_with?(__vc_i18n_scope + ".")
         translated =
@@ -113,7 +113,7 @@ module ViewComponent
           return @view_context.translate(key, locale: locale, **options)
         end
 
-        translated = html_safe_translation(translated) if as_html
+        translated = __vc_html_safe_translation(translated) if as_html
         translated
       else
         @view_context.translate(key, locale: locale, **options)
@@ -127,9 +127,9 @@ module ViewComponent
 
     private
 
-    def html_safe_translation(translation)
+    def __vc_html_safe_translation(translation)
       if translation.respond_to?(:map)
-        translation.map { |element| html_safe_translation(element) }
+        translation.map { |element| __vc_html_safe_translation(element) }
       else
         # It's assumed here that objects loaded by the i18n backend will respond to `#html_safe?`.
         # It's reasonable that if we're in Rails, `active_support/core_ext/string/output_safety.rb`
@@ -138,7 +138,7 @@ module ViewComponent
       end
     end
 
-    def html_escape_translation_options!(options)
+    def __vc_html_escape_translation_options!(options)
       options.except(*::I18n::RESERVED_KEYS).each do |name, value|
         next if name == :count && value.is_a?(Numeric)
 
