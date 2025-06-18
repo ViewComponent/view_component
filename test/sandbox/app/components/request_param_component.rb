@@ -4,6 +4,6 @@ class RequestParamComponent < ViewComponent::Base
   end
 
   def call
-    @request
+    @request.html_safe
   end
 end
