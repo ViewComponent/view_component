@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module ViewComponent
-  module WithContentHelper # Provides the `with_content` helper for setting string content values
+  # Provides the `with_content` helper for setting string content values on components and slots
+  module WithContentHelper
     def with_content(value)
       raise NilWithContentError if value.nil?
 
