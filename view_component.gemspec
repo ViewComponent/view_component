@@ -14,6 +14,7 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
+  spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["source_code_uri"] = "https://github.com/viewcomponent/view_component"
   spec.metadata["changelog_uri"] = "https://github.com/ViewComponent/view_component/blob/main/docs/CHANGELOG.md"
 
