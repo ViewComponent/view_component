@@ -25,4 +25,6 @@ require "rspec/rails"
 
 RSpec.configure do |config|
   config.include ViewComponent::TestHelpers
+  config.include ViewComponent::SystemTestHelpers, type: :feature
+  config.include ViewComponent::SystemTestHelpers, type: :system
 end
