@@ -18,6 +18,7 @@ module ViewComponent
   autoload :Preview
   autoload :TestHelpers
   autoload :SystemTestHelpers
+  autoload :SystemSpecHelpers
   autoload :TestCase
   autoload :SystemTestCase
   autoload :Translatable

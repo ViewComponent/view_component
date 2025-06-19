@@ -14,8 +14,4 @@ RSpec.feature "Feature specs for isolated view components" do
       visit(path)
     end
   end
-
-  def page
-    Capybara.current_session
-  end
 end

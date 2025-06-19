@@ -18,8 +18,4 @@ RSpec.describe "System specs for isolated view components", type: :system do
       visit(path)
     end
   end
-
-  def page
-    Capybara.current_session
-  end
 end
