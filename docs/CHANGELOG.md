@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Require MFA when publishing to RubyGems.
+
+    *Joel Hawksley*
+
 ## 4.0.0.alpha7
 
 * BREAKING: Remove deprecated `use_helper(s)`. Use `include MyHelper` or `helpers.` proxy instead.
