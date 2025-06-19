@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module ViewComponent
+  # A collection of helper methods for ViewComponent unit tests
+  # utilizing `render_inline`.
   module TestHelpers
     begin
       require "capybara/minitest"
