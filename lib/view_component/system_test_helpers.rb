@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module ViewComponent
+  # Test helpers for writing ViewComponent system tests
   module SystemTestHelpers
     include TestHelpers
 
