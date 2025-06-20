@@ -131,6 +131,8 @@ namespace :docs do
 end
 
 task :all_tests do
+  ENV["RAILS_ENV"] = "test"
+
   if ENV["MEASURE_COVERAGE"]
     SimpleCov.start do
       command_name "RSpec-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
