@@ -128,9 +128,9 @@ namespace :docs do
 end
 
 task :all_tests do
-  Rake::Task['test'].invoke
-  Rake::Task['engine_test'].invoke
-  Rake::Task['spec'].invoke
+  Rake::Task["test"].invoke
+  Rake::Task["engine_test"].invoke
+  Rake::Task["spec"].invoke
 end
 
 task default: [:all_tests]
