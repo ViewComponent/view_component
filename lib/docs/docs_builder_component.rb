@@ -62,9 +62,12 @@ module ViewComponent
         @method.docstring
       end
 
+      # Not covered as we have no deprecated methods
+      # :nocov:
       def deprecation_text
         @method.tag(:deprecated)&.text
       end
+      # :nocov:
 
       def docstring_and_deprecation_text
         <<~DOCS.strip.html_safe

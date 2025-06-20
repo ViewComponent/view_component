@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
+require "method_source"
 require "test_helper"
 
 class IntegrationTest < ActionDispatch::IntegrationTest
   def setup
-    ViewComponent::Preview.load_previews
+    ViewComponent::Preview.__vc_load_previews
   end
 
   def test_rendering_component_in_a_view
@@ -14,15 +15,13 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "Foo bar")
   end
 
-  if Rails.version.to_f >= 6.1
-    def test_rendering_component_with_template_annotations_enabled
-      get "/"
-      assert_response :success
+  def test_rendering_component_with_template_annotations_enabled
+    get "/"
+    assert_response :success
 
-      assert_includes response.body, "BEGIN app/components/erb_component.html.erb"
+    assert_includes response.body, "BEGIN app/components/erb_component.html.erb"
 
-      assert_select("div", "Foo bar")
-    end
+    assert_select("div", "Foo bar")
   end
 
   def test_rendering_component_in_a_controller
@@ -111,7 +110,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "div", "hello world"
       assert_response :success
 
-      compile_method_lines = UncompilableComponent.method(:compile).source.split("\n")
+      compile_method_lines = UncompilableComponent.method(:__vc_compile).source.split("\n")
       compile_method_lines.insert(1, 'raise "this should not happen" if self.name == "UncompilableComponent"')
       UncompilableComponent.instance_eval compile_method_lines.join("\n")
 
@@ -128,8 +127,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_helper_changes_are_reflected_on_new_request
-    skip if Rails.application.config.cache_classes
-
     get "/helpers_proxy_component"
     assert_select("div", "Hello helper method")
     assert_response :success
@@ -153,8 +150,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_helper_changes_are_reflected_on_new_request_with_previews
-    skip if Rails.application.config.cache_classes
-
     with_preview_route("/previews") do
       get "/previews/helpers_proxy_component/default"
       assert_select("div", "Hello helper method")
@@ -189,6 +184,23 @@ class IntegrationTest < ActionDispatch::IntegrationTest
 
     get "/controller_to_string"
     assert_select("div", "bar")
+    assert_response :success
+
+    to_string_response = response.body
+
+    assert_includes to_string_response, baseline_response
+  end
+
+  def test_rendering_component_in_a_controller_using_render_to_string_with_layout
+    get "/controller_inline_baseline_with_layout"
+
+    assert_select("body div", "bar")
+    assert_response :success
+
+    baseline_response = response.body
+
+    get "/controller_to_string_with_layout"
+    assert_select("body div", "bar")
     assert_response :success
 
     to_string_response = response.body
@@ -271,6 +283,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/render_check"
     assert_response :success
     refute_includes response.body, "Rendered"
+  end
+
+  def test_previews_can_be_disabled
+    with_previews_option(:enabled, false) do
+      get "/rails/view_components/my_component/default"
+
+      assert_response 200
+    end
   end
 
   def test_renders_component_preview
@@ -407,26 +427,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "hello,world!")
   end
 
-  def test_renders_preview_source_without_template
-    get "/rails/view_components/preview_component/default"
-
-    assert_select ".view-component-source-example h2", "Source:"
-    assert_select ".view-component-source-example pre.source code"
-    assert_select ".language-ruby"
-    refute_match "&lt;%=", response.body
-    refute_match "%&gt", response.body
-  end
-
-  def test_renders_preview_source_with_template_from_layout
-    get "/rails/view_components/preview_source_from_layout_component/default_with_template"
-
-    assert_select ".view-component-source-example h2", "Source:"
-    assert_select ".view-component-source-example pre.source code"
-    assert_select ".language-erb"
-    assert_match "&lt;%=", response.body
-    assert_match "%&gt", response.body
-  end
-
   def test_renders_collections
     get "/products"
 
@@ -493,42 +493,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  if Rails.version.to_f >= 6.1
-    def test_rendering_component_using_the_render_component_helper_raises_an_error
-      error =
-        assert_raises ActionView::Template::Error do
-          get "/render_component"
-        end
-
-      matcher = (RUBY_VERSION >= "3.4") ? /undefined method 'render_component'/ : /undefined method `render_component' for/
-      assert_match(matcher, error.message)
-    end
-  end
-
-  if Rails.version.to_f < 6.1
-    def test_rendering_component_using_render_component
-      get "/render_component"
-      assert_includes response.body, "bar"
-    end
-
-    def test_rendering_component_in_a_controller_using_render_component
-      get "/controller_inline_render_component"
-      assert_includes response.body, "bar"
-    end
-
-    def test_rendering_component_in_a_controller_using_render_component_to_string
-      get "/controller_to_string_render_component"
-      assert_includes response.body, "bar"
-    end
-
-    def test_rendering_component_in_preview_using_render_component_and_monkey_patch_disabled
-      with_render_monkey_patch_config(false) do
-        get "/rails/view_components/monkey_patch_disabled_component/default"
-        assert_includes response.body, "<div>hello,world!</div>"
-      end
-    end
-  end
-
   def test_renders_the_inline_component_preview_examples_with_default_behaviour_and_with_their_own_templates
     get "/rails/view_components/inline_component/default"
     assert_select "input" do
@@ -549,29 +513,26 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_does_not_render_additional_newline
-    skip unless Rails::VERSION::MAJOR >= 7
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
       get "/rails/view_components/display_inline_component/with_newline"
       assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   ensure
-    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false
   end
 
   def test_does_not_render_additional_newline_with_render_in
-    skip unless Rails::VERSION::MAJOR >= 7
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
       get "/rails/view_components/display_inline_component/with_newline_render_in"
       assert_includes response.body, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   ensure
-    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false
   end
 
   # This test documents a bug that reports an incompatibility with the turbo-rails gem's `turbo_stream` helper.
-  # This helper may work if the `capture_compatibility_patch` is enabled.
   # Prefer `tag.turbo_stream` instead if you do not have the patch enabled already.
   def test_render_component_in_turbo_stream
     without_template_annotations do
@@ -579,11 +540,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       expected_response_body = <<~TURBOSTREAM
         <turbo-stream action="update" target="area1"><template><span>Hello, world!</span></template></turbo-stream>
       TURBOSTREAM
-      if ViewComponent::Base.config.capture_compatibility_patch_enabled
-        assert_equal expected_response_body, response.body
-      else
-        assert_not_equal expected_response_body, response.body
-      end
+
+      assert_equal expected_response_body, response.body
     end
   end
 
@@ -617,8 +575,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_an_inline_component_preview_using_a_haml_template
-    skip if Rails::VERSION::STRING < "6.1"
-
     get "/rails/view_components/inline_component/with_haml"
     assert_select "h1", "Some HAML here"
     assert_select "input[name=?]", "name"
@@ -631,8 +587,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_mix_of_haml_and_erb
-    skip if Rails::VERSION::STRING < "6.1"
-
     get "/nested_haml"
     assert_response :success
     assert_select ".foo > .bar > .baz > .quux > .haml-div"
@@ -647,8 +601,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def test_renders_a_preview_template_using_haml_params_from_url_custom_template_and_locals
-    skip if Rails::VERSION::STRING < "6.1"
-
     get "/rails/view_components/inline_component/with_several_options?form_title=Title from params"
 
     assert_select "form" do
@@ -670,7 +622,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       Rails.env = "production".inquiry
 
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal false, ViewComponent::Compiler.development_mode
+      assert_equal false, ViewComponent::Compiler.__vc_development_mode
     ensure
       Rails.env = old_env
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
@@ -680,12 +632,12 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_sets_the_compiler_mode_in_development_mode
     Rails.env.stub :development?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal true, ViewComponent::Compiler.development_mode
+      assert_equal true, ViewComponent::Compiler.__vc_development_mode
     end
 
     Rails.env.stub :test?, true do
       ViewComponent::Engine.initializers.find { |i| i.name == "compiler mode" }.run
-      assert_equal true, ViewComponent::Compiler.development_mode
+      assert_equal true, ViewComponent::Compiler.__vc_development_mode
     end
   end
 
@@ -722,9 +674,10 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       config_entrypoints.first.yield_self do |config|
         {
           generate: config.generate.dup.tap { |c| c.sidecar = true },
-          preview_controller: "SomeOtherController",
-          preview_route: "/some/other/route",
-          show_previews_source: true
+          previews: config.previews.dup.tap { |c|
+            c.controller = "SomeOtherController"
+            c.route = "/some/other/route"
+          }
         }.each do |option, value|
           with_config_option(option, value, config_entrypoint: config) do
             assert_equal(config.public_send(option), config_entrypoints.second.public_send(option))
@@ -788,9 +741,30 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Hello, CSS!"
   end
 
+  def test_slotable_default_override
+    get "/slotable_default_override"
+
+    assert_includes response.body, "foo"
+  end
+
   def test_renders_preview_from_custom_preview_path
     get "/rails/view_components/my_component_lib/default"
 
     assert_select "div", "hello,world!"
+  end
+
+  def test_modifying_previews_reflected_on_reload
+    get "/rails/view_components/preview_component/default"
+    assert_select "h1", text: "Lorem Ipsum"
+
+    new_file_contents = File.read("test/sandbox/test/components/previews/preview_component_preview.rb").gsub("Lorem Ipsum", "Changed!")
+
+    modify_file "test/components/previews/preview_component_preview.rb", new_file_contents do
+      get "/rails/view_components/preview_component/default"
+      assert_select "h1", text: "Changed!"
+    end
+
+    get "/rails/view_components/preview_component/default"
+    assert_select "h1", text: "Lorem Ipsum"
   end
 end

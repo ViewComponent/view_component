@@ -23,60 +23,20 @@ jobs:
         bundle exec appraisal rails-8.0 rake partial_benchmark
         bundle exec appraisal rails-8.0 rake translatable_benchmark
   test:
-    name: test (${{ matrix.rails_version }}, ${{ matrix.ruby_version }}, ${{ matrix.mode }})
+    name: test (Rails ${{ matrix.rails_version }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - ruby_version: "3.0"
-            rails_version: "6.1"
-            mode: "capture_patch_enabled"
-          - ruby_version: "3.0"
-            rails_version: "6.1"
-            mode: "capture_patch_disabled"
-          - ruby_version: "3.1"
-            rails_version: "7.0"
-            mode: "capture_patch_enabled"
-          - ruby_version: "3.1"
-            rails_version: "7.0"
-            mode: "capture_patch_disabled"
           - ruby_version: "3.2"
             rails_version: "7.1"
-            mode: "capture_patch_enabled"
-          - ruby_version: "3.2"
-            rails_version: "7.1"
-            mode: "capture_patch_disabled"
           - ruby_version: "3.3"
             rails_version: "7.2"
-            mode: "capture_patch_disabled"
-          - ruby_version: "3.3"
-            rails_version: "7.2"
-            mode: "capture_patch_enabled"
-          - ruby_version: "3.3"
-            rails_version: "8.0"
-            mode: "capture_patch_disabled"
-          - ruby_version: "3.3"
-            rails_version: "8.0"
-            mode: "capture_patch_enabled"
           - ruby_version: "3.4"
             rails_version: "8.0"
-            mode: "capture_patch_disabled"
-          - ruby_version: "3.4"
-            rails_version: "8.0"
-            mode: "capture_patch_enabled"
-          - ruby_version: "3.4"
-            rails_version: "main"
-            mode: "capture_patch_disabled"
-          - ruby_version: "3.4"
-            rails_version: "main"
-            mode: "capture_patch_enabled"
-          - ruby_version: "3.5"
-            rails_version: "8.0"
-            mode: "capture_patch_disabled"
-          - ruby_version: "3.5"
-            rails_version: "8.0"
-            mode: "capture_patch_enabled"
+          # - ruby_version: "head"
+          #   rails_version: "main"
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
@@ -87,17 +47,13 @@ jobs:
         ruby-version: ${{ matrix.ruby_version }}
         bundler-cache: true
     - name: Build and test with Rake
-      # Code-reloading isn't compatible with simplecov, so we need to run once
-      # to collect coverage, and again to test reloads.
       run: |
-        bundle exec appraisal rails-${{ matrix.rails_version }} bundle
-        MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake
-        ENABLE_RELOADING=true bundle exec appraisal rails-${{ matrix.rails_version }} rake
+        bundle exec appraisal rails-${{ matrix.rails_version }} bundle --quiet
+        MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake all_tests
       env:
         RAISE_ON_WARNING: 1
         RAILS_VERSION: ${{ matrix.rails_version }}
         RUBY_VERSION: ${{ matrix.ruby_version }}
-        CAPTURE_PATCH_ENABLED: ${{ matrix.mode == 'capture_patch_enabled' && 'true' || 'false' }}
     - name: Upload coverage results
       uses: actions/upload-artifact@v4.4.0
       if: always()
@@ -113,6 +69,7 @@ jobs:
       with:
         repository: 'primer/view_components'
         path: 'primer_view_components'
+        ref: '20250603-vc-compat'
     - uses: actions/checkout@v4.1.1
       with:
         path: 'view_component'
@@ -132,10 +89,10 @@ jobs:
         cd primer_view_components
         npm ci
         cd demo && npm ci && cd ..
-        bundle && bundle exec rake
+        bundle --quiet && bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '7.1.1'
+        RAILS_VERSION: '7.1.5'
         PARALLEL_WORKERS: '1'
   coverage:
     needs: test

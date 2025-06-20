@@ -1,18 +1,7 @@
 # frozen_string_literal: true
 
 require "allocation_stats"
-require "simplecov"
-require "simplecov-console"
 require "rails/version"
-
-if ENV["MEASURE_COVERAGE"]
-  SimpleCov.start do
-    command_name "minitest-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
-
-    formatter SimpleCov::Formatter::Console
-  end
-end
-
 require "bundler/setup"
 require "pathname"
 require "minitest/autorun"
@@ -43,7 +32,7 @@ require "capybara/cuprite"
 
 # Rails registers its own driver named "cuprite" which will overwrite the one we
 # register here. Avoid the problem by registering the driver with a distinct name.
-Capybara.register_driver(:vc_cuprite) do |app|
+Capybara.register_driver(:system_test_driver) do |app|
   # Add the process_timeout option to prevent failures due to the browser
   # taking too long to start up.
   Capybara::Cuprite::Driver.new(app, {process_timeout: 60, timeout: 30})
@@ -68,35 +57,35 @@ end
 # @yield Test code to run
 # @return [void]
 def with_preview_paths(new_value, &block)
-  with_config_option(:preview_paths, new_value, &block)
+  with_previews_option(:paths, new_value, &block)
 end
 
-def with_preview_route(new_value)
-  old_value = Rails.application.config.view_component.preview_route
-  Rails.application.config.view_component.preview_route = new_value
+def with_preview_route(new_value, &block)
+  old_value = Rails.application.config.view_component.previews.route
+  Rails.application.config.view_component.previews.route = new_value
   app.reloader.reload!
   yield
 ensure
-  Rails.application.config.view_component.preview_route = old_value
+  Rails.application.config.view_component.previews.route = old_value
   app.reloader.reload!
 end
 
-def with_preview_controller(new_value)
-  old_value = Rails.application.config.view_component.preview_controller
-  Rails.application.config.view_component.preview_controller = new_value
+def with_preview_controller(new_value, &block)
+  old_value = Rails.application.config.view_component.previews.controller
+  Rails.application.config.view_component.previews.controller = new_value
   app.reloader.reload!
   yield
 ensure
-  Rails.application.config.view_component.preview_controller = old_value
+  Rails.application.config.view_component.previews.controller = old_value
   app.reloader.reload!
 end
 
 def with_custom_component_path(new_value, &block)
-  with_config_option(:view_component_path, new_value, &block)
+  with_generate_option(:path, new_value, &block)
 end
 
-def with_custom_component_parent_class(new_value, &block)
-  with_config_option(:component_parent_class, new_value, &block)
+def with_custom_parent_class(new_value, &block)
+  with_generate_option(:parent_class, new_value, &block)
 end
 
 def with_application_component_class
@@ -112,6 +101,22 @@ def with_generate_option(config_option, value)
   yield
 ensure
   Rails.application.config.view_component.generate[config_option] = old_value
+end
+
+def with_previews_option(config_option, value)
+  old_value = Rails.application.config.view_component.previews[config_option]
+  Rails.application.config.view_component.previews[config_option] = value
+  yield
+ensure
+  Rails.application.config.view_component.previews[config_option] = old_value
+end
+
+def with_instrumentation_enabled_option(value)
+  old_value = Rails.application.config.view_component.instrumentation_enabled
+  Rails.application.config.view_component.instrumentation_enabled = value
+  yield
+ensure
+  Rails.application.config.view_component.instrumentation_enabled = old_value
 end
 
 def with_generate_sidecar(enabled, &block)
@@ -140,18 +145,14 @@ ensure
 end
 
 def without_template_annotations(&block)
-  if ActionView::Base.respond_to?(:annotate_rendered_view_with_filenames)
-    old_value = ActionView::Base.annotate_rendered_view_with_filenames
-    ActionView::Base.annotate_rendered_view_with_filenames = false
-    app.reloader.reload! if defined?(app)
+  old_value = ActionView::Base.annotate_rendered_view_with_filenames
+  ActionView::Base.annotate_rendered_view_with_filenames = false
+  app.reloader.reload! if defined?(app)
 
-    with_new_cache(&block)
+  with_new_cache(&block)
 
-    ActionView::Base.annotate_rendered_view_with_filenames = old_value
-    app.reloader.reload! if defined?(app)
-  else
-    yield
-  end
+  ActionView::Base.annotate_rendered_view_with_filenames = old_value
+  app.reloader.reload! if defined?(app)
 end
 
 def modify_file(file, content)
@@ -166,25 +167,21 @@ def modify_file(file, content)
 end
 
 def with_default_preview_layout(layout, &block)
-  with_config_option(:default_preview_layout, layout, &block)
-end
-
-def with_render_monkey_patch_config(enabled, &block)
-  with_config_option(:render_monkey_patch_enabled, enabled, &block)
+  with_previews_option(:default_layout, layout, &block)
 end
 
 def with_compiler_development_mode(mode)
-  previous_mode = ViewComponent::Compiler.development_mode
-  ViewComponent::Compiler.development_mode = mode
+  previous_mode = ViewComponent::Compiler.__vc_development_mode
+  ViewComponent::Compiler.__vc_development_mode = mode
   yield
 ensure
-  ViewComponent::Compiler.development_mode = previous_mode
+  ViewComponent::Compiler.__vc_development_mode = previous_mode
 end
 
 def capture_warnings(&block)
   [].tap do |warnings|
     Kernel.stub(:warn, ->(msg) { warnings << msg }) do
-      block.call
+      yield
     end
   end
 end
@@ -192,7 +189,7 @@ end
 def assert_allocations(count_map, &block)
   trace = AllocationStats.trace(&block)
   total = trace.allocations.all.size
-  count = count_map[RUBY_VERSION]
+  count = count_map[RUBY_VERSION.split(".").first(2).join(".")]
 
   assert_equal count, total, "Expected #{count} allocations, got #{total} allocations for Ruby #{RUBY_VERSION}"
 end

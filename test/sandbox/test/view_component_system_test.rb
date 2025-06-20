@@ -3,7 +3,7 @@
 require "test_helper"
 
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
-  driven_by :vc_cuprite
+  driven_by :system_test_driver
 
   def test_simple_js_interaction_in_browser_without_layout
     with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)) do |path|
@@ -54,5 +54,13 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
       assert find("div", text: "hello,world!")
       assert_no_selector "body > title", visible: false
     end
+  end
+
+  def test_turbo_content_type
+    visit "/turbo_content_type"
+
+    find("#submit").click
+
+    assert_selector("body #test-frame #result", text: "Submitted")
   end
 end
