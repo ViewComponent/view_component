@@ -141,6 +141,8 @@ module ViewComponent
         value = nil
 
         @output_buffer.with_buffer do
+          @view_context.instance_variable_set(:@virtual_path, virtual_path)
+
           rendered_template = render_template_for(@__vc_requested_details).to_s
 
           # Avoid allocating new string when output_preamble and output_postamble are blank
