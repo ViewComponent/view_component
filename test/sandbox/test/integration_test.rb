@@ -767,4 +767,11 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/rails/view_components/preview_component/default"
     assert_select "h1", text: "Lorem Ipsum"
   end
+
+  def test_virtual_path_reset
+    get "/virtual_path_reset"
+
+    assert_select "#before", text: "Hello world!"
+    assert_select "#after", text: "Hello world!"
+  end
 end
