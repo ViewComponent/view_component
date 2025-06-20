@@ -2,8 +2,11 @@
 
 require "bundler/gem_tasks"
 require "rake/testtask"
+require "rspec/core/rake_task"
 require "yard"
 require "yard/mattr_accessor_handler"
+
+RSpec::Core::RakeTask.new(:spec)
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
@@ -15,12 +18,6 @@ Rake::TestTask.new(:engine_test) do |t|
   t.libs << "test/test_engine"
   t.libs << "test/test_engine/lib"
   t.test_files = FileList["test/test_engine/**/*_test.rb"]
-end
-
-begin
-  require "rspec/core/rake_task"
-  RSpec::Core::RakeTask.new(:spec)
-rescue LoadError
 end
 
 desc "Runs benchmarks against components"
@@ -130,4 +127,10 @@ namespace :docs do
   end
 end
 
-task default: [:test, :engine_test, :spec]
+task :all_tests do
+  Rake::Task['test'].invoke
+  Rake::Task['engine_test'].invoke
+  Rake::Task['spec'].invoke
+end
+
+task default: [:all_tests]
