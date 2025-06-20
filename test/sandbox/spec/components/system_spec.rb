@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe "System specs for isolated view components", type: :system do
   before do
-    driven_by(:rack_test)
+    driven_by(:system_test_driver)
   end
 
   scenario "page is a Capybara::Session" do
