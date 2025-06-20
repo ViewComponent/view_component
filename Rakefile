@@ -133,7 +133,7 @@ end
 task :all_tests do
   if ENV["MEASURE_COVERAGE"]
     SimpleCov.start do
-      command_name "RSpec-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
+      command_name "rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
       enable_coverage :branch
       formatter SimpleCov::Formatter::Console
     end
