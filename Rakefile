@@ -5,6 +5,9 @@ require "rake/testtask"
 require "rspec/core/rake_task"
 require "yard"
 require "yard/mattr_accessor_handler"
+require "rails/version"
+require "simplecov"
+require "simplecov-console"
 
 RSpec::Core::RakeTask.new(:spec)
 
