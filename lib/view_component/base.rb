@@ -108,6 +108,7 @@ module ViewComponent
       self.class.__vc_compile(raise_errors: true)
 
       @view_context = view_context
+      old_virtual_path = view_context.instance_variable_get(:@virtual_path)
       self.__vc_original_view_context ||= view_context
 
       @output_buffer = view_context.output_buffer
@@ -160,6 +161,7 @@ module ViewComponent
         ""
       end
     ensure
+      view_context.instance_variable_set(:@virtual_path, old_virtual_path)
       @current_template = old_current_template
     end
 

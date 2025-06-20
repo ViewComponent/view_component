@@ -18,6 +18,10 @@ nav_order: 6
 
     *Meyric Rawlings*, *Joel Hawksley*
 
+* Fix bug where virtual path was not reset, breaking translations outside of components.
+
+    *Alex Coles*, *Joel Hawksley*
+
 ## 4.0.0.alpha7
 
 * BREAKING: Remove deprecated `use_helper(s)`. Use `include MyHelper` or `helpers.` proxy instead.
