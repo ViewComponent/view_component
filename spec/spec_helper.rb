@@ -4,14 +4,6 @@ require "simplecov"
 require "simplecov-console"
 require "rails/version"
 
-if ENV["MEASURE_COVERAGE"]
-  SimpleCov.start do
-    command_name "RSpec-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
-
-    formatter SimpleCov::Formatter::Console
-  end
-end
-
 require "bundler/setup"
 
 # Configure Rails Environment

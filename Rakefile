@@ -128,6 +128,14 @@ namespace :docs do
 end
 
 task :all_tests do
+  if ENV["MEASURE_COVERAGE"]
+    SimpleCov.start do
+      command_name "RSpec-rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
+
+      formatter SimpleCov::Formatter::Console
+    end
+  end
+
   Rake::Task["test"].invoke
   Rake::Task["engine_test"].invoke
   Rake::Task["spec"].invoke
