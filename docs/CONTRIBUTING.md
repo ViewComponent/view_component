@@ -8,6 +8,8 @@ nav_order: 9
 
 _ViewComponent is intended to be a safe, welcoming space for collaboration. By participating you agree to abide by the [Contributor Code of Conduct](CODE_OF_CONDUCT.md)._
 
+_As of version 4, ViewComponent is considered feature-complete. While contributions are always welcome, we're unlikely to accept further breaking changes or significant feature additions._
+
 Hi there! We're thrilled that you'd like to contribute to ViewComponent. Your help is essential for keeping it great.
 
 If you have any substantial changes that you would like to make, please [open an issue](http://github.com/viewcomponent/view_component/issues/new) first to discuss them with us.
@@ -68,7 +70,7 @@ bundle exec m test/view_component/YOUR_COMPONENT_test.rb:line_number
 Specify one of the supported versions listed in [Appraisals](https://github.com/viewcomponent/view_component/blob/main/Appraisals):
 
 ```command
-bundle exec appraisal rails-5.2 rake
+bundle exec appraisal rails-8.0 rake
 ```
 
 ## Documentation

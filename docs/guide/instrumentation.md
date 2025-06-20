@@ -15,10 +15,7 @@ To enable ActiveSupport notifications, use the `instrumentation_enabled` option:
 # config/application.rb
 # Enable ActiveSupport notifications for all ViewComponents
 config.view_component.instrumentation_enabled = true
-config.view_component.use_deprecated_instrumentation_name = false
 ```
-
-Setting `use_deprecated_instrumentation_name` configures the event name. If `false` the name is `"render.view_component"`. If `true` (default) the deprecated `"!render.view_component"` will be used.
 
 Subscribe to the event:
 
@@ -28,6 +25,8 @@ ActiveSupport::Notifications.subscribe("render.view_component") do |event| # or 
   event.payload # => { name: "MyComponent", identifier: "/Users/mona/project/app/components/my_component.rb" }
 end
 ```
+
+_Note: Enabling instrumentation negatively impacts the performance of ViewComponent._
 
 ## Viewing instrumentation sums in the browser developer tools
 

@@ -58,15 +58,7 @@ module ViewComponent
           if defined?(@__vc_content_block)
             # render_in is faster than `parent.render`
             @__vc_component_instance.render_in(view_context) do |*args|
-              return @__vc_content_block.call(*args) if @__vc_content_block&.source_location.nil?
-
-              block_context = @__vc_content_block.binding.receiver
-
-              if block_context.class < ActionView::Base
-                block_context.capture(*args, &@__vc_content_block)
-              else
-                @__vc_content_block.call(*args)
-              end
+              @__vc_content_block.call(*args)
             end
           else
             @__vc_component_instance.render_in(view_context)
@@ -101,15 +93,12 @@ module ViewComponent
     #   end
     # end
     #
-    def method_missing(symbol, *args, &block)
-      @__vc_component_instance.public_send(symbol, *args, &block)
+    def method_missing(symbol, *args, **kwargs, &block)
+      @__vc_component_instance.public_send(symbol, *args, **kwargs, &block)
     end
-    ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
 
     def html_safe?
-      # :nocov:
       to_s.html_safe?
-      # :nocov:
     end
 
     def respond_to_missing?(symbol, include_all = false)

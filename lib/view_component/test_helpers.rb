@@ -18,18 +18,7 @@ module ViewComponent
       def assert_component_rendered
         assert_selector("body")
       end
-    rescue LoadError
-      # We don't have a test case for running an application without capybara installed.
-      # It's probably fine to leave this without coverage.
-      # :nocov:
-      if ENV["DEBUG"]
-        warn(
-          "WARNING in `ViewComponent::TestHelpers`: Add `capybara` " \
-          "to Gemfile to use Capybara assertions."
-        )
-      end
-
-      # :nocov:
+    rescue LoadError # We don't have a test case for running an application without capybara installed.
     end
 
     # Returns the result of a render_inline call.
@@ -46,21 +35,12 @@ module ViewComponent
     # ```
     #
     # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
-    # @return [Nokogiri::HTML]
+    # @return [Nokogiri::HTML5]
     def render_inline(component, **args, &block)
       @page = nil
-      @rendered_content =
-        if Rails.version.to_f >= 6.1
-          vc_test_controller.view_context.render(component, args, &block)
+      @rendered_content = vc_test_controller.view_context.render(component, args, &block)
 
-        # :nocov:
-        else
-          vc_test_controller.view_context.render_component(component, &block)
-        end
-
-      # :nocov:
-
-      Nokogiri::HTML.fragment(@rendered_content)
+      Nokogiri::HTML5.fragment(@rendered_content)
     end
 
     # `JSON.parse`-d component output.
@@ -91,9 +71,9 @@ module ViewComponent
     # @param name [String] The name of the preview to be rendered.
     # @param from [ViewComponent::Preview] The class of the preview to be rendered.
     # @param params [Hash] Parameters to be passed to the preview.
-    # @return [Nokogiri::HTML]
+    # @return [Nokogiri::HTML5]
     def render_preview(name, from: __vc_test_helpers_preview_class, params: {})
-      previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.preview_controller.constantize)
+      previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.previews.controller.constantize)
 
       # From what I can tell, it's not possible to overwrite all request parameters
       # at once, so we set them individually here.
@@ -107,7 +87,7 @@ module ViewComponent
 
       @rendered_content = result
 
-      Nokogiri::HTML.fragment(@rendered_content)
+      Nokogiri::HTML5.fragment(@rendered_content)
     end
 
     # Execute the given block in the view context (using `instance_exec`).
@@ -121,12 +101,11 @@ module ViewComponent
     #
     # assert_text("Hello, World!")
     # ```
-    def render_in_view_context(*args, &block)
+    def render_in_view_context(...)
       @page = nil
-      @rendered_content = vc_test_controller.view_context.instance_exec(*args, &block)
-      Nokogiri::HTML.fragment(@rendered_content)
+      @rendered_content = vc_test_controller.view_context.instance_exec(...)
+      Nokogiri::HTML5.fragment(@rendered_content)
     end
-    ruby2_keywords(:render_in_view_context) if respond_to?(:ruby2_keywords, true)
 
     # Set the Action Pack request variant for the given block:
     #
@@ -136,11 +115,11 @@ module ViewComponent
     # end
     # ```
     #
-    # @param variant [Symbol] The variant to be set for the provided block.
-    def with_variant(variant)
+    # @param variants [Symbol[]] The variants to be set for the provided block.
+    def with_variant(*variants)
       old_variants = vc_test_controller.view_context.lookup_context.variants
 
-      vc_test_controller.view_context.lookup_context.variants = variant
+      vc_test_controller.view_context.lookup_context.variants += variants
       yield
     ensure
       vc_test_controller.view_context.lookup_context.variants = old_variants
@@ -173,9 +152,14 @@ module ViewComponent
     # end
     # ```
     #
-    # @param format [Symbol] The format to be set for the provided block.
-    def with_format(format)
-      with_request_url("/", format: format) { yield }
+    # @param formats [Symbol[]] The format(s) to be set for the provided block.
+    def with_format(*formats)
+      old_formats = vc_test_controller.view_context.lookup_context.formats
+
+      vc_test_controller.view_context.lookup_context.formats = formats
+      yield
+    ensure
+      vc_test_controller.view_context.lookup_context.formats = old_formats
     end
 
     # Set the URL of the current request (such as when using request-dependent path helpers):
@@ -205,7 +189,7 @@ module ViewComponent
     # @param full_path [String] The path to set for the current request.
     # @param host [String] The host to set for the current request.
     # @param method [String] The request method to set for the current request.
-    def with_request_url(full_path, host: nil, method: nil, format: ViewComponent::Base::VC_INTERNAL_DEFAULT_FORMAT)
+    def with_request_url(full_path, host: nil, method: nil)
       old_request_host = vc_test_request.host
       old_request_method = vc_test_request.request_method
       old_request_path_info = vc_test_request.path_info
@@ -225,7 +209,6 @@ module ViewComponent
       vc_test_request.set_header("action_dispatch.request.query_parameters",
         Rack::Utils.parse_nested_query(query).with_indifferent_access)
       vc_test_request.set_header(Rack::QUERY_STRING, query)
-      vc_test_request.format = format
       yield
     ensure
       vc_test_request.host = old_request_host
@@ -250,7 +233,20 @@ module ViewComponent
     #
     # @return [ActionController::Base]
     def vc_test_controller
-      @vc_test_controller ||= __vc_test_helpers_build_controller(Base.test_controller.constantize)
+      @vc_test_controller ||= __vc_test_helpers_build_controller(vc_test_controller_class)
+    end
+
+    # Set the controller used by `render_inline`:
+    #
+    # ```ruby
+    # def vc_test_controller_class
+    #   MyTestController
+    # end
+    # ```
+    def vc_test_controller_class
+      return @__vc_test_controller_class if defined?(@__vc_test_controller_class)
+
+      defined?(ApplicationController) ? ApplicationController : ActionController::Base
     end
 
     # Access the request used by `render_inline`:
@@ -284,11 +280,9 @@ module ViewComponent
 
     def __vc_test_helpers_preview_class
       result = if respond_to?(:described_class)
-        # :nocov:
-        raise "`render_preview` expected a described_class, but it is nil." if described_class.nil?
+        raise ArgumentError.new("`render_preview` expected a described_class, but it is nil.") if described_class.nil?
 
         "#{described_class}Preview"
-        # :nocov:
       else
         self.class.name.gsub("Test", "Preview")
       end
@@ -296,6 +290,5 @@ module ViewComponent
     rescue NameError
       raise NameError, "`render_preview` expected to find #{result}, but it does not exist."
     end
-    # :nocov:
   end
 end

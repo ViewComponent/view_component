@@ -9,6 +9,8 @@ require "benchmark/ips"
 ENV["RAILS_ENV"] = "production"
 require File.expand_path("../test/sandbox/config/environment.rb", __dir__)
 
+Rails.logger.level = 1
+
 module Performance
   require_relative "components/name_component"
   require_relative "components/nested_name_component"

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "rails/generators/component/component_generator"
+require "generators/view_component/component/component_generator"
 
 Rails.application.load_generators
 
 class ComponentGeneratorTest < Rails::Generators::TestCase
-  tests Rails::Generators::ComponentGenerator
+  tests ViewComponent::Generators::ComponentGenerator
   destination Dir.mktmpdir
   setup :prepare_destination
 
@@ -54,11 +54,22 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_component_with_call
+    run_generator %w[user name --call]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/def call/, component)
+    end
+
+    assert_no_file "app/components/user_component.html.erb"
+    assert_no_file "component.html.erb"
+  end
+
   def test_component_with_inline
     run_generator %w[user name --inline]
 
     assert_file "app/components/user_component.rb" do |component|
-      assert_match(/def call/, component)
+      assert_match(/erb_template/, component)
     end
 
     assert_no_file "app/components/user_component.html.erb"
@@ -85,8 +96,8 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_component_with_parent_and_custom_component_parent_class
-    with_custom_component_parent_class("MyBaseComponent") do
+  def test_component_with_parent_and_custom_parent_class
+    with_custom_parent_class("MyBaseComponent") do
       run_generator %w[user --parent MyOtherBaseComponent]
 
       assert_file "app/components/user_component.rb" do |component|
@@ -127,6 +138,17 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/user_component.html.slim"
   end
 
+  def test_invoking_slim_template_engine_inline
+    run_generator %w[user --inline --template-engine slim]
+
+    assert_file "app/components/user_component.rb" do |component|
+      assert_match(/slim_template <<~SLIM/, component)
+    end
+
+    assert_no_file "app/components/user_component.html.slim"
+    assert_no_file "component.html.erb"
+  end
+
   def test_invoking_haml_template_engine
     run_generator %w[user --template-engine haml]
 
@@ -159,8 +181,8 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
-  def test_generating_components_with_custom_component_parent_class
-    with_custom_component_parent_class("MyBaseComponent") do
+  def test_generating_components_with_custom_parent_class
+    with_custom_parent_class("MyBaseComponent") do
       run_generator %w[user]
 
       assert_file "app/components/user_component.rb" do |component|
@@ -172,7 +194,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
 
   def test_generating_components_with_application_component_class_and_custom_parent_class
     with_application_component_class do
-      with_custom_component_parent_class("MyBaseComponent") do
+      with_custom_parent_class("MyBaseComponent") do
         run_generator %w[user]
 
         assert_file "app/components/user_component.rb" do |component|
@@ -194,7 +216,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   end
 
   def test_component_with_stimulus_and_inline
-    run_generator %w[user --stimulus --inline]
+    run_generator %w[user --stimulus --call]
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/data: { controller: "user-component" }/, component)
@@ -222,7 +244,7 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
   end
 
   def test_component_with_stimulus_and_sidecar_and_inline
-    run_generator %w[user --stimulus --sidecar --inline]
+    run_generator %w[user --stimulus --sidecar --call]
 
     assert_file "app/components/user_component.rb" do |component|
       assert_match(/data: { controller: "user-component--user-component" }/, component)

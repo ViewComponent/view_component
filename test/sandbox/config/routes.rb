@@ -15,9 +15,8 @@ Sandbox::Application.routes.draw do
   get :controller_inline_with_block, to: "integration_examples#controller_inline_with_block"
   get :controller_inline_baseline, to: "integration_examples#controller_inline_baseline"
   get :controller_to_string, to: "integration_examples#controller_to_string"
-  get :render_component, to: "integration_examples#render_component"
-  get :controller_inline_render_component, to: "integration_examples#controller_inline_render_component"
-  get :controller_to_string_render_component, to: "integration_examples#controller_to_string_render_component"
+  get :controller_inline_baseline_with_layout, to: "integration_examples#controller_inline_baseline_with_layout"
+  get :controller_to_string_with_layout, to: "integration_examples#controller_to_string_with_layout"
   get :layout_default, to: "layouts#default"
   get :layout_global_for_action, to: "layouts#global_for_action"
   get :layout_explicit_in_action, to: "layouts#explicit_in_action"
@@ -33,7 +32,12 @@ Sandbox::Application.routes.draw do
   get :unsafe_preamble_component, to: "integration_examples#unsafe_preamble_component"
   get :unsafe_postamble_component, to: "integration_examples#unsafe_postamble_component"
   get :multiple_formats_component, to: "integration_examples#multiple_formats_component"
+  get :slotable_default_override, to: "integration_examples#slotable_default_override"
   post :create, to: "integration_examples#create"
+  get :turbo_content_type, to: "integration_examples#turbo_content_type"
+  post :submit, to: "integration_examples#submit"
+
+  resources :posts
 
   constraints(lambda { |request| request.env["warden"].authenticate! }) do
     get :constraints_with_env, to: "integration_examples#index"
