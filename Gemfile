@@ -38,6 +38,7 @@ group :development, :test do
   gem "slim", "~> 5"
   gem "sprockets-rails", "~> 3"
   gem "standard", "~> 1"
+  gem "turbo-rails"
   gem "warning"
   gem "yard-activesupport-concern", "< 1"
   gem "yard", "< 1"

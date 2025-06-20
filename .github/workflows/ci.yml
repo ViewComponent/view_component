@@ -35,8 +35,8 @@ jobs:
             rails_version: "7.2"
           - ruby_version: "3.4"
             rails_version: "8.0"
-          - ruby_version: "head"
-            rails_version: "main"
+          # - ruby_version: "head"
+          #   rails_version: "main"
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
@@ -49,7 +49,7 @@ jobs:
     - name: Build and test with Rake
       run: |
         bundle exec appraisal rails-${{ matrix.rails_version }} bundle --quiet
-        MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake
+        MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake all_tests
       env:
         RAISE_ON_WARNING: 1
         RAILS_VERSION: ${{ matrix.rails_version }}

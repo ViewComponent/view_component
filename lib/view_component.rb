@@ -18,6 +18,7 @@ module ViewComponent
 
   if Rails.env.test?
     autoload :TestHelpers
+    autoload :SystemSpecHelpers
     autoload :SystemTestHelpers
     autoload :TestCase
     autoload :SystemTestCase
