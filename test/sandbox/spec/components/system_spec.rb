@@ -14,8 +14,12 @@ RSpec.describe "System specs for isolated view components", type: :system do
   end
 
   scenario "visit the isolated, rendered component" do
-    with_rendered_component_path(render_inline(MyComponent.new)) do |path|
-      visit(path)
+    with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)) do |path|
+      visit path
+
+      assert find("[data-hidden-field]", visible: false)
+      find("[data-button]", text: "Click Me To Reveal Something Cool").click
+      assert find("[data-hidden-field]", visible: true)
     end
   end
 end
