@@ -10,17 +10,80 @@ nav_order: 6
 
 ## main
 
-* Require MFA when publishing to RubyGems.
+## 4.0.0.rc1
 
-    *Joel Hawksley*
+Almost six years after releasing [v1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship the first release candidate of ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions. GitHub.com is already running this release in production, and the included breaking changes required very minimal work to integrate.
+
+Please report any issues at https://github.com/ViewComponent/view_component/issues.
+
+### Breaking changes (production)
+
+* Remove dependency on `ActionView::Base`, eliminating the need for capture compatibility patch. In some edge cases, this change may require switching to use the `helpers.` proxy.
+* Require [non-EOL](https://endoflife.date/rails) Rails (`>= 7.1.0`) and Ruby (`>= 3.2.0`).
+* Remove `render_component` and `render` monkey patch configured with `render_monkey_patch_enabled`.
+* Remove deprecated `use_helper(s)`. Use `include MyHelper` or `helpers.` proxy instead.
+* Support compatibility with `Dry::Initializer`. As a result, `EmptyOrInvalidInitializerError` will no longer be raised.
+* Remove default initializer from `ViewComponent::Base`. Previously, `ViewComponent::Base` defined a catch-all initializer that allowed components without an initializer defined to be passed arbitrary arguments.
+* Remove `use_deprecated_instrumentation_name` configuration option. Events will always use `render.view_component` name.
+* Remove unnecessary `#format` methods that returned `nil`.
+* Remove support for variant names containing `.` to be consistent with Rails.
+* Use ActionView's `lookup_context` for picking templates instead of the request format.
+
+  3.15 added support for using templates that match the request format, i.e. if `/resource.csv` is requested then
+  ViewComponents would pick `_component.csv.erb` over `_component.html.erb`.
+
+  With this release, the request format is no longer considered and instead ViewComponent will use the Rails logic for picking the most appropriate template type, i.e. the csv template will be used if it matches the `Accept` header or because the controller uses a `respond_to` block to pick the response format.
+
+### Breaking changes (dev/test)
+
+* Rename internal methods to have `__vc_` prefix if they shouldn't be used by consumers. Make internal constants private. Make `Collection#components`, `Slotable#register_polymorphic_slot` private. Remove unused `ComponentError` class.
+* Rename `config.generate.component_parent_class` to `config.generate.parent_class`.
+* Remove `config.test_controller` in favor of `vc_test_controller_class` test helper method.
+* `config.component_parent_class` is now `config.generate.component_parent_class`, moving the generator-specific option to the generator configuration namespace.
+* Move previews-related configuration (`enabled`, `route`, `paths`, `default_layout`, `controller`) to under `previews` namespace.
+* `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
+* `--inline` generator option now generates inline template. Use `--call` to generate `#call` method.
+* Remove broken integration with `rails stats` that ignored components outside of `app/components`.
+* Remove `preview_source` functionality. Consider using [Lookbook](https://lookbook.build/) instead.
+* Use `Nokogiri::HTML5` instead of `Nokogiri::HTML4` for test helpers.
+* Move generators to a ViewComponent namespace.
+
+  Before, ViewComponent generators pollute the generator namespace with a bunch of top level items, and claim the generic "component" name.
+
+  Now, generators live in a "view_component" module/namespace, so what was before `rails g
+  component` is now `rails g view_component:component`.
+
+### New features
 
 * Add `SystemSpecHelpers` for use with RSpec.
+* Add support for including `Turbo::StreamsHelper`.
+* Add template annotations for components with `def call`.
+* Graduate `SlotableDefault` to be included by default.
+* Add `#current_template` accessor and `Template#path` for diagnostic usage.
+* Reduce string allocations during compilation.
 
-    *Meyric Rawlings*, *Joel Hawksley*
+### Bug fixes
 
 * Fix bug where virtual path wasn't reset, breaking translations outside of components.
+* Fix bug where `config.previews.enabled` did not function properly in production environments.
+* Fix bug where response format wasn't set, which caused issues with Turbo Frames.
+* Fix bug in `SlotableDefault` where default couldn't be overridden when content was passed as a block.
+* Fix bug where request-aware helpers did not work outside of the request context.
+* `ViewComponentsSystemTestController` should not be useable outside of test environment
 
-    *Alex Coles*, *Joel Hawksley*
+### Non-functional changes
+
+* Remove unnecessary usage of `ruby2_keywords`.
+* Remove unnecessary `respond_to` checks.
+* Require MFA when publishing to RubyGems.
+* Clean up project dependencies, relaxing versions of development gems.
+* Add test case for absolute URL path helpers in mailers.
+* Update documentation on performance to reflect more representative benchmark showing 2-3x speed increase over partials.
+* Add documentation note about instrumentation negatively affecting performance.
+* Remove unnecessary ENABLE_RELOADING test suite flag.
+* `config.previews.default_layout` should default to nil.
+* Add test coverage for uncovered code.
+* Test against `turbo-rails` `v2` and `rspec-rails` `v7`.
 
 ## 4.0.0.alpha7
 
