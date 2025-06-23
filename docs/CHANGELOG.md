@@ -14,7 +14,7 @@ nav_order: 6
 
 Almost six years after releasing [v1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship the first release candidate of ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions. GitHub.com is already running this release in production, and the included breaking changes required very minimal work to integrate.
 
-Please report any issues at https://github.com/ViewComponent/view_component/issues.
+Please report any issues at [https://github.com/ViewComponent/view_component/issues](https://github.com/ViewComponent/view_component/issues).
 
 ### Breaking changes (production)
 
