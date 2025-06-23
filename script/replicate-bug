@@ -12,7 +12,7 @@ bundle add view_component --git https://github.com/viewcomponent/view_component 
 # Generate a controller
 rails g controller Home index
 # Generate ApplicationComponent, assuming most folks use it.
-rails g component ApplicationComponent --template_engine=no_template
+rails g view_component ApplicationComponent --template_engine=no_template
 # Root to the index action on HomeController
 cat << 'ROUTES' > 'config/routes.rb'
 Rails.application.routes.draw do
