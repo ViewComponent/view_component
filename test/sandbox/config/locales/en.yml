@@ -15,3 +15,10 @@ en:
 
   editorb_component:
     title: Editorb!
+
+  integration_examples:
+    virtual_path_reset:
+      message: "Hello world!"
+
+  my_component:
+    message: "OH NO! (you shouldn't see me)"

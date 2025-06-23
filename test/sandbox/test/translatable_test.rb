@@ -184,6 +184,9 @@ class TranslatableTest < ViewComponent::TestCase
   def translate(key, **options)
     component = TranslatableComponent.new
     render_inline(component)
+    component
+      .instance_variable_get(:@view_context)
+      .instance_variable_set(:@virtual_path, component.virtual_path)
     component.translate(key, **options)
   end
 end
