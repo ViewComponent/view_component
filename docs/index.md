@@ -8,7 +8,7 @@ nav_order: 1
 
 A framework for creating reusable, testable & encapsulated view components, built to integrate seamlessly with Ruby on Rails.
 
-_As of version 4, ViewComponent is in Long-Term Support and generally considered feature-complete._
+_As of version 4, ViewComponent is in Long-Term Support and considered feature-complete._
 
 ## What's a ViewComponent?
 

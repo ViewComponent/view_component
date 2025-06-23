@@ -30,10 +30,10 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 * Rename internal methods to have `__vc_` prefix if they shouldn't be used by consumers. Make internal constants private. Make `Collection#components`, `Slotable#register_polymorphic_slot` private. Remove unused `ComponentError` class.
 * Use ActionView's `lookup_context` for picking templates instead of the request format.
 
-  3.15 added support for using templates that match the request format, i.e. if `/resource.csv` is requested then
+  3.15 added support for using templates that match the request format, that is if `/resource.csv` is requested then
   ViewComponents would pick `_component.csv.erb` over `_component.html.erb`.
 
-  With this release, the request format is no longer considered and instead ViewComponent will use the Rails logic for picking the most appropriate template type, i.e. the csv template will be used if it matches the `Accept` header or because the controller uses a `respond_to` block to pick the response format.
+  With this release, the request format is no longer considered and instead ViewComponent will use the Rails logic for picking the most appropriate template type, that is the csv template will be used if it matches the `Accept` header or because the controller uses a `respond_to` block to pick the response format.
 
 ### Breaking changes (dev/test)
 
@@ -65,11 +65,11 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 ### Bug fixes
 
 * Fix bug where virtual path wasn't reset, breaking translations outside of components.
-* Fix bug where `config.previews.enabled` did not function properly in production environments.
+* Fix bug where `config.previews.enabled` didn't function properly in production environments.
 * Fix bug where response format wasn't set, which caused issues with Turbo Frames.
 * Fix bug in `SlotableDefault` where default couldn't be overridden when content was passed as a block.
-* Fix bug where request-aware helpers did not work outside of the request context.
-* `ViewComponentsSystemTestController` should not be useable outside of test environment
+* Fix bug where request-aware helpers didn't work outside of the request context.
+* `ViewComponentsSystemTestController` shouldn't be useable outside of test environment
 
 ### Non-functional changes
 
@@ -99,7 +99,7 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 
     *Joel Hawksley*
 
-* Fix bug where `config.previews.enabled` did not function properly in production environments.
+* Fix bug where `config.previews.enabled` didn't function properly in production environments.
 
     *Joel Hawksley*
 
@@ -234,11 +234,11 @@ This release makes the following breaking changes:
 
 * BREAKING: Use ActionView's `lookup_context` for picking templates instead of the request format.
 
-  3.15 added support for using templates that match the request format, i.e. if `/resource.csv` is requested then
+  3.15 added support for using templates that match the request format, that is if `/resource.csv` is requested then
   ViewComponents would pick `_component.csv.erb` over `_component.html.erb`.
 
   With this release, the request format is no longer considered and instead ViewComponent will use the Rails logic
-  for picking the most appropriate template type, i.e. the csv template will be used if it matches the `Accept` header
+  for picking the most appropriate template type, that is the csv template will be used if it matches the `Accept` header
   or because the controller uses a `respond_to` block to pick the response format.
 
     *Stephen Nelson*
@@ -247,11 +247,11 @@ This release makes the following breaking changes:
 
     *Joel Hawksley*
 
-* Fix bug where request-aware helpers did not work outside of the request context.
+* Fix bug where request-aware helpers didn't work outside of the request context.
 
     *Joel Hawksley*, *Stephen Nelson*
 
-* `ViewComponentsSystemTestController` should not be useable outside of test environment
+* `ViewComponentsSystemTestController` shouldn't be useable outside of test environment
 
     *Joel Hawksley*, *Stephen Nelson*
 
