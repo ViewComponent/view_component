@@ -119,16 +119,16 @@ Preview classes live in `test/components/previews`, which can be configured usin
 
 ```ruby
 # config/application.rb
-config.view_component.preview_paths << "#{Rails.root}/lib/component_previews"
+config.view_component.previews.paths << "#{Rails.root}/lib/component_previews"
 ```
 
 ## Previews route
 
-Previews are served from `/rails/view_components` by default. To use a different endpoint, set the `preview_route` option:
+Previews are served from `/rails/view_components` by default. To use a different endpoint, set the `previews.route` option:
 
 ```ruby
 # config/application.rb
-config.view_component.preview_route = "/previews"
+config.view_component.previews.route = "/previews"
 ```
 
 ## Preview templates
@@ -155,7 +155,7 @@ end
 ```
 
 To use a different location for preview templates, pass the `template` argument:
-(the path should be relative to `config.view_component.preview_paths`):
+(the path should be relative to `config.view_component.previews.paths`):
 
 ```ruby
 # test/components/previews/cell_component_preview.rb
@@ -184,11 +184,11 @@ Which enables passing in a value: `/rails/view_components/cell_component/default
 
 ## Configuring preview controller
 
-Extend previews to add authentication, authorization, before actions, etc. using the `preview_controller` option:
+Extend previews to add authentication, authorization, before actions, etc. using the `previews.controller` option:
 
 ```ruby
 # config/application.rb
-config.view_component.preview_controller = "MyPreviewController"
+config.view_component.previews.controller = "MyPreviewController"
 ```
 
 Then include `PreviewActions` in the controller:
@@ -201,24 +201,12 @@ end
 
 ## Enabling previews
 
-Previews are enabled by default in test and development environments. To enable or disable previews, use the `show_previews` option:
+Previews are enabled by default in test and development environments. To enable or disable previews, use the `previews.enabled` option:
 
 ```ruby
 # config/environments/test.rb
-config.view_component.show_previews = false
+config.view_component.previews.enabled = false
 ```
-
-## Source previews
-
-A source preview is a syntax highlighted source code example of the usage of a view component, shown below the preview.
-Source previews are disabled by default. To enable or disable source previews, use the `show_previews_source` option:
-
-```ruby
-# config/environments/test.rb
-config.view_component.show_previews_source = true
-```
-
-To render the source preview in a different location, use the view helper `preview_source` from within the preview template or preview layout.
 
 ## Use with RSpec
 

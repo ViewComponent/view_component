@@ -3,6 +3,10 @@
 require "test_helper"
 
 class RenderingTest < ViewComponent::TestCase
+  def vc_test_controller_class
+    IntegrationExamplesController
+  end
+
   def test_render_inline
     render_inline(MyComponent.new)
 
@@ -13,20 +17,41 @@ class RenderingTest < ViewComponent::TestCase
     # Stabilize compilation status ahead of testing allocations to simulate rendering
     # performance with compiled component
     ViewComponent::CompileCache.cache.delete(MyComponent)
-    MyComponent.ensure_compiled
+    MyComponent.__vc_ensure_compiled
 
-    allocations =
-      if Rails.version.to_f < 8.0
-        {"3.3.8" => 124, "3.3.0" => 140, "3.2.8" => 122, "3.1.7" => 122, "3.0.7" => 131}
-      elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
-        {"3.5.0" => 117, "3.4.4" => 121, "3.4.3" => 121, "3.3.8" => 133}
-      else
-        {"3.4.4" => 119, "3.4.3" => 119}
+    with_instrumentation_enabled_option(false) do
+      assert_allocations({"3.5" => 69, "3.4" => 74, "3.3" => 72, "3.2" => 71}) do
+        render_inline(MyComponent.new)
       end
-
-    assert_allocations(**allocations) do
-      render_inline(MyComponent.new)
     end
+
+    assert_selector("div", text: "hello,world!")
+  end
+
+  def test_render_collection_inline_allocations
+    # Stabilize compilation status ahead of testing allocations to simulate rendering
+    # performance with compiled component
+    ViewComponent::CompileCache.cache.delete(ProductComponent)
+    ProductComponent.__vc_ensure_compiled
+
+    allocations = {"3.5" => 77, "3.4" => 82, "3.3" => 86, "3.2" => 84}
+
+    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
+    notice = "On sale"
+    # Ensure any one-time allocations are done
+    render_inline(ProductComponent.with_collection(products, notice: notice))
+
+    with_instrumentation_enabled_option(false) do
+      assert_allocations(**allocations) do
+        render_inline(ProductComponent.with_collection(products, notice: notice))
+      end
+    end
+
+    assert_selector("h1", text: "Product", count: 2)
+  end
+
+  def test_initialize_super
+    render_inline(InitializeSuperComponent.new)
 
     assert_selector("div", text: "hello,world!")
   end
@@ -101,14 +126,18 @@ class RenderingTest < ViewComponent::TestCase
   def test_render_without_template
     render_inline(InlineComponent.new)
 
-    assert_predicate InlineComponent, :compiled?
+    assert_predicate InlineComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
+  end
+
+  def test_inline_call_component_format
+    assert_equal(:html, InlineComponent.new.format)
   end
 
   def test_render_child_without_template
     render_inline(InlineChildComponent.new)
 
-    assert_predicate InlineChildComponent, :compiled?
+    assert_predicate InlineChildComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
@@ -116,6 +145,12 @@ class RenderingTest < ViewComponent::TestCase
     assert_nothing_raised do
       render_inline(EmptyComponent.new)
     end
+  end
+
+  def test_render_empty_component_with_annotations
+    render_inline(EmptyComponent.new)
+
+    assert_includes rendered_content, "empty_component.rb"
   end
 
   def test_renders_slim_template
@@ -126,8 +161,6 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_renders_haml_with_html_formatted_slot
-    skip if Rails::VERSION::STRING < "6.1"
-
     render_inline(HamlHtmlFormattedSlotComponent.new)
 
     assert_selector("p", text: "HTML Formatted one")
@@ -201,19 +234,27 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_renders_component_with_only_variant
+    with_variant :phone do
+      render_inline(OnlyVariantComponent.new)
+
+      assert_text("Phone")
+    end
+  end
+
+  def test_renders_component_with_multiple_variants
+    with_variant :app, :phone do
+      render_inline(VariantsComponent.new)
+
+      assert_text("Phone")
+    end
+  end
+
   def test_renders_component_with_variant_containing_a_dash
     with_variant :"mini-watch" do
       render_inline(VariantsComponent.new)
 
       assert_text("Mini Watch with dash")
-    end
-  end
-
-  def test_renders_component_with_variant_containing_a_dot
-    with_variant :"mini.watch" do
-      render_inline(VariantsComponent.new)
-
-      assert_text("Mini Watch with dot")
     end
   end
 
@@ -229,7 +270,7 @@ class RenderingTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantComponent.new)
 
-      assert_predicate InlineVariantComponent, :compiled?
+      assert_predicate InlineVariantComponent, :__vc_compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
   end
@@ -238,7 +279,7 @@ class RenderingTest < ViewComponent::TestCase
     with_variant :inline_variant do
       render_inline(InlineVariantChildComponent.new)
 
-      assert_predicate InlineVariantChildComponent, :compiled?
+      assert_predicate InlineVariantChildComponent, :__vc_compiled?
       assert_selector("input[type='text'][name='inline_variant']")
     end
   end
@@ -278,15 +319,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_helper_method_within_nested_component
     render_inline(ContainerComponent.new)
-
     assert_text("Hello helper method")
-  end
-
-  def test_renders_helper_method_within_nested_component_with_disabled_monkey_patch
-    with_render_monkey_patch_config(false) do
-      render_inline(ContainerComponent.new)
-      assert_text("Hello helper method")
-    end
   end
 
   def test_renders_path_helper
@@ -342,9 +375,7 @@ class RenderingTest < ViewComponent::TestCase
     assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
 
     if Rails.version.to_f < 8.0
-
       # Propshaft doesn't allow setting custom hosts so this only works in Rails < 8
-      # TODO: Revisit this comment for v4 to see if we need to make any deprecations
       component.config.asset_host = nil
       assert_match(%r{/assets/application-\w+.css}, render_inline(component).text)
 
@@ -431,6 +462,31 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("Content")
   end
 
+  def test_conditional_rendering_combined_with_component_arg
+    render_inline(ConditionalContentWithArgComponent.new)
+
+    refute_component_rendered
+
+    render_inline(ConditionalContentWithArgComponent.new) do
+      "Content"
+    end
+
+    assert_component_rendered
+    assert_text("Content")
+
+    render_inline(ConditionalContentWithArgComponent.new(description: "foo")) do
+      "Content"
+    end
+
+    assert_component_rendered
+    assert_text("foo")
+
+    render_inline(ConditionalContentWithArgComponent.new(description: "bar"))
+
+    assert_component_rendered
+    assert_text("bar")
+  end
+
   def test_assert_select
     render_inline(MyComponent.new)
 
@@ -444,22 +500,6 @@ class RenderingTest < ViewComponent::TestCase
       end
 
     assert_includes exception.message, "Validation failed: Content"
-  end
-
-  def test_compiles_unrendered_component
-    # The UnreferencedComponent will get compiled at boot,
-    # but that might have been thrown away if code-reloading is enabled
-    skip unless Rails.env.cache_classes?
-
-    assert UnreferencedComponent.compiled?
-  end
-
-  def test_compiles_components_without_initializers
-    # MissingInitializerComponent will get compiled at boot,
-    # but that might have been thrown away if code-reloading is enabled
-    skip unless Rails.env.cache_classes?
-
-    assert MissingInitializerComponent.compiled?
   end
 
   def test_renders_when_initializer_is_not_defined
@@ -478,6 +518,15 @@ class RenderingTest < ViewComponent::TestCase
       exception.message,
       "Couldn't find a template file or inline render method for MissingTemplateComponent"
     )
+  end
+
+  def test_raises_error_when_inline_and_sidecar_template_conflict
+    error =
+      assert_raises ViewComponent::TemplateError do
+        render_inline(InlineSidecarConflictComponent.new)
+      end
+
+    assert_includes error.message, "Template file and inline render method found for InlineSidecarConflictComponent."
   end
 
   def test_raises_error_when_more_than_one_sidecar_template_is_present
@@ -610,32 +659,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("p", text: "On sale", count: 2)
     assert_selector("p", text: "Radio clock counter: 0")
     assert_selector("p", text: "Mints counter: 1")
-  end
-
-  def test_render_collection_inline_allocations
-    # Stabilize compilation status ahead of testing allocations to simulate rendering
-    # performance with compiled component
-    ViewComponent::CompileCache.cache.delete(ProductComponent)
-    ProductComponent.ensure_compiled
-
-    allocations =
-      if Rails.version.to_f < 8.0
-        {"3.3.8" => 128, "3.2.8" => 125, "3.1.7" => 125, "3.0.7" => 122}
-      elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
-        {"3.5.0" => 121, "3.4.4" => 121, "3.3.8" => 128}
-      else
-        {"3.4.4" => 119}
-      end
-
-    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
-    notice = "On sale"
-    # Ensure any one-time allocations are done
-    render_inline(ProductComponent.with_collection(products, notice: notice))
-
-    assert_allocations(**allocations) do
-      render_inline(ProductComponent.with_collection(products, notice: notice))
-    end
-    assert_selector("h1", text: "Product", count: 2)
   end
 
   def test_render_collection_custom_collection_parameter_name
@@ -773,7 +796,7 @@ class RenderingTest < ViewComponent::TestCase
     with_new_cache do
       exception =
         assert_raises ViewComponent::ReservedParameterError do
-          InvalidParametersComponent.compile(raise_errors: true)
+          InvalidParametersComponent.__vc_compile(raise_errors: true)
         end
 
       assert_match(/InvalidParametersComponent initializer can't accept the parameter/, exception.message)
@@ -784,7 +807,7 @@ class RenderingTest < ViewComponent::TestCase
     with_new_cache do
       exception =
         assert_raises ViewComponent::ReservedParameterError do
-          InvalidNamedParametersComponent.compile(raise_errors: true)
+          InvalidNamedParametersComponent.__vc_compile(raise_errors: true)
         end
 
       assert_match(
@@ -792,17 +815,6 @@ class RenderingTest < ViewComponent::TestCase
         exception.message
       )
     end
-  end
-
-  def test_collection_component_with_trailing_comma_attr_reader
-    exception =
-      assert_raises ViewComponent::EmptyOrInvalidInitializerError do
-        render_inline(
-          ProductReaderOopsComponent.with_collection(["foo"])
-        )
-      end
-
-    assert_match(/ProductReaderOopsComponent initializer is empty or invalid/, exception.message)
   end
 
   def test_renders_component_using_rails_config
@@ -826,7 +838,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_inherited_inline_component_inherits_inline_method
     render_inline(InlineInheritedComponent.new)
 
-    assert_predicate InlineInheritedComponent, :compiled?
+    assert_predicate InlineInheritedComponent, :__vc_compiled?
     assert_selector("input[type='text'][name='name']")
   end
 
@@ -982,7 +994,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_multithread_render
     ViewComponent::CompileCache.cache.delete(MyComponent)
     Rails.env.stub :test?, true do
-      threads = 100.times.map do
+      threads = Array.new(100) do
         Thread.new do
           render_inline(MyComponent.new)
 
@@ -1015,7 +1027,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_inherited_component_renders_when_lazy_loading
     # Simulate lazy loading by manually removing the classes in question. This will completely
-    # undo the changes made by self.class.compile and friends, forcing a compile the next time
+    # undo the changes made by self.class.__vc_compile and friends, forcing a compile the next time
     # #render_template_for is called. This shouldn't be necessary except in the test environment,
     # since eager loading is turned on here.
     Object.send(:remove_const, :MyComponent) if defined?(MyComponent)
@@ -1095,20 +1107,6 @@ class RenderingTest < ViewComponent::TestCase
     refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
   end
 
-  def test_renders_objects_in_component_view_context
-    not_a_component = RendersNonComponent::NotAComponent.new
-    component = RendersNonComponent.new(not_a_component: not_a_component)
-
-    render_inline(component)
-
-    assert_selector "span", text: "I'm not a component"
-
-    assert(
-      not_a_component.render_in_view_context == component,
-      "Component-like object was not rendered in the parent component's view context"
-    )
-  end
-
   def test_renders_nested_collection
     items = %w[foo bar baz boo]
     render_inline(NestedCollectionWrapperComponent.new(items: items))
@@ -1167,11 +1165,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("script", text: "\n//<![CDATA[\n  \"alert('hello')\"\n\n//]]>\n", visible: :hidden)
   end
 
-  def test_use_helper
-    render_inline(UseHelpersComponent.new)
-    assert_selector ".helper__message", text: "Hello helper method"
-  end
-
   def test_inline_component_renders_without_trailing_whitespace
     without_template_annotations do
       render_inline(InlineTrailingWhitespaceComponent.new)
@@ -1180,83 +1173,25 @@ class RenderingTest < ViewComponent::TestCase
     refute @rendered_content =~ /\s+\z/, "Rendered component contains trailing whitespace"
   end
 
-  def test_use_helpers_macros
-    render_inline(UseHelpersMacroComponent.new)
-
-    assert_selector ".helper__message", text: "Hello helper method"
-  end
-
-  def test_use_helpers_macros_with_args
-    render_inline(UseHelpersMacroComponent.new)
-
-    assert_selector ".helper__args-message", text: "Hello macro helper method"
-  end
-
-  def test_use_helpers_macros_with_kwargs
-    render_inline(UseHelpersMacroComponent.new)
-
-    assert_selector ".helper__kwargs-message", text: "Hello macro kwargs helper method"
-  end
-
-  def test_use_helpers_with_block
-    render_inline(UseHelpersMacroComponent.new)
-
-    assert_selector ".helper__block-message", text: "Hello block helper method"
-  end
-
-  def test_use_helper_macros
-    render_inline(UseHelperMacroComponent.new)
-
-    assert_selector ".helper__message", text: "Hello helper method"
-  end
-
-  def test_use_helper_macros_with_args
-    render_inline(UseHelperMacroComponent.new)
-
-    assert_selector ".helper__args-message", text: "Hello macro helper method"
-  end
-
-  def test_use_helper_macros_with_kwargs
-    render_inline(UseHelperMacroComponent.new)
-
-    assert_selector ".helper__kwargs-message", text: "Hello macro kwargs helper method"
-  end
-
-  def test_use_helper_macros_with_block
-    render_inline(UseHelperMacroComponent.new)
-
-    assert_selector ".helper__block-message", text: "Hello block helper method"
-  end
-
-  def test_use_helper_macros_with_prefix
-    render_inline(UseHelperMacroComponent.new)
-
-    assert_selector ".helper__prefix-message", text: "Hello macro prefix helper method"
-  end
-
-  def test_use_helper_macros_with_named_prefix
-    render_inline(UseHelperMacroComponent.new)
-
-    assert_selector ".helper__prefix-message", text: "Hello macro named prefix helper method"
-  end
-
-  def test_use_helpers_macros_with_prefix
-    render_inline(UseHelpersMacroComponent.new)
-
-    assert_selector ".helper__prefix-message", text: "Hello macro prefix helper method"
-  end
-
-  def test_use_helpers_macros_with_named_prefix
-    render_inline(UseHelpersMacroComponent.new)
-
-    assert_selector ".helper__named-prefix-message", text: "Hello macro named prefix helper method"
-  end
-
   def test_with_format
     with_format(:json) do
       render_inline(MultipleFormatsComponent.new)
 
       assert_equal(rendered_json["hello"], "world")
+    end
+  end
+
+  def test_with_format_missing
+    with_format(:xml) do
+      exception =
+        assert_raises ViewComponent::MissingTemplateError do
+          render_inline(MultipleFormatsComponent.new)
+        end
+
+      assert_includes(
+        exception.message,
+        "No templates for MultipleFormatsComponent match the request"
+      )
     end
   end
 
@@ -1270,6 +1205,16 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(RequestParamComponent.new(request: "foo"))
 
     assert_text("foo")
+  end
+
+  def test_turbo_stream_format_custom_variant
+    with_format(:turbo_stream, :html) do
+      with_variant(:custom) do
+        render_inline(TurboStreamFormatComponent.new)
+
+        assert_text("Hi turbo stream custom!")
+      end
+    end
   end
 
   # In https://github.com/ViewComponent/view_component/issues/2187,
@@ -1287,6 +1232,14 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_current_template
+    component = CurrentTemplateComponent.new
+
+    render_inline(component)
+
+    assert(rendered_content.include?("current_template_component.html.erb"))
+  end
+
   class CustomView < ActionView::Base
     def hi
       "Hi!"
@@ -1300,7 +1253,7 @@ class RenderingTest < ViewComponent::TestCase
       #
       #   hi # raises: undefined method `hi' for #<GreetingComponent....
       #
-      helpers.hi
+      helpers.hi.html_safe
     end
   end
 
@@ -1308,5 +1261,54 @@ class RenderingTest < ViewComponent::TestCase
     custom_view = CustomView.with_empty_template_cache.with_view_paths []
 
     assert_includes("Hi!", custom_view.render(GreetingComponent.new))
+  end
+
+  def test_dry_initializer
+    render_inline(ItemComponent.with_collection([Product.new(name: "Radio clock")]))
+
+    assert_text("Radio clock")
+  end
+
+  class DynamicComponentBase < ViewComponent::Base
+    def setup_component(**attributes)
+      # This method is somewhat contrived, it's intended to mimic features available in the dry-initializer gem.
+      model_name = self.class.name.demodulize.delete_suffix("Component").underscore.to_sym
+      instance_variable_set(:"@#{model_name}", attributes[model_name])
+      define_singleton_method(model_name) { instance_variable_get(:"@#{model_name}") }
+    end
+  end
+
+  class OrderComponent < DynamicComponentBase
+    def initialize(**)
+      setup_component(**)
+    end
+
+    def call
+      "<div data-name='#{order.name}'><h1>#{order.name}</h1></div>".html_safe
+    end
+  end
+
+  class CustomerComponent < DynamicComponentBase
+    def initialize(...)
+      setup_component(...)
+    end
+
+    def call
+      "<div data-name='#{customer.name}'><h1>#{customer.name}</h1></div>".html_safe
+    end
+  end
+
+  def test_supports_components_with_argument_forwarding
+    customers = [Product.new(name: "Taylor"), Product.new(name: "Rowan")]
+    render_inline(CustomerComponent.with_collection(customers))
+    assert_selector("*[data-name='#{customers.first.name}']", text: customers.first.name)
+    assert_selector("*[data-name='#{customers.last.name}']", text: customers.last.name)
+  end
+
+  def test_supports_components_with_unnamed_splatted_arguments
+    orders = [Product.new(name: "O-2024-0004"), Product.new(name: "B-2024-0714")]
+    render_inline(OrderComponent.with_collection(orders))
+    assert_selector("*[data-name='#{orders.first.name}']", text: orders.first.name)
+    assert_selector("*[data-name='#{orders.last.name}']", text: orders.last.name)
   end
 end

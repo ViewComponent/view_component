@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "rails/generators/haml/component_generator"
+require "generators/view_component/haml/haml_generator"
 
 Rails.application.load_generators
 
 class HamlGeneratorTest < Rails::Generators::TestCase
-  tests Haml::Generators::ComponentGenerator
+  tests ViewComponent::Generators::HamlGenerator
   destination Dir.mktmpdir
   setup :prepare_destination
 
@@ -40,8 +40,8 @@ class HamlGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/admins/user_component/user_component.html.haml"
   end
 
-  def test_component_with_inline
-    run_generator %w[user name --inline]
+  def test_component_with_call
+    run_generator %w[user name --call]
 
     assert_no_file "app/components/user_component.html.haml"
   end

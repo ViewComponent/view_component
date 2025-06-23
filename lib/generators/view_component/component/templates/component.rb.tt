@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+<% module_namespacing do -%>
+class <%= class_name %><%= options[:skip_suffix] ? "" : "Component" %> < <%= parent_class %>
+<%- if inline_template? -%>
+  <%= template_engine %>_template <<~<%= template_engine.upcase %>
+    <h1>Hello, World!</h1>
+  <%= template_engine.upcase %>
+<%- end -%>
+<%- if initialize_signature? -%>
+  def initialize(<%= initialize_signature %>)
+    <%= initialize_body %>
+  end
+<%- end -%>
+<%- if initialize_call_method_for_inline? -%>
+  def call
+    content_tag :h1, "Hello world!"<%= ", data: { controller: \"#{stimulus_controller}\" }" if options["stimulus"] %>
+  end
+<%- end -%>
+end
+<% end -%>

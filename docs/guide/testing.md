@@ -42,6 +42,8 @@ RSpec.configure do |config|
   # ...
 
   config.include ViewComponent::TestHelpers, type: :component
+  config.include ViewComponent::SystemSpecHelpers, type: :feature
+  config.include ViewComponent::SystemSpecHelpers, type: :system
 end
 ```
 
@@ -169,10 +171,20 @@ end
 Since 2.27.0
 {: .label }
 
-Component tests assume the existence of an `ApplicationController` class, which can be configured globally using the `test_controller` option:
+Component tests assume the existence of an `ApplicationController` class. To set the controller for a test file, define `vc_test_controller_class`:
 
 ```ruby
-config.view_component.test_controller = "BaseController"
+class ExampleComponentTest < ViewComponent::TestCase
+  def vc_test_controller_class
+    PublicController
+  end
+
+  def test_component_in_public_controller
+    render_inline ExampleComponent.new
+
+    assert_text "foo"
+  end
+end
 ```
 
 To configure the controller used for a test case, use `with_controller_class` from `ViewComponent::TestHelpers`.
@@ -304,7 +316,7 @@ To use component previews:
 
 ```ruby
 # config/application.rb
-config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+config.view_component.previews.paths << "#{Rails.root}/spec/components/previews"
 ```
 
 ## Component system tests

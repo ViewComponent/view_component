@@ -29,7 +29,7 @@ Use the component generator to create a new ViewComponent.
 The generator accepts a component name and a list of arguments:
 
 ```console
-bin/rails generate component Example title
+bin/rails generate view_component:component Example title
 
       invoke  test_unit
       create  test/components/example_component_test.rb
@@ -92,7 +92,7 @@ def show
 end
 ```
 
-_Note: Content can't be passed to a component via a block in controllers. Instead, use `with_content`. In versions of Rails < 6.1, rendering a ViewComponent from a controller doesn't include the layout._
+_Note: Content can't be passed to a component via a block in controllers. Instead, use `with_content`._
 
 When using turbo frames with [turbo-rails](https://github.com/hotwired/turbo-rails), set `content_type` as `text/html`:
 

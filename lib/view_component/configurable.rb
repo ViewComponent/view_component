@@ -5,7 +5,7 @@ module ViewComponent
     extend ActiveSupport::Concern
 
     included do
-      next if respond_to?(:config) && config.respond_to?(:view_component) && config.respond_to_missing?(:test_controller)
+      next if respond_to?(:config) && config.respond_to?(:view_component) && config.respond_to_missing?(:instrumentation_enabled)
 
       include ActiveSupport::Configurable
 

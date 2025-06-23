@@ -17,6 +17,21 @@ class TranslatableTest < ViewComponent::TestCase
     assert_selector("p.global.nested", text: "This is coming from Rails")
   end
 
+  def test_isolated_translations_in_module
+    render_inline(ExampleModule::TranslatableModuleComponent.new)
+
+    assert_selector("p.sidecar.shared-key", text: "Hello from sidecar translations!")
+    assert_selector("p.sidecar.nested", text: "This is coming from the sidecar")
+    assert_selector("p.sidecar.missing", text: "This is coming from Rails")
+
+    assert_selector("p.helpers.shared-key", text: "Hello from Rails translations!")
+    assert_selector("p.helpers.nested", text: "This is coming from Rails")
+    assert_selector("p.helpers.relative", text: "Relative key from Rails for module")
+
+    assert_selector("p.global.shared-key", text: "Hello from Rails translations!")
+    assert_selector("p.global.nested", text: "This is coming from Rails")
+  end
+
   def test_multi_key_support
     assert_equal(
       [
@@ -95,7 +110,7 @@ class TranslatableTest < ViewComponent::TestCase
     ) do
       assert_equal "MISSING", translate(".hello", default: "MISSING")
       assert_equal "Hello from Rails translations!", translate("hello")
-      assert_nil TranslatableComponent.i18n_backend
+      assert_nil TranslatableComponent.__vc_i18n_backend
     end
   ensure
     ViewComponent::CompileCache.invalidate_class!(TranslatableComponent)
@@ -169,6 +184,9 @@ class TranslatableTest < ViewComponent::TestCase
   def translate(key, **options)
     component = TranslatableComponent.new
     render_inline(component)
+    component
+      .instance_variable_get(:@view_context)
+      .instance_variable_set(:@virtual_path, component.virtual_path)
     component.translate(key, **options)
   end
 end

@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "rails/generators/test_case"
-require "rails/generators/tailwindcss/component_generator"
+require "generators/view_component/tailwindcss/tailwindcss_generator"
 
 Rails.application.load_generators
 
 class TailwindcssGeneratorTest < Rails::Generators::TestCase
-  tests Tailwindcss::Generators::ComponentGenerator
+  tests ViewComponent::Generators::TailwindcssGenerator
   destination Dir.mktmpdir
   setup :prepare_destination
 
@@ -41,8 +40,8 @@ class TailwindcssGeneratorTest < Rails::Generators::TestCase
     assert_file "app/components/admins/user_component/user_component.html.erb"
   end
 
-  def test_component_with_inline
-    run_generator %w[user name --inline]
+  def test_component_with_call
+    run_generator %w[user name --call]
 
     assert_no_file "app/components/user_component.html.erb"
   end

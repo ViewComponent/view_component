@@ -2,15 +2,6 @@
 
 require "simplecov"
 require "simplecov-console"
-require "rails/version"
-
-if ENV["MEASURE_COVERAGE"]
-  SimpleCov.start do
-    command_name "minitest-rails-engine#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
-
-    formatter SimpleCov::Formatter::Console
-  end
-end
 
 require "bundler/setup"
 require "minitest/autorun"
@@ -30,6 +21,10 @@ ensure
   config_entrypoint.public_send(:"#{option_name}=", old_value)
 end
 
-def with_preview_paths(new_value, &block)
-  with_config_option(:preview_paths, new_value, &block)
+def with_preview_paths(new_value, config_entrypoint: TestEngine::Engine.config.view_component, &block)
+  old_value = config_entrypoint.previews.paths
+  config_entrypoint.previews.paths = new_value
+  yield
+ensure
+  config_entrypoint.previews.paths = old_value
 end

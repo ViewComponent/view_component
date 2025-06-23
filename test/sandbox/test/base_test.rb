@@ -89,7 +89,6 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   end
 
   def test_does_not_render_additional_newline_with_render_in
-    skip unless Rails::VERSION::MAJOR >= 7
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
       rendered_output = Array.new(2) {
@@ -98,7 +97,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
       assert_includes rendered_output, "<span>Hello, world!</span><span>Hello, world!</span>"
     end
   ensure
-    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false if Rails::VERSION::MAJOR >= 7
+    ActionView::Template::Handlers::ERB.strip_trailing_newlines = false
   end
 
   def test_evaled_component
@@ -158,7 +157,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     include ViewComponent::Configurable
 
     configure do |config|
-      config.view_component.test_controller = "AnotherController"
+      config.view_component.instrumentation_enabled = false
     end
 
     class SomeComponent < ViewComponent::Base
@@ -170,7 +169,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     include ViewComponent::Configurable
 
     configure do |config|
-      config.view_component.test_controller = "AnotherController"
+      config.view_component.instrumentation_enabled = false
     end
 
     class SomeComponent < ViewComponent::Base
@@ -181,7 +180,7 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     include ActiveSupport::Configurable
 
     configure do |config|
-      config.view_component = ActiveSupport::InheritableOptions[test_controller: "AnotherController"]
+      config.view_component = ActiveSupport::InheritableOptions[instrumentation_enabled: false]
     end
 
     include ViewComponent::Configurable
@@ -191,10 +190,9 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   end
 
   def test_uses_module_configuration
-    # We override this ourselves in test/sandbox/config/environments/test.rb.
-    assert_equal "IntegrationExamplesController", TestModuleWithoutConfig::SomeComponent.test_controller
-    assert_equal "AnotherController", TestModuleWithConfig::SomeComponent.test_controller
-    assert_equal "AnotherController", TestAlreadyConfigurableModule::SomeComponent.test_controller
-    assert_equal "AnotherController", TestAlreadyConfiguredModule::SomeComponent.test_controller
+    assert_equal true, TestModuleWithoutConfig::SomeComponent.instrumentation_enabled
+    assert_equal false, TestModuleWithConfig::SomeComponent.instrumentation_enabled
+    assert_equal false, TestAlreadyConfigurableModule::SomeComponent.instrumentation_enabled
+    assert_equal false, TestAlreadyConfiguredModule::SomeComponent.instrumentation_enabled
   end
 end

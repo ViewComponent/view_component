@@ -2,8 +2,14 @@
 
 require "bundler/gem_tasks"
 require "rake/testtask"
+require "rspec/core/rake_task"
 require "yard"
 require "yard/mattr_accessor_handler"
+require "rails/version"
+require "simplecov"
+require "simplecov-console"
+
+RSpec::Core::RakeTask.new(:spec)
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
@@ -15,18 +21,6 @@ Rake::TestTask.new(:engine_test) do |t|
   t.libs << "test/test_engine"
   t.libs << "test/test_engine/lib"
   t.test_files = FileList["test/test_engine/**/*_test.rb"]
-end
-
-Rake::TestTask.new(:docs_test) do |t|
-  t.libs << "test"
-  t.libs << "lib"
-  t.test_files = FileList["test/docs/*_test.rb"]
-end
-
-begin
-  require "rspec/core/rake_task"
-  RSpec::Core::RakeTask.new(:spec)
-rescue LoadError
 end
 
 desc "Runs benchmarks against components"
@@ -60,17 +54,12 @@ namespace :coverage do
 end
 
 namespace :docs do
-  # Build api.md documentation page from YARD comments.
   task :build do
     YARD::Rake::YardocTask.new do |t|
-      t.options = ["--no-output"]
+      t.options = ["--no-output", "-q"]
     end
 
-    puts "Building YARD documentation."
-
     Rake::Task["yard"].execute
-
-    puts "Converting YARD documentation to Markdown files."
 
     registry = YARD::RegistryStore.new
     registry.load!(".yardoc")
@@ -101,7 +90,6 @@ namespace :docs do
     require "rails"
     require "action_controller"
     require "view_component"
-    ViewComponent::Base.config.view_component_path = "docs"
     require "docs/docs_builder_component"
 
     error_keys = registry.keys.select { |key| key.to_s.include?("Error::MESSAGE") }.map(&:to_s)
@@ -142,4 +130,20 @@ namespace :docs do
   end
 end
 
-task default: [:docs_test, :test, :engine_test, :spec]
+task :all_tests do
+  ENV["RAILS_ENV"] = "test"
+
+  if ENV["MEASURE_COVERAGE"]
+    SimpleCov.start do
+      command_name "rails#{Rails::VERSION::STRING}-ruby#{RUBY_VERSION}"
+      enable_coverage :branch
+      formatter SimpleCov::Formatter::Console
+    end
+  end
+
+  Rake::Task["test"].invoke
+  Rake::Task["engine_test"].invoke
+  Rake::Task["spec"].invoke
+end
+
+task default: [:all_tests]

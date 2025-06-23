@@ -1,0 +1,13 @@
+<%= content_tag("turbo-frame", id: "test-frame") do %>
+  <% if show_form %>
+    <%= form_tag("/submit", method: :post, data: {turbo_frame: "test-frame"}) do %>
+      <div>
+        <h2><%= @message %></h2>
+        <%= text_field_tag("user_message", "", value: "Test message", autocomplete: "off") %>
+        <%= submit_tag("Submit", id: "submit") %>
+      </div>
+    <% end %>
+  <% else %>
+    <%= content_tag(:div, @message, id: "result") %>
+  <% end %>
+<% end %>

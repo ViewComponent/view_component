@@ -80,7 +80,7 @@ app/components
 To generate a component with a sidecar directory, use the `--sidecar` flag:
 
 ```console
-bin/rails generate component Example title --sidecar
+bin/rails generate view_component:component Example title --sidecar
   invoke  test_unit
   create  test/components/example_component_test.rb
   create  app/components/example_component.rb
