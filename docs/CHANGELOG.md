@@ -18,7 +18,7 @@ nav_order: 6
 
     *Meyric Rawlings*, *Joel Hawksley*
 
-* Fix bug where virtual path was not reset, breaking translations outside of components.
+* Fix bug where virtual path wasn't reset, breaking translations outside of components.
 
     *Alex Coles*, *Joel Hawksley*
 
