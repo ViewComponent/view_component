@@ -27,6 +27,7 @@ Please report any issues at https://github.com/ViewComponent/view_component/issu
 * Remove `use_deprecated_instrumentation_name` configuration option. Events will always use `render.view_component` name.
 * Remove unnecessary `#format` methods that returned `nil`.
 * Remove support for variant names containing `.` to be consistent with Rails.
+* Rename internal methods to have `__vc_` prefix if they shouldn't be used by consumers. Make internal constants private. Make `Collection#components`, `Slotable#register_polymorphic_slot` private. Remove unused `ComponentError` class.
 * Use ActionView's `lookup_context` for picking templates instead of the request format.
 
   3.15 added support for using templates that match the request format, i.e. if `/resource.csv` is requested then
@@ -36,7 +37,6 @@ Please report any issues at https://github.com/ViewComponent/view_component/issu
 
 ### Breaking changes (dev/test)
 
-* Rename internal methods to have `__vc_` prefix if they shouldn't be used by consumers. Make internal constants private. Make `Collection#components`, `Slotable#register_polymorphic_slot` private. Remove unused `ComponentError` class.
 * Rename `config.generate.component_parent_class` to `config.generate.parent_class`.
 * Remove `config.test_controller` in favor of `vc_test_controller_class` test helper method.
 * `config.component_parent_class` is now `config.generate.component_parent_class`, moving the generator-specific option to the generator configuration namespace.
