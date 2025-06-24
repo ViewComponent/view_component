@@ -24,6 +24,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select("div", "Foo bar")
   end
 
+  def test_rendering_component_in_a_controller_layout_behavior
+    get "/controller_inline"
+    assert_select("div", "bar")
+    assert_response :success
+
+    assert_includes(response.body, "<body")
+  end
+
   def test_rendering_component_in_a_controller
     get "/controller_inline_baseline"
 
