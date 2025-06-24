@@ -3,6 +3,7 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "view_component/version"
+require "fileutils"
 
 Gem::Specification.new do |spec|
   spec.name = "view_component"
