@@ -14,13 +14,13 @@ RSpec::Core::RakeTask.new(:spec)
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
-  t.test_files = FileList["test/sandbox/**/*_test.rb", "test/view_component/**/*_test.rb"]
+  t.test_files = FileList["test/**/*_test.rb"]
 end
 
 Rake::TestTask.new(:engine_test) do |t|
-  t.libs << "test/test_engine"
-  t.libs << "test/test_engine/lib"
-  t.test_files = FileList["test/test_engine/**/*_test.rb"]
+  t.libs << "test_engine"
+  t.libs << "test_engine/lib"
+  t.test_files = FileList["test_engine/**/*_test.rb"]
 end
 
 desc "Runs benchmarks against components"
