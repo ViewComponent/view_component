@@ -60,6 +60,7 @@ update_gemfiles() {
 }
 
 build_docs() {
+  ruby script/sync_contributors.rb
   bundle exec rake docs:build
 }
 
