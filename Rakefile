@@ -141,8 +141,15 @@ task :all_tests do
     end
   end
 
+  puts "Running Minitests"
   Rake::Task["test"].invoke
+  puts
+  puts
+  puts "Running Minitests for Rails Engine compatibility"
   Rake::Task["engine_test"].invoke
+  puts
+  puts
+  puts "Running RSpecs"
   Rake::Task["spec"].invoke
 end
 
