@@ -101,10 +101,10 @@ ViewComponents are Ruby objects, making it easy to follow (and enforce) code qua
 
 ## Contributors
 
-ViewComponent is built by over a hundred members of the community, including:
+Hundreds of people have [contributed](https://github.com/ViewComponent/view_component/graphs/contributors) to ViewComponent, including:
 
-<img src="https://avatars.githubusercontent.com/nickcoyne?s=64" alt="nickcoyne" width="32" />
-<img src="https://avatars.githubusercontent.com/nachiket87?s=64" alt="nachiket87" width="32" />
+<img src="https://avatars.githubusercontent.com/aduth?s=64" alt="aduth" width="32" />
+<img src="https://avatars.githubusercontent.com/allan-pires?s=64" alt="allan-pires" width="32" />
 <img src="https://avatars.githubusercontent.com/andrewjtait?s=64" alt="andrewjtait" width="32" />
 <img src="https://avatars.githubusercontent.com/asgerb?s=64" alt="asgerb" width="32" />
 <img src="https://avatars.githubusercontent.com/bbugh?s=64" alt="bbugh" width="32" />
@@ -115,6 +115,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/bpo?s=64" alt="bpo" width="32" />
 <img src="https://avatars.githubusercontent.com/bradparker?s=64" alt="bradparker" width="32" />
 <img src="https://avatars.githubusercontent.com/cesariouy?s=64" alt="cesariouy" width="32" />
+<img src="https://avatars.githubusercontent.com/chloe-meister" alt="chloe-meister" width="32" />
 <img src="https://avatars.githubusercontent.com/cover?s=64" alt="cover" width="32" />
 <img src="https://avatars.githubusercontent.com/cpjmcquillan?s=64" alt="cpjmcquillan" width="32" />
 <img src="https://avatars.githubusercontent.com/crookedgrin?s=64" alt="crookedgrin" width="32" />
@@ -122,6 +123,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/dani-sc?s=64" alt="dani-sc" width="32" />
 <img src="https://avatars.githubusercontent.com/danieldiekmeier?s=64" alt="danieldiekmeier" width="32" />
 <img src="https://avatars.githubusercontent.com/danielnc?s=64" alt="danielnc" width="32" />
+<img src="https://avatars.githubusercontent.com/danigonza?s=64" alt="danigonza" width="32" />
 <img src="https://avatars.githubusercontent.com/dark-panda?s=64" alt="dark-panda" width="32" />
 <img src="https://avatars.githubusercontent.com/davekaro?s=64" alt="davekaro" width="32" />
 <img src="https://avatars.githubusercontent.com/dixpac?s=64" alt="dixpac" width="32" />
@@ -130,6 +132,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/dylnclrk?s=64" alt="dylnclrk" width="32" />
 <img src="https://avatars.githubusercontent.com/edwinthinks?s=64" alt="edwinthinks" width="32" />
 <img src="https://avatars.githubusercontent.com/elia?s=64" alt="elia" width="32" />
+<img src="https://avatars.githubusercontent.com/erinnachen?s=64" alt="erinnachen" width="32" />
 <img src="https://avatars.githubusercontent.com/franco?s=64" alt="franco" width="32" />
 <img src="https://avatars.githubusercontent.com/franks921?s=64" alt="franks921" width="32" />
 <img src="https://avatars.githubusercontent.com/franzliedke?s=64" alt="franzliedke" width="32" />
@@ -138,8 +141,11 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/g13ydson?s=64" alt="g13ydson" width="32" />
 <img src="https://avatars.githubusercontent.com/horacio?s=64" alt="horacio" width="32" />
 <img src="https://avatars.githubusercontent.com/horiaradu?s=64" alt="horiaradu" width="32" />
+<img src="https://avatars.githubusercontent.com/htcarr3?s=64" alt="htcarr3" width="32" />
+<img src="https://avatars.githubusercontent.com/ihollander?s=64" alt="ihollander" width="32" />
 <img src="https://avatars.githubusercontent.com/jacob-carlborg-apoex?s=64" alt="yykamei" width="32" />
 <img src="https://avatars.githubusercontent.com/jaredcwhite?s=64" alt="jaredcwhite" width="32" />
+<img src="https://avatars.githubusercontent.com/jasonkim?s=64" alt="jasonkim" width="32" />
 <img src="https://avatars.githubusercontent.com/jasonswett?s=64" alt="jasonswett" width="32" />
 <img src="https://avatars.githubusercontent.com/javierm?s=64" alt="javierm" width="32" />
 <img src="https://avatars.githubusercontent.com/jcoyne?s=64" alt="jcoyne" width="32" />
@@ -151,11 +157,13 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/jules2689?s=64" alt="jules2689" width="32" />
 <img src="https://avatars.githubusercontent.com/jwshuff?s=64" alt="jwshuff" width="32" />
 <img src="https://avatars.githubusercontent.com/kaspermeyer?s=64" alt="kaspermeyer" width="32" />
-<img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
+<img src="https://avatars.githubusercontent.com/kawakamimoeki" alt="kawakamimoeki" width="32" />
 <img src="https://avatars.githubusercontent.com/kdonovan?s=64" alt="kdonovan" width="32" />
+<img src="https://avatars.githubusercontent.com/kylefox?s=64" alt="kylefox" width="32" />
 <img src="https://avatars.githubusercontent.com/leighhalliday?s=64" alt="leighhalliday" width="32" />
 <img src="https://avatars.githubusercontent.com/llenk?s=64" alt="llenk" width="32" />
 <img src="https://avatars.githubusercontent.com/manuelpuyol?s=64" alt="manuelpuyol" width="32" />
+<img src="https://avatars.githubusercontent.com/matheuspolicamilo?s=64" alt="matheuspolicamilo" width="32" />
 <img src="https://avatars.githubusercontent.com/matheusrich?s=64" alt="matheusrich" width="32" />
 <img src="https://avatars.githubusercontent.com/matt-yorkley?s=64" alt="Matt-Yorkley" width="32" />
 <img src="https://avatars.githubusercontent.com/mattbrictson?s=64" alt="mattbrictson" width="32" />
@@ -164,9 +172,14 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/mellowfish?s=64" alt="mellowfish" width="32" />
 <img src="https://avatars.githubusercontent.com/metade?s=64" alt="metade" width="32" />
 <img src="https://avatars.githubusercontent.com/michaelem?s=64" alt="michaelem" width="32" />
+<img src="https://avatars.githubusercontent.com/milk1000cc?s=64" alt="milk1000cc" width="32" />
 <img src="https://avatars.githubusercontent.com/mixergtz?s=64" alt="mixergtz" width="32" />
 <img src="https://avatars.githubusercontent.com/mrrooijen?s=64" alt="mrrooijen" width="32" />
+<img src="https://avatars.githubusercontent.com/nachiket87?s=64" alt="nachiket87" width="32" />
 <img src="https://avatars.githubusercontent.com/nashby?s=64" alt="nashby" width="32" />
+<img src="https://avatars.githubusercontent.com/neanias?s=64" alt="neanias" width="32" />
+<img src="https://avatars.githubusercontent.com/nickcoyne?s=64" alt="nickcoyne" width="32" />
+<img src="https://avatars.githubusercontent.com/nickmalcolm?s=64" alt="nickmalcolm" width="32" />
 <img src="https://avatars.githubusercontent.com/nicolas-brousse?s=64" alt="nicolas-brousse" width="32" />
 <img src="https://avatars.githubusercontent.com/nielsslot?s=64" alt="nshki" width="32" />
 <img src="https://avatars.githubusercontent.com/nshki?s=64" alt="nshki" width="32" />
@@ -175,6 +188,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/patrickarnett?s=64" alt="patrickarnett" width="32" />
 <img src="https://avatars.githubusercontent.com/rainerborene?s=64" alt="rainerborene" width="32" />
 <img src="https://avatars.githubusercontent.com/rdavid1099?s=64" alt="rdavid1099" width="32" />
+<img src="https://avatars.githubusercontent.com/reeganviljoen?s=64" alt="reeganviljoen" width="32" />
 <img src="https://avatars.githubusercontent.com/richardmarbach?s=64" alt="richardmarbach" width="32" />
 <img src="https://avatars.githubusercontent.com/rmacklin?s=64" alt="rmacklin" width="32" />
 <img src="https://avatars.githubusercontent.com/ryogift?s=64" alt="ryogift" width="32" />
@@ -188,12 +202,15 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/spdawson?s=64" alt="spdawson" width="32" />
 <img src="https://avatars.githubusercontent.com/spone?s=64" alt="Spone" width="32" />
 <img src="https://avatars.githubusercontent.com/stiig?s=64" alt="stiig" width="32" />
+<img src="https://avatars.githubusercontent.com/svetlins?s=64" alt="svetlins" width="32" />
 <img src="https://avatars.githubusercontent.com/swanson?s=64" alt="swanson" width="32" />
 <img src="https://avatars.githubusercontent.com/tbroad-ramsey?s=64" alt="tbroad-ramsey" width="32" />
 <img src="https://avatars.githubusercontent.com/tclem?s=64" alt="tclem" width="32" />
 <img src="https://avatars.githubusercontent.com/tenderlove?s=64" alt="tenderlove" width="32" />
 <img src="https://avatars.githubusercontent.com/tgaff?s=64" alt="tgaff" width="32" />
+<img src="https://avatars.githubusercontent.com/thomascchen?s=64" alt="thomascchen" width="32" />
 <img src="https://avatars.githubusercontent.com/thutterer?s=64" alt="thutterer" width="32" />
+<img src="https://avatars.githubusercontent.com/tkowalewski" alt="tkowalewski" width="32" />
 <img src="https://avatars.githubusercontent.com/tonkpils?s=64" alt="tonkpils" width="32" />
 <img src="https://avatars.githubusercontent.com/traels?s=64" alt="traels" width="32" />
 <img src="https://avatars.githubusercontent.com/vinistock?s=64" alt="vinistock" width="32" />
@@ -202,24 +219,7 @@ ViewComponent is built by over a hundred members of the community, including:
 <img src="https://avatars.githubusercontent.com/xkraty?s=64" alt="xkraty" width="32" />
 <img src="https://avatars.githubusercontent.com/xronos-i-am?s=64" alt="xronos-i-am" width="32" />
 <img src="https://avatars.githubusercontent.com/yykamei?s=64" alt="yykamei" width="32" />
-<img src="https://avatars.githubusercontent.com/matheuspolicamilo?s=64" alt="matheuspolicamilo" width="32" />
-<img src="https://avatars.githubusercontent.com/danigonza?s=64" alt="danigonza" width="32" />
-<img src="https://avatars.githubusercontent.com/erinnachen?s=64" alt="erinnachen" width="32" />
-<img src="https://avatars.githubusercontent.com/ihollander?s=64" alt="ihollander" width="32" />
-<img src="https://avatars.githubusercontent.com/svetlins?s=64" alt="svetlins" width="32" />
-<img src="https://avatars.githubusercontent.com/nickmalcolm?s=64" alt="nickmalcolm" width="32" />
-<img src="https://avatars.githubusercontent.com/reeganviljoen?s=64" alt="reeganviljoen" width="32" />
-<img src="https://avatars.githubusercontent.com/thomascchen?s=64" alt="thomascchen" width="32" />
-<img src="https://avatars.githubusercontent.com/milk1000cc?s=64" alt="milk1000cc" width="32" />
-<img src="https://avatars.githubusercontent.com/aduth?s=64" alt="aduth" width="32" />
-<img src="https://avatars.githubusercontent.com/htcarr3?s=64" alt="htcarr3" width="32" />
-<img src="https://avatars.githubusercontent.com/neanias?s=64" alt="neanias" width="32" />
-<img src="https://avatars.githubusercontent.com/allan-pires?s=64" alt="allan-pires" width="32" />
-<img src="https://avatars.githubusercontent.com/jasonkim?s=64" alt="jasonkim" width="32" />
-<img src="https://avatars.githubusercontent.com/tkowalewski" alt="tkowalewski" width="32" />
-<img src="https://avatars.githubusercontent.com/chloe-meister" alt="chloe-meister" width="32" />
 <img src="https://avatars.githubusercontent.com/zaratan" alt="zaratan" width="32" />
-<img src="https://avatars.githubusercontent.com/kawakamimoeki" alt="kawakamimoeki" width="32" />
 
 ## Who uses ViewComponent?
 
