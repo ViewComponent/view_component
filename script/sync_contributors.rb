@@ -50,7 +50,7 @@ def transform_contributors(contributors)
     contributor["login"]
   end.sort
 
-  { "usernames" => usernames }
+  {"usernames" => usernames}
 end
 
 # Write contributors data to YAML file
@@ -62,7 +62,7 @@ def write_contributors_yaml(data)
 
   File.write(output_path, data.to_yaml)
   puts "Contributors synced to #{output_path}"
-  puts "Found #{data['usernames'].length} contributors"
+  puts "Found #{data["usernames"].length} contributors"
 end
 
 # Main execution
