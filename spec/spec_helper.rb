@@ -12,7 +12,7 @@ ENV["RAILS_ENV"] = "test"
 require "view_component/deprecation"
 ViewComponent::Deprecation.behavior = :silence
 
-require File.expand_path("../sandbox/config/environment.rb", __FILE__)
+require File.expand_path("../../test/sandbox/config/environment.rb", __FILE__)
 require "rspec/rails"
 
 require "capybara/cuprite"
