@@ -67,6 +67,7 @@ _Is this page missing a link? Open a PR!_
 - [ViewComponent in the Wild I: building modern Rails frontends](https://evilmartians.com/chronicles/viewcomponent-in-the-wild-building-modern-rails-frontends)
 - [ViewComponent in the Wild II: supercharging your components](https://evilmartians.com/chronicles/viewcomponent-in-the-wild-supercharging-your-components)
 - [Quicktips for ViewComponent with Tailwind CSS/Hotwire](https://railsdesigner.com/viewcomponents-and-tailwindcss/)
+- [Scoped CSS in Ruby](https://blog.mrloop.com/ruby/rails/css/viewcomponent/2025/06/07/scoped-css-in-ruby)
 
 ## Etcetera
 
