@@ -22,11 +22,12 @@ nav_order: 6
 
     class SpecialButtonComponent < ButtonComponent
       renders_many :leading_items, types: {
-        svg: SvgComponent,
         checkbox: CheckboxComponent
       }
     end
     ```
+
+    Where `SpecialButtonComponent` will accept `with_leading_item_icon`, `with_leading_item_svg`, and `with_leading_item_checkbox`.
 
 ## 4.0.0.rc1
 

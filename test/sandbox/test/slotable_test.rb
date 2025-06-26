@@ -638,9 +638,12 @@ class SlotableTest < ViewComponent::TestCase
 
   def test_subclass_can_redefine_slot
     render_inline(SlotsSubclassComponent.new(classes: "mt-4")) do |component|
+      # overridden in subclass
       component.with_title do
         "This is my title!"
       end
+
+      # defined in parent class
       component.with_subtitle do
         "This is my subtitle!"
       end
@@ -648,6 +651,21 @@ class SlotableTest < ViewComponent::TestCase
 
     assert_selector("h1", text: "This is my title!")
     assert_selector(".subtitle", text: "This is my subtitle!")
+  end
+
+  def test_subclass_can_redefine_polymorphic_slot_entirely
+    render_inline(PolymorphicSlotSubclassComponent.new) do |component|
+      # Overridden in subclass
+      component.with_header_my { "mine" }
+
+      # defined in parent class
+      component.with_foo_field(class_names: "custom-foo1")
+      component.with_item_bar(class_names: "custom-bar2")
+    end
+
+    assert_selector("div .my", text: "mine")
+    assert_selector("div .foo.custom-foo1")
+    assert_selector("div .bar.custom-bar2")
   end
 
   def test_lambda_slot_content_can_be_provided_via_a_block
