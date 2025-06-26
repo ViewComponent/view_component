@@ -1,34 +1,5 @@
 ---
 usernames:
-- AMHOL
-- AndreyAzimov
-- BigBigDoudou
-- BlakeWilliams
-- BoberMod
-- CarpenterJoseph
-- CrookedGrin
-- DRBragg
-- DanceParty
-- HParker
-- Hirurg103
-- JWShuff
-- JoGetBlock
-- KonnorRogers
-- Lyams
-- MatheusPoliCamilo
-- MatheusRich
-- Matt-Yorkley
-- MikeMcQuaid
-- PositiveControl
-- RicardoTrindade
-- RubenSmit
-- SalazarJosh
-- SebastjanPrachovskij
-- Spone
-- TastyPi
-- Tonkpils
-- WaKeMaTTa
-- Zeneixe
 - adillari
 - adrianthedev
 - aduth
@@ -36,8 +7,10 @@ usernames:
 - allan-pires
 - allmarkedup
 - alvincrespo
+- amhol
 - andrewjtait
 - andrewmcodes
+- andreyazimov
 - asgerb
 - avinoth
 - ayushn21
@@ -47,8 +20,11 @@ usernames:
 - being-frank
 - berniechiu
 - betogrun
+- bigbigdoudou
 - biow0lf
+- blakewilliams
 - boardfish
+- bobermod
 - bobmaerten
 - boof
 - bpo
@@ -60,6 +36,7 @@ usernames:
 - buraga-dmitrii
 - caifara
 - camertron
+- carpenterjoseph
 - ceritium
 - cheshire137
 - chloe-meister
@@ -67,8 +44,10 @@ usernames:
 - cllns
 - compostbrain
 - cover
+- crookedgrin
 - cyupa
 - czj
+- danceparty
 - dani-sc
 - danieldiekmeier
 - danielnc
@@ -82,6 +61,7 @@ usernames:
 - dlinch
 - donapieppo
 - dpaola2
+- drbragg
 - dukex
 - dvisockas
 - dylanatsmith
@@ -111,9 +91,11 @@ usernames:
 - hachi8833
 - halo
 - henrikbjorn
+- hirurg103
 - hjhart
 - horacio
 - horiaradu
+- hparker
 - htcarr3
 - igor-drozdov
 - ihollander
@@ -124,10 +106,11 @@ usernames:
 - javierav
 - javierm
 - jcoyne
-- jdelStrother
+- jdelstrother
 - jdennes
 - jess
 - joelhawksley
+- jogetblock
 - johannesengl
 - jonrohan
 - jonspalmer
@@ -136,6 +119,7 @@ usernames:
 - joshuaclayton
 - jpbalarini
 - juanmanuelramallo
+- jwshuff
 - jyunderwood
 - kalashnikovisme
 - kanejamison
@@ -145,6 +129,7 @@ usernames:
 - kengos
 - kenyonj
 - khiga8
+- konnorrogers
 - krazylegz
 - kulturbande
 - kylefox
@@ -155,10 +140,14 @@ usernames:
 - llenk
 - luccastera
 - lxxxvi
+- lyams
 - mamhoff
 - manuelpuyol
 - marckohlbrugge
 - marcoroth
+- matheuspolicamilo
+- matheusrich
+- matt-yorkley
 - mattbearman
 - mattbrictson
 - matthewlehner
@@ -172,6 +161,7 @@ usernames:
 - metade
 - mhw
 - michaelem
+- mikemcquaid
 - mikepmunroe
 - milk1000cc
 - mitchellhenke
@@ -187,7 +177,7 @@ usernames:
 - myabc
 - nachiket87
 - nashby
-- natashaU
+- natashau
 - ncsmith24
 - neanias
 - nickcoyne
@@ -202,7 +192,7 @@ usernames:
 - otorain
 - ozydingo
 - p8
-- pacMakaveli
+- pacmakaveli
 - palkan
 - patrickarnett
 - paul
@@ -214,6 +204,7 @@ usernames:
 - phacks
 - phil-janeapp
 - porbas
+- positivecontrol
 - pouretrebelle
 - progapandist
 - rainerborene
@@ -221,16 +212,20 @@ usernames:
 - rdkulp
 - reedrolemodel
 - reeganviljoen
+- ricardotrindade
 - richardmarbach
 - rickychilcott
 - rmacklin
 - romaricpascal
+- rubensmit
 - rylanb
 - ryogift
 - sahglie
+- salazarjosh
 - sammyhenningsson
 - sampart
 - seanpdoyle
+- sebastjanprachovskij
 - sethherr
 - sfnelson
 - simonrand
@@ -238,6 +233,7 @@ usernames:
 - smashwilson
 - sn3p
 - spdawson
+- spone
 - srt32
 - steveclarke
 - stiig
@@ -246,6 +242,7 @@ usernames:
 - swanson
 - talltorp
 - talum
+- tastypi
 - tclem
 - tdak
 - tgaff
@@ -256,6 +253,7 @@ usernames:
 - tmbv93
 - tmecklem
 - tomasc
+- tonkpils
 - traels
 - triskweline
 - tysongach
@@ -263,6 +261,7 @@ usernames:
 - varyform
 - vinistock
 - vsppedro
+- wakematta
 - websebdev
 - willcosgrove
 - wooly
@@ -275,4 +274,5 @@ usernames:
 - yshmarov
 - yykamei
 - zaratan
+- zeneixe
 - zspencer

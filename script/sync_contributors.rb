@@ -47,7 +47,7 @@ end
 # Transform contributors data for YAML output
 def transform_contributors(contributors)
   usernames = contributors.map do |contributor|
-    contributor["login"]
+    contributor["login"].downcase
   end.sort
 
   {"usernames" => usernames}
