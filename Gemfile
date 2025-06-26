@@ -30,7 +30,7 @@ group :development, :test do
   gem "rake", "~> 13"
   gem "rails-dom-testing", "~> 2.3.0"
   gem "redis"
-  gem "rspec-rails", "~> 7"
+  gem "rspec-rails", "~> 8"
   gem "rubocop-md", "~> 2"
   gem "selenium-webdriver", "~> 4"
   gem "simplecov-console", "< 1"
