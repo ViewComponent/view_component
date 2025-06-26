@@ -38,8 +38,6 @@ class SlotableTest < ViewComponent::TestCase
 
     assert_selector(".title", text: "This is my title!")
 
-    assert_selector(".subtitle", text: "This is my subtitle!")
-
     assert_selector(".tab", text: "Tab A")
     assert_selector(".tab", text: "Tab B")
 
@@ -135,15 +133,6 @@ class SlotableTest < ViewComponent::TestCase
         component.with_foo { "Hello!" }
       end
     end
-  end
-
-  def test_sub_component_raise_with_duplicate_slot_name
-    exception =
-      assert_raises ViewComponent::RedefinedSlotError do
-        SlotsComponent.renders_one :title
-      end
-
-    assert_includes exception.message, "declares the title slot multiple times"
   end
 
   def test_sub_component_with_positional_args
@@ -647,6 +636,20 @@ class SlotableTest < ViewComponent::TestCase
     assert_equal 1, PartialHelper::State.calls
   end
 
+  def test_subclass_can_redefine_slot
+    render_inline(SlotsSubclassComponent.new(classes: "mt-4")) do |component|
+      component.with_title do
+        "This is my title!"
+      end
+      component.with_subtitle do
+        "This is my subtitle!"
+      end
+    end
+
+    assert_selector("h1", text: "This is my title!")
+    assert_selector(".subtitle", text: "This is my subtitle!")
+  end
+
   def test_lambda_slot_content_can_be_provided_via_a_block
     render_inline LambdaSlotComponent.new do |component|
       component.with_header(classes: "some-class") do
@@ -655,28 +658,6 @@ class SlotableTest < ViewComponent::TestCase
     end
 
     assert_selector("h1.some-class", text: "This is a header!")
-  end
-
-  def test_raises_error_on_conflicting_slot_names
-    error = assert_raises ViewComponent::RedefinedSlotError do
-      Class.new(ViewComponent::Base) do
-        renders_one :conflicting_item
-        renders_many :conflicting_items
-      end
-    end
-
-    assert_includes error.message, "conflicting_item slot multiple times"
-  end
-
-  def test_raises_error_on_conflicting_slot_names_in_reverse_order
-    error = assert_raises ViewComponent::RedefinedSlotError do
-      Class.new(ViewComponent::Base) do
-        renders_many :conflicting_items
-        renders_one :conflicting_item
-      end
-    end
-
-    assert_includes error.message, "conflicting_items slot multiple times"
   end
 
   def test_slots_dont_interfere_with_content

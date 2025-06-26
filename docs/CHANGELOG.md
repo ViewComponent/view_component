@@ -10,6 +10,24 @@ nav_order: 6
 
 ## main
 
+* BREAKING: Allow slots to be redefined, removing `RedefinedSlotError`. The following is now possible:
+
+    ```ruby
+    class ButtonComponent < ViewComponent::Base
+      renders_many :leading_items, types: {
+        icon: IconComponent,
+        svg: SvgComponent
+      }
+    end
+
+    class SpecialButtonComponent < ButtonComponent
+      renders_many :leading_items, types: {
+        svg: SvgComponent,
+        checkbox: CheckboxComponent
+      }
+    end
+    ```
+
 ## 4.0.0.rc1
 
 Almost six years after releasing [v1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship the first release candidate of ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions.

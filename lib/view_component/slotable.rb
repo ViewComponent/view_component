@@ -311,7 +311,6 @@ module ViewComponent
         __vc_raise_if_slot_name_uncountable(slot_name)
         __vc_raise_if_slot_conflicts_with_call(slot_name)
         __vc_raise_if_slot_ends_with_question_mark(slot_name)
-        __vc_raise_if_slot_registered(slot_name)
       end
 
       def __vc_validate_singular_slot_name(slot_name)
@@ -325,13 +324,6 @@ module ViewComponent
 
         __vc_raise_if_slot_conflicts_with_call(slot_name)
         __vc_raise_if_slot_ends_with_question_mark(slot_name)
-        __vc_raise_if_slot_registered(slot_name)
-      end
-
-      def __vc_raise_if_slot_registered(slot_name)
-        if registered_slots.key?(slot_name)
-          raise RedefinedSlotError.new(name, slot_name)
-        end
       end
 
       def __vc_raise_if_slot_ends_with_question_mark(slot_name)
