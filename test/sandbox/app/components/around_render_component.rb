@@ -1,6 +1,6 @@
 class AroundRenderComponent < ViewComponent::Base
   def call
-    "Hi!"
+    "Hi!".html_safe
   end
 
   def around_render
