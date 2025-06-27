@@ -1311,4 +1311,14 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("*[data-name='#{orders.first.name}']", text: orders.first.name)
     assert_selector("*[data-name='#{orders.last.name}']", text: orders.last.name)
   end
+
+  def test_around_render
+    assert_equal(0, Instrumenter.count)
+
+    render_inline(AroundRenderComponent.new)
+
+    assert_equal(1, Instrumenter.count)
+
+    assert_text("Hi!")
+  end
 end

@@ -21,3 +21,21 @@ class ExampleComponent < ViewComponent::Base
   end
 end
 ```
+
+## `#around_render`
+
+Since 4.0.0.rc2
+{: .label }
+
+Define an `around_render` method to be called around the rendering of a component:
+
+```ruby
+# app/components/example_component.rb
+class ExampleComponent < ViewComponent::Base
+  def around_render
+    MyIntrumenter.instrument do
+      yield
+    end
+  end
+end
+```
