@@ -135,7 +135,7 @@ module ViewComponent
       @__vc_content_evaluated = false
       @__vc_render_in_block = block
 
-      if self.class.send(:__vc_content_is_a_slot?)
+      if self.class.__vc_content_is_a_slot?
         @__vc_content_evaluated = true
         if __vc_render_in_block_provided?
           view_context.capture(self, &@__vc_render_in_block)
@@ -676,6 +676,11 @@ module ViewComponent
         __vc_initialize_parameter_names.include?(__vc_collection_iteration_parameter)
       end
 
+      # @private
+      def __vc_content_is_a_slot?
+        defined?(@__vc_content_is_a_slot) && @__vc_content_is_a_slot
+      end
+
       private
 
       def __vc_splatted_keyword_argument_present?
@@ -697,10 +702,6 @@ module ViewComponent
 
       def __vc_provided_collection_parameter
         @__vc_provided_collection_parameter ||= nil
-      end
-
-      def __vc_content_is_a_slot?
-        defined?(@__vc_content_is_a_slot) && @__vc_content_is_a_slot
       end
 
       def content_is_a_slot!
