@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   benchmark:
     runs-on: ubuntu-latest
