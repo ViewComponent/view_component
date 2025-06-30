@@ -372,7 +372,7 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_component_with_asset_url
     component = AssetComponent.new
-    assert_match(%r{http://assets.example.com/assets/application-\w+.css}, render_inline(component).text)
+    assert_match(%r{http://assets\.example\.com/assets/application-\w+\.css}, render_inline(component).text)
 
     if Rails.version.to_f < 8.0
       # Propshaft doesn't allow setting custom hosts so this only works in Rails < 8
