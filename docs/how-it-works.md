@@ -42,4 +42,4 @@ First, ViewComponent calls the `before_render` method, which gives ViewComponent
 
 Second, ViewComponent calls `render?`, returning early with an empty string if `render?` returns false.
 
-ViewComponent then renders the component template.
+ViewComponent then renders the component template, wrapped in a call to the `around_render` method.

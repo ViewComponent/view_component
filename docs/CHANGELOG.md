@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add `around_render` lifecyle method for wrapping component rendering in custom instrumentation, etc.
+
+    *Joel Hawksley*, *Blake Williams*
+
 ## 4.0.0.rc1
 
 Almost six years after releasing [v1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship the first release candidate of ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions.
