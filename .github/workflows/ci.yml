@@ -72,7 +72,7 @@ jobs:
       with:
         repository: 'primer/view_components'
         path: 'primer_view_components'
-        ref: '20250603-vc-compat'
+        ref: 'main'
     - uses: actions/checkout@v4.1.1
       with:
         path: 'view_component'
