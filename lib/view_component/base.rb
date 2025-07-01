@@ -143,7 +143,10 @@ module ViewComponent
         @output_buffer.with_buffer do
           @view_context.instance_variable_set(:@virtual_path, virtual_path)
 
-          rendered_template = render_template_for(@__vc_requested_details).to_s
+          rendered_template =
+            around_render do
+              render_template_for(@__vc_requested_details).to_s
+            end
 
           # Avoid allocating new string when output_preamble and output_postamble are blank
           value = if output_preamble.blank? && output_postamble.blank?
@@ -226,6 +229,14 @@ module ViewComponent
     # @return [void]
     def before_render
       # noop
+    end
+
+    # Called around rendering the component. Override to wrap the rendering of a
+    # component in custom instrumentation, etc.
+    #
+    # @return [void]
+    def around_render
+      yield
     end
 
     # Override to determine whether the ViewComponent should render.
