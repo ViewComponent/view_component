@@ -5,7 +5,7 @@ require 'view_component/templat_dependency_extractor'
 module ViewComponent
   class CacheDigestor
     def initialize(component:)
-    @component= component.class
+      @component= component.class
     end
 
     def digest
