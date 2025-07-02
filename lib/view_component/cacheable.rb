@@ -8,23 +8,29 @@ module ViewComponent::Cacheable
   extend ActiveSupport::Concern
 
   included do
-    class_attribute :__vc_cache_dependencies, default: Set[:format, :__vc_format, :identifier]
+
+    class_attribute :__vc_cache_options, default: Set[:identifier]
+    class_attribute :__vc_cache_dependencies, default: Set.new
 
     # For caching, such as #cache_if
     #
     # @private
     def view_cache_dependencies
-      return if __vc_cache_dependencies.blank? || __vc_cache_dependencies.none? || __vc_cache_dependencies.nil?
+      self.class.__vc_cache_dependencies.map { |dep| public_send(dep) }
+    end
 
-      computed_view_cache_dependencies = __vc_cache_dependencies.map { |dep| if respond_to?(dep) then public_send(dep) end }
-      combined_fragment_cache_key(ActiveSupport::Cache.expand_cache_key(computed_view_cache_dependencies))
+    def view_cache_options
+      return if __vc_cache_options.blank?
+
+      computed_view_cache_options = __vc_cache_options.map { |opt| if respond_to?(opt) then public_send(opt) end }
+      combined_fragment_cache_key(ActiveSupport::Cache.expand_cache_key(computed_view_cache_options + component_digest))
     end
 
     # Render component from cache if possible
     #
     # @private
     def __vc_render_cacheable(rendered_template)
-      if __vc_cache_dependencies != [:format, :__vc_format]
+      if __vc_cache_options.any?
         ViewComponent::CachingRegistry.track_caching do
           template_fragment(rendered_template)
         end
@@ -34,7 +40,7 @@ module ViewComponent::Cacheable
     end
 
     def template_fragment(rendered_template)
-      if content = read_fragment(rendered_template)
+      if content = read_fragment
         @view_renderer.cache_hits[@current_template&.virtual_path] = :hit if defined?(@view_renderer)
         content
       else
@@ -43,13 +49,13 @@ module ViewComponent::Cacheable
       end
     end
 
-    def read_fragment(rendered_template)
-      Rails.cache.fetch(component_digest)
+    def read_fragment
+      Rails.cache.fetch(view_cache_options)
     end
 
     def write_fragment(rendered_template)
       content = __vc_render_template(rendered_template)
-      Rails.cache.fetch(component_digest) do
+      Rails.cache.fetch(view_cache_options) do
         content
       end
       content
@@ -63,20 +69,19 @@ module ViewComponent::Cacheable
     end
 
     def component_digest
-      component_name = self.class.name.demodulize.underscore
-      ViewComponent::CacheDigestor.digest(name: component_name, format: format, finder: @lookup_context, dependencies: view_cache_dependencies)
+      ViewComponent::CacheDigestor.new(component: self).digest
     end
   end
 
   class_methods do
     # For caching the component
     def cache_on(*args)
-      __vc_cache_dependencies.merge(args)
+      __vc_cache_options.merge(args)
     end
 
     def inherited(child)
-      child.__vc_cache_dependencies = __vc_cache_dependencies.dup
-
+      child.__vc_cache_options = __vc_cache_options.dup
+      
       super
     end
   end
