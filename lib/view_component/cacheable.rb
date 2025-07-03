@@ -38,7 +38,7 @@ module ViewComponent::Cacheable
     end
 
     def template_fragment
-      if content = read_fragment
+      if (content = read_fragment)
         @view_renderer.cache_hits[@current_template&.virtual_path] = :hit if defined?(@view_renderer)
         content
       else
