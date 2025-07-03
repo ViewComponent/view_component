@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.0.0.rc2
+
 * Add `around_render` lifecyle method for wrapping component rendering in custom instrumentation, etc.
 
     *Joel Hawksley*, *Blake Williams*
