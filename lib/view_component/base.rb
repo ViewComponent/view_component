@@ -318,13 +318,6 @@ module ViewComponent
       self.class.virtual_path
     end
 
-    # For caching, such as #cache_if
-    #
-    # @private
-    def view_cache_dependencies
-      []
-    end
-
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.
     #
