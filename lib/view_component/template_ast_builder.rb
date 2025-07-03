@@ -1,10 +1,9 @@
-
 # frozen_string_literal: true
 
-require 'temple'
-require 'slim'
-require 'haml'
-require 'erb'
+require "temple"
+require "slim"
+require "haml"
+require "erb"
 
 module ViewComponent
   class TemplateAstBuilder
@@ -25,12 +24,12 @@ module ViewComponent
     ENGINE_MAP = {
       slim: -> { Slim::Engine.new },
       haml: -> { HamlTempleWrapper.new },
-      erb:  -> { ErbTempleWrapper.new }
+      erb: -> { ErbTempleWrapper.new }
     }
 
     def self.build(template_string, engine_name)
       engine = ENGINE_MAP.fetch(engine_name.to_sym) do
-        raise ArgumentError, "Unsupported engine: #{engine_name.inspect}"
+        return nil
       end.call
 
       engine.call(template_string)

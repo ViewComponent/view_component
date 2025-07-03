@@ -1,8 +1,7 @@
-
 # frozen_string_literal: true
 
-require_relative 'template_ast_builder'
-require_relative 'prism_render_dependency_extractor'
+require_relative "template_ast_builder"
+require_relative "prism_render_dependency_extractor"
 
 module ViewComponent
   class TemplateDependencyExtractor
@@ -14,7 +13,8 @@ module ViewComponent
 
     def extract
       ast = TemplateAstBuilder.build(@template_string, @engine)
-      walk(ast.split(';'))
+      return @dependencies unless ast.present?
+      walk(ast.split(";"))
       @dependencies.uniq
     end
 
@@ -35,7 +35,7 @@ module ViewComponent
 
     def extract_partial_or_layout(code)
       partial_match = code.match(/partial:\s*["']([^"']+)["']/)
-      layout_match  = code.match(/layout:\s*["']([^"']+)["']/)
+      layout_match = code.match(/layout:\s*["']([^"']+)["']/)
       direct_render = code.match(/render\s*\(?\s*["']([^"']+)["']/)
 
       @dependencies << partial_match[1] if partial_match

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
 require "view_component/cache_registry"
 require "view_component/cache_digestor"
 
@@ -8,7 +7,6 @@ module ViewComponent::Cacheable
   extend ActiveSupport::Concern
 
   included do
-
     class_attribute :__vc_cache_options, default: Set[:identifier]
     class_attribute :__vc_cache_dependencies, default: Set.new
 
@@ -29,23 +27,23 @@ module ViewComponent::Cacheable
     # Render component from cache if possible
     #
     # @private
-    def __vc_render_cacheable(rendered_template)
-      if __vc_cache_options.any?
+    def __vc_render_cacheable(safe_call)
+      if (__vc_cache_options - [:identifier]).any?
         ViewComponent::CachingRegistry.track_caching do
-          template_fragment(rendered_template)
+          template_fragment(safe_call)
         end
       else
-        __vc_render_template(rendered_template)
+        instance_exec(&safe_call)
       end
     end
 
-    def template_fragment(rendered_template)
+    def template_fragment
       if content = read_fragment
         @view_renderer.cache_hits[@current_template&.virtual_path] = :hit if defined?(@view_renderer)
         content
       else
         @view_renderer.cache_hits[@current_template&.virtual_path] = :miss if defined?(@view_renderer)
-        write_fragment(rendered_template)
+        write_fragment
       end
     end
 
@@ -53,8 +51,8 @@ module ViewComponent::Cacheable
       Rails.cache.fetch(view_cache_options)
     end
 
-    def write_fragment(rendered_template)
-      content = __vc_render_template(rendered_template)
+    def write_fragment
+      content = instance_exec(&safe_call)
       Rails.cache.fetch(view_cache_options) do
         content
       end
@@ -81,7 +79,7 @@ module ViewComponent::Cacheable
 
     def inherited(child)
       child.__vc_cache_options = __vc_cache_options.dup
-      
+
       super
     end
   end

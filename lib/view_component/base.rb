@@ -75,7 +75,7 @@ module ViewComponent
     # Config option that strips trailing whitespace in templates before compiling them.
 
     class_attribute :__vc_response_format, instance_accessor: false, instance_predicate: false, default: nil
-    class_attribute :__vc_cache_dependencies, instance_accessor: false, instance_predicate: false, default: []
+
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
     self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
 
@@ -321,15 +321,6 @@ module ViewComponent
     # For caching, such as #cache_if
     #
     # @private
-    def view_cache_dependencies
-      return unless __vc_cache_dependencies.present? && __vc_cache_dependencies.any?
-
-      __vc_cache_dependencies.filter_map { |dep| send(dep) }
-    end
-
-    # For caching, such as #cache_if
-    #
-    # @private
     def format
       @__vc_variant if defined?(@__vc_variant)
     end
@@ -348,15 +339,6 @@ module ViewComponent
       @__vc_request ||= controller.request if controller.respond_to?(:request)
     end
 
-    # For caching, such as #cache_if
-    #
-    # @private
-    def view_cache_dependencies
-      return unless __vc_cache_dependencies.present? && __vc_cache_dependencies.any?
-
-      __vc_cache_dependencies.filter_map { |dep| send(dep) }
-    end
-
     # The content passed to the component instance as a block.
     #
     # @return [String]
@@ -372,7 +354,7 @@ module ViewComponent
         end
     end
 
-    # Whether `content` has been passed to the component.
+    # Whether f render?`content` has been passed to the component.
     #
     # @return [Boolean]
     def content?
@@ -541,16 +523,6 @@ module ViewComponent
         sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
-      end
-
-      def cache_on(*args)
-        __vc_cache_dependencies.push(*args)
-      end
-
-      def view_cache_dependencies
-        return unless __vc_cache_dependencies.any?
-
-        __vc_cache_dependencies.filter_map { |dep| send(dep) }
       end
 
       # Render a component for each element in a collection ([documentation](/guide/collections)):
