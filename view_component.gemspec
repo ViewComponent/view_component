@@ -34,4 +34,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "activesupport", [">= 7.1.0", "< 8.1"]
   spec.add_runtime_dependency "concurrent-ruby", "~> 1"
+  spec.add_runtime_dependency "temple", "~> 0.10"
 end
