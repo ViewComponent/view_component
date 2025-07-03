@@ -1,7 +1,6 @@
-
 # frozen_string_literal: true
 
-require 'prism'
+require "prism"
 
 module ViewComponent
   class PrismRenderDependencyExtractor
@@ -39,8 +38,8 @@ module ViewComponent
       first_arg = args.first
 
       if first_arg.is_a?(Prism::CallNode) &&
-         first_arg.name == :new &&
-         first_arg.receiver.is_a?(Prism::ConstantPathNode) || first_arg.receiver.is_a?(Prism::ConstantReadNode)
+          first_arg.name == :new &&
+          first_arg.receiver.is_a?(Prism::ConstantPathNode) || first_arg.receiver.is_a?(Prism::ConstantReadNode)
 
         const = extract_constant_path(first_arg.receiver)
         @dependencies << const if const
