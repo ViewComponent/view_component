@@ -22,7 +22,7 @@ module ViewComponent
     end
 
     def gather_templates
-      @templates = @component.compiler.send(:gather_templates) 
+      @templates = @component.compiler.send(:gather_templates)
     end
   end
 end
