@@ -57,9 +57,6 @@ module ViewComponent
     include ViewComponent::WithContentHelper
     include ViewComponent::Cacheable
 
-    RESERVED_PARAMETER = :content
-    VC_INTERNAL_DEFAULT_FORMAT = :html
-
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
 
@@ -347,7 +344,7 @@ module ViewComponent
         end
     end
 
-    # Whether f render?`content` has been passed to the component.
+    # Whether `content` has been passed to the component.
     #
     # @return [Boolean]
     def content?
