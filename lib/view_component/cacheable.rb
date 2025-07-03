@@ -10,6 +10,7 @@ module ViewComponent::Cacheable
     class_attribute :__vc_cache_options, default: Set[:identifier]
     class_attribute :__vc_cache_dependencies, default: Set.new
 
+    silence_redefinition_of_method(:view_cache_dependencies)
     # For caching, such as #cache_if
     #
     # @private
