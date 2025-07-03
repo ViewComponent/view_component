@@ -1322,6 +1322,26 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("Hi!")
   end
 
+  def test_inline_cache_component
+    return if Rails.version < "7.0"
+
+    component = InlineCacheComponent.new(foo: "foo", bar: "bar")
+    render_inline(component)
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo bar")
+
+    render_inline(InlineCacheComponent.new(foo: "foo", bar: "bar"))
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+
+    new_component = InlineCacheComponent.new(foo: "foo", bar: "baz")
+    render_inline(new_component)
+
+    assert_selector(".cache-component__cache-key", text: new_component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo baz")
+  end
+
   def test_cache_component
     return if Rails.version < "7.0"
 
