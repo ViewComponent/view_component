@@ -1,6 +1,6 @@
 # # frozen_string_literal: true
 
-require "view_component/templat_dependency_extractor"
+require "view_component/template_dependency_extractor"
 
 module ViewComponent
   class CacheDigestor
