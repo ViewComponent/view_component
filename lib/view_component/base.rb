@@ -321,8 +321,8 @@ module ViewComponent
     # For caching, such as #cache_if
     #
     # @private
-    def format
-      @__vc_variant if defined?(@__vc_variant)
+    def view_cache_dependencies
+      []
     end
 
     # The current request. Use sparingly as doing so introduces coupling that
