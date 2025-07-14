@@ -161,6 +161,7 @@ Hundreds of people have [contributed](https://github.com/ViewComponent/view_comp
 * [Project Blacklight](http://projectblacklight.org/)
 * [QuickNode](https://www.quicknode.com/)
 * [Room AI](https://roomai.com/)
+* [SerpApi](https://www.serpapi.com/)
 * [SearchApi](https://www.searchapi.io/)
 * [Simundia](https://www.simundia.com/)
 * [Skroutz](https://engineering.skroutz.gr/blog/)
