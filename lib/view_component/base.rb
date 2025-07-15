@@ -108,7 +108,7 @@ module ViewComponent
       self.class.__vc_compile(raise_errors: true)
 
       @view_context = view_context
-      old_virtual_path = view_context.instance_variable_get(:@virtual_path)
+      @old_virtual_path = view_context.instance_variable_get(:@virtual_path)
       self.__vc_original_view_context ||= view_context
 
       @output_buffer = view_context.output_buffer
@@ -166,7 +166,7 @@ module ViewComponent
         ""
       end
     ensure
-      view_context.instance_variable_set(:@virtual_path, old_virtual_path)
+      view_context.instance_variable_set(:@virtual_path, @old_virtual_path)
       @current_template = old_current_template
     end
 
@@ -341,7 +341,9 @@ module ViewComponent
 
       @__vc_content =
         if __vc_render_in_block_provided?
-          view_context.capture(self, &@__vc_render_in_block)
+          with_original_virtual_path do
+            view_context.capture(self, &@__vc_render_in_block)
+          end
         elsif __vc_content_set_by_with_content_defined?
           @__vc_content_set_by_with_content
         end
@@ -356,6 +358,14 @@ module ViewComponent
 
     def format
       self.class.__vc_response_format
+    end
+
+    # @private
+    def with_original_virtual_path
+      @view_context.instance_variable_set(:@virtual_path, @old_virtual_path)
+      yield
+    ensure
+      @view_context.instance_variable_set(:@virtual_path, virtual_path)
     end
 
     private
