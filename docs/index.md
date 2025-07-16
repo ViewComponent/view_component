@@ -103,9 +103,11 @@ ViewComponents are Ruby objects, making it easy to follow (and enforce) code qua
 
 Hundreds of people have [contributed](https://github.com/ViewComponent/view_component/graphs/contributors) to ViewComponent, including:
 
+<div>
 {% for contributor in site.data.contributors.usernames %}
 <img src="https://avatars.githubusercontent.com/{{ contributor }}?s=64" alt="{{ contributor }}" width="32" />
 {% endfor %}
+</div>
 
 ## Who uses ViewComponent?
 
