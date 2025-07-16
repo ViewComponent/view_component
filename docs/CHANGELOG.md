@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Reformat the avatars section to arrange them in a grid.
+
+    *Josh Cohen*
+
 * Add SerpApi to "Who uses ViewComponent" list
 
     *Andy from SerpApi*
