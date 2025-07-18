@@ -10,11 +10,15 @@ nav_order: 6
 
 ## main
 
+* Reformat the avatars section to arrange them in a grid.
+
+    *Josh Cohen*
+
 * Fix bug where relative paths in `translate` didn't work in blocks passed to ViewComponents.
 
     *Joel Hawksley*
 
-* Add SerpApi to "Who uses ViewComponent" list
+* Add SerpApi to "Who uses ViewComponent" list.
 
     *Andy from SerpApi*
 
