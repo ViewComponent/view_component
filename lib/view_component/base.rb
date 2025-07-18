@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "action_view"
+require "view_component/cacheable"
 require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
@@ -50,11 +51,11 @@ module ViewComponent
     include Rails.application.routes.url_helpers if defined?(Rails) && Rails.application
     include ERB::Escape
     include ActiveSupport::CoreExt::ERBUtil
-
     include ViewComponent::InlineTemplate
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
+    include ViewComponent::Cacheable
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -69,9 +70,11 @@ module ViewComponent
     delegate :content_security_policy_nonce, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
-    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
     class_attribute :__vc_response_format, instance_accessor: false, instance_predicate: false, default: nil
+
+    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
+    self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
 
     attr_accessor :__vc_original_view_context
     attr_reader :current_template
@@ -310,12 +313,6 @@ module ViewComponent
     # @private
     def virtual_path
       self.class.virtual_path
-    end
-
-    # For caching, such as #cache_if
-    # @private
-    def view_cache_dependencies
-      []
     end
 
     # The current request. Use sparingly as doing so introduces coupling that
