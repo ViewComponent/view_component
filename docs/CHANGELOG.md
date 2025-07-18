@@ -10,6 +10,12 @@ nav_order: 6
 
 ## main
 
+## 4.0.3
+
+* Add `after_compile` hook to enable extensions to run logic after component compilation. Extensions can override this instance method to add custom post-compilation behavior.
+
+    *Jose Solás*
+
 ## 4.0.2
 
 * Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.

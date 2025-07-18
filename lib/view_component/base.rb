@@ -611,6 +611,18 @@ module ViewComponent
         __vc_compiler.compiled?
       end
 
+      # Called after a component class has been compiled.
+      #
+      # Extensions can override this instance method to run logic after
+      # compilation (e.g., generate helpers, register metadata, etc.).
+      #
+      # By default, this is a no-op. The compiler will invoke this method on an
+      # uninitialized instance using `allocate` to avoid requiring initializer
+      # arguments.
+      def after_compile
+        # no-op by default
+      end
+
       # @private
       def __vc_ensure_compiled
         __vc_compile unless __vc_compiled?
