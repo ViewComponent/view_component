@@ -1,0 +1,21 @@
+<div id="outside"><%= t(".local_relative_key") %></div>
+
+<div id="inside">
+  <%= render(MyComponent.new) do %>
+    <%= t(".local_relative_key") %>
+  <% end %>
+</div>
+
+<div id="slot">
+  <%= render(SlotsComponent.new) do |component| %>
+    <% component.with_title do %>
+      <%= t(".local_relative_key") %>
+    <% end %>
+    <% component.with_item do %>
+      <%= t(".local_relative_key") %>
+    <% end %>
+    <% component.with_footer do %>
+      <%= t(".local_relative_key") %>
+    <% end %>
+  <% end %>
+</div>

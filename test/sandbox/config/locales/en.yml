@@ -19,6 +19,8 @@ en:
   integration_examples:
     virtual_path_reset:
       message: "Hello world!"
+    translations_in_block:
+      local_relative_key: "Local translation"
 
   my_component:
     message: "OH NO! (you shouldn't see me)"
