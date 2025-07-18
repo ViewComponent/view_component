@@ -774,4 +774,14 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_select "#before", text: "Hello world!"
     assert_select "#after", text: "Hello world!"
   end
+
+  def test_works_with_translations_in_block
+    get "/translations_in_block"
+
+    assert_select "#outside", text: "Local translation"
+    assert_select "#inside", text: "hello,world! Local translation"
+    assert_select "#slot .title", text: "Local translation"
+    assert_select "#slot .item", text: "Local translation"
+    assert_select "#slot .footer", text: "Local translation"
+  end
 end
