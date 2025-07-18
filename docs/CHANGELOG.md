@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.0.0.rc3
+
 * Reformat the avatars section to arrange them in a grid.
 
     *Josh Cohen*
