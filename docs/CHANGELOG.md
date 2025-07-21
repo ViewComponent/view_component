@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.0.0.rc4
+
 * Fix issue where generators were not included in published gem.
 
     *Jean-Louis Giordano*
