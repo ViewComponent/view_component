@@ -10,9 +10,7 @@ nav_order: 6
 
 ## main
 
-## pending
-
-* Fix missing generators
+* Fix issue where generators were not included in published gem.
 
     *Jean-Louis Giordano*
 
