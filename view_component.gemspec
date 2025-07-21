@@ -23,8 +23,8 @@ Gem::Specification.new do |spec|
     "README.md",
     "app/**/*",
     "docs/CHANGELOG.md",
-    "lib/rails/**/*.rb",
-    "lib/rails/**/*.tt",
+    "lib/generators/**/*.rb",
+    "lib/generators/**/*.tt",
     "lib/view_component.rb",
     "lib/view_component/**/*"
   ]

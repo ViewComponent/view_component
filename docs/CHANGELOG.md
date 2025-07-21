@@ -10,6 +10,12 @@ nav_order: 6
 
 ## main
 
+## pending
+
+* Fix missing generators
+
+    *Jean-Louis Giordano*
+
 ## 4.0.0.rc3
 
 * Reformat the avatars section to arrange them in a grid.
