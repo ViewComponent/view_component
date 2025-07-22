@@ -4,6 +4,9 @@ PATH
     view_component (4.0.0.rc4)
       activesupport (>= 7.1.0, < 8.1)
       concurrent-ruby (~> 1)
+      haml (~> 6)
+      slim (~> 5)
+      temple (~> 0.10)
 
 GEM
   remote: https://rubygems.org/
