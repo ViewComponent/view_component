@@ -43,7 +43,7 @@ module ViewComponent
       attr_reader :source
 
       def initialize(component:, inline_template:)
-        details = ActionView::TemplateDetails.new(nil, inline_template.language.to_sym, DEFAULT_FORMAT, nil)
+        details = ActionView::TemplateDetails.new(nil, inline_template.language.to_sym, nil, nil)
 
         super(
           component: component,
@@ -63,7 +63,7 @@ module ViewComponent
     class InlineCall < Template
       def initialize(component:, method_name:, defined_on_self:)
         variant = method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil
-        details = ActionView::TemplateDetails.new(nil, nil, DEFAULT_FORMAT, variant)
+        details = ActionView::TemplateDetails.new(nil, nil, nil, variant)
 
         super(component: component, details: details)
 

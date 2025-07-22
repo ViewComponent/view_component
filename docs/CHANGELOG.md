@@ -10,6 +10,18 @@ nav_order: 6
 
 ## main
 
+* Revert change setting `#format`. In GitHub's codebase, the change led to hard-to-detect failures. For example, components rendered from controllers included layouts when they didn't before. In other cases, the response `content_type` changed, breaking downstream consumers. For cases where a specific content type is needed, use:
+
+```ruby
+respond_to do |f|
+  f.html_fragment do
+    render(MyComponent.new)
+  end
+end
+```
+
+    *Joel Hawksley*
+
 ## 4.0.0.rc4
 
 * Fix issue where generators were not included in published gem.

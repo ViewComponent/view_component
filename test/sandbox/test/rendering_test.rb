@@ -130,10 +130,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("input[type='text'][name='name']")
   end
 
-  def test_inline_call_component_format
-    assert_equal(:html, InlineComponent.new.format)
-  end
-
   def test_render_child_without_template
     render_inline(InlineChildComponent.new)
 
