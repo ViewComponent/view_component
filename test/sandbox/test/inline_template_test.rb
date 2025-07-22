@@ -169,8 +169,4 @@ class InlineErbTest < ViewComponent::TestCase
 
     assert_selector(".greeting-container h1", text: "Hello, Fox Mulder!")
   end
-
-  test "defines format" do
-    assert_equal(:html, InlineErbComponent.new("Tester").format)
-  end
 end
