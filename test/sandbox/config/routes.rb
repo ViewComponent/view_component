@@ -35,9 +35,7 @@ Sandbox::Application.routes.draw do
   get :slotable_default_override, to: "integration_examples#slotable_default_override"
   get :virtual_path_reset, to: "integration_examples#virtual_path_reset"
   post :create, to: "integration_examples#create"
-  get :turbo_content_type, to: "integration_examples#turbo_content_type"
   get :translations_in_block, to: "integration_examples#translations_in_block"
-  post :submit, to: "integration_examples#submit"
 
   resources :posts
 
