@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.0.0.rc5
+
 * Revert change setting `#format`. In GitHub's codebase, the change led to hard-to-detect failures. For example, components rendered from controllers included layouts when they didn't before. In other cases, the response `content_type` changed, breaking downstream consumers. For cases where a specific content type is needed, use:
 
 ```ruby
