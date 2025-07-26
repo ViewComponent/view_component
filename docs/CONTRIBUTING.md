@@ -98,6 +98,8 @@ To run the Vale prose linter locally, `brew install vale` and `vale docs/`.
 
 `./script/release`
 
+To improve software supply chain safety, new gem versions are automatically pushed to RubyGems by Github Actions, thanks to [Trusted Publishing](https://guides.rubygems.org/trusted-publishing/).
+
 ## Governance
 
 ViewComponent is built by over a hundred members of the community. Project membership has several levels:
