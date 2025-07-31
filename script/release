@@ -82,7 +82,9 @@ push() {
 
   echo "####################################################"
   echo "Now, open a PR with this branch and merge it to main"
-  echo "Then, run script/publish on main to release the gem"
+  echo "Then, run script/publish on main to publish the docs"
+  echo "The gem will be pushed to RubyGems automatically by"
+  echo "Github Actions, using Trusted Publishing."
   echo "Finally, create a GitHub release https://github.com/viewcomponent/view_component/releases/new with the changes from docs/CHANGELOG"
   echo "####################################################"
 }
