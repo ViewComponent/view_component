@@ -28,6 +28,10 @@ module ViewComponent
         # early exit
         return if compiled? && !force
 
+        # TODO: Needs to reset the template errors in case of Slim "lazy-loaded" (?)
+        reset_template_errors
+        # TODO: Needs to reset the templates in case of Slim "lazy-loaded"
+        reset_templates
         gather_templates
 
         if self.class.__vc_development_mode && @templates.any?(&:requires_compiled_superclass?)
@@ -163,6 +167,14 @@ module ViewComponent
 
         errors
       end
+    end
+
+    def reset_template_errors
+      @_template_errors = nil
+    end
+
+    def reset_templates
+      @templates = nil
     end
 
     def gather_templates

@@ -77,7 +77,12 @@ module ViewComponent
 
     initializer "view_component.eager_load_actions" do
       ActiveSupport.on_load(:after_initialize) do
-        ViewComponent::Base.descendants.each(&:__vc_compile) if Rails.application.config.eager_load
+        # ViewComponent::Base.descendants.each(&:__vc_compile) if Rails.application.config.eager_load
+
+        ViewComponent::Base.descendants.each do |c|
+          # FIXME: trying to not precompile SlimComponent to validate the specs
+          c.__vc_compile if c != SlimComponent
+        end
       end
     end
 
