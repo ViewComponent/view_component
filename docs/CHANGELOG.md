@@ -14,6 +14,10 @@ nav_order: 6
 
     *Hans Lemuet*
 
+* Re-introduce Base#format and Collection#format to fix Rails 7.1 tests.
+
+    *Cameron Dutro*
+
 ## 4.0.0
 
 Two years after releasing [3.0.0](https://github.com/ViewComponent/view_component/releases/tag/v3.0.0) and almost six years since [1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions.
