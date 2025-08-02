@@ -19,6 +19,12 @@ module ViewComponent
       components.each(&block)
     end
 
+    # Rails expects us to define `format` on all renderables,
+    # but we do not know the `format` of a ViewComponent until runtime.
+    def format
+      nil
+    end
+
     private
 
     def components
