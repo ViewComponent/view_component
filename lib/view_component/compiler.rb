@@ -24,34 +24,40 @@ module ViewComponent
       return if @component == ViewComponent::Base
 
       @lock.synchronize do
-        # this check is duplicated so that concurrent compile calls can still
-        # early exit
+        # This check is duplicated so that concurrent compile calls can still
+        # early exit before we instrument.
         return if compiled? && !force
 
-        gather_templates
+        ActiveSupport::Notifications.instrument(
+          "compile.view_component",
+          component: @component,
+          compiler: self
+        ) do |payload|
+          gather_templates
 
-        if self.class.__vc_development_mode && @templates.any?(&:requires_compiled_superclass?)
-          @component.superclass.__vc_compile(raise_errors: raise_errors)
+          if self.class.__vc_development_mode && @templates.any?(&:requires_compiled_superclass?)
+            @component.superclass.__vc_compile(raise_errors: raise_errors)
+          end
+
+          if template_errors.present?
+            raise TemplateError.new(template_errors) if raise_errors
+
+            # this return is load bearing, and prevents the component from being considered "compiled?"
+            return false
+          end
+
+          if raise_errors
+            @component.__vc_validate_initialization_parameters!
+            @component.__vc_validate_collection_parameter!
+          end
+
+          define_render_template_for
+
+          @component.__vc_register_default_slots
+          @component.__vc_build_i18n_backend
+
+          CompileCache.register(@component)
         end
-
-        if template_errors.present?
-          raise TemplateError.new(template_errors) if raise_errors
-
-          # this return is load bearing, and prevents the component from being considered "compiled?"
-          return false
-        end
-
-        if raise_errors
-          @component.__vc_validate_initialization_parameters!
-          @component.__vc_validate_collection_parameter!
-        end
-
-        define_render_template_for
-
-        @component.__vc_register_default_slots
-        @component.__vc_build_i18n_backend
-
-        CompileCache.register(@component)
       end
     end
 

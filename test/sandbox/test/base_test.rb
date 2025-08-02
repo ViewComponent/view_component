@@ -195,4 +195,48 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     assert_equal false, TestAlreadyConfigurableModule::SomeComponent.instrumentation_enabled
     assert_equal false, TestAlreadyConfiguredModule::SomeComponent.instrumentation_enabled
   end
+
+  def test_compiler_emits_notification_on_compile
+    notification_received = false
+    component_received = nil
+    compiler_received = nil
+
+    # Subscribe to the notification
+    subscription = ActiveSupport::Notifications.subscribe("compile.view_component") do |name, start, finish, id, payload|
+      notification_received = true
+      component_received = payload[:component]
+      compiler_received = payload[:compiler]
+    end
+
+    begin
+      # Compile a component to trigger the notification (force to ensure it runs)
+      ViewComponent::Compiler.new(EmptyComponent).compile(force: true)
+
+      # Verify the notification was emitted
+      assert notification_received, "Expected compile.view_component notification to be emitted"
+      assert_equal EmptyComponent, component_received
+      assert_instance_of ViewComponent::Compiler, compiler_received
+    ensure
+      # Clean up the subscription
+      ActiveSupport::Notifications.unsubscribe(subscription)
+    end
+  end
+
+  def test_compiler_does_not_emit_notification_when_already_compiled
+    # Ensure the component is compiled once
+    ViewComponent::Compiler.new(EmptyComponent).compile
+
+    notification_count = 0
+    subscription = ActiveSupport::Notifications.subscribe("compile.view_component") do
+      notification_count += 1
+    end
+
+    begin
+      # This should not emit a notification as it's already compiled (no `force`)
+      ViewComponent::Compiler.new(EmptyComponent).compile
+      assert_equal 0, notification_count, "Expected no notification for an already compiled component"
+    ensure
+      ActiveSupport::Notifications.unsubscribe(subscription)
+    end
+  end
 end
