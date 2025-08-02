@@ -14,6 +14,10 @@ nav_order: 6
 
     *Hans Lemuet*
 
+* Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
+
+    *Cameron Dutro*
+
 ## 4.0.0
 
 Two years after releasing [3.0.0](https://github.com/ViewComponent/view_component/releases/tag/v3.0.0) and almost six years since [1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions.
