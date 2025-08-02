@@ -43,4 +43,10 @@ class TestHelperTest < ViewComponent::TestCase
   def test_vc_test_controller_exists
     assert vc_test_controller.is_a?(ActionController::Base)
   end
+
+  def test_vc_test_view_context_is_shared_reference
+    builder = ActionView::Helpers::FormBuilder.new(nil, Object.new, vc_test_view_context, {})
+    render_inline(CustomFormBuilderComponent.new(builder: builder)) { "Label content" }
+    assert_selector("label[for=foo]", text: "Label content")
+  end
 end
