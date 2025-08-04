@@ -43,8 +43,8 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 
 * Remove `config.test_controller` in favor of `vc_test_controller_class` test helper method.
 * `config.component_parent_class` is now `config.generate.parent_class`, moving the generator-specific option to the generator configuration namespace.
-* Move previews-related configuration (`enabled`, `route`, `paths`, `default_layout`, `controller`) to under `previews` namespace.
 * `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
+* Move previews-related configuration (`enabled`, `route`, `paths`, `default_layout`, `controller`) to under `previews` namespace.
 * `--inline` generator option now generates inline template. Use `--call` to generate `#call` method.
 * Remove broken integration with `rails stats` that ignored components outside of `app/components`.
 * Remove `preview_source` functionality. Consider using [Lookbook](https://lookbook.build/) instead.
