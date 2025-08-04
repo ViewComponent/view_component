@@ -1317,4 +1317,10 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_text("Hi!")
   end
+
+  def test_super_with_args
+    render_inline(SuperArgsComponent.new("Hi!"))
+
+    assert_selector("h1", text: "Hi!")
+  end
 end
