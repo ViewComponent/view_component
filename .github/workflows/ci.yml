@@ -96,7 +96,7 @@ jobs:
         bundle --quiet && bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '7.1.5'
+        RAILS_VERSION: '8.0.2'
         PARALLEL_WORKERS: '1'
   coverage:
     needs: test
