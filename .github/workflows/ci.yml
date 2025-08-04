@@ -33,7 +33,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - ruby_version: "3.2"
+          - ruby_version: "3.2.9"
             rails_version: "7.1"
           - ruby_version: "3.3"
             rails_version: "7.2"
