@@ -10,6 +10,12 @@ nav_order: 6
 
 ## main
 
+## 4.0.0.rc6
+
+* Add `compile.view_component` ActiveSupport::Notifications instrumentation, enabling gems to safely extend the compiler without monkey-patching.
+
+    *Jose Solás*
+
 * Setup Trusted Publishing to RubyGems to improve software supply chain safety.
 
     *Hans Lemuet*
