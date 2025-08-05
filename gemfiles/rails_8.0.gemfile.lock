@@ -1,5 +1,5 @@
 PATH
-  remote: .
+  remote: ..
   specs:
     view_component (4.0.0)
       activesupport (>= 7.1.0, < 8.1)
@@ -151,7 +151,7 @@ GEM
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
-    json (2.13.0)
+    json (2.13.2)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -198,7 +198,7 @@ GEM
     nokogiri (1.18.9-x86_64-linux-musl)
       racc (~> 1.4)
     parallel (1.27.0)
-    parser (3.3.8.0)
+    parser (3.3.9.0)
       ast (~> 2.4.1)
       racc
     pp (0.6.2)
@@ -216,7 +216,7 @@ GEM
     puma (6.6.1)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.1.16)
+    rack (3.2.0)
     rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -262,7 +262,7 @@ GEM
       redis-client (>= 0.22.0)
     redis-client (0.25.1)
       connection_pool
-    regexp_parser (2.10.0)
+    regexp_parser (2.11.0)
     reline (0.6.2)
       io-console (~> 0.5)
     rexml (3.4.1)
@@ -348,11 +348,17 @@ GEM
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.25.0)
     stringio (3.1.7)
-    tailwindcss-rails (2.1.0)
-      railties (>= 6.0.0)
-    tailwindcss-rails (2.1.0-arm64-darwin)
-      railties (>= 6.0.0)
-    temple (0.10.3)
+    tailwindcss-rails (2.7.9-aarch64-linux)
+      railties (>= 7.0.0)
+    tailwindcss-rails (2.7.9-arm-linux)
+      railties (>= 7.0.0)
+    tailwindcss-rails (2.7.9-arm64-darwin)
+      railties (>= 7.0.0)
+    tailwindcss-rails (2.7.9-x86_64-darwin)
+      railties (>= 7.0.0)
+    tailwindcss-rails (2.7.9-x86_64-linux)
+      railties (>= 7.0.0)
+    temple (0.10.4)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
     thor (1.4.0)
@@ -383,12 +389,15 @@ GEM
     zeitwerk (2.7.3)
 
 PLATFORMS
+  aarch64-linux
   aarch64-linux-gnu
   aarch64-linux-musl
+  arm-linux
   arm-linux-gnu
   arm-linux-musl
   arm64-darwin
   x86_64-darwin
+  x86_64-linux
   x86_64-linux-gnu
   x86_64-linux-musl
 
@@ -409,11 +418,11 @@ DEPENDENCIES
   minitest (~> 5)
   propshaft (~> 1)
   puma (~> 6)
-  rails (~> 8)
+  rails (~> 8.0.0)
   rails-dom-testing (~> 2.3.0)
   rake (~> 13)
   redis
-  rspec-rails
+  rspec-rails (~> 8)
   rubocop-md (~> 2)
   selenium-webdriver (~> 4)
   simplecov (< 1)
@@ -422,14 +431,14 @@ DEPENDENCIES
   sprockets-rails (~> 3)
   standard (~> 1)
   tailwindcss-rails (~> 2)
-  turbo-rails
+  turbo-rails (~> 2)
   view_component!
   warning
   yard (< 1)
   yard-activesupport-concern (< 1)
 
 RUBY VERSION
-   ruby 3.4.2p28
+   ruby 3.4.4p34
 
 BUNDLED WITH
-   2.6.2
+   2.6.9
