@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.0.1
+
 * Setup Trusted Publishing to RubyGems to improve software supply chain safety.
 
     *Hans Lemuet*
