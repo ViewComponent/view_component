@@ -2,9 +2,9 @@
 
 source "https://rubygems.org"
 
-gem "rails", "~> 7.1"
-gem "tailwindcss-rails", "~> 2"
-gem "turbo-rails", "~> 1"
+ruby "~> 3.2.0"
+
+gem "rails", "~> 7.1.0"
 
 group :development, :test do
   gem "allocation_stats"
@@ -34,6 +34,8 @@ group :development, :test do
   gem "slim", "~> 5"
   gem "sprockets-rails", "~> 3"
   gem "standard", "~> 1"
+  gem "tailwindcss-rails", "~> 2"
+  gem "turbo-rails", "~> 1"
   gem "warning"
   gem "yard-activesupport-concern", "< 1"
   gem "yard", "< 1"
