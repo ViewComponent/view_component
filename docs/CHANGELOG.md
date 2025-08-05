@@ -14,7 +14,9 @@ nav_order: 6
 
     *Hans Lemuet*
 
-* Re-introduce Base#format and Collection#format to fix Rails 7.1 tests.
+* Conditionally add the `ViewComponent::Base#format` method back for Rails 7.1 only.
+* Compute and check lockfiles into source control.
+* Constrain Rails versions in gemfiles to only allow the patch version to vary, eg. `~> 7.1.0` instead of `~> 7.1`.
 
     *Cameron Dutro*
 
