@@ -246,17 +246,30 @@ module ViewComponent
 
     # Re-use original view_context if we're not rendering a component.
     #
-    # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
-    # of the component. This is due to the partials compiled template method existing in the parent `view_context`,
-    # and not the component's `view_context`.
+    # As of v4, ViewComponent::Base re-uses the existing view context created
+    # by ActionView, meaning the current view context and the original view
+    # context are the same object. set_original_view_context is still called
+    # to maintain backwards compatibility.
     #
     # @private
     def render(options = {}, args = {}, &block)
       if options.respond_to?(:set_original_view_context)
         options.set_original_view_context(self.__vc_original_view_context)
+
+        # We assume options is a component, so there's no need to evaluate the
+        # block in the view context as we do below.
         @view_context.render(options, args, &block)
       else
-        __vc_original_view_context.render(options, args, &block)
+        __vc_original_view_context.render(options, args) do
+          # Partials are rendered to their own buffer and do not append to the
+          # original @output_buffer we retain a reference to in #render_in. This
+          # is a problem since the block passed to us here in the #render method
+          # is evaluated within the context of ViewComponent::Base, and thus
+          # appends to the original @output_buffer. To avoid this, we evaluate the
+          # block in the view context instead, which will append to the output buffer
+          # created for the partial.
+          __vc_original_view_context.instance_exec(&block)
+        end
       end
     end
 
