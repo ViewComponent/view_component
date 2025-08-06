@@ -10,9 +10,17 @@ nav_order: 6
 
 ## main
 
+## 4.0.1
+
 * Setup Trusted Publishing to RubyGems to improve software supply chain safety.
 
     *Hans Lemuet*
+
+* Conditionally add the `ViewComponent::Base#format` method back for Rails 7.1 only.
+* Compute and check lockfiles into source control.
+* Constrain Rails versions in gemfiles to only allow the patch version to vary, eg. `~> 7.1.0` instead of `~> 7.1`.
+
+    *Cameron Dutro*
 
 * Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
 
@@ -45,11 +53,10 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 
 ### Breaking changes (dev/test)
 
-* Rename `config.generate.component_parent_class` to `config.generate.parent_class`.
-* Remove `config.test_controller` in favor of `vc_test_controller_class` test helper method.
-* `config.component_parent_class` is now `config.generate.component_parent_class`, moving the generator-specific option to the generator configuration namespace.
+* Remove `config.view_component.test_controller` in favor of `vc_test_controller_class` test helper method.
+* `config.view_component.component_parent_class` is now `config.view_component.generate.parent_class`, moving the generator-specific option to the generator configuration namespace.
+* `config.view_component.view_component_path` is now `config.view_component.generate.path`, as components have long since been able to exist in any directory.
 * Move previews-related configuration (`enabled`, `route`, `paths`, `default_layout`, `controller`) to under `previews` namespace.
-* `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
 * `--inline` generator option now generates inline template. Use `--call` to generate `#call` method.
 * Remove broken integration with `rails stats` that ignored components outside of `app/components`.
 * Remove `preview_source` functionality. Consider using [Lookbook](https://lookbook.build/) instead.
@@ -74,7 +81,7 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 ### Bug fixes
 
 * Fix bug where virtual path wasn't reset, breaking translations outside of components.
-* Fix bug where `config.previews.enabled` didn't function properly in production environments.
+* Fix bug where `config.view_component.previews.enabled` didn't function properly in production environments.
 * Fix bug in `SlotableDefault` where default couldn't be overridden when content was passed as a block.
 * Fix bug where request-aware helpers didn't work outside of the request context.
 * `ViewComponentsSystemTestController` shouldn't be useable outside of test environment
@@ -89,7 +96,7 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 * Update documentation on performance to reflect more representative benchmark showing 2-3x speed increase over partials.
 * Add documentation note about instrumentation negatively affecting performance.
 * Remove unnecessary ENABLE_RELOADING test suite flag.
-* `config.previews.default_layout` should default to nil.
+* `config.view_component.previews.default_layout` should default to nil.
 * Add test coverage for uncovered code.
 * Test against `turbo-rails` `v2` and `rspec-rails` `v7`.
 

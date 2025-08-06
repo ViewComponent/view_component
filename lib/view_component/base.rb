@@ -316,6 +316,14 @@ module ViewComponent
       []
     end
 
+    if Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR == 1
+      # Rails expects us to define `format` on all renderables,
+      # but we do not know the `format` of a ViewComponent until runtime.
+      def format
+        nil
+      end
+    end
+
     # The current request. Use sparingly as doing so introduces coupling that
     # inhibits encapsulation & reuse, often making testing difficult.
     #

@@ -19,6 +19,14 @@ module ViewComponent
       components.each(&block)
     end
 
+    if Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR == 1
+      # Rails expects us to define `format` on all renderables,
+      # but we do not know the `format` of a ViewComponent until runtime.
+      def format
+        nil
+      end
+    end
+
     private
 
     def components
