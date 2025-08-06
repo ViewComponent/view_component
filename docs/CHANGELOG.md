@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
+
+    *Cameron Dutro*
+
 ## 4.0.1
 
 * Setup Trusted Publishing to RubyGems to improve software supply chain safety.
@@ -19,10 +23,6 @@ nav_order: 6
 * Conditionally add the `ViewComponent::Base#format` method back for Rails 7.1 only.
 * Compute and check lockfiles into source control.
 * Constrain Rails versions in gemfiles to only allow the patch version to vary, eg. `~> 7.1.0` instead of `~> 7.1`.
-
-    *Cameron Dutro*
-
-* Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
 
     *Cameron Dutro*
 
