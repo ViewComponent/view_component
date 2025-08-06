@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
+
+    *Cameron Dutro*
+
 ## 4.0.1
 
 * Setup Trusted Publishing to RubyGems to improve software supply chain safety.
