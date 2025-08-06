@@ -259,7 +259,7 @@ module ViewComponent
         # We assume options is a component, so there's no need to evaluate the
         # block in the view context as we do below.
         @view_context.render(options, args, &block)
-      else
+      elsif block
         __vc_original_view_context.render(options, args) do
           # Partials are rendered to their own buffer and do not append to the
           # original @output_buffer we retain a reference to in #render_in. This
@@ -270,6 +270,8 @@ module ViewComponent
           # created for the partial.
           __vc_original_view_context.instance_exec(&block)
         end
+      else
+        __vc_original_view_context.render(options, args)
       end
     end
 
