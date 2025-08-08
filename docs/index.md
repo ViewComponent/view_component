@@ -172,6 +172,7 @@ Hundreds of people have [contributed](https://github.com/ViewComponent/view_comp
 * [Spina CMS](https://spinacms.com/)
 * [Spring](https://spring.net/)
 * [Startup Jobs](https://startup.jobs/)
+* [TalentoHQ](https://talentohq.com)
 * [Teamtailor](https://teamtailor.com/)
 * [Topkey](https://topkey.io/)
 * [Web3 Jobs](https://web3.career)
