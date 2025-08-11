@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Allow render_inline with Nokogiri::HTML5 to parse more arbitrary content including bare table content otherwise illegal fragments like <td>)
+
+    *Jonathan Rochkind*
+
 ## 4.0.2
 
 * Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.

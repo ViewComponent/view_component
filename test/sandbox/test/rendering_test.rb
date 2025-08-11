@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 67, "3.4" => 74, "3.3" => 72, "3.2" => 75..76}) do
+      assert_allocations({"3.5" => 67, "3.4" => 74, "3.3" => 75, "3.2" => 77..79}) do
         render_inline(MyComponent.new)
       end
     end
@@ -34,7 +34,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
-    allocations = {"3.5" => 66, "3.4" => 82, "3.3" => 86, "3.2" => 89..90}
+    allocations = {"3.5" => 66..76, "3.4" => 82, "3.3" => 86..89, "3.2" => 90..92}
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
@@ -75,6 +75,10 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_inline_returns_nokogiri_fragment
     assert_includes render_inline(MyComponent.new).css("div").to_html, "hello,world!"
+  end
+
+  def test_render_inline_handles_table_contents
+    assert_includes render_inline(TableContentsComponent.new).css("td").to_html, "<td>td contents</td>"
   end
 
   def test_render_inline_sets_rendered_content
