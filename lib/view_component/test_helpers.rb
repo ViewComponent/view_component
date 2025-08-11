@@ -40,7 +40,7 @@ module ViewComponent
       @page = nil
       @rendered_content = vc_test_controller.view_context.render(component, args, &block)
 
-      Nokogiri::HTML5.fragment(@rendered_content)
+      Nokogiri::HTML5.fragment(@rendered_content, context: "template")
     end
 
     # `JSON.parse`-d component output.

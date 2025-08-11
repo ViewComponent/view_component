@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Allow render_inline with Nokogiri::HTML5 to parse more arbitrary content including bare table content
+
+    *Jonathan Rochkind*
+
 ## 4.0.1
 
 * Setup Trusted Publishing to RubyGems to improve software supply chain safety.
