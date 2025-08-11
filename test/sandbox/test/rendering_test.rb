@@ -77,6 +77,10 @@ class RenderingTest < ViewComponent::TestCase
     assert_includes render_inline(MyComponent.new).css("div").to_html, "hello,world!"
   end
 
+  def test_render_inline_handles_table_contents
+    assert_includes render_inline(TableContentsComponent.new).css("td").to_html, "<td>td contents</td>"
+  end
+
   def test_render_inline_sets_rendered_content
     render_inline(MyComponent.new)
 
