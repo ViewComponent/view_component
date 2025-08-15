@@ -38,7 +38,7 @@ group :development, :test do
   gem "slim", "~> 5"
   gem "sprockets-rails", "~> 3"
   gem "standard", "~> 1"
-  gem "tailwindcss-rails", "~> 2"
+  gem "tailwindcss-rails", "~> 4"
   gem "turbo-rails"
   gem "warning"
   gem "yard-activesupport-concern", "< 1"
