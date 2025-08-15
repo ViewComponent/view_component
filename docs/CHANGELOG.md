@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix double rendering issue for partials that yield.
+
+    *Cameron Dutro*
+
 ## 4.0.1
 
 * Setup Trusted Publishing to RubyGems to improve software supply chain safety.
