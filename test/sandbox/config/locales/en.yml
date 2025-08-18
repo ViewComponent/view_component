@@ -24,3 +24,9 @@ en:
 
   my_component:
     message: "OH NO! (you shouldn't see me)"
+
+  relative_translation_partial_parent_component:
+    title: Test Component Title
+  shared:
+    partial:
+      title: Partial Title
