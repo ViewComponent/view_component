@@ -26,7 +26,7 @@ en:
     message: "OH NO! (you shouldn't see me)"
 
   test_component:
-    title: "Test Component Title"
+    title: Test Component Title
   shared:
     partial:
-      title: "Partial Title"
+      title: Partial Title
