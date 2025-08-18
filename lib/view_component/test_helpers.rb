@@ -40,7 +40,7 @@ module ViewComponent
       @page = nil
       @rendered_content = vc_test_view_context.render(component, args, &block)
 
-      fragment = Nokogiri::HTML5.fragment(@rendered_content)
+      fragment = Nokogiri::HTML5.fragment(@rendered_content, context: "template")
       @vc_test_view_context = nil
       fragment
     end
