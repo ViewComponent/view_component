@@ -27,7 +27,6 @@ en:
 
   test_component:
     title: "Test Component Title"
-    subtitle: "Test Component Subtitle"
   shared:
     partial:
       title: "Partial Title"
