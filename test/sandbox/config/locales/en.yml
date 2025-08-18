@@ -24,3 +24,10 @@ en:
 
   my_component:
     message: "OH NO! (you shouldn't see me)"
+
+  test_component:
+    title: "Test Component Title"
+    subtitle: "Test Component Subtitle"
+  shared:
+    partial:
+      title: "Partial Title"
