@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add test documenting current behavior for resolving relative translation keys in partial blocks. The test expects translation keys to resolve relative to the caller's path, but currently they resolve relative to the partial's path, which is incorrect.
+
+    *Oussama Hilal*
+
 ## 4.0.2
 
 * Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
