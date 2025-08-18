@@ -52,6 +52,13 @@ module ViewComponent
         @component.__vc_build_i18n_backend
 
         CompileCache.register(@component)
+
+        # Invoke instance-level after_compile hook without calling initialize.
+        begin
+          @component.allocate.after_compile
+        rescue NoMethodError
+          # no-op
+        end
       end
     end
 
