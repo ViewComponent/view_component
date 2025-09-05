@@ -7,7 +7,8 @@ nav_order: 6
 <!-- Add unreleased changes under the "main" heading. -->
 
 # Changelog
-
+## [Unreleased]
+- Added **RailsCarma** to the list of companies using ViewComponent.
 ## main
 
 ## 4.0.2
