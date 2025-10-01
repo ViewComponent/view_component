@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+Added **RailsCarma** to the list of companies using ViewComponent.
+
 ## 4.0.2
 
 * Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
