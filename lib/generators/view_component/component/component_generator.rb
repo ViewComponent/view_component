@@ -23,7 +23,7 @@ module ViewComponent
       class_option :skip_suffix, type: :boolean, default: false
 
       def create_component_file
-        template "component.rb", File.join(component_path, class_path, "#{file_name}#{options[:skip_suffix] ? "" : "_component"}.rb")
+        template "component.rb", File.join(component_path, class_path, "#{file_name}#{"_component" unless options[:skip_suffix]}.rb")
       end
 
       hook_for :test_framework
