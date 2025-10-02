@@ -9,6 +9,9 @@ nav_order: 6
 # Changelog
 
 ## main
+* Fix outdated settings related to default layout preview.
+
+    *Lucas Geron*
 
 ## 4.0.2
 
