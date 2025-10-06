@@ -119,6 +119,7 @@ Hundreds of people have [contributed](https://github.com/ViewComponent/view_comp
 * [Brightline](https://hellobrightline.com)
 * [Buildkite](https://buildkite.com)
 * [Bump.sh](https://bump.sh)
+* [Carwow](https://www.carwow.com/) (300+ components)
 * [Causey](https://www.causey.app/) (100+ components)
 * [CharlieHR](https://www.charliehr.com/)
 * [City of Paris](https://www.paris.fr/)
