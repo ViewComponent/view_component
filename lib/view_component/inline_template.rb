@@ -3,6 +3,7 @@
 module ViewComponent # :nodoc:
   module InlineTemplate
     extend ActiveSupport::Concern
+
     Template = Struct.new(:source, :language, :path, :lineno)
 
     class_methods do
