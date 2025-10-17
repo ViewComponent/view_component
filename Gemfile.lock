@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     view_component (4.0.2)
+      actionview (>= 7.1.0, < 8.1)
       activesupport (>= 7.1.0, < 8.1)
       concurrent-ruby (~> 1)
 
