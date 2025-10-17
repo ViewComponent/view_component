@@ -16,7 +16,7 @@ module ViewComponent
   autoload :Preview
   autoload :Translatable
 
-  if Rails.env.test?
+  if defined?(Rails.env) && Rails.env.test?
     autoload :TestHelpers
     autoload :SystemSpecHelpers
     autoload :SystemTestHelpers

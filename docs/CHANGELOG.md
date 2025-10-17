@@ -13,6 +13,9 @@ nav_order: 6
 * Add Carwow to list of companies using ViewComponent.
 
     *Tom Lord*
+* ViewComponent now works without `rails` and `railties` gems loaded.
+
+    *Michal Cichra*
 
 ## 4.0.2
 
