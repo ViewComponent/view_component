@@ -24,6 +24,10 @@ nav_order: 6
 
     *Tom Lord*
 
+* Declare `actionview` as a `view_component` gem dependency.
+
+    *Michal Cichra*
+
 ## 4.0.2
 
 * Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
