@@ -13,6 +13,9 @@ nav_order: 6
 * Add Carwow to list of companies using ViewComponent.
 
     *Tom Lord*
+* Declare `actionview` as a `view_component` gem dependency.
+
+    *Michal Cichra*
 
 ## 4.0.2
 
