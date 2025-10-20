@@ -158,6 +158,7 @@ Hundreds of people have [contributed](https://github.com/ViewComponent/view_comp
 * [Ophelos](https://ophelos.com)
 * [Orbit](https://orbit.love)
 * [PeopleForce](https://peopleforce.io)
+* [Percent Pledge](https://www.percentpledge.org/)
 * [PLT4M](https://plt4m.com/)
 * [Podia](https://www.podia.com/)
 * [PrintReleaf](https://www.printreleaf.com/)
