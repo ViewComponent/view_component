@@ -213,7 +213,7 @@ GEM
       date
       stringio
     public_suffix (6.0.2)
-    puma (6.6.1)
+    puma (7.1.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.3)
@@ -417,7 +417,7 @@ DEPENDENCIES
   method_source (~> 1)
   minitest (~> 5)
   propshaft (~> 1)
-  puma (~> 6)
+  puma (~> 7)
   rails (~> 8)
   rails-dom-testing (~> 2.3.0)
   rake (~> 13)
