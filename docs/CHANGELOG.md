@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.1.0
+
 * Add Rails 8.1 support.
 
     *Hans Lemuet*
