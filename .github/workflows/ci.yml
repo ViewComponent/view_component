@@ -24,8 +24,8 @@ jobs:
         bundler-cache: true
     - name: Run benchmarks
       run: |
-        bundle exec appraisal rails-8.1 rake partial_benchmark
-        bundle exec appraisal rails-8.1 rake translatable_benchmark
+        bundle exec appraisal rails-8.0 rake partial_benchmark
+        bundle exec appraisal rails-8.0 rake translatable_benchmark
   test:
     name: test (Rails ${{ matrix.rails_version }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-latest
