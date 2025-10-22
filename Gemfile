@@ -44,3 +44,5 @@ group :development, :test do
   gem "yard-activesupport-concern", "< 1"
   gem "yard", "< 1"
 end
+
+gem "appraisal-run", "~> 1.0"
