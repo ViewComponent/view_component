@@ -56,9 +56,10 @@ When a new version of Rails is released:
 
 1. Add a new `appraise` block in `Appraisals`.
 2. Run `bundle exec appraisal generate`
-3. Make sure the tests pass: `appraisal-run gemfiles/*.gemfile -- bundle exec rake`
-4. Commit and push the changes.
-5. Release a new version.
+3. Update the gemfiles locks `appraisal-run gemfiles/*.gemfile -- bundle lock`
+4. Make sure the tests pass: `appraisal-run gemfiles/*.gemfile -- bundle exec rake`
+5. Commit and push the changes.
+6. Release a new version.
 
 ## Submitting a pull request
 
