@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     view_component (4.0.2)
-      activesupport (>= 7.1.0, < 8.1)
+      activesupport (>= 7.1.0, < 8.2)
       concurrent-ruby (~> 1)
 
 GEM
@@ -87,6 +87,7 @@ GEM
       bundler
       rake
       thor (>= 0.14.0)
+    appraisal-run (1.0.0)
     ast (2.4.3)
     base64 (0.3.0)
     benchmark (0.4.1)
@@ -348,16 +349,16 @@ GEM
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.25.0)
     stringio (3.1.7)
-    tailwindcss-rails (2.7.9-aarch64-linux)
+    tailwindcss-rails (4.3.0)
       railties (>= 7.0.0)
-    tailwindcss-rails (2.7.9-arm-linux)
-      railties (>= 7.0.0)
-    tailwindcss-rails (2.7.9-arm64-darwin)
-      railties (>= 7.0.0)
-    tailwindcss-rails (2.7.9-x86_64-darwin)
-      railties (>= 7.0.0)
-    tailwindcss-rails (2.7.9-x86_64-linux)
-      railties (>= 7.0.0)
+      tailwindcss-ruby (~> 4.0)
+    tailwindcss-ruby (4.1.13)
+    tailwindcss-ruby (4.1.13-aarch64-linux-gnu)
+    tailwindcss-ruby (4.1.13-aarch64-linux-musl)
+    tailwindcss-ruby (4.1.13-arm64-darwin)
+    tailwindcss-ruby (4.1.13-x86_64-darwin)
+    tailwindcss-ruby (4.1.13-x86_64-linux-gnu)
+    tailwindcss-ruby (4.1.13-x86_64-linux-musl)
     temple (0.10.4)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
@@ -403,6 +404,7 @@ PLATFORMS
 DEPENDENCIES
   allocation_stats
   appraisal (~> 2)
+  appraisal-run (~> 1.0)
   benchmark-ips (~> 2)
   better_html
   bundler (~> 2)
@@ -429,7 +431,7 @@ DEPENDENCIES
   slim (~> 5)
   sprockets-rails (~> 3)
   standard (~> 1)
-  tailwindcss-rails (~> 2)
+  tailwindcss-rails (~> 4)
   turbo-rails (~> 2)
   view_component!
   warning
