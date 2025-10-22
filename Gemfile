@@ -13,6 +13,7 @@ ruby ruby_version
 group :development, :test do
   gem "allocation_stats"
   gem "appraisal", "~> 2"
+  gem "appraisal-run", "~> 1.0"
   gem "benchmark-ips", "~> 2"
   gem "better_html"
   gem "bundler", "~> 2"
@@ -44,5 +45,3 @@ group :development, :test do
   gem "yard-activesupport-concern", "< 1"
   gem "yard", "< 1"
 end
-
-gem "appraisal-run", "~> 1.0"
