@@ -49,7 +49,7 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 
 This project uses [appraisal](https://github.com/thoughtbot/appraisal) to run tests for various versions of Ruby and Rails, and [appraisal-run](https://github.com/camertron/appraisal-run) to run them in Docker containers.
 
-1. Configure and install the dependencies: `bundle exec appraisal install`
+1. Install the dependencies: `bundle`
 2. Make sure the tests pass: `appraisal-run gemfiles/*.gemfile -- bundle exec rake`
 
 When a new version of Rails is released:
