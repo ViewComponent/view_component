@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add Rails 8.1 support.
+
+    *Hans Lemuet*
+
 * Add Carwow to list of companies using ViewComponent.
 
     *Tom Lord*
