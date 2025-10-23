@@ -164,6 +164,7 @@ Hundreds of people have [contributed](https://github.com/ViewComponent/view_comp
 * [PrintReleaf](https://www.printreleaf.com/)
 * [Project Blacklight](http://projectblacklight.org/)
 * [QuickNode](https://www.quicknode.com/)
+* [Reinvented Hospitality](https://reinvented-hospitality.com/)
 * [Room AI](https://roomai.com/)
 * [SerpApi](https://www.serpapi.com/)
 * [SearchApi](https://www.searchapi.io/)
