@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Added Reinvented Hospitality to the list of companies using ViewComponent.
+
+    *Torgil Zechel*
+
 ## 4.1.0
 
 * Add Rails 8.1 support.
