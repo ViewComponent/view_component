@@ -27,7 +27,7 @@ group :development, :test do
   gem "method_source", "~> 1"
   gem "minitest", "~> 5"
   gem "propshaft", "~> 1"
-  gem "puma", "~> 6"
+  gem "puma", ">= 6"
   gem "rake", "~> 13"
   gem "rails-dom-testing", "~> 2.3.0"
   gem "redis"
