@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Resolve deprecation warning for `ActiveSupport::Configurable`.
+
+    *Simon Fish*
+
 * Added Reinvented Hospitality to the list of companies using ViewComponent.
 
     *Torgil Zechel*
