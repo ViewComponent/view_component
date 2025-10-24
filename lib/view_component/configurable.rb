@@ -7,6 +7,7 @@ module ViewComponent
     included do
       next if respond_to?(:config) && config.respond_to?(:view_component) && config.respond_to_missing?(:instrumentation_enabled)
 
+      require "active_support/configurable"
       include ActiveSupport::Configurable
 
       configure do |config|

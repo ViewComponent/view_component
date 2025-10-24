@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Isolate ActiveSupport deprecation warning to Configurable module
+
+    *Hamed Asghari*
+
 * Added Reinvented Hospitality to the list of companies using ViewComponent.
 
     *Torgil Zechel*
