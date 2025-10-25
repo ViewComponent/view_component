@@ -3,6 +3,7 @@ PATH
   specs:
     view_component (4.1.0)
       activesupport (>= 7.1.0, < 8.2)
+      actionview (>= 7.1.0, < 8.2)
       concurrent-ruby (~> 1)
 
 GEM
