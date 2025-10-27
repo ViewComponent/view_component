@@ -110,7 +110,7 @@ To set a custom layout for individual previews and the previews index page, set:
 ```ruby
 # config/application.rb
 # Set the default layout to app/views/layouts/component_preview.html.erb
-config.view_component.default_preview_layout = "component_preview"
+config.view_component.previews.default_layout = "component_preview"
 ```
 
 ## Preview paths

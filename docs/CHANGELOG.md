@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix outdated settings related to default layout preview.
+
+    *Lucas Geron*
+
 * Make `ViewComponent::VERSION` accessible to other gems by default.
 
     *Hans Lemuet*
