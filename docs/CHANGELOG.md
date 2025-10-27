@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Resolve deprecation warning for `ActiveSupport::Configurable`.
+
+    *Simon Fish*
+
 * Make `ViewComponent::VERSION` accessible to other gems by default.
 
     *Hans Lemuet*
