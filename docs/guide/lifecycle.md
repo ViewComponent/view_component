@@ -33,7 +33,7 @@ Define an `around_render` method to be called around the rendering of a componen
 # app/components/example_component.rb
 class ExampleComponent < ViewComponent::Base
   def around_render
-    MyIntrumenter.instrument do
+    MyInstrumenter.instrument do
       yield
     end
   end

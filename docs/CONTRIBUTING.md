@@ -45,11 +45,26 @@ The codespace environment includes a minimal Rails app with ViewComponent instal
 2. Expose the port when prompted by the Visual Studio Code Web Editor.
 3. Add the external URL to the config block in `config/application.rb` as prompted by the error.
 
+## Running tests with Appraisal
+
+This project uses [appraisal](https://github.com/thoughtbot/appraisal) to run tests for various versions of Ruby and Rails, and [appraisal-run](https://github.com/camertron/appraisal-run) to run them in Docker containers.
+
+1. Install the dependencies: `bundle`
+2. Make sure the tests pass: `appraisal-run gemfiles/*.gemfile -- bundle exec rake`
+
+When a new version of Rails is released:
+
+1. Add a new `appraise` block in `Appraisals`.
+2. Run `bundle exec appraisal generate`
+3. Update the gemfiles locks `appraisal-run gemfiles/*.gemfile -- bundle lock`
+4. Make sure the tests pass: `appraisal-run gemfiles/*.gemfile -- bundle exec rake`
+5. Commit and push the changes.
+6. Release a new version.
+
 ## Submitting a pull request
 
 1. [Fork](https://github.com/viewcomponent/view_component/fork) and clone the repository.
-1. Configure and install the dependencies: `bundle exec appraisal install`.
-2. Make sure the tests pass: `bundle exec appraisal rake` (see below for specific cases).
+2. Make sure the tests pass: `appraisal-run gemfiles/*.gemfile -- bundle exec rake`.
 3. Create a new branch: `git checkout -b my-branch-name`.
 4. Add tests, make the change, and make sure the tests still pass.
 5. Add an entry to the top of `docs/CHANGELOG.md` for the changes, no matter how small.

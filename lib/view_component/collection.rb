@@ -5,6 +5,7 @@ require "action_view/renderer/collection_renderer"
 module ViewComponent
   class Collection
     include Enumerable
+
     attr_reader :component
 
     delegate :size, to: :@collection

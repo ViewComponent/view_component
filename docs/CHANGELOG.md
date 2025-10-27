@@ -10,6 +10,32 @@ nav_order: 6
 
 ## main
 
+* Resolve deprecation warning for `ActiveSupport::Configurable`.
+
+    *Simon Fish*
+
+* Make `ViewComponent::VERSION` accessible to other gems by default.
+
+    *Hans Lemuet*
+
+* Added Reinvented Hospitality to the list of companies using ViewComponent.
+
+    *Torgil Zechel*
+
+## 4.1.0
+
+* Add Rails 8.1 support.
+
+    *Hans Lemuet*
+
+* Add Carwow to list of companies using ViewComponent.
+
+    *Tom Lord*
+
+* Declare `actionview` as a `view_component` gem dependency.
+
+    *Michal Cichra*
+
 ## 4.0.2
 
 * Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
