@@ -13,6 +13,7 @@ ruby ruby_version
 group :development, :test do
   gem "allocation_stats"
   gem "appraisal", "~> 2"
+  gem "appraisal-run", "~> 1.1"
   gem "benchmark-ips", "~> 2"
   gem "better_html"
   gem "bundler", "~> 2"
@@ -38,7 +39,7 @@ group :development, :test do
   gem "slim", "~> 5"
   gem "sprockets-rails", "~> 3"
   gem "standard", "~> 1"
-  gem "tailwindcss-rails", "~> 2"
+  gem "tailwindcss-rails", "~> 4"
   gem "turbo-rails"
   gem "warning"
   gem "yard-activesupport-concern", "< 1"
