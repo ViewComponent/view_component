@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Remove support for [EOL](https://endoflife.date/rails) Rails `7.1.0`.
+
+    *Hans Lemuet*
+
 * Make `ViewComponent::VERSION` accessible to other gems by default.
 
     *Hans Lemuet*
