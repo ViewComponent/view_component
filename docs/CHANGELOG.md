@@ -14,6 +14,10 @@ nav_order: 6
 
     *Simon Fish*
 
+* Make `ViewComponent::VERSION` accessible to other gems by default.
+
+    *Hans Lemuet*
+
 * Added Reinvented Hospitality to the list of companies using ViewComponent.
 
     *Torgil Zechel*
@@ -27,6 +31,10 @@ nav_order: 6
 * Add Carwow to list of companies using ViewComponent.
 
     *Tom Lord*
+
+* Declare `actionview` as a `view_component` gem dependency.
+
+    *Michal Cichra*
 
 ## 4.0.2
 

@@ -13,7 +13,7 @@ ruby ruby_version
 group :development, :test do
   gem "allocation_stats"
   gem "appraisal", "~> 2"
-  gem "appraisal-run", "~> 1.0"
+  gem "appraisal-run", "~> 1.1"
   gem "benchmark-ips", "~> 2"
   gem "better_html"
   gem "bundler", "~> 2"
@@ -27,7 +27,7 @@ group :development, :test do
   gem "method_source", "~> 1"
   gem "minitest", "~> 5"
   gem "propshaft", "~> 1"
-  gem "puma", "~> 6"
+  gem "puma", ">= 6"
   gem "rake", "~> 13"
   gem "rails-dom-testing", "~> 2.3.0"
   gem "redis"
