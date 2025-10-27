@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Make `ViewComponent::VERSION` accessible to other gems by default.
+
+    *Hans Lemuet*
+
 * Added Reinvented Hospitality to the list of companies using ViewComponent.
 
     *Torgil Zechel*
