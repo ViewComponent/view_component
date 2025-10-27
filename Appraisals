@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+appraise "rails-7.2-ruby-3.2" do
+  ruby "~> 3.2.0"
+
+  gem "rails", "~> 7.2.0"
+
+  group :development, :test do
+    gem "turbo-rails", "~> 2"
+    gem "rspec-rails", "~> 7"
+  end
+end
+
 appraise "rails-7.2" do
   ruby "~> 3.3.0"
 
