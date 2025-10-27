@@ -34,7 +34,7 @@ jobs:
       matrix:
         include:
           - ruby_version: "3.2"
-            rails_version: "7.1"
+            rails_version: "7.2"
           - ruby_version: "3.3"
             rails_version: "7.2"
           - ruby_version: "3.4"
