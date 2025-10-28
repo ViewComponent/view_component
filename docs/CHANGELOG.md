@@ -10,8 +10,9 @@ nav_order: 6
 
 ## main
 
-* Allow I18n calls in render?
-* Split render lifecycle into separate methods, to be able to test component methods that rely on `t(...)` directly
+* Allow I18n calls in render?.
+* Split render lifecycle into separate methods, to be able to test component methods that rely on `t(...)` directly.
+* Added `setup_render` test helper to allow testing of component methods that rely on `t(...)` without rendering the component.
 
     *23tux*
 
