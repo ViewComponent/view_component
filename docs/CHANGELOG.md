@@ -10,6 +10,11 @@ nav_order: 6
 
 ## main
 
+* Allow I18n calls in render?
+* Split render lifecycle into separate methods, to be able to test component methods that rely on `t(...)` directly
+
+  *23tux*
+
 * Resolve deprecation warning for `ActiveSupport::Configurable`.
 
     *Simon Fish*
