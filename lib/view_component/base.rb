@@ -102,6 +102,14 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, &block)
+      setup_render(view_context, &block)
+      before_render
+      perform_render
+    ensure
+      teardown_render(view_context)
+    end
+
+    def setup_render(view_context, &block)
       self.class.__vc_compile(raise_errors: true)
 
       @view_context = view_context
@@ -123,7 +131,7 @@ module ViewComponent
 
       # For caching, such as #cache_if
       @current_template = nil unless defined?(@current_template)
-      old_current_template = @current_template
+      @old_current_template = @current_template
 
       if block && defined?(@__vc_content_set_by_with_content)
         raise DuplicateContentError.new(self.class.name)
@@ -132,13 +140,14 @@ module ViewComponent
       @__vc_content_evaluated = false
       @__vc_render_in_block = block
 
-      before_render
+      @view_context.instance_variable_set(:@virtual_path, virtual_path)
+    end
 
+    def perform_render
       if render?
         value = nil
 
         @output_buffer.with_buffer do
-          @view_context.instance_variable_set(:@virtual_path, virtual_path)
 
           rendered_template =
             around_render do
@@ -162,8 +171,11 @@ module ViewComponent
       else
         ""
       end
-    ensure
+    end
+
+    def teardown_render(view_context)
       view_context.instance_variable_set(:@virtual_path, @old_virtual_path)
+      old_current_template = remove_instance_variable(:@current_template) if defined?(@current_template)
       @current_template = old_current_template
     end
 

@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 67, "3.4" => 72..74, "3.3" => 72, "3.2" => 75..76}) do
+      assert_allocations({"3.5" => 67, "3.4" => 72..74, "3.3" => 72, "3.2" => 71..76}) do
         render_inline(MyComponent.new)
       end
     end
@@ -34,7 +34,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
-    allocations = {"3.5" => 66, "3.4" => 70..82, "3.3" => 86, "3.2" => 89..90}
+    allocations = {"3.5" => 66, "3.4" => 70..82, "3.3" => 86, "3.2" => 70..90}
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
@@ -1321,5 +1321,32 @@ class RenderingTest < ViewComponent::TestCase
   def test_render_partial_with_yield
     render_inline(PartialWithYieldComponent.new)
     assert_text "hello world", exact: true, normalize_ws: true
+  end
+
+  class I18nTestComponent < ViewComponent::Base
+    def message
+      t(".message")
+    end
+
+    def render?
+      message
+    end
+
+    def call
+      content_tag :div, t(".message")
+    end
+  end
+
+  def test_i18n_in_render_hook
+    vc_test_request.params[:hello] = "world"
+    render_inline(I18nTestComponent.new)
+
+    assert_selector("div", text: I18n.t("rendering_test.i18n_test_component.message"))
+  end
+
+  def test_render_lifecycle_hooks
+    component = I18nTestComponent.new
+    component.setup_render(vc_test_view_context)
+    assert_equal(component.message, I18n.t("rendering_test.i18n_test_component.message"))
   end
 end
