@@ -141,6 +141,7 @@ module ViewComponent
       @__vc_render_in_block = block
 
       @view_context.instance_variable_set(:@virtual_path, virtual_path)
+      self
     end
 
     def perform_render

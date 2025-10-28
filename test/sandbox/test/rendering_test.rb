@@ -1345,8 +1345,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_lifecycle_hooks
-    component = I18nTestComponent.new
-    component.setup_render(vc_test_view_context)
+    component = setup_render(I18nTestComponent.new)
     assert_equal(component.message, I18n.t("rendering_test.i18n_test_component.message"))
   end
 end
