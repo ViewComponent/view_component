@@ -260,6 +260,9 @@ module ViewComponent
         @view_context.render(options, args, &block)
       elsif block
         __vc_original_view_context.render(options, args) do
+          # capture the block output in the view context of the component
+          output = capture(&block)
+
           # Partials are rendered to their own buffer and do not append to the
           # original @output_buffer we retain a reference to in #render_in. This
           # is a problem since the block passed to us here in the #render method
@@ -267,7 +270,7 @@ module ViewComponent
           # appends to the original @output_buffer. To avoid this, we evaluate the
           # block in the view context instead, which will append to the output buffer
           # created for the partial.
-          __vc_original_view_context.instance_exec(&block)
+          __vc_original_view_context.capture { output }
         end
       else
         __vc_original_view_context.render(options, args)
