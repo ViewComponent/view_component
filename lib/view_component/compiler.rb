@@ -108,7 +108,11 @@ module ViewComponent
 
         errors << "Couldn't find a template file or inline render method for #{@component}." if @templates.empty?
 
-        @templates
+        # Only check templates defined on this component or template files (not inherited inline calls)
+        # to allow component inheritance where child has template file and parent has inline render
+        templates_to_check = @templates.select { |t| !t.inline_call? || t.defined_on_self? }
+
+        templates_to_check
           .map { |template| [template.variant, template.format] }
           .tally
           .select { |_, count| count > 1 }
