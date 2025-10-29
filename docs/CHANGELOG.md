@@ -10,6 +10,9 @@ nav_order: 6
 
 ## main
 
+* Capture partial block in the components context
+    *23tux*
+
 * Resolve deprecation warning for `ActiveSupport::Configurable`.
 
     *Simon Fish*
