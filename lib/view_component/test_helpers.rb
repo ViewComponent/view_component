@@ -45,6 +45,10 @@ module ViewComponent
       fragment
     end
 
+    def setup_render(component)
+      component.setup_render(vc_test_view_context)
+    end
+
     # Returns the view context used to render components in tests. Note that the view context
     # is reset after each call to `render_inline`.
     #
