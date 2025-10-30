@@ -413,7 +413,7 @@ DEPENDENCIES
   yard-activesupport-concern (< 1)
 
 RUBY VERSION
-   ruby 3.2.0p0
+   ruby 3.2.9p265
 
 BUNDLED WITH
    2.4.1

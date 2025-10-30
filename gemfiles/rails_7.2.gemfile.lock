@@ -440,7 +440,7 @@ DEPENDENCIES
   yard-activesupport-concern (< 1)
 
 RUBY VERSION
-   ruby 3.3.8p144
+   ruby 3.3.10p183
 
 BUNDLED WITH
    2.6.9
