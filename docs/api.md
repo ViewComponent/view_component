@@ -301,6 +301,23 @@ render_inline(MyComponent.new)
 assert_text("Hello, World!")
 ```
 
+### `#setup_render(component)` → [ViewComponent::Base]
+
+Triggers the render setup of a component without actually rendering it.
+The method is also called internally by `#render_in` when a component is rendered.
+Useful for testing methods of components that need access to the view context or the `@virtual_path` variable like I18n's `t(...)` helper.
+
+```ruby
+class MyComponent < ViewComponent::Base
+  def message
+    t("hello.world")
+  end
+end
+
+component = setup_render(MyComponent.new)
+assert_equal(component.message, "Hello, World!")
+```
+
 ### `#render_preview(name, from: __vc_test_helpers_preview_class, params: {})` → [Nokogiri::HTML5]
 
 Render a preview inline. Internally sets `page` to be a `Capybara::Node::Simple`,
