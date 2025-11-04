@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add Consultport to list of companies using ViewComponent.
+
+    *Sebastian Nepote*
+
 * Resolve deprecation warning for `ActiveSupport::Configurable`.
 
     *Simon Fish*
