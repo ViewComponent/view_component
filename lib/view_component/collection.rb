@@ -5,6 +5,7 @@ require "action_view/renderer/collection_renderer"
 module ViewComponent
   class Collection
     include Enumerable
+
     attr_reader :component
 
     delegate :size, to: :@collection
@@ -17,6 +18,14 @@ module ViewComponent
 
     def each(&block)
       components.each(&block)
+    end
+
+    if Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR == 1
+      # Rails expects us to define `format` on all renderables,
+      # but we do not know the `format` of a ViewComponent until runtime.
+      def format
+        nil
+      end
     end
 
     private

@@ -2,14 +2,15 @@
 
 source "https://rubygems.org"
 
+ruby "~> 3.4"
+
 gem "rails", github: "rails/rails", branch: "main"
 gem "rack", git: "https://github.com/rack/rack", ref: "8a4475a9f416a72e5b02bd7817e4a8ed684f29b0"
-gem "tailwindcss-rails", "~> 2"
-gem "turbo-rails", "~> 2"
 
 group :development, :test do
   gem "allocation_stats"
   gem "appraisal", "~> 2"
+  gem "appraisal-run", "~> 1.0"
   gem "benchmark-ips", "~> 2"
   gem "better_html"
   gem "bundler", "~> 2"
@@ -27,7 +28,7 @@ group :development, :test do
   gem "rake", "~> 13"
   gem "rails-dom-testing", "~> 2.3.0"
   gem "redis"
-  gem "rspec-rails", "~> 7"
+  gem "rspec-rails", "~> 8"
   gem "rubocop-md", "~> 2"
   gem "selenium-webdriver", "~> 4"
   gem "simplecov-console", "< 1"
@@ -35,6 +36,8 @@ group :development, :test do
   gem "slim", "~> 5"
   gem "sprockets-rails", "~> 3"
   gem "standard", "~> 1"
+  gem "tailwindcss-rails", "~> 4"
+  gem "turbo-rails", "~> 2"
   gem "warning"
   gem "yard-activesupport-concern", "< 1"
   gem "yard", "< 1"
