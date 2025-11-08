@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add test to document the current behavior for resolving relative translation keys within partial blocks. When rendering a partial, relative translation keys are resolved relative to the partial’s own path rather than the caller’s path. This test ensures that this behavior remains consistent.
+
+    *Oussama Hilal*
+
 * Add Consultport to list of companies using ViewComponent.
 
     *Sebastian Nepote*
@@ -39,9 +43,6 @@ nav_order: 6
 * Declare `actionview` as a `view_component` gem dependency.
 
     *Michal Cichra*
-* Add test documenting current behavior for resolving relative translation keys in partial blocks. The test expects translation keys to resolve relative to the caller's path, but currently they resolve relative to the partial's path, which is incorrect.
-
-    *Oussama Hilal*
 
 ## 4.0.2
 

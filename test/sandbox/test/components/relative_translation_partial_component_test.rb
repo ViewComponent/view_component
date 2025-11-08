@@ -2,10 +2,10 @@
 
 require "test_helper"
 
-class RelativeTranslationPartialComponentTest < ViewComponent::TestCase
+class RelativeTranslationPartialBlockComponentTest < ViewComponent::TestCase
   def test_relative_translation_in_partial_block
-    render_inline(RelativeTranslationPartialParentComponent.new)
+    render_inline(RelativeTranslationPartialBlockComponent.new)
 
-    assert_text "Test Component Title"
+    assert_text "Partial Title"
   end
 end
