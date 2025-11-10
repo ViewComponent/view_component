@@ -24,3 +24,7 @@ en:
 
   my_component:
     message: "OH NO! (you shouldn't see me)"
+
+  shared:
+    partial:
+      title: Partial Title
