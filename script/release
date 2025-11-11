@@ -102,8 +102,8 @@ main() {
     exit 1
   fi
 
-  if [ "$(branch_name)" != "main" ]; then
-    echo "Error: can only make a release on the main branch"
+  if [[ "$(branch_name)" != "main" && "$(branch_name)" != "3.x" ]]; then
+    echo "Error: can only make a release on the main or 3.x branch"
     exit 1
   fi
 
