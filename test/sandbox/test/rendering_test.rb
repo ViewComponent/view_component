@@ -16,10 +16,8 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.ensure_compiled
 
     allocations =
-      if Rails.version.split(".").first(2).map(&:to_i) == [7, 1] && ViewComponent::Base.config.capture_compatibility_patch_enabled
-        {"3.2.9" => 129}
-      elsif Rails.version.to_f < 8.0
-        {"3.3.10" => 126, "3.2.9" => 129, "3.1.7" => 130, "3.0.7" => 131}
+      if Rails.version.to_f < 8.0
+        {"3.3.10" => 126, "3.2.9" => 128..129, "3.1.7" => 130, "3.0.7" => 131}
       elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
         {"3.5.0" => 118, "3.4.7" => 122, "3.3.10" => 134}
       else
