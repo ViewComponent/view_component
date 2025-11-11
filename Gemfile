@@ -21,7 +21,7 @@ group :development, :test do
   gem "cuprite"
   gem "dry-initializer", require: true
   gem "erb_lint"
-  gem "haml", "~> 6"
+  gem "haml", "~> 7"
   gem "jbuilder", "~> 2"
   gem "m", "~> 1"
   gem "method_source", "~> 1"
