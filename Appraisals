@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 appraise "rails-6.1" do
-  gem "rails", "~> 6.1"
+  gem "rails", "~> 6.1.0"
   gem "tailwindcss-rails", "~> 2.0"
   gem "sprockets-rails", "~> 3.4.2"
   gem "concurrent-ruby", "1.3.4"
@@ -14,27 +14,33 @@ appraise "rails-6.1" do
 end
 
 appraise "rails-7.0" do
-  gem "rails", "~> 7.0"
+  gem "rails", "~> 7.0.0"
   gem "tailwindcss-rails", "~> 2.0"
   gem "turbo-rails", "~> 1"
   gem "sprockets-rails", "~> 3.4.2"
 end
 
 appraise "rails-7.1" do
-  gem "rails", "~> 7.1"
+  gem "rails", "~> 7.1.0"
   gem "tailwindcss-rails", "~> 2.0"
   gem "turbo-rails", "~> 1"
   gem "sprockets-rails", "~> 3.4.2"
 end
 
 appraise "rails-7.2" do
-  gem "rails", "~> 7.2"
+  gem "rails", "~> 7.2.0"
   gem "tailwindcss-rails", "~> 2.0"
   gem "sprockets-rails", "~> 3.4.2"
 end
 
 appraise "rails-8.0" do
-  gem "rails", "~> 8.0"
+  gem "rails", "~> 8.0.0"
+  gem "tailwindcss-rails", "~> 2.0"
+  gem "propshaft", "~> 1.1.0"
+end
+
+appraise "rails-8.1" do
+  gem "rails", "~> 8.1.0"
   gem "tailwindcss-rails", "~> 2.0"
   gem "propshaft", "~> 1.1.0"
 end
