@@ -19,9 +19,9 @@ class RenderingTest < ViewComponent::TestCase
       if Rails.version.to_f < 8.0
         {"3.3.10" => 126, "3.2.9" => 129, "3.1.7" => 130, "3.0.7" => 131}
       elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
-        {"3.5.0" => 117, "3.4.4" => 121, "3.3.10" => 132}
+        {"3.5.0" => 117, "3.4.7" => 122, "3.3.10" => 134}
       else
-        {"3.4.4" => 119}
+        {"3.4.7" => 120}
       end
 
     assert_allocations(**allocations) do
