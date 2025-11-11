@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add Rails 8.1 support to ViewComponent v3.
+
+    *Hans Lemuet*
+
 ## 3.23.2
 
 * Include .tt files in published gem. Fixes templates not being available when using generators.

@@ -5,6 +5,9 @@ source "https://rubygems.org"
 gem "rails", github: "rails/rails", branch: "main"
 gem "tailwindcss-rails", "~> 2.0"
 gem "turbo-rails", "~> 1"
-gem "propshaft", "~> 1.1.0"
+
+group :development, :test do
+  gem "appraisal-run", "~> 1.0"
+end
 
 gemspec path: "../"

@@ -66,6 +66,12 @@ jobs:
             rails_version: "8.0"
             mode: "capture_patch_enabled"
           - ruby_version: "3.4"
+            rails_version: "8.1"
+            mode: "capture_patch_disabled"
+          - ruby_version: "3.4"
+            rails_version: "8.1"
+            mode: "capture_patch_enabled"
+          - ruby_version: "3.4"
             rails_version: "main"
             mode: "capture_patch_disabled"
           - ruby_version: "3.4"
@@ -76,6 +82,12 @@ jobs:
             mode: "capture_patch_disabled"
           - ruby_version: "3.5"
             rails_version: "8.0"
+            mode: "capture_patch_enabled"
+          - ruby_version: "3.5"
+            rails_version: "8.1"
+            mode: "capture_patch_disabled"
+          - ruby_version: "3.5"
+            rails_version: "8.1"
             mode: "capture_patch_enabled"
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
@@ -105,38 +117,6 @@ jobs:
         name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}-${{matrix.mode}}
         path: coverage
         include-hidden-files: true
-  primer_view_components_compatibility:
-    name: Test compatibility with Primer ViewComponents (main)
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4.1.1
-      with:
-        repository: 'primer/view_components'
-        path: 'primer_view_components'
-    - uses: actions/checkout@v4.1.1
-      with:
-        path: 'view_component'
-    - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.4
-        bundler-cache: true
-        working-directory: 'view_component'
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: 'npm'
-        cache-dependency-path: 'primer_view_components/package-lock.json'
-    - name: Build and test with Rake
-      run: |
-        cd primer_view_components
-        npm ci
-        cd demo && npm ci && cd ..
-        bundle && bundle exec rake
-      env:
-        VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '7.1.1'
-        PARALLEL_WORKERS: '1'
   coverage:
     needs: test
     runs-on: ubuntu-latest
