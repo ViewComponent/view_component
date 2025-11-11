@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 3.24.0
+
 * Add Rails 8.1 support to ViewComponent v3.
 
     *Hans Lemuet*
