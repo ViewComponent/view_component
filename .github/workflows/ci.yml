@@ -83,6 +83,12 @@ jobs:
           - ruby_version: "3.5"
             rails_version: "8.0"
             mode: "capture_patch_enabled"
+          - ruby_version: "3.5"
+            rails_version: "8.1"
+            mode: "capture_patch_disabled"
+          - ruby_version: "3.5"
+            rails_version: "8.1"
+            mode: "capture_patch_enabled"
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
