@@ -111,6 +111,7 @@ Hundreds of people have [contributed](https://github.com/ViewComponent/view_comp
 
 ## Who uses ViewComponent?
 
+* [20Tabs](https://20tabs.nl)
 * [Aboard HR](https://aboardhr.com/)
 * [Arrows](https://arrows.to/)
 * [Aluuno](https://aluuno.com/)
