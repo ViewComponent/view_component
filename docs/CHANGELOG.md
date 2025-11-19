@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix bug where error line numbers were incorrect in Rails 8.1.
+
+    *Joel Hawksley*
+
 ## 4.1.1
 
 * Add Consultport to list of companies using ViewComponent.
