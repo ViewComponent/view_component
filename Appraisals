@@ -45,6 +45,8 @@ appraise "rails-8.1" do
 end
 
 appraise "rails-main" do
+  ruby "~> 4.0"
+
   gem "rack", git: "https://github.com/rack/rack", ref: "8a4475a9f416a72e5b02bd7817e4a8ed684f29b0"
   gem "rails", github: "rails/rails", branch: "main"
 
