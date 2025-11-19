@@ -23,7 +23,6 @@ module ViewComponent
       def initialize(component:, details:, path:)
         # Rails 8.1 added a newline to the compiled ERB output in
         # https://github.com/rails/rails/pull/53731
-        lineno = Rails::VERSION::STRING > "8.0" ? -1 : 0
         lineno =
           if Rails::VERSION::MAJOR == 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
             - 1
