@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix bug where error line numbers were incorrect in Rails 8.1.
+
+    *Joel Hawksley*
+
 * Remove `< 8.2` upper bound for `activesupport` and `actionview` dependencies.
 
     *Hans Lemuet*
