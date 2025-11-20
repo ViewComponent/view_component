@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-ruby "~> 3.4"
+ruby "4.0.0.dev"
 
 gem "rails", github: "rails/rails", branch: "main"
 gem "rack", git: "https://github.com/rack/rack", ref: "8a4475a9f416a72e5b02bd7817e4a8ed684f29b0"
@@ -10,10 +10,10 @@ gem "rack", git: "https://github.com/rack/rack", ref: "8a4475a9f416a72e5b02bd781
 group :development, :test do
   gem "allocation_stats"
   gem "appraisal", "~> 2"
-  gem "appraisal-run", "~> 1.0"
+  gem "appraisal-run", "~> 1.1"
   gem "benchmark-ips", "~> 2"
   gem "better_html"
-  gem "bundler", "~> 2"
+  gem "bundler"
   gem "capybara", "~> 3"
   gem "cuprite"
   gem "dry-initializer", require: true
@@ -24,7 +24,7 @@ group :development, :test do
   gem "method_source", "~> 1"
   gem "minitest", "~> 5"
   gem "propshaft", "~> 1"
-  gem "puma", "~> 6"
+  gem "puma", ">= 6"
   gem "rake", "~> 13"
   gem "rails-dom-testing", "~> 2.3.0"
   gem "redis"
