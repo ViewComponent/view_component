@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Remove `< 8.2` upper bound for `activesupport` and `actionview` dependencies.
+
+    *Hans Lemuet*
+
 ## 4.1.1
 
 * Add Consultport to list of companies using ViewComponent.
