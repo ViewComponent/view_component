@@ -109,7 +109,7 @@ GIT
 PATH
   remote: ..
   specs:
-    view_component (4.1.0)
+    view_component (4.1.1)
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
