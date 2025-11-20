@@ -152,6 +152,14 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
+    herb (0.8.2-aarch64-linux-gnu)
+    herb (0.8.2-aarch64-linux-musl)
+    herb (0.8.2-arm-linux-gnu)
+    herb (0.8.2-arm-linux-musl)
+    herb (0.8.2-arm64-darwin)
+    herb (0.8.2-x86_64-darwin)
+    herb (0.8.2-x86_64-linux-gnu)
+    herb (0.8.2-x86_64-linux-musl)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     io-console (0.8.1)
@@ -274,6 +282,9 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
+    reactionview (0.1.6)
+      actionview (>= 7.0)
+      herb (>= 0.7.5, < 1.0.0)
     redis (5.4.1)
       redis-client (>= 0.22.0)
     redis-client (0.26.1)
@@ -423,7 +434,7 @@ DEPENDENCIES
   appraisal-run (~> 1.1)
   benchmark-ips (~> 2)
   better_html
-  bundler (~> 2)
+  bundler
   capybara (~> 3)
   cuprite
   dry-initializer
@@ -438,6 +449,7 @@ DEPENDENCIES
   rails (~> 7.1.0)
   rails-dom-testing (~> 2.3.0)
   rake (~> 13)
+  reactionview
   redis
   rspec-rails (~> 7)
   rubocop-md (~> 2)
