@@ -18,6 +18,10 @@ nav_order: 6
 
     *Hans Lemuet*
 
+* Test compatibility with Herb/ReActionView.
+
+    *Joel Hawksley*
+
 ## 4.1.1
 
 * Add Consultport to list of companies using ViewComponent.
