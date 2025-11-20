@@ -295,6 +295,13 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("bar")
   end
 
+  def test_renders_herb_template
+    render_inline(HerbComponent.new(message: "bar")) { "foo" }
+
+    assert_text("foo")
+    assert_text("bar")
+  end
+
   def test_renders_partial_template
     render_inline(PartialComponent.new)
 

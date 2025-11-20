@@ -30,6 +30,7 @@ group :development, :test do
   gem "puma", ">= 6"
   gem "rake", "~> 13"
   gem "rails-dom-testing", "~> 2.3.0"
+  gem "reactionview"
   gem "redis"
   gem "rspec-rails"
   gem "rubocop-md", "~> 2"
