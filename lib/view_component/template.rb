@@ -57,7 +57,7 @@ module ViewComponent
         # Rails 8.1 added a newline to the compiled ERB output in
         # https://github.com/rails/rails/pull/53731
         lineno =
-          if Rails::VERSION::MAJOR == 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
+          if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
             inline_template.lineno - 1
           else
             inline_template.lineno
