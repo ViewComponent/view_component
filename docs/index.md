@@ -188,6 +188,7 @@ Hundreds of people have [contributed](https://github.com/ViewComponent/view_comp
 * [Workbrew](https://www.workbrew.com/)
 * [Wrapbook](https://wrapbook.com/)
 * [Yobbers](https://www.yobbers.com/)
+* [Job&Careers](https://job.careers/)
 
 Using ViewComponent? [Send a pull request](https://github.com/viewcomponent/view_component/edit/main/docs/index.md) to update this list!
 You can also check out [how various projects use ViewComponent](https://github.com/viewcomponent/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
