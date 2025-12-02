@@ -22,6 +22,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Remove Who Uses ViewComponent section from docs.
+
+    *Joel Hawksley*
+
 ## 4.1.1
 
 * Add Consultport to list of companies using ViewComponent.
