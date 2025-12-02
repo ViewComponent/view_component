@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Allow ruby-head CI job to fail without failing workflow.
+
+    *Hakan Ensari*
+
 * Fix bug where error line numbers were incorrect in Rails 8.1.
 
     *Joel Hawksley*

@@ -29,6 +29,7 @@ jobs:
   test:
     name: test (Rails ${{ matrix.rails_version }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.ruby_version == 'head' }}
     strategy:
       fail-fast: false
       matrix:
