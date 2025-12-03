@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix outdated reference to preview layout configuration in docs.
+
+    *Lucas Geron*
+
 * Allow ruby-head CI job to fail without failing workflow.
 
     *Hakan Ensari*
