@@ -131,6 +131,7 @@ module ViewComponent
 
       @__vc_content_evaluated = false
       @__vc_render_in_block = block
+      @view_context.instance_variable_set(:@virtual_path, virtual_path)
 
       before_render
 
@@ -138,8 +139,6 @@ module ViewComponent
         value = nil
 
         @output_buffer.with_buffer do
-          @view_context.instance_variable_set(:@virtual_path, virtual_path)
-
           rendered_template =
             around_render do
               render_template_for(@__vc_requested_details).to_s
