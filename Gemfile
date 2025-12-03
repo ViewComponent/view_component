@@ -16,7 +16,7 @@ group :development, :test do
   gem "appraisal-run", "~> 1.1"
   gem "benchmark-ips", "~> 2"
   gem "better_html"
-  gem "bundler", "~> 2"
+  gem "bundler"
   gem "capybara", "~> 3"
   gem "cuprite"
   gem "dry-initializer", require: true
@@ -30,6 +30,7 @@ group :development, :test do
   gem "puma", ">= 6"
   gem "rake", "~> 13"
   gem "rails-dom-testing", "~> 2.3.0"
+  gem "reactionview"
   gem "redis"
   gem "rspec-rails"
   gem "rubocop-md", "~> 2"

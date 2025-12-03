@@ -10,11 +10,27 @@ nav_order: 6
 
 ## main
 
+* Allow ruby-head CI job to fail without failing workflow.
+
+    *Hakan Ensari*
+
+* Fix bug where error line numbers were incorrect in Rails 8.1.
+
+    *Joel Hawksley*
+
+* Remove `< 8.2` upper bound for `activesupport` and `actionview` dependencies.
+
+    *Hans Lemuet*
+
+* Test compatibility with Herb/ReActionView.
+
+    *Joel Hawksley*
+
+* Remove Who Uses ViewComponent section from docs.
+
+    *Joel Hawksley*
+
 ## 4.1.1
-
-* Add Consultport to list of companies using ViewComponent.
-
-    *Sebastian Nepote*
 
 * Resolve deprecation warning for `ActiveSupport::Configurable`.
 
@@ -24,19 +40,11 @@ nav_order: 6
 
     *Hans Lemuet*
 
-* Added Reinvented Hospitality to the list of companies using ViewComponent.
-
-    *Torgil Zechel*
-
 ## 4.1.0
 
 * Add Rails 8.1 support.
 
     *Hans Lemuet*
-
-* Add Carwow to list of companies using ViewComponent.
-
-    *Tom Lord*
 
 * Declare `actionview` as a `view_component` gem dependency.
 
@@ -520,10 +528,6 @@ This release makes the following breaking changes:
 
     *Martin Meyerhoff*, *Joel Hawksley*
 
-* Add Content Harmony & Learn To Be to list of companies using ViewComponent.
-
-    *Kane Jamison*
-
 * Clarify error message about render-dependent logic.
 
   Error messages about render-dependent logic were sometimes inaccurate, saying `during initialization` despite also being raised after a component had been initialized but before it was rendered.
@@ -542,10 +546,6 @@ This release makes the following breaking changes:
 
     *Reegan Viljoen*
 
-* Add HomeStyler AI to list of companies using ViewComponent.
-
-    *JP Balarini*
-
 ## 3.21.0
 
 * Updates testing docs to include an example of how to use with RSpec.
@@ -555,10 +555,6 @@ This release makes the following breaking changes:
 * Add `--skip-suffix` option to component generator.
 
     *KAWAKAMI Moeki*
-
-* Add FreeATS to list of companies using ViewComponent.
-
-    *Ilia Liamshin*
 
 * Ensure HTML output safety wrapper is used for all inline templates.
 
@@ -609,10 +605,6 @@ This release makes the following breaking changes:
 * Wrap entire compile step in a mutex to make it more resilient to race conditions.
 
     *Blake Williams*
-
-* Add [Niva]([niva.co](https://www.niva.co/)) to companies who use `ViewComponent`.
-
-    *Daniel Vu Dao*
 
 * Fix `preview_paths` in docs.
 
@@ -677,10 +669,6 @@ This release makes the following breaking changes:
 * Warn if using Ruby < 3.2 or Rails < 7.1, which won't be supported by ViewComponent v4, to be released no earlier than April 1, 2025.
 
     *Joel Hawksley*
-
-* Add Kicksite to list of companies using ViewComponent.
-
-    *Adil Lari*
 
 * Allow overridden slot methods to use `super`.
 
@@ -921,10 +909,6 @@ This release makes the following breaking changes:
 
     *Simon Fish*
 
-* Add Simundia to list of companies using ViewComponent.
-
-    *Alexandre Ignjatovic*
-
 * Reduce UnboundMethod objects by memoizing initialize_parameters.
 
     *Rainer Borene*
@@ -974,10 +958,6 @@ This release makes the following breaking changes:
 * Fix `#with_request_url` to ensure `request.query_parameters` is an instance of ActiveSupport::HashWithIndifferentAccess.
 
     *milk1000cc*
-
-* Add PeopleForce to list of companies using ViewComponent.
-
-    *Volodymyr Khandiuk*
 
 ## 3.5.0
 
@@ -1052,14 +1032,6 @@ This release makes the following breaking changes:
 * Add `SECURITY.md`.
 
     *Joel Hawksley*
-
-* Add Ophelos to list of companies using ViewComponent.
-
-    *Graham Rogers*
-
-* Add FlightLogger to list of companies using ViewComponent.
-
-    *Joseph Carpenter*
 
 * Fix coverage reports overwriting each other when running locally.
 
@@ -1300,14 +1272,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Graham Rogers*
 
-* Add Krystal to list of companies using ViewComponent.
-
-     *Matt Bearman*
-
-* Add Mon Ami to list of companies using ViewComponent.
-
-    *Ethan Lee-Tyson*
-
 ## 3.0.0.rc1
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
@@ -1456,10 +1420,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Hans Lemuet*
 
-* Add Startup Jobs to list of companies using ViewComponent.
-
-    *Marc Köhlbrugge*
-
 * Run PVC's accessibility tests in a single process to avoid resource contention in CI.
 
     *Cameron Dutro*
@@ -1500,10 +1460,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
 ## 2.74.0
 
-* Add Avo to list of companies using ViewComponent.
-
-    *Adrian Marin*
-
 * Promote experimental `_output_postamble` method to public API as `output_postamble`.
 
     *Joel Hawksley*
@@ -1530,10 +1486,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Erinna Chen*
 
-* Add PrintReleaf to list of companies using ViewComponent.
-
-    *Ry Kulp*
-
 * Simplify CI configuration to a single build per Ruby/Rails version.
 
     *Joel Hawksley*
@@ -1541,10 +1493,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 * Correctly document `generate.sidecar` config option.
 
     *Ruben Smit*
-
-* Add Yobbers to list of companies using ViewComponent.
-
-    *Anton Prins*
 
 ## 2.72.0
 
@@ -1559,10 +1507,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 * Link to `CHANGELOG.md` instead of symlink.
 
     *Joel Hawksley.
-
-* Add Aluuno to list of companies using ViewComponent.
-
-    *Daniel Naves de Carvalho*
 
 * Add `source_code_uri` to gemspec.
 
@@ -1598,21 +1542,9 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Joel Hawksley*
 
-* Add Arrows to list of companies using ViewComponent.
-
-    *Matt Swanson*
-
-* Add WIP to list of companies using ViewComponent.
-
-    *Marc Köhlbrugge*
-
 * Update slots documentation to include how to reference slots.
 
     *Brittany Ellich*
-
-* Add Clio to list of companies using ViewComponent.
-
-    *Mike Buckley*
 
 ## 2.69.0
 
@@ -1731,10 +1663,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Vikram Dighe*
 
-* Add HappyCo to list of companies using ViewComponent.
-
-    *Josh Clayton*
-
 * Add predicate method support to polymorphic slots.
 
     *Graham Rogers*
@@ -1845,10 +1773,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Thomas Hutterer*
 
-* Add FreeAgent to list of companies using ViewComponent.
-
-    *Simon Fish*
-
 * Include polymorphic slots in `ViewComponent::Base` by default.
 
     *Cameron Dutro*
@@ -1904,18 +1828,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Joel Hawksley*
 
-* Add G2 to list of companies that use ViewComponent.
-
-    *Jack Shuff*
-
-* Add Within3 to list of companies that use ViewComponent.
-
-    *Drew Bragg*
-
-* Add Mission Met to list of companies that use ViewComponent.
-
-    *Nick Smith*
-
 * Fix `#with_request_url` test helper not parsing nested query parameters into nested hashes.
 
     *Richard Marbach*
@@ -1955,10 +1867,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Blake Williams*
 
-* Add QuickNode to list of companies that use ViewComponent.
-
-    *Luc Castera*
-
 * Include the `Translatable` module by default.
 
     *Elia Schito*
@@ -1989,10 +1897,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Jason Swett*
 
-* Add Bearer to list of companies that use ViewComponent.
-
-    *Yaroslav Shmarov*
-
 * Add articles to resources page.
 
     *Joel Hawksley*
@@ -2021,10 +1925,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 * Update the docs only when releasing a new version.
 
     *Hans Lemuet*
-
-* Alphabetize companies using ViewComponent and add Brightline to the list.
-
-    *Jack Schuss*
 
 * Add CMYK value for ViewComponent Red color on logo page.
 

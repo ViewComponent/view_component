@@ -295,6 +295,13 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("bar")
   end
 
+  def test_renders_herb_template
+    render_inline(HerbComponent.new(message: "bar")) { "foo" }
+
+    assert_text("foo")
+    assert_text("bar")
+  end
+
   def test_renders_partial_template
     render_inline(PartialComponent.new)
 
@@ -643,6 +650,16 @@ class RenderingTest < ViewComponent::TestCase
 
     component_error_index = (Rails::VERSION::STRING < "8.0") ? 0 : 1
     assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[component_error_index]
+  end
+
+  def test_backtrace_returns_correct_file_and_line_number_in_slim
+    error =
+      assert_raises NameError do
+        render_inline(ExceptionInSlimTemplateComponent.new)
+      end
+
+    component_error_index = (Rails::VERSION::STRING < "8.0") ? 0 : 1
+    assert_match %r{app/components/exception_in_slim_template_component\.html\.slim:2}, error.backtrace[component_error_index]
   end
 
   def test_render_collection
