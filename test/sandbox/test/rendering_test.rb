@@ -1343,4 +1343,30 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(PartialWithYieldComponent.new)
     assert_text "hello world", exact: true, normalize_ws: true
   end
+
+  def test_render_partial_with_yield_and_method_call
+    render_inline(PartialWithYieldAndMethodCallComponent.new)
+    assert_text "hello world", exact: true, normalize_ws: true
+  end
+
+  class I18nTestComponent < ViewComponent::Base
+    def message
+      t(".message")
+    end
+
+    def render?
+      message
+    end
+
+    def call
+      content_tag :div, t(".message")
+    end
+  end
+
+  def test_i18n_in_render_hook
+    vc_test_request.params[:hello] = "world"
+    render_inline(I18nTestComponent.new)
+
+    assert_selector("div", text: I18n.t("rendering_test.i18n_test_component.message"))
+  end
 end

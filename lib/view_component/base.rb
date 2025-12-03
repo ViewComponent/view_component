@@ -46,7 +46,7 @@ module ViewComponent
     end
 
     include ActionView::Helpers
-    include Rails.application.routes.url_helpers if defined?(Rails) && Rails.application
+    include Rails.application.routes.url_helpers if defined?(Rails.application.routes)
     include ERB::Escape
     include ActiveSupport::CoreExt::ERBUtil
 
@@ -131,6 +131,7 @@ module ViewComponent
 
       @__vc_content_evaluated = false
       @__vc_render_in_block = block
+      @view_context.instance_variable_set(:@virtual_path, virtual_path)
 
       before_render
 
@@ -138,8 +139,6 @@ module ViewComponent
         value = nil
 
         @output_buffer.with_buffer do
-          @view_context.instance_variable_set(:@virtual_path, virtual_path)
-
           rendered_template =
             around_render do
               render_template_for(@__vc_requested_details).to_s
@@ -260,6 +259,9 @@ module ViewComponent
         @view_context.render(options, args, &block)
       elsif block
         __vc_original_view_context.render(options, args) do
+          # capture the block output in the view context of the component
+          output = capture(&block)
+
           # Partials are rendered to their own buffer and do not append to the
           # original @output_buffer we retain a reference to in #render_in. This
           # is a problem since the block passed to us here in the #render method
@@ -267,7 +269,7 @@ module ViewComponent
           # appends to the original @output_buffer. To avoid this, we evaluate the
           # block in the view context instead, which will append to the output buffer
           # created for the partial.
-          __vc_original_view_context.instance_exec(&block)
+          __vc_original_view_context.capture { output }
         end
       else
         __vc_original_view_context.render(options, args)
@@ -301,7 +303,7 @@ module ViewComponent
       @__vc_helpers ||= __vc_original_view_context || controller.view_context
     end
 
-    if ::Rails.env.development? || ::Rails.env.test?
+    if defined?(Rails.env) && (::Rails.env.development? || ::Rails.env.test?)
       # @private
       def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
         super
@@ -330,7 +332,7 @@ module ViewComponent
       []
     end
 
-    if Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR == 1
+    if defined?(Rails::VERSION) && Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR == 1
       # Rails expects us to define `format` on all renderables,
       # but we do not know the `format` of a ViewComponent until runtime.
       def format
@@ -608,6 +610,16 @@ module ViewComponent
       # @private
       def __vc_compiled?
         __vc_compiler.compiled?
+      end
+
+      # Hook called by the compiler after a component is compiled.
+      #
+      # Extensions can override this class method to run logic after
+      # compilation (e.g., generate helpers, register metadata, etc.).
+      #
+      # By default, this is a no-op.
+      def after_compile
+        # no-op by default
       end
 
       # @private
