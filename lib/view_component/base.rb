@@ -613,6 +613,16 @@ module ViewComponent
         __vc_compiler.compiled?
       end
 
+      # Hook called by the compiler after a component is compiled.
+      #
+      # Extensions can override this class method to run logic after
+      # compilation (e.g., generate helpers, register metadata, etc.).
+      #
+      # By default, this is a no-op.
+      def after_compile
+        # no-op by default
+      end
+
       # @private
       def __vc_ensure_compiled
         __vc_compile unless __vc_compiled?
