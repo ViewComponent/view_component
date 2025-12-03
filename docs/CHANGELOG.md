@@ -14,6 +14,22 @@ nav_order: 6
 
     *Oussama Hilal*
 
+* Allow I18n calls in `render?`.
+
+    *23tux*
+
+* ViewComponent now works without `rails` and `railties` gems loaded, enabling compatibility with Bridgetown 2.0.
+
+    *Tom Lord*
+
+* Capture partial block in the component's context, allowing access to the component instance inside the block.
+
+    *23tux*
+
+* Add `after_compile` class method hook to enable extensions to run logic after component compilation.
+
+    *Jose Solás*
+
 * Fix outdated reference to preview layout configuration in docs.
 
     *Lucas Geron*

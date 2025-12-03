@@ -28,3 +28,7 @@ en:
   shared:
     partial:
       title: Partial Title
+
+  rendering_test:
+    i18n_test_component:
+      message: "I can be called in render?"
