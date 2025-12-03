@@ -14,10 +14,6 @@ nav_order: 6
 
     *Lucas Geron*
 
-* Make `ViewComponent::VERSION` accessible to other gems by default.
-
-    *Hans Lemuet*
-
 * Allow ruby-head CI job to fail without failing workflow.
 
     *Hakan Ensari*
