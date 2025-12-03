@@ -29,6 +29,7 @@ jobs:
   test:
     name: test (Rails ${{ matrix.rails_version }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.ruby_version == 'head' }}
     strategy:
       fail-fast: false
       matrix:
@@ -39,6 +40,8 @@ jobs:
             rails_version: "7.2"
           - ruby_version: "3.4"
             rails_version: "8.0"
+          - ruby_version: "3.4"
+            rails_version: "8.1"
           - ruby_version: "head"
             rails_version: "main"
     env:
