@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Remove known issue from docs as ActiveScaffold is [now compatible](https://github.com/activescaffold/active_scaffold/pull/743) with ViewComponent.
+
+    *David Löwenfels*
+
 * Add `after_compile` class method hook to enable extensions to run logic after component compilation.
 
     *Jose Solás*
