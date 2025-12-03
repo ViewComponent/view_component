@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add `after_compile` class method hook to enable extensions to run logic after component compilation.
+
+    *Jose Solás*
+
 * Fix outdated reference to preview layout configuration in docs.
 
     *Lucas Geron*
