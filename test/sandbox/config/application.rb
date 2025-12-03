@@ -34,6 +34,7 @@ require "view_component"
 require "haml"
 require "slim"
 require "jbuilder"
+require "reactionview"
 
 module Sandbox
   class Application < Rails::Application
