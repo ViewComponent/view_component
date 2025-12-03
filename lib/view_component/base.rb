@@ -46,7 +46,7 @@ module ViewComponent
     end
 
     include ActionView::Helpers
-    include Rails.application.routes.url_helpers if defined?(Rails) && Rails.application
+    include Rails.application.routes.url_helpers if defined?(Rails.application.routes)
     include ERB::Escape
     include ActiveSupport::CoreExt::ERBUtil
 
@@ -304,7 +304,7 @@ module ViewComponent
       @__vc_helpers ||= __vc_original_view_context || controller.view_context
     end
 
-    if ::Rails.env.development? || ::Rails.env.test?
+    if defined?(Rails.env) && (::Rails.env.development? || ::Rails.env.test?)
       # @private
       def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
         super
@@ -333,7 +333,7 @@ module ViewComponent
       []
     end
 
-    if Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR == 1
+    if defined?(Rails::VERSION) && Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR == 1
       # Rails expects us to define `format` on all renderables,
       # but we do not know the `format` of a ViewComponent until runtime.
       def format
