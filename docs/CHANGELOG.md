@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Fix outdated settings related to default layout preview.
+* Fix outdated reference to preview layout configuration in docs.
 
     *Lucas Geron*
 
