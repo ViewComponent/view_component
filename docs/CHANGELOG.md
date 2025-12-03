@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Capture partial block in the component's context, allowing access to the component instance inside the block.
+
+    *23tux*
+
 * Add `after_compile` class method hook to enable extensions to run logic after component compilation.
 
     *Jose Solás*
