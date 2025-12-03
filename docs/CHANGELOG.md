@@ -10,11 +10,11 @@ nav_order: 6
 
 ## main
 
-* Capture partial block in the component's context, allowing access to the component instance inside the block.
+* ViewComponent now works without `rails` and `railties` gems loaded, enabling compatibility with Bridgetown 2.0.
 
     *Tom Lord*
 
-* ViewComponent now works without `rails` and `railties` gems loaded.
+* Capture partial block in the component's context, allowing access to the component instance inside the block.
 
     *23tux*
 
