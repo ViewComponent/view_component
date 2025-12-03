@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Allow I18n calls in `render?`.
+
+    *23tux*
+
 * ViewComponent now works without `rails` and `railties` gems loaded, enabling compatibility with Bridgetown 2.0.
 
     *Tom Lord*
