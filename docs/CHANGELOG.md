@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Allow `render_inline` with Nokogiri::HTML5 to parse more arbitrary content including bare table content otherwise illegal fragments like `<td>`.
+
+    *Jonathan Rochkind*
+
 * Remove known issue from docs as ActiveScaffold is [now compatible](https://github.com/activescaffold/active_scaffold/pull/743) with ViewComponent.
 
     *David Löwenfels*
