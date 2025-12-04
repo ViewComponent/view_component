@@ -17,7 +17,3 @@ Calls to form helpers such as `form_with` in ViewComponents [don't use the defau
   <%= f.text_field :name %>
 <% end %>
 ```
-
-## Incompatibility with `active_scaffold`
-
-Due to `active_scaffold`'s [monkey-patching](https://github.com/activescaffold/active_scaffold/blob/0ada8b7a51bf608c4ade18983ce4494c963963f3/lib/active_scaffold/extensions/action_view_rendering.rb) of `render` that hasn't been updated to support renderable objects like ViewComponents, it's impossible to use `active_scaffold` alongside `view_component`.
