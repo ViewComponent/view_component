@@ -14,6 +14,10 @@ nav_order: 6
 
     *Jonathan Rochkind*
 
+* Remove known issue from docs as ActiveScaffold is [now compatible](https://github.com/activescaffold/active_scaffold/pull/743) with ViewComponent.
+
+    *David Löwenfels*
+
 * Add test to document the current behavior for resolving relative translation keys within partial blocks. When rendering a partial, relative translation keys are resolved relative to the partial's own path rather than the caller’s path. This test ensures that this behavior remains consistent.
 
     *Oussama Hilal*
