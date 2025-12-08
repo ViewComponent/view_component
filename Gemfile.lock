@@ -402,7 +402,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.37)
+    yard (0.9.38)
     yard-activesupport-concern (0.0.1)
       yard (>= 0.8)
     zeitwerk (2.7.3)
