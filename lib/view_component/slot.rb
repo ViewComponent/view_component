@@ -6,7 +6,7 @@ module ViewComponent
   class Slot
     include ViewComponent::WithContentHelper
 
-    attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content
+    attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content, :__vc_content_block_virtual_path
 
     def initialize(parent)
       @parent = parent
@@ -58,7 +58,7 @@ module ViewComponent
           if defined?(@__vc_content_block)
             # render_in is faster than `parent.render`
             @__vc_component_instance.render_in(view_context) do |*args|
-              @parent.with_original_virtual_path do
+              @parent.with_captured_virtual_path(@__vc_content_block_virtual_path) do
                 @__vc_content_block.call(*args)
               end
             end
@@ -68,7 +68,7 @@ module ViewComponent
         elsif defined?(@__vc_content)
           @__vc_content
         elsif defined?(@__vc_content_block)
-          @parent.with_original_virtual_path do
+          @parent.with_captured_virtual_path(@__vc_content_block_virtual_path) do
             view_context.capture(&@__vc_content_block)
           end
         elsif defined?(@__vc_content_set_by_with_content)

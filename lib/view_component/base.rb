@@ -363,7 +363,7 @@ module ViewComponent
 
       @__vc_content =
         if __vc_render_in_block_provided?
-          with_original_virtual_path do
+          with_captured_virtual_path(@old_virtual_path) do
             view_context.capture(self, &@__vc_render_in_block)
           end
         elsif __vc_content_set_by_with_content_defined?
@@ -379,11 +379,14 @@ module ViewComponent
     end
 
     # @private
-    def with_original_virtual_path
-      @view_context.instance_variable_set(:@virtual_path, @old_virtual_path)
+    # Temporarily sets the virtual path to the captured value, then restores it.
+    # This ensures translations and other path-dependent code execute with the correct scope.
+    def with_captured_virtual_path(captured_path)
+      old_virtual_path = @view_context.instance_variable_get(:@virtual_path)
+      @view_context.instance_variable_set(:@virtual_path, captured_path)
       yield
     ensure
-      @view_context.instance_variable_set(:@virtual_path, virtual_path)
+      @view_context.instance_variable_set(:@virtual_path, old_virtual_path)
     end
 
     private
