@@ -390,7 +390,12 @@ module ViewComponent
       # 2. Since we have to pass block content to components when calling
       # `render`, evaluating the block here would require us to call
       # `view_context.capture` twice, which is slower
-      slot.__vc_content_block = block if block
+      if block
+        slot.__vc_content_block = block
+        # Capture the virtual path at the time the block is defined, so that
+        # translations resolve relative to where the block was created, not where it's rendered
+        slot.__vc_content_block_virtual_path = view_context.instance_variable_get(:@virtual_path)
+      end
 
       # If class
       if slot_definition[:renderable]
@@ -408,7 +413,9 @@ module ViewComponent
         renderable_value =
           if block
             renderable_function.call(*args, **kwargs) do |*rargs|
-              view_context.capture(*rargs, &block)
+              with_captured_virtual_path(@old_virtual_path) do
+                view_context.capture(*rargs, &block)
+              end
             end
           else
             renderable_function.call(*args, **kwargs)
