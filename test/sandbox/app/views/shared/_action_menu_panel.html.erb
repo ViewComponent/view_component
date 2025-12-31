@@ -1,0 +1,7 @@
+<%= render ActionMenuComponent.new do |menu| %>
+  <% menu.with_list do |list| %>
+    <% list.with_item do %>
+      <%= t(".menu_action") %>
+    <% end %>
+  <% end %>
+<% end %>
