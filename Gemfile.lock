@@ -183,7 +183,8 @@ GEM
     matrix (0.4.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
-    minitest (5.27.0)
+    minitest (6.0.1)
+      prism (~> 1.5)
     net-imap (0.5.12)
       date
       net-protocol
@@ -432,7 +433,7 @@ DEPENDENCIES
   jbuilder (~> 2)
   m (~> 1)
   method_source (~> 1)
-  minitest (~> 5)
+  minitest (~> 6)
   propshaft (~> 1)
   puma (>= 6)
   rails (~> 8)
