@@ -14,6 +14,8 @@ nav_order: 6
 
     *Joel Hawksley*
 
+## 4.2.0
+
 * Fix translation scope resolution in deeply nested component blocks (3+ levels). Translations called inside deeply nested slot blocks using `renders_many`/`renders_one` were incorrectly resolving to an intermediate component's scope instead of the partial's scope where the block was defined. The fix captures the virtual path at block definition time and restores it during block execution, ensuring translations always resolve relative to where the block was created regardless of nesting depth.
 
     *Nathaniel Watts*
