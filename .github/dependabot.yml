@@ -3,8 +3,8 @@ updates:
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
   - package-ecosystem: "bundler"
     directory: "/docs"
     schedule:
-      interval: "weekly"
+      interval: "daily"

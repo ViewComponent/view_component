@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Automatically merge dependabot PRs.
+
+    *Joel Hawksley*
+
 * Use Ruby 4.0.0 in CI and dev.
 
     *Joel Hawksley*
