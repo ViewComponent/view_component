@@ -78,7 +78,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.4
+        ruby-version: 4.0
     - uses: actions/cache@v4
       with:
         path: vendor/bundle
