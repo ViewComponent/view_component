@@ -109,7 +109,7 @@ GIT
 PATH
   remote: ..
   specs:
-    view_component (4.1.1)
+    view_component (4.2.0)
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
@@ -399,7 +399,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
-    unicode-emoji (4.1.0)
+    unicode-emoji (4.2.0)
     uri (1.1.1)
     useragent (0.16.11)
     warning (1.5.0)
@@ -466,7 +466,7 @@ DEPENDENCIES
   yard-activesupport-concern (< 1)
 
 RUBY VERSION
-  ruby 4.0.0.dev
+  ruby 4.1.0.dev
 
 BUNDLED WITH
-  4.0.0.dev
+  4.1.0.dev
