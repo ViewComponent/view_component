@@ -145,14 +145,7 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
-    herb (0.8.3-aarch64-linux-gnu)
-    herb (0.8.3-aarch64-linux-musl)
-    herb (0.8.3-arm-linux-gnu)
-    herb (0.8.3-arm-linux-musl)
-    herb (0.8.3-arm64-darwin)
-    herb (0.8.3-x86_64-darwin)
-    herb (0.8.3-x86_64-linux-gnu)
-    herb (0.8.3-x86_64-linux-musl)
+    herb (0.8.3)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     io-console (0.8.2)
@@ -390,7 +383,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
-    unicode-emoji (4.1.0)
+    unicode-emoji (4.2.0)
     uri (1.1.1)
     useragent (0.16.11)
     warning (1.5.0)
@@ -456,7 +449,7 @@ DEPENDENCIES
   yard-activesupport-concern (< 1)
 
 RUBY VERSION
-   ruby 3.4.7p58
+   ruby 4.0.0p0
 
 BUNDLED WITH
    2.6.2

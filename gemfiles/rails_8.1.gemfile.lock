@@ -145,6 +145,7 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
+    herb (0.8.2)
     herb (0.8.2-aarch64-linux-gnu)
     herb (0.8.2-aarch64-linux-musl)
     herb (0.8.2-arm-linux-gnu)
@@ -183,6 +184,7 @@ GEM
     matrix (0.4.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     minitest (5.26.2)
     net-imap (0.5.12)
       date
@@ -194,6 +196,9 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
+    nokogiri (1.18.10)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.18.10-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.18.10-aarch64-linux-musl)
@@ -390,7 +395,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
-    unicode-emoji (4.1.0)
+    unicode-emoji (4.2.0)
     uri (1.1.1)
     useragent (0.16.11)
     warning (1.5.0)
@@ -456,7 +461,7 @@ DEPENDENCIES
   yard-activesupport-concern (< 1)
 
 RUBY VERSION
-   ruby 3.4.7p58
+   ruby 4.0.0p0
 
 BUNDLED WITH
    2.6.7
