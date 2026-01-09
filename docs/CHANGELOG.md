@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Test against Ruby 4.0.0 in CI.
+* Use Ruby 4.0.0 in CI and dev.
 
     *Joel Hawksley*
 
