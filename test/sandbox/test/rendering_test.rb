@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 67, "3.4" => 72..74, "3.3" => 72, "3.2" => 75..76}) do
+      assert_allocations({"4.1" => 67..68, "4.0" => 67, "3.4" => 72..74, "3.3" => 75, "3.2" => 78..79}) do
         render_inline(MyComponent.new)
       end
     end
@@ -34,7 +34,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
-    allocations = {"3.5" => 66, "3.4" => 70..82, "3.3" => 86, "3.2" => 89..90}
+    allocations = {"4.1" => 66, "4.0" => 66, "3.4" => 70..82, "3.3" => 89, "3.2" => 92..93}
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
@@ -75,6 +75,10 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_render_inline_returns_nokogiri_fragment
     assert_includes render_inline(MyComponent.new).css("div").to_html, "hello,world!"
+  end
+
+  def test_render_inline_handles_table_contents
+    assert_includes render_inline(TableContentsComponent.new).css("td").to_html, "<td>td contents</td>"
   end
 
   def test_render_inline_sets_rendered_content
@@ -290,6 +294,13 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_renders_erb_template
     render_inline(ErbComponent.new(message: "bar")) { "foo" }
+
+    assert_text("foo")
+    assert_text("bar")
+  end
+
+  def test_renders_herb_template
+    render_inline(HerbComponent.new(message: "bar")) { "foo" }
 
     assert_text("foo")
     assert_text("bar")
@@ -643,6 +654,16 @@ class RenderingTest < ViewComponent::TestCase
 
     component_error_index = (Rails::VERSION::STRING < "8.0") ? 0 : 1
     assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[component_error_index]
+  end
+
+  def test_backtrace_returns_correct_file_and_line_number_in_slim
+    error =
+      assert_raises NameError do
+        render_inline(ExceptionInSlimTemplateComponent.new)
+      end
+
+    component_error_index = (Rails::VERSION::STRING < "8.0") ? 0 : 1
+    assert_match %r{app/components/exception_in_slim_template_component\.html\.slim:2}, error.backtrace[component_error_index]
   end
 
   def test_render_collection
@@ -1321,5 +1342,31 @@ class RenderingTest < ViewComponent::TestCase
   def test_render_partial_with_yield
     render_inline(PartialWithYieldComponent.new)
     assert_text "hello world", exact: true, normalize_ws: true
+  end
+
+  def test_render_partial_with_yield_and_method_call
+    render_inline(PartialWithYieldAndMethodCallComponent.new)
+    assert_text "hello world", exact: true, normalize_ws: true
+  end
+
+  class I18nTestComponent < ViewComponent::Base
+    def message
+      t(".message")
+    end
+
+    def render?
+      message
+    end
+
+    def call
+      content_tag :div, t(".message")
+    end
+  end
+
+  def test_i18n_in_render_hook
+    vc_test_request.params[:hello] = "world"
+    render_inline(I18nTestComponent.new)
+
+    assert_selector("div", text: I18n.t("rendering_test.i18n_test_component.message"))
   end
 end

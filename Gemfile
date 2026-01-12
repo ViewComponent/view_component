@@ -3,11 +3,11 @@
 source "https://rubygems.org"
 gemspec
 
-rails_version = (ENV["RAILS_VERSION"] || "~> 8").to_s
+rails_version = (ENV["RAILS_VERSION"] || "~> 8.1").to_s
 
 gem "rails", (rails_version == "main") ? {git: "https://github.com/rails/rails", ref: "main"} : rails_version
 
-ruby_version = (ENV["RUBY_VERSION"] || "~> 3.4").to_s
+ruby_version = (ENV["RUBY_VERSION"] || "~> 4.0").to_s
 ruby ruby_version
 
 group :development, :test do
@@ -16,20 +16,22 @@ group :development, :test do
   gem "appraisal-run", "~> 1.1"
   gem "benchmark-ips", "~> 2"
   gem "better_html"
-  gem "bundler", "~> 2"
+  gem "bundler"
   gem "capybara", "~> 3"
   gem "cuprite"
   gem "dry-initializer", require: true
   gem "erb_lint"
-  gem "haml", "~> 6"
+  gem "haml", "~> 7"
   gem "jbuilder", "~> 2"
   gem "m", "~> 1"
   gem "method_source", "~> 1"
-  gem "minitest", "~> 5"
+  gem "minitest", "~> 6"
+  gem "nokogiri", "1.19.0"
   gem "propshaft", "~> 1"
   gem "puma", ">= 6"
   gem "rake", "~> 13"
   gem "rails-dom-testing", "~> 2.3.0"
+  gem "reactionview"
   gem "redis"
   gem "rspec-rails"
   gem "rubocop-md", "~> 2"

@@ -163,7 +163,7 @@ module ViewComponent
         options = ActiveSupport::OrderedOptions.new
         options.controller = "ViewComponentsController"
         options.route = "/rails/view_components"
-        options.enabled = Rails.env.development? || Rails.env.test?
+        options.enabled = defined?(Rails.env) && (Rails.env.development? || Rails.env.test?)
         options.default_layout = nil
         options.paths = default_preview_paths
         options

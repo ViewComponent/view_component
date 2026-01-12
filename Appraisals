@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 appraise "rails-7.1" do
-  ruby "~> 3.2.0"
+  ruby "~> 3.2"
 
   gem "rails", "~> 7.1.0"
 
@@ -12,7 +12,7 @@ appraise "rails-7.1" do
 end
 
 appraise "rails-7.2" do
-  ruby "~> 3.3.0"
+  ruby "~> 3.3"
 
   gem "rails", "~> 7.2.0"
 
@@ -23,7 +23,7 @@ appraise "rails-7.2" do
 end
 
 appraise "rails-8.0" do
-  ruby "~> 3.4.0"
+  ruby "~> 3.4"
 
   gem "rails", "~> 8.0.0"
 
@@ -34,7 +34,7 @@ appraise "rails-8.0" do
 end
 
 appraise "rails-8.1" do
-  ruby "~> 3.4.0"
+  ruby "~> 4.0"
 
   gem "rails", "~> 8.1.0"
 
@@ -45,6 +45,8 @@ appraise "rails-8.1" do
 end
 
 appraise "rails-main" do
+  ruby "4.1.0.dev"
+
   gem "rack", git: "https://github.com/rack/rack", ref: "8a4475a9f416a72e5b02bd7817e4a8ed684f29b0"
   gem "rails", github: "rails/rails", branch: "main"
 

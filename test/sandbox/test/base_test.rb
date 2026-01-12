@@ -195,4 +195,63 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     assert_equal false, TestAlreadyConfigurableModule::SomeComponent.instrumentation_enabled
     assert_equal false, TestAlreadyConfiguredModule::SomeComponent.instrumentation_enabled
   end
+
+  def test_after_compile_hook_called_on_compile
+    klass = Class.new(ViewComponent::Base) do
+      @@calls = 0
+
+      def self.calls
+        @@calls
+      end
+
+      class << self
+        def after_compile
+          @@calls += 1
+        end
+      end
+
+      erb_template ""
+    end
+
+    self.class.const_set(:TempHookComponent, klass)
+    ViewComponent::CompileCache.invalidate_class!(klass)
+
+    ViewComponent::Compiler.new(klass).compile(force: true)
+    assert_equal 1, klass.calls
+  ensure
+    self.class.send(:remove_const, :TempHookComponent) if self.class.const_defined?(:TempHookComponent)
+    ViewComponent::CompileCache.invalidate_class!(klass) if defined?(klass)
+  end
+
+  def test_after_compile_not_called_on_cached_compile
+    klass = Class.new(ViewComponent::Base) do
+      @@calls = 0
+
+      def self.calls
+        @@calls
+      end
+
+      class << self
+        def after_compile
+          @@calls += 1
+        end
+      end
+
+      erb_template ""
+    end
+
+    self.class.const_set(:TempHookCachedComponent, klass)
+    ViewComponent::CompileCache.invalidate_class!(klass)
+
+    compiler = ViewComponent::Compiler.new(klass)
+    compiler.compile(force: true)
+    assert_equal 1, klass.calls
+
+    # compile again without force -> should not call hook again
+    compiler.compile
+    assert_equal 1, klass.calls
+  ensure
+    self.class.send(:remove_const, :TempHookCachedComponent) if self.class.const_defined?(:TempHookCachedComponent)
+    ViewComponent::CompileCache.invalidate_class!(klass) if defined?(klass)
+  end
 end

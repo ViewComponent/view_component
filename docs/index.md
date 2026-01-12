@@ -101,95 +101,13 @@ ViewComponents are Ruby objects, making it easy to follow (and enforce) code qua
 
 ## Contributors
 
-Hundreds of people have [contributed](https://github.com/ViewComponent/view_component/graphs/contributors) to ViewComponent, including:
+Hundreds of people have [contributed](https://github.com/ViewComponent/view_component/graphs/contributors) to ViewComponent:
 
 <div>
 {% for contributor in site.data.contributors.usernames %}
 <img src="https://avatars.githubusercontent.com/{{ contributor }}?s=64" alt="{{ contributor }}" width="32" />
 {% endfor %}
 </div>
-
-## Who uses ViewComponent?
-
-* [Aboard HR](https://aboardhr.com/)
-* [Arrows](https://arrows.to/)
-* [Aluuno](https://aluuno.com/)
-* [Avo Admin for Rails](https://avohq.io/rails-admin)
-* [Bearer](https://www.bearer.com/) (70+ components)
-* [Brightline](https://hellobrightline.com)
-* [Buildkite](https://buildkite.com)
-* [Bump.sh](https://bump.sh)
-* [Carwow](https://www.carwow.com/) (300+ components)
-* [Causey](https://www.causey.app/) (100+ components)
-* [CharlieHR](https://www.charliehr.com/)
-* [City of Paris](https://www.paris.fr/)
-* [Clio](https://www.clio.com/)
-* [Cometeer](https://cometeer.com/)
-* [Consul](https://consulproject.org/en/)
-* [Consultport](https://app.consultport.com/)
-* [Content Harmony](https://www.contentharmony.com/)
-* [Cults.](https://cults3d.com/)
-* [Defacto](https://www.defacto.nl)
-* [DotRuby](https://www.dotruby.com)
-* [Eagerworks](https://eagerworks.com/)
-* [FlightLogger](https://flightlogger.net/)
-* [Framework](https://frame.work/)
-* [FreeAgent](https://www.freeagent.com)
-* [FreeATS](https://www.freeats.com/)
-* [G2](https://www.g2.com/) (200+ components)
-* [Getblock](https://getblock.io/)
-* [GitHub](https://github.com/) (900+ components used 15k+ times)
-* [GitLab](https://gitlab.com/)
-* [HappyCo](https://happy.co)
-* [HomeStyler AI](https://homestyler.ai)
-* [Keenly](https://www.keenly.so) (100+ components)
-* [Kicksite](https://kicksite.com/)
-* [Krystal](https://krystal.uk)
-* [Launch Scout](https://launchscout.com/)
-* [Learn To Be](https://www.learntobe.org/) (100+ components)
-* [Litmus](https://litmus.engineering/)
-* [Login.gov](https://github.com/18F/identity-idp)
-* [Mission Met Center](https://www.missionmet.com/mission-met-center)
-* [Mon Ami](https://www.monami.io)
-* [Nikola Motor](https://www.nikolamotor.com/) (50+ components and counting)
-* [Niva](https://www.niva.co/)
-* [OBLSK](https://oblsk.com/)
-* [openSUSE Open Build Service](https://openbuildservice.org/)
-* [OpenProject](https://www.openproject.org/)
-* [Ophelos](https://ophelos.com)
-* [Orbit](https://orbit.love)
-* [PeopleForce](https://peopleforce.io)
-* [Percent Pledge](https://www.percentpledge.org/)
-* [PLT4M](https://plt4m.com/)
-* [Podia](https://www.podia.com/)
-* [PrintReleaf](https://www.printreleaf.com/)
-* [Project Blacklight](http://projectblacklight.org/)
-* [QuickNode](https://www.quicknode.com/)
-* [RailsCarma](https://www.railscarma.com)
-* [Reinvented Hospitality](https://reinvented-hospitality.com/)
-* [Room AI](https://roomai.com/)
-* [SerpApi](https://www.serpapi.com/)
-* [SearchApi](https://www.searchapi.io/)
-* [Simundia](https://www.simundia.com/)
-* [Skroutz](https://engineering.skroutz.gr/blog/)
-* [Shogun](https://getshogun.com/)
-* [SpendHQ](https://www.spendhq.com/)
-* [Spina CMS](https://spinacms.com/)
-* [Spring](https://spring.net/)
-* [Startup Jobs](https://startup.jobs/)
-* [TalentoHQ](https://talentohq.com)
-* [Teamtailor](https://teamtailor.com/)
-* [Topkey](https://topkey.io/)
-* [Web3 Jobs](https://web3.career)
-* [Wecasa](https://www.wecasa.fr/)
-* [WIP](https://wip.co/)
-* [Within3](https://www.within3.com/)
-* [Workbrew](https://www.workbrew.com/)
-* [Wrapbook](https://wrapbook.com/)
-* [Yobbers](https://www.yobbers.com/)
-
-Using ViewComponent? [Send a pull request](https://github.com/viewcomponent/view_component/edit/main/docs/index.md) to update this list!
-You can also check out [how various projects use ViewComponent](https://github.com/viewcomponent/view_component/network/dependents?package_id=UGFja2FnZS0xMDEwNjQxMzYx).
 
 <hr />
 
