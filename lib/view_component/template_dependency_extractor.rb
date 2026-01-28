@@ -13,6 +13,7 @@ module ViewComponent
 
     def extract
       ast = TemplateAstBuilder.build(@template_string, @engine)
+      return extract_erb_fallback if ast.blank? && @engine.to_sym == :erb
       return @dependencies unless ast.present?
       walk(ast.split(";"))
       @dependencies.uniq
@@ -41,6 +42,17 @@ module ViewComponent
       @dependencies << partial_match[1] if partial_match
       @dependencies << layout_match[1] if layout_match
       @dependencies << direct_render[1] if direct_render
+    end
+
+    ERB_RUBY_TAG = /<%(=|-|#)?(.*?)%>/m
+    private_constant :ERB_RUBY_TAG
+
+    def extract_erb_fallback
+      @template_string.scan(ERB_RUBY_TAG) do |(_, ruby_code)|
+        extract_from_ruby(ruby_code)
+      end
+
+      @dependencies.uniq
     end
   end
 end
