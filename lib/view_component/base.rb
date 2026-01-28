@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "action_view"
-require "view_component/cacheable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
@@ -54,7 +53,6 @@ module ViewComponent
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
-    include ViewComponent::Cacheable
 
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 

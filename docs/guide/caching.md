@@ -9,7 +9,17 @@ parent: How-to guide
 Experimental
 {: .label }
 
-Components can implement caching by marking the depndencies that a digest can be built om using the cache_on macro, like so:
+Caching is experimental.
+
+To enable caching globally (opt-in), add this to an initializer:
+
+```ruby
+require "view_component/fragment_caching"
+```
+
+Alternatively, you can opt in per-component by including `ViewComponent::Cacheable`.
+
+Components implement caching by marking the dependencies that should be included in the cache key using `cache_on`:
 
 ```ruby
 class CacheComponent < ViewComponent::Base
@@ -28,7 +38,7 @@ end
 ```erb
 <p><%= view_cache_dependencies %></p>
 
-<p><%= Time.zone.now %>"></p>
+<p><%= Time.zone.now %></p>
 <p><%= "#{foo} #{bar}" %></p>
 ```
 

@@ -21,7 +21,7 @@ module ViewComponent::Cacheable
       return if __vc_cache_options.blank?
 
       computed_view_cache_options = __vc_cache_options.map { |opt| if respond_to?(opt) then public_send(opt) end }
-      combined_fragment_cache_key(ActiveSupport::Cache.expand_cache_key(computed_view_cache_options + component_digest))
+      combined_fragment_cache_key(ActiveSupport::Cache.expand_cache_key(computed_view_cache_options + [component_digest]))
     end
 
     # Render component from cache if possible

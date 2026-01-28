@@ -90,8 +90,8 @@ module ViewComponent
         safe_call = template.safe_method_name_call
         @component.define_method(:render_template_for) do |_|
           @current_template = template
-          if @component.respond_to?(:__vc_render_cacheable)
-            @component.__vc_render_cacheable(safe_call)
+          if respond_to?(:__vc_render_cacheable)
+            __vc_render_cacheable(safe_call)
           else
             instance_exec(&safe_call)
           end
@@ -100,8 +100,8 @@ module ViewComponent
         compiler = self
         @component.define_method(:render_template_for) do |details|
           if (@current_template = compiler.find_templates_for(details).first)
-            if @component.respond_to?(:__vc_render_cacheable)
-              @component.__vc_render_cacheable(@current_template.safe_method_name_call)
+            if respond_to?(:__vc_render_cacheable)
+              __vc_render_cacheable(@current_template.safe_method_name_call)
             else
               instance_exec(&@current_template.safe_method_name_call)
             end

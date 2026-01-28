@@ -1389,6 +1389,37 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector(".cache-component__cache-message", text: "foo bar")
   end
 
+  def test_cache_key_changes_when_child_component_template_changes
+    return if Rails.version < "7.0"
+
+    child_template_path = CacheDigestorChildComponent.sidecar_files(["erb"]).first
+    original_template = File.read(child_template_path)
+
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    key_v1 = CacheDigestorParentComponent.new(foo: "x").view_cache_options
+    render_inline(CacheDigestorParentComponent.new(foo: "x"))
+    assert_selector(".child", text: "v1")
+    assert(Rails.cache.exist?(key_v1))
+
+    File.write(child_template_path, original_template.sub("v1", "v2"))
+    ViewComponent::CompileCache.invalidate!
+
+    key_v2 = CacheDigestorParentComponent.new(foo: "x").view_cache_options
+    refute_equal(key_v1, key_v2)
+
+    render_inline(CacheDigestorParentComponent.new(foo: "x"))
+    assert_selector(".child", text: "v2")
+  ensure
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    if child_template_path && original_template
+      File.write(child_template_path, original_template)
+    end
+  end
+
   def test_render_partial_with_yield
     render_inline(PartialWithYieldComponent.new)
     assert_text "hello world", exact: true, normalize_ws: true
