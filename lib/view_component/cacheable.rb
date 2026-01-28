@@ -7,7 +7,6 @@ module ViewComponent::Cacheable
   extend ActiveSupport::Concern
 
   included do
-    class_attribute :__vc_cache_options, default: Set[:identifier]
     class_attribute :__vc_cache_dependencies, default: Set.new
 
     # For caching, such as #cache_if
@@ -18,23 +17,33 @@ module ViewComponent::Cacheable
     end
 
     def view_cache_options
-      return if __vc_cache_options.blank?
+      return if self.class.__vc_cache_dependencies.blank?
 
-      computed_view_cache_options = __vc_cache_options.map { |opt| if respond_to?(opt) then public_send(opt) end }
-      combined_fragment_cache_key(ActiveSupport::Cache.expand_cache_key(computed_view_cache_options + [component_digest]))
+      template_key = __vc_cache_template_key
+      return if template_key.nil?
+
+      cache_key_parts = [self.class.name, self.class.virtual_path, template_key, view_cache_dependencies, component_digest]
+      combined_fragment_cache_key(ActiveSupport::Cache.expand_cache_key(cache_key_parts))
     end
 
     # Render component from cache if possible
     #
     # @private
     def __vc_render_cacheable(safe_call)
-      if (__vc_cache_options - [:identifier]).any?
+      if view_cache_options
         ViewComponent::CachingRegistry.track_caching do
           template_fragment(safe_call)
         end
       else
         instance_exec(&safe_call)
       end
+    end
+
+    # @private
+    def __vc_cache_template_key
+      return unless defined?(@current_template) && @current_template
+
+      [@current_template.call_method_name, @current_template.virtual_path]
     end
 
     def template_fragment(safe_call)
@@ -74,11 +83,11 @@ module ViewComponent::Cacheable
   class_methods do
     # For caching the component
     def cache_on(*args)
-      __vc_cache_options.merge(args)
+      __vc_cache_dependencies.merge(args)
     end
 
     def inherited(child)
-      child.__vc_cache_options = __vc_cache_options.dup
+      child.__vc_cache_dependencies = __vc_cache_dependencies.dup
 
       super
     end

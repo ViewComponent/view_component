@@ -1398,19 +1398,22 @@ class RenderingTest < ViewComponent::TestCase
     Rails.cache.clear
     ViewComponent::CompileCache.invalidate!
 
-    key_v1 = CacheDigestorParentComponent.new(foo: "x").view_cache_options
+    component_v1 = CacheDigestorParentComponent.new(foo: "x")
+    render_inline(component_v1)
+    assert_selector(".child", text: "v1")
+    time_v1 = page.find(".parent")["data-time"]
+
     render_inline(CacheDigestorParentComponent.new(foo: "x"))
     assert_selector(".child", text: "v1")
-    assert(Rails.cache.exist?(key_v1))
+    assert_equal(time_v1, page.find(".parent")["data-time"])
 
     File.write(child_template_path, original_template.sub("v1", "v2"))
     ViewComponent::CompileCache.invalidate!
 
-    key_v2 = CacheDigestorParentComponent.new(foo: "x").view_cache_options
-    refute_equal(key_v1, key_v2)
-
-    render_inline(CacheDigestorParentComponent.new(foo: "x"))
+    component_v2 = CacheDigestorParentComponent.new(foo: "x")
+    render_inline(component_v2)
     assert_selector(".child", text: "v2")
+    refute_equal(time_v1, page.find(".parent")["data-time"])
   ensure
     Rails.cache.clear
     ViewComponent::CompileCache.invalidate!
