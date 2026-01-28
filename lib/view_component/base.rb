@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "action_view"
-require "view_component/cacheable"
-require "active_support/configurable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
@@ -48,7 +46,7 @@ module ViewComponent
     end
 
     include ActionView::Helpers
-    include Rails.application.routes.url_helpers if defined?(Rails) && Rails.application
+    include Rails.application.routes.url_helpers if defined?(Rails.application.routes)
     include ERB::Escape
     include ActiveSupport::CoreExt::ERBUtil
     include ViewComponent::InlineTemplate
@@ -70,11 +68,6 @@ module ViewComponent
     delegate :content_security_policy_nonce, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
-
-    class_attribute :__vc_response_format, instance_accessor: false, instance_predicate: false, default: nil
-
-    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false
-    self.__vc_strip_trailing_whitespace = false # class_attribute:default doesn't work until Rails 5.2
 
     attr_accessor :__vc_original_view_context
     attr_reader :current_template
@@ -111,7 +104,7 @@ module ViewComponent
       self.class.__vc_compile(raise_errors: true)
 
       @view_context = view_context
-      old_virtual_path = view_context.instance_variable_get(:@virtual_path)
+      @old_virtual_path = view_context.instance_variable_get(:@virtual_path)
       self.__vc_original_view_context ||= view_context
 
       @output_buffer = view_context.output_buffer
@@ -137,6 +130,7 @@ module ViewComponent
 
       @__vc_content_evaluated = false
       @__vc_render_in_block = block
+      @view_context.instance_variable_set(:@virtual_path, virtual_path)
 
       before_render
 
@@ -144,8 +138,6 @@ module ViewComponent
         value = nil
 
         @output_buffer.with_buffer do
-          @view_context.instance_variable_set(:@virtual_path, virtual_path)
-
           rendered_template =
             around_render do
               render_template_for(@__vc_requested_details).to_s
@@ -169,7 +161,7 @@ module ViewComponent
         ""
       end
     ensure
-      view_context.instance_variable_set(:@virtual_path, old_virtual_path)
+      view_context.instance_variable_set(:@virtual_path, @old_virtual_path)
       @current_template = old_current_template
     end
 
@@ -251,17 +243,35 @@ module ViewComponent
 
     # Re-use original view_context if we're not rendering a component.
     #
-    # This prevents an exception when rendering a partial inside of a component that has also been rendered outside
-    # of the component. This is due to the partials compiled template method existing in the parent `view_context`,
-    # and not the component's `view_context`.
+    # As of v4, ViewComponent::Base re-uses the existing view context created
+    # by ActionView, meaning the current view context and the original view
+    # context are the same object. set_original_view_context is still called
+    # to maintain backwards compatibility.
     #
     # @private
     def render(options = {}, args = {}, &block)
       if options.respond_to?(:set_original_view_context)
         options.set_original_view_context(self.__vc_original_view_context)
+
+        # We assume options is a component, so there's no need to evaluate the
+        # block in the view context as we do below.
         @view_context.render(options, args, &block)
+      elsif block
+        __vc_original_view_context.render(options, args) do
+          # capture the block output in the view context of the component
+          output = capture(&block)
+
+          # Partials are rendered to their own buffer and do not append to the
+          # original @output_buffer we retain a reference to in #render_in. This
+          # is a problem since the block passed to us here in the #render method
+          # is evaluated within the context of ViewComponent::Base, and thus
+          # appends to the original @output_buffer. To avoid this, we evaluate the
+          # block in the view context instead, which will append to the output buffer
+          # created for the partial.
+          __vc_original_view_context.capture { output }
+        end
       else
-        __vc_original_view_context.render(options, args, &block)
+        __vc_original_view_context.render(options, args)
       end
     end
 
@@ -292,11 +302,11 @@ module ViewComponent
       @__vc_helpers ||= __vc_original_view_context || controller.view_context
     end
 
-    if ::Rails.env.development? || ::Rails.env.test?
+    if defined?(Rails.env) && (::Rails.env.development? || ::Rails.env.test?)
       # @private
       def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
         super
-      rescue => e # rubocop:disable Style/RescueStandardError
+        rescue => e # rubocop:disable Style/RescueStandardError
         e.set_backtrace e.backtrace.tap(&:shift)
         raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && helpers.respond_to?(method_name)
           #{e.message}
@@ -313,6 +323,20 @@ module ViewComponent
     # @private
     def virtual_path
       self.class.virtual_path
+    end
+
+    # For caching, such as #cache_if
+    # @private
+    def 
+      []
+    end
+
+    if defined?(Rails::VERSION) && Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR == 1
+      # Rails expects us to define `format` on all renderables,
+      # but we do not know the `format` of a ViewComponent until runtime.
+      def format
+        nil
+      end
     end
 
     # The current request. Use sparingly as doing so introduces coupling that
@@ -338,7 +362,9 @@ module ViewComponent
 
       @__vc_content =
         if __vc_render_in_block_provided?
-          view_context.capture(self, &@__vc_render_in_block)
+          with_captured_virtual_path(@old_virtual_path) do
+            view_context.capture(self, &@__vc_render_in_block)
+          end
         elsif __vc_content_set_by_with_content_defined?
           @__vc_content_set_by_with_content
         end
@@ -351,8 +377,15 @@ module ViewComponent
       __vc_render_in_block_provided? || __vc_content_set_by_with_content_defined?
     end
 
-    def format
-      self.class.__vc_response_format
+    # @private
+    # Temporarily sets the virtual path to the captured value, then restores it.
+    # This ensures translations and other path-dependent code execute with the correct scope.
+    def with_captured_virtual_path(captured_path)
+      old_virtual_path = @view_context.instance_variable_get(:@virtual_path)
+      @view_context.instance_variable_set(:@virtual_path, captured_path)
+      yield
+    ensure
+      @view_context.instance_variable_set(:@virtual_path, old_virtual_path)
     end
 
     private
@@ -543,7 +576,7 @@ module ViewComponent
         # eager loading is disabled and the parent component is rendered before the child. In
         # such a scenario, the parent will override ViewComponent::Base#render_template_for,
         # meaning it will not be called for any children and thus not compile their templates.
-        if !child.instance_methods(false).include?(:render_template_for) && !child.__vc_compiled?
+        if !child.method_defined?(:render_template_for, false) && !child.__vc_compiled?
           child.class_eval <<~RUBY, __FILE__, __LINE__ + 1
             def render_template_for(requested_details)
               # Force compilation here so the compiler always redefines render_template_for.
@@ -566,7 +599,7 @@ module ViewComponent
         # Set collection parameter to the extended component
         child.with_collection_parameter(__vc_provided_collection_parameter)
 
-        if instance_methods(false).include?(:render_template_for)
+        if method_defined?(:render_template_for, false)
           vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
 
           vc_ancestor_calls.unshift(instance_method(:render_template_for))
@@ -579,6 +612,16 @@ module ViewComponent
       # @private
       def __vc_compiled?
         __vc_compiler.compiled?
+      end
+
+      # Hook called by the compiler after a component is compiled.
+      #
+      # Extensions can override this class method to run logic after
+      # compilation (e.g., generate helpers, register metadata, etc.).
+      #
+      # By default, this is a no-op.
+      def after_compile
+        # no-op by default
       end
 
       # @private

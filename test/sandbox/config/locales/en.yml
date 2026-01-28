@@ -19,6 +19,20 @@ en:
   integration_examples:
     virtual_path_reset:
       message: "Hello world!"
+    translations_in_block:
+      local_relative_key: "Local translation"
 
   my_component:
     message: "OH NO! (you shouldn't see me)"
+
+  shared:
+    partial:
+      title: Partial Title
+    action_menu_panel:
+      menu_action: Menu Action from Partial
+    deep_navigation:
+      deep_action: Deep Action from Partial (5 levels!)
+
+  rendering_test:
+    i18n_test_component:
+      message: "I can be called in render?"

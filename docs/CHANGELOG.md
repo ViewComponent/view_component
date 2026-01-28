@@ -10,23 +10,118 @@ nav_order: 6
 
 ## main
 
-* Add SerpApi to "Who uses ViewComponent" list
-
-    *Andy from SerpApi*
-
-## 4.0.0.rc2
-
-* Add `around_render` lifecyle method for wrapping component rendering in custom instrumentation, etc.
-
-    *Joel Hawksley*, *Blake Williams*
-
 * Add experimental support for caching.
 
     *Reegan Viljoen*
 
-## 4.0.0.rc1
+* Automatically merge dependabot PRs.
 
-Almost six years after releasing [v1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship the first release candidate of ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions.
+    *Joel Hawksley*
+
+* Use Ruby 4.0.0 in CI and dev.
+
+    *Joel Hawksley*
+
+## 4.2.0
+
+* Fix translation scope resolution in deeply nested component blocks (3+ levels). Translations called inside deeply nested slot blocks using `renders_many`/`renders_one` were incorrectly resolving to an intermediate component's scope instead of the partial's scope where the block was defined. The fix captures the virtual path at block definition time and restores it during block execution, ensuring translations always resolve relative to where the block was created regardless of nesting depth.
+
+    *Nathaniel Watts*
+
+* Allow `render_inline` with Nokogiri::HTML5 to parse more arbitrary content including bare table content otherwise illegal fragments like `<td>`.
+
+    *Jonathan Rochkind*
+
+* Remove known issue from docs as ActiveScaffold is [now compatible](https://github.com/activescaffold/active_scaffold/pull/743) with ViewComponent.
+
+    *David Löwenfels*
+
+* Add test to document the current behavior for resolving relative translation keys within partial blocks. When rendering a partial, relative translation keys are resolved relative to the partial's own path rather than the caller’s path. This test ensures that this behavior remains consistent.
+
+    *Oussama Hilal*
+
+* Allow I18n calls in `render?`.
+
+    *23tux*
+
+* ViewComponent now works without `rails` and `railties` gems loaded, enabling compatibility with Bridgetown 2.0.
+
+    *Tom Lord*
+
+* Capture partial block in the component's context, allowing access to the component instance inside the block.
+
+    *23tux*
+
+* Add `after_compile` class method hook to enable extensions to run logic after component compilation.
+
+    *Jose Solás*
+
+* Fix outdated reference to preview layout configuration in docs.
+
+    *Lucas Geron*
+
+* Allow ruby-head CI job to fail without failing workflow.
+
+    *Hakan Ensari*
+
+* Fix bug where error line numbers were incorrect in Rails 8.1.
+
+    *Joel Hawksley*
+
+* Remove `< 8.2` upper bound for `activesupport` and `actionview` dependencies.
+
+    *Hans Lemuet*
+
+* Test compatibility with Herb/ReActionView.
+
+    *Joel Hawksley*
+
+* Remove Who Uses ViewComponent section from docs.
+
+    *Joel Hawksley*
+
+## 4.1.1
+
+* Resolve deprecation warning for `ActiveSupport::Configurable`.
+
+    *Simon Fish*
+
+* Make `ViewComponent::VERSION` accessible to other gems by default.
+
+    *Hans Lemuet*
+
+## 4.1.0
+
+* Add Rails 8.1 support.
+
+    *Hans Lemuet*
+
+* Declare `actionview` as a `view_component` gem dependency.
+
+    *Michal Cichra*
+
+## 4.0.2
+
+* Share the view context in tests to prevent out-of-order rendering issues for certain advanced use-cases, eg. testing instances of Rails' `FormBuilder`.
+* Fix double rendering issue for partials that yield.
+
+    *Cameron Dutro*
+
+## 4.0.1
+
+* Setup Trusted Publishing to RubyGems to improve software supply chain safety.
+
+    *Hans Lemuet*
+
+* Conditionally add the `ViewComponent::Base#format` method back for Rails 7.1 only.
+* Compute and check lockfiles into source control.
+* Constrain Rails versions in gemfiles to only allow the patch version to vary, eg. `~> 7.1.0` instead of `~> 7.1`.
+
+    *Cameron Dutro*
+
+## 4.0.0
+
+Two years after releasing [3.0.0](https://github.com/ViewComponent/view_component/releases/tag/v3.0.0) and almost six years since [1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions.
 
 Please report any issues at [https://github.com/ViewComponent/view_component/issues](https://github.com/ViewComponent/view_component/issues).
 
@@ -51,11 +146,10 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 
 ### Breaking changes (dev/test)
 
-* Rename `config.generate.component_parent_class` to `config.generate.parent_class`.
-* Remove `config.test_controller` in favor of `vc_test_controller_class` test helper method.
-* `config.component_parent_class` is now `config.generate.component_parent_class`, moving the generator-specific option to the generator configuration namespace.
+* Remove `config.view_component.test_controller` in favor of `vc_test_controller_class` test helper method.
+* `config.view_component.component_parent_class` is now `config.view_component.generate.parent_class`, moving the generator-specific option to the generator configuration namespace.
+* `config.view_component.view_component_path` is now `config.view_component.generate.path`, as components have long since been able to exist in any directory.
 * Move previews-related configuration (`enabled`, `route`, `paths`, `default_layout`, `controller`) to under `previews` namespace.
-* `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
 * `--inline` generator option now generates inline template. Use `--call` to generate `#call` method.
 * Remove broken integration with `rails stats` that ignored components outside of `app/components`.
 * Remove `preview_source` functionality. Consider using [Lookbook](https://lookbook.build/) instead.
@@ -75,8 +169,123 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 * Graduate `SlotableDefault` to be included by default.
 * Add `#current_template` accessor and `Template#path` for diagnostic usage.
 * Reduce string allocations during compilation.
+* Add `around_render` lifecyle method for wrapping component rendering in custom instrumentation, etc.
 
 ### Bug fixes
+
+* Fix bug where virtual path wasn't reset, breaking translations outside of components.
+* Fix bug where `config.view_component.previews.enabled` didn't function properly in production environments.
+* Fix bug in `SlotableDefault` where default couldn't be overridden when content was passed as a block.
+* Fix bug where request-aware helpers didn't work outside of the request context.
+* `ViewComponentsSystemTestController` shouldn't be useable outside of test environment
+
+### Non-functional changes
+
+* Remove unnecessary usage of `ruby2_keywords`.
+* Remove unnecessary `respond_to` checks.
+* Require MFA when publishing to RubyGems.
+* Clean up project dependencies, relaxing versions of development gems.
+* Add test case for absolute URL path helpers in mailers.
+* Update documentation on performance to reflect more representative benchmark showing 2-3x speed increase over partials.
+* Add documentation note about instrumentation negatively affecting performance.
+* Remove unnecessary ENABLE_RELOADING test suite flag.
+* `config.view_component.previews.default_layout` should default to nil.
+* Add test coverage for uncovered code.
+* Test against `turbo-rails` `v2` and `rspec-rails` `v7`.
+
+## 4.0.0.rc5
+
+* Revert change setting `#format`. In GitHub's codebase, the change led to hard-to-detect failures. For example, components rendered from controllers included layouts when they didn't before. In other cases, the response `content_type` changed, breaking downstream consumers. For cases where a specific content type is needed, use:
+
+```ruby
+respond_to do |f|
+  f.html_fragment do
+    render(MyComponent.new)
+  end
+end
+```
+
+    *Joel Hawksley*
+
+## 4.0.0.rc4
+
+* Fix issue where generators were not included in published gem.
+
+    *Jean-Louis Giordano*
+
+## 4.0.0.rc3
+
+* Reformat the avatars section to arrange them in a grid.
+
+    *Josh Cohen*
+
+* Fix bug where relative paths in `translate` didn't work in blocks passed to ViewComponents.
+
+    *Joel Hawksley*
+
+* Add SerpApi to "Who uses ViewComponent" list.
+
+    *Andy from SerpApi*
+
+## 4.0.0.rc2
+
+* Add `around_render` lifecyle method for wrapping component rendering in custom instrumentation, etc.
+
+    *Joel Hawksley*, *Blake Williams*
+
+## 4.0.0.rc1
+
+Almost six years after releasing [v1.0.0](https://github.com/ViewComponent/view_component/releases/tag/v1.0.0), we're proud to ship the first release candidate of ViewComponent 4. This release marks a shift towards a Long Term Support model for the project, having reached significant feature maturity. While contributions are always welcome, we're unlikely to accept further breaking changes or major feature additions.
+
+Please report any issues at [https://github.com/ViewComponent/view_component/issues](https://github.com/ViewComponent/view_component/issues).
+
+### 4.0.0.rc1 Breaking changes (production)
+
+* Remove dependency on `ActionView::Base`, eliminating the need for capture compatibility patch. In some edge cases, this change may require switching to use the `helpers.` proxy.
+* Require [non-EOL](https://endoflife.date/rails) Rails (`>= 7.1.0`) and Ruby (`>= 3.2.0`).
+* Remove `render_component` and `render` monkey patch configured with `render_monkey_patch_enabled`.
+* Remove deprecated `use_helper(s)`. Use `include MyHelper` or `helpers.` proxy instead.
+* Support compatibility with `Dry::Initializer`. As a result, `EmptyOrInvalidInitializerError` will no longer be raised.
+* Remove default initializer from `ViewComponent::Base`. Previously, `ViewComponent::Base` defined a catch-all initializer that allowed components without an initializer defined to be passed arbitrary arguments.
+* Remove `use_deprecated_instrumentation_name` configuration option. Events will always use `render.view_component` name.
+* Remove unnecessary `#format` methods that returned `nil`.
+* Remove support for variant names containing `.` to be consistent with Rails.
+* Rename internal methods to have `__vc_` prefix if they shouldn't be used by consumers. Make internal constants private. Make `Collection#components`, `Slotable#register_polymorphic_slot` private. Remove unused `ComponentError` class.
+* Use ActionView's `lookup_context` for picking templates instead of the request format.
+
+  3.15 added support for using templates that match the request format, that is if `/resource.csv` is requested then
+  ViewComponents would pick `_component.csv.erb` over `_component.html.erb`.
+
+  With this release, the request format is no longer considered and instead ViewComponent will use the Rails logic for picking the most appropriate template type, that is the csv template will be used if it matches the `Accept` header or because the controller uses a `respond_to` block to pick the response format.
+
+### 4.0.0.rc1 Breaking changes (dev/test)
+
+* Rename `config.generate.component_parent_class` to `config.generate.parent_class`.
+* Remove `config.test_controller` in favor of `vc_test_controller_class` test helper method.
+* `config.component_parent_class` is now `config.generate.component_parent_class`, moving the generator-specific option to the generator configuration namespace.
+* Move previews-related configuration (`enabled`, `route`, `paths`, `default_layout`, `controller`) to under `previews` namespace.
+* `config.view_component_path` is now `config.generate.path`, as components have long since been able to exist in any directory.
+* `--inline` generator option now generates inline template. Use `--call` to generate `#call` method.
+* Remove broken integration with `rails stats` that ignored components outside of `app/components`.
+* Remove `preview_source` functionality. Consider using [Lookbook](https://lookbook.build/) instead.
+* Use `Nokogiri::HTML5` instead of `Nokogiri::HTML4` for test helpers.
+* Move generators to a ViewComponent namespace.
+
+  Before, ViewComponent generators pollute the generator namespace with a bunch of top level items, and claim the generic "component" name.
+
+  Now, generators live in a "view_component" module/namespace, so what was before `rails g
+  component` is now `rails g view_component:component`.
+
+### 4.0.0.rc1 New features
+
+* Add `SystemSpecHelpers` for use with RSpec.
+* Add support for including `Turbo::StreamsHelper`.
+* Add template annotations for components with `def call`.
+* Graduate `SlotableDefault` to be included by default.
+* Add `#current_template` accessor and `Template#path` for diagnostic usage.
+* Reduce string allocations during compilation.
+
+### 4.0.0.rc1 Bug fixes
 
 * Fix bug where virtual path wasn't reset, breaking translations outside of components.
 * Fix bug where `config.previews.enabled` didn't function properly in production environments.
@@ -85,7 +294,7 @@ Please report any issues at [https://github.com/ViewComponent/view_component/iss
 * Fix bug where request-aware helpers didn't work outside of the request context.
 * `ViewComponentsSystemTestController` shouldn't be useable outside of test environment
 
-### Non-functional changes
+### 4.0.0.rc1 Non-functional changes
 
 * Remove unnecessary usage of `ruby2_keywords`.
 * Remove unnecessary `respond_to` checks.
@@ -369,10 +578,6 @@ This release makes the following breaking changes:
 
     *Martin Meyerhoff*, *Joel Hawksley*
 
-* Add Content Harmony & Learn To Be to list of companies using ViewComponent.
-
-    *Kane Jamison*
-
 * Clarify error message about render-dependent logic.
 
   Error messages about render-dependent logic were sometimes inaccurate, saying `during initialization` despite also being raised after a component had been initialized but before it was rendered.
@@ -391,10 +596,6 @@ This release makes the following breaking changes:
 
     *Reegan Viljoen*
 
-* Add HomeStyler AI to list of companies using ViewComponent.
-
-    *JP Balarini*
-
 ## 3.21.0
 
 * Updates testing docs to include an example of how to use with RSpec.
@@ -404,10 +605,6 @@ This release makes the following breaking changes:
 * Add `--skip-suffix` option to component generator.
 
     *KAWAKAMI Moeki*
-
-* Add FreeATS to list of companies using ViewComponent.
-
-    *Ilia Liamshin*
 
 * Ensure HTML output safety wrapper is used for all inline templates.
 
@@ -458,10 +655,6 @@ This release makes the following breaking changes:
 * Wrap entire compile step in a mutex to make it more resilient to race conditions.
 
     *Blake Williams*
-
-* Add [Niva]([niva.co](https://www.niva.co/)) to companies who use `ViewComponent`.
-
-    *Daniel Vu Dao*
 
 * Fix `preview_paths` in docs.
 
@@ -526,10 +719,6 @@ This release makes the following breaking changes:
 * Warn if using Ruby < 3.2 or Rails < 7.1, which won't be supported by ViewComponent v4, to be released no earlier than April 1, 2025.
 
     *Joel Hawksley*
-
-* Add Kicksite to list of companies using ViewComponent.
-
-    *Adil Lari*
 
 * Allow overridden slot methods to use `super`.
 
@@ -770,10 +959,6 @@ This release makes the following breaking changes:
 
     *Simon Fish*
 
-* Add Simundia to list of companies using ViewComponent.
-
-    *Alexandre Ignjatovic*
-
 * Reduce UnboundMethod objects by memoizing initialize_parameters.
 
     *Rainer Borene*
@@ -823,10 +1008,6 @@ This release makes the following breaking changes:
 * Fix `#with_request_url` to ensure `request.query_parameters` is an instance of ActiveSupport::HashWithIndifferentAccess.
 
     *milk1000cc*
-
-* Add PeopleForce to list of companies using ViewComponent.
-
-    *Volodymyr Khandiuk*
 
 ## 3.5.0
 
@@ -901,14 +1082,6 @@ This release makes the following breaking changes:
 * Add `SECURITY.md`.
 
     *Joel Hawksley*
-
-* Add Ophelos to list of companies using ViewComponent.
-
-    *Graham Rogers*
-
-* Add FlightLogger to list of companies using ViewComponent.
-
-    *Joseph Carpenter*
 
 * Fix coverage reports overwriting each other when running locally.
 
@@ -1149,14 +1322,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Graham Rogers*
 
-* Add Krystal to list of companies using ViewComponent.
-
-     *Matt Bearman*
-
-* Add Mon Ami to list of companies using ViewComponent.
-
-    *Ethan Lee-Tyson*
-
 ## 3.0.0.rc1
 
 1,000+ days and 100+ releases later, the 200+ contributors to ViewComponent are proud to ship v3.0.0!
@@ -1305,10 +1470,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Hans Lemuet*
 
-* Add Startup Jobs to list of companies using ViewComponent.
-
-    *Marc Köhlbrugge*
-
 * Run PVC's accessibility tests in a single process to avoid resource contention in CI.
 
     *Cameron Dutro*
@@ -1349,10 +1510,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
 ## 2.74.0
 
-* Add Avo to list of companies using ViewComponent.
-
-    *Adrian Marin*
-
 * Promote experimental `_output_postamble` method to public API as `output_postamble`.
 
     *Joel Hawksley*
@@ -1379,10 +1536,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Erinna Chen*
 
-* Add PrintReleaf to list of companies using ViewComponent.
-
-    *Ry Kulp*
-
 * Simplify CI configuration to a single build per Ruby/Rails version.
 
     *Joel Hawksley*
@@ -1390,10 +1543,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 * Correctly document `generate.sidecar` config option.
 
     *Ruben Smit*
-
-* Add Yobbers to list of companies using ViewComponent.
-
-    *Anton Prins*
 
 ## 2.72.0
 
@@ -1408,10 +1557,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 * Link to `CHANGELOG.md` instead of symlink.
 
     *Joel Hawksley.
-
-* Add Aluuno to list of companies using ViewComponent.
-
-    *Daniel Naves de Carvalho*
 
 * Add `source_code_uri` to gemspec.
 
@@ -1447,21 +1592,9 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Joel Hawksley*
 
-* Add Arrows to list of companies using ViewComponent.
-
-    *Matt Swanson*
-
-* Add WIP to list of companies using ViewComponent.
-
-    *Marc Köhlbrugge*
-
 * Update slots documentation to include how to reference slots.
 
     *Brittany Ellich*
-
-* Add Clio to list of companies using ViewComponent.
-
-    *Mike Buckley*
 
 ## 2.69.0
 
@@ -1580,10 +1713,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Vikram Dighe*
 
-* Add HappyCo to list of companies using ViewComponent.
-
-    *Josh Clayton*
-
 * Add predicate method support to polymorphic slots.
 
     *Graham Rogers*
@@ -1694,10 +1823,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Thomas Hutterer*
 
-* Add FreeAgent to list of companies using ViewComponent.
-
-    *Simon Fish*
-
 * Include polymorphic slots in `ViewComponent::Base` by default.
 
     *Cameron Dutro*
@@ -1753,18 +1878,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Joel Hawksley*
 
-* Add G2 to list of companies that use ViewComponent.
-
-    *Jack Shuff*
-
-* Add Within3 to list of companies that use ViewComponent.
-
-    *Drew Bragg*
-
-* Add Mission Met to list of companies that use ViewComponent.
-
-    *Nick Smith*
-
 * Fix `#with_request_url` test helper not parsing nested query parameters into nested hashes.
 
     *Richard Marbach*
@@ -1804,10 +1917,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Blake Williams*
 
-* Add QuickNode to list of companies that use ViewComponent.
-
-    *Luc Castera*
-
 * Include the `Translatable` module by default.
 
     *Elia Schito*
@@ -1838,10 +1947,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Jason Swett*
 
-* Add Bearer to list of companies that use ViewComponent.
-
-    *Yaroslav Shmarov*
-
 * Add articles to resources page.
 
     *Joel Hawksley*
@@ -1870,10 +1975,6 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 * Update the docs only when releasing a new version.
 
     *Hans Lemuet*
-
-* Alphabetize companies using ViewComponent and add Brightline to the list.
-
-    *Jack Schuss*
 
 * Add CMYK value for ViewComponent Red color on logo page.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Publish gem
-bundle exec rake release
+# this step has been replaced by .github/workflows/push_gem.yml
 
 # Publish updated docs
 git branch -D gh-pages

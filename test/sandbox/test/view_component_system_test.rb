@@ -55,12 +55,4 @@ class ViewComponentSystemTest < ViewComponent::SystemTestCase
       assert_no_selector "body > title", visible: false
     end
   end
-
-  def test_turbo_content_type
-    visit "/turbo_content_type"
-
-    find("#submit").click
-
-    assert_selector("body #test-frame #result", text: "Submitted")
-  end
 end

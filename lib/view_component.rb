@@ -2,6 +2,7 @@
 
 require "action_view"
 require "active_support/dependencies/autoload"
+require "view_component/version"
 
 module ViewComponent
   extend ActiveSupport::Autoload
@@ -16,7 +17,7 @@ module ViewComponent
   autoload :Preview
   autoload :Translatable
 
-  if Rails.env.test?
+  if defined?(Rails.env) && Rails.env.test?
     autoload :TestHelpers
     autoload :SystemSpecHelpers
     autoload :SystemTestHelpers

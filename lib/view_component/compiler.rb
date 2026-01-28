@@ -48,19 +48,12 @@ module ViewComponent
 
         define_render_template_for
 
-        # Set the format if the component only responds to a single format.
-        # Unfortunately we cannot determine which format a multi-format
-        # component will respond to until render time, so those components
-        # will not set the response format.
-        #
-        # TODO: Investigate upstream changes necessary to support multi-format renderables
-        unique_formats = templates.map(&:format).uniq
-        @component.__vc_response_format = unique_formats.last if unique_formats.one?
-
         @component.__vc_register_default_slots
         @component.__vc_build_i18n_backend
 
         CompileCache.register(@component)
+
+        @component.after_compile
       end
     end
 
@@ -126,16 +119,15 @@ module ViewComponent
         errors << "Couldn't find a template file or inline render method for #{@component}." if @templates.empty?
 
         @templates
-          .reject { |template| template.inline_call? && !template.defined_on_self? }
           .map { |template| [template.variant, template.format] }
           .tally
           .select { |_, count| count > 1 }
           .each do |tally|
-          variant, this_format = tally.first
+            variant, this_format = tally.first
 
-          variant_string = " for variant `#{variant}`" if variant.present?
+            variant_string = " for variant `#{variant}`" if variant.present?
 
-          errors << "More than one #{this_format.upcase} template found#{variant_string} for #{@component}. "
+            errors << "More than one #{this_format.upcase} template found#{variant_string} for #{@component}. "
         end
 
         default_template_types = @templates.each_with_object(Set.new) do |template, memo|
@@ -206,11 +198,11 @@ module ViewComponent
           ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }
             .uniq
             .each do |method_name|
-            templates << Template::InlineCall.new(
-              component: @component,
-              method_name: method_name,
-              defined_on_self: component_instance_methods_on_self.include?(method_name)
-            )
+              templates << Template::InlineCall.new(
+                component: @component,
+                method_name: method_name,
+                defined_on_self: component_instance_methods_on_self.include?(method_name)
+              )
           end
 
           templates

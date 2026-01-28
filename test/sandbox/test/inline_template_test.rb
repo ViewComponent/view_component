@@ -27,6 +27,18 @@ class InlineErbTest < ViewComponent::TestCase
     end
   end
 
+  class InlineRaiseSlimComponent < ViewComponent::Base
+    attr_reader :name
+
+    slim_template <<~SLIM
+      = raise ArgumentError, "oh no"
+    SLIM
+
+    def initialize(name)
+      @name = name
+    end
+  end
+
   class InlineErbSubclassComponent < InlineErbComponent
     erb_template <<~ERB
       <h1>Hey, <%= name %>!</h1>
@@ -107,6 +119,14 @@ class InlineErbTest < ViewComponent::TestCase
     assert_match %r{test/sandbox/test/inline_template_test.rb:22}, error.backtrace[0]
   end
 
+  test "error backtrace locations work in slim" do
+    error = assert_raises ArgumentError do
+      render_inline(InlineRaiseSlimComponent.new("Fox Mulder"))
+    end
+
+    assert_match %r{test/sandbox/test/inline_template_test.rb:34}, error.backtrace[0]
+  end
+
   test "renders inline slim templates" do
     render_inline(InlineSlimComponent.new("Fox Mulder"))
 
@@ -168,9 +188,5 @@ class InlineErbTest < ViewComponent::TestCase
     end
 
     assert_selector(".greeting-container h1", text: "Hello, Fox Mulder!")
-  end
-
-  test "defines format" do
-    assert_equal(:html, InlineErbComponent.new("Tester").format)
   end
 end

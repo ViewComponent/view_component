@@ -14,21 +14,22 @@ jobs:
   benchmark:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_GEMFILE: gemfiles/rails_8.0.gemfile
+      BUNDLE_GEMFILE: gemfiles/rails_8.1.gemfile
     steps:
     - uses: actions/checkout@v4.1.1
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.4
+        ruby-version: 4.0
         bundler-cache: true
     - name: Run benchmarks
       run: |
-        bundle exec appraisal rails-8.0 rake partial_benchmark
-        bundle exec appraisal rails-8.0 rake translatable_benchmark
+        bundle exec appraisal rails-8.1 rake partial_benchmark
+        bundle exec appraisal rails-8.1 rake translatable_benchmark
   test:
     name: test (Rails ${{ matrix.rails_version }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.ruby_version == 'head' }}
     strategy:
       fail-fast: false
       matrix:
@@ -39,6 +40,8 @@ jobs:
             rails_version: "7.2"
           - ruby_version: "3.4"
             rails_version: "8.0"
+          - ruby_version: "4.0"
+            rails_version: "8.1"
           - ruby_version: "head"
             rails_version: "main"
     env:
@@ -80,7 +83,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.4
+        ruby-version: 4.0
         bundler-cache: true
         working-directory: 'view_component'
     - uses: actions/setup-node@v4
@@ -96,7 +99,7 @@ jobs:
         bundle --quiet && bundle exec rake
       env:
         VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '7.1.5'
+        RAILS_VERSION: '8.1.0'
         PARALLEL_WORKERS: '1'
   coverage:
     needs: test
@@ -106,7 +109,7 @@ jobs:
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.4
+        ruby-version: 4.0
         bundler-cache: true
     - name: Download coverage results
       uses: actions/download-artifact@v4.3.0

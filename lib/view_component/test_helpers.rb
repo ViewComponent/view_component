@@ -38,9 +38,19 @@ module ViewComponent
     # @return [Nokogiri::HTML5]
     def render_inline(component, **args, &block)
       @page = nil
-      @rendered_content = vc_test_controller.view_context.render(component, args, &block)
+      @rendered_content = vc_test_view_context.render(component, args, &block)
 
-      Nokogiri::HTML5.fragment(@rendered_content)
+      fragment = Nokogiri::HTML5.fragment(@rendered_content, context: "template")
+      @vc_test_view_context = nil
+      fragment
+    end
+
+    # Returns the view context used to render components in tests. Note that the view context
+    # is reset after each call to `render_inline`.
+    #
+    # @return [ActionView::Base]
+    def vc_test_view_context
+      @vc_test_view_context ||= vc_test_controller.view_context
     end
 
     # `JSON.parse`-d component output.
@@ -103,7 +113,7 @@ module ViewComponent
     # ```
     def render_in_view_context(...)
       @page = nil
-      @rendered_content = vc_test_controller.view_context.instance_exec(...)
+      @rendered_content = vc_test_view_context.instance_exec(...)
       Nokogiri::HTML5.fragment(@rendered_content)
     end
 

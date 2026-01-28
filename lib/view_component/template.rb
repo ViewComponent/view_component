@@ -21,11 +21,20 @@ module ViewComponent
 
     class File < Template
       def initialize(component:, details:, path:)
+        # Rails 8.1 added a newline to the compiled ERB output in
+        # https://github.com/rails/rails/pull/53731
+        lineno =
+          if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
+            - 1
+          else
+            0
+          end
+
         super(
           component: component,
           details: details,
           path: path,
-          lineno: 0
+          lineno: lineno
         )
       end
 
@@ -43,13 +52,22 @@ module ViewComponent
       attr_reader :source
 
       def initialize(component:, inline_template:)
-        details = ActionView::TemplateDetails.new(nil, inline_template.language.to_sym, DEFAULT_FORMAT, nil)
+        details = ActionView::TemplateDetails.new(nil, inline_template.language.to_sym, nil, nil)
+
+        # Rails 8.1 added a newline to the compiled ERB output in
+        # https://github.com/rails/rails/pull/53731
+        lineno =
+          if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
+            inline_template.lineno - 1
+          else
+            inline_template.lineno
+          end
 
         super(
           component: component,
           details: details,
           path: inline_template.path,
-          lineno: inline_template.lineno,
+          lineno: lineno,
         )
 
         @source = inline_template.source.dup
@@ -63,7 +81,7 @@ module ViewComponent
     class InlineCall < Template
       def initialize(component:, method_name:, defined_on_self:)
         variant = method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil
-        details = ActionView::TemplateDetails.new(nil, nil, DEFAULT_FORMAT, variant)
+        details = ActionView::TemplateDetails.new(nil, nil, nil, variant)
 
         super(component: component, details: details)
 

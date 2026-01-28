@@ -110,12 +110,12 @@ To set a custom layout for individual previews and the previews index page, set:
 ```ruby
 # config/application.rb
 # Set the default layout to app/views/layouts/component_preview.html.erb
-config.view_component.default_preview_layout = "component_preview"
+config.view_component.previews.default_layout = "component_preview"
 ```
 
 ## Preview paths
 
-Preview classes live in `test/components/previews`, which can be configured using the `preview_paths` option:
+Preview classes live in `test/components/previews`, which can be configured using the `previews.paths` option:
 
 ```ruby
 # config/application.rb
@@ -210,9 +210,9 @@ config.view_component.previews.enabled = false
 
 ## Use with RSpec
 
-When using previews with RSpec,  replace `test/components` with `spec/components` and update `preview_paths`:
+When using previews with RSpec,  replace `test/components` with `spec/components` and update `previews.paths`:
 
 ```ruby
 # config/application.rb
-config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+config.view_component.previews.paths << "#{Rails.root}/spec/components/previews"
 ```
