@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "action_view"
+require "view_component/cacheable"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
@@ -54,6 +55,8 @@ module ViewComponent
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
     include ViewComponent::Cacheable
+
+    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -306,7 +309,7 @@ module ViewComponent
       # @private
       def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
         super
-        rescue => e # rubocop:disable Style/RescueStandardError
+      rescue => e # rubocop:disable Style/RescueStandardError
         e.set_backtrace e.backtrace.tap(&:shift)
         raise e, <<~MESSAGE.chomp if view_context && e.is_a?(NameError) && helpers.respond_to?(method_name)
           #{e.message}
@@ -323,12 +326,6 @@ module ViewComponent
     # @private
     def virtual_path
       self.class.virtual_path
-    end
-
-    # For caching, such as #cache_if
-    # @private
-    def 
-      []
     end
 
     if defined?(Rails::VERSION) && Rails::VERSION::MAJOR == 7 && Rails::VERSION::MINOR == 1

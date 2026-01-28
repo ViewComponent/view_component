@@ -37,13 +37,13 @@ module ViewComponent::Cacheable
       end
     end
 
-    def template_fragment
+    def template_fragment(safe_call)
       if (content = read_fragment)
         @view_renderer.cache_hits[@current_template&.virtual_path] = :hit if defined?(@view_renderer)
         content
       else
         @view_renderer.cache_hits[@current_template&.virtual_path] = :miss if defined?(@view_renderer)
-        write_fragment
+        write_fragment(safe_call)
       end
     end
 
@@ -51,7 +51,7 @@ module ViewComponent::Cacheable
       Rails.cache.fetch(view_cache_options)
     end
 
-    def write_fragment
+    def write_fragment(safe_call)
       content = instance_exec(&safe_call)
       Rails.cache.fetch(view_cache_options) do
         content

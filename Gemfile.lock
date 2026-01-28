@@ -5,9 +5,6 @@ PATH
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
-      haml (~> 6)
-      slim (~> 5)
-      temple (~> 0.10)
 
 GEM
   remote: https://rubygems.org/

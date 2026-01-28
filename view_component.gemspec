@@ -36,7 +36,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "activesupport", supported_rails_version
   spec.add_runtime_dependency "actionview", supported_rails_version
   spec.add_runtime_dependency "concurrent-ruby", "~> 1"
-  spec.add_runtime_dependency "temple", "~> 0.10"
-  spec.add_runtime_dependency "slim", "~> 5"
-  spec.add_runtime_dependency "haml", "~> 6"
 end
