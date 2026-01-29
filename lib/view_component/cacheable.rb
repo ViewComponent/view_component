@@ -13,7 +13,7 @@ module ViewComponent::Cacheable
     #
     # @private
     def view_cache_dependencies
-      self.class.__vc_cache_dependencies.map { |dep| public_send(dep) }
+      self.class.__vc_cache_dependencies.map { |dep| send(dep) }
     end
 
     def view_cache_options
@@ -76,7 +76,7 @@ module ViewComponent::Cacheable
     end
 
     def component_digest
-      ViewComponent::CacheDigestor.new(component: self).digest
+      @__vc_component_digest ||= ViewComponent::CacheDigestor.new(component: self).digest
     end
   end
 

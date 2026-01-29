@@ -8,6 +8,7 @@ module ViewComponent
     def initialize(component:)
       @component = component
       @visited_components = {}
+      @digests = {}
     end
 
     def digest
@@ -22,6 +23,9 @@ module ViewComponent
     def digest_for_component(component_class)
       return "" unless component_class.respond_to?(:name)
       return "" unless component_class <= ViewComponent::Base
+
+      cached_digest = @digests[component_class.name]
+      return cached_digest if cached_digest
 
       return "" if @visited_components.key?(component_class.name)
 
@@ -55,7 +59,7 @@ module ViewComponent
         sources << file_contents(path)
       end
 
-      Digest::SHA1.hexdigest(sources.compact.join("\n"))
+      @digests[component_class.name] = Digest::SHA1.hexdigest(sources.compact.join("\n"))
     end
 
     def dependency_digests(dependencies)
