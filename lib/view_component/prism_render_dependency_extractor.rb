@@ -10,21 +10,27 @@ module ViewComponent
     end
 
     def extract
-      result = Prism.parse(@code)
-      walk(result.value)
+      root = Prism.parse(@code).value
+      walk(root) if root
       @dependencies
     end
 
     private
 
     def walk(node)
-      return unless node.respond_to?(:child_nodes)
+      stack = [node]
 
-      if node.is_a?(Prism::CallNode) && render_call?(node)
-        extract_render_target(node)
+      until stack.empty?
+        current = stack.pop
+        next unless current.is_a?(Prism::Node)
+
+        extract_render_target(current) if current.is_a?(Prism::CallNode) && render_call?(current)
+
+        children = current.child_nodes
+        next if children.empty?
+
+        children.reverse_each { |child| stack << child if child }
       end
-
-      node.child_nodes.each { |child| walk(child) if child }
     end
 
     def render_call?(node)
@@ -32,38 +38,17 @@ module ViewComponent
     end
 
     def extract_render_target(node)
-      args = node.arguments&.arguments
-      return unless args && !args.empty?
+      first_arg = node.arguments&.arguments&.first
+      return unless first_arg.is_a?(Prism::CallNode) && first_arg.name == :new
 
-      first_arg = args.first
+      receiver = first_arg.receiver
+      return unless receiver.is_a?(Prism::ConstantPathNode) || receiver.is_a?(Prism::ConstantReadNode)
 
-      if first_arg.is_a?(Prism::CallNode) &&
-          first_arg.name == :new &&
-          first_arg.receiver.is_a?(Prism::ConstantPathNode) || first_arg.receiver.is_a?(Prism::ConstantReadNode)
-
-        const = extract_constant_path(first_arg.receiver)
-        @dependencies << const if const
-      end
+      @dependencies << extract_constant_path(receiver)
     end
 
     def extract_constant_path(const_node)
-      parts = []
-      current = const_node
-
-      while current
-        case current
-        when Prism::ConstantPathNode
-          parts.unshift(current.child.name)
-          current = current.parent
-        when Prism::ConstantReadNode
-          parts.unshift(current.name)
-          break
-        else
-          break
-        end
-      end
-
-      parts.join("::")
+      const_node.location.slice
     end
   end
 end
