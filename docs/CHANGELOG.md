@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Add experimental support for caching.
+* Add experimental fragment caching.
 
     *Reegan Viljoen*
 

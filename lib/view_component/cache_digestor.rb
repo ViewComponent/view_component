@@ -7,8 +7,9 @@ module ViewComponent
   class CacheDigestor
     def initialize(component:)
       @component = component
-      @visited_components = {}
       @digests = {}
+      @file_cache = {}
+      @constant_cache = {}
     end
 
     def digest
@@ -20,72 +21,89 @@ module ViewComponent
     TEMPLATE_EXTENSIONS = %w[erb haml slim].freeze
     private_constant :TEMPLATE_EXTENSIONS
 
+    IN_PROGRESS = :__vc_in_progress
+    private_constant :IN_PROGRESS
+
     def digest_for_component(component_class)
-      return "" unless component_class.respond_to?(:name)
+      name = component_class.name
+      return "" unless name
       return "" unless component_class <= ViewComponent::Base
 
-      cached_digest = @digests[component_class.name]
+      cached_digest = @digests[name]
+      return "" if cached_digest == IN_PROGRESS
       return cached_digest if cached_digest
 
-      return "" if @visited_components.key?(component_class.name)
+      @digests[name] = IN_PROGRESS
 
-      @visited_components[component_class.name] = true
+      digest = Digest::SHA1.new
 
-      sources = []
-
-      identifier = component_class.identifier
-      sources << file_contents(identifier) if identifier
+      if (identifier = component_class.identifier)
+        update_digest(digest, file_contents(identifier))
+      end
 
       inline_template = component_class.__vc_inline_template if component_class.respond_to?(:__vc_inline_template)
       if inline_template
-        sources << inline_template.source
+        update_digest(digest, inline_template.source)
 
         dependencies = ViewComponent::TemplateDependencyExtractor.new(inline_template.source, inline_template.language).extract
-        sources.concat(dependency_digests(dependencies))
+        update_dependency_digests(digest, dependencies)
       end
 
       component_class.sidecar_files(TEMPLATE_EXTENSIONS).sort.each do |path|
         template_source = file_contents(path)
         next unless template_source
 
-        sources << template_source
+        update_digest(digest, template_source)
 
-        handler = path.split(".").last
+        handler = path.rpartition(".").last
         dependencies = ViewComponent::TemplateDependencyExtractor.new(template_source, handler).extract
-        sources.concat(dependency_digests(dependencies))
+        update_dependency_digests(digest, dependencies)
       end
 
       component_class.sidecar_files(["yml"]).sort.each do |path|
-        sources << file_contents(path)
+        update_digest(digest, file_contents(path))
       end
 
-      @digests[component_class.name] = Digest::SHA1.hexdigest(sources.compact.join("\n"))
+      @digests[name] = digest.hexdigest
     end
 
-    def dependency_digests(dependencies)
-      dependencies.filter_map do |dep|
-        next unless dep.match?(/\A[A-Z]/)
+    def update_dependency_digests(digest, dependencies)
+      dependencies.each do |dep|
+        next unless uppercase_constant?(dep)
 
         klass = constantize(dep)
         next unless klass
 
-        digest_for_component(klass)
+        update_digest(digest, digest_for_component(klass))
       end
+    end
+
+    def update_digest(digest, value)
+      return unless value
+
+      digest.update(value)
+      digest.update("\n")
+    end
+
+    def uppercase_constant?(dep)
+      return false unless dep
+
+      first = dep.getbyte(0)
+      first && first >= 65 && first <= 90
     end
 
     def constantize(constant_name)
-      constant_name.split("::").reduce(Object) do |namespace, name|
-        namespace.const_get(name)
+      @constant_cache.fetch(constant_name) do
+        @constant_cache[constant_name] = constant_name.split("::").reduce(Object) { |namespace, name| namespace.const_get(name) }
       end
     rescue NameError
-      nil
+      @constant_cache[constant_name] = nil
     end
 
     def file_contents(path)
-      return unless path
-      return unless File.file?(path)
-
-      File.read(path)
+      @file_cache.fetch(path) do
+        @file_cache[path] = File.file?(path) ? File.read(path) : nil
+      end
     end
   end
 end

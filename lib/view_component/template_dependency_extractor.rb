@@ -8,51 +8,60 @@ module ViewComponent
     def initialize(template_string, engine)
       @template_string = template_string
       @engine = engine
-      @dependencies = []
+      @dependencies = Set.new
     end
 
     def extract
-      ast = TemplateAstBuilder.build(@template_string, @engine)
-      return extract_erb_fallback if ast.blank? && @engine.to_sym == :erb
-      return @dependencies unless ast.present?
-      walk(ast.split(";"))
-      @dependencies.uniq
+      engine = @engine.to_sym
+      ruby_source = TemplateAstBuilder.build(@template_string, engine)
+
+      if ruby_source.nil?
+        return extract_erb_fallback if engine == :erb
+
+        return []
+      end
+
+      extract_from_ruby(ruby_source)
+      @dependencies.to_a
     end
 
     private
 
-    def walk(node)
-      return unless node.is_a?(Array)
-
-      node.each { extract_from_ruby(_1) if _1.is_a?(String) }
-    end
-
     def extract_from_ruby(ruby_code)
       return unless ruby_code.include?("render")
 
-      @dependencies.concat PrismRenderDependencyExtractor.new(ruby_code).extract
+      PrismRenderDependencyExtractor.new(ruby_code).extract.each { @dependencies << _1 }
       extract_partial_or_layout(ruby_code)
     end
 
-    def extract_partial_or_layout(code)
-      partial_match = code.match(/partial:\s*["']([^"']+)["']/)
-      layout_match = code.match(/layout:\s*["']([^"']+)["']/)
-      direct_render = code.match(/render\s*\(?\s*["']([^"']+)["']/)
+    PARTIAL_RENDER = /partial:\s*["']([^"']+)["']/
+    LAYOUT_RENDER = /layout:\s*["']([^"']+)["']/
+    DIRECT_RENDER = /render\s*\(?\s*["']([^"']+)["']/
+    private_constant :PARTIAL_RENDER, :LAYOUT_RENDER, :DIRECT_RENDER
 
-      @dependencies << partial_match[1] if partial_match
-      @dependencies << layout_match[1] if layout_match
-      @dependencies << direct_render[1] if direct_render
+    def extract_partial_or_layout(code)
+      if (partial_match = code.match(PARTIAL_RENDER))
+        @dependencies << partial_match[1]
+      end
+
+      if (layout_match = code.match(LAYOUT_RENDER))
+        @dependencies << layout_match[1]
+      end
+
+      if (direct_render = code.match(DIRECT_RENDER))
+        @dependencies << direct_render[1]
+      end
     end
 
     ERB_RUBY_TAG = /<%(=|-|#)?(.*?)%>/m
     private_constant :ERB_RUBY_TAG
 
     def extract_erb_fallback
-      @template_string.scan(ERB_RUBY_TAG) do |(_, ruby_code)|
-        extract_from_ruby(ruby_code)
+      @template_string.scan(ERB_RUBY_TAG) do |(_, tag_ruby)|
+        extract_from_ruby(tag_ruby)
       end
 
-      @dependencies.uniq
+      @dependencies.to_a
     end
   end
 end
