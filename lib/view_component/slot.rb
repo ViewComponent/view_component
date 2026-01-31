@@ -43,7 +43,27 @@ module ViewComponent
     # If there is no slot renderable, we evaluate the block passed to
     # the slot and return it.
     def to_s
-      return @content if defined?(@content)
+      call
+    end
+
+    # Renders the slot content, optionally passing arguments to the content block.
+    #
+    # This allows slot content blocks to receive arguments from the component
+    # that defines the slot, enabling patterns like:
+    #
+    #   # In the component template:
+    #   <%= my_slot.call(arg1, arg2) %>
+    #
+    #   # When setting the slot:
+    #   component.with_my_slot do |arg1, arg2|
+    #     "Content using #{arg1} and #{arg2}"
+    #   end
+    #
+    # @param args [Array] Arguments to pass to the content block
+    # @param kwargs [Hash] Keyword arguments to pass to the content block
+    # @return [String] The rendered slot content
+    def call(*args, **kwargs)
+      return @content if defined?(@content) && args.empty? && kwargs.empty?
 
       view_context = @parent.send(:view_context)
 
@@ -51,15 +71,15 @@ module ViewComponent
         raise DuplicateSlotContentError.new(self.class.name)
       end
 
-      @content =
+      content =
         if __vc_component_instance?
           @__vc_component_instance.__vc_original_view_context = @parent.__vc_original_view_context
 
           if defined?(@__vc_content_block)
             # render_in is faster than `parent.render`
-            @__vc_component_instance.render_in(view_context) do |*args|
+            @__vc_component_instance.render_in(view_context) do |*component_args|
               @parent.with_captured_virtual_path(@__vc_content_block_virtual_path) do
-                @__vc_content_block.call(*args)
+                @__vc_content_block.call(*component_args)
               end
             end
           else
@@ -69,13 +89,21 @@ module ViewComponent
           @__vc_content
         elsif defined?(@__vc_content_block)
           @parent.with_captured_virtual_path(@__vc_content_block_virtual_path) do
-            view_context.capture(&@__vc_content_block)
+            view_context.capture do
+              if kwargs.empty?
+                @__vc_content_block.call(*args)
+              else
+                @__vc_content_block.call(*args, **kwargs)
+              end
+            end
           end
         elsif defined?(@__vc_content_set_by_with_content)
           @__vc_content_set_by_with_content
         end
 
-      @content = @content.to_s
+      content = content.to_s
+      @content = content if args.empty? && kwargs.empty?
+      content
     end
 
     # Allow access to public component methods via the wrapper

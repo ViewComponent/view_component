@@ -86,8 +86,13 @@ module ViewComponent
             __vc_set_slot(slot_name, nil, *args, **kwargs, &block)
           end
 
-          self::GeneratedSlotMethods.define_method slot_name do
-            __vc_get_slot(slot_name)
+          self::GeneratedSlotMethods.define_method slot_name do |*args, **kwargs, &block|
+            slot = __vc_get_slot(slot_name)
+            if (args.any? || kwargs.any? || block) && slot
+              slot.call(*args, **kwargs, &block)
+            else
+              slot
+            end
           end
 
           self::GeneratedSlotMethods.define_method :"#{slot_name}?" do
@@ -229,8 +234,13 @@ module ViewComponent
       end
 
       def __vc_register_polymorphic_slot(slot_name, types, collection:)
-        self::GeneratedSlotMethods.define_method(slot_name) do
-          __vc_get_slot(slot_name)
+        self::GeneratedSlotMethods.define_method(slot_name) do |*args, **kwargs, &block|
+          slot = __vc_get_slot(slot_name)
+          if (args.any? || kwargs.any? || block) && slot && !slot.is_a?(Array)
+            slot.call(*args, **kwargs, &block)
+          else
+            slot
+          end
         end
 
         self::GeneratedSlotMethods.define_method(:"#{slot_name}?") do

@@ -1,0 +1,14 @@
+<div class="slot-args">
+  <% if greeting? %>
+    <div class="greeting"><%= greeting("Hello", "World") %></div>
+  <% end %>
+  <% items.each_with_index do |item, index| %>
+    <div class="item"><%= item.call(index, "extra") %></div>
+  <% end %>
+  <% if kwargs_slot? %>
+    <div class="kwargs"><%= kwargs_slot(name: "test", value: 42) %></div>
+  <% end %>
+  <% if mixed_slot? %>
+    <div class="mixed"><%= mixed_slot("positional", key: "keyword") %></div>
+  <% end %>
+</div>

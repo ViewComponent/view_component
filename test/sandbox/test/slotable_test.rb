@@ -831,4 +831,58 @@ class SlotableTest < ViewComponent::TestCase
 
     assert_selector(".breadcrumb.active")
   end
+
+  def test_slot_with_args_renders_one
+    render_inline(SlotArgsComponent.new) do |component|
+      component.with_greeting do |arg1, arg2|
+        "#{arg1} #{arg2}!"
+      end
+    end
+
+    assert_selector(".greeting", text: "Hello World!")
+  end
+
+  def test_slot_with_args_renders_many
+    render_inline(SlotArgsComponent.new) do |component|
+      component.with_item do |index, extra|
+        "Item #{index}: #{extra}"
+      end
+      component.with_item do |index, extra|
+        "Item #{index}: #{extra}"
+      end
+    end
+
+    assert_selector(".item", text: "Item 0: extra")
+    assert_selector(".item", text: "Item 1: extra")
+  end
+
+  def test_slot_call_with_kwargs
+    render_inline(SlotArgsComponent.new) do |component|
+      component.with_kwargs_slot do |name:, value:|
+        "Name: #{name}, Value: #{value}"
+      end
+    end
+
+    assert_selector(".kwargs", text: "Name: test, Value: 42")
+  end
+
+  def test_slot_call_with_mixed_args_and_kwargs
+    render_inline(SlotArgsComponent.new) do |component|
+      component.with_mixed_slot do |pos, key:|
+        "#{pos} and #{key}"
+      end
+    end
+
+    assert_selector(".mixed", text: "positional and keyword")
+  end
+
+  def test_slot_call_method_directly
+    render_inline(SlotArgsComponent.new) do |component|
+      component.with_greeting do |arg1, arg2|
+        "Direct: #{arg1}-#{arg2}"
+      end
+    end
+
+    assert_selector(".greeting", text: "Direct: Hello-World")
+  end
 end

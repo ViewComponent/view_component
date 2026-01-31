@@ -219,6 +219,92 @@ end
 
 _Note: While a lambda is called when the `with_*` method is called, a returned component isn't rendered until first use._
 
+## Passing arguments to slots
+
+Slots can receive arguments during rendering. This is useful when the component template has data that the slot content needs access to.
+
+```ruby
+# greeting_component.rb
+class GreetingComponent < ViewComponent::Base
+  renders_one :message
+end
+```
+
+```erb
+<%# greeting_component.html.erb %>
+<div class="greeting">
+  <%= message("Hello", "World") %>
+</div>
+```
+
+```erb
+<%# index.html.erb %>
+<%= render GreetingComponent.new do |component| %>
+  <% component.with_message do |greeting, name| %>
+    <%= greeting %>, <%= name %>!
+  <% end %>
+<% end %>
+```
+
+Returning:
+
+```erb
+<div class="greeting">
+  Hello, World!
+</div>
+```
+
+For `renders_many` slots, call `.call()` on each slot item:
+
+```ruby
+# list_component.rb
+class ListComponent < ViewComponent::Base
+  renders_many :items
+end
+```
+
+```erb
+<%# list_component.html.erb %>
+<ul>
+  <% items.each_with_index do |item, index| %>
+    <li><%= item.call(index) %></li>
+  <% end %>
+</ul>
+```
+
+```erb
+<%# index.html.erb %>
+<%= render ListComponent.new do |component| %>
+  <% component.with_item do |index| %>
+    Item <%= index + 1 %>
+  <% end %>
+  <% component.with_item do |index| %>
+    Item <%= index + 1 %>
+  <% end %>
+<% end %>
+```
+
+Returning:
+
+```erb
+<ul>
+  <li>Item 1</li>
+  <li>Item 2</li>
+</ul>
+```
+
+Keyword arguments are also supported:
+
+```erb
+<%# In the component template %>
+<%= my_slot(name: "Alice", role: "Admin") %>
+
+<%# When setting the slot %>
+<% component.with_my_slot do |name:, role:| %>
+  <%= name %> (<%= role %>)
+<% end %>
+```
+
 ## Rendering collections
 
 Since 2.23.0
