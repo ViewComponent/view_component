@@ -21,11 +21,13 @@ module ViewComponent
 
     class File < Template
       def initialize(component:, details:, path:)
-        # Rails 8.1 added a newline to the compiled ERB output in
-        # https://github.com/rails/rails/pull/53731
+        # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).
+        # Use -1 to compensate for correct line numbers in stack traces.
+        # However, negative line numbers cause segfaults when Ruby's coverage
+        # is enabled (bugs.ruby-lang.org/issues/19363), so use 1 in that case.
         lineno =
           if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
-            - 1
+            coverage_running? ? 1 : -1
           else
             0
           end
@@ -54,11 +56,13 @@ module ViewComponent
       def initialize(component:, inline_template:)
         details = ActionView::TemplateDetails.new(nil, inline_template.language.to_sym, nil, nil)
 
-        # Rails 8.1 added a newline to the compiled ERB output in
-        # https://github.com/rails/rails/pull/53731
+        # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).
+        # Subtract 1 to compensate for correct line numbers in stack traces.
+        # However, negative line numbers cause segfaults when Ruby's coverage
+        # is enabled (bugs.ruby-lang.org/issues/19363), so skip the adjustment in that case.
         lineno =
           if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
-            inline_template.lineno - 1
+            coverage_running? ? inline_template.lineno : inline_template.lineno - 1
           else
             inline_template.lineno
           end
@@ -124,6 +128,10 @@ module ViewComponent
       # rubocop:enable Style/EvalWithLocation
 
       @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
+    end
+
+    def coverage_running?
+      defined?(Coverage) && Coverage.running?
     end
 
     def safe_method_name_call
