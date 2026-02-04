@@ -119,11 +119,11 @@ module ViewComponent
           .tally
           .select { |_, count| count > 1 }
           .each do |tally|
-          variant, this_format = tally.first
+            variant, this_format = tally.first
 
-          variant_string = " for variant `#{variant}`" if variant.present?
+            variant_string = " for variant `#{variant}`" if variant.present?
 
-          errors << "More than one #{this_format.upcase} template found#{variant_string} for #{@component}. "
+            errors << "More than one #{this_format.upcase} template found#{variant_string} for #{@component}. "
         end
 
         default_template_types = @templates.each_with_object(Set.new) do |template, memo|
@@ -202,11 +202,11 @@ module ViewComponent
           ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }
             .uniq
             .each do |method_name|
-            templates << Template::InlineCall.new(
-              component: @component,
-              method_name: method_name,
-              defined_on_self: component_instance_methods_on_self.include?(method_name)
-            )
+              templates << Template::InlineCall.new(
+                component: @component,
+                method_name: method_name,
+                defined_on_self: component_instance_methods_on_self.include?(method_name)
+              )
           end
 
           templates
