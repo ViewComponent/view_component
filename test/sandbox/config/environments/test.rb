@@ -48,6 +48,4 @@ Sandbox::Application.configure do
   config.action_view.annotate_rendered_view_with_filenames = true
 
   config.eager_load = true
-
-  config.active_support.to_time_preserves_timezone = :zone
 end
