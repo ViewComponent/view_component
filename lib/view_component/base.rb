@@ -49,11 +49,12 @@ module ViewComponent
     include Rails.application.routes.url_helpers if defined?(Rails.application.routes)
     include ERB::Escape
     include ActiveSupport::CoreExt::ERBUtil
-
     include ViewComponent::InlineTemplate
     include ViewComponent::Slotable
     include ViewComponent::Translatable
     include ViewComponent::WithContentHelper
+
+    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
     # For CSRF authenticity tokens in forms
     delegate :form_authenticity_token, :protect_against_forgery?, :config, to: :helpers
@@ -68,7 +69,6 @@ module ViewComponent
     delegate :content_security_policy_nonce, to: :helpers
 
     # Config option that strips trailing whitespace in templates before compiling them.
-    class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
     attr_accessor :__vc_original_view_context
     attr_reader :current_template

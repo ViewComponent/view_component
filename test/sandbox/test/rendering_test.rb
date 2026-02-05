@@ -1339,6 +1339,90 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("Hi!")
   end
 
+  def test_inline_cache_component
+    return if Rails.version < "7.0"
+
+    component = InlineCacheComponent.new(foo: "foo", bar: "bar")
+    render_inline(component)
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo bar")
+
+    render_inline(InlineCacheComponent.new(foo: "foo", bar: "bar"))
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+
+    new_component = InlineCacheComponent.new(foo: "foo", bar: "baz")
+    render_inline(new_component)
+
+    assert_selector(".cache-component__cache-key", text: new_component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo baz")
+  end
+
+  def test_cache_component
+    return if Rails.version < "7.0"
+
+    component = CacheComponent.new(foo: "foo", bar: "bar")
+    render_inline(component)
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo bar")
+
+    render_inline(CacheComponent.new(foo: "foo", bar: "bar"))
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+
+    new_component = CacheComponent.new(foo: "foo", bar: "baz")
+    render_inline(new_component)
+
+    assert_selector(".cache-component__cache-key", text: new_component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo baz")
+  end
+
+  def test_no_cache_compoennt
+    return if Rails.version < "7.0"
+
+    component = NoCacheComponent.new(foo: "foo", bar: "bar")
+    render_inline(component)
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo bar")
+  end
+
+  def test_cache_key_changes_when_child_component_template_changes
+    return if Rails.version < "7.0"
+
+    child_template_path = CacheDigestorChildComponent.sidecar_files(["erb"]).first
+    original_template = File.read(child_template_path)
+
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    component_v1 = CacheDigestorParentComponent.new(foo: "x")
+    render_inline(component_v1)
+    assert_selector(".child", text: "v1")
+    time_v1 = page.find(".parent")["data-time"]
+
+    render_inline(CacheDigestorParentComponent.new(foo: "x"))
+    assert_selector(".child", text: "v1")
+    assert_equal(time_v1, page.find(".parent")["data-time"])
+
+    File.write(child_template_path, original_template.sub("v1", "v2"))
+    ViewComponent::CompileCache.invalidate!
+
+    component_v2 = CacheDigestorParentComponent.new(foo: "x")
+    render_inline(component_v2)
+    assert_selector(".child", text: "v2")
+    refute_equal(time_v1, page.find(".parent")["data-time"])
+  ensure
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    if child_template_path && original_template
+      File.write(child_template_path, original_template)
+    end
+  end
+
   def test_render_partial_with_yield
     render_inline(PartialWithYieldComponent.new)
     assert_text "hello world", exact: true, normalize_ws: true
