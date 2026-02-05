@@ -184,6 +184,7 @@ GEM
     mini_mime (1.1.5)
     minitest (6.0.1)
       prism (~> 1.5)
+    minitest-mock (5.27.0)
     net-imap (0.6.2)
       date
       net-protocol
@@ -433,6 +434,7 @@ DEPENDENCIES
   m (~> 1)
   method_source (~> 1)
   minitest (~> 6)
+  minitest-mock
   nokogiri (= 1.19.0)
   propshaft (~> 1)
   puma (>= 6)
