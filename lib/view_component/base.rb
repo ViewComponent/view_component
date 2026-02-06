@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "action_view"
+require "action_view/base"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
