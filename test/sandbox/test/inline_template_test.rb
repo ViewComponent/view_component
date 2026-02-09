@@ -189,4 +189,54 @@ class InlineErbTest < ViewComponent::TestCase
 
     assert_selector(".greeting-container h1", text: "Hello, Fox Mulder!")
   end
+
+  # Regression test for https://github.com/ViewComponent/view_component/issues/2540
+  # Negative lineno values in class_eval cause segfaults when Ruby's Coverage module
+  # is enabled. This test verifies that components can be compiled and rendered when
+  # coverage is running.
+  test "file-based templates compile without segfault when coverage is running" do
+    skip unless Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0
+
+    with_new_cache do
+      with_coverage_running do
+        # Force recompilation with coverage "enabled"
+        ViewComponent::CompileCache.cache.delete(ErbComponent)
+
+        # This would segfault before the fix due to negative lineno
+        render_inline(ErbComponent.new(message: "Foo bar"))
+
+        assert_selector("div", text: "Foo bar")
+      end
+    end
+  end
+
+  test "inline templates compile without segfault when coverage is running" do
+    skip unless Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0
+
+    with_new_cache do
+      with_coverage_running do
+        # Force recompilation with coverage "enabled"
+        ViewComponent::CompileCache.cache.delete(InlineRaiseErbComponent)
+
+        # Inline templates should still work (lineno is 2+, so -1 won't be negative)
+        error = assert_raises ArgumentError do
+          render_inline(InlineRaiseErbComponent.new("Fox Mulder"))
+        end
+
+        # Verify backtrace still points to correct line
+        assert_match %r{test/sandbox/test/inline_template_test.rb:22}, error.backtrace[0]
+      end
+    end
+  end
+
+  private
+
+  def with_coverage_running
+    require "coverage"
+    already_running = Coverage.running?
+    Coverage.start unless already_running
+    yield
+  ensure
+    Coverage.result unless already_running
+  end
 end
