@@ -3,11 +3,11 @@
 source "https://rubygems.org"
 gemspec
 
-rails_version = (ENV["RAILS_VERSION"] || "~> 8").to_s
+rails_version = (ENV["RAILS_VERSION"] || "~> 8.1").to_s
 
 gem "rails", (rails_version == "main") ? {git: "https://github.com/rails/rails", ref: "main"} : rails_version
 
-ruby_version = (ENV["RUBY_VERSION"] || "~> 3.4").to_s
+ruby_version = (ENV["RUBY_VERSION"] || "~> 4.0").to_s
 ruby ruby_version
 
 group :development, :test do
@@ -26,6 +26,8 @@ group :development, :test do
   gem "m", "~> 1"
   gem "method_source", "~> 1"
   gem "minitest", "~> 6"
+  gem "minitest-mock"
+  gem "nokogiri", "1.19.0"
   gem "propshaft", "~> 1"
   gem "puma", ">= 6"
   gem "rake", "~> 13"

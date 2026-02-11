@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "action_view"
+require "action_view/base"
 require "view_component/collection"
 require "view_component/compile_cache"
 require "view_component/compiler"
@@ -577,7 +578,7 @@ module ViewComponent
         # eager loading is disabled and the parent component is rendered before the child. In
         # such a scenario, the parent will override ViewComponent::Base#render_template_for,
         # meaning it will not be called for any children and thus not compile their templates.
-        if !child.instance_methods(false).include?(:render_template_for) && !child.__vc_compiled?
+        if !child.method_defined?(:render_template_for, false) && !child.__vc_compiled?
           child.class_eval <<~RUBY, __FILE__, __LINE__ + 1
             def render_template_for(requested_details)
               # Force compilation here so the compiler always redefines render_template_for.
@@ -600,7 +601,7 @@ module ViewComponent
         # Set collection parameter to the extended component
         child.with_collection_parameter(__vc_provided_collection_parameter)
 
-        if instance_methods(false).include?(:render_template_for)
+        if method_defined?(:render_template_for, false)
           vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
 
           vc_ancestor_calls.unshift(instance_method(:render_template_for))

@@ -259,7 +259,7 @@ module ViewComponent
 
           setter_method_name = :"with_#{poly_slot_name}"
 
-          if instance_methods.include?(setter_method_name)
+          if method_defined?(setter_method_name)
             raise AlreadyDefinedPolymorphicSlotSetterError.new(setter_method_name, poly_slot_name)
           end
 

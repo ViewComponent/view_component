@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"3.5" => 67, "3.4" => 72..74, "3.3" => 75, "3.2" => 78..79}) do
+      assert_allocations({"4.1" => 67..68, "4.0" => 67, "3.4" => 72..74, "3.3" => 75, "3.2" => 78..79}) do
         render_inline(MyComponent.new)
       end
     end
@@ -34,7 +34,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
-    allocations = {"3.5" => 66, "3.4" => 70..82, "3.3" => 89, "3.2" => 92..93}
+    allocations = {"4.1" => 66, "4.0" => 66, "3.4" => 70..82, "3.3" => 89, "3.2" => 92..93}
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
