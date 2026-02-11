@@ -51,7 +51,7 @@ class TestHelperTest < ViewComponent::TestCase
   end
 
   def test_with_request_url_specifying_http_protocol
-    with_request_url "/products", protocol: "http" do
+    with_request_url "/products", protocol: :http do
       render_inline(ProtocolComponent.new)
     end
 
@@ -59,7 +59,7 @@ class TestHelperTest < ViewComponent::TestCase
   end
 
   def test_with_request_url_specifying_https_protocol
-    with_request_url "/products", protocol: "https" do
+    with_request_url "/products", protocol: :https do
       render_inline(ProtocolComponent.new)
     end
 
@@ -70,7 +70,7 @@ class TestHelperTest < ViewComponent::TestCase
     # Store original protocol
     original_scheme = vc_test_request.scheme
 
-    with_request_url "/products", protocol: "https" do
+    with_request_url "/products", protocol: :https do
       assert_equal "https", vc_test_request.scheme
     end
 
@@ -79,7 +79,7 @@ class TestHelperTest < ViewComponent::TestCase
   end
 
   def test_with_request_url_with_protocol_and_host
-    with_request_url "/products", protocol: "https", host: "secure.example.com" do
+    with_request_url "/products", protocol: :https, host: "secure.example.com" do
       render_inline(ProtocolComponent.new)
     end
 

@@ -199,7 +199,7 @@ module ViewComponent
     # To specify a protocol, pass the protocol param:
     #
     # ```ruby
-    # with_request_url("/users/42", protocol: "https") do
+    # with_request_url("/users/42", protocol: :https) do
     #   render_inline(MyComponent.new)
     # end
     # ```
@@ -207,7 +207,7 @@ module ViewComponent
     # @param full_path [String] The path to set for the current request.
     # @param host [String] The host to set for the current request.
     # @param method [String] The request method to set for the current request.
-    # @param protocol [String] The protocol to set for the current request (e.g., "http" or "https").
+    # @param protocol [Symbol] The protocol to set for the current request (e.g., `:http` or `:https`).
     def with_request_url(full_path, host: nil, method: nil, protocol: nil)
       old_request_host = vc_test_request.host
       old_request_method = vc_test_request.request_method
@@ -224,7 +224,7 @@ module ViewComponent
       vc_test_request.instance_variable_set(:@original_fullpath, full_path)
       vc_test_request.host = host if host
       vc_test_request.request_method = method if method
-      vc_test_request.set_header(Rack::RACK_URL_SCHEME, protocol) if protocol
+      vc_test_request.set_header(Rack::RACK_URL_SCHEME, protocol.to_s) if protocol
       vc_test_request.path_info = path
       vc_test_request.path_parameters = Rails.application.routes.recognize_path_with_request(vc_test_request, path, {})
       vc_test_request.set_header("action_dispatch.request.query_parameters",
