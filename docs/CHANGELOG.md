@@ -10,6 +10,16 @@ nav_order: 6
 
 ## main
 
+## 4.3.0
+
+* Fix load order issues for 3rd-party template handlers.
+
+    *Cameron Dutro*
+
+* Fix segfault when Ruby coverage is enabled with Rails 8.1 ERB templates.
+
+    *George Holborn*
+
 * Automatically merge dependabot PRs.
 
     *Joel Hawksley*
@@ -17,10 +27,6 @@ nav_order: 6
 * Use Ruby 4.0.0 in CI and dev.
 
     *Joel Hawksley*
-
-* Fix load order issues for 3rd-party template handlers.
-
-    *Cameron Dutro*
 
 ## 4.2.0
 
