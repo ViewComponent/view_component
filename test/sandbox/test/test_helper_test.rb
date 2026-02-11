@@ -49,4 +49,32 @@ class TestHelperTest < ViewComponent::TestCase
     render_inline(CustomFormBuilderComponent.new(builder: builder)) { "Label content" }
     assert_selector("label[for=foo]", text: "Label content")
   end
+
+  def test_with_request_url_specifying_http_protocol
+    with_request_url "/products", protocol: "http" do
+      render_inline(ProtocolComponent.new)
+    end
+
+    assert_selector(".protocol", text: "Protocol: http, SSL: false")
+  end
+
+  def test_with_request_url_specifying_https_protocol
+    with_request_url "/products", protocol: "https" do
+      render_inline(ProtocolComponent.new)
+    end
+
+    assert_selector(".protocol", text: "Protocol: https, SSL: true")
+  end
+
+  def test_with_request_url_restores_original_protocol
+    # Store original protocol
+    original_scheme = vc_test_request.scheme
+
+    with_request_url "/products", protocol: "https" do
+      assert_equal "https", vc_test_request.scheme
+    end
+
+    # Verify original protocol is restored
+    assert_equal original_scheme, vc_test_request.scheme
+  end
 end
