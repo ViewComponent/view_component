@@ -967,7 +967,7 @@ class RenderingTest < ViewComponent::TestCase
   def test_with_request_url_with_https_protocol
     with_request_url "/", protocol: :https do
       render_inline UrlForComponent.new(only_path: false)
-      assert_text "https://example.com/?key=value"
+      assert_text "https://test.host/?key=value"
     end
 
     with_request_url "/products", protocol: :https, host: "secure.example.com" do
