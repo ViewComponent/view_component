@@ -61,13 +61,9 @@ module ViewComponent
 
       def compiled_source
         result = super
-        puts "before" if @strip_annotation_line
-        puts result if @strip_annotation_line
         # Strip the annotation line to maintain correct line numbers when coverage
         # is running (avoids segfault from negative lineno)
         result = result.sub(/\A[^\n]*\n/, "") if @strip_annotation_line
-        puts "after" if @strip_annotation_line
-        puts result if @strip_annotation_line
         result
       end
     end
