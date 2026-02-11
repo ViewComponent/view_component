@@ -77,4 +77,12 @@ class TestHelperTest < ViewComponent::TestCase
     # Verify original protocol is restored
     assert_equal original_scheme, vc_test_request.scheme
   end
+
+  def test_with_request_url_with_protocol_and_host
+    with_request_url "/products", protocol: "https", host: "secure.example.com" do
+      render_inline(ProtocolComponent.new)
+    end
+
+    assert_selector(".protocol", text: "Protocol: https, SSL: true")
+  end
 end
