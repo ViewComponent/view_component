@@ -21,11 +21,21 @@ module ViewComponent
 
     class File < Template
       def initialize(component:, details:, path:)
-        # Rails 8.1 added a newline to the compiled ERB output in
-        # https://github.com/rails/rails/pull/53731
+        @strip_annotation_line = false
+
+        # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).
+        # Use -1 to compensate for correct line numbers in stack traces.
+        # However, negative line numbers cause segfaults when Ruby's coverage
+        # is enabled (bugs.ruby-lang.org/issues/19363). In that case, strip the
+        # annotation line from compiled source instead.
         lineno =
           if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
-            - 1
+            if coverage_running? && ActionView::Base.annotate_rendered_view_with_filenames
+              @strip_annotation_line = true
+              0
+            else
+              -1
+            end
           else
             0
           end
@@ -46,6 +56,16 @@ module ViewComponent
       def source
         ::File.read(@path)
       end
+
+      private
+
+      def compiled_source
+        result = super
+        # Strip the annotation line to maintain correct line numbers when coverage
+        # is running (avoids segfault from negative lineno)
+        result = result.sub(/\A[^\n]*\n/, "") if @strip_annotation_line
+        result
+      end
     end
 
     class Inline < Template
@@ -54,8 +74,10 @@ module ViewComponent
       def initialize(component:, inline_template:)
         details = ActionView::TemplateDetails.new(nil, inline_template.language.to_sym, nil, nil)
 
-        # Rails 8.1 added a newline to the compiled ERB output in
-        # https://github.com/rails/rails/pull/53731
+        # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).
+        # Subtract 1 to compensate for correct line numbers in stack traces.
+        # Inline templates start at line 2+ (defined inside a class), so this
+        # won't result in negative line numbers that cause segfaults with coverage.
         lineno =
           if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
             inline_template.lineno - 1
@@ -124,6 +146,10 @@ module ViewComponent
       # rubocop:enable Style/EvalWithLocation
 
       @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
+    end
+
+    def coverage_running?
+      defined?(Coverage) && Coverage.running?
     end
 
     def safe_method_name_call
