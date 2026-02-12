@@ -50,6 +50,7 @@ module ViewComponent
       end
     end
 
+    # For Rails 7.1 wich doesnt have this built in
     PARTIAL_RENDER = /partial:\s*["']([^"']+)["']/
     LAYOUT_RENDER = /layout:\s*["']([^"']+)["']/
     DIRECT_RENDER = /render\s*\(?\s*["']([^"']+)["']/
