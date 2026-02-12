@@ -30,8 +30,8 @@ module ViewComponent
         # annotation line from compiled source instead.
         lineno =
           if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
-            if coverage_running?
-              @strip_annotation_line = ActionView::Base.annotate_rendered_view_with_filenames
+            if coverage_running? && ActionView::Base.annotate_rendered_view_with_filenames
+              @strip_annotation_line = true
               0
             else
               -1
@@ -137,8 +137,10 @@ module ViewComponent
     def compile_to_component
       @component.silence_redefinition_of_method(call_method_name)
 
+      safe_lineno = coverage_running? && @lineno.to_i.negative? ? 1 : @lineno
+
       # rubocop:disable Style/EvalWithLocation
-      @component.class_eval <<~RUBY, @path, @lineno
+      @component.class_eval <<~RUBY, @path, safe_lineno
         def #{call_method_name}
           #{compiled_source}
         end
