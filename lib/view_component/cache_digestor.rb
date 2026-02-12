@@ -22,17 +22,13 @@ module ViewComponent
     private_constant :IN_PROGRESS
 
     def digest_for_component(component_class)
+      return "" unless component_class <= ViewComponent::Base
       name = component_class.name
       return "" unless name
-      return "" unless component_class <= ViewComponent::Base
 
-      case (cached_digest = @digests[name])
-      when IN_PROGRESS
-        return ""
-      when nil
-      else
-        return cached_digest
-      end
+      cached_digest = @digests[name]
+      return "" if cached_digest == IN_PROGRESS
+      return cached_digest if cached_digest
 
       @digests[name] = IN_PROGRESS
 
@@ -42,26 +38,31 @@ module ViewComponent
 
       inline_template = component_class.__vc_inline_template
       if inline_template
-        update_digest(digest, inline_template.source)
-
-        dependencies = ViewComponent::TemplateDependencyExtractor.new(inline_template.source, inline_template.language).extract
-        update_dependency_digests(digest, dependencies)
+        inline_source = inline_template.source
+        update_digest(digest, inline_source)
+        update_template_dependency_digests(digest, inline_source, inline_template.language)
       end
 
-      component_class.sidecar_files(ActionView::Template.template_handler_extensions).sort.each do |path|
+      template_paths = component_class.sidecar_files(ActionView::Template.template_handler_extensions).sort
+      template_paths.each do |path|
         template_source = file_contents(path)
         update_digest(digest, template_source)
-
-        handler = path.rpartition(".").last
-        dependencies = ViewComponent::TemplateDependencyExtractor.new(template_source, handler).extract
-        update_dependency_digests(digest, dependencies)
+        update_template_dependency_digests(digest, template_source, File.extname(path).delete_prefix("."))
       end
 
-      component_class.sidecar_files(%w[yml yaml]).sort.each do |path|
+      i18n_paths = component_class.sidecar_files(%w[yml yaml]).sort
+      i18n_paths.each do |path|
         update_digest(digest, file_contents(path))
       end
 
       @digests[name] = digest.hexdigest
+    end
+
+    def update_template_dependency_digests(digest, template_source, handler)
+      return unless template_source&.include?("render")
+
+      dependencies = ViewComponent::TemplateDependencyExtractor.new(template_source, handler).extract
+      update_dependency_digests(digest, dependencies)
     end
 
     def update_dependency_digests(digest, dependencies)

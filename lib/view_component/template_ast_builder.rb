@@ -6,14 +6,8 @@ module ViewComponent
       case engine_name.to_sym
       when :erb
         compile_erb(template_string)
-      when :slim
-        return nil unless load_slim?
-
-        Slim::Engine.new.call(template_string)
-      when :haml
-        return nil unless load_haml?
-
-        Haml::Engine.new.call(template_string)
+      else
+        compile_template_with_engine(template_string, engine_name)
       end
     end
 
@@ -26,24 +20,33 @@ module ViewComponent
     end
     private_class_method :compile_erb
 
-    def self.load_slim?
-      return true if defined?(Slim::Engine)
+    def self.compile_template_with_engine(template_string, engine_name)
+      engine_class = load_template_engine(engine_name)
+      return nil unless engine_class
 
-      require "slim"
-      true
-    rescue LoadError
-      false
+      engine_class.new.call(template_string)
+    rescue
+      nil
     end
-    private_class_method :load_slim?
+    private_class_method :compile_template_with_engine
 
-    def self.load_haml?
-      return true if defined?(Haml::Engine)
+    def self.load_template_engine(engine_name)
+      engine_class = template_engine_class(engine_name)
+      return engine_class if engine_class
 
-      require "haml"
-      true
+      require engine_name.to_s
+      template_engine_class(engine_name)
     rescue LoadError
-      false
+      nil
     end
-    private_class_method :load_haml?
+    private_class_method :load_template_engine
+
+    def self.template_engine_class(engine_name)
+      engine_module_name = engine_name.to_s.tr("-", "_").split("_").map!(&:capitalize).join
+      Object.const_get("#{engine_module_name}::Engine")
+    rescue NameError
+      nil
+    end
+    private_class_method :template_engine_class
   end
 end

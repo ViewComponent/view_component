@@ -19,13 +19,15 @@ module ViewComponent::ExperimentallyCacheable
 
     def view_cache_options
       return @__vc_cache_options if instance_variable_defined?(:@__vc_cache_options)
-      return @__vc_cache_options = nil if self.class.__vc_cache_dependencies.blank?
+
+      dependencies = self.class.__vc_cache_dependencies
+      return @__vc_cache_options = nil if dependencies.empty?
 
       template_key = __vc_cache_template_key
-      return @__vc_cache_options = nil if template_key.nil?
+      return @__vc_cache_options = nil unless template_key
 
-      cache_key_parts = [__vc_static_cache_key_parts(template_key), view_cache_dependencies]
-      @__vc_cache_options = combined_fragment_cache_key(ActiveSupport::Cache.expand_cache_key(cache_key_parts))
+      expanded_key = ActiveSupport::Cache.expand_cache_key([__vc_static_cache_key_parts(template_key), view_cache_dependencies])
+      @__vc_cache_options = combined_fragment_cache_key(expanded_key)
     end
 
     # Render component from cache if possible
@@ -76,25 +78,29 @@ module ViewComponent::ExperimentallyCacheable
     end
 
     def component_digest
-      if ActionView::Base.cache_template_loading
-        self.class.instance_variable_get(:@__vc_component_digest) ||
-          self.class.instance_variable_set(:@__vc_component_digest, ViewComponent::CacheDigestor.new(component: self).digest)
-      else
-        @__vc_component_digest ||= ViewComponent::CacheDigestor.new(component: self).digest
-      end
+      return @__vc_component_digest ||= __vc_compute_component_digest unless ActionView::Base.cache_template_loading
+
+      klass = self.class
+      digest = klass.instance_variable_get(:@__vc_component_digest)
+      return digest if digest
+
+      klass.instance_variable_set(:@__vc_component_digest, __vc_compute_component_digest)
+    end
+
+    def __vc_compute_component_digest
+      ViewComponent::CacheDigestor.new(component: self).digest
     end
 
     def __vc_static_cache_key_parts(template_key)
+      klass = self.class
       digest = component_digest
-      key = [template_key, digest]
+      call_method_name, template_virtual_path = template_key
+      cache_key = [call_method_name, template_virtual_path, digest]
 
-      static_key_cache = self.class.instance_variable_get(:@__vc_static_cache_key_parts)
-      unless static_key_cache
-        static_key_cache = {}
-        self.class.instance_variable_set(:@__vc_static_cache_key_parts, static_key_cache)
-      end
+      static_key_cache = klass.instance_variable_get(:@__vc_static_cache_key_parts) ||
+        klass.instance_variable_set(:@__vc_static_cache_key_parts, {})
 
-      static_key_cache[key] ||= [self.class.name, self.class.virtual_path, template_key, digest].freeze
+      static_key_cache[cache_key] ||= [klass.name, klass.virtual_path, [call_method_name, template_virtual_path].freeze, digest].freeze
     end
 
     def __vc_cache_enabled?
