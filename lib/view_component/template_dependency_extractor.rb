@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "action_view/render_parser"
+
 require_relative "template_ast_builder"
 require_relative "prism_render_dependency_extractor"
 
@@ -31,25 +33,9 @@ module ViewComponent
       return unless ruby_code.include?("render")
 
       PrismRenderDependencyExtractor.new(ruby_code).extract.each { @dependencies << _1 }
-      extract_partial_or_layout(ruby_code)
-    end
 
-    PARTIAL_RENDER = /partial:\s*["']([^"']+)["']/
-    LAYOUT_RENDER = /layout:\s*["']([^"']+)["']/
-    DIRECT_RENDER = /render\s*\(?\s*["']([^"']+)["']/
-    private_constant :PARTIAL_RENDER, :LAYOUT_RENDER, :DIRECT_RENDER
-
-    def extract_partial_or_layout(code)
-      if (partial_match = code.match(PARTIAL_RENDER))
-        @dependencies << partial_match[1]
-      end
-
-      if (layout_match = code.match(LAYOUT_RENDER))
-        @dependencies << layout_match[1]
-      end
-
-      if (direct_render = code.match(DIRECT_RENDER))
-        @dependencies << direct_render[1]
+      ActionView::RenderParser::Default.new("view_component/template", ruby_code).render_calls.each do |render_path|
+        @dependencies << render_path.gsub(%r{/_}, "/")
       end
     end
 

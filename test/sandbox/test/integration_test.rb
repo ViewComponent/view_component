@@ -280,19 +280,19 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     get "/controller_inline_cached?foo=foo&bar=bar"
     assert_response :success
     assert_select ".cache-component__cache-message", text: "foo bar"
-    first_time = response.body[/data-time(?:=data-time)?="([^"]+)"/, 1]
+    first_time = css_select(".cache-component__cache-message").first["data-time"]
     refute_nil first_time
 
     get "/controller_inline_cached?foo=foo&bar=bar"
     assert_response :success
     assert_select ".cache-component__cache-message", text: "foo bar"
-    second_time = response.body[/data-time(?:=data-time)?="([^"]+)"/, 1]
+    second_time = css_select(".cache-component__cache-message").first["data-time"]
     assert_equal first_time, second_time
 
     get "/controller_inline_cached?foo=foo&bar=baz"
     assert_response :success
     assert_select ".cache-component__cache-message", text: "foo baz"
-    third_time = response.body[/data-time(?:=data-time)?="([^"]+)"/, 1]
+    third_time = css_select(".cache-component__cache-message").first["data-time"]
     refute_nil third_time
     refute_equal first_time, third_time
   ensure
