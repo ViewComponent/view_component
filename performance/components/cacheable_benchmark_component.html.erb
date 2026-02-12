@@ -1,1 +1,18 @@
-<div class="cacheable-benchmark" data-time="<%= Time.zone.now.to_f %>"><%= name %></div>
+<section class="cacheable-benchmark" data-time="<%= Time.zone.now.to_f %>">
+  <header class="benchmark-header">
+    <h3><%= name %> dashboard</h3>
+    <p>Total score: <%= number_with_delimiter(total_score) %></p>
+  </header>
+  <ul class="benchmark-list">
+    <% report_rows.each_with_index do |row, index| %>
+      <li class="benchmark-row <%= index.even? ? "even" : "odd" %>">
+        <span class="label"><%= row[:label] %></span>
+        <span class="amount"><%= number_to_currency(row[:amount]) %></span>
+        <span class="events"><%= pluralize(row[:events], "event") %></span>
+      </li>
+    <% end %>
+  </ul>
+  <footer class="benchmark-footer">
+    <%= safe_join(report_rows.first(6).map { |row| content_tag(:code, row[:slug]) }, " ") %>
+  </footer>
+</section>
