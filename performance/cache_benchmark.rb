@@ -17,6 +17,8 @@ class BenchmarksController < ActionController::Base
 end
 
 ActionController::Base.perform_caching = true
+original_cache = Rails.cache
+Rails.cache = ActiveSupport::Cache::MemoryStore.new(size: 64.megabytes)
 Rails.cache.clear
 
 BenchmarksController.view_paths = [File.expand_path("./views", __dir__)]
@@ -30,22 +32,26 @@ cache_miss_counter = 0
 controller_view.render(cacheable_warm_component)
 controller_view.render(non_cacheable_component)
 
-Benchmark.ips do |x|
-  x.time = ENV.fetch("BENCHMARK_TIME", "10").to_i
-  x.warmup = ENV.fetch("BENCHMARK_WARMUP", "2").to_i
+begin
+  Benchmark.ips do |x|
+    x.time = ENV.fetch("BENCHMARK_TIME", "20").to_i
+    x.warmup = ENV.fetch("BENCHMARK_WARMUP", "5").to_i
 
-  x.report("non_cacheable") do
-    controller_view.render(non_cacheable_component)
+    x.report("non_cacheable") do
+      controller_view.render(non_cacheable_component)
+    end
+
+    x.report("cacheable_miss") do
+      cache_miss_counter += 1
+      controller_view.render(Performance::CacheableBenchmarkComponent.new(name: "Fox Mulder #{cache_miss_counter}"))
+    end
+
+    x.report("cacheable_hit") do
+      controller_view.render(cacheable_warm_component)
+    end
+
+    x.compare!
   end
-
-  x.report("cacheable_miss") do
-    cache_miss_counter += 1
-    controller_view.render(Performance::CacheableBenchmarkComponent.new(name: "Fox Mulder #{cache_miss_counter}"))
-  end
-
-  x.report("cacheable_hit") do
-    controller_view.render(cacheable_warm_component)
-  end
-
-  x.compare!
+ensure
+  Rails.cache = original_cache
 end

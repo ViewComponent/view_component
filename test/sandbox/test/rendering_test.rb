@@ -1383,6 +1383,18 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector(".cache-component__cache-message", text: "foo bar")
   end
 
+  def test_cache_if_false_skips_caching
+    component = CacheConditionComponent.new(foo: "foo")
+
+    render_inline(component)
+    first_time = page.find(".cache-condition-component__message")["data-time"]
+
+    render_inline(component)
+    second_time = page.find(".cache-condition-component__message")["data-time"]
+
+    refute_equal(first_time, second_time)
+  end
+
   def test_cache_key_changes_when_child_component_template_changes
     child_template_path = CacheDigestorChildComponent.sidecar_files(["erb"]).first
     original_template = File.read(child_template_path)
