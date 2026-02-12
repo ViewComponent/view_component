@@ -14,6 +14,20 @@ nav_order: 6
 
     *Reegan Viljoen*
 
+* Add `protocol` parameter to `with_request_url` test helper to enable testing with HTTPS protocol.
+
+    *Joel Hawksley*
+
+## 4.3.0
+
+* Fix load order issues for 3rd-party template handlers.
+
+    *Cameron Dutro*
+
+* Fix segfault when Ruby coverage is enabled with Rails 8.1 ERB templates.
+
+    *George Holborn*
+
 * Automatically merge dependabot PRs.
 
     *Joel Hawksley*

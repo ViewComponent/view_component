@@ -5,6 +5,7 @@ require "rails/version"
 require "bundler/setup"
 require "pathname"
 require "minitest/autorun"
+require "minitest/mock"
 
 if ENV["RAISE_ON_WARNING"]
   module Warning

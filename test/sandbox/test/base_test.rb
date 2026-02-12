@@ -165,7 +165,6 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   end
 
   module TestAlreadyConfigurableModule
-    include ActiveSupport::Configurable
     include ViewComponent::Configurable
 
     configure do |config|
@@ -177,13 +176,11 @@ class ViewComponent::Base::UnitTest < Minitest::Test
   end
 
   module TestAlreadyConfiguredModule
-    include ActiveSupport::Configurable
+    include ViewComponent::Configurable
 
     configure do |config|
       config.view_component = ActiveSupport::InheritableOptions[instrumentation_enabled: false]
     end
-
-    include ViewComponent::Configurable
 
     class SomeComponent < ViewComponent::Base
     end
