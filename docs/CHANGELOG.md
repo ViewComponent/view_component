@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.4.0
+
 * Fix segfaults when Ruby coverage is enabled.
 
     *George Holborn*, *Joel Hawksley*
