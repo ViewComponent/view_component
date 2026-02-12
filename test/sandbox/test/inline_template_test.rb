@@ -234,7 +234,7 @@ class InlineErbTest < ViewComponent::TestCase
   def with_coverage_running
     require "coverage"
     already_running = Coverage.running?
-    Coverage.start unless already_running
+    Coverage.start(lines: true, branches: true, eval: true) unless already_running
     yield
   ensure
     Coverage.result unless already_running

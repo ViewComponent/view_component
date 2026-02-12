@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix segfault when coverage of eval'd code is enabled with Rails 8.1 ERB templates and view annotations are disabled.
+
+    *Josh Adam*
+
 * Add `protocol` parameter to `with_request_url` test helper to enable testing with HTTPS protocol.
 
     *Joel Hawksley*

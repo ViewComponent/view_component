@@ -30,8 +30,8 @@ module ViewComponent
         # annotation line from compiled source instead.
         lineno =
           if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
-            if coverage_running? && ActionView::Base.annotate_rendered_view_with_filenames
-              @strip_annotation_line = true
+            if coverage_running?
+              @strip_annotation_line = ActionView::Base.annotate_rendered_view_with_filenames
               0
             else
               -1
