@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix segfault when Ruby coverage is enabled but template annotations are disabled.
+
+    *George Holborn*
+
 * Add `protocol` parameter to `with_request_url` test helper to enable testing with HTTPS protocol.
 
     *Joel Hawksley*

@@ -210,6 +210,25 @@ class InlineErbTest < ViewComponent::TestCase
     end
   end
 
+  # Regression test for segfault when coverage is running but annotations are DISABLED.
+  # This is the common case in CI environments.
+  test "file-based templates compile without segfault when coverage is running and annotations disabled" do
+    skip unless Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0
+
+    without_template_annotations do
+      with_coverage_running do
+        # Force recompilation with coverage "enabled" but annotations disabled
+        ViewComponent::CompileCache.cache.delete(ErbComponent)
+
+        # This would segfault in v4.3.0 because it only avoided -1 lineno
+        # when annotations were enabled
+        render_inline(ErbComponent.new(message: "Foo bar"))
+
+        assert_selector("div", text: "Foo bar")
+      end
+    end
+  end
+
   test "inline templates compile without segfault when coverage is running" do
     skip unless Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0
 
