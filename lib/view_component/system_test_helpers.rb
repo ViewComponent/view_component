@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "base64"
 require "securerandom"
 
 module ViewComponent
@@ -11,10 +12,17 @@ module ViewComponent
     # @param layout [String] The (optional) layout to use.
     # @return [Proc] A block that can be used to visit the path of the inline rendered component.
     def with_rendered_component_path(fragment, layout: false, &block)
+      rendered_html = vc_test_controller.render_to_string(html: fragment.to_html.html_safe, layout: layout)
+
+      if !layout
+        yield("data:text/html;base64,#{Base64.strict_encode64(rendered_html)}")
+        return
+      end
+
       filename = "rendered_#{fragment.class.name.gsub("::", "")}_#{SecureRandom.hex(8)}.html"
       path = File.join(ViewComponentsSystemTestController.temp_dir, filename)
 
-      File.write(path, vc_test_controller.render_to_string(html: fragment.to_html.html_safe, layout: layout))
+      File.write(path, rendered_html)
 
       yield("/_system_test_entrypoint?file=#{filename}")
     end
