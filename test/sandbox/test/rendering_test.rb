@@ -1412,6 +1412,21 @@ class RenderingTest < ViewComponent::TestCase
     refute_equal(first_time, second_time)
   end
 
+  def test_cache_on_expands_dependency_values_and_allows_private_methods
+    record = CacheDependencyTypesRecord.new(id: "42")
+    component = CacheDependencyTypesComponent.new(record: record, tags: ["alpha", "beta"], label: "plain-string")
+
+    render_inline(component)
+
+    expected_dependencies = [record.to_global_id, ["alpha", "beta"], "plain-string", "private-token"]
+    assert_equal(expected_dependencies, component.view_cache_dependencies)
+
+    expanded_dependencies = ActiveSupport::Cache.expand_cache_key(expected_dependencies)
+    cache_key = component.view_cache_options.last
+    assert_includes(cache_key, expanded_dependencies)
+    assert_includes(expanded_dependencies, record.to_global_id.to_param)
+  end
+
   def test_cache_key_changes_when_child_component_template_changes
     child_template_path = CacheDigestorChildComponent.sidecar_files(["erb"]).first
     original_template = File.read(child_template_path)
@@ -1494,6 +1509,32 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.invalidate!
 
     File.write(partial_path, original_partial) if partial_path && original_partial
+  end
+
+  def test_cache_key_does_not_change_when_layout_string_dependency_changes
+    layout_path = Rails.root.join("app/views/shared/_cache_digestor_layout.html.erb")
+    original_layout = File.read(layout_path)
+
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    component_v1 = CacheDigestorLayoutParentComponent.new(foo: "x")
+    render_inline(component_v1)
+    assert_selector(".layout-shell", text: "layout-v1")
+    time_v1 = page.find(".layout-parent")["data-time"]
+
+    File.write(layout_path, original_layout.sub("layout-v1", "layout-v2"))
+    ViewComponent::CompileCache.invalidate!
+
+    render_inline(CacheDigestorLayoutParentComponent.new(foo: "x"))
+
+    assert_selector(".layout-shell", text: "layout-v1")
+    assert_equal(time_v1, page.find(".layout-parent")["data-time"])
+  ensure
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    File.write(layout_path, original_layout) if layout_path && original_layout
   end
 
   def test_render_partial_with_yield
