@@ -1413,18 +1413,18 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_cache_on_expands_dependency_values_and_allows_private_methods
-    record = CacheDependencyTypesRecord.new(id: "42")
+    record = GlobalID.parse("gid://sandbox/CacheDependencyTypesRecord/42")
     component = CacheDependencyTypesComponent.new(record: record, tags: ["alpha", "beta"], label: "plain-string")
 
     render_inline(component)
 
-    expected_dependencies = [record.to_global_id, ["alpha", "beta"], "plain-string", "private-token"]
+    expected_dependencies = [record, ["alpha", "beta"], "plain-string", "private-token"]
     assert_equal(expected_dependencies, component.view_cache_dependencies)
 
     expanded_dependencies = ActiveSupport::Cache.expand_cache_key(expected_dependencies)
     cache_key = component.view_cache_options.last
     assert_includes(cache_key, expanded_dependencies)
-    assert_includes(expanded_dependencies, record.to_global_id.to_param)
+    assert_includes(expanded_dependencies, record.to_param)
   end
 
   def test_cache_key_changes_when_child_component_template_changes
