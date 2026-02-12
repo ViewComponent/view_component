@@ -1441,6 +1441,32 @@ class RenderingTest < ViewComponent::TestCase
     File.write(partial_path, original_partial) if partial_path && original_partial
   end
 
+  def test_cache_key_does_not_change_when_child_component_partial_dependency_changes
+    partial_path = Rails.root.join("app/views/shared/_cache_digestor_nested_partial.html.erb")
+    original_partial = File.read(partial_path)
+
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    component_v1 = CacheDigestorNestedPartialParentComponent.new(foo: "x")
+    render_inline(component_v1)
+    assert_selector(".nested-partial-child", text: "nested-v1")
+    time_v1 = page.find(".nested-partial-parent")["data-time"]
+
+    File.write(partial_path, original_partial.sub("nested-v1", "nested-v2"))
+    ViewComponent::CompileCache.invalidate!
+
+    render_inline(CacheDigestorNestedPartialParentComponent.new(foo: "x"))
+
+    assert_selector(".nested-partial-child", text: "nested-v1")
+    assert_equal(time_v1, page.find(".nested-partial-parent")["data-time"])
+  ensure
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    File.write(partial_path, original_partial) if partial_path && original_partial
+  end
+
   def test_render_partial_with_yield
     render_inline(PartialWithYieldComponent.new)
     assert_text "hello world", exact: true, normalize_ws: true
