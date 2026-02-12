@@ -18,9 +18,6 @@ module ViewComponent
 
     private
 
-    TEMPLATE_EXTENSIONS = %w[erb haml slim].freeze
-    private_constant :TEMPLATE_EXTENSIONS
-
     IN_PROGRESS = :__vc_in_progress
     private_constant :IN_PROGRESS
 
@@ -29,19 +26,21 @@ module ViewComponent
       return "" unless name
       return "" unless component_class <= ViewComponent::Base
 
-      cached_digest = @digests[name]
-      return "" if cached_digest == IN_PROGRESS
-      return cached_digest if cached_digest
+      case (cached_digest = @digests[name])
+      when IN_PROGRESS
+        return ""
+      when nil
+      else
+        return cached_digest
+      end
 
       @digests[name] = IN_PROGRESS
 
       digest = Digest::SHA1.new
 
-      if (identifier = component_class.identifier)
-        update_digest(digest, file_contents(identifier))
-      end
+      update_digest(digest, file_contents(component_class.identifier))
 
-      inline_template = component_class.__vc_inline_template if component_class.respond_to?(:__vc_inline_template)
+      inline_template = component_class.__vc_inline_template
       if inline_template
         update_digest(digest, inline_template.source)
 
@@ -49,10 +48,8 @@ module ViewComponent
         update_dependency_digests(digest, dependencies)
       end
 
-      component_class.sidecar_files(TEMPLATE_EXTENSIONS).sort.each do |path|
+      component_class.sidecar_files(ActionView::Template.template_handler_extensions).sort.each do |path|
         template_source = file_contents(path)
-        next unless template_source
-
         update_digest(digest, template_source)
 
         handler = path.rpartition(".").last
@@ -60,7 +57,7 @@ module ViewComponent
         update_dependency_digests(digest, dependencies)
       end
 
-      component_class.sidecar_files(["yml"]).sort.each do |path|
+      component_class.sidecar_files(%w[yml yaml]).sort.each do |path|
         update_digest(digest, file_contents(path))
       end
 
@@ -94,13 +91,13 @@ module ViewComponent
 
     def constantize(constant_name)
       @constant_cache.fetch(constant_name) do
-        @constant_cache[constant_name] = constant_name.split("::").reduce(Object) { |namespace, name| namespace.const_get(name) }
+        @constant_cache[constant_name] = constant_name.safe_constantize
       end
-    rescue NameError
-      @constant_cache[constant_name] = nil
     end
 
     def file_contents(path)
+      return nil if path.nil?
+
       @file_cache.fetch(path) do
         @file_cache[path] = File.file?(path) ? File.read(path) : nil
       end

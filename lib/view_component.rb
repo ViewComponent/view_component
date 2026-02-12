@@ -8,11 +8,11 @@ module ViewComponent
   extend ActiveSupport::Autoload
 
   autoload :Base
-  autoload :Cacheable
   autoload :Compiler
   autoload :CompileCache
   autoload :Config
   autoload :Deprecation
+  autoload :ExperimentallyCacheable
   autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview

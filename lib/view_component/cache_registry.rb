@@ -10,7 +10,7 @@ module ViewComponent
 
     def track_caching
       caching_was = ActiveSupport::IsolatedExecutionState[:view_component_caching]
-      ActiveSupport::IsolatedExecutionState[:action_view_caching] = true
+      ActiveSupport::IsolatedExecutionState[:view_component_caching] = true
 
       yield
     ensure

@@ -3,7 +3,7 @@
 require "view_component/cache_registry"
 require "view_component/cache_digestor"
 
-module ViewComponent::Cacheable
+module ViewComponent::ExperimentallyCacheable
   extend ActiveSupport::Concern
 
   included do

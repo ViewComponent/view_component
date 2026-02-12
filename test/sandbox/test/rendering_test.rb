@@ -1340,8 +1340,6 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_inline_cache_component
-    return if Rails.version < "7.0"
-
     component = InlineCacheComponent.new(foo: "foo", bar: "bar")
     render_inline(component)
 
@@ -1360,8 +1358,6 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_cache_component
-    return if Rails.version < "7.0"
-
     component = CacheComponent.new(foo: "foo", bar: "bar")
     render_inline(component)
 
@@ -1380,8 +1376,6 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_no_cache_compoennt
-    return if Rails.version < "7.0"
-
     component = NoCacheComponent.new(foo: "foo", bar: "bar")
     render_inline(component)
 
@@ -1390,8 +1384,6 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_cache_key_changes_when_child_component_template_changes
-    return if Rails.version < "7.0"
-
     child_template_path = CacheDigestorChildComponent.sidecar_files(["erb"]).first
     original_template = File.read(child_template_path)
 
@@ -1421,6 +1413,32 @@ class RenderingTest < ViewComponent::TestCase
     if child_template_path && original_template
       File.write(child_template_path, original_template)
     end
+  end
+
+  def test_cache_key_does_not_change_when_partial_string_dependency_changes
+    partial_path = Rails.root.join("app/views/shared/_cache_digestor_partial.html.erb")
+    original_partial = File.read(partial_path)
+
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    component_v1 = CacheDigestorPartialParentComponent.new(foo: "x")
+    render_inline(component_v1)
+    assert_selector(".partial-child", text: "partial-v1")
+    time_v1 = page.find(".partial-parent")["data-time"]
+
+    File.write(partial_path, original_partial.sub("partial-v1", "partial-v2"))
+    ViewComponent::CompileCache.invalidate!
+
+    render_inline(CacheDigestorPartialParentComponent.new(foo: "x"))
+
+    assert_selector(".partial-child", text: "partial-v1")
+    assert_equal(time_v1, page.find(".partial-parent")["data-time"])
+  ensure
+    Rails.cache.clear
+    ViewComponent::CompileCache.invalidate!
+
+    File.write(partial_path, original_partial) if partial_path && original_partial
   end
 
   def test_render_partial_with_yield

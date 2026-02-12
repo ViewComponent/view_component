@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Add experimental fragment caching.
+* Add experimental support for caching by including `ViewComponent::ExperimentallyCacheable`.
 
     *Reegan Viljoen*
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CacheComponent < ViewComponent::Base
-  include ViewComponent::Cacheable
+  include ViewComponent::ExperimentallyCacheable
 
   cache_on :foo, :bar
 

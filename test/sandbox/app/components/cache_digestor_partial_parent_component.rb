@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CacheDigestorParentComponent < ViewComponent::Base
+class CacheDigestorPartialParentComponent < ViewComponent::Base
   include ViewComponent::ExperimentallyCacheable
 
   cache_on :foo
