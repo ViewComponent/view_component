@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-begin
-  require "action_view/render_parser"
-rescue LoadError
-end
+require "actionview_precompiler"
 
 require_relative "template_ast_builder"
-require_relative "prism_render_dependency_extractor"
 
 module ViewComponent
   class TemplateDependencyExtractor
@@ -35,43 +31,31 @@ module ViewComponent
     def extract_from_ruby(ruby_code)
       return unless ruby_code.include?("render")
 
-      PrismRenderDependencyExtractor.new(ruby_code).extract.each { @dependencies << _1 }
+      extract_component_class_renders(ruby_code).each { @dependencies << _1 }
 
       extract_render_paths(ruby_code).each do |render_path|
         @dependencies << render_path.gsub(%r{/_}, "/")
       end
     end
 
-    def extract_render_paths(ruby_code)
-      if defined?(ActionView::RenderParser::Default)
-        ActionView::RenderParser::Default.new("view_component/template", ruby_code).render_calls
-      else
-        extract_render_paths_fallback(ruby_code)
-      end
+    COMPONENT_RENDER = /(?:render|render_to_string)\s*\(?\s*([A-Z]\w*(?:::[A-Z]\w*)*)\.new\b/
+    private_constant :COMPONENT_RENDER
+
+    def extract_component_class_renders(ruby_code)
+      ruby_code.scan(COMPONENT_RENDER).flatten
     end
 
-    # For Rails 7.1 wich doesnt have this built in
-    PARTIAL_RENDER = /partial:\s*["']([^"']+)["']/
-    LAYOUT_RENDER = /layout:\s*["']([^"']+)["']/
-    DIRECT_RENDER = /render\s*\(?\s*["']([^"']+)["']/
-    private_constant :PARTIAL_RENDER, :LAYOUT_RENDER, :DIRECT_RENDER
-
-    def extract_render_paths_fallback(ruby_code)
-      matches = []
-
-      if (partial_match = ruby_code.match(PARTIAL_RENDER))
-        matches << partial_match[1]
+    def extract_render_paths(ruby_code)
+      render_calls = ActionviewPrecompiler::RenderParser.new(ruby_code).render_calls
+      render_calls.map do |call|
+        call.respond_to?(:virtual_path) ? call.virtual_path : call
       end
+    rescue ActionviewPrecompiler::PrismASTParser::CompilationError
+      require "actionview_precompiler/ast_parser/ripper"
 
-      if (layout_match = ruby_code.match(LAYOUT_RENDER))
-        matches << layout_match[1]
+      ActionviewPrecompiler::RenderParser.new(ruby_code, parser: ActionviewPrecompiler::RipperASTParser).render_calls.map do |call|
+        call.respond_to?(:virtual_path) ? call.virtual_path : call
       end
-
-      if (direct_match = ruby_code.match(DIRECT_RENDER))
-        matches << direct_match[1]
-      end
-
-      matches
     end
 
     ERB_RUBY_TAG = /<%(=|-|#)?(.*?)%>/m
