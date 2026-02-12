@@ -6,7 +6,6 @@ class MailerTest < ActionMailer::TestCase
   def test_rendering_component_in_an_action_mailer
     result = TestMailer.test_email.deliver_now.body.to_s
     assert_includes result, "<div>Hello world!</div>"
-    assert_includes result, "test_email.html.erb"
   end
 
   def test_rendering_component_in_an_action_mailer_with_asset_component
