@@ -9,7 +9,7 @@ nav_order: 6
 # Changelog
 
 ## main
-
+ 
 * Fix segfault when Ruby coverage is enabled but template annotations are disabled.
 
     *George Holborn*
