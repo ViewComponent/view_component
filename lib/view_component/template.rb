@@ -66,6 +66,7 @@ module ViewComponent
         # Strip the annotation line to maintain correct line numbers when coverage
         # is running (avoids segfault from negative lineno)
         result = result.sub(/\A[^\n]*\n/, "") if @strip_annotation_line
+        raise if @strip_annotation_line
         result
       end
     end
