@@ -13,7 +13,7 @@ Caching is experimental.
 
 To enable caching, include `ViewComponent::ExperimentallyCacheable`.
 
-Components implement caching by marking the dependencies that should be included in the cache key using `cache_on`:
+Components implement caching by marking dependencies using `cache_on`:
 
 ```ruby
 class CacheComponent < ViewComponent::Base
