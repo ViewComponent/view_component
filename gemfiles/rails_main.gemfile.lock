@@ -7,8 +7,8 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 990198b7b5f4a3a3d0d59bc1bcac58efa405f527
-  branch: main
+  revision: 58c94cbd8081ddefadf8e1824685051f52234791
+  ref: 58c94cbd8081ddefadf8e1824685051f52234791
   specs:
     actioncable (8.2.0.alpha)
       actionpack (= 8.2.0.alpha)
@@ -41,7 +41,7 @@ GIT
       rails-html-sanitizer (~> 1.6)
       useragent (~> 0.16)
     actiontext (8.2.0.alpha)
-      action_text-trix (~> 2.1.15)
+      action_text-trix (~> 2.1.16)
       actionpack (= 8.2.0.alpha)
       activerecord (= 8.2.0.alpha)
       activestorage (= 8.2.0.alpha)
@@ -54,8 +54,6 @@ GIT
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    actionview_precompiler (0.4.0)
-      actionview (>= 6.0.a)
     activejob (8.2.0.alpha)
       activesupport (= 8.2.0.alpha)
       globalid (>= 0.3.6)
@@ -81,6 +79,7 @@ GIT
       json
       logger (>= 1.4.2)
       minitest (>= 5.1)
+      psych (>= 4)
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
@@ -120,8 +119,10 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    action_text-trix (2.1.15)
+    action_text-trix (2.1.16)
       railties
+    actionview_precompiler (0.4.0)
+      actionview (>= 6.0.a)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     allocation_stats (0.1.5)
