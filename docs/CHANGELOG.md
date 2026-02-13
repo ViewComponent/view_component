@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add experimental support for caching by including `ViewComponent::ExperimentallyCacheable`.
+
+    *Reegan Viljoen*
+
 ## 4.4.0
 
 * Fix segfaults when Ruby coverage is enabled.
@@ -552,7 +556,7 @@ This release makes the following breaking changes:
 
 ## 3.23.0
 
-* Add docs about Slack channel in Ruby Central workspace. (Join us! #oss-view-component). Email joelhawksley@github.com for an invite.
+* Add docs about Slack channel in Ruby Central workspace. (Join us! #oss-view-component). Email <joelhawksley@github.com> for an invite.
 
     *Joel Hawksley
 
@@ -1912,7 +1916,7 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Joel Hawksley*
 
-* The ViewComponent team at GitHub is hiring! We're looking for a Rails engineer with accessibility experience: [https://boards.greenhouse.io/github/jobs/4020166](https://boards.greenhouse.io/github/jobs/4020166). Reach out to joelhawksley@github.com with any questions!
+* The ViewComponent team at GitHub is hiring! We're looking for a Rails engineer with accessibility experience: [https://boards.greenhouse.io/github/jobs/4020166](https://boards.greenhouse.io/github/jobs/4020166). Reach out to <joelhawksley@github.com> with any questions!
 
 * The ViewComponent team is hosting a happy hour at RailsConf. Join us for snacks, drinks, and stickers: [https://www.eventbrite.com/e/viewcomponent-happy-hour-tickets-304168585427](https://www.eventbrite.com/e/viewcomponent-happy-hour-tickets-304168585427)
 
@@ -2664,7 +2668,7 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
     *Matheus Richard*
 
-* Are you interested in building the future of ViewComponent? GitHub is looking to hire a Senior Engineer to work on Primer ViewComponents and ViewComponent. Apply here: [US/Canada](https://github.com/careers) / [Europe](https://boards.greenhouse.io/github/jobs/3132294). Feel free to reach out to joelhawksley@github.com with any questions.
+* Are you interested in building the future of ViewComponent? GitHub is looking to hire a Senior Engineer to work on Primer ViewComponents and ViewComponent. Apply here: [US/Canada](https://github.com/careers) / [Europe](https://boards.greenhouse.io/github/jobs/3132294). Feel free to reach out to <joelhawksley@github.com> with any questions.
 
     *Joel Hawksley*
 
@@ -2682,7 +2686,7 @@ Run into an issue with this release? [Let us know](https://github.com/ViewCompon
 
 ## 2.31.0
 
-_Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot shouldn't be returned. (`<%`)_
+*Note: This release includes an underlying change to Slots that may affect incorrect usage of the API, where Slots were set on a line prefixed by `<%=`. The result of setting a Slot shouldn't be returned. (`<%`)*
 
 * Add `#with_content` to allow setting content without a block.
 
@@ -3130,7 +3134,7 @@ _Note: This release includes an underlying change to Slots that may affect incor
 
   * The gem name is now `view_component`.
   * ViewComponent previews are now accessed at `/rails/view_components`.
-  * ViewComponents can _only_ be rendered with the instance syntax: `render(MyComponent.new)`. Support for all other syntaxes has been removed.
+  * ViewComponents can *only* be rendered with the instance syntax: `render(MyComponent.new)`. Support for all other syntaxes has been removed.
   * ActiveModel::Validations have been removed. ViewComponent generators no longer include validations.
   * In Rails 6.1, no monkey patching is used.
   * `to_component_class` has been removed.

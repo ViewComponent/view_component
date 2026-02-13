@@ -273,6 +273,33 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
   end
 
+  def test_rendering_cacheable_component_in_controller
+    Rails.cache.clear
+    ActionController::Base.perform_caching = true
+
+    get "/controller_inline_cached?foo=foo&bar=bar"
+    assert_response :success
+    assert_select ".cache-component__cache-message", text: "foo bar"
+    first_time = css_select(".cache-component__cache-message").first["data-time"]
+    refute_nil first_time
+
+    get "/controller_inline_cached?foo=foo&bar=bar"
+    assert_response :success
+    assert_select ".cache-component__cache-message", text: "foo bar"
+    second_time = css_select(".cache-component__cache-message").first["data-time"]
+    assert_equal first_time, second_time
+
+    get "/controller_inline_cached?foo=foo&bar=baz"
+    assert_response :success
+    assert_select ".cache-component__cache-message", text: "foo baz"
+    third_time = css_select(".cache-component__cache-message").first["data-time"]
+    refute_nil third_time
+    refute_equal first_time, third_time
+  ensure
+    ActionController::Base.perform_caching = false
+    Rails.cache.clear
+  end
+
   def test_optional_rendering_component_depending_on_request_context
     get "/render_check"
     assert_response :success
