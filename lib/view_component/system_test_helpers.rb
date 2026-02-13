@@ -31,6 +31,7 @@ module ViewComponent
 
     def use_inline_data_url?(layout)
       return false if layout
+      return true if defined?(ActionDispatch::SystemTestCase) && is_a?(ActionDispatch::SystemTestCase)
       return false unless defined?(Capybara) && Capybara.respond_to?(:current_driver)
 
       Capybara.current_driver != :rack_test
