@@ -67,7 +67,7 @@ module ViewComponent
     # For Content Security Policy nonces
     delegate :content_security_policy_nonce, to: :helpers
 
-    # Config:attr_writer :attr_names option that strips trailing whitespace in templates before compiling them.
+    # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
 
     attr_accessor :__vc_original_view_context
