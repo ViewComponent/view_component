@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    view_component (4.3.0)
+    view_component (4.4.0)
       actionview (>= 7.1.0)
       actionview_precompiler (>= 0.4)
       activesupport (>= 7.1.0)

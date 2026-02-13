@@ -14,6 +14,12 @@ nav_order: 6
 
     *Reegan Viljoen*
 
+## 4.4.0
+
+* Fix segfaults when Ruby coverage is enabled.
+
+    *George Holborn*, *Joel Hawksley*
+
 * Add `protocol` parameter to `with_request_url` test helper to enable testing with HTTPS protocol.
 
     *Joel Hawksley*
