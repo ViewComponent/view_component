@@ -54,6 +54,8 @@ GIT
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
+    actionview_precompiler (0.4.0)
+      actionview (>= 6.0.a)
     activejob (8.2.0.alpha)
       activesupport (= 8.2.0.alpha)
       globalid (>= 0.3.6)
@@ -111,6 +113,7 @@ PATH
   specs:
     view_component (4.4.0)
       actionview (>= 7.1.0)
+      actionview_precompiler (>= 0.4)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
 
