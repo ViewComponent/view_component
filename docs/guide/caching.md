@@ -42,4 +42,4 @@ Methods listed in `cache_on` may be private.
 
 The cache key includes a digest of component source (Ruby + templates + i18n sidecars) and rendered child ViewComponents.
 
-Partial/layout string dependencies are not currently included in the digest; modify `RAILS_CACHE_ID`/`RAILS_APP_VERSION` to invalidate on deploy.
+Partial/layout string dependencies aren't currently included in the digest, to invalidate the cache on deploy modify `RAILS_CACHE_ID`/`RAILS_APP_VERSION`.
