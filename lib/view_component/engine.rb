@@ -50,7 +50,7 @@ module ViewComponent
       end
     end
 
-    config.after_initialize do |app|
+    config.after_routes_loaded do |app|
       ActiveSupport.on_load(:view_component) do
         if defined?(Sprockets::Rails)
           include Sprockets::Rails::Helper
