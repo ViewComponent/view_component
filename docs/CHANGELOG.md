@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix initialization ordering issue causing missing asset errors in Sprockets.
+
+    *Cameron Dutro*
+
 ## 4.4.0
 
 * Fix segfaults when Ruby coverage is enabled.
