@@ -50,10 +50,12 @@ module ViewComponent
       end
     end
 
-    config.after_initialize do |app|
+    config.after_routes_loaded do
       ActiveSupport.on_load(:view_component) do
         if defined?(Sprockets::Rails)
           include Sprockets::Rails::Helper
+
+          app = Rails.application
 
           # Copy relevant config to VC context
           # See: https://github.com/rails/sprockets-rails/blob/266ec49f3c7c96018dd75f9dc4f9b62fe3f7eecf/lib/sprockets/railtie.rb#L245
