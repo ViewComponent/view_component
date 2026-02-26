@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.5.0
+
 * Fix initialization ordering issue causing missing asset errors in Sprockets.
 
     *Cameron Dutro*
