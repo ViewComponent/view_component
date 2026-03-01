@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+* Add no-animal-violence Vale style for inclusive language checking. ([@stuckvgn](https://github.com/stuckvgn))
+
 ## 4.5.0
 
 * Fix initialization ordering issue causing missing asset errors in Sprockets.
