@@ -22,7 +22,7 @@ Subscribe to the event:
 ```ruby
 ActiveSupport::Notifications.subscribe("render.view_component") do |event| # or !render.view_component
   event.name    # => "render.view_component"
-  event.payload # => { name: "MyComponent", identifier: "/Users/mona/project/app/components/my_component.rb" }
+  event.payload # => { name: "MyComponent", identifier: "/Users/mona/project/app/components/my_component.rb", view_identifier: "/Users/mona/project/app/components/my_component.html.erb" }
 end
 ```
 

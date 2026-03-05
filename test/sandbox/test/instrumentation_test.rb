@@ -16,6 +16,7 @@ class InstrumentationTest < ViewComponent::TestCase
     assert_equal("render.view_component", events[0].name)
     assert_equal(events[0].payload[:name], "InstrumentationComponent")
     assert_match("app/components/instrumentation_component.rb", events[0].payload[:identifier])
+    assert_match("app/components/instrumentation_component.html.erb", events[0].payload[:view_identifier])
   end
 
   def test_instrumentation_disabled
