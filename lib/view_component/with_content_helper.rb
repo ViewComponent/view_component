@@ -2,6 +2,7 @@
 
 module ViewComponent
   module WithContentHelper
+    # @param value [String] the content to set
     def with_content(value)
       raise NilWithContentError if value.nil?
 

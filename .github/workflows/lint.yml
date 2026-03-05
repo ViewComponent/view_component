@@ -89,5 +89,6 @@ jobs:
         bundle update
         bundle exec standardrb -r "rubocop-md"
         bundle exec erb_lint --lint-all
+        bundle exec yard-lint lib/view_component/
       env:
         RAILS_VERSION: '~> 8'

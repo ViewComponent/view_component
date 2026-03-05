@@ -72,6 +72,8 @@ module ViewComponent
       # on the component instance.
       #
       #   <%= render_inline(MyComponent.new.with_header_content("Foo")) %>
+      # @param slot_name [Symbol] the name of the slot
+      # @param callable [Object, nil] the renderable for the slot
       def renders_one(slot_name, callable = nil)
         __vc_validate_singular_slot_name(slot_name)
 
@@ -140,8 +142,8 @@ module ViewComponent
       #     <% component.with_item(name: "Bar") do %>
       #       <p>two</p>
       #     <% end %>
-      #   <% end %>
-      def renders_many(slot_name, callable = nil)
+      #   <% end %>      # @param slot_name [Symbol] the name of the slot
+      # @param callable [Object, nil] the renderable for the slot      def renders_many(slot_name, callable = nil)
         __vc_validate_plural_slot_name(slot_name)
 
         if callable.is_a?(Hash) && callable.key?(:types)
@@ -184,6 +186,7 @@ module ViewComponent
         end
       end
 
+      # @param slot_name [Symbol] the name of the slot
       def slot_type(slot_name)
         registered_slot = registered_slots[slot_name]
         if registered_slot
@@ -195,6 +198,7 @@ module ViewComponent
         end
       end
 
+      # @param child [Class] the inheriting class
       def inherited(child)
         # Clone slot configuration into child class
         # see #test_slots_pollution
@@ -352,6 +356,7 @@ module ViewComponent
       end
     end
 
+    # @param slot_name [Symbol] the name of the slot
     def __vc_get_slot(slot_name)
       @__vc_set_slots ||= {}
       content unless defined?(@__vc_content_evaluated) && @__vc_content_evaluated # ensure content is loaded so slots will be defined
@@ -377,6 +382,11 @@ module ViewComponent
       end
     end
 
+    # @param slot_name [Symbol] the name of the slot
+    # @param slot_definition [Hash, nil] the slot configuration
+    # @param args [Array] positional arguments
+    # @param kwargs [Hash] keyword arguments
+    # @param block [Proc] optional content block
     def __vc_set_slot(slot_name, slot_definition = nil, *args, **kwargs, &block)
       slot_definition ||= self.class.registered_slots[slot_name]
       slot = Slot.new(self)
@@ -441,6 +451,11 @@ module ViewComponent
       slot
     end
 
+    # @param slot_name [Symbol] the name of the slot
+    # @param poly_type [Symbol, nil] the polymorphic type
+    # @param args [Array] positional arguments
+    # @param kwargs [Hash] keyword arguments
+    # @param block [Proc] optional content block
     def __vc_set_polymorphic_slot(slot_name, poly_type = nil, *args, **kwargs, &block)
       slot_definition = self.class.registered_slots[slot_name]
 

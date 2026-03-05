@@ -12,6 +12,10 @@ module ViewComponent
     delegate :virtual_path, to: :@component
     delegate :format, :variant, to: :@details
 
+    # @param component [Class] the component class
+    # @param details [ActionView::TemplateDetails] template format details
+    # @param lineno [Integer, nil] the line number offset
+    # @param path [String, nil] the template file path
     def initialize(component:, details:, lineno: nil, path: nil)
       @component = component
       @details = details
@@ -20,6 +24,9 @@ module ViewComponent
     end
 
     class File < Template
+      # @param component [Class] the component class
+      # @param details [ActionView::TemplateDetails] template format details
+      # @param path [String] the template file path
       def initialize(component:, details:, path:)
         @strip_annotation_line = false
 
@@ -73,6 +80,8 @@ module ViewComponent
     class Inline < Template
       attr_reader :source
 
+      # @param component [Class] the component class
+      # @param inline_template [ViewComponent::InlineTemplate::Template] the inline template
       def initialize(component:, inline_template:)
         details = ActionView::TemplateDetails.new(nil, inline_template.language.to_sym, nil, nil)
 
@@ -103,6 +112,9 @@ module ViewComponent
     end
 
     class InlineCall < Template
+      # @param component [Class] the component class
+      # @param method_name [Symbol] the call method name
+      # @param defined_on_self [Boolean] whether the method is defined on the component itself
       def initialize(component:, method_name:, defined_on_self:)
         variant = method_name.to_s.include?("call_") ? method_name.to_s.sub("call_", "").to_sym : nil
         details = ActionView::TemplateDetails.new(nil, nil, nil, variant)

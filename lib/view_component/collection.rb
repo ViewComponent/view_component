@@ -10,12 +10,15 @@ module ViewComponent
 
     delegate :size, to: :@collection
 
+    # @param view_context [ActionView::Base] the view context
+    # @param block [Proc] optional block
     def render_in(view_context, &block)
       components.map do |component|
         component.render_in(view_context, &block)
       end.join(rendered_spacer(view_context)).html_safe
     end
 
+    # @param block [Proc] the iteration block
     def each(&block)
       components.each(&block)
     end

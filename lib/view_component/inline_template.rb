@@ -7,6 +7,8 @@ module ViewComponent # :nodoc:
     Template = Struct.new(:source, :language, :path, :lineno)
 
     class_methods do
+      # @param method [Symbol] the method name
+      # @param args [Array] the method arguments
       def method_missing(method, *args)
         return super if !method.end_with?("_template")
 
@@ -34,6 +36,8 @@ module ViewComponent # :nodoc:
         @__vc_inline_template_defined = true
       end
 
+      # @param method [Symbol] the method name
+      # @param include_all [Boolean] whether to include private methods
       def respond_to_missing?(method, include_all = false)
         method.end_with?("_template") || super
       end
@@ -46,6 +50,7 @@ module ViewComponent # :nodoc:
         @__vc_inline_template_language if defined?(@__vc_inline_template_language)
       end
 
+      # @param subclass [Class] the inheriting class
       def inherited(subclass)
         super
         subclass.instance_variable_set(:@__vc_inline_template_language, __vc_inline_template_language)

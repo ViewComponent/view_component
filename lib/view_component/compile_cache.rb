@@ -10,14 +10,17 @@ module ViewComponent
 
     module_function
 
+    # @param klass [Class] the component class to register
     def register(klass)
       cache << klass
     end
 
+    # @param klass [Class] the component class to check
     def compiled?(klass)
       cache.include? klass
     end
 
+    # @param klass [Class] the component class to invalidate
     def invalidate_class!(klass)
       cache.delete(klass)
     end

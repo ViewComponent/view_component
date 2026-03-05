@@ -35,6 +35,8 @@ module ViewComponent
     # ```
     #
     # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
+    # @param args [Hash] additional arguments passed to the component.
+    # @param block [Proc] optional block passed to the component.
     # @return [Nokogiri::HTML5]
     def render_inline(component, **args, &block)
       @page = nil
