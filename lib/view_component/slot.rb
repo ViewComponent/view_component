@@ -8,6 +8,7 @@ module ViewComponent
 
     attr_writer :__vc_component_instance, :__vc_content_block, :__vc_content, :__vc_content_block_virtual_path
 
+    # @param parent [ViewComponent::Base] the parent component
     def initialize(parent)
       @parent = parent
     end
@@ -21,6 +22,7 @@ module ViewComponent
       @__vc_component_instance.content?
     end
 
+    # @param args [Object] the content to set
     def with_content(args)
       if __vc_component_instance?
         @__vc_component_instance.with_content(args)
@@ -97,6 +99,10 @@ module ViewComponent
     #   end
     # end
     #
+    # @param symbol [Symbol] the method name
+    # @param args [Array] positional arguments
+    # @param kwargs [Hash] keyword arguments
+    # @param block [Proc] optional block
     def method_missing(symbol, *args, **kwargs, &block)
       @__vc_component_instance.public_send(symbol, *args, **kwargs, &block)
     end
@@ -105,6 +111,8 @@ module ViewComponent
       to_s.html_safe?
     end
 
+    # @param symbol [Symbol] the method name
+    # @param include_all [Boolean] whether to include private methods
     def respond_to_missing?(symbol, include_all = false)
       __vc_component_instance? && @__vc_component_instance.respond_to?(symbol, include_all)
     end

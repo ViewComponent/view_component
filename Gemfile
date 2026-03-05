@@ -47,4 +47,5 @@ group :development, :test do
   gem "warning"
   gem "yard-activesupport-concern", "< 1"
   gem "yard", "< 1"
+  gem "yard-lint", "< 1"
 end

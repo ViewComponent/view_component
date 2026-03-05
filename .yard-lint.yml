@@ -1,0 +1,17 @@
+AllValidators:
+  Exclude:
+    - '\.git'
+    - 'vendor/**/*'
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'lib/docs/**/*'
+    - 'lib/generators/**/*'
+    - 'lib/yard/**/*'
+
+  FailOnSeverity: warning
+
+Documentation/UndocumentedObjects:
+  Enabled: false
+
+Documentation/UndocumentedBooleanMethods:
+  Enabled: false

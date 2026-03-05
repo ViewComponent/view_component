@@ -10,6 +10,7 @@ module ViewComponent
     # * false(a non-blocking mode, default in Rails production mode)
     class_attribute :__vc_development_mode, default: false
 
+    # @param component [Class] the component class to compile
     def initialize(component)
       @component = component
       @lock = Mutex.new
@@ -19,6 +20,8 @@ module ViewComponent
       CompileCache.compiled?(@component)
     end
 
+    # @param raise_errors [Boolean] whether to raise on template errors
+    # @param force [Boolean] whether to force recompilation
     def compile(raise_errors: false, force: false)
       return if compiled? && !force
       return if @component == ViewComponent::Base
@@ -57,9 +60,8 @@ module ViewComponent
       end
     end
 
+    # @param requested_details [ActionView::TemplateDetails::Requested] i.e. locales, formats, variants
     # @return all matching compiled templates, in priority order based on the requested details from LookupContext
-    #
-    # @param [ActionView::TemplateDetails::Requested] requested_details i.e. locales, formats, variants
     def find_templates_for(requested_details)
       filtered_templates = @templates.select do |template|
         template.details.matches?(requested_details)

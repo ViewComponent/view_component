@@ -43,6 +43,8 @@ module ViewComponent
         end
       end
 
+      # @param key [String, nil] the translation key
+      # @param scope [Array, String, nil] the translation scope
       def __vc_i18n_key(key, scope = nil)
         scope = scope.join(".") if scope.is_a? Array
         key = key&.to_s unless key.is_a?(String)
@@ -51,6 +53,8 @@ module ViewComponent
         key
       end
 
+      # @param key [String, Array, nil] the translation key
+      # @param options [Hash] translation options
       def translate(key = nil, **options)
         return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
@@ -68,6 +72,8 @@ module ViewComponent
     class I18nBackend < ::I18n::Backend::Simple
       EMPTY_HASH = {}.freeze
 
+      # @param scope [String] the i18n scope
+      # @param load_paths [Array<String>] paths to translation files
       def initialize(scope:, load_paths:)
         @__vc_i18n_scope = scope.split(".").map(&:to_sym)
         @__vc_load_paths = load_paths
@@ -78,6 +84,7 @@ module ViewComponent
         super(@__vc_load_paths)
       end
 
+      # @param data [Hash] the translation data to scope
       def scope_data(data)
         @__vc_i18n_scope.reverse_each do |part|
           data = {part => data}
@@ -85,11 +92,16 @@ module ViewComponent
         data
       end
 
+      # @param locale [Symbol] the locale
+      # @param data [Hash] the translation data
+      # @param options [Hash] additional options
       def store_translations(locale, data, options = EMPTY_HASH)
         super(locale, scope_data(data), options)
       end
     end
 
+    # @param key [String, Array, nil] the translation key
+    # @param options [Hash] translation options
     def translate(key = nil, **options)
       raise ViewComponent::TranslateCalledBeforeRenderError if view_context.nil?
 

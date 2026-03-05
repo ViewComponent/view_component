@@ -13,6 +13,9 @@ module ViewComponent # :nodoc:
     include ActionView::Helpers::AssetTagHelper
     extend ActiveSupport::DescendantsTracker
 
+    # @param component [ViewComponent::Base] the component instance to render
+    # @param args [Hash] additional arguments
+    # @param block [Proc] optional block
     def render(component, **args, &block)
       {
         args: args,
@@ -23,6 +26,8 @@ module ViewComponent # :nodoc:
       }
     end
 
+    # @param template [String, nil] the template path
+    # @param locals [Hash] local variables to pass to the template
     def render_with_template(template: nil, locals: {})
       {
         template: template,
@@ -39,6 +44,8 @@ module ViewComponent # :nodoc:
       end
 
       # Returns the arguments for rendering of the component in its layout
+      # @param example [String] the preview example method name
+      # @param params [Hash] request parameters
       def render_args(example, params: {})
         example_params_names = instance_method(example).parameters.map(&:last)
         provided_params = params.slice(*example_params_names).to_h.symbolize_keys
@@ -55,11 +62,13 @@ module ViewComponent # :nodoc:
       end
 
       # Returns +true+ if the preview exists.
+      # @param preview [String] the preview name
       def exists?(preview)
         all.any? { |p| p.preview_name == preview }
       end
 
       # Find a component preview by its underscored class name.
+      # @param preview [String] the preview name
       def find(preview)
         all.find { |p| p.preview_name == preview }
       end
@@ -71,12 +80,14 @@ module ViewComponent # :nodoc:
 
       # rubocop:disable Style/TrivialAccessors
       # Setter for layout name.
+      # @param layout_name [String] the layout name
       def layout(layout_name)
         @layout = layout_name
       end
       # rubocop:enable Style/TrivialAccessors
 
       # Returns the relative path (from preview_path) to the preview example template if the template exists
+      # @param example [String] the preview example method name
       def preview_example_template_path(example)
         preview_path =
           Array(preview_paths).detect do |path|

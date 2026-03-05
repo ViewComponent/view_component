@@ -17,6 +17,7 @@ require "view_component/with_content_helper"
 
 module ActionView
   class OutputBuffer
+    # @param buf [String, nil] optional buffer to use
     def with_buffer(buf = nil)
       new_buffer = buf || +""
       old_buffer, @raw_buffer = @raw_buffer, new_buffer
@@ -101,6 +102,8 @@ module ViewComponent
     #
     # Returns HTML that has been escaped by the respective template handler.
     #
+    # @param view_context [ActionView::Base] ActionView context from calling view
+    # @param block [Proc] optional block to be captured within the view context
     # @return [String]
     def render_in(view_context, &block)
       self.class.__vc_compile(raise_errors: true)
@@ -251,6 +254,9 @@ module ViewComponent
     # to maintain backwards compatibility.
     #
     # @private
+    # @param options [Object] render options or component
+    # @param args [Hash] additional arguments
+    # @param block [Proc] optional block
     def render(options = {}, args = {}, &block)
       if options.respond_to?(:set_original_view_context)
         options.set_original_view_context(self.__vc_original_view_context)
@@ -306,6 +312,8 @@ module ViewComponent
 
     if defined?(Rails.env) && (::Rails.env.development? || ::Rails.env.test?)
       # @private
+      # @param method_name [Symbol] the missing method name
+      # @param args [Array] positional arguments
       def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
         super
       rescue => e # rubocop:disable Style/RescueStandardError
@@ -382,6 +390,7 @@ module ViewComponent
     # @private
     # Temporarily sets the virtual path to the captured value, then restores it.
     # This ensures translations and other path-dependent code execute with the correct scope.
+    # @param captured_path [String] the virtual path to set
     def with_captured_virtual_path(captured_path)
       old_virtual_path = @view_context.instance_variable_get(:@virtual_path)
       @view_context.instance_variable_set(:@virtual_path, captured_path)
@@ -564,11 +573,14 @@ module ViewComponent
       end
 
       # @private
+      # @param raise_errors [Boolean] whether to raise on compile errors
+      # @param force [Boolean] whether to force recompilation
       def __vc_compile(raise_errors: false, force: false)
         __vc_compiler.compile(raise_errors: raise_errors, force: force)
       end
 
       # @private
+      # @param child [Class] the inheriting class
       def inherited(child)
         # Compile so child will inherit compiled `call_*` template methods that
         # `compile` defines
@@ -674,6 +686,7 @@ module ViewComponent
       # is accepted, as support for collection
       # rendering is optional.
       # @private
+      # @param validate_default [Boolean] whether to validate the default parameter name
       def __vc_validate_collection_parameter!(validate_default: false)
         parameter = validate_default ? __vc_collection_parameter : __vc_provided_collection_parameter
 

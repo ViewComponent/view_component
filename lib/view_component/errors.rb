@@ -11,12 +11,15 @@ module ViewComponent
       "which means that ViewComponent doesn't know which content to use.\n\n" \
       "To fix this issue, use either `with_content` or a block."
 
+    # @param klass_name [String] the name of the component class
     def initialize(klass_name)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s))
     end
   end
 
   class TemplateError < StandardError
+    # @param errors [Array<String>] the list of template errors
+    # @param templates [Array, nil] the associated templates
     def initialize(errors, templates = nil)
       message = errors.join("\n")
 
@@ -33,6 +36,7 @@ module ViewComponent
       "A preview template for example EXAMPLE doesn't exist.\n\n" \
       "To fix this issue, create a template for the example."
 
+    # @param example [String] the name of the preview example
     def initialize(example)
       super(MESSAGE.gsub("EXAMPLE", example))
     end
@@ -43,6 +47,8 @@ module ViewComponent
       "No templates for COMPONENT match the request DETAIL.\n\n" \
       "To fix this issue, provide a suitable template."
 
+    # @param component [String] the component identifier
+    # @param request_detail [Object] the request detail constraints
     def initialize(component, request_detail)
       detail = {
         locale: request_detail.locale,
@@ -60,6 +66,7 @@ module ViewComponent
       "which means that ViewComponent doesn't know which content to use.\n\n" \
       "To fix this issue, use either `with_content` or a block."
 
+    # @param klass_name [String] the name of the component class
     def initialize(klass_name)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s))
     end
@@ -72,6 +79,8 @@ module ViewComponent
       "To fix this issue, update the initializer to accept `PARAMETER`.\n\n" \
       "See [the collections docs](https://viewcomponent.org/guide/collections.html) for more information on rendering collections."
 
+    # @param klass_name [String] the name of the component class
+    # @param parameter [Symbol] the missing collection parameter
     def initialize(klass_name, parameter)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("PARAMETER", parameter.to_s))
     end
@@ -82,6 +91,8 @@ module ViewComponent
       "COMPONENT initializer can't accept the parameter `PARAMETER`, as it will override a " \
       "public ViewComponent method. To fix this issue, rename the parameter."
 
+    # @param klass_name [String] the name of the component class
+    # @param parameter [Symbol] the reserved parameter name
     def initialize(klass_name, parameter)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("PARAMETER", parameter.to_s))
     end
@@ -99,6 +110,7 @@ module ViewComponent
       "Content passed to a ViewComponent as a block is captured and assigned to the `content` accessor without having to create an explicit slot.\n\n" \
       "To fix this issue, either use the `content` accessor directly or choose a different slot name."
 
+    # @param klass_name [String] the name of the component class
     def initialize(klass_name)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s))
     end
@@ -120,6 +132,8 @@ module ViewComponent
       "methods ending in `?`.\n\n" \
       "To fix this issue, choose a different name."
 
+    # @param klass_name [String] the name of the component class
+    # @param slot_name [Symbol] the invalid slot name
     def initialize(klass_name, slot_name)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
     end
@@ -130,6 +144,8 @@ module ViewComponent
       "COMPONENT declares the SLOT_NAME slot multiple times.\n\n" \
       "To fix this issue, choose a different slot name."
 
+    # @param klass_name [String] the name of the component class
+    # @param slot_name [Symbol] the redefined slot name
     def initialize(klass_name, slot_name)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
     end
@@ -140,6 +156,8 @@ module ViewComponent
       "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
       "To fix this issue, choose a different name."
 
+    # @param klass_name [String] the name of the component class
+    # @param slot_name [Symbol] the reserved slot name
     def initialize(klass_name, slot_name)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
     end
@@ -150,6 +168,8 @@ module ViewComponent
       "COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewComponent framework.\n\n" \
       "To fix this issue, choose a different name."
 
+    # @param klass_name [String] the name of the component class
+    # @param slot_name [Symbol] the reserved slot name
     def initialize(klass_name, slot_name)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
     end
@@ -160,6 +180,8 @@ module ViewComponent
       "COMPONENT declares a slot named SLOT_NAME, which is an uncountable word\n\n" \
       "To fix this issue, choose a different name."
 
+    # @param klass_name [String] the name of the component class
+    # @param slot_name [Symbol] the uncountable slot name
     def initialize(klass_name, slot_name)
       super(MESSAGE.gsub("COMPONENT", klass_name.to_s).gsub("SLOT_NAME", slot_name.to_s))
     end
@@ -168,6 +190,7 @@ module ViewComponent
   class ContentAlreadySetForPolymorphicSlotError < StandardError
     MESSAGE = "Content for slot SLOT_NAME has already been provided."
 
+    # @param slot_name [Symbol] the polymorphic slot name
     def initialize(slot_name)
       super(MESSAGE.gsub("SLOT_NAME", slot_name.to_s))
     end
@@ -215,6 +238,8 @@ module ViewComponent
       "A method called 'SETTER_METHOD_NAME' already exists and would be overwritten by the 'SETTER_NAME' polymorphic " \
       "slot setter.\n\nPlease choose a different setter name."
 
+    # @param setter_method_name [Symbol] the existing method name
+    # @param setter_name [Symbol] the polymorphic slot setter name
     def initialize(setter_method_name, setter_name)
       super(MESSAGE.gsub("SETTER_METHOD_NAME", setter_method_name.to_s).gsub("SETTER_NAME", setter_name.to_s))
     end
