@@ -277,9 +277,9 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    reactionview (0.2.1)
+    reactionview (0.2.2)
       actionview (>= 7.0)
-      herb (>= 0.8.0, < 1.0.0)
+      herb (>= 0.8.0, < 0.9.0)
     redis (5.4.1)
       redis-client (>= 0.22.0)
     redis-client (0.26.4)
@@ -561,7 +561,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.3.1) sha256=8c9e89d09f66a26a01264e7e3480ec0607f0c497a861ef16063604b1b08eb19c
   rdoc (7.2.0) sha256=8650f76cd4009c3b54955eb5d7e3a075c60a57276766ebf36f9085e8c9f23192
-  reactionview (0.2.1) sha256=f37b2231b4e6628594d4e57b116d8097e46e80635379cbc36447da8980908207
+  reactionview (0.2.2) sha256=c6a4dd81858223da06050c92b63af6564a332d91fae1b62fe5134e12a374476e
   redis (5.4.1) sha256=b5e675b57ad22b15c9bcc765d5ac26f60b675408af916d31527af9bd5a81faae
   redis-client (0.26.4) sha256=3ad70beff5da2653e02dfeae996e7d8d7147a558da12b16b2282ad345e4c7120
   regexp_parser (2.11.3) sha256=ca13f381a173b7a93450e53459075c9b76a10433caadcb2f1180f2c741fc55a4
