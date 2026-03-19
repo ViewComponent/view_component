@@ -145,15 +145,14 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
-    herb (0.8.10)
-    herb (0.8.10-aarch64-linux-gnu)
-    herb (0.8.10-aarch64-linux-musl)
-    herb (0.8.10-arm-linux-gnu)
-    herb (0.8.10-arm-linux-musl)
-    herb (0.8.10-arm64-darwin)
-    herb (0.8.10-x86_64-darwin)
-    herb (0.8.10-x86_64-linux-gnu)
-    herb (0.8.10-x86_64-linux-musl)
+    herb (0.9.2-aarch64-linux-gnu)
+    herb (0.9.2-aarch64-linux-musl)
+    herb (0.9.2-arm-linux-gnu)
+    herb (0.9.2-arm-linux-musl)
+    herb (0.9.2-arm64-darwin)
+    herb (0.9.2-x86_64-darwin)
+    herb (0.9.2-x86_64-linux-gnu)
+    herb (0.9.2-x86_64-linux-musl)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     io-console (0.8.2)
@@ -165,7 +164,7 @@ GEM
     jbuilder (2.14.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
-    json (2.19.1)
+    json (2.19.2)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -277,9 +276,9 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    reactionview (0.2.2)
+    reactionview (0.3.0)
       actionview (>= 7.0)
-      herb (>= 0.8.0, < 0.9.0)
+      herb (>= 0.9.0, < 1.0.0)
     redis (5.4.1)
       redis-client (>= 0.22.0)
     redis-client (0.26.4)
@@ -501,20 +500,19 @@ CHECKSUMS
   ferrum (0.17.1) sha256=51d591120fc593e5a13b5d9d6474389f5145bb92a91e36eab147b5d096c8cbe7
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
   haml (7.2.0) sha256=87fd2b71f7feab1724337b090a7d767f5ab2d42f08c974f3ead673f18cfcd55a
-  herb (0.8.10) sha256=5c70c1402ba7bcc3f46d676fbb1cf5489cfa67c898f4700d2e5407c5627bf331
-  herb (0.8.10-aarch64-linux-gnu) sha256=da47ed456350077e73c6d94336dda8a3ac141922c867cf552bf17cb0840388de
-  herb (0.8.10-aarch64-linux-musl) sha256=6317516ad3dc0fc4543dad748d9a34689426beb4ee5eace0ac0f3c185277b5ce
-  herb (0.8.10-arm-linux-gnu) sha256=535eaf3003aa115b7c6c7ea634cdf4234cbec91596d946e8817261a45b7699d9
-  herb (0.8.10-arm-linux-musl) sha256=2cded27f825c868322df1d7343670122e2317644d4d75191409b915cd6d559fe
-  herb (0.8.10-arm64-darwin) sha256=bba77f7f64ffd144f36af5d4573ca5ee863f7258acd71c8536384d63d60e3d72
-  herb (0.8.10-x86_64-darwin) sha256=d1aa283e9d354f3ec20db4ba725718441d1b9d24ff75e17fa244b27f7dd82ec3
-  herb (0.8.10-x86_64-linux-gnu) sha256=268b059f66a1f3191c8d7c15cfcb293a91be5c3811704856acd49b6f2e5dc1b1
-  herb (0.8.10-x86_64-linux-musl) sha256=bd1b2bf9f0ab9ceecdd874cdf03424176b83fa3c937188568c011cecf40b5d7f
+  herb (0.9.2-aarch64-linux-gnu) sha256=6c34f4cd8eb582d142720fc573e2550e516dc071384a668f20605aef727670f7
+  herb (0.9.2-aarch64-linux-musl) sha256=4ce7b5afe88b0895460472cb7275acb3a518d96909d028804dd1f90b1abf99f6
+  herb (0.9.2-arm-linux-gnu) sha256=981bda30e30dff1500a7f6467a5154113938027823ca9c82768cc9b985b5a469
+  herb (0.9.2-arm-linux-musl) sha256=43da47b2801cb5cb80b2c88113814a4bf8f4e1cc24b5edb9d1616132491f79fd
+  herb (0.9.2-arm64-darwin) sha256=1dc9e8a456480961648e245cef2fba927ad5d9f445d1db797aac089c65bf96cd
+  herb (0.9.2-x86_64-darwin) sha256=d995e5eb0fefbf093f0e179e61414bac865c58e8be4103a9927f0ef1d99711a4
+  herb (0.9.2-x86_64-linux-gnu) sha256=0a48ed0140499609ed78f28019ec5fc29e0768d1ca69bfa458a9e337771d32a8
+  herb (0.9.2-x86_64-linux-musl) sha256=9f2545149efff5fb9d9c865d42b05de24f866e209f0eb53407233456b3515820
   i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5
   io-console (0.8.2) sha256=d6e3ae7a7cc7574f4b8893b4fca2162e57a825b223a177b7afa236c5ef9814cc
   irb (1.17.0) sha256=168c4ddb93d8a361a045c41d92b2952c7a118fa73f23fe14e55609eb7a863aae
   jbuilder (2.14.1) sha256=4eb26376ff60ef100cb4fd6fd7533cd271f9998327e86adf20fd8c0e69fabb42
-  json (2.19.1) sha256=dd94fdc59e48bff85913829a32350b3148156bc4fd2a95a2568a78b11344082d
+  json (2.19.2) sha256=e7e1bd318b2c37c4ceee2444841c86539bc462e81f40d134cf97826cb14e83cf
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
@@ -561,7 +559,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.3.1) sha256=8c9e89d09f66a26a01264e7e3480ec0607f0c497a861ef16063604b1b08eb19c
   rdoc (7.2.0) sha256=8650f76cd4009c3b54955eb5d7e3a075c60a57276766ebf36f9085e8c9f23192
-  reactionview (0.2.2) sha256=c6a4dd81858223da06050c92b63af6564a332d91fae1b62fe5134e12a374476e
+  reactionview (0.3.0) sha256=3bd363863776827eaf85a9baf75370c1ca52a4b0dad87ba5d672e4abe76eb640
   redis (5.4.1) sha256=b5e675b57ad22b15c9bcc765d5ac26f60b675408af916d31527af9bd5a81faae
   redis-client (0.26.4) sha256=3ad70beff5da2653e02dfeae996e7d8d7147a558da12b16b2282ad345e4c7120
   regexp_parser (2.11.3) sha256=ca13f381a173b7a93450e53459075c9b76a10433caadcb2f1180f2c741fc55a4
