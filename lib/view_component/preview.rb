@@ -95,7 +95,7 @@ module ViewComponent # :nodoc:
       # @private
       def __vc_load_previews
         Array(preview_paths).each do |preview_path|
-          Dir["#{preview_path}/**/*preview.rb"].sort.each { |file| require_dependency file }
+          Dir["#{preview_path}/**/*preview.rb"].sort.each { |file| require file }
         end
       end
 

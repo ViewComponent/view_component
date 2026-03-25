@@ -160,7 +160,7 @@ module ViewComponent
 
         value
       else
-        ""
+        "".html_safe
       end
     ensure
       view_context.instance_variable_set(:@virtual_path, @old_virtual_path)
