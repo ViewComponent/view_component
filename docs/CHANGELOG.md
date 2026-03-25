@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Replace deprecated `require_dependency` with `require` in preview loading.
+
+    *GitHub Copilot*
+
 * Return `html_safe` empty string from `render_in` when `render?` is false.
 
     *Copilot*
