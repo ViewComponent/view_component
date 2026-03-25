@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Replace deprecated `require_dependency` with `require` in preview loading.
+
+    *GitHub Copilot*
+
 ## 4.5.0
 
 * Fix initialization ordering issue causing missing asset errors in Sprockets.
