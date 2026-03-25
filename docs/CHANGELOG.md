@@ -14,6 +14,10 @@ nav_order: 6
 
     *GitHub Copilot*
 
+* Return `html_safe` empty string from `render_in` when `render?` is false.
+
+    *Copilot*
+
 ## 4.5.0
 
 * Fix initialization ordering issue causing missing asset errors in Sprockets.
