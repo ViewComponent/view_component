@@ -877,6 +877,12 @@ class RenderingTest < ViewComponent::TestCase
     assert total < 1
   end
 
+  def test_render_in_returns_html_safe_string_when_render_is_false
+    render_inline(ConditionalRenderComponent.new(should_render: false))
+
+    assert_predicate @rendered_content, :html_safe?
+  end
+
   def test_collection_parameter_does_not_require_compile
     dynamic_component =
       Class.new(ViewComponent::Base) do
