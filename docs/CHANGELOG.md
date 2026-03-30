@@ -22,7 +22,7 @@ nav_order: 6
 
 * Return `html_safe` empty string from `render_in` when `render?` is false.
 
-    *Copilot*
+    *GitHub Copilot*
 
 ## 4.5.0
 
