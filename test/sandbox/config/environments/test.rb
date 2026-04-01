@@ -9,6 +9,7 @@ require "warning"
 end
 
 Warning.ignore(/warning: parser\/current/)
+Warning.ignore(/(format_less_parent|format_less_child|no_format)_component.erb is missing, defaulting to :html/)
 
 Sandbox::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
