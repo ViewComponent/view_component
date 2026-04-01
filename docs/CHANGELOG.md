@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix bug where inheritance of components with formatless templates improperly raised a NoMethodError.
+
+    *GitHub Copilot*, *Joel Hawksley*, *Cameron Dutro*
+
 ## 4.6.0
 
 * Add `view_identifier` to the `render.view_component` instrumentation event payload, containing the path to the component's template file (e.g. `app/components/my_component.html.erb`). For components using inline render methods, `view_identifier` will be `nil`.

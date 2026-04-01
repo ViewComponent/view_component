@@ -21,6 +21,13 @@ module ViewComponent
 
     class File < Template
       def initialize(component:, details:, path:)
+        # If the template file has no format (e.g. .erb instead of .html.erb),
+        # assume the default format (html).
+        if details.format.nil?
+          Kernel.warn("Template format for #{path} is missing, defaulting to :html.")
+          details = ActionView::TemplateDetails.new(details.locale, details.handler, DEFAULT_FORMAT, details.variant)
+        end
+
         @strip_annotation_line = false
 
         # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).

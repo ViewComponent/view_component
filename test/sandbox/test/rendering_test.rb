@@ -852,6 +852,18 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello, my own template")
   end
 
+  def test_inherited_component_with_format_less_template
+    # Reproduces https://github.com/ViewComponent/view_component/issues/2573
+    # When a parent component uses a format-less template (e.g. .erb or .slim
+    # instead of .html.erb or .html.slim), the child component crashes with
+    # "undefined method 'upcase' for nil" during compilation.
+    render_inline(FormatLessChildComponent.new) do
+      "Hello World"
+    end
+
+    assert_selector("div.child", text: "Hello World")
+  end
+
   def test_inherited_inline_component_inherits_inline_method
     render_inline(InlineInheritedComponent.new)
 
