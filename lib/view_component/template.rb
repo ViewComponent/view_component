@@ -24,7 +24,7 @@ module ViewComponent
         # If the template file has no format (e.g. .erb instead of .html.erb),
         # assume the default format (html).
         if details.format.nil?
-          Kernel.warn("Template format for #{path} is missing, defaulting to :html.")
+          Kernel.warn("WARNING: Template format for #{path} is missing, defaulting to :html.")
           details = ActionView::TemplateDetails.new(details.locale, details.handler, DEFAULT_FORMAT, details.variant)
         end
 
