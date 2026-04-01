@@ -2,6 +2,7 @@
 EnableDefaultLinters: true
 exclude:
   - '**/vendor/**/*'
+  - 'test/sandbox/app/components/content_security_policy_nonce_component.html.erb'
 linters:
   ErbSafety:
     enabled: true
