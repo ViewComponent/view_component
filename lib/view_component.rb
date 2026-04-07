@@ -15,6 +15,7 @@ module ViewComponent
   autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview
+  autoload :Serializable
   autoload :Translatable
 
   if defined?(Rails.env) && Rails.env.test?

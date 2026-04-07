@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add support for Turbo-streaming ViewComponents.
+
+    *Ben Sheldon*, *Joel Hawksley*, *GitHub Copilot*
+
 * Fix bug where inheritance of components with formatless templates improperly raised a NoMethodError.
 
     *GitHub Copilot*, *Joel Hawksley*, *Cameron Dutro*

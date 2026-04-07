@@ -77,6 +77,13 @@ module ViewComponent
       end
     end
 
+    initializer "view_component.serializable" do
+      ActiveSupport.on_load(:active_job) do
+        require "view_component/serializable_serializer"
+        ActiveJob::Serializers.add_serializers(ViewComponent::SerializableSerializer)
+      end
+    end
+
     initializer "view_component.eager_load_actions" do
       ActiveSupport.on_load(:after_initialize) do
         ViewComponent::Base.descendants.each(&:__vc_compile) if Rails.application.config.eager_load
