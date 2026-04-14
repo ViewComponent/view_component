@@ -7,17 +7,15 @@ require "pathname"
 require "minitest/autorun"
 require "minitest/mock"
 
-if ENV["RAISE_ON_WARNING"]
-  module Warning
-    PROJECT_ROOT = File.expand_path("..", __dir__).freeze
+module Warning
+  PROJECT_ROOT = File.expand_path("..", __dir__).freeze
 
-    def self.warn(message)
-      called_by = caller_locations(1, 1).first.path
-      return super unless called_by&.start_with?(PROJECT_ROOT) && !called_by.start_with?("#{PROJECT_ROOT}/vendor")
-      return super if message.include?("Template format for")
+  def self.warn(message)
+    called_by = caller_locations(1, 1).first.path
+    return super unless called_by&.start_with?(PROJECT_ROOT) && !called_by.start_with?("#{PROJECT_ROOT}/vendor")
+    return if message.include?("Template format for")
 
-      raise "Warning: #{message}"
-    end
+    raise "Warning: #{message}"
   end
 end
 
