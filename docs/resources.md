@@ -27,6 +27,9 @@ _Is this page missing a link? Open a PR!_
 - [ViewComponent Contrib](https://github.com/palkan/view_component-contrib)
 - [Lookbook](https://lookbook.build)
 - [ViewComponentAttributes](https://github.com/Amba-Health/view_component_attributes)
+
+## Tools
+
 - [rubocop-view_component](https://github.com/andyw8/rubocop-view_component)
 
 ## Podcasts
