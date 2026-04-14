@@ -28,6 +28,10 @@ _Is this page missing a link? Open a PR!_
 - [Lookbook](https://lookbook.build)
 - [ViewComponentAttributes](https://github.com/Amba-Health/view_component_attributes)
 
+## Tools
+
+- [rubocop-view_component](https://github.com/andyw8/rubocop-view_component)
+
 ## Podcasts
 
 - [Code with Jason - ViewComponent with Joel Hawksley, Staff Engineer at GitHub](https://www.codewithjason.com/podcast/9936046-130-viewcomponent-with-joel-hawksley-staff-engineer-at-github/)
