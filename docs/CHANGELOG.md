@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix stale content cache when slots are accessed before `render_in`.
+
+    *Jared Armstrong*
+
 * Add rubocop-view_component to resources.
 
     *Andy Waite*
