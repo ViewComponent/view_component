@@ -131,6 +131,7 @@ module ViewComponent
       end
 
       @__vc_content_evaluated = false
+      remove_instance_variable(:@__vc_content) if defined?(@__vc_content)
       @__vc_render_in_block = block
       @view_context.instance_variable_set(:@virtual_path, virtual_path)
 
