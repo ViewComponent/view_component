@@ -58,7 +58,6 @@ jobs:
         bundle exec appraisal rails-${{ matrix.rails_version }} bundle --quiet
         MEASURE_COVERAGE=true bundle exec appraisal rails-${{ matrix.rails_version }} rake all_tests
       env:
-        RAISE_ON_WARNING: 1
         RAILS_VERSION: ${{ matrix.rails_version }}
         RUBY_VERSION: ${{ matrix.ruby_version }}
     - name: Upload coverage results

@@ -6,6 +6,18 @@ require "rails/version"
 
 require "bundler/setup"
 
+module Warning
+  PROJECT_ROOT = File.expand_path("..", __dir__).freeze
+
+  def self.warn(message)
+    called_by = caller_locations(1, 1).first.path
+    return super unless called_by&.start_with?(PROJECT_ROOT) && !called_by.start_with?("#{PROJECT_ROOT}/vendor")
+    return if message.include?("Template format for")
+
+    raise "Warning: #{message}"
+  end
+end
+
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
