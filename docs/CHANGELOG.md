@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add rubocop-view_component to resources.
+
+    *Andy Waite*
+
 * Fix bug where inheritance of components with formatless templates improperly raised a NoMethodError.
 
     *GitHub Copilot*, *Joel Hawksley*, *Cameron Dutro*
