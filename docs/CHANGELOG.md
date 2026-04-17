@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.7.0
+
 * Fix stale content cache when slots are accessed before `render_in`.
 
     *Jared Armstrong*
