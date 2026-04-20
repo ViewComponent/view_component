@@ -35,18 +35,23 @@ class InstrumentationTest < ViewComponent::TestCase
 
   def test_compile_instrumentation
     events = []
-    ActiveSupport::Notifications.subscribe("compile.view_component") do |*args|
+    subscriber = ActiveSupport::Notifications.subscribe("compile.view_component") do |*args|
       events << ActiveSupport::Notifications::Event.new(*args)
     end
 
-    ActiveSupport::Notifications.instrument("compile.view_component") do
-      ViewComponent::CompileCache.invalidate_class!(InstrumentationComponent)
-      InstrumentationComponent.__vc_compile
-    end
+    old_eager_load = Rails.application.config.eager_load
+    Rails.application.config.eager_load = true
+
+    ViewComponent::CompileCache.invalidate!
+
+    # Execute the same block that the view_component.eager_load_actions initializer registers
+    initializer = ViewComponent::Engine.initializers.find { |i| i.name == "view_component.eager_load_actions" }
+    initializer.run(Rails.application)
 
     assert_equal(1, events.size)
     assert_equal("compile.view_component", events[0].name)
   ensure
-    ActiveSupport::Notifications.unsubscribe("compile.view_component")
+    Rails.application.config.eager_load = old_eager_load
+    ActiveSupport::Notifications.unsubscribe(subscriber)
   end
 end
