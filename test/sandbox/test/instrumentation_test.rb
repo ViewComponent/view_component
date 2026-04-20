@@ -39,9 +39,9 @@ class InstrumentationTest < ViewComponent::TestCase
       events << ActiveSupport::Notifications::Event.new(*args)
     end
 
-    ViewComponent::CompileCache.invalidate!
     ActiveSupport::Notifications.instrument("compile.view_component") do
-      ViewComponent::Base.descendants.each(&:__vc_compile)
+      ViewComponent::CompileCache.invalidate_class!(InstrumentationComponent)
+      InstrumentationComponent.__vc_compile
     end
 
     assert_equal(1, events.size)
