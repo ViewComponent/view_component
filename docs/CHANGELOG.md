@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add `compile.view_component` ActiveSupport::Notifications event for eager compilation at boot time.
+
+    *Joel Hawksley*, *GitHub Copilot*
+
 ## 4.7.0
 
 * Fix stale content cache when slots are accessed before `render_in`.

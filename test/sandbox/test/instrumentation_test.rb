@@ -32,4 +32,21 @@ class InstrumentationTest < ViewComponent::TestCase
       assert_equal(events.size, 0)
     end
   end
+
+  def test_compile_instrumentation
+    events = []
+    ActiveSupport::Notifications.subscribe("compile.view_component") do |*args|
+      events << ActiveSupport::Notifications::Event.new(*args)
+    end
+
+    ViewComponent::CompileCache.invalidate!
+    ActiveSupport::Notifications.instrument("compile.view_component") do
+      ViewComponent::Base.descendants.each(&:__vc_compile)
+    end
+
+    assert_equal(1, events.size)
+    assert_equal("compile.view_component", events[0].name)
+  ensure
+    ActiveSupport::Notifications.unsubscribe("compile.view_component")
+  end
 end

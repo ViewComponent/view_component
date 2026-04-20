@@ -79,7 +79,11 @@ module ViewComponent
 
     initializer "view_component.eager_load_actions" do
       ActiveSupport.on_load(:after_initialize) do
-        ViewComponent::Base.descendants.each(&:__vc_compile) if Rails.application.config.eager_load
+        if Rails.application.config.eager_load
+          ActiveSupport::Notifications.instrument("compile.view_component") do
+            ViewComponent::Base.descendants.each(&:__vc_compile)
+          end
+        end
       end
     end
 
