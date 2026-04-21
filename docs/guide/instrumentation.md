@@ -28,6 +28,20 @@ end
 
 _Note: Enabling instrumentation negatively impacts the performance of ViewComponent._
 
+## Compile instrumentation
+
+Since 4.8.0
+{: .label }
+
+ViewComponent also instruments eager compilation at boot time via the `compile.view_component` event. This event is always emitted (no configuration needed) when `config.eager_load` is `true`:
+
+```ruby
+ActiveSupport::Notifications.subscribe("compile.view_component") do |event|
+  event.name     # => "compile.view_component"
+  event.duration # => 123.45 (milliseconds)
+end
+```
+
 ## Viewing instrumentation sums in the browser developer tools
 
 When using `render.view_component` with `config.server_timing = true` (default in development) in Rails 7, the browser developer tools display the sum total timing information in Network > Timing under the key `render.view_component`.
