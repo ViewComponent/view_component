@@ -518,6 +518,7 @@ module ViewComponent
       # @param extensions [Array<String>] Extensions of which to return matching sidecar files.
       def sidecar_files(extensions)
         return [] unless identifier
+        return [] unless name
 
         extensions = extensions.join(",")
 
