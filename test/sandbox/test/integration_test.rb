@@ -110,7 +110,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "div", "hello world"
       assert_response :success
 
-      compile_method_lines = UncompilableComponent.method(:__vc_compile).source.split("\n")
+      original_method = UncompilableComponent.method(:__vc_compile)
+      compile_method_lines = original_method.source.split("\n")
       compile_method_lines.insert(1, 'raise "this should not happen" if self.name == "UncompilableComponent"')
       UncompilableComponent.instance_eval compile_method_lines.join("\n")
 
@@ -123,6 +124,9 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       get "/inherited_from_uncompilable_component"
       assert_select "div", "hello world"
       assert_response :success
+    ensure
+      UncompilableComponent.singleton_class.silence_redefinition_of_method(:__vc_compile)
+      UncompilableComponent.define_singleton_method(:__vc_compile, original_method)
     end
   end
 
