@@ -125,6 +125,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select "div", "hello world"
       assert_response :success
     ensure
+      UncompilableComponent.singleton_class.silence_redefinition_of_method(:__vc_compile)
       UncompilableComponent.define_singleton_method(:__vc_compile, original_method)
     end
   end
