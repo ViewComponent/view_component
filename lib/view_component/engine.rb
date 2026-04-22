@@ -82,7 +82,7 @@ module ViewComponent
         if Rails.application.config.eager_load
           ActiveSupport::Notifications.instrument("compile.view_component") do
             ViewComponent::Base.descendants.each do |component|
-              next unless component.name
+              next if component.anonymous?
 
               component.__vc_compile
             end
