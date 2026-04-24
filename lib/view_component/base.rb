@@ -278,6 +278,22 @@ module ViewComponent
       end
     end
 
+    # Sync @output_buffer with the view context's current output buffer before
+    # capturing. Form helpers create builders with @template_object pointing to
+    # the component. When those builders later call capture inside a partial
+    # (whose _run allocated a fresh OutputBuffer on the view context), the
+    # component's stale @output_buffer would capture from the wrong buffer.
+    # Temporarily switching to the view context's buffer keeps both in sync.
+    #
+    # @private
+    def capture(*, **, &block)
+      old_output_buffer = @output_buffer
+      @output_buffer = view_context.output_buffer if view_context
+      super
+    ensure
+      @output_buffer = old_output_buffer
+    end
+
     # The current controller. Use sparingly as doing so introduces coupling
     # that inhibits encapsulation & reuse, often making testing difficult.
     #
