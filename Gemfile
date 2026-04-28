@@ -27,7 +27,7 @@ group :development, :test do
   gem "method_source", "~> 1"
   gem "minitest", "~> 6"
   gem "minitest-mock"
-  gem "nokogiri", "1.19.2"
+  gem "nokogiri", "1.19.3"
   gem "propshaft", "~> 1"
   gem "puma", ">= 6"
   gem "rake", "~> 13"
