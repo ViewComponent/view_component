@@ -1,0 +1,5 @@
+<%= form_with url: '/' do |form| %>
+  <%= render "shared/yielding_form_partial", form: do %>
+    world
+  <% end %>
+<% end %>
