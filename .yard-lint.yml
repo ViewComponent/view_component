@@ -45,7 +45,7 @@ Tags/InvalidTypes:
   Enabled: true
 
 Tags/TypeSyntax:
-  Enabled: false
+  Enabled: true
 
 Tags/MeaninglessTag:
   Enabled: true
