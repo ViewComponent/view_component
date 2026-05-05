@@ -71,12 +71,12 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     #
-    # Note: `#rendered_preview` expects a preview to be defined with the same class
-    # name as the calling test, but with `Test` replaced with `Preview`:
+    # @note `#rendered_preview` expects a preview to be defined with the same class
+    #   name as the calling test, but with `Test` replaced with `Preview`:
     #
-    # MyComponentTest -> MyComponentPreview etc.
+    #   MyComponentTest -> MyComponentPreview etc.
     #
-    # In RSpec, `Preview` is appended to `described_class`.
+    #   In RSpec, `Preview` is appended to `described_class`.
     #
     # @param name [String] The name of the preview to be rendered.
     # @param from [ViewComponent::Preview] The class of the preview to be rendered.
