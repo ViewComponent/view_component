@@ -124,7 +124,7 @@ module ViewComponent
     # end
     # ```
     #
-    # @param variants [Symbol[]] The variants to be set for the provided block.
+    # @param variants [Array<Symbol>] The variants to be set for the provided block.
     def with_variant(*variants)
       old_variants = vc_test_controller.view_context.lookup_context.variants
 
@@ -161,7 +161,7 @@ module ViewComponent
     # end
     # ```
     #
-    # @param formats [Symbol[]] The format(s) to be set for the provided block.
+    # @param formats [Array<Symbol>] The format(s) to be set for the provided block.
     def with_format(*formats)
       old_formats = vc_test_controller.view_context.lookup_context.formats
 

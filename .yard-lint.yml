@@ -42,7 +42,7 @@ Tags/Order:
   Enabled: true
 
 Tags/InvalidTypes:
-  Enabled: false
+  Enabled: true
 
 Tags/TypeSyntax:
   Enabled: false
