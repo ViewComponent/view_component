@@ -1,8 +1,5 @@
 # YARD-Lint Configuration
 # See https://github.com/mensfeld/yard-lint for documentation
-#
-# Starting with minimal enforcement (Warnings/UnknownTag only).
-# Additional validators can be enabled in subsequent PRs.
 
 AllValidators:
   YardOptions:
@@ -24,7 +21,7 @@ Documentation/UndocumentedMethodArguments:
   Enabled: false
 
 Documentation/UndocumentedBooleanMethods:
-  Enabled: false
+  Enabled: true
 
 Documentation/UndocumentedOptions:
   Enabled: false
@@ -33,7 +30,7 @@ Documentation/MissingReturn:
   Enabled: false
 
 Documentation/MarkdownSyntax:
-  Enabled: false
+  Enabled: true
 
 Documentation/EmptyCommentLine:
   Enabled: false
@@ -51,10 +48,10 @@ Tags/TypeSyntax:
   Enabled: false
 
 Tags/MeaninglessTag:
-  Enabled: false
+  Enabled: true
 
 Tags/CollectionType:
-  Enabled: false
+  Enabled: true
 
 Tags/TagTypePosition:
   Enabled: false
@@ -66,44 +63,44 @@ Tags/OptionTags:
   Enabled: false
 
 Tags/ExampleSyntax:
-  Enabled: false
+  Enabled: true
 
 Tags/ExampleStyle:
-  Enabled: false
+  Enabled: true
 
 Tags/RedundantParamDescription:
-  Enabled: false
+  Enabled: true
 
 Tags/InformalNotation:
   Enabled: false
 
 Tags/NonAsciiType:
-  Enabled: false
+  Enabled: true
 
 Tags/TagGroupSeparator:
   Enabled: false
 
 Tags/ForbiddenTags:
-  Enabled: false
+  Enabled: true
 
 Warnings/UnknownTag:
   Enabled: true
   Severity: error
 
 Warnings/UnknownDirective:
-  Enabled: false
+  Enabled: true
 
 Warnings/InvalidTagFormat:
-  Enabled: false
+  Enabled: true
 
 Warnings/InvalidDirectiveFormat:
-  Enabled: false
+  Enabled: true
 
 Warnings/DuplicatedParameterName:
-  Enabled: false
+  Enabled: true
 
 Warnings/UnknownParameterName:
-  Enabled: false
+  Enabled: true
 
 Semantic/AbstractMethods:
-  Enabled: false
+  Enabled: true
