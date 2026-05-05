@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.9.0
+
 * Fix path traversal vulnerability in `ViewComponentsSystemTestController` where sibling directories sharing a string prefix with the allowed temp directory could bypass the path containment check. The `start_with?` check has been replaced with a separator-aware prefix check, and nefarious path errors now return a 404 instead of an unhandled exception.
 
     *Joel Hawksley*
