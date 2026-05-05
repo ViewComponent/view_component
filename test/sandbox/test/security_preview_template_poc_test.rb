@@ -18,17 +18,18 @@ class SecurityPreviewTemplatePocTest < ActionDispatch::IntegrationTest
     # explicitly defined as an example on MyComponentPreview.
     refute_includes MyComponentPreview.examples, "render_with_template"
 
-    # Before the fix, this request would succeed and render internal/secret
-    # with attacker-controlled locals and request params.
-    get(
-      "/rails/view_components/my_component/render_with_template",
-      params: {
-        template: "internal/secret",
-        locals: {poc_local: "attacker-controlled-local"},
-        request_marker: "attacker-controlled-request"
-      }
-    )
-
-    assert_response :not_found
+    # Before the fix, this request would succeed (200) and render internal/secret
+    # with attacker-controlled locals and request params. After the fix it raises
+    # ActionNotFound, which the framework maps to a 404 in production.
+    assert_raises AbstractController::ActionNotFound do
+      get(
+        "/rails/view_components/my_component/render_with_template",
+        params: {
+          template: "internal/secret",
+          locals: {poc_local: "attacker-controlled-local"},
+          request_marker: "attacker-controlled-request"
+        }
+      )
+    end
   end
 end
