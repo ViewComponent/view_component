@@ -54,7 +54,7 @@ Tags/CollectionType:
   Enabled: true
 
 Tags/TagTypePosition:
-  Enabled: false
+  Enabled: true
 
 Tags/ApiTags:
   Enabled: false
