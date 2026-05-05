@@ -39,7 +39,7 @@ Documentation/BlankLineBeforeDefinition:
   Enabled: false
 
 Tags/Order:
-  Enabled: false
+  Enabled: true
 
 Tags/InvalidTypes:
   Enabled: false

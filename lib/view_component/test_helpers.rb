@@ -71,17 +71,16 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     #
+    # @param name [String] The name of the preview to be rendered.
+    # @param from [ViewComponent::Preview] The class of the preview to be rendered.
+    # @param params [Hash] Parameters to be passed to the preview.
+    # @return [Nokogiri::HTML5]
     # @note `#rendered_preview` expects a preview to be defined with the same class
     #   name as the calling test, but with `Test` replaced with `Preview`:
     #
     #   MyComponentTest -> MyComponentPreview etc.
     #
     #   In RSpec, `Preview` is appended to `described_class`.
-    #
-    # @param name [String] The name of the preview to be rendered.
-    # @param from [ViewComponent::Preview] The class of the preview to be rendered.
-    # @param params [Hash] Parameters to be passed to the preview.
-    # @return [Nokogiri::HTML5]
     def render_preview(name, from: __vc_test_helpers_preview_class, params: {})
       previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.previews.controller.constantize)
 
