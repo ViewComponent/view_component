@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add `yard-lint` to CI.
+
+    *Joel Hawksley*
+
 ## 4.8.0
 
 * Add `compile.view_component` ActiveSupport::Notifications event for eager compilation at boot time.
