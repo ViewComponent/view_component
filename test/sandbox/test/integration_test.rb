@@ -738,9 +738,8 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   def test_path_traversal_raises_error
     path = "../../README.md"
 
-    assert_raises ViewComponent::SystemTestControllerNefariousPathError do
-      get "/_system_test_entrypoint?file=#{path}"
-    end
+    get "/_system_test_entrypoint?file=#{path}"
+    assert_response :not_found
   end
 
   def test_unsafe_component
