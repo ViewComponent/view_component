@@ -104,5 +104,3 @@ jobs:
         bundler-cache: true
     - name: YARD Lint
       run: bundle exec yard-lint lib/
-      env:
-        RAILS_VERSION: '~> 8'
