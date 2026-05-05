@@ -409,6 +409,9 @@ GEM
     yard (0.9.43)
     yard-activesupport-concern (0.0.1)
       yard (>= 0.8)
+    yard-lint (1.5.1)
+      yard (~> 0.9)
+      zeitwerk (~> 2.6)
     zeitwerk (2.7.5)
 
 PLATFORMS
@@ -460,6 +463,7 @@ DEPENDENCIES
   warning
   yard (< 1)
   yard-activesupport-concern (< 1)
+  yard-lint (~> 1.5)
 
 CHECKSUMS
   action_text-trix (2.1.18) sha256=3fdb83f8bff4145d098be283cdd47ac41caf5110bfa6df4695ed7127d7fb3642
@@ -621,6 +625,7 @@ CHECKSUMS
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yard (0.9.43) sha256=cf8733a8f0485df2a162927e9b5f182215a61f6d22de096b8f402c726a1c5821
   yard-activesupport-concern (0.0.1) sha256=be790cb0efc23e2e87677063598ac8b743586154657bbd9655a7f03ce78390ef
+  yard-lint (1.5.1) sha256=41d194855b4f54aa957a0337720c6f48e252e4a31d7412c46cc94a12399c0149
   zeitwerk (2.7.5) sha256=d8da92128c09ea6ec62c949011b00ed4a20242b255293dd66bf41545398f73dd
 
 RUBY VERSION

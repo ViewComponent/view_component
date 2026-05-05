@@ -1,0 +1,109 @@
+# YARD-Lint Configuration
+# See https://github.com/mensfeld/yard-lint for documentation
+#
+# Starting with minimal enforcement (Warnings/UnknownTag only).
+# Additional validators can be enabled in subsequent PRs.
+
+AllValidators:
+  YardOptions:
+    - --plugin
+    - activesupport-concern
+
+  Exclude:
+    - 'vendor/**/*'
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'performance/**/*'
+
+  FailOnSeverity: error
+
+Documentation/UndocumentedObjects:
+  Enabled: false
+
+Documentation/UndocumentedMethodArguments:
+  Enabled: false
+
+Documentation/UndocumentedBooleanMethods:
+  Enabled: false
+
+Documentation/UndocumentedOptions:
+  Enabled: false
+
+Documentation/MissingReturn:
+  Enabled: false
+
+Documentation/MarkdownSyntax:
+  Enabled: false
+
+Documentation/EmptyCommentLine:
+  Enabled: false
+
+Documentation/BlankLineBeforeDefinition:
+  Enabled: false
+
+Tags/Order:
+  Enabled: false
+
+Tags/InvalidTypes:
+  Enabled: false
+
+Tags/TypeSyntax:
+  Enabled: false
+
+Tags/MeaninglessTag:
+  Enabled: false
+
+Tags/CollectionType:
+  Enabled: false
+
+Tags/TagTypePosition:
+  Enabled: false
+
+Tags/ApiTags:
+  Enabled: false
+
+Tags/OptionTags:
+  Enabled: false
+
+Tags/ExampleSyntax:
+  Enabled: false
+
+Tags/ExampleStyle:
+  Enabled: false
+
+Tags/RedundantParamDescription:
+  Enabled: false
+
+Tags/InformalNotation:
+  Enabled: false
+
+Tags/NonAsciiType:
+  Enabled: false
+
+Tags/TagGroupSeparator:
+  Enabled: false
+
+Tags/ForbiddenTags:
+  Enabled: false
+
+Warnings/UnknownTag:
+  Enabled: true
+  Severity: error
+
+Warnings/UnknownDirective:
+  Enabled: false
+
+Warnings/InvalidTagFormat:
+  Enabled: false
+
+Warnings/InvalidDirectiveFormat:
+  Enabled: false
+
+Warnings/DuplicatedParameterName:
+  Enabled: false
+
+Warnings/UnknownParameterName:
+  Enabled: false
+
+Semantic/AbstractMethods:
+  Enabled: false
