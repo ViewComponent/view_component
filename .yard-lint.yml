@@ -33,7 +33,7 @@ Documentation/MarkdownSyntax:
   Enabled: true
 
 Documentation/EmptyCommentLine:
-  Enabled: false
+  Enabled: true
 
 Documentation/BlankLineBeforeDefinition:
   Enabled: false
