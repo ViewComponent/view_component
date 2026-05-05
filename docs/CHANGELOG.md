@@ -10,6 +10,14 @@ nav_order: 6
 
 ## main
 
+* Fix path traversal vulnerability in `ViewComponentsSystemTestController` where sibling directories sharing a string prefix with the allowed temp directory could bypass the path containment check. The `start_with?` check has been replaced with a separator-aware prefix check, and nefarious path errors now return a 404 instead of an unhandled exception.
+
+    *Joel Hawksley*
+
+* Fix preview route vulnerability where inherited methods on `ViewComponent::Preview` (such as `render_with_template`) could be invoked via the preview URL, allowing arbitrary internal Rails templates to be rendered with attacker-controlled locals and request parameters. `render_args` now raises `AbstractController::ActionNotFound` for any example not explicitly declared on the preview subclass.
+
+    *Joel Hawksley*
+
 * Add `yard-lint` to CI.
 
     *Joel Hawksley*
