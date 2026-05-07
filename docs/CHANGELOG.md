@@ -28,7 +28,6 @@ nav_order: 6
 
     *Joel Hawksley*
 
-
 ## 4.8.0
 
 * Add `compile.view_component` ActiveSupport::Notifications event for eager compilation at boot time.
