@@ -1380,7 +1380,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_partial_with_yield_form
-    assert_includes render_inline(PartialWithYieldFormComponent.new).css('label').to_html, 'world'
+    assert_includes render_inline(PartialWithYieldFormComponent.new).css("label").to_html, "world"
   end
 
   def test_render_partial_with_yield_and_method_call

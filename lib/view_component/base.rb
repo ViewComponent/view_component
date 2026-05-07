@@ -286,10 +286,10 @@ module ViewComponent
     # Temporarily switching to the view context's buffer keeps both in sync.
     #
     # @private
-    def capture(*, **, &block)
+    def capture(...)
       old_output_buffer = @output_buffer
       @output_buffer = view_context.output_buffer if view_context
-      super
+      super(...)
     ensure
       @output_buffer = old_output_buffer
     end
