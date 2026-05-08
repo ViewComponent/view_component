@@ -35,6 +35,7 @@ module ViewComponent
     # ```
     #
     # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
+    #
     # @return [Nokogiri::HTML5]
     def render_inline(component, **args, &block)
       @page = nil
@@ -74,7 +75,9 @@ module ViewComponent
     # @param name [String] The name of the preview to be rendered.
     # @param from [ViewComponent::Preview] The class of the preview to be rendered.
     # @param params [Hash] Parameters to be passed to the preview.
+    #
     # @return [Nokogiri::HTML5]
+    #
     # @note `#rendered_preview` expects a preview to be defined with the same class
     #   name as the calling test, but with `Test` replaced with `Preview`:
     #

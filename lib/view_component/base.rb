@@ -82,6 +82,7 @@ module ViewComponent
     # so helpers, etc work as expected.
     #
     # @param view_context [ActionView::Base] The original view context.
+    #
     # @return [void]
     def set_original_view_context(view_context)
       # noop

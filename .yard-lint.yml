@@ -80,7 +80,7 @@ Tags/NonAsciiType:
   Enabled: true
 
 Tags/TagGroupSeparator:
-  Enabled: false
+  Enabled: true
 
 Tags/ForbiddenTags:
   Enabled: true
