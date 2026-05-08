@@ -36,7 +36,9 @@ Documentation/EmptyCommentLine:
   Enabled: true
 
 Documentation/BlankLineBeforeDefinition:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - 'lib/view_component/config.rb'
 
 Tags/Order:
   Enabled: true
