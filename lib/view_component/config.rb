@@ -19,6 +19,7 @@ module ViewComponent
       end
 
       # @!attribute generate
+      #
       # @return [ActiveSupport::OrderedOptions]
       # The subset of configuration options relating to generators.
       #
@@ -95,6 +96,7 @@ module ViewComponent
       # in `spec/views/components/` rather than the default `spec/components/`.
 
       # @!attribute previews
+      #
       # @return [ActiveSupport::OrderedOptions]
       # The subset of configuration options relating to previews.
       #
@@ -124,6 +126,7 @@ module ViewComponent
       #
 
       # @!attribute instrumentation_enabled
+      #
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
@@ -171,6 +174,7 @@ module ViewComponent
     end
 
     # @!attribute current
+    #
     # @return [ViewComponent::Config]
     # Returns the current ViewComponent::Config. This is persisted against this
     # class so that config options remain accessible before the rest of

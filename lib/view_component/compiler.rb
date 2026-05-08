@@ -58,6 +58,7 @@ module ViewComponent
     end
 
     # @param requested_details [ActionView::TemplateDetails::Requested] i.e. locales, formats, variants
+    #
     # @return all matching compiled templates, in priority order based on the requested details from LookupContext
     def find_templates_for(requested_details)
       filtered_templates = @templates.select do |template|
