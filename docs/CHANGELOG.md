@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.10.0
+
 * Fix `NameError: uninitialized constant ViewComponent::SystemTestControllerNefariousPathError` when booting in the test environment with `eager_load = true`.
 
     *Joel Hawksley*
