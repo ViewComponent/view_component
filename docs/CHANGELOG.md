@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix `NameError: uninitialized constant ViewComponent::SystemTestControllerNefariousPathError` when booting in the test environment with `eager_load = true`.
+
+    *Joel Hawksley*
+
 * Fix yielded content rendered at wrong location when using form helpers.
 
     *Joel Hawksley*, *Markus*
