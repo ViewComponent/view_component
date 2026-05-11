@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "view_component/errors"
+
 class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
   if Rails.env.test?
     before_action :validate_file_path
