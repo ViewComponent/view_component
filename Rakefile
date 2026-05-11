@@ -130,6 +130,33 @@ namespace :docs do
   end
 end
 
+desc "Verify the app boots with eager_load=true (catches missing requires)"
+task :eager_load_check do
+  puts "Checking eager loading..."
+  # Boot a minimal Rails app with eager_load enabled. Using a bare app (no
+  # components) ensures Zeitwerk doesn't accidentally autoload
+  # ViewComponent::Base before processing the engine's controllers — exactly
+  # the scenario that triggers NameError in a fresh host application.
+  result = system(
+    {"RAILS_ENV" => "test"},
+    "bundle", "exec", "ruby", "-e", <<~RUBY
+      require "rails"
+      require "action_controller/railtie"
+      require "view_component"
+
+      class EagerLoadCheckApp < Rails::Application
+        config.eager_load = true
+        config.secret_key_base = "test"
+        config.hosts.clear
+      end
+
+      EagerLoadCheckApp.initialize!
+    RUBY
+  )
+  abort("Eager loading check failed!") unless result
+  puts "Eager loading check passed"
+end
+
 task :all_tests do
   ENV["RAILS_ENV"] = "test"
 
@@ -141,6 +168,10 @@ task :all_tests do
     end
   end
 
+  puts "Checking eager loading"
+  Rake::Task["eager_load_check"].invoke
+  puts
+  puts
   puts "Running Minitests"
   Rake::Task["test"].invoke
   puts
