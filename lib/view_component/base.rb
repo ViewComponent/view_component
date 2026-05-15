@@ -98,13 +98,12 @@ module ViewComponent
     # Entrypoint for rendering components.
     #
     # - `view_context`: ActionView context from calling view
-    # - `options`: optional render options (e.g., locals)
     # - `block`: optional block to be captured within the view context
     #
     # Returns HTML that has been escaped by the respective template handler.
     #
     # @return [String]
-    def render_in(view_context, **options, &block)
+    def render_in(view_context, **_, &block)
       self.class.__vc_compile(raise_errors: true)
 
       @view_context = view_context
