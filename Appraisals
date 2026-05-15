@@ -56,7 +56,7 @@ appraise "rails-main" do
   end
 end
 
-appraise "rails-main-head" do
+appraise "rails-main_head" do
   ruby "4.1.0.dev"
 
   gem "rack", git: "https://github.com/rack/rack", ref: "8a4475a9f416a72e5b02bd7817e4a8ed684f29b0"
