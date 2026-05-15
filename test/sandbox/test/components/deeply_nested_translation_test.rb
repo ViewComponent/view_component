@@ -28,6 +28,23 @@ class DeeplyNestedTranslationTest < ViewComponent::TestCase
     assert_includes result.to_html, "Menu Action from Partial"
   end
 
+  # Tests a nested lambda-backed slot, where the translation is defined in a partial
+  # but rendered inside a lambda slot on a nested child component.
+  #
+  # Structure:
+  #   Partial (_lambda_slot_translation.html.erb)
+  #     └─> LambdaSlotOuterComponent (Level 1)
+  #         └─> outer.with_inner → LambdaSlotInnerComponent (Level 2)
+  #             └─> inner.with_aside → lambda-backed slot (Level 3)
+  #                 └─> t(".lambda_action") ← Translation should resolve to partial's scope
+  #
+  # This exercises the lambda-backed slot path in Slotable#__vc_set_slot.
+  def test_translation_in_nested_lambda_backed_slot
+    result = render_inline(LambdaSlotTranslationWrapperComponent.new)
+
+    assert_includes result.to_html, "Lambda Action from Partial"
+  end
+
   # Tests 5 levels of nesting to prove the fix works for arbitrary depth
   #
   # Structure:
