@@ -20,6 +20,7 @@
 /test/tmp/*
 /.yardoc
 .DS_Store
+/log/*
 
 ## Specific to RubyMotion:
 .dat*
