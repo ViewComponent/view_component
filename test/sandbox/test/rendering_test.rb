@@ -799,7 +799,7 @@ class RenderingTest < ViewComponent::TestCase
         MissingCollectionParameterWithActiveModelComponent.with_collection([Product.new(name: "Mints")])
       )
     end
-    
+
     # Rails main raises ActiveModel::UnknownAttributeError before ViewComponent can check
     assert [ViewComponent::MissingCollectionArgumentError, ActiveModel::UnknownAttributeError].include?(error.class)
   end
