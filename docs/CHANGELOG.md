@@ -14,6 +14,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Fix translation scope resolution in nested lambda-backed slots. Relative `t(".key")` calls inside lambda-backed slots were resolving against an intermediate component's scope instead of the original partial's scope where the block was defined.
+
+    *Artin Boghosian*
+
 ## 4.10.0
 
 * Fix `NameError: uninitialized constant ViewComponent::SystemTestControllerNefariousPathError` when booting in the test environment with `eager_load = true`.

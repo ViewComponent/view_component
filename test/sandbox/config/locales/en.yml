@@ -32,6 +32,8 @@ en:
       menu_action: Menu Action from Partial
     deep_navigation:
       deep_action: Deep Action from Partial (5 levels!)
+    lambda_slot_translation:
+      lambda_action: Lambda Action from Partial
 
   rendering_test:
     i18n_test_component:

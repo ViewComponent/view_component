@@ -1,0 +1,7 @@
+<%= render LambdaSlotOuterComponent.new do |outer| %>
+  <% outer.with_inner do |inner| %>
+    <% inner.with_aside do %>
+      <%= t(".lambda_action") %>
+    <% end %>
+  <% end %>
+<% end %>
