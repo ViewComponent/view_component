@@ -10,6 +10,11 @@ nav_order: 6
 
 ## main
 
+* Update `render_in` signature to accept `**_` for compatibility with Rails [#50623](https://github.com/rails/rails/pull/50623).
+
+    *Joel Hawksley*
+
+
 ## 4.10.0
 
 * Fix `NameError: uninitialized constant ViewComponent::SystemTestControllerNefariousPathError` when booting in the test environment with `eager_load = true`.
