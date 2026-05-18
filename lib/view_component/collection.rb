@@ -10,7 +10,7 @@ module ViewComponent
 
     delegate :size, to: :@collection
 
-    def render_in(view_context, &block)
+    def render_in(view_context, **_, &block)
       components.map do |component|
         component.render_in(view_context, &block)
       end.join(rendered_spacer(view_context)).html_safe

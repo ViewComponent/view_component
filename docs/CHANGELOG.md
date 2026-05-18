@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Update `render_in` signature to accept `**_` for compatibility with Rails [#50623](https://github.com/rails/rails/pull/50623).
+
+    *Joel Hawksley*
+
 * Fix translation scope resolution in nested lambda-backed slots. Relative `t(".key")` calls inside lambda-backed slots were resolving against an intermediate component's scope instead of the original partial's scope where the block was defined.
 
     *Artin Boghosian*
