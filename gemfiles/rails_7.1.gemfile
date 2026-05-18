@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-ruby "~> 3.2.0"
+ruby "~> 3.2"
 
 gem "rails", "~> 7.1.0"
 
@@ -17,11 +17,13 @@ group :development, :test do
   gem "cuprite"
   gem "dry-initializer", require: true
   gem "erb_lint"
-  gem "haml", "~> 6"
+  gem "haml", "~> 7"
   gem "jbuilder", "~> 2"
   gem "m", "~> 1"
   gem "method_source", "~> 1"
-  gem "minitest", "~> 5"
+  gem "minitest", "~> 6"
+  gem "minitest-mock"
+  gem "nokogiri", "1.19.3"
   gem "propshaft", "~> 1"
   gem "puma", ">= 6"
   gem "rake", "~> 13"
@@ -40,6 +42,7 @@ group :development, :test do
   gem "turbo-rails", "~> 1"
   gem "warning"
   gem "yard-activesupport-concern", "< 1"
+  gem "yard-lint", "~> 1.5"
   gem "yard", "< 1"
 end
 
