@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.11.0
+
 * Update `render_in` signature to accept `**_` for compatibility with Rails [#50623](https://github.com/rails/rails/pull/50623).
 
     *Joel Hawksley*
