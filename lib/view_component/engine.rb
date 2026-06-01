@@ -79,8 +79,8 @@ module ViewComponent
 
     initializer "view_component.serializable" do
       ActiveSupport.on_load(:active_job) do
-        require "view_component/serializable_serializer"
-        ActiveJob::Serializers.add_serializers(ViewComponent::SerializableSerializer)
+        require "view_component/active_job_serializer"
+        ActiveJob::Serializers.add_serializers(ViewComponent::ActiveJobSerializer)
       end
     end
 
