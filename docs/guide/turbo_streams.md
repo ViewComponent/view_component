@@ -30,9 +30,7 @@ end
 
 To broadcast asynchronously via ActiveJob (using `broadcast_action_later_to`), components must be serializable so they can be passed to the background job.
 
-### Setup
-
-Include `ViewComponent::Serializable` in the component and use `.serializable` instead of `.new` when broadcasting:
+Include `ViewComponent::Serializable` in the component and use `.render_later` instead of `.new` when broadcasting:
 
 ```ruby
 class MessageComponent < ViewComponent::Base
@@ -41,20 +39,8 @@ class MessageComponent < ViewComponent::Base
   def initialize(message:)
     @message = message
   end
-
-  erb_template <<~ERB
-    <div id="<%= dom_id(@message) %>">
-      <%= @message.body %>
-    </div>
-  ERB
 end
-```
 
-### Broadcasting
-
-Use `.serializable` to create a component instance that can be serialized by ActiveJob:
-
-```ruby
 class Message < ApplicationRecord
   after_create_commit :broadcast_append
 
@@ -65,7 +51,7 @@ class Message < ApplicationRecord
       "messages",
       action: :append,
       target: "messages",
-      renderable: MessageComponent.serializable(message: self),
+      renderable: MessageComponent.render_later(message: self),
       layout: false
     )
   end
@@ -74,14 +60,37 @@ end
 
 The component is serialized when the job is enqueued and deserialized when the job runs. The job renders the component via `ApplicationController.render` and broadcasts the resulting HTML over ActionCable.
 
+### Slots
+
+Slot calls made on the proxy are captured and replayed at render time. Slots must use a component class — passthrough slots that accept blocks are not supported because blocks cannot be serialized.
+
+```ruby
+class CardComponent < ViewComponent::Base
+  class BodyComponent < ViewComponent::Base
+    def initialize(text:)
+      @text = text
+    end
+  end
+
+  renders_many :bodies, BodyComponent
+end
+
+proxy = CardComponent.render_later(title: "Updates")
+proxy.with_body(text: "First item")
+proxy.with_body(text: "Second item")
+
+Turbo::StreamsChannel.broadcast_action_later_to("cards", renderable: proxy, ...)
+```
+
+Passing a block to a slot call raises `ViewComponent::Serializable::UnserializableError` immediately.
+
 ### How it works
 
-- `.serializable(**kwargs)` creates a normal component instance and stores the keyword arguments for later serialization.
-- `ViewComponent::SerializableSerializer` (an ActiveJob serializer) handles converting the component to and from a JSON-safe format. It's automatically registered when ActiveJob is loaded.
-- ActiveRecord objects passed as keyword arguments are serialized via GlobalID, just like any other ActiveJob argument.
+- `.render_later(*args, **kwargs)` returns a `ViewComponent::Serializable::Proxy` that stores the component class and initialization arguments without instantiating the component.
+- `ViewComponent::ActiveJobSerializer` handles converting the proxy to and from a JSON-safe format. It is automatically registered when ActiveJob is loaded.
+- ActiveRecord objects passed as arguments are serialized via GlobalID, just like any other ActiveJob argument.
 
 ### Limitations
 
-- Only keyword arguments passed to `.serializable` are serialized. Slots, `with_content`, and other state set after initialization are not included.
-- Components must be instantiated with `.serializable` instead of `.new` for serialization to work. Instances created with `.new` are not serializable.
+- Blocks passed to `render_in` or to slot calls raise `ViewComponent::Serializable::UnserializableError`. Use component-based slots instead.
 - The component class must be `safe_constantize`-able at deserialization time (i.e., it must be autoloadable).
