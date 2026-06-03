@@ -409,10 +409,10 @@ GEM
     yard (0.9.44)
     yard-activesupport-concern (0.0.1)
       yard (>= 0.8)
-    yard-lint (1.5.1)
+    yard-lint (1.5.2)
       yard (~> 0.9)
       zeitwerk (~> 2.6)
-    zeitwerk (2.7.5)
+    zeitwerk (2.8.2)
 
 PLATFORMS
   aarch64-linux-gnu
@@ -626,8 +626,8 @@ CHECKSUMS
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yard (0.9.44) sha256=eb087e9b631ccd887b049f303d489963945452d5e2a7eb49a5a74a7cf6887f28
   yard-activesupport-concern (0.0.1) sha256=be790cb0efc23e2e87677063598ac8b743586154657bbd9655a7f03ce78390ef
-  yard-lint (1.5.1) sha256=41d194855b4f54aa957a0337720c6f48e252e4a31d7412c46cc94a12399c0149
-  zeitwerk (2.7.5) sha256=d8da92128c09ea6ec62c949011b00ed4a20242b255293dd66bf41545398f73dd
+  yard-lint (1.5.2) sha256=bbb37c45babdba61d7fb18b2c40ad4136760413cfcf4e9becd9390a36c60792b
+  zeitwerk (2.8.2) sha256=7212a61311083c604184b1ea2574b9aa05cd14f855a0841c06985cabe9181d12
 
 RUBY VERSION
   ruby 4.1.0.dev
