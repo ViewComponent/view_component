@@ -1,19 +1,22 @@
 # frozen_string_literal: true
 
 require "action_view/renderer/collection_renderer"
+require "action_view/helpers/output_safety_helper"
 
 module ViewComponent
   class Collection
     include Enumerable
+    include ActionView::Helpers::OutputSafetyHelper
 
     attr_reader :component
 
     delegate :size, to: :@collection
 
     def render_in(view_context, **_, &block)
-      components.map do |component|
+      rendered = components.map do |component|
         component.render_in(view_context, &block)
-      end.join(rendered_spacer(view_context)).html_safe
+      end
+      safe_join(rendered, rendered_spacer(view_context))
     end
 
     def each(&block)

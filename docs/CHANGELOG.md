@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+* [GHSA-97jw-64cj-jc58] Fix HTML-safety bypass in `around_render`. `ViewComponent::Base#around_render` could return HTML-unsafe strings that bypassed the escaping applied to normal `#call` return values, creating an XSS risk. The vulnerability was amplified in `ViewComponent::Collection#render_in`, which joined per-item results and unconditionally marked the output `html_safe`. HTML-unsafe strings returned from `around_render` are now escaped (with a warning) and `Collection#render_in` now uses `safe_join` so unsafe per-item output is escaped instead of laundered into a `SafeBuffer`.
+
 ## 4.11.0
 
 * Update `render_in` signature to accept `**_` for compatibility with Rails [#50623](https://github.com/rails/rails/pull/50623).

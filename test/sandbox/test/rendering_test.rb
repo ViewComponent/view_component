@@ -1377,6 +1377,18 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("Hi!")
   end
 
+  def test_around_render_html_unsafe_output_is_escaped
+    warnings = capture_warnings { render_inline(UnsafeAroundRenderComponent.new) }
+
+    assert_includes @rendered_content, "&lt;script&gt;alert(1)&lt;/script&gt;"
+    refute_includes @rendered_content, "<script>"
+    assert_predicate @rendered_content, :html_safe?
+    assert(
+      warnings.any? { |warning| warning.include?("around_render returned an HTML-unsafe string") },
+      "Rendering UnsafeAroundRenderComponent did not emit an HTML safety warning"
+    )
+  end
+
   def test_render_partial_with_yield
     render_inline(PartialWithYieldComponent.new)
     assert_text "hello world", exact: true, normalize_ws: true

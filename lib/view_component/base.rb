@@ -142,10 +142,21 @@ module ViewComponent
         value = nil
 
         @output_buffer.with_buffer do
-          rendered_template =
-            around_render do
-              render_template_for(@__vc_requested_details).to_s
-            end
+          inner_rendered_template = nil
+          around_rendered_template = around_render do
+            inner_rendered_template = render_template_for(@__vc_requested_details).to_s
+          end
+
+          # If `around_render` returned the same object the block yielded, the inner
+          # template's escaping is authoritative and we can trust the result. If the
+          # user replaced/wrapped the value, re-check HTML safety to prevent
+          # bypassing the escaping applied to normal `#call` return values
+          # (GHSA-97jw-64cj-jc58).
+          rendered_template = if around_rendered_template.equal?(inner_rendered_template)
+            around_rendered_template
+          else
+            __vc_safe_around_render_output(around_rendered_template)
+          end
 
           # Avoid allocating new string when output_preamble and output_postamble are blank
           value = if output_preamble.blank? && output_postamble.blank?
@@ -441,6 +452,12 @@ module ViewComponent
     def __vc_safe_output_postamble
       __vc_maybe_escape_html(output_postamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
+      end
+    end
+
+    def __vc_safe_around_render_output(output)
+      __vc_maybe_escape_html(output) do
+        Kernel.warn("WARNING: The #{self.class} component's around_render returned an HTML-unsafe string. The output will be automatically escaped, but you may want to investigate.")
       end
     end
 
