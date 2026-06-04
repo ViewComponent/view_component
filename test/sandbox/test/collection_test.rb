@@ -46,5 +46,15 @@ module ViewComponent
       render_inline(ProductComponent.with_collection(@products, spacer_component: SpacerComponent.new))
       assert_selector("hr", count: 1)
     end
+
+    def test_collection_escapes_html_unsafe_around_render_output
+      capture_warnings do
+        render_inline(UnsafeAroundRenderComponent.with_collection([1, 2]))
+      end
+
+      refute_includes @rendered_content, "<script>"
+      assert_includes @rendered_content, "&lt;script&gt;alert(1)&lt;/script&gt;"
+      assert_predicate @rendered_content, :html_safe?
+    end
   end
 end

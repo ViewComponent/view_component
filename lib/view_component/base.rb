@@ -106,22 +106,24 @@ module ViewComponent
     def render_in(view_context, **_, &block)
       self.class.__vc_compile(raise_errors: true)
 
+      __vc_reset_render_state!
+
       @view_context = view_context
       @old_virtual_path = view_context.instance_variable_get(:@virtual_path)
-      self.__vc_original_view_context ||= view_context
+      self.__vc_original_view_context = view_context
 
       @output_buffer = view_context.output_buffer
 
-      @lookup_context ||= view_context.lookup_context
+      @lookup_context = view_context.lookup_context
 
       # For content_for
-      @view_flow ||= view_context.view_flow
+      @view_flow = view_context.view_flow
 
       # For i18n
       @virtual_path ||= virtual_path
 
       # Describes the inferred request constraints (locales, formats, variants)
-      @__vc_requested_details ||= @lookup_context.vc_requested_details
+      @__vc_requested_details = @lookup_context.vc_requested_details
 
       # For caching, such as #cache_if
       @current_template = nil unless defined?(@current_template)
@@ -142,10 +144,21 @@ module ViewComponent
         value = nil
 
         @output_buffer.with_buffer do
-          rendered_template =
-            around_render do
-              render_template_for(@__vc_requested_details).to_s
-            end
+          inner_rendered_template = nil
+          around_rendered_template = around_render do
+            inner_rendered_template = render_template_for(@__vc_requested_details).to_s
+          end
+
+          # If `around_render` returned the same object the block yielded, the inner
+          # template's escaping is authoritative and we can trust the result. If the
+          # user replaced/wrapped the value, re-check HTML safety to prevent
+          # bypassing the escaping applied to normal `#call` return values
+          # (GHSA-97jw-64cj-jc58).
+          rendered_template = if around_rendered_template.equal?(inner_rendered_template)
+            around_rendered_template
+          else
+            __vc_safe_around_render_output(around_rendered_template)
+          end
 
           # Avoid allocating new string when output_preamble and output_postamble are blank
           value = if output_preamble.blank? && output_postamble.blank?
@@ -441,6 +454,28 @@ module ViewComponent
     def __vc_safe_output_postamble
       __vc_maybe_escape_html(output_postamble) do
         Kernel.warn("WARNING: The #{self.class} component was provided an HTML-unsafe postamble. The postamble will be automatically escaped, but you may want to investigate.")
+      end
+    end
+
+    def __vc_safe_around_render_output(output)
+      __vc_maybe_escape_html(output) do
+        Kernel.warn("WARNING: The #{self.class} component's around_render returned an HTML-unsafe string. The output will be automatically escaped, but you may want to investigate.")
+      end
+    end
+
+    # Resets every render-scoped instance variable derived from the calling view
+    # context so a reused instance cannot leak controller/helper/request/format
+    # state from a previous render. Slot state (`@__vc_set_slots`,
+    # `@__vc_content_set_by_with_content`) is intentionally preserved because it
+    # is populated by callers _before_ `render_in` runs (e.g. via `with_*`
+    # slot setters or `with_content`).
+    def __vc_reset_render_state!
+      %i[
+        @__vc_controller
+        @__vc_helpers
+        @__vc_request
+      ].each do |ivar|
+        remove_instance_variable(ivar) if instance_variable_defined?(ivar)
       end
     end
 
