@@ -65,7 +65,10 @@ module ViewComponent
     # @param view_context [ActionView::Base] The original view context.
     # @return [void]
     def set_original_view_context(view_context)
-      self.__vc_original_view_context = view_context
+      # Stash on a separate ivar that survives `__vc_reset_render_state!` so a
+      # parent component can call `set_original_view_context` immediately before
+      # `render_in` without having that value clobbered by the per-render reset.
+      @__vc_pending_original_view_context = view_context
     end
 
     # Entrypoint for rendering components.
@@ -79,24 +82,31 @@ module ViewComponent
     def render_in(view_context, &block)
       self.class.compile(raise_errors: true)
 
+      __vc_reset_render_state!
+
       @view_context = view_context
-      self.__vc_original_view_context ||= view_context
+      self.__vc_original_view_context =
+        if instance_variable_defined?(:@__vc_pending_original_view_context)
+          remove_instance_variable(:@__vc_pending_original_view_context)
+        else
+          view_context
+        end
 
       @output_buffer = ActionView::OutputBuffer.new
 
-      @lookup_context ||= view_context.lookup_context
+      @lookup_context = view_context.lookup_context
 
       # required for path helpers in older Rails versions
-      @view_renderer ||= view_context.view_renderer
+      @view_renderer = view_context.view_renderer
 
       # For content_for
-      @view_flow ||= view_context.view_flow
+      @view_flow = view_context.view_flow
 
       # For i18n
       @virtual_path ||= virtual_path
 
       # For template variants (+phone, +desktop, etc.)
-      @__vc_variant ||= @lookup_context.variants.first
+      @__vc_variant = @lookup_context.variants.first
 
       # For caching, such as #cache_if
       @current_template = nil unless defined?(@current_template)
@@ -393,6 +403,23 @@ module ViewComponent
     # Defaults to nil. If this is falsy, generators will use
     # "ApplicationComponent" if defined, "ViewComponent::Base" otherwise.
     #
+
+    # Resets every render-scoped instance variable derived from the calling view
+    # context so a reused instance cannot leak controller/helper/request/format
+    # state from a previous render. Slot state (`@__vc_set_slots`,
+    # `@__vc_content_set_by_with_content`) is intentionally preserved because it
+    # is populated by callers _before_ `render_in` runs (e.g. via `with_*`
+    # slot setters or `with_content`).
+    def __vc_reset_render_state!
+      %i[
+        @__vc_controller
+        @__vc_helpers
+        @__vc_request
+        @__vc_original_view_context
+      ].each do |ivar|
+        remove_instance_variable(ivar) if instance_variable_defined?(ivar)
+      end
+    end
 
     # Configuration for generators.
     #

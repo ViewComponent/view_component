@@ -10,6 +10,20 @@ nav_order: 6
 
 ## main
 
+### 3.25.0
+
+* Fix stale render context on reused component instances. A `ViewComponent::Base` instance memoized its controller, helpers, request, view context, lookup context, view flow, and requested format/variant on first render via `||=`. Rendering the same instance a second time (intentionally or via aliasing) reused that stale context, which could leak data across requests, sessions, or users. `#render_in` now resets these ivars on every call so each render derives its context from the current view.
+
+    *Joel Hawksley*
+
+* Fix path traversal vulnerability in `ViewComponentsSystemTestController` where sibling directories sharing a string prefix with the allowed temp directory could bypass the path containment check. The `start_with?` check has been replaced with a separator-aware prefix check, and nefarious path errors now return a 404 instead of an unhandled exception.
+
+    *Joel Hawksley*
+
+* Fix preview route vulnerability where inherited methods on `ViewComponent::Preview` (such as `render_with_template`) could be invoked via the preview URL, allowing arbitrary internal Rails templates to be rendered with attacker-controlled locals and request parameters. `render_args` now raises `AbstractController::ActionNotFound` for any example not explicitly declared on the preview subclass.
+
+    *Joel Hawksley*
+
 ## 3.24.0
 
 * Add Rails 8.1 support to ViewComponent v3.

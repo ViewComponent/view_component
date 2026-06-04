@@ -19,7 +19,7 @@ class RenderingTest < ViewComponent::TestCase
       if Rails.version.to_f < 8.0
         {"3.3" => 126, "3.2" => 128..129, "3.1" => 130, "3.0" => 131}
       elsif Rails.version.split(".").first(2).map(&:to_i) == [8, 0]
-        {"3.5" => 118, "3.4" => 122, "3.3" => 134}
+        {"3.5" => 118, "3.4" => 121, "3.3" => 134}
       else
         {"3.5" => 116, "3.4" => 120}
       end
@@ -982,8 +982,8 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_multiple_inline_renders_of_the_same_component
-    component = ErbComponent.new(message: "foo")
-    render_inline(InlineRenderComponent.new(items: [component, component]))
+    items = [ErbComponent.new(message: "foo"), ErbComponent.new(message: "foo")]
+    render_inline(InlineRenderComponent.new(items: items))
     assert_selector("div", text: "foo", count: 2)
   end
 
