@@ -14,7 +14,8 @@ module ViewComponent
         ActiveSupport::OrderedOptions.new.merge!({
           generate: default_generate_options,
           previews: default_previews_options,
-          instrumentation_enabled: false
+          instrumentation_enabled: false,
+          raise_on_reused_instances: true
         })
       end
 
@@ -130,6 +131,15 @@ module ViewComponent
       # @return [Boolean]
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
+
+      # @!attribute raise_on_reused_instances
+      #
+      # @return [Boolean]
+      # Whether to raise `ViewComponent::ReusedInstanceError` when the same
+      # component instance is rendered more than once. Reusing a component
+      # instance across renders can leak request-scoped state from an earlier
+      # render into a later one (GHSA). Defaults to `true`. Set to `false` to
+      # emit a warning instead of raising, for a one-release migration window.
 
       def default_preview_paths
         (default_rails_preview_paths + default_rails_engines_preview_paths).uniq

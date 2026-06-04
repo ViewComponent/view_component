@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+* Fix stale render context on reused component instances. A `ViewComponent::Base` instance memoized its controller, helpers, request, view context, lookup context, view flow, and requested format details on first render via `||=`. Rendering the same instance a second time (intentionally or via aliasing) reused that stale context, which could leak data across requests, sessions, or users. `#render_in` now resets these ivars on every call and raises `ViewComponent::ReusedInstanceError` if the same instance is rendered more than once. The guard can be disabled with `config.view_component.raise_on_reused_instances = false` (a deprecation warning is emitted instead and state is still refreshed).
+
 * [GHSA-97jw-64cj-jc58] Fix HTML-safety bypass in `around_render`. `ViewComponent::Base#around_render` could return HTML-unsafe strings that bypassed the escaping applied to normal `#call` return values, creating an XSS risk. The vulnerability was amplified in `ViewComponent::Collection#render_in`, which joined per-item results and unconditionally marked the output `html_safe`. HTML-unsafe strings returned from `around_render` are now escaped (with a warning) and `Collection#render_in` now uses `safe_join` so unsafe per-item output is escaped instead of laundered into a `SafeBuffer`.
 
 ## 4.11.0

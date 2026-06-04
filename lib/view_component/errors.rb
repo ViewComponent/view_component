@@ -179,6 +179,21 @@ module ViewComponent
       "To fix this issue, pass a value."
   end
 
+  class ReusedInstanceError < StandardError
+    MESSAGE =
+      "ViewComponent instances are single-use; a COMPONENT instance was rendered more than once.\n\n" \
+      "Reusing a component instance across renders can leak request-scoped state " \
+      "(controller, helpers, request, view_flow, format/variant) from an earlier render " \
+      "into a later one, which has security and correctness implications (GHSA).\n\n" \
+      "To fix this issue, create a new component instance per render. " \
+      "To temporarily restore the previous behavior (with a warning), set " \
+      "`config.view_component.raise_on_reused_instances = false`."
+
+    def initialize(klass_name)
+      super(MESSAGE.gsub("COMPONENT", klass_name.to_s))
+    end
+  end
+
   class TranslateCalledBeforeRenderError < BaseError
     MESSAGE =
       "`#translate` can't be used before rendering as it depends " \

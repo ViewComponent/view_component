@@ -33,15 +33,15 @@ module ViewComponent
 
     private
 
+    # Always rebuild child component instances per render to avoid leaking
+    # request-scoped state from a previous render into a later one (GHSA).
     def components
-      return @components if defined? @components
-
       iterator = ActionView::PartialIteration.new(@collection.size)
 
       component.__vc_validate_collection_parameter!(validate_default: true)
 
-      @components = @collection.map do |item|
-        component.new(**component_options(item, iterator)).tap do |component|
+      @collection.map do |item|
+        component.new(**component_options(item, iterator)).tap do |_|
           iterator.iterate!
         end
       end
@@ -70,12 +70,17 @@ module ViewComponent
       @options.merge(item_options)
     end
 
+    # Render the spacer through a fresh `dup` so a collection rendered multiple
+    # times does not reuse (and trip the single-render guard on) the spacer
+    # instance passed by the caller.
     def rendered_spacer(view_context)
-      if @spacer_component
-        @spacer_component.render_in(view_context)
-      else
-        ""
+      return "" unless @spacer_component
+
+      spacer = @spacer_component.dup
+      if spacer.instance_variable_defined?(:@__vc_rendered)
+        spacer.remove_instance_variable(:@__vc_rendered)
       end
+      spacer.render_in(view_context)
     end
   end
 end

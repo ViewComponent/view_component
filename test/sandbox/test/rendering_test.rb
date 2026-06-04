@@ -1075,8 +1075,8 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_multiple_inline_renders_of_the_same_component
-    component = ErbComponent.new(message: "foo")
-    render_inline(InlineRenderComponent.new(items: [component, component]))
+    items = [ErbComponent.new(message: "foo"), ErbComponent.new(message: "foo")]
+    render_inline(InlineRenderComponent.new(items: items))
     assert_selector("div", text: "foo", count: 2)
   end
 
