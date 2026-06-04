@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Fix stale render context on reused component instances. A `ViewComponent::Base` instance memoized its controller, helpers, request, view context, lookup context, view flow, and requested format details on first render via `||=`. Rendering the same instance a second time (intentionally or via aliasing) reused that stale context, which could leak data across requests, sessions, or users. `#render_in` now resets these ivars on every call and raises `ViewComponent::ReusedInstanceError` if the same instance is rendered more than once. The guard can be disabled with `config.view_component.raise_on_reused_instances = false` (a deprecation warning is emitted instead and state is still refreshed).
+* Fix stale render context on reused component instances. A `ViewComponent::Base` instance memoized its controller, helpers, request, view context, lookup context, view flow, and requested format details on first render via `||=`. Rendering the same instance a second time (intentionally or via aliasing) reused that stale context, which could leak data across requests, sessions, or users. `#render_in` now resets these ivars on every call so each render derives its context from the current view.
 
     *Joel Hawksley*
 

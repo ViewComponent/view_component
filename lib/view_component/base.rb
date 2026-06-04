@@ -106,7 +106,6 @@ module ViewComponent
     def render_in(view_context, **_, &block)
       self.class.__vc_compile(raise_errors: true)
 
-      __vc_check_reused_instance!
       __vc_reset_render_state!
 
       @view_context = view_context
@@ -181,7 +180,6 @@ module ViewComponent
     ensure
       view_context.instance_variable_set(:@virtual_path, @old_virtual_path)
       @current_template = old_current_template
-      @__vc_rendered = true
     end
 
     # Subclass components that call `super` inside their template code will cause a
@@ -462,23 +460,6 @@ module ViewComponent
     def __vc_safe_around_render_output(output)
       __vc_maybe_escape_html(output) do
         Kernel.warn("WARNING: The #{self.class} component's around_render returned an HTML-unsafe string. The output will be automatically escaped, but you may want to investigate.")
-      end
-    end
-
-    # Raises (or warns) when a component instance is rendered more than once.
-    # See `ViewComponent::ReusedInstanceError`.
-    def __vc_check_reused_instance!
-      return unless defined?(@__vc_rendered) && @__vc_rendered
-
-      if ViewComponent::Base.config.raise_on_reused_instances
-        raise ReusedInstanceError.new(self.class.name)
-      else
-        Kernel.warn(
-          "WARNING: ViewComponent instance of #{self.class} was rendered more than once. " \
-          "Reusing component instances across renders can leak request-scoped state " \
-          "from an earlier render into a later one (GHSA). " \
-          "Create a new component instance per render to silence this warning."
-        )
       end
     end
 
