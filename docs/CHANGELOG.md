@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Revert `Fix yielded content rendered at wrong location when using form helpers.`
+
+    *Joel Hawksley*
+
 ## 4.11.0
 
 * Update `render_in` signature to accept `**_` for compatibility with Rails [#50623](https://github.com/rails/rails/pull/50623).
