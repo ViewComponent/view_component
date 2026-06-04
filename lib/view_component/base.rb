@@ -295,6 +295,28 @@ module ViewComponent
       @output_buffer = old_output_buffer
     end
 
+    # Override with_output_buffer so that compiled ERB blocks (which write to
+    # the component's @output_buffer ivar) write to the same temporary buffer
+    # that Rails' capture relies on. Without this override, when capture is
+    # invoked on the component, the ERB-facing @output_buffer ivar and the
+    # CaptureHelper-managed buffer get out of sync, so block content either
+    # leaks into the outer buffer or fails to be captured.
+    #
+    # @private
+    def with_output_buffer(buf = nil)
+      unless buf
+        buf = ActionView::OutputBuffer.new
+        buf.force_encoding(@output_buffer.encoding) if @output_buffer
+      end
+
+      old_output_buffer = @output_buffer
+      @output_buffer = buf
+      yield
+      @output_buffer
+    ensure
+      @output_buffer = old_output_buffer
+    end
+
     # The current controller. Use sparingly as doing so introduces coupling
     # that inhibits encapsulation & reuse, often making testing difficult.
     #
