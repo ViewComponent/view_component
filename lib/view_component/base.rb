@@ -268,7 +268,7 @@ module ViewComponent
     # @private
     def render(options = {}, args = {}, &block)
       if options.respond_to?(:set_original_view_context)
-        options.set_original_view_context(self.__vc_original_view_context)
+        options.set_original_view_context(__vc_original_view_context)
 
         # We assume options is a component, so there's no need to evaluate the
         # block in the view context as we do below.
