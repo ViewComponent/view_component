@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    view_component (4.11.0)
+    view_component (4.12.0)
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
@@ -466,7 +466,7 @@ DEPENDENCIES
   yard-lint (~> 1.5)
 
 RUBY VERSION
-  ruby 3.4.4p34
+   ruby 3.4.4p34
 
 BUNDLED WITH
-  4.1.0.dev
+   2.6.9
