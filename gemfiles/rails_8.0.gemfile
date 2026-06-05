@@ -2,8 +2,9 @@
 
 source "https://rubygems.org"
 
+ruby "~> 3.4"
+
 gem "rails", "~> 8.0.0"
-gem "cgi", "< 0.5"
 gem "tailwindcss-rails", "~> 2.0"
 gem "propshaft", "~> 1.1.0"
 

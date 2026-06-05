@@ -10,6 +10,10 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_render_inline_allocations
+    # Skip on prerelease Rails (main): upstream allocation counts fluctuate
+    # in ways unrelated to ViewComponent.
+    skip if Rails.gem_version.prerelease?
+
     # Stabilize compilation status ahead of testing allocations to simulate rendering
     # performance with compiled component
     ViewComponent::CompileCache.cache.delete(MyComponent)
