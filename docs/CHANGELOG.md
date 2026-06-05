@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 3.25.0
+
 ### 3.25.0
 
 * Support Rails `render_in` options signature. Rails [#50623](https://github.com/rails/rails/pull/50623) changed the `render_in` signature from `render_in(view_context, &block)` to `render_in(view_context, **options, &block)`. `ViewComponent::Base#render_in`, `ViewComponent::Collection#render_in`, and `ViewComponent::Instrumentation#render_in` now accept `**options`, restoring compatibility with Rails main and silencing the deprecation warning.
