@@ -16,10 +16,10 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
-    def render_in(view_context, &block)
+    def render_in(view_context, **options, &block)
       components.map do |component|
         component.set_original_view_context(__vc_original_view_context)
-        component.render_in(view_context, &block)
+        component.render_in(view_context, **options, &block)
       end.join(rendered_spacer(view_context)).html_safe
     end
 

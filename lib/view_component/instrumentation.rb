@@ -8,7 +8,7 @@ module ViewComponent # :nodoc:
       mod.prepend(self) unless ancestors.include?(ViewComponent::Instrumentation)
     end
 
-    def render_in(view_context, &block)
+    def render_in(view_context, **options, &block)
       ActiveSupport::Notifications.instrument(
         notification_name,
         {
