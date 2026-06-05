@@ -12,6 +12,10 @@ nav_order: 6
 
 ### 3.25.0
 
+* Support Rails `render_in` options signature. Rails [#50623](https://github.com/rails/rails/pull/50623) changed the `render_in` signature from `render_in(view_context, &block)` to `render_in(view_context, **options, &block)`. `ViewComponent::Base#render_in`, `ViewComponent::Collection#render_in`, and `ViewComponent::Instrumentation#render_in` now accept `**options`, restoring compatibility with Rails main and silencing the deprecation warning.
+
+    *Joel Hawksley*
+
 * Fix stale render context on reused component instances. A `ViewComponent::Base` instance memoized its controller, helpers, request, view context, lookup context, view flow, and requested format/variant on first render via `||=`. Rendering the same instance a second time (intentionally or via aliasing) reused that stale context, which could leak data across requests, sessions, or users. `#render_in` now resets these ivars on every call so each render derives its context from the current view.
 
     *Joel Hawksley*
