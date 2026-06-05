@@ -597,7 +597,8 @@ class RenderingTest < ViewComponent::TestCase
       end
 
     component_error_index = (Rails::VERSION::STRING < "8.0") ? 0 : 1
-    assert_match %r{app/components/exception_in_template_component\.html\.erb:2}, error.backtrace[component_error_index]
+    expected_line = (Rails.gem_version >= Gem::Version.new("8.1")) ? 3 : 2
+    assert_match %r{app/components/exception_in_template_component\.html\.erb:#{expected_line}}, error.backtrace[component_error_index]
   end
 
   def test_render_collection
