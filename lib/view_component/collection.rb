@@ -36,7 +36,7 @@ module ViewComponent
     private
 
     # Always rebuild child component instances per render to avoid leaking
-    # request-scoped state from a previous render into a later one (GHSA).
+    # request-scoped state from a previous render into a later one.
     def components
       iterator = ActionView::PartialIteration.new(@collection.size)
 
