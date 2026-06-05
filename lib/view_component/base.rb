@@ -221,7 +221,7 @@ module ViewComponent
     # @private
     def render(options = {}, args = {}, &block)
       if options.respond_to?(:set_original_view_context)
-        options.set_original_view_context(self.__vc_original_view_context)
+        options.set_original_view_context(__vc_original_view_context)
         super
       else
         __vc_original_view_context.render(options, args, &block)
