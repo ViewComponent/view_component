@@ -16,25 +16,11 @@ module ViewComponent
       self.__vc_original_view_context = view_context
     end
 
-    def render_in(view_context, &block)
+    def render_in(view_context, **options, &block)
       components.map do |component|
         component.set_original_view_context(__vc_original_view_context)
-        component.render_in(view_context, &block)
+        component.render_in(view_context, **options, &block)
       end.join(rendered_spacer(view_context)).html_safe
-    end
-
-    def components
-      return @components if defined? @components
-
-      iterator = ActionView::PartialIteration.new(@collection.size)
-
-      component.validate_collection_parameter!(validate_default: true)
-
-      @components = @collection.map do |item|
-        component.new(**component_options(item, iterator)).tap do |component|
-          iterator.iterate!
-        end
-      end
     end
 
     def each(&block)
@@ -48,6 +34,20 @@ module ViewComponent
     end
 
     private
+
+    # Always rebuild child component instances per render to avoid leaking
+    # request-scoped state from a previous render into a later one.
+    def components
+      iterator = ActionView::PartialIteration.new(@collection.size)
+
+      component.validate_collection_parameter!(validate_default: true)
+
+      @collection.map do |item|
+        component.new(**component_options(item, iterator)).tap do |_|
+          iterator.iterate!
+        end
+      end
+    end
 
     def initialize(component, object, spacer_component, **options)
       @component = component
@@ -74,7 +74,7 @@ module ViewComponent
 
     def rendered_spacer(view_context)
       if @spacer_component
-        @spacer_component.set_original_view_context(__vc_original_view_context)
+        @spacer_component.set_original_view_context(__vc_original_view_context) if @spacer_component.respond_to?(:set_original_view_context)
         @spacer_component.render_in(view_context)
       else
         ""

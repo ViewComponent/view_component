@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require "view_component/errors"
+
 class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
   before_action :validate_test_env
   before_action :validate_file_path
+
+  rescue_from ViewComponent::SystemTestControllerNefariousPathError, with: :render_not_found
 
   def self.temp_dir
     @_tmpdir ||= FileUtils.mkdir_p("./tmp/view_components/").first
@@ -14,6 +18,10 @@ class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
 
   private
 
+  def render_not_found
+    head :not_found
+  end
+
   def validate_test_env
     raise ViewComponent::SystemTestControllerOnlyAllowedInTestError unless Rails.env.test?
   end
@@ -23,7 +31,8 @@ class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
   def validate_file_path
     base_path = ::File.realpath(self.class.temp_dir)
     @path = ::File.realpath(params.permit(:file)[:file], base_path)
-    unless @path.start_with?(base_path)
+    allowed_prefix = "#{base_path}#{::File::SEPARATOR}"
+    unless @path == base_path || @path.start_with?(allowed_prefix)
       raise ViewComponent::SystemTestControllerNefariousPathError
     end
   end

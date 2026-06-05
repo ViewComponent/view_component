@@ -91,6 +91,10 @@ jobs:
             mode: "capture_patch_enabled"
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
+      # Nokogiri 1.19.3 doesn't ship a precompiled binary for Ruby 3.5 yet.
+      # Force Bundler to install the platform-agnostic gem (built from source)
+      # on Ruby 3.5 so installation succeeds.
+      BUNDLE_FORCE_RUBY_PLATFORM: ${{ matrix.ruby_version == '3.5' && 'true' || 'false' }}
     steps:
     - uses: actions/checkout@v4.1.1
     - name: Setup Ruby
