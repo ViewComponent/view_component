@@ -46,6 +46,6 @@ group :development, :test do
   gem "turbo-rails"
   gem "warning"
   gem "yard-activesupport-concern", "< 1"
-  gem "yard-lint", "~> 1.5"
+  gem "yard-lint", "~> 1.6"
   gem "yard", "< 1"
 end
