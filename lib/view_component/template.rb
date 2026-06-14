@@ -5,7 +5,11 @@ module ViewComponent
     DEFAULT_FORMAT = :html
     private_constant :DEFAULT_FORMAT
 
-    DataWithSource = Struct.new(:format, :identifier, :short_identifier, :type, keyword_init: true)
+    class DataWithSource < Struct.new(:format, :identifier, :short_identifier, :type)
+      def initialize(format:, identifier:, short_identifier:, type:)
+        super(format, identifier, short_identifier, type)
+      end
+    end
 
     attr_reader :details, :path
 

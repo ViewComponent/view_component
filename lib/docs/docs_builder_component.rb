@@ -2,11 +2,11 @@
 
 module ViewComponent
   class DocsBuilderComponent < Base
-    class Section < Struct.new(:heading, :methods, :error_klasses, :show_types, keyword_init: true)
+    class Section < Struct.new(:heading, :methods, :error_klasses, :show_types)
       def initialize(heading: nil, methods: [], error_klasses: [], show_types: true)
         methods.sort_by! { |method| method[:name] }
         error_klasses.sort!
-        super
+        super(heading, methods, error_klasses, show_types)
       end
     end
 

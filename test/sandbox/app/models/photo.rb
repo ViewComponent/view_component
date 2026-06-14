@@ -1,1 +1,5 @@
-Photo = Struct.new(:title, :caption, :url, keyword_init: true)
+class Photo < Struct.new(:title, :caption, :url)
+  def initialize(title:, caption:, url:)
+    super(title, caption, url)
+  end
+end
