@@ -3,7 +3,9 @@
 class InlineCacheComponent < ViewComponent::Base
   include ViewComponent::ExperimentallyCacheable
 
-  cache_on :foo, :bar
+  cache do
+    [foo, bar]
+  end
 
   attr_reader :foo, :bar
 

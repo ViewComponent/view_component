@@ -90,21 +90,13 @@ module ViewComponent
         safe_call = template.safe_method_name_call
         @component.define_method(:render_template_for) do |_|
           @current_template = template
-          if is_a?(ViewComponent::ExperimentallyCacheable)
-            __vc_render_cacheable(safe_call)
-          else
-            instance_exec(&safe_call)
-          end
+          __vc_render_template(safe_call)
         end
       else
         compiler = self
         @component.define_method(:render_template_for) do |details|
           if (@current_template = compiler.find_templates_for(details).first)
-            if is_a?(ViewComponent::ExperimentallyCacheable)
-              __vc_render_cacheable(@current_template.safe_method_name_call)
-            else
-              instance_exec(&@current_template.safe_method_name_call)
-            end
+            __vc_render_template(@current_template.safe_method_name_call)
           else
             raise MissingTemplateError.new(self.class.name, details)
           end
@@ -184,9 +176,7 @@ module ViewComponent
           )]
         else
           path_parser = ActionView::Resolver::PathParser.new
-          templates = @component.sidecar_files(
-            ActionView::Template.template_handler_extensions
-          ).map do |path|
+          templates = @component.sidecar_templates.map do |path|
             details = path_parser.parse(path).details
             Template::File.new(component: @component, path: path, details: details)
           end

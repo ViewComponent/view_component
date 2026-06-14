@@ -4,7 +4,9 @@ class CacheConditionComponent < ViewComponent::Base
   include ViewComponent::ExperimentallyCacheable
 
   cache_if :cache_enabled?
-  cache_on :foo
+  cache do
+    [foo]
+  end
 
   attr_reader :foo
 

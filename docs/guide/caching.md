@@ -9,18 +9,17 @@ parent: How-to guide
 Experimental
 {: .label }
 
-Caching is experimental.
-
-To enable caching, include `ViewComponent::ExperimentallyCacheable`.
-
-Components implement caching by marking dependencies using `cache_on`:
+Caching is experimental. To cache a component, include `ViewComponent::ExperimentallyCacheable` and declare cache dependencies using `cache`:
 
 ```ruby
 class CacheComponent < ViewComponent::Base
   include ViewComponent::ExperimentallyCacheable
 
-  cache_on :foo, :bar
   attr_reader :foo, :bar
+
+  cache do
+    [foo, bar]
+  end
 
   def initialize(foo:, bar:)
     @foo = foo
@@ -30,16 +29,67 @@ end
 ```
 
 ```erb
-<p><%= view_cache_dependencies.inspect %></p>
-
 <p><%= Time.zone.now %></p>
 <p><%= "#{foo} #{bar}" %></p>
 ```
 
-`cache_on` accepts method names. Returned values are expanded via `ActiveSupport::Cache.expand_cache_key`, so Active Record models, `GlobalID`, arrays, and plain strings work as expected.
+Components that include `ViewComponent::ExperimentallyCacheable` but do not call `cache` render normally without fragment caching.
 
-Methods listed in `cache_on` may be private.
+Caching only reads and writes fragments when controller caching is enabled.
 
-The cache key includes a digest of component source (Ruby + templates + i18n sidecars) and rendered child ViewComponents.
+## Dependencies
 
-Partial/layout string dependencies aren't currently included in the digest, to invalidate the cache on deploy modify `RAILS_CACHE_ID`/`RAILS_APP_VERSION`.
+The `cache` block is evaluated in the component instance context. Returned values are expanded via `ActiveSupport::Cache.expand_cache_key`, so Active Record models, `GlobalID`, arrays, plain strings, and values returned by private methods work as expected.
+
+```ruby
+class UserComponent < ViewComponent::Base
+  include ViewComponent::ExperimentallyCacheable
+
+  def initialize(user:)
+    @user = user
+  end
+
+  cache do
+    [@user]
+  end
+end
+```
+
+## Conditional caching
+
+Use `cache_if` to cache only when a condition is met:
+
+```ruby
+class UserComponent < ViewComponent::Base
+  include ViewComponent::ExperimentallyCacheable
+
+  cache_if :cacheable?
+
+  cache do
+    [@user]
+  end
+
+  def initialize(user:, cacheable: true)
+    @user = user
+    @cacheable = cacheable
+  end
+
+  private
+
+  def cacheable?
+    @cacheable
+  end
+end
+```
+
+`cache_if` accepts a symbol, a boolean value, or a block.
+
+## Cache invalidation
+
+The cache key includes a digest of the component, its sidecar files, and ViewComponents rendered by the component.
+
+Caches are invalidated when the component source, sidecar templates, sidecar translations, or rendered child ViewComponents change.
+
+## Limitations
+
+Changes to partial and layout string dependencies will not invalidate the cache. Modify `RAILS_CACHE_ID` or `RAILS_APP_VERSION` to invalidate these caches on deploy.

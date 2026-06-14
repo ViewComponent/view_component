@@ -30,7 +30,7 @@ module ViewComponent
         # can inherit translations from its parent and is able to overwrite them.
         translation_files = ancestors.reverse_each.with_object([]) do |ancestor, files|
           if ancestor.is_a?(Class) && ancestor < ViewComponent::Base
-            files.concat(ancestor.sidecar_files(TRANSLATION_EXTENSIONS))
+            files.concat(ancestor.sidecar_translations)
           end
         end
 

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class CacheDigestorParentComponent < ViewComponent::Base
+class CacheDigestorHamlParentComponent < ViewComponent::Base
   include ViewComponent::ExperimentallyCacheable
+
+  attr_reader :foo
 
   cache do
     [foo]
   end
-
-  attr_reader :foo
 
   def initialize(foo:)
     @foo = foo

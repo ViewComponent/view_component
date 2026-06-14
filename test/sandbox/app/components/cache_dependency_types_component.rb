@@ -3,7 +3,9 @@
 class CacheDependencyTypesComponent < ViewComponent::Base
   include ViewComponent::ExperimentallyCacheable
 
-  cache_on :record, :tags, :label, :private_token
+  cache do
+    [record, tags, label, private_token]
+  end
 
   attr_reader :record, :tags, :label
 

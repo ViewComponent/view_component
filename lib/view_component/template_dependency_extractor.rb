@@ -6,15 +6,16 @@ require_relative "template_ast_builder"
 
 module ViewComponent
   class TemplateDependencyExtractor
-    def initialize(template_string, engine)
+    def initialize(template_string, engine, identifier: nil)
       @template_string = template_string
       @engine = engine
+      @identifier = identifier
       @dependencies = Set.new
     end
 
     def extract
       engine = @engine.to_sym
-      ruby_source = TemplateAstBuilder.build(@template_string, engine)
+      ruby_source = TemplateAstBuilder.build(@template_string, engine, identifier: @identifier)
 
       if ruby_source.nil?
         return extract_erb_fallback if engine == :erb

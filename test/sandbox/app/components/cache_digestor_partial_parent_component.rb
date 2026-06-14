@@ -3,7 +3,9 @@
 class CacheDigestorPartialParentComponent < ViewComponent::Base
   include ViewComponent::ExperimentallyCacheable
 
-  cache_on :foo
+  cache do
+    [foo]
+  end
 
   attr_reader :foo
 

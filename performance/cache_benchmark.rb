@@ -43,7 +43,7 @@ begin
 
     x.report("cacheable_miss") do
       cache_miss_counter += 1
-      controller_view.render(Performance::CacheableBenchmarkComponent.new(name: "Fox Mulder #{cache_miss_counter}"))
+      controller_view.render(Performance::CacheableBenchmarkComponent.new(name: "Fox Mulder miss #{cache_miss_counter}x"))
     end
 
     x.report("cacheable_hit") do

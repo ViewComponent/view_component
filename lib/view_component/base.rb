@@ -205,6 +205,11 @@ module ViewComponent
       end
     end
 
+    # @private
+    def __vc_render_template(safe_call)
+      instance_exec(&safe_call)
+    end
+
     # Optional content to be returned before the rendered template.
     #
     # @return [String]
@@ -547,6 +552,16 @@ module ViewComponent
         sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
+      end
+
+      # @private
+      def sidecar_templates
+        sidecar_files(ActionView::Template.template_handler_extensions)
+      end
+
+      # @private
+      def sidecar_translations
+        sidecar_files(%w[yml yaml])
       end
 
       # Render a component for each element in a collection ([documentation](/guide/collections)):
