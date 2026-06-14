@@ -380,6 +380,7 @@ module ViewComponent
     def __vc_set_slot(slot_name, slot_definition = nil, *args, **kwargs, &block)
       slot_definition ||= self.class.registered_slots[slot_name]
       slot = Slot.new(self)
+      captured_block_virtual_path = nil
 
       # Passing the block to the sub-component wrapper like this has two
       # benefits:
@@ -394,7 +395,8 @@ module ViewComponent
         slot.__vc_content_block = block
         # Capture the virtual path at the time the block is defined, so that
         # translations resolve relative to where the block was created, not where it's rendered
-        slot.__vc_content_block_virtual_path = view_context.instance_variable_get(:@virtual_path)
+        captured_block_virtual_path = view_context.instance_variable_get(:@virtual_path)
+        slot.__vc_content_block_virtual_path = captured_block_virtual_path
       end
 
       # If class
@@ -413,7 +415,7 @@ module ViewComponent
         renderable_value =
           if block
             renderable_function.call(*args, **kwargs) do |*rargs|
-              with_captured_virtual_path(@old_virtual_path) do
+              with_captured_virtual_path(captured_block_virtual_path) do
                 view_context.capture(*rargs, &block)
               end
             end

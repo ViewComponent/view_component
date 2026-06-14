@@ -50,10 +50,12 @@ module ViewComponent
       end
     end
 
-    config.after_initialize do |app|
+    config.after_routes_loaded do
       ActiveSupport.on_load(:view_component) do
         if defined?(Sprockets::Rails)
           include Sprockets::Rails::Helper
+
+          app = Rails.application
 
           # Copy relevant config to VC context
           # See: https://github.com/rails/sprockets-rails/blob/266ec49f3c7c96018dd75f9dc4f9b62fe3f7eecf/lib/sprockets/railtie.rb#L245
@@ -77,7 +79,15 @@ module ViewComponent
 
     initializer "view_component.eager_load_actions" do
       ActiveSupport.on_load(:after_initialize) do
-        ViewComponent::Base.descendants.each(&:__vc_compile) if Rails.application.config.eager_load
+        if Rails.application.config.eager_load
+          ActiveSupport::Notifications.instrument("compile.view_component") do
+            ViewComponent::Base.descendants.each do |component|
+              next if component.anonymous?
+
+              component.__vc_compile
+            end
+          end
+        end
       end
     end
 

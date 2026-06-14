@@ -35,6 +35,7 @@ module ViewComponent
     # ```
     #
     # @param component [ViewComponent::Base, ViewComponent::Collection] The instance of the component to be rendered.
+    #
     # @return [Nokogiri::HTML5]
     def render_inline(component, **args, &block)
       @page = nil
@@ -71,17 +72,18 @@ module ViewComponent
     # assert_text("Hello, World!")
     # ```
     #
-    # Note: `#rendered_preview` expects a preview to be defined with the same class
-    # name as the calling test, but with `Test` replaced with `Preview`:
-    #
-    # MyComponentTest -> MyComponentPreview etc.
-    #
-    # In RSpec, `Preview` is appended to `described_class`.
-    #
     # @param name [String] The name of the preview to be rendered.
     # @param from [ViewComponent::Preview] The class of the preview to be rendered.
     # @param params [Hash] Parameters to be passed to the preview.
+    #
     # @return [Nokogiri::HTML5]
+    #
+    # @note `#rendered_preview` expects a preview to be defined with the same class
+    #   name as the calling test, but with `Test` replaced with `Preview`:
+    #
+    #   MyComponentTest -> MyComponentPreview etc.
+    #
+    #   In RSpec, `Preview` is appended to `described_class`.
     def render_preview(name, from: __vc_test_helpers_preview_class, params: {})
       previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.previews.controller.constantize)
 
@@ -125,7 +127,7 @@ module ViewComponent
     # end
     # ```
     #
-    # @param variants [Symbol[]] The variants to be set for the provided block.
+    # @param variants [Array<Symbol>] The variants to be set for the provided block.
     def with_variant(*variants)
       old_variants = vc_test_controller.view_context.lookup_context.variants
 
@@ -162,7 +164,7 @@ module ViewComponent
     # end
     # ```
     #
-    # @param formats [Symbol[]] The format(s) to be set for the provided block.
+    # @param formats [Array<Symbol>] The format(s) to be set for the provided block.
     def with_format(*formats)
       old_formats = vc_test_controller.view_context.lookup_context.formats
 

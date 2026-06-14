@@ -822,6 +822,23 @@ class SlotableTest < ViewComponent::TestCase
     assert_not_equal SlotsComponent.instance_method(:title).owner, SlotNameOverrideComponent::OtherComponent.instance_method(:title).owner
   end
 
+  def test_slot_predicate_before_render_does_not_poison_content_cache
+    component = SlotWithContentBlockComponent.new
+    component.with_header { "My Header" }
+
+    # Accessing a slot predicate before render_in triggers content evaluation
+    # via __vc_get_slot. Without the fix, this caches a nil @__vc_content that
+    # persists through render_in, causing the content block to be silently ignored.
+    assert component.header?
+
+    render_inline(component) do
+      "Body content from block"
+    end
+
+    assert_selector(".header", text: "My Header")
+    assert_selector(".body", text: "Body content from block")
+  end
+
   def test_allows_marking_slot_as_last
     render_inline(LastItemComponent.new) do |component|
       component.with_item("animal")

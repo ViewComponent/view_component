@@ -96,7 +96,6 @@ module ViewComponent
     #     end
     #   end
     # end
-    #
     def method_missing(symbol, *args, **kwargs, &block)
       @__vc_component_instance.public_send(symbol, *args, **kwargs, &block)
     end

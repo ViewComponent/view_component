@@ -14,6 +14,90 @@ nav_order: 6
 
     *Reegan Viljoen*
 
+## 4.12.0
+
+* Fix stale render context on reused component instances. A `ViewComponent::Base` instance memoized its controller, helpers, request, view context, lookup context, view flow, and requested format details on first render via `||=`. Rendering the same instance a second time (intentionally or via aliasing) reused that stale context, which could leak data across requests, sessions, or users. `#render_in` now resets these ivars on every call so each render derives its context from the current view.
+
+    *Joel Hawksley*
+
+* Fix HTML-safety bypass in `around_render`. `ViewComponent::Base#around_render` could return HTML-unsafe strings that bypassed the escaping applied to normal `#call` return values, creating an XSS risk. The vulnerability was amplified in `ViewComponent::Collection#render_in`, which joined per-item results and unconditionally marked the output `html_safe`. HTML-unsafe strings returned from `around_render` are now escaped (with a warning) and `Collection#render_in` now uses `safe_join` so unsafe per-item output is escaped instead of laundered into a `SafeBuffer`.
+
+    *Joel Hawksley*
+
+## 4.11.0
+
+* Update `render_in` signature to accept `**_` for compatibility with Rails [#50623](https://github.com/rails/rails/pull/50623).
+
+    *Joel Hawksley*
+
+* Fix translation scope resolution in nested lambda-backed slots. Relative `t(".key")` calls inside lambda-backed slots were resolving against an intermediate component's scope instead of the original partial's scope where the block was defined.
+
+    *Artin Boghosian*
+
+## 4.10.0
+
+* Fix `NameError: uninitialized constant ViewComponent::SystemTestControllerNefariousPathError` when booting in the test environment with `eager_load = true`.
+
+    *Joel Hawksley*
+
+* Fix yielded content rendered at wrong location when using form helpers.
+
+    *Joel Hawksley*, *Markus*
+
+## 4.9.0
+
+* Fix path traversal vulnerability in `ViewComponentsSystemTestController` where sibling directories sharing a string prefix with the allowed temp directory could bypass the path containment check. The `start_with?` check has been replaced with a separator-aware prefix check, and nefarious path errors now return a 404 instead of an unhandled exception.
+
+    *Joel Hawksley*
+
+* Fix preview route vulnerability where inherited methods on `ViewComponent::Preview` (such as `render_with_template`) could be invoked via the preview URL, allowing arbitrary internal Rails templates to be rendered with attacker-controlled locals and request parameters. `render_args` now raises `AbstractController::ActionNotFound` for any example not explicitly declared on the preview subclass.
+
+    *Joel Hawksley*
+
+* Add `yard-lint` to CI.
+
+    *Joel Hawksley*
+
+## 4.8.0
+
+* Add `compile.view_component` ActiveSupport::Notifications event for eager compilation at boot time.
+
+    *Joel Hawksley*, *GitHub Copilot*
+
+## 4.7.0
+
+* Fix stale content cache when slots are accessed before `render_in`.
+
+    *Jared Armstrong*
+
+* Add rubocop-view_component to resources.
+
+    *Andy Waite*
+
+* Fix bug where inheritance of components with formatless templates improperly raised a NoMethodError.
+
+    *GitHub Copilot*, *Joel Hawksley*, *Cameron Dutro*
+
+## 4.6.0
+
+* Add `view_identifier` to the `render.view_component` instrumentation event payload, containing the path to the component's template file (e.g. `app/components/my_component.html.erb`). For components using inline render methods, `view_identifier` will be `nil`.
+
+    *GitHub Copilot*
+
+* Replace deprecated `require_dependency` with `require` in preview loading.
+
+    *GitHub Copilot*
+
+* Return `html_safe` empty string from `render_in` when `render?` is false.
+
+    *GitHub Copilot*
+
+## 4.5.0
+
+* Fix initialization ordering issue causing missing asset errors in Sprockets.
+
+    *Cameron Dutro*
+
 ## 4.4.0
 
 * Fix segfaults when Ruby coverage is enabled.

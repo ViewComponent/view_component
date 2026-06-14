@@ -91,3 +91,16 @@ jobs:
         bundle exec erb_lint --lint-all
       env:
         RAILS_VERSION: '~> 8'
+  yard-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 4.0
+        bundler-cache: true
+    - name: YARD Lint
+      run: bundle exec yard-lint lib/

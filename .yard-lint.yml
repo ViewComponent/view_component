@@ -1,0 +1,108 @@
+# YARD-Lint Configuration
+# See https://github.com/mensfeld/yard-lint for documentation
+
+AllValidators:
+  YardOptions:
+    - --plugin
+    - activesupport-concern
+
+  Exclude:
+    - 'vendor/**/*'
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'performance/**/*'
+
+  FailOnSeverity: error
+
+Documentation/UndocumentedObjects:
+  Enabled: false
+
+Documentation/UndocumentedMethodArguments:
+  Enabled: false
+
+Documentation/UndocumentedBooleanMethods:
+  Enabled: true
+
+Documentation/UndocumentedOptions:
+  Enabled: false
+
+Documentation/MissingReturn:
+  Enabled: false
+
+Documentation/MarkdownSyntax:
+  Enabled: true
+
+Documentation/EmptyCommentLine:
+  Enabled: true
+
+Documentation/BlankLineBeforeDefinition:
+  Enabled: true
+  Exclude:
+    - 'lib/view_component/config.rb'
+
+Tags/Order:
+  Enabled: true
+
+Tags/InvalidTypes:
+  Enabled: true
+
+Tags/TypeSyntax:
+  Enabled: true
+
+Tags/MeaninglessTag:
+  Enabled: true
+
+Tags/CollectionType:
+  Enabled: true
+
+Tags/TagTypePosition:
+  Enabled: true
+
+Tags/ApiTags:
+  Enabled: false
+
+Tags/OptionTags:
+  Enabled: false
+
+Tags/ExampleSyntax:
+  Enabled: true
+
+Tags/ExampleStyle:
+  Enabled: true
+
+Tags/RedundantParamDescription:
+  Enabled: true
+
+Tags/InformalNotation:
+  Enabled: true
+
+Tags/NonAsciiType:
+  Enabled: true
+
+Tags/TagGroupSeparator:
+  Enabled: true
+
+Tags/ForbiddenTags:
+  Enabled: true
+
+Warnings/UnknownTag:
+  Enabled: true
+  Severity: error
+
+Warnings/UnknownDirective:
+  Enabled: true
+
+Warnings/InvalidTagFormat:
+  Enabled: true
+
+Warnings/InvalidDirectiveFormat:
+  Enabled: true
+
+Warnings/DuplicatedParameterName:
+  Enabled: true
+
+Warnings/UnknownParameterName:
+  Enabled: true
+
+Semantic/AbstractMethods:
+  Enabled: true

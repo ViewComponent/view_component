@@ -57,6 +57,13 @@ update_ruby_version() {
 update_gemfiles() {
   # Update Gemfile.lock
   bundle
+
+  # Update appraisal gemfile locks.
+  # BUNDLE_IGNORE_RUBY_VERSION is needed because the gemfiles declare ruby
+  # versions that don't match the local Ruby (e.g. 3.2, 3.3, 4.1.0.dev).
+  for gemfile in gemfiles/*.gemfile; do
+    BUNDLE_GEMFILE="$gemfile" BUNDLE_IGNORE_RUBY_VERSION=1 bundle lock
+  done
 }
 
 build_docs() {
@@ -70,6 +77,7 @@ add_changed_files() {
     docs/CHANGELOG.md \
     docs/_data/library.yml \
     Gemfile.lock \
+    gemfiles/*.gemfile.lock \
     lib/view_component/version.rb
 }
 

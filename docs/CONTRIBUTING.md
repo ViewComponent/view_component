@@ -61,6 +61,8 @@ When a new version of Rails is released:
 5. Commit and push the changes.
 6. Release a new version.
 
+_You main need to run `RUBY_VERSION="4.1.0dev" bundle exec appraisal rails-main bundle lock` to lock the rails-main lockfile._
+
 ## Submitting a pull request
 
 1. [Fork](https://github.com/viewcomponent/view_component/fork) and clone the repository.

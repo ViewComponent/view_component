@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"4.1" => 67..68, "4.0" => 67, "3.4" => 72..76, "3.3" => 75, "3.2" => 78..79}) do
+      assert_allocations({"4.1" => 69..160, "4.0" => 69..161, "3.4" => 75..76, "3.3" => 77..79, "3.2" => 80..82}) do
         render_inline(MyComponent.new)
       end
     end
@@ -34,7 +34,7 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
-    allocations = {"4.1" => 66, "4.0" => 66, "3.4" => 70..82, "3.3" => 89, "3.2" => 92..93}
+    allocations = {"4.1" => 71..170, "4.0" => 71..170, "3.4" => 86..89, "3.3" => 92..97, "3.2" => 97..101}
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
@@ -794,11 +794,14 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_collection_component_missing_custom_parameter_name_with_activemodel
-    assert_raises ViewComponent::MissingCollectionArgumentError do
+    error = assert_raises do
       render_inline(
         MissingCollectionParameterWithActiveModelComponent.with_collection([Product.new(name: "Mints")])
       )
     end
+
+    # Rails main raises ActiveModel::UnknownAttributeError before ViewComponent can check
+    assert [ViewComponent::MissingCollectionArgumentError, ActiveModel::UnknownAttributeError].include?(error.class)
   end
 
   def test_collection_component_present_custom_parameter_name_with_activemodel
@@ -852,6 +855,18 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello, my own template")
   end
 
+  def test_inherited_component_with_format_less_template
+    # Reproduces https://github.com/ViewComponent/view_component/issues/2573
+    # When a parent component uses a format-less template (e.g. .erb or .slim
+    # instead of .html.erb or .html.slim), the child component crashes with
+    # "undefined method 'upcase' for nil" during compilation.
+    render_inline(FormatLessChildComponent.new) do
+      "Hello World"
+    end
+
+    assert_selector("div.child", text: "Hello World")
+  end
+
   def test_inherited_inline_component_inherits_inline_method
     render_inline(InlineInheritedComponent.new)
 
@@ -875,6 +890,12 @@ class RenderingTest < ViewComponent::TestCase
     total = Time.now - start_time
 
     assert total < 1
+  end
+
+  def test_render_in_returns_html_safe_string_when_render_is_false
+    render_inline(ConditionalRenderComponent.new(should_render: false))
+
+    assert_predicate @rendered_content, :html_safe?
   end
 
   def test_collection_parameter_does_not_require_compile
@@ -1054,8 +1075,8 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_multiple_inline_renders_of_the_same_component
-    component = ErbComponent.new(message: "foo")
-    render_inline(InlineRenderComponent.new(items: [component, component]))
+    items = [ErbComponent.new(message: "foo"), ErbComponent.new(message: "foo")]
+    render_inline(InlineRenderComponent.new(items: items))
     assert_selector("div", text: "foo", count: 2)
   end
 
@@ -1654,9 +1675,25 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_around_render_html_unsafe_output_is_escaped
+    warnings = capture_warnings { render_inline(UnsafeAroundRenderComponent.new) }
+
+    assert_includes @rendered_content, "&lt;script&gt;alert(1)&lt;/script&gt;"
+    refute_includes @rendered_content, "<script>"
+    assert_predicate @rendered_content, :html_safe?
+    assert(
+      warnings.any? { |warning| warning.include?("around_render returned an HTML-unsafe string") },
+      "Rendering UnsafeAroundRenderComponent did not emit an HTML safety warning"
+    )
+  end
+
   def test_render_partial_with_yield
     render_inline(PartialWithYieldComponent.new)
     assert_text "hello world", exact: true, normalize_ws: true
+  end
+
+  def test_render_partial_with_yield_form
+    assert_includes render_inline(PartialWithYieldFormComponent.new).css("label").to_html, "world"
   end
 
   def test_render_partial_with_yield_and_method_call
