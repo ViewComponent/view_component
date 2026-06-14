@@ -38,16 +38,18 @@ module ViewComponent
         # Use -1 to compensate for correct line numbers in stack traces.
         # However, negative line numbers cause segfaults when Ruby's coverage
         # is enabled (bugs.ruby-lang.org/issues/19363). In that case, strip the
-        # annotation line from compiled source instead.
+        # annotation line from compiled source instead. Ruby 4.1-dev also has
+        # trouble evaluating ERB methods with non-positive line numbers, so use
+        # the closest positive line offsets there.
         lineno =
           if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
             if coverage_running?
               # Can't use negative lineno with coverage (causes segfault on Linux).
               # Strip annotation line if enabled to preserve correct line numbers.
               @strip_annotation_line = ActionView::Base.annotate_rendered_view_with_filenames
-              0
+              ruby_head? ? 1 : 0
             else
-              -1
+              ruby_head? ? 0 : -1
             end
           else
             0
@@ -163,6 +165,10 @@ module ViewComponent
 
     def coverage_running?
       defined?(Coverage) && Coverage.running?
+    end
+
+    def ruby_head?
+      RUBY_DESCRIPTION.include?("dev")
     end
 
     def safe_method_name_call
