@@ -90,13 +90,13 @@ module ViewComponent
         safe_call = template.safe_method_name_call
         @component.define_method(:render_template_for) do |_|
           @current_template = template
-          __vc_render_template(safe_call)
+          instance_exec(&safe_call)
         end
       else
         compiler = self
         @component.define_method(:render_template_for) do |details|
           if (@current_template = compiler.find_templates_for(details).first)
-            __vc_render_template(@current_template.safe_method_name_call)
+            instance_exec(&@current_template.safe_method_name_call)
           else
             raise MissingTemplateError.new(self.class.name, details)
           end
@@ -176,7 +176,9 @@ module ViewComponent
           )]
         else
           path_parser = ActionView::Resolver::PathParser.new
-          templates = @component.sidecar_templates.map do |path|
+          templates = @component.sidecar_files(
+            ActionView::Template.template_handler_extensions
+          ).map do |path|
             details = path_parser.parse(path).details
             Template::File.new(component: @component, path: path, details: details)
           end

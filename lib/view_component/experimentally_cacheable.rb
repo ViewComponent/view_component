@@ -119,7 +119,21 @@ module ViewComponent::ExperimentallyCacheable
     def after_compile
       super
 
+      __vc_define_cached_render_template_for
       __vc_precompute_component_digest if ActionView::Base.cache_template_loading
+    end
+
+    def __vc_define_cached_render_template_for
+      compiler = __vc_compiler
+      silence_redefinition_of_method(:render_template_for)
+
+      define_method(:render_template_for) do |details|
+        if (@current_template = compiler.find_templates_for(details).first)
+          __vc_render_template(@current_template.safe_method_name_call)
+        else
+          raise ViewComponent::MissingTemplateError.new(self.class.name, details)
+        end
+      end
     end
 
     def __vc_component_digest

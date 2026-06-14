@@ -50,6 +50,7 @@ module ViewComponent
     include Rails.application.routes.url_helpers if defined?(Rails.application.routes)
     include ERB::Escape
     include ActiveSupport::CoreExt::ERBUtil
+
     include ViewComponent::InlineTemplate
     include ViewComponent::Slotable
     include ViewComponent::Translatable
@@ -218,11 +219,6 @@ module ViewComponent
       ensure
         @__vc_parent_render_level -= 1
       end
-    end
-
-    # @private
-    def __vc_render_template(safe_call)
-      instance_exec(&safe_call)
     end
 
     # Optional content to be returned before the rendered template.
@@ -606,16 +602,6 @@ module ViewComponent
         sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
-      end
-
-      # @private
-      def sidecar_templates
-        sidecar_files(ActionView::Template.template_handler_extensions)
-      end
-
-      # @private
-      def sidecar_translations
-        sidecar_files(%w[yml yaml])
       end
 
       # Render a component for each element in a collection ([documentation](/guide/collections)):

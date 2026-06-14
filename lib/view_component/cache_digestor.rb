@@ -47,13 +47,13 @@ module ViewComponent
         update_template_dependency_digests(digest, inline_source, inline_template.language, component_class.identifier)
       end
 
-      component_class.sidecar_templates.sort.each do |path|
+      component_class.sidecar_files(ActionView::Template.template_handler_extensions).sort.each do |path|
         template_source = cached_file_contents(path)
         update_digest(digest, template_source)
         update_template_dependency_digests(digest, template_source, File.extname(path).delete_prefix("."), path)
       end
 
-      component_class.sidecar_translations.sort.each do |path|
+      component_class.sidecar_files(%w[yml yaml]).sort.each do |path|
         update_digest(digest, cached_file_contents(path))
       end
 
