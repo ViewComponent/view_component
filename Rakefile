@@ -64,22 +64,28 @@ namespace :docs do
     registry = YARD::RegistryStore.new
     registry.load!(".yardoc")
 
-    base_methods = registry.get("ViewComponent::Base").meths
-    meths = base_methods.select do |method|
-      !method.tag(:private) &&
-        method.path.include?("ViewComponent::Base") &&
-        method.visibility == :public &&
-        !method[:name].to_s.start_with?("_") # Ignore methods we mark as internal by prefixing with underscores
-    end.sort_by { |method| method[:name] }
+    meths =
+      registry
+        .get("ViewComponent::Base")
+        .meths
+        .select do |method|
+          !method.tag(:private) &&
+            method.path.include?("ViewComponent::Base") &&
+            method.visibility == :public &&
+            !method[:name].to_s.start_with?("_") # Ignore methods we mark as internal by prefixing with underscores
+      end.sort_by { |method| method[:name] }
 
     instance_methods_to_document = meths.select { |method| method.scope != :class }
     class_methods_to_document = meths.select { |method| method.scope == :class }
     configuration_methods_to_document = registry.get("ViewComponent::Config").meths.select(&:reader?)
-    test_helper_methods = registry.get("ViewComponent::TestHelpers").meths
-    test_helper_methods_to_document = test_helper_methods.select do |method|
-      !method.tag(:private) &&
-        method.visibility == :public
-    end.sort_by { |method| method[:name] }
+    test_helper_methods_to_document = registry
+      .get("ViewComponent::TestHelpers")
+      .meths
+      .sort_by { |method| method[:name] }
+      .select do |method|
+        !method.tag(:private) &&
+          method.visibility == :public
+    end
 
     require "rails"
     require "action_controller"

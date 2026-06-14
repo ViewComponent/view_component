@@ -459,7 +459,7 @@ DEPENDENCIES
   simplecov-console (< 1)
   slim (~> 5)
   sprockets-rails (~> 3)
-  standard (~> 1)
+  standard (~> 1.54.0)
   tailwindcss-rails (~> 4)
   turbo-rails
   view_component!
