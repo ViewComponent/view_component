@@ -1,0 +1,15 @@
+<section class="handler-benchmark erb uncached" data-time="<%= Time.zone.now.to_f %>">
+  <header>
+    <h3><%= name %> ERB uncached</h3>
+    <p>Total score: <%= number_with_delimiter(total_score) %></p>
+  </header>
+  <ul>
+    <% report_rows.each do |row| %>
+      <li>
+        <span><%= row[:label] %></span>
+        <span><%= number_to_currency(row[:amount]) %></span>
+        <span><%= pluralize(row[:events], "event") %></span>
+      </li>
+    <% end %>
+  </ul>
+</section>
