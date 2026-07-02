@@ -41,7 +41,7 @@ group :development, :test do
   gem "simplecov", "< 1"
   gem "slim", "~> 5"
   gem "sprockets-rails", "~> 3"
-  gem "standard", "~> 1.54.0"
+  gem "standard", "~> 1.55.0"
   gem "tailwindcss-rails", "~> 4"
   gem "turbo-rails"
   gem "warning"
