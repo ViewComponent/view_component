@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Update link to GOV.UK Components library in resources list to govuk-components.x-govuk.org
+
+    *Peter Yates*
+
 ## 4.12.0
 
 * Fix stale render context on reused component instances. A `ViewComponent::Base` instance memoized its controller, helpers, request, view context, lookup context, view flow, and requested format details on first render via `||=`. Rendering the same instance a second time (intentionally or via aliasing) reused that stale context, which could leak data across requests, sessions, or users. `#render_in` now resets these ivars on every call so each render derives its context from the current view.
