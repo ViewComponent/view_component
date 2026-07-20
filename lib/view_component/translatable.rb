@@ -23,6 +23,15 @@ module ViewComponent
         @__vc_i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
       end
 
+      # Sidecar translation files (i18n YAML) for this component.
+      #
+      # Shares `TRANSLATION_EXTENSIONS` with translation loading so the extension
+      # list can't fall out of sync between i18n and cache digesting.
+      # @return [Array<String>] Absolute paths of sidecar translation files.
+      def sidecar_translations
+        sidecar_files(TRANSLATION_EXTENSIONS)
+      end
+
       def __vc_build_i18n_backend
         return if __vc_compiled?
 
@@ -30,7 +39,7 @@ module ViewComponent
         # can inherit translations from its parent and is able to overwrite them.
         translation_files = ancestors.reverse_each.with_object([]) do |ancestor, files|
           if ancestor.is_a?(Class) && ancestor < ViewComponent::Base
-            files.concat(ancestor.sidecar_files(TRANSLATION_EXTENSIONS))
+            files.concat(ancestor.sidecar_translations)
           end
         end
 
