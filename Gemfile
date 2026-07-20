@@ -38,7 +38,7 @@ group :development, :test do
   gem "rubocop-md", "~> 2"
   gem "selenium-webdriver", "~> 4"
   gem "simplecov-console", "< 1"
-  gem "simplecov", "< 1"
+  gem "simplecov", "< 2"
   gem "slim", "~> 5"
   gem "sprockets-rails", "~> 3"
   gem "standard", "~> 1"
