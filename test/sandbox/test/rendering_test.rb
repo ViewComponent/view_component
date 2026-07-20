@@ -1755,4 +1755,119 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_selector("div", text: I18n.t("rendering_test.i18n_test_component.message"))
   end
+
+  def test_cache_call_component_caches
+    with_action_controller_caching do
+      render_inline(CacheCallComponent.new(foo: "foo"))
+      first_time = page.find(".cache-call")["data-time"]
+
+      render_inline(CacheCallComponent.new(foo: "foo"))
+      second_time = page.find(".cache-call")["data-time"]
+
+      assert_equal(first_time, second_time)
+    end
+  end
+
+  def test_cache_record_component_caches_and_invalidates_on_update
+    with_action_controller_caching do
+      Rails.cache.clear
+
+      render_inline(CacheRecordComponent.new(record: CacheableTestRecord.new(id: 1, version: 1)))
+      first_time = page.find(".cache-record")["data-time"]
+
+      render_inline(CacheRecordComponent.new(record: CacheableTestRecord.new(id: 1, version: 1)))
+      assert_equal(first_time, page.find(".cache-record")["data-time"], "same record should hit the cache")
+
+      render_inline(CacheRecordComponent.new(record: CacheableTestRecord.new(id: 1, version: 2)))
+      refute_equal(first_time, page.find(".cache-record")["data-time"], "an updated record should invalidate the cache")
+    ensure
+      Rails.cache.clear
+    end
+  end
+
+  def test_cache_key_changes_when_child_component_ruby_file_changes
+    child_path = CacheDigestorChildComponent.identifier
+    original = File.read(child_path)
+
+    ViewComponent::CompileCache.invalidate!
+    digest_v1 = ViewComponent::CacheDigestor.digest(CacheDigestorParentComponent)
+
+    File.write(child_path, original + "\n# cache-bust\n")
+    ViewComponent::CompileCache.invalidate!
+    digest_v2 = ViewComponent::CacheDigestor.digest(CacheDigestorParentComponent)
+
+    refute_equal(digest_v1, digest_v2, "changing a rendered child's Ruby file should bust the parent digest")
+  ensure
+    File.write(child_path, original) if child_path && original
+    ViewComponent::CompileCache.invalidate!
+  end
+
+  def test_cache_key_changes_when_indirectly_rendered_child_changes
+    child_template = CacheDigestorChildComponent.sidecar_files(["erb"]).first
+    original = File.read(child_template)
+
+    ViewComponent::CompileCache.invalidate!
+    digest_v1 = ViewComponent::CacheDigestor.digest(CacheIndirectParentComponent)
+
+    File.write(child_template, original.sub("v1", "indirect-v2"))
+    ViewComponent::CompileCache.invalidate!
+    digest_v2 = ViewComponent::CacheDigestor.digest(CacheIndirectParentComponent)
+
+    refute_equal(digest_v1, digest_v2, "a child rendered from a Ruby method should invalidate the parent digest")
+  ensure
+    File.write(child_template, original) if child_template && original
+    ViewComponent::CompileCache.invalidate!
+  end
+
+  def test_cache_digest_terminates_for_cyclic_components
+    digest = nil
+    assert_nothing_raised { digest = ViewComponent::CacheDigestor.digest(CacheCycleAComponent) }
+    assert_kind_of(String, digest)
+  end
+
+  def test_cache_digest_terminates_for_self_referential_component
+    assert_nothing_raised { ViewComponent::CacheDigestor.digest(CacheSelfReferentialComponent) }
+  end
+
+  def test_cache_variant_is_not_served_from_default_cache
+    with_action_controller_caching do
+      render_inline(CacheVariantComponent.new)
+      assert_selector(".cache-variant", text: "DEFAULT")
+
+      with_variant(:phone) do
+        render_inline(CacheVariantComponent.new)
+        assert_selector(".cache-variant", text: "PHONE")
+      end
+    end
+  end
+
+  def test_cache_preserves_html_safety
+    with_action_controller_caching do
+      render_inline(CacheHtmlSafetyComponent.new)
+      render_inline(CacheHtmlSafetyComponent.new)
+
+      assert_selector("div.cache-html strong", text: "bold")
+      assert_no_selector("div.cache-html script")
+      assert_text("<script>")
+    end
+  end
+
+  def test_cache_block_is_inherited_when_parent_declares_cache_after_subclass
+    parent = Class.new(ViewComponent::Base) do
+      include ViewComponent::ExperimentallyCacheable
+
+      def self.name
+        "CacheOrderingParentComponent"
+      end
+    end
+    child = Class.new(parent) do
+      def self.name
+        "CacheOrderingChildComponent"
+      end
+    end
+
+    parent.cache { [:ordered] }
+
+    refute_nil(child.__vc_cache_key_block, "a subclass should inherit a cache block declared on the parent after the subclass was defined")
+  end
 end
