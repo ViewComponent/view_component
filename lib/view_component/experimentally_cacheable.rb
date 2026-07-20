@@ -67,6 +67,13 @@ module ViewComponent::ExperimentallyCacheable
       return unless Rails.application.config.view_component.instrumentation_enabled.present?
       return unless defined?(@view_renderer)
 
+      # `ActionView::Renderer#cache_hits` is internal (`:nodoc:`) API used only to
+      # annotate the template render log with cache hit/miss. Feature-detect it so a
+      # future Rails change can never raise here; the canonical, supported hit/miss
+      # signal is the `read_fragment`/`write_fragment` ActiveSupport::Notifications
+      # events, which fire regardless of this annotation.
+      return unless @view_renderer.respond_to?(:cache_hits)
+
       @view_renderer.cache_hits[@current_template&.virtual_path] = status
     end
 
