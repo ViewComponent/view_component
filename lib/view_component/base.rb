@@ -604,13 +604,12 @@ module ViewComponent
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
       end
 
-      # Sidecar template files (ERB, Haml, Slim, etc.) for this component.
+      # Sidecar template files (ERB, Haml, Slim, etc.) for this component. Wraps
+      # `ActionView::Template.template_handler_extensions` so the cache digestor
+      # doesn't reach into ActionView directly.
       #
-      # Centralizes the template-handler extension list so cache digesting (and any
-      # future caller) shares a single source of truth for
-      # `ActionView::Template.template_handler_extensions` rather than each reaching
-      # into ActionView directly. Keeping this coupling in one place means a Rails
-      # change to the handler registry only needs to be audited here.
+      # @private
+      #
       # @return [Array<String>] Absolute paths of sidecar template files.
       def sidecar_templates
         sidecar_files(ActionView::Template.template_handler_extensions)

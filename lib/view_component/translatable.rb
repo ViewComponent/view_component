@@ -23,10 +23,12 @@ module ViewComponent
         @__vc_i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
       end
 
-      # Sidecar translation files (i18n YAML) for this component.
+      # Sidecar translation files (i18n YAML) for this component. Shares
+      # `TRANSLATION_EXTENSIONS` with translation loading so the extension list
+      # can't fall out of sync between i18n and cache digesting.
       #
-      # Shares `TRANSLATION_EXTENSIONS` with translation loading so the extension
-      # list can't fall out of sync between i18n and cache digesting.
+      # @private
+      #
       # @return [Array<String>] Absolute paths of sidecar translation files.
       def sidecar_translations
         sidecar_files(TRANSLATION_EXTENSIONS)

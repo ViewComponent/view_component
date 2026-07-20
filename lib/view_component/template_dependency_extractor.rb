@@ -27,11 +27,9 @@ module ViewComponent
       @dependencies.to_a
     end
 
-    # Extract ViewComponent render dependencies from raw Ruby source (for example a
-    # component's own .rb file), where a child may be rendered from a method rather
-    # than directly in a template. Only component-class renders (`render Foo.new`)
-    # are detected; partial/string renders are intentionally out of scope, matching
-    # how template sources are handled.
+    # Scan raw Ruby source (e.g. a component's own .rb) for `render Foo.new` so a
+    # child rendered from a method still busts the parent digest. Regex-based, so a
+    # match inside a comment or string only ever over-invalidates, never serves stale.
     def extract_component_renders
       return [] unless @template_string&.include?("render")
 
