@@ -158,12 +158,5 @@ module ViewComponent::ExperimentallyCacheable
     def cache_if(value = nil, &block)
       self.__vc_cache_if = block || value
     end
-
-    def inherited(child)
-      child.__vc_cache_key_block = __vc_cache_key_block
-      child.__vc_cache_if = __vc_cache_if
-
-      super
-    end
   end
 end
