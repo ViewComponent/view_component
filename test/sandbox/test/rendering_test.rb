@@ -1456,6 +1456,22 @@ class RenderingTest < ViewComponent::TestCase
     end
   end
 
+  def test_cache_key_includes_locale
+    with_action_controller_caching do
+      Rails.cache.clear
+
+      I18n.with_locale(:en) { render_inline(CacheLocaleComponent.new) }
+      assert_selector(".cache-locale__greeting", text: "Hello")
+
+      # Without the locale in the cache key, this render would serve the cached
+      # English fragment instead of the French translation.
+      I18n.with_locale(:fr) { render_inline(CacheLocaleComponent.new) }
+      assert_selector(".cache-locale__greeting", text: "Bonjour")
+    ensure
+      Rails.cache.clear
+    end
+  end
+
   def test_cache_hits_are_recorded_when_instrumentation_is_enabled
     component = CacheComponent.new(foo: "foo", bar: "bar")
     renderer = Struct.new(:cache_hits).new({})

@@ -28,7 +28,7 @@ module ViewComponent::ExperimentallyCacheable
       return @__vc_cache_options = nil unless template_key
 
       @__vc_cache_options = cache_fragment_name(
-        [:view_component, view_cache_dependencies],
+        [:view_component, I18n.locale, view_cache_dependencies],
         digest_path: __vc_component_digest_path(template_key)
       )
     end
