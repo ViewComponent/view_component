@@ -27,6 +27,17 @@ module ViewComponent
       @dependencies.to_a
     end
 
+    # Extract ViewComponent render dependencies from raw Ruby source (for example a
+    # component's own .rb file), where a child may be rendered from a method rather
+    # than directly in a template. Only component-class renders (`render Foo.new`)
+    # are detected; partial/string renders are intentionally out of scope, matching
+    # how template sources are handled.
+    def extract_component_renders
+      return [] unless @template_string&.include?("render")
+
+      extract_component_class_renders(@template_string).uniq
+    end
+
     private
 
     def extract_from_ruby(ruby_code)

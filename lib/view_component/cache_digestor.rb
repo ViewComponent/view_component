@@ -38,7 +38,9 @@ module ViewComponent
 
       digest = Digest::SHA1.new
 
-      update_digest(digest, cached_file_contents(component_class.identifier))
+      ruby_source = cached_file_contents(component_class.identifier)
+      update_digest(digest, ruby_source)
+      update_ruby_dependency_digests(digest, ruby_source, component_class.identifier)
 
       inline_template = component_class.__vc_inline_template
       if inline_template
@@ -64,6 +66,13 @@ module ViewComponent
       return unless template_source&.include?("render")
 
       dependencies = ViewComponent::TemplateDependencyExtractor.new(template_source, handler, identifier: identifier).extract
+      update_dependency_digests(digest, dependencies)
+    end
+
+    def update_ruby_dependency_digests(digest, ruby_source, identifier)
+      return unless ruby_source&.include?("render")
+
+      dependencies = ViewComponent::TemplateDependencyExtractor.new(ruby_source, :rb, identifier: identifier).extract_component_renders
       update_dependency_digests(digest, dependencies)
     end
 
