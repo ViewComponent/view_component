@@ -113,7 +113,7 @@ module ViewComponent::ExperimentallyCacheable
 
       case cache_if
       when Symbol, String
-        public_send(cache_if)
+        send(cache_if)
       when Proc
         instance_exec(&cache_if)
       else

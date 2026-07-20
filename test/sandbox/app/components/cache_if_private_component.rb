@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class CacheConditionComponent < ViewComponent::Base
+class CacheIfPrivateComponent < ViewComponent::Base
   include ViewComponent::ExperimentallyCacheable
 
-  cache_if :cache_enabled?
+  cache_if :cacheable?
   cache do
     [foo]
   end
@@ -16,7 +16,7 @@ class CacheConditionComponent < ViewComponent::Base
 
   private
 
-  def cache_enabled?
-    false
+  def cacheable?
+    true
   end
 end

@@ -1440,6 +1440,22 @@ class RenderingTest < ViewComponent::TestCase
     refute_equal(first_time, second_time)
   end
 
+  def test_cache_if_private_method_enables_caching
+    with_action_controller_caching do
+      Rails.cache.clear
+
+      render_inline(CacheIfPrivateComponent.new(foo: "foo"))
+      first_time = page.find(".cache-if-private__message")["data-time"]
+
+      render_inline(CacheIfPrivateComponent.new(foo: "foo"))
+      second_time = page.find(".cache-if-private__message")["data-time"]
+
+      assert_equal(first_time, second_time)
+    ensure
+      Rails.cache.clear
+    end
+  end
+
   def test_cache_hits_are_recorded_when_instrumentation_is_enabled
     component = CacheComponent.new(foo: "foo", bar: "bar")
     renderer = Struct.new(:cache_hits).new({})
