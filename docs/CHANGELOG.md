@@ -14,6 +14,10 @@ nav_order: 6
 
     *Peter Yates*
 
+* Fix `NoMethodError: undefined method 'template_handler_extensions'` when gathering sidecar templates on Rails main. Action View removed the `ActionView::Template.template_handler_extensions` method in newer versions; the compiler now reads the registered extensions through `ActionView::Template::Handlers.extensions`, which is the supported read-path API across all supported Rails versions (7.1+).
+
+    *Luiz Kowalski*
+
 ## 4.12.0
 
 * Fix stale render context on reused component instances. A `ViewComponent::Base` instance memoized its controller, helpers, request, view context, lookup context, view flow, and requested format details on first render via `||=`. Rendering the same instance a second time (intentionally or via aliasing) reused that stale context, which could leak data across requests, sessions, or users. `#render_in` now resets these ivars on every call so each render derives its context from the current view.
