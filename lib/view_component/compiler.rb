@@ -177,7 +177,7 @@ module ViewComponent
         else
           path_parser = ActionView::Resolver::PathParser.new
           templates = @component.sidecar_files(
-            ActionView::Template.template_handler_extensions
+            ActionView::Template::Handlers.extensions
           ).map do |path|
             details = path_parser.parse(path).details
             Template::File.new(component: @component, path: path, details: details)
