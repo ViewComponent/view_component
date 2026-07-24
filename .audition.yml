@@ -1,0 +1,9 @@
+# Audition — Ractor-readiness checks (https://github.com/yaroslav/audition)
+#
+# Known findings are recorded in .audition-baseline.json so CI fails only on
+# *new* findings. Regenerate the baseline with:
+#   audition . --write-baseline
+#
+# Silence a single line inline, rubocop-style:
+#   risky_call # audition:disable <check-name>
+fail_on: error

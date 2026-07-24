@@ -11,7 +11,7 @@ _Is this page missing a link? Open a PR!_
 ## ViewComponent libraries
 
 - [Primer ViewComponents](https://primer.style/view-components/)
-- [GOV.UK Rails Components](https://govuk-components.netlify.app/)
+- [GOV.UK Rails Components](https://govuk-components.x-govuk.org/)
 - [Polaris ViewComponents](https://github.com/baoagency/polaris_view_components)
 - [Rails Designer](https://railsdesigner.com/)
 

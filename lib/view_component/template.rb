@@ -28,32 +28,11 @@ module ViewComponent
           details = ActionView::TemplateDetails.new(details.locale, details.handler, DEFAULT_FORMAT, details.variant)
         end
 
-        @strip_annotation_line = false
-
-        # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).
-        # Use -1 to compensate for correct line numbers in stack traces.
-        # However, negative line numbers cause segfaults when Ruby's coverage
-        # is enabled (bugs.ruby-lang.org/issues/19363). In that case, strip the
-        # annotation line from compiled source instead.
-        lineno =
-          if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
-            if coverage_running?
-              # Can't use negative lineno with coverage (causes segfault on Linux).
-              # Strip annotation line if enabled to preserve correct line numbers.
-              @strip_annotation_line = ActionView::Base.annotate_rendered_view_with_filenames
-              0
-            else
-              -1
-            end
-          else
-            0
-          end
-
         super(
           component: component,
           details: details,
           path: path,
-          lineno: lineno
+          lineno: 0
         )
       end
 
@@ -68,11 +47,19 @@ module ViewComponent
 
       private
 
+      def compile_lineno
+        return super unless Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
+
+        coverage_running? ? 0 : -1
+      end
+
       def compiled_source
         result = super
         # Strip the annotation line to maintain correct line numbers when coverage
         # is running (avoids segfault from negative lineno)
-        result = result.partition(";").last if @strip_annotation_line
+        if coverage_running? && ActionView::Base.annotate_rendered_view_with_filenames
+          result = result.partition(";").last
+        end
         result
       end
     end
@@ -147,7 +134,7 @@ module ViewComponent
       @component.silence_redefinition_of_method(call_method_name)
 
       # rubocop:disable Style/EvalWithLocation
-      @component.class_eval <<~RUBY, @path, @lineno
+      @component.class_eval <<~RUBY, @path, compile_lineno
         def #{call_method_name}
           #{compiled_source}
         end
@@ -194,6 +181,10 @@ module ViewComponent
     end
 
     private
+
+    def compile_lineno
+      @lineno
+    end
 
     def compiled_source
       handler = details.handler_class
