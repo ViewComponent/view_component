@@ -14,6 +14,7 @@ group :development, :test do
   gem "allocation_stats"
   gem "appraisal", "~> 2"
   gem "appraisal-run", "~> 1.1"
+  gem "audition", require: false
   gem "benchmark-ips", "~> 2"
   gem "better_html"
   gem "bundler"

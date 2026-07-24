@@ -104,3 +104,18 @@ jobs:
         bundler-cache: true
     - name: YARD Lint
       run: bundle exec yard-lint lib/
+  audition:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 4.0
+    # audition needs Ruby 4.0+; installed standalone since rubydex is a
+    # precompiled native gem. Fails only on findings not in
+    # .audition-baseline.json. Static-only skips Ractor issues in dependencies.
+    - name: Install audition
+      run: gem install audition
+    - name: Audition (Ractor readiness)
+      run: audition . --static-only --plain

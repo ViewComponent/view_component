@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add [audition](https://github.com/yaroslav/audition) Ractor-readiness checks to CI. Applied safe `.freeze` auto-fixes to string constants in `ViewComponent::Errors` and baselined existing findings so the gate fails only on new Ractor-isolation violations.
+
+    *Joel Hawksley*
+
 * Update link to GOV.UK Components library in resources list to govuk-components.x-govuk.org
 
     *Peter Yates*
