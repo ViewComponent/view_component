@@ -10,4 +10,3 @@ module ViewComponent
     STRING = [MAJOR, MINOR, PATCH, PRE].compact.join(".").freeze
   end
 end
-
