@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Remove the `$PROGRAM_NAME` version-printing line from `version.rb` so the file no longer reads a global variable (unshareable across Ractors). The version is still available via `ViewComponent::VERSION::STRING`.
+
+    *Joel Hawksley*
+
 * Freeze `ViewComponent::VERSION::STRING` so the version constant is immutable and Ractor-shareable.
 
     *Joel Hawksley*

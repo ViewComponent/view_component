@@ -2,7 +2,6 @@
   "class-level-state|lib/view_component/base.rb": 9,
   "class-level-state|lib/view_component/preview.rb": 2,
   "class-variables|lib/view_component/base.rb": 2,
-  "global-variables|lib/view_component/version.rb": 1,
   "runtime-class-state|/Users/joelhawksley/.local/share/mise/installs/ruby/4.0.5/lib/ruby/4.0.0/delegate.rb": 1,
   "runtime-class-state|/Users/joelhawksley/.local/share/mise/installs/ruby/4.0.5/lib/ruby/gems/4.0.0/gems/actionpack-8.1.3/lib/action_dispatch/http/mime_type.rb": 3,
   "runtime-class-state|/Users/joelhawksley/.local/share/mise/installs/ruby/4.0.5/lib/ruby/gems/4.0.0/gems/actionview-8.1.3/lib/action_view/gem_version.rb": 1,

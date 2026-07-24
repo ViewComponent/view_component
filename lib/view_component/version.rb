@@ -11,4 +11,3 @@ module ViewComponent
   end
 end
 
-puts ViewComponent::VERSION::STRING if __FILE__ == $PROGRAM_NAME
