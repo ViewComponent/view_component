@@ -471,6 +471,9 @@ module ViewComponent
     # slot setters or `with_content`).
     def __vc_reset_render_state!
       %i[
+        @__vc_cache_dependencies
+        @__vc_cache_options
+        @__vc_component_digest
         @__vc_controller
         @__vc_helpers
         @__vc_request

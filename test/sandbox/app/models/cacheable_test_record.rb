@@ -3,7 +3,8 @@
 # Minimal stand-in for an ActiveRecord model with cache versioning enabled:
 # a stable cache_key plus a cache_version that changes when the record is updated.
 class CacheableTestRecord
-  attr_reader :id, :version
+  attr_reader :id
+  attr_accessor :version
 
   def initialize(id:, version:)
     @id = id

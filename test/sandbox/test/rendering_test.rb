@@ -1459,13 +1459,14 @@ class RenderingTest < ViewComponent::TestCase
   def test_cache_key_includes_locale
     with_action_controller_caching do
       Rails.cache.clear
+      component = CacheLocaleComponent.new
 
-      I18n.with_locale(:en) { render_inline(CacheLocaleComponent.new) }
+      I18n.with_locale(:en) { render_inline(component) }
       assert_selector(".cache-locale__greeting", text: "Hello")
 
-      # Without the locale in the cache key, this render would serve the cached
-      # English fragment instead of the French translation.
-      I18n.with_locale(:fr) { render_inline(CacheLocaleComponent.new) }
+      # Reusing the component verifies that render-scoped cache key state does not
+      # serve the cached English fragment instead of the French translation.
+      I18n.with_locale(:fr) { render_inline(component) }
       assert_selector(".cache-locale__greeting", text: "Bonjour")
     ensure
       Rails.cache.clear
@@ -1771,14 +1772,17 @@ class RenderingTest < ViewComponent::TestCase
   def test_cache_record_component_caches_and_invalidates_on_update
     with_action_controller_caching do
       Rails.cache.clear
+      record = CacheableTestRecord.new(id: 1, version: 1)
+      component = CacheRecordComponent.new(record: record)
 
-      render_inline(CacheRecordComponent.new(record: CacheableTestRecord.new(id: 1, version: 1)))
+      render_inline(component)
       first_time = page.find(".cache-record")["data-time"]
 
-      render_inline(CacheRecordComponent.new(record: CacheableTestRecord.new(id: 1, version: 1)))
+      render_inline(component)
       assert_equal(first_time, page.find(".cache-record")["data-time"], "same record should hit the cache")
 
-      render_inline(CacheRecordComponent.new(record: CacheableTestRecord.new(id: 1, version: 2)))
+      record.version = 2
+      render_inline(component)
       refute_equal(first_time, page.find(".cache-record")["data-time"], "an updated record should invalidate the cache")
     ensure
       Rails.cache.clear
@@ -1831,11 +1835,12 @@ class RenderingTest < ViewComponent::TestCase
 
   def test_cache_variant_is_not_served_from_default_cache
     with_action_controller_caching do
-      render_inline(CacheVariantComponent.new)
+      component = CacheVariantComponent.new
+      render_inline(component)
       assert_selector(".cache-variant", text: "DEFAULT")
 
       with_variant(:phone) do
-        render_inline(CacheVariantComponent.new)
+        render_inline(component)
         assert_selector(".cache-variant", text: "PHONE")
       end
     end
