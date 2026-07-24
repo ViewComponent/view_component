@@ -124,7 +124,6 @@
   "runtime-unshareable-constant|/Users/joelhawksley/.local/share/mise/installs/ruby/4.0.5/lib/ruby/gems/4.0.0/gems/i18n-1.14.8/lib/i18n/interpolate/ruby.rb": 1,
   "runtime-unshareable-constant|/Users/joelhawksley/.local/share/mise/installs/ruby/4.0.5/lib/ruby/gems/4.0.0/gems/logger-1.7.0/lib/logger.rb": 1,
   "runtime-unshareable-constant|/Users/joelhawksley/github/view_component/lib/view_component/deprecation.rb": 1,
-  "runtime-unshareable-constant|/Users/joelhawksley/github/view_component/lib/view_component/version.rb": 1,
   "unsafe-calls|lib/view_component/base.rb": 1,
   "unsafe-calls|lib/view_component/compile_cache.rb": 1,
   "unsafe-calls|lib/view_component/compiler.rb": 3,
