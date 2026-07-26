@@ -14,6 +14,10 @@ nav_order: 6
 
     *Reegan Viljoen*
 
+* Freeze `ViewComponent::VERSION::STRING` so the version constant is immutable and Ractor-shareable.
+
+    *Joel Hawksley*
+
 * Add [audition](https://github.com/yaroslav/audition) Ractor-readiness checks to CI. Applied safe `.freeze` auto-fixes to string constants in `ViewComponent::Errors` and baselined existing findings so the gate fails only on new Ractor-isolation violations.
 
     *Joel Hawksley*
