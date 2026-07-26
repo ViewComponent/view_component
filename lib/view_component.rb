@@ -12,6 +12,7 @@ module ViewComponent
   autoload :CompileCache
   autoload :Config
   autoload :Deprecation
+  autoload :ExperimentallyCacheable
   autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview

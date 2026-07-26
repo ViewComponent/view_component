@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add experimental support for caching by including `ViewComponent::ExperimentallyCacheable`.
+
+    *Reegan Viljoen*
+
 * Freeze `ViewComponent::VERSION::STRING` so the version constant is immutable and Ractor-shareable.
 
     *Joel Hawksley*

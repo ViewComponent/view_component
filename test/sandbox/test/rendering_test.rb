@@ -20,7 +20,7 @@ class RenderingTest < ViewComponent::TestCase
     MyComponent.__vc_ensure_compiled
 
     with_instrumentation_enabled_option(false) do
-      assert_allocations({"4.1" => 69..160, "4.0" => 69..161, "3.4" => 75..76, "3.3" => 77..79, "3.2" => 80..82}) do
+      assert_allocations({"4.1" => 69..160, "4.0" => 69..162, "3.4" => 75..76, "3.3" => 77..79, "3.2" => 80..82}) do
         render_inline(MyComponent.new)
       end
     end
@@ -406,6 +406,8 @@ class RenderingTest < ViewComponent::TestCase
     end
 
     render_inline(MyComponent.new)
+  ensure
+    ViewComponent::CompileCache.cache.delete(MyComponent)
   end
 
   def test_that_it_has_a_version_number
@@ -1377,6 +1379,337 @@ class RenderingTest < ViewComponent::TestCase
     assert_text("Hi!")
   end
 
+  def test_inline_cache_component
+    with_action_controller_caching do
+      component = InlineCacheComponent.new(foo: "foo", bar: "bar")
+      render_inline(component)
+
+      assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+      assert_selector(".cache-component__cache-message", text: "foo bar")
+
+      render_inline(InlineCacheComponent.new(foo: "foo", bar: "bar"))
+
+      assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+
+      new_component = InlineCacheComponent.new(foo: "foo", bar: "baz")
+      render_inline(new_component)
+
+      assert_selector(".cache-component__cache-key", text: new_component.view_cache_dependencies)
+      assert_selector(".cache-component__cache-message", text: "foo baz")
+    end
+  end
+
+  def test_cache_component
+    with_action_controller_caching do
+      component = CacheComponent.new(foo: "foo", bar: "bar")
+      render_inline(component)
+
+      assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+      assert_selector(".cache-component__cache-message", text: "foo bar")
+
+      render_inline(CacheComponent.new(foo: "foo", bar: "bar"))
+
+      assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+
+      new_component = CacheComponent.new(foo: "foo", bar: "baz")
+      render_inline(new_component)
+
+      assert_selector(".cache-component__cache-key", text: new_component.view_cache_dependencies)
+      assert_selector(".cache-component__cache-message", text: "foo baz")
+    end
+  end
+
+  def test_no_cache_compoennt
+    component = NoCacheComponent.new(foo: "foo", bar: "bar")
+    render_inline(component)
+
+    assert_selector(".cache-component__cache-key", text: component.view_cache_dependencies)
+    assert_selector(".cache-component__cache-message", text: "foo bar")
+    assert_nil(component.view_cache_options)
+  end
+
+  def test_cache_if_false_skips_caching
+    component = CacheConditionComponent.new(foo: "foo")
+
+    render_inline(component)
+    first_time = page.find(".cache-condition-component__message")["data-time"]
+
+    render_inline(component)
+    second_time = page.find(".cache-condition-component__message")["data-time"]
+
+    refute_equal(first_time, second_time)
+  end
+
+  def test_cache_if_private_method_enables_caching
+    with_action_controller_caching do
+      Rails.cache.clear
+
+      render_inline(CacheIfPrivateComponent.new(foo: "foo"))
+      first_time = page.find(".cache-if-private__message")["data-time"]
+
+      render_inline(CacheIfPrivateComponent.new(foo: "foo"))
+      second_time = page.find(".cache-if-private__message")["data-time"]
+
+      assert_equal(first_time, second_time)
+    ensure
+      Rails.cache.clear
+    end
+  end
+
+  def test_cache_key_includes_locale
+    with_action_controller_caching do
+      Rails.cache.clear
+      component = CacheLocaleComponent.new
+
+      I18n.with_locale(:en) { render_inline(component) }
+      assert_selector(".cache-locale__greeting", text: "Hello")
+
+      # Reusing the component verifies that render-scoped cache key state does not
+      # serve the cached English fragment instead of the French translation.
+      I18n.with_locale(:fr) { render_inline(component) }
+      assert_selector(".cache-locale__greeting", text: "Bonjour")
+    ensure
+      Rails.cache.clear
+    end
+  end
+
+  def test_cache_hits_are_recorded_when_instrumentation_is_enabled
+    component = CacheComponent.new(foo: "foo", bar: "bar")
+    renderer = Struct.new(:cache_hits).new({})
+    template = Struct.new(:virtual_path).new("cache_component")
+
+    component.instance_variable_set(:@view_renderer, renderer)
+    component.instance_variable_set(:@current_template, template)
+
+    with_instrumentation_enabled_option(true) do
+      component.record_fragment_cache(:hit)
+    end
+
+    assert_equal(:hit, renderer.cache_hits["cache_component"])
+  end
+
+  def test_cache_hits_are_not_recorded_when_instrumentation_is_disabled
+    component = CacheComponent.new(foo: "foo", bar: "bar")
+    renderer = Struct.new(:cache_hits).new({})
+    template = Struct.new(:virtual_path).new("cache_component")
+
+    component.instance_variable_set(:@view_renderer, renderer)
+    component.instance_variable_set(:@current_template, template)
+
+    with_instrumentation_enabled_option(false) do
+      component.record_fragment_cache(:hit)
+    end
+
+    assert_empty(renderer.cache_hits)
+  end
+
+  def test_component_cache_uses_rails_fragment_cache_instrumentation
+    events = []
+    subscriber = lambda do |*args|
+      events << ActiveSupport::Notifications::Event.new(*args)
+    end
+
+    with_action_controller_caching do
+      Rails.cache.clear
+
+      ActiveSupport::Notifications.subscribed(subscriber, /_fragment\.action_controller/) do
+        render_inline(CacheComponent.new(foo: "foo", bar: "bar"))
+        render_inline(CacheComponent.new(foo: "foo", bar: "bar"))
+      end
+    end
+
+    assert_includes(events.map(&:name), "write_fragment.action_controller")
+    assert_includes(events.map(&:name), "read_fragment.action_controller")
+    assert(events.any? { |event| event.payload[:key].flatten.include?(:view_component) })
+  ensure
+    Rails.cache.clear
+  end
+
+  def test_cache_digest_is_precomputed_when_template_caching_is_enabled
+    CacheComponent.remove_instance_variable(:@__vc_component_digest) if CacheComponent.instance_variable_defined?(:@__vc_component_digest)
+
+    with_template_caching do
+      CacheComponent.__vc_compile(force: true)
+    end
+
+    assert_predicate(CacheComponent.instance_variable_get(:@__vc_component_digest), :present?)
+  ensure
+    CacheComponent.remove_instance_variable(:@__vc_component_digest) if CacheComponent.instance_variable_defined?(:@__vc_component_digest)
+    ViewComponent::CompileCache.invalidate!
+  end
+
+  def test_cache_block_expands_dependency_values_and_allows_private_methods
+    record = GlobalID.parse("gid://sandbox/CacheDependencyTypesRecord/42")
+    component = CacheDependencyTypesComponent.new(record: record, tags: ["alpha", "beta"], label: "plain-string")
+
+    render_inline(component)
+
+    expected_dependencies = [record, ["alpha", "beta"], "plain-string", "private-token"]
+    assert_equal(expected_dependencies, component.view_cache_dependencies)
+
+    expanded_dependencies = ActiveSupport::Cache.expand_cache_key(expected_dependencies)
+    cache_key = ActiveSupport::Cache.expand_cache_key(component.view_cache_options)
+    assert_includes(cache_key, expanded_dependencies)
+    assert_includes(expanded_dependencies, record.to_param)
+  end
+
+  def with_action_controller_caching
+    old_perform_caching = ActionController::Base.perform_caching
+    ActionController::Base.perform_caching = true
+
+    yield
+  ensure
+    ActionController::Base.perform_caching = old_perform_caching
+  end
+
+  def test_cache_key_changes_when_child_component_template_changes
+    with_action_controller_caching do
+      child_template_path = CacheDigestorChildComponent.sidecar_files(["erb"]).first
+      original_template = File.read(child_template_path)
+
+      Rails.cache.clear
+      ViewComponent::CompileCache.invalidate!
+
+      component_v1 = CacheDigestorParentComponent.new(foo: "x")
+      render_inline(component_v1)
+      assert_selector(".child", text: "v1")
+      time_v1 = page.find(".parent")["data-time"]
+
+      render_inline(CacheDigestorParentComponent.new(foo: "x"))
+      assert_selector(".child", text: "v1")
+      assert_equal(time_v1, page.find(".parent")["data-time"])
+
+      File.write(child_template_path, original_template.sub("v1", "v2"))
+      ViewComponent::CompileCache.invalidate!
+
+      component_v2 = CacheDigestorParentComponent.new(foo: "x")
+      render_inline(component_v2)
+      assert_selector(".child", text: "v2")
+      refute_equal(time_v1, page.find(".parent")["data-time"])
+    ensure
+      Rails.cache.clear
+      ViewComponent::CompileCache.invalidate!
+
+      if child_template_path && original_template
+        File.write(child_template_path, original_template)
+      end
+    end
+  end
+
+  def test_cache_digest_tracks_child_component_dependencies_from_rails_template_handlers
+    [
+      CacheDigestorSlimParentComponent,
+      CacheDigestorHamlParentComponent,
+      CacheDigestorJbuilderParentComponent
+    ].each do |component_class|
+      assert_cache_digest_changes_when_child_component_template_changes(component_class)
+    end
+  end
+
+  def assert_cache_digest_changes_when_child_component_template_changes(component_class)
+    child_template_path = CacheDigestorChildComponent.sidecar_files(["erb"]).first
+    original_template = File.read(child_template_path)
+
+    ViewComponent::CompileCache.invalidate!
+    digest_v1 = ViewComponent::CacheDigestor.digest(component_class)
+
+    File.write(child_template_path, original_template.sub("v1", "v2"))
+    ViewComponent::CompileCache.invalidate!
+
+    digest_v2 = ViewComponent::CacheDigestor.digest(component_class)
+    refute_equal(digest_v1, digest_v2)
+  ensure
+    ViewComponent::CompileCache.invalidate!
+
+    if child_template_path && original_template
+      File.write(child_template_path, original_template)
+    end
+  end
+
+  def test_cache_key_does_not_change_when_partial_string_dependency_changes
+    with_action_controller_caching do
+      partial_path = Rails.root.join("app/views/shared/_cache_digestor_partial.html.erb")
+      original_partial = File.read(partial_path)
+
+      Rails.cache.clear
+      ViewComponent::CompileCache.invalidate!
+
+      component_v1 = CacheDigestorPartialParentComponent.new(foo: "x")
+      render_inline(component_v1)
+      assert_selector(".partial-child", text: "partial-v1")
+      time_v1 = page.find(".partial-parent")["data-time"]
+
+      File.write(partial_path, original_partial.sub("partial-v1", "partial-v2"))
+      ViewComponent::CompileCache.invalidate!
+
+      render_inline(CacheDigestorPartialParentComponent.new(foo: "x"))
+
+      assert_selector(".partial-child", text: "partial-v1")
+      assert_equal(time_v1, page.find(".partial-parent")["data-time"])
+    ensure
+      Rails.cache.clear
+      ViewComponent::CompileCache.invalidate!
+
+      File.write(partial_path, original_partial) if partial_path && original_partial
+    end
+  end
+
+  def test_cache_key_does_not_change_when_child_component_partial_dependency_changes
+    with_action_controller_caching do
+      partial_path = Rails.root.join("app/views/shared/_cache_digestor_nested_partial.html.erb")
+      original_partial = File.read(partial_path)
+
+      Rails.cache.clear
+      ViewComponent::CompileCache.invalidate!
+
+      component_v1 = CacheDigestorNestedPartialParentComponent.new(foo: "x")
+      render_inline(component_v1)
+      assert_selector(".nested-partial-child", text: "nested-v1")
+      time_v1 = page.find(".nested-partial-parent")["data-time"]
+
+      File.write(partial_path, original_partial.sub("nested-v1", "nested-v2"))
+      ViewComponent::CompileCache.invalidate!
+
+      render_inline(CacheDigestorNestedPartialParentComponent.new(foo: "x"))
+
+      assert_selector(".nested-partial-child", text: "nested-v1")
+      assert_equal(time_v1, page.find(".nested-partial-parent")["data-time"])
+    ensure
+      Rails.cache.clear
+      ViewComponent::CompileCache.invalidate!
+
+      File.write(partial_path, original_partial) if partial_path && original_partial
+    end
+  end
+
+  def test_cache_key_does_not_change_when_layout_string_dependency_changes
+    with_action_controller_caching do
+      layout_path = Rails.root.join("app/views/shared/_cache_digestor_layout.html.erb")
+      original_layout = File.read(layout_path)
+
+      Rails.cache.clear
+      ViewComponent::CompileCache.invalidate!
+
+      component_v1 = CacheDigestorLayoutParentComponent.new(foo: "x")
+      render_inline(component_v1)
+      assert_selector(".layout-shell", text: "layout-v1")
+      time_v1 = page.find(".layout-parent")["data-time"]
+
+      File.write(layout_path, original_layout.sub("layout-v1", "layout-v2"))
+      ViewComponent::CompileCache.invalidate!
+
+      render_inline(CacheDigestorLayoutParentComponent.new(foo: "x"))
+
+      assert_selector(".layout-shell", text: "layout-v1")
+      assert_equal(time_v1, page.find(".layout-parent")["data-time"])
+    ensure
+      Rails.cache.clear
+      ViewComponent::CompileCache.invalidate!
+
+      File.write(layout_path, original_layout) if layout_path && original_layout
+    end
+  end
+
   def test_around_render_html_unsafe_output_is_escaped
     warnings = capture_warnings { render_inline(UnsafeAroundRenderComponent.new) }
 
@@ -1422,5 +1755,124 @@ class RenderingTest < ViewComponent::TestCase
     render_inline(I18nTestComponent.new)
 
     assert_selector("div", text: I18n.t("rendering_test.i18n_test_component.message"))
+  end
+
+  def test_cache_call_component_caches
+    with_action_controller_caching do
+      render_inline(CacheCallComponent.new(foo: "foo"))
+      first_time = page.find(".cache-call")["data-time"]
+
+      render_inline(CacheCallComponent.new(foo: "foo"))
+      second_time = page.find(".cache-call")["data-time"]
+
+      assert_equal(first_time, second_time)
+    end
+  end
+
+  def test_cache_record_component_caches_and_invalidates_on_update
+    with_action_controller_caching do
+      Rails.cache.clear
+      record = CacheableTestRecord.new(id: 1, version: 1)
+      component = CacheRecordComponent.new(record: record)
+
+      render_inline(component)
+      first_time = page.find(".cache-record")["data-time"]
+
+      render_inline(component)
+      assert_equal(first_time, page.find(".cache-record")["data-time"], "same record should hit the cache")
+
+      record.version = 2
+      render_inline(component)
+      refute_equal(first_time, page.find(".cache-record")["data-time"], "an updated record should invalidate the cache")
+    ensure
+      Rails.cache.clear
+    end
+  end
+
+  def test_cache_key_changes_when_child_component_ruby_file_changes
+    child_path = CacheDigestorChildComponent.identifier
+    original = File.read(child_path)
+
+    ViewComponent::CompileCache.invalidate!
+    digest_v1 = ViewComponent::CacheDigestor.digest(CacheDigestorParentComponent)
+
+    File.write(child_path, original + "\n# cache-bust\n")
+    ViewComponent::CompileCache.invalidate!
+    digest_v2 = ViewComponent::CacheDigestor.digest(CacheDigestorParentComponent)
+
+    refute_equal(digest_v1, digest_v2, "changing a rendered child's Ruby file should bust the parent digest")
+  ensure
+    File.write(child_path, original) if child_path && original
+    ViewComponent::CompileCache.invalidate!
+  end
+
+  def test_cache_key_changes_when_indirectly_rendered_child_changes
+    child_template = CacheDigestorChildComponent.sidecar_files(["erb"]).first
+    original = File.read(child_template)
+
+    ViewComponent::CompileCache.invalidate!
+    digest_v1 = ViewComponent::CacheDigestor.digest(CacheIndirectParentComponent)
+
+    File.write(child_template, original.sub("v1", "indirect-v2"))
+    ViewComponent::CompileCache.invalidate!
+    digest_v2 = ViewComponent::CacheDigestor.digest(CacheIndirectParentComponent)
+
+    refute_equal(digest_v1, digest_v2, "a child rendered from a Ruby method should invalidate the parent digest")
+  ensure
+    File.write(child_template, original) if child_template && original
+    ViewComponent::CompileCache.invalidate!
+  end
+
+  def test_cache_digest_terminates_for_cyclic_components
+    digest = nil
+    assert_nothing_raised { digest = ViewComponent::CacheDigestor.digest(CacheCycleAComponent) }
+    assert_kind_of(String, digest)
+  end
+
+  def test_cache_digest_terminates_for_self_referential_component
+    assert_nothing_raised { ViewComponent::CacheDigestor.digest(CacheSelfReferentialComponent) }
+  end
+
+  def test_cache_variant_is_not_served_from_default_cache
+    with_action_controller_caching do
+      component = CacheVariantComponent.new
+      render_inline(component)
+      assert_selector(".cache-variant", text: "DEFAULT")
+
+      with_variant(:phone) do
+        render_inline(component)
+        assert_selector(".cache-variant", text: "PHONE")
+      end
+    end
+  end
+
+  def test_cache_preserves_html_safety
+    with_action_controller_caching do
+      render_inline(CacheHtmlSafetyComponent.new)
+      render_inline(CacheHtmlSafetyComponent.new)
+
+      assert_selector("div.cache-html strong", text: "bold")
+      assert_no_selector("div.cache-html script")
+      assert_text("<script>")
+    end
+  end
+
+  def test_cache_block_is_inherited_when_parent_declares_cache_after_subclass
+    parent = Class.new(ViewComponent::Base) do
+      include ViewComponent::ExperimentallyCacheable
+
+      def self.name
+        "CacheOrderingParentComponent"
+      end
+    end
+    child = Class.new(parent) do
+      def self.name
+        "CacheOrderingChildComponent"
+      end
+    end
+
+    parent.cache { [:ordered] }
+
+    refute_nil(child.__vc_cache_key_block, "a subclass should inherit a cache block declared on the parent after the subclass was defined")
   end
 end

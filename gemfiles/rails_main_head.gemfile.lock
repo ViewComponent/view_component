@@ -112,6 +112,7 @@ PATH
   specs:
     view_component (4.12.0)
       actionview (>= 7.1.0)
+      actionview_precompiler (>= 0.4)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
 
@@ -120,6 +121,8 @@ GEM
   specs:
     action_text-trix (2.1.19)
       railties
+    actionview_precompiler (0.4.0)
+      actionview (>= 6.0.a)
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
     allocation_stats (0.1.5)
@@ -456,6 +459,7 @@ CHECKSUMS
   actionpack (8.2.0.alpha)
   actiontext (8.2.0.alpha)
   actionview (8.2.0.alpha)
+  actionview_precompiler (0.4.0) sha256=33b6bd6ec4c1b856e02fdf5f6512c9eb4a92ac1c0545e941b3e354b7d540ed1c
   activejob (8.2.0.alpha)
   activemodel (8.2.0.alpha)
   activerecord (8.2.0.alpha)

@@ -471,6 +471,9 @@ module ViewComponent
     # slot setters or `with_content`).
     def __vc_reset_render_state!
       %i[
+        @__vc_cache_dependencies
+        @__vc_cache_options
+        @__vc_component_digest
         @__vc_controller
         @__vc_helpers
         @__vc_request
@@ -602,6 +605,17 @@ module ViewComponent
         sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
 
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
+      end
+
+      # Sidecar template files (ERB, Haml, Slim, etc.) for this component. Wraps
+      # `ActionView::Template::Handlers.extensions` so callers don't reach into
+      # Action View directly.
+      #
+      # @private
+      #
+      # @return [Array<String>] Absolute paths of sidecar template files.
+      def sidecar_templates
+        sidecar_files(ActionView::Template::Handlers.extensions)
       end
 
       # Render a component for each element in a collection ([documentation](/guide/collections)):

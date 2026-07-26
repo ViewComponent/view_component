@@ -75,8 +75,9 @@
   "runtime-class-variable|/Users/joelhawksley/.local/share/mise/installs/ruby/4.0.5/lib/ruby/gems/4.0.0/gems/rails-html-sanitizer-1.7.0/lib/rails-html-sanitizer.rb": 1,
   "runtime-class-variable|/Users/joelhawksley/github/view_component/lib/view_component/base.rb": 1,
   "runtime-class-variable|/Users/joelhawksley/github/view_component/lib/view_component/compile_cache.rb": 1,
-  "runtime-require|lib/view_component.rb": 14,
+  "runtime-require|lib/view_component.rb": 15,
   "runtime-require|lib/view_component/preview.rb": 1,
+  "runtime-require|lib/view_component/template_dependency_extractor.rb": 1,
   "runtime-require|lib/view_component/test_helpers.rb": 1,
   "runtime-unshareable-constant|/Users/joelhawksley/.local/share/mise/installs/ruby/4.0.5/lib/ruby/4.0.0/cgi/escape.rb": 1,
   "runtime-unshareable-constant|/Users/joelhawksley/.local/share/mise/installs/ruby/4.0.5/lib/ruby/gems/4.0.0/gems/actionpack-8.1.3/lib/action_dispatch/http/mime_type.rb": 7,
@@ -128,6 +129,7 @@
   "unsafe-calls|lib/view_component/compile_cache.rb": 1,
   "unsafe-calls|lib/view_component/compiler.rb": 3,
   "unsafe-calls|lib/view_component/config.rb": 1,
+  "unsafe-calls|lib/view_component/experimentally_cacheable.rb": 3,
   "unsafe-calls|lib/view_component/slotable.rb": 14,
   "unsafe-calls|lib/view_component/translatable.rb": 1
 }

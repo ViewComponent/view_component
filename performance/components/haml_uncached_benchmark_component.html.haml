@@ -1,0 +1,10 @@
+%section.handler-benchmark.haml.uncached{data: {time: Time.zone.now.to_f}}
+  %header
+    %h3= "#{name} Haml uncached"
+    %p= "Total score: #{number_with_delimiter(total_score)}"
+  %ul
+    - report_rows.each do |row|
+      %li
+        %span= row[:label]
+        %span= number_to_currency(row[:amount])
+        %span= pluralize(row[:events], "event")
