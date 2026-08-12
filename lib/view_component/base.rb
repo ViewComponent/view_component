@@ -88,7 +88,7 @@ module ViewComponent
       @view_context = view_context
       self.__vc_original_view_context =
         if instance_variable_defined?(:@__vc_pending_original_view_context)
-          remove_instance_variable(:@__vc_pending_original_view_context)
+          remove_instance_variable(:@__vc_pending_original_view_context) || view_context
         else
           view_context
         end
