@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix intermittent template compilation failures where line-number offsets and annotation stripping were decided when a template object was created instead of when it was compiled, so later changes to coverage or annotation settings produced off-by-one backtraces or blank output.
+
+    *Joel Hawksley*
+
 * Freeze `ViewComponent::VERSION::STRING` so the version constant is immutable and Ractor-shareable.
 
     *Joel Hawksley*
