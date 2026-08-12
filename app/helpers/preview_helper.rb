@@ -23,7 +23,7 @@ module PreviewHelper
   end
 
   def find_template_data_for_preview_source(lookup_context:, template_identifier:)
-    template = lookup_context.find_template(template_identifier)
+    template = find_template_for_preview_source(lookup_context, template_identifier)
 
     if Rails.version.to_f >= 6.1 || template.source.present?
       {
@@ -60,6 +60,14 @@ module PreviewHelper
   end
 
   private
+
+  def find_template_for_preview_source(lookup_context, template_identifier)
+    if lookup_context.respond_to?(:find_template)
+      lookup_context.find_template(template_identifier)
+    else
+      lookup_context.find(template_identifier)
+    end
+  end
 
   def prism_language_name_by_template(template:)
     language = template.identifier.split(".").last

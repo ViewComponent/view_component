@@ -14,7 +14,7 @@ nav_order: 6
 
     *Justin Coyne, Joel Hawksley*
 
-* Restore compatibility with Rails main after `ActionView::Template.template_handler_extensions` was removed.
+* Restore compatibility with Rails main after `ActionView::Template.template_handler_extensions` and `ActionView::LookupContext#find_template` were removed.
 
     *Joel Hawksley*
 
