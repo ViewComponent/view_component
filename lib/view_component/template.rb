@@ -28,11 +28,7 @@ module ViewComponent
           details = ActionView::TemplateDetails.new(details.locale, details.handler, DEFAULT_FORMAT, details.variant)
         end
 
-        super(
-          component: component,
-          details: details,
-          path: path
-        )
+        super
       end
 
       def type
@@ -198,9 +194,7 @@ module ViewComponent
 
     private
 
-    def lineno
-      @lineno
-    end
+    attr_reader :lineno
 
     def compiled_source
       handler = details.handler_class
