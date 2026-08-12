@@ -170,7 +170,7 @@ module ViewComponent
       @templates ||=
         begin
           templates = @component.sidecar_files(
-            ActionView::Template.template_handler_extensions
+            template_handler_extensions
           ).map do |path|
             # Extract format and variant from template filename
             this_format, variant =
@@ -224,6 +224,14 @@ module ViewComponent
 
           templates
         end
+    end
+
+    def template_handler_extensions
+      if ActionView::Template.respond_to?(:template_handler_extensions)
+        ActionView::Template.template_handler_extensions
+      else
+        ActionView::Template::Handlers.extensions.map(&:to_s)
+      end
     end
   end
 end
