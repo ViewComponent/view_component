@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 3.26.0
+
 * Fix rendering partials from components rendered as a collection when the original view context is explicitly stashed as `nil`.
 
     *Justin Coyne, Joel Hawksley*
