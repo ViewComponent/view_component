@@ -10,5 +10,3 @@ module ViewComponent
     STRING = [MAJOR, MINOR, PATCH, PRE].compact.join(".").freeze
   end
 end
-
-puts ViewComponent::VERSION::STRING if __FILE__ == $PROGRAM_NAME
