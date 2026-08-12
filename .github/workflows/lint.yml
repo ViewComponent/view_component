@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
     - name: Check for trailing whitespace
       uses: raisedevs/find-trailing-whitespace@restrict-to-plaintext-only
     - name: Check for merge conflicts
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Vale
         uses: errata-ai/vale-action@d89dee975228ae261d22c15adcd03578634d429c
         env:
@@ -32,7 +32,7 @@ jobs:
   markdown:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v5
     - uses: avto-dev/markdown-lint@v1
       with:
         config: '.github/lint/markdown.json'
@@ -46,7 +46,7 @@ jobs:
     steps:
       # Make sure we have some code to diff.
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Get changed files
@@ -74,12 +74,12 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v5
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 4.0
-    - uses: actions/cache@v4
+    - uses: actions/cache@v5
       with:
         path: vendor/bundle
         key: gems-build-rails-8-ruby-3.2-${{ hashFiles('**/Gemfile.lock') }}
@@ -94,7 +94,7 @@ jobs:
   yard-lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0
     - name: Setup Ruby
@@ -107,7 +107,7 @@ jobs:
   audition:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:

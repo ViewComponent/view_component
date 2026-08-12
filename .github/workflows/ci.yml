@@ -16,7 +16,7 @@ jobs:
     env:
       BUNDLE_GEMFILE: gemfiles/rails_8.1.gemfile
     steps:
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v5
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -49,7 +49,7 @@ jobs:
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v5
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -63,7 +63,7 @@ jobs:
         RAILS_VERSION: ${{ matrix.rails_version }}
         RUBY_VERSION: ${{ matrix.ruby_version }}
     - name: Upload coverage results
-      uses: actions/upload-artifact@v4.4.0
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}-${{matrix.mode}}
@@ -73,12 +73,12 @@ jobs:
     name: Test compatibility with Primer ViewComponents (main)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v5
       with:
         repository: 'primer/view_components'
         path: 'primer_view_components'
         ref: 'main'
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v5
       with:
         path: 'view_component'
     - name: Setup Ruby
@@ -87,7 +87,7 @@ jobs:
         ruby-version: 4.0
         bundler-cache: true
         working-directory: 'view_component'
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v5
       with:
         node-version: 20
         cache: 'npm'
@@ -106,14 +106,14 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v5
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 4.0
         bundler-cache: true
     - name: Download coverage results
-      uses: actions/download-artifact@v4.3.0
+      uses: actions/download-artifact@v5
     - name: Collate simplecov
       run: |
         bundle exec rake coverage:report

@@ -34,7 +34,7 @@ group :development, :test do
   gem "rake", "~> 13"
   gem "rails-dom-testing", "~> 2.3.0"
   gem "reactionview"
-  gem "redis"
+  gem "redis", ">= 4", "< 6"
   gem "rspec-rails"
   gem "rubocop-md", "~> 2"
   gem "selenium-webdriver", "~> 4"
