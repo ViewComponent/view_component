@@ -103,7 +103,7 @@ module ViewComponent
     # Returns HTML that has been escaped by the respective template handler.
     #
     # @return [String]
-    def render_in(view_context, **_, &block)
+    def render_in(view_context, **, &block)
       self.class.__vc_compile(raise_errors: true)
 
       __vc_reset_render_state!
@@ -469,12 +469,14 @@ module ViewComponent
     # `@__vc_content_set_by_with_content`) is intentionally preserved because it
     # is populated by callers _before_ `render_in` runs (e.g. via `with_*`
     # slot setters or `with_content`).
+    RENDER_STATE_IVARS = %i[
+      @__vc_controller
+      @__vc_helpers
+      @__vc_request
+    ].freeze
+
     def __vc_reset_render_state!
-      %i[
-        @__vc_controller
-        @__vc_helpers
-        @__vc_request
-      ].each do |ivar|
+      RENDER_STATE_IVARS.each do |ivar|
         remove_instance_variable(ivar) if instance_variable_defined?(ivar)
       end
     end
