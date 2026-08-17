@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Stabilize rendering allocation tests with explicit warmups and exact expectations by Rails and Ruby.
+
+    *Joel Hawksley*
+
 * Replace the custom memory allocation test helper with `minitest-memory`, preserving Ruby-version-specific allocation thresholds while improving failure diagnostics.
 
     *Joel Hawksley*
