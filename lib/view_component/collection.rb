@@ -13,7 +13,7 @@ module ViewComponent
     delegate :size, to: :@collection
 
     def render_in(view_context, **_, &block)
-      rendered = components.map do |component|
+      rendered = components.map! do |component|
         component.render_in(view_context, &block)
       end
       safe_join(rendered, rendered_spacer(view_context))
@@ -63,11 +63,12 @@ module ViewComponent
     end
 
     def component_options(item, iterator)
-      item_options = {component.__vc_collection_parameter => item}
+      item_options = @options.dup
+      item_options[component.__vc_collection_parameter] = item
       item_options[component.__vc_collection_counter_parameter] = iterator.index if component.__vc_counter_argument_present?
       item_options[component.__vc_collection_iteration_parameter] = iterator.dup if component.__vc_iteration_argument_present?
 
-      @options.merge(item_options)
+      item_options
     end
 
     # Render the spacer through a fresh `dup` so a collection rendered multiple

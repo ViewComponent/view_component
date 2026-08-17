@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Reduce allocations and avoid redundant compiler work when rendering components and collections.
+
+    *Joel Hawksley*
+
 * Stabilize rendering allocation tests with explicit warmups and exact expectations by Rails and Ruby.
 
     *Joel Hawksley*
