@@ -188,7 +188,8 @@ def capture_warnings(&block)
   end
 end
 
-def assert_versioned_allocations(count_map, &block)
+def assert_versioned_allocations(counts, &block)
+  rails_version = Rails.gem_version.segments.first(2).join(".")
   ruby_version = RUBY_VERSION.split(".").first(2).join(".")
-  assert_allocations(count: count_map.fetch(ruby_version), &block)
+  assert_allocations(count: counts.fetch([rails_version, ruby_version]), &block)
 end

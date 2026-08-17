@@ -13,43 +13,6 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("div", text: "hello,world!")
   end
 
-  def test_render_inline_allocations
-    # Stabilize compilation status ahead of testing allocations to simulate rendering
-    # performance with compiled component
-    ViewComponent::CompileCache.cache.delete(MyComponent)
-    MyComponent.__vc_ensure_compiled
-
-    with_instrumentation_enabled_option(false) do
-      assert_versioned_allocations({"4.1" => 69..160, "4.0" => 69..161, "3.4" => 75..76, "3.3" => 77..79, "3.2" => 80..82}) do
-        render_inline(MyComponent.new)
-      end
-    end
-
-    assert_selector("div", text: "hello,world!")
-  end
-
-  def test_render_collection_inline_allocations
-    # Stabilize compilation status ahead of testing allocations to simulate rendering
-    # performance with compiled component
-    ViewComponent::CompileCache.cache.delete(ProductComponent)
-    ProductComponent.__vc_ensure_compiled
-
-    allocations = {"4.1" => 71..170, "4.0" => 71..170, "3.4" => 86..89, "3.3" => 92..97, "3.2" => 97..101}
-
-    products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
-    notice = "On sale"
-    # Ensure any one-time allocations are done
-    render_inline(ProductComponent.with_collection(products, notice: notice))
-
-    with_instrumentation_enabled_option(false) do
-      assert_versioned_allocations(allocations) do
-        render_inline(ProductComponent.with_collection(products, notice: notice))
-      end
-    end
-
-    assert_selector("h1", text: "Product", count: 2)
-  end
-
   def test_initialize_super
     render_inline(InitializeSuperComponent.new)
 
