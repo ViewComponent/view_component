@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-require "allocation_stats"
 require "rails/version"
 require "bundler/setup"
 require "pathname"
 require "minitest/autorun"
+require "minitest/memory"
 require "minitest/mock"
+
+Minitest::Test.include(Minitest::Memory)
 
 module Warning
   PROJECT_ROOT = File.expand_path("..", __dir__).freeze
@@ -186,10 +188,7 @@ def capture_warnings(&block)
   end
 end
 
-def assert_allocations(count_map, &block)
-  trace = AllocationStats.trace(&block)
-  total = trace.allocations.all.size
-  count = count_map[RUBY_VERSION.split(".").first(2).join(".")]
-
-  assert count === total, "Expected #{count} allocations, got #{total} allocations for Ruby #{RUBY_VERSION}"
+def assert_versioned_allocations(count_map, &block)
+  ruby_version = RUBY_VERSION.split(".").first(2).join(".")
+  assert_allocations(count: count_map.fetch(ruby_version), &block)
 end
