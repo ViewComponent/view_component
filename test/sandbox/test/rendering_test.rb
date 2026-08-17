@@ -3,6 +3,26 @@
 require "test_helper"
 
 class RenderingTest < ViewComponent::TestCase
+  INLINE_ALLOCATIONS = {
+    ["7.1", "3.2"] => 54,
+    ["7.2", "3.3"] => 49,
+    ["8.0", "3.4"] => 43,
+    ["8.1", "4.0"] => 41,
+    ["8.1", "4.1"] => 41,
+    ["8.2", "4.0"] => 128,
+    ["8.2", "4.1"] => 128
+  }.freeze
+
+  COLLECTION_ALLOCATIONS = {
+    ["7.1", "3.2"] => 101,
+    ["7.2", "3.3"] => 97,
+    ["8.0", "3.4"] => 89,
+    ["8.1", "4.0"] => 74,
+    ["8.1", "4.1"] => 74,
+    ["8.2", "4.0"] => 161,
+    ["8.2", "4.1"] => 161
+  }.freeze
+
   def vc_test_controller_class
     IntegrationExamplesController
   end
@@ -19,8 +39,11 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(MyComponent)
     MyComponent.__vc_ensure_compiled
 
+    # Ensure any one-time render allocations are done.
+    render_inline(MyComponent.new)
+
     with_instrumentation_enabled_option(false) do
-      assert_versioned_allocations({"4.1" => 69..160, "4.0" => 69..161, "3.4" => 75..76, "3.3" => 77..79, "3.2" => 80..82}) do
+      assert_versioned_allocations(INLINE_ALLOCATIONS) do
         render_inline(MyComponent.new)
       end
     end
@@ -34,15 +57,13 @@ class RenderingTest < ViewComponent::TestCase
     ViewComponent::CompileCache.cache.delete(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
-    allocations = {"4.1" => 71..170, "4.0" => 71..170, "3.4" => 86..89, "3.3" => 92..97, "3.2" => 97..101}
-
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]
     notice = "On sale"
-    # Ensure any one-time allocations are done
+    # Ensure any one-time render allocations are done.
     render_inline(ProductComponent.with_collection(products, notice: notice))
 
     with_instrumentation_enabled_option(false) do
-      assert_versioned_allocations(allocations) do
+      assert_versioned_allocations(COLLECTION_ALLOCATIONS) do
         render_inline(ProductComponent.with_collection(products, notice: notice))
       end
     end
