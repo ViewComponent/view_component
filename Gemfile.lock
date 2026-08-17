@@ -85,7 +85,6 @@ GEM
       uri (>= 0.13.1)
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
-    allocation_stats (0.1.5)
     ansi (1.6.0)
     appraisal (2.5.0)
       bundler
@@ -189,7 +188,12 @@ GEM
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
+    minitest-memory (1.1.0)
+      minitest (>= 5.21, < 7)
+      minitest-strict (>= 1.0)
     minitest-mock (5.27.0)
+    minitest-strict (1.0.1)
+      minitest (>= 5.21, < 7)
     net-imap (0.6.6)
       date
       net-protocol
@@ -443,7 +447,6 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  allocation_stats
   appraisal (~> 2)
   appraisal-run (~> 1.1)
   audition
@@ -459,6 +462,7 @@ DEPENDENCIES
   m (~> 1)
   method_source (~> 1)
   minitest (~> 6)
+  minitest-memory
   minitest-mock
   nokogiri (= 1.19.4)
   propshaft (~> 1)
@@ -498,7 +502,6 @@ CHECKSUMS
   activestorage (8.1.3.1) sha256=f555254f387b1cffa499d2fd3115d12635eadc5b15206a8534316a67036163ef
   activesupport (8.1.3.1) sha256=85458765f25ea48b9019c46b6bb3fa5683197bf4280d9f06710a6e8d7a831376
   addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
-  allocation_stats (0.1.5) sha256=cb9bb238c871d0d308e7f8316044be0a9bf68b194959a0c7a16adb97efa2b903
   ansi (1.6.0) sha256=ac9ea0c0ea8d32fb4e271348e609963ac78882f34b73836c2a02b3622e666658
   appraisal (2.5.0) sha256=36989221be127913b0dba8d114da2001e6b2dceea7bd4951200eaba764eed3ce
   appraisal-run (1.1.0) sha256=93179b8fe4d7a3469a703dab69deccc88432bfe43f979acdebbe514e21af9789
@@ -546,7 +549,9 @@ CHECKSUMS
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
   minitest (6.0.6) sha256=153ea36d1d987a62942382b61075745042a2b3123b1cd48f4c3675af9cc7d6f1
+  minitest-memory (1.1.0) sha256=1251476a6e636a9b3bf4f02cd50a2edd6837db53afb81c5e78474e7144f1b747
   minitest-mock (5.27.0) sha256=7040ed7185417a966920987eaa6eaf1be4ea1fc5b25bb03ff4703f98564a55b0
+  minitest-strict (1.0.1) sha256=5bf179ed48c21013575cc00506be3fd6ceec8529636ce6897468f9574004ae06
   net-imap (0.6.6) sha256=96aa4ee50df3060203e649efc341f53480b791d49e150f2fdebf68beb141a8df
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8

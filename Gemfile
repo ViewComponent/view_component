@@ -11,7 +11,6 @@ ruby_version = (ENV["RUBY_VERSION"] || "~> 4.0").to_s
 ruby ruby_version
 
 group :development, :test do
-  gem "allocation_stats"
   gem "appraisal", "~> 2"
   gem "appraisal-run", "~> 1.1"
   gem "audition", require: false
@@ -27,6 +26,7 @@ group :development, :test do
   gem "m", "~> 1"
   gem "method_source", "~> 1"
   gem "minitest", "~> 6"
+  gem "minitest-memory"
   gem "minitest-mock"
   gem "nokogiri", "1.19.4"
   gem "propshaft", "~> 1"

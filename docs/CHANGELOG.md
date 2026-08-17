@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Replace the custom memory allocation test helper with `minitest-memory`, preserving Ruby-version-specific allocation thresholds while improving failure diagnostics.
+
+    *Joel Hawksley*
+
 * Add zizmor security analysis for GitHub Actions workflows to CI.
 
     *Joel Hawksley*
