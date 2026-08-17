@@ -90,7 +90,6 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    allocation_stats (0.1.5)
     ansi (1.5.0)
     appraisal (2.5.0)
       bundler
@@ -193,7 +192,12 @@ GEM
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
+    minitest-memory (1.1.0)
+      minitest (>= 5.21, < 7)
+      minitest-strict (>= 1.0)
     minitest-mock (5.27.0)
+    minitest-strict (1.0.1)
+      minitest (>= 5.21, < 7)
     mutex_m (0.3.0)
     net-imap (0.5.12)
       date
@@ -435,7 +439,6 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  allocation_stats
   appraisal (~> 2)
   appraisal-run (~> 1.1)
   benchmark-ips (~> 2)
@@ -450,6 +453,7 @@ DEPENDENCIES
   m (~> 1)
   method_source (~> 1)
   minitest (~> 6)
+  minitest-memory
   minitest-mock
   nokogiri (= 1.19.3)
   propshaft (~> 1)
