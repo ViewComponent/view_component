@@ -104,7 +104,7 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, **, &block)
-      self.class.__vc_compile(raise_errors: true)
+      self.class.__vc_compile(raise_errors: true) unless self.class.__vc_compiled?
 
       __vc_reset_render_state!
 

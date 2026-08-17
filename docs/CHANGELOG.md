@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Reduce allocations when rendering components and collections.
+* Reduce allocations and avoid redundant compiler work when rendering components and collections.
 
     *Joel Hawksley*
 
