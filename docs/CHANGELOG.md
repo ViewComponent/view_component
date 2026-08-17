@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add zizmor security analysis for GitHub Actions workflows to CI.
+
+    *Joel Hawksley*
+
 * Remove the `$PROGRAM_NAME` version-printing line from `version.rb` so the file no longer reads a global variable (unshareable across Ractors). The version is still available via `ViewComponent::VERSION::STRING`.
 
     *Joel Hawksley*
