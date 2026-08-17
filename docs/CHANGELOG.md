@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Replace the custom memory allocation test helper with `minitest-memory`, preserving Ruby-version-specific allocation thresholds while improving failure diagnostics.
+
+    *Joel Hawksley*
+
 * Remove the `$PROGRAM_NAME` version-printing line from `version.rb` so the file no longer reads a global variable (unshareable across Ractors). The version is still available via `ViewComponent::VERSION::STRING`.
 
     *Joel Hawksley*
