@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add support for Turbo-streaming ViewComponents.
+
+    *Ben Sheldon*, *Joel Hawksley*
+
 * Reduce allocations and avoid redundant compiler work when rendering components and collections.
 
     *Joel Hawksley*
