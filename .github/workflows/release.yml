@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      major:
+        description: 'Major version'
+        required: true
+        type: string
+      minor:
+        description: 'Minor version'
+        required: true
+        type: string
+      patch:
+        description: 'Patch version'
+        required: true
+        type: string
+      pre:
+        description: 'Pre-release version (leave empty for release)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare-release:
+    name: Get current version
+    runs-on: ubuntu-latest
+    outputs:
+      current-major: ${{ steps.current-version.outputs.major }}
+      current-minor: ${{ steps.current-version.outputs.minor }}
+      current-patch: ${{ steps.current-version.outputs.patch }}
+      current-pre: ${{ steps.current-version.outputs.pre }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read current version
+        id: current-version
+        run: |
+          major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+          minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+          patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
+          pre=$(grep "PRE = " lib/view_component/version.rb | grep -o "\"[^\"]*\"" | tr -d '"')
+          echo "major=$major" >> $GITHUB_OUTPUT
+          echo "minor=$minor" >> $GITHUB_OUTPUT
+          echo "patch=$patch" >> $GITHUB_OUTPUT
+          echo "pre=$pre" >> $GITHUB_OUTPUT
+
+      - name: Show current version
+        run: |
+          current="${{ steps.current-version.outputs.major }}.${{ steps.current-version.outputs.minor }}.${{ steps.current-version.outputs.patch }}"
+          pre="${{ steps.current-version.outputs.pre }}"
+          if [ -n "$pre" ]; then
+            current="$current-$pre"
+          fi
+          echo "Current version: $current"
+          echo ""
+          echo "Release version will be: ${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }}${{ inputs.pre && format('-{0}', inputs.pre) || '' }}"
+
+  release:
+    name: Create release
+    needs: prepare-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          script/release "${{ inputs.major }}" "${{ inputs.minor }}" "${{ inputs.patch }}" "${{ inputs.pre }}"

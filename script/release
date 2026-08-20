@@ -32,8 +32,7 @@ create_release_branch() {
 }
 
 update_readme() {
-  sed -i '' "/## main/ {a\
-  \\
+  sed -i "/## main/ {a\\
 \\
 ## $1.$2.$3
   }" docs/CHANGELOG.md
@@ -41,16 +40,16 @@ update_readme() {
 
 update_ruby_version() {
   # Update version file
-  sed -E -i '' \
-      -e "s/MAJOR = [0-9]+/MAJOR = $1/g" \
-      -e "s/MINOR = [0-9]+/MINOR = $2/g" \
-      -e "s/PATCH = [0-9]+/PATCH = $3/g" \
+  sed -i \
+      -e "s/MAJOR = [0-9]*/MAJOR = $1/g" \
+      -e "s/MINOR = [0-9]*/MINOR = $2/g" \
+      -e "s/PATCH = [0-9]*/PATCH = $3/g" \
       lib/view_component/version.rb
 
   # Update deprecation horizon version
   major=$1
-  sed -E -i '' \
-      -e "s/DEPRECATION_HORIZON = [0-9]+/DEPRECATION_HORIZON = $((major + 1))/g" \
+  sed -i \
+      -e "s/DEPRECATION_HORIZON = [0-9]*/DEPRECATION_HORIZON = $((major + 1))/g" \
       lib/view_component/deprecation.rb
 }
 
@@ -116,6 +115,71 @@ main() {
   major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
   minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
   patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
+  pre=$(grep "PRE = " lib/view_component/version.rb | grep -o "\"[^\"]*\"" | tr -d '"')
+
+  # If arguments provided, use them (for CI/workflow usage)
+  if [ $# -gt 0 ]; then
+    major=$1
+    minor=$2
+    patch=$3
+    [ $# -gt 3 ] && pre=$4 || pre=""
+  else
+    # Interactive mode
+    echo "==================="
+    echo "Prerequisite Checks"
+    echo "==================="
+
+    if ! working_tree_is_clean; then
+      echo "Error: unclean working tree"
+      exit 1
+    fi
+
+    if [ "$(branch_name)" != "main" ]; then
+      echo "Error: can only make a release on the main branch"
+      exit 1
+    fi
+
+    fetch
+
+    if ! remote_history_is_clean; then
+      echo "Error: changes exist on origin not pulled into this branch. Please pull"
+      exit 1
+    fi
+
+    if ! local_history_is_clean; then
+      echo "Error: changes exist that haven't been pushed to origin. Please pull"
+      exit 1
+    fi
+
+    echo "Type the number of an option to bump, or pick Manual to enter a version number"
+    select bump in Major Minor Patch Manual
+    do
+      if [ "$bump" == "Major" ]; then
+        major=$((major + 1))
+        minor=0
+        patch=0
+      elif [ "$bump" == "Minor" ]; then
+        minor=$((minor + 1))
+        patch=0
+      elif [ "$bump" == "Patch" ]; then
+        patch=$((patch + 1))
+      else
+        read -p "What version? (Currently $major.$minor.$patch): " new_version
+        if [ "$new_version" == "$major.$minor.$patch" ]; then
+          echo "Error: Can't be the same version"
+          exit 1
+        fi
+
+        new_version=(${new_version//./ })
+
+        major=${new_version[0]}
+        minor=${new_version[1]}
+        patch=${new_version[2]}
+      fi
+
+      break
+    done
+  fi
 
   echo "==================="
   echo "Prerequisite Checks"
@@ -143,51 +207,24 @@ main() {
     exit 1
   fi
 
-  echo "Type the number of an option to bump, or pick Manual to enter a version number"
-  select bump in Major Minor Patch Manual
-  do
-    if [ "$bump" == "Major" ]; then
-      major=$((major + 1))
-      minor=0
-      patch=0
-    elif [ "$bump" == "Minor" ]; then
-      minor=$((minor + 1))
-      patch=0
-    elif [ "$bump" == "Patch" ]; then
-      patch=$((patch + 1))
-    else
-      read -p "What version? (Currently $major.$minor.$patch): " new_version
-      if [ "$new_version" == "$major.$minor.$patch" ]; then
-        echo "Error: Can't be the same version"
-        exit 1
-      fi
+  if tag_exists_on_remote $major $minor $patch; then
+    echo "Error: tag exists on remote"
+    exit 1
+  fi
 
-      new_version=(${new_version//./ })
+  echo "==============================="
+  echo "Creating release for $major.$minor.$patch"
+  echo "==============================="
 
-      major=${new_version[0]}
-      minor=${new_version[1]}
-      patch=${new_version[2]}
-    fi
-
-    if tag_exists_on_remote $major $minor $patch; then
-      echo "Error: tag exists on remote"
-      exit 1
-    fi
-
-    echo "==============================="
-    echo "Creating release for $major.$minor.$patch"
-    echo "==============================="
-
-    create_release_branch $major $minor $patch
-    update_readme $major $minor $patch
-    update_ruby_version $major $minor $patch
-    update_gemfiles $major $minor $patch
-    echo "version: $major.$minor.$patch" > docs/_data/library.yml
-    add_changed_files $major $minor $patch
-    commit $major $minor $patch
-    push $major $minor $patch
-    exit 0
-  done
+  create_release_branch $major $minor $patch
+  update_readme $major $minor $patch
+  update_ruby_version $major $minor $patch
+  update_gemfiles $major $minor $patch
+  echo "version: $major.$minor.$patch" > docs/_data/library.yml
+  add_changed_files $major $minor $patch
+  commit $major $minor $patch
+  push $major $minor $patch
+  exit 0
 }
 
 main

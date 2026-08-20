@@ -35,6 +35,10 @@ tag="v$version"
 # Check permissions before proceeding
 check_github_permissions
 
+# Create and push git tag
+git tag "$tag"
+git push origin "$tag"
+
 # Extract changelog for this version
 # Find the section for this version and capture until the next ## heading
 changelog=$(sed -n "/^## $version$/,/^## /p" docs/CHANGELOG.md | sed '$ d')
