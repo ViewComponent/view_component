@@ -35,9 +35,12 @@ tag="v$version"
 # Check permissions before proceeding
 check_github_permissions
 
-# Create and push git tag
-git tag "$tag"
-git push origin "$tag"
+# Create and push git tag (idempotent so re-running after a partial
+# release doesn't abort on an already-existing tag)
+if ! git rev-parse --quiet --verify "refs/tags/$tag" > /dev/null; then
+  git tag "$tag"
+fi
+git push origin "$tag" || true
 
 # Extract changelog for this version
 # Find the section for this version and capture until the next ## heading
@@ -47,7 +50,7 @@ changelog=$(sed -n "/^## $version$/,/^## /p" docs/CHANGELOG.md | sed '$ d')
 # this step has been replaced by .github/workflows/push_gem.yml
 
 # Publish updated docs
-git branch -D gh-pages
+git branch -D gh-pages 2>/dev/null || true
 git checkout -b gh-pages main
 git push origin gh-pages --force
 git checkout main
