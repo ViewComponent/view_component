@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Update GitHub Actions workflows to use `actions/checkout` v7.
+
+    *Richard Macklin*
+
 ## 4.13.0
 
 * Add support for Turbo-streaming ViewComponents.
