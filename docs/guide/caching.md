@@ -44,7 +44,9 @@ That's all that's needed for the `<% cache %>` block above to work. The componen
 
 ## Caching a component's own output
 
-Use `cache_on` to have the component cache its own rendered output. Each argument names a method whose value identifies a rendering of the component:
+Everything above is about making a `<% cache %>` block that wraps a component behave correctly. `cache_on` does something different: the component caches itself, so **no `<% cache %>` block is needed anywhere**.
+
+Declare the methods whose values identify a rendering of the component:
 
 ```ruby
 class PostComponent < ViewComponent::Base
@@ -62,11 +64,21 @@ class PostComponent < ViewComponent::Base
 end
 ```
 
-Rendering the component now reads from and writes to `Rails.cache`, with no `<% cache %>` block at the call site:
+Every call site is now cached, with nothing to wrap and nothing to remember:
 
 ```erb
 <%= render PostComponent.new(post: @post) %>
 ```
+
+That single line is equivalent to writing this at every call site:
+
+```erb
+<% cache [@post, PostComponent.cache_digest] do %>
+  <%= render PostComponent.new(post: @post) %>
+<% end %>
+```
+
+Moving caching into the component means it can't be forgotten at one of a dozen call sites, and the cache key lives next to the state it's derived from.
 
 Private methods are allowed, so the values that form the key don't have to be part of the component's public interface.
 
@@ -88,12 +100,12 @@ Caching is skipped unless `perform_caching` is enabled on the controller, matchi
 PostComponent.cache_digest # => "a1b2c3..."
 ```
 
-Use it to build cache keys by hand, or to key a cache in a background job:
+Use it when a cache needs to be tied to a component's source but is written somewhere the component isn't rendered, such as a background job:
 
-```erb
-<% cache [@post, PostComponent.cache_digest] do %>
-  <%= render PostComponent.new(post: @post) %>
-<% end %>
+```ruby
+Rails.cache.fetch(["post-summary", post, PostComponent.cache_digest]) do
+  expensive_summary_for(post)
+end
 ```
 
 ## Declaring dependencies static analysis can't see
