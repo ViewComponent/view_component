@@ -30,20 +30,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate inputs are numeric
+        env:
+          MAJOR: ${{ inputs.major }}
+          MINOR: ${{ inputs.minor }}
+          PATCH: ${{ inputs.patch }}
+          PRE: ${{ inputs.pre }}
         run: |
-          if ! [[ "${{ inputs.major }}" =~ ^[0-9]+$ ]]; then
+          if ! [[ "$MAJOR" =~ ^[0-9]+$ ]]; then
             echo "Error: major version must be numeric"
             exit 1
           fi
-          if ! [[ "${{ inputs.minor }}" =~ ^[0-9]+$ ]]; then
+          if ! [[ "$MINOR" =~ ^[0-9]+$ ]]; then
             echo "Error: minor version must be numeric"
             exit 1
           fi
-          if ! [[ "${{ inputs.patch }}" =~ ^[0-9]+$ ]]; then
+          if ! [[ "$PATCH" =~ ^[0-9]+$ ]]; then
             echo "Error: patch version must be numeric"
             exit 1
           fi
-          if [ -n "${{ inputs.pre }}" ] && ! [[ "${{ inputs.pre }}" =~ ^[a-zA-Z0-9.-]+$ ]]; then
+          if [ -n "$PRE" ] && ! [[ "$PRE" =~ ^[a-zA-Z0-9.-]+$ ]]; then
             echo "Error: pre-release version contains invalid characters"
             exit 1
           fi
@@ -107,7 +112,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@e5517072e87f198d9533967ae13d97c11b604005
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
         with:
           bundler-cache: true
 
