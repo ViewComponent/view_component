@@ -465,6 +465,14 @@ This template exists only so Rails can compute a cache digest for the component 
 
 Content for slot SLOT_NAME has already been provided.
 
+### `ContentPassedToCachedComponentError`
+
+Content was passed to COMPONENT, which caches its own output because it declares `cache_on`.
+
+Content provided by the caller isn't part of the cache key, so caching it would risk serving one caller's content to another.
+
+To fix this issue, either remove `cache_on` from COMPONENT, or move the content into the component and derive it from the values declared in `cache_on`.
+
 ### `ContentSlotNameError`
 
 COMPONENT declares a slot named content, which is a reserved word in ViewComponent.

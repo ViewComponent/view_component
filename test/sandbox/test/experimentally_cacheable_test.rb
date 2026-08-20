@@ -328,21 +328,34 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     end
   end
 
-  def test_content_blocks_are_not_cached
-    component = Class.new(CacheableComponent) do
-      def self.name
-        "BlockCacheableComponent"
+  def test_passing_a_block_to_a_cached_component_raises
+    error = assert_raises(ViewComponent::ContentPassedToCachedComponentError) do
+      render_inline(CacheableComponent.new(title: "a")) { "content" }
+    end
+
+    assert_includes error.message, "CacheableComponent"
+  end
+
+  def test_passing_with_content_to_a_cached_component_raises
+    assert_raises(ViewComponent::ContentPassedToCachedComponentError) do
+      render_inline(CacheableComponent.new(title: "a").with_content("content"))
+    end
+  end
+
+  # Raised regardless of whether caching is on, so the conflict is caught in
+  # development and test rather than only in production.
+  def test_content_raises_even_when_caching_is_enabled
+    with_caching do
+      assert_raises(ViewComponent::ContentPassedToCachedComponentError) do
+        render_inline(CacheableComponent.new(title: "a")) { "content" }
       end
     end
+  end
 
-    with_caching do
-      # A block's content isn't part of the cache key, so caching is skipped
-      # rather than risk serving one caller's content to another.
-      instance = component.new(title: "a")
+  def test_components_without_cache_on_still_accept_content
+    render_inline(CacheableParentComponent.new) { "content" }
 
-      refute instance.send(:__vc_cache_enabled?, vc_test_controller.view_context, proc { "content" })
-      assert instance.send(:__vc_cache_enabled?, vc_test_controller.view_context, nil)
-    end
+    assert_selector(".cacheable-child", text: "child")
   end
 
   def test_anonymous_components_are_not_registered

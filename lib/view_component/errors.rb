@@ -241,4 +241,17 @@ module ViewComponent
       super(MESSAGE.gsub("COMPONENT", component_name.to_s).gsub("METHOD", method_name.to_s))
     end
   end
+
+  class ContentPassedToCachedComponentError < StandardError
+    MESSAGE =
+      "Content was passed to COMPONENT, which caches its own output because it declares `cache_on`.\n\n" \
+      "Content provided by the caller isn't part of the cache key, so caching it would risk " \
+      "serving one caller's content to another.\n\n" \
+      "To fix this issue, either remove `cache_on` from COMPONENT, or move the content into the " \
+      "component and derive it from the values declared in `cache_on`.".freeze
+
+    def initialize(component_name)
+      super(MESSAGE.gsub("COMPONENT", component_name.to_s))
+    end
+  end
 end

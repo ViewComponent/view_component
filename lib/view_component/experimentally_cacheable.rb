@@ -116,7 +116,17 @@ module ViewComponent
     #
     # @private
     def render_in(view_context, **, &block)
-      return super unless __vc_cache_enabled?(view_context, block)
+      return super unless self.class.__vc_caches_output?
+
+      # Content provided by the caller isn't part of the cache key, so caching
+      # it would serve one caller's content to another. Raised whether or not
+      # caching is currently enabled, so the conflict surfaces in development
+      # and test rather than only in production.
+      if block || __vc_content_set_by_with_content_defined?
+        raise ContentPassedToCachedComponentError.new(self.class.name)
+      end
+
+      return super unless __vc_cache_enabled?(view_context)
 
       store = Rails.cache
       key = cache_key(view_context)
@@ -157,13 +167,7 @@ module ViewComponent
 
     private
 
-    def __vc_cache_enabled?(view_context, block)
-      return false unless self.class.__vc_caches_output?
-
-      # Content passed as a block isn't part of the cache key, so caching it
-      # would serve one caller's content to another.
-      return false if block
-
+    def __vc_cache_enabled?(view_context)
       return false unless defined?(Rails) && Rails.respond_to?(:cache) && Rails.cache
 
       controller = view_context.try(:controller)

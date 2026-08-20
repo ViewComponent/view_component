@@ -158,18 +158,20 @@ Declared components must include `ViewComponent::ExperimentallyCacheable` themse
 
 ## Caveats
 
-**Content blocks aren't cached.** Content passed as a block isn't part of the cache key, so caching it would risk serving one caller's content to another:
+**Self-caching components can't take content.** Content passed by the caller isn't part of the cache key, so caching it would risk serving one caller's content to another. Passing a block or `with_content` to a component that declares `cache_on` raises:
 
 ```erb
-<%# Not cached: the block's content isn't in the key %>
+<%# Raises ContentPassedToCachedComponentError %>
 <%= render PostComponent.new(post: @post) do %>
   Hello
 <% end %>
 ```
 
-To cache a component that takes content, include the values that determine that content in `cache_on`, and set the content from within the component rather than from the call site.
+The error is raised whether or not caching is enabled, so the conflict surfaces in development and test rather than only in production.
 
-**Slots have the same constraint.** Slot content set by the caller isn't part of the key unless declared in `cache_on`.
+To cache a component that takes content, move the content into the component and derive it from values declared in `cache_on`. Components that don't declare `cache_on` are unaffected: they still accept content, and a `<% cache %>` block around them still invalidates correctly.
+
+**Slot content set by the caller isn't part of the key either**, and isn't currently detected. Declare the values it depends on in `cache_on`.
 
 **`cache_on` methods run before the component renders**, so they can only depend on the component's own state, not on `helpers` or the view context. A cache key that depends on the view context is usually a sign the value should be passed to the component instead.
 
