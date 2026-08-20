@@ -86,6 +86,19 @@ The cache key combines:
 
 Caching is skipped unless `perform_caching` is enabled on the controller, matching the behavior of Rails' `cache` helper.
 
+A component that declares `cache_on` can't accept content from its callers. A block, `with_content`, or a slot set by the caller isn't part of the cache key, so passing one raises `ContentPassedToCachedComponentError`:
+
+```erb
+<%# Raises: the block's content isn't in the cache key %>
+<%= render PostComponent.new(post: @post) do %>
+  Hello
+<% end %>
+```
+
+The error is raised whether or not caching is enabled, so the conflict surfaces in development and test rather than only in production. See [Caveats](#caveats) for how to restructure a component that needs to take content.
+
+`cache_on` is inherited, so declaring it on a base class opts every subclass into self-caching, and into that restriction. Declare it on the components that should cache themselves rather than on `ApplicationComponent`.
+
 ## Reading a component's digest
 
 `.cache_digest` returns the digest of everything the component renders from. It works outside a request, where no view context exists:
@@ -158,21 +171,14 @@ Declared components must include `ViewComponent::ExperimentallyCacheable` themse
 
 ## Caveats
 
-**Self-caching components can't take content from their callers.** Content passed by the caller isn't part of the cache key, so caching it would risk serving one caller's content to another. Passing a block, `with_content`, or a slot to a component that declares `cache_on` raises:
+**Self-caching components can't take content from their callers.** Besides a block, this covers `with_content` and slots set by the caller:
 
 ```erb
-<%# Raises ContentPassedToCachedComponentError %>
-<%= render PostComponent.new(post: @post) do %>
-  Hello
-<% end %>
-
-<%# Also raises %>
+<%# Also raises ContentPassedToCachedComponentError %>
 <%= render PostComponent.new(post: @post) do |component| %>
   <% component.with_header { "Hello" } %>
 <% end %>
 ```
-
-The error is raised whether or not caching is enabled, so the conflict surfaces in development and test rather than only in production.
 
 Slots a component fills in for itself with a `default_*` method are part of its own output, not the caller's, so those are cached normally:
 
