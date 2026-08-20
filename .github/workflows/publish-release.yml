@@ -6,30 +6,34 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: read
 
 jobs:
   publish:
     name: Publish release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
     # Only run if this is a release commit (created by script/release)
     if: startsWith(github.event.head_commit.message, 'release ')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@a5ac7e51b41094c7467c0571fcf3efa5d718588e # v4.1.6
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@40952e3fccbed86cb109344f62e64d30d5487b6e1 # v1.180.1
         with:
           bundler-cache: true
 
-      - name: Install gh CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gh
+      - name: Harden runner
+        uses: step-security/harden-runner@17d0e2bd7d51742c71814c7e8a1e8e7489a06eb5 # v2.8.1
+        with:
+          egress-policy: audit
 
       - name: Configure git
         run: |
