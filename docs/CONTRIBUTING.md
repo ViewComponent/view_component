@@ -113,7 +113,26 @@ To run the Vale prose linter locally, `brew install vale` and `vale docs/`.
 
 ## Releasing
 
-`./script/release`
+Releases are automated using GitHub Actions. Here's the process:
+
+1. Go to **Actions** → **Release** → **Run workflow**
+2. Enter the new version numbers (current values are pre-filled):
+   - **major**: Major version number
+   - **minor**: Minor version number
+   - **patch**: Patch version number
+   - **pre**: Optional pre-release label (leave blank for stable release)
+3. Click **Run workflow**
+4. The workflow will:
+   - Create a release branch
+   - Update version files and changelog
+   - Update dependencies
+   - Open a pull request
+5. Review and merge the pull request to main
+6. After merge, the workflow automatically:
+   - Publishes docs to gh-pages
+   - Creates a GitHub release
+   - Pushes the tag to trigger gem publishing
+7. The gem is published to RubyGems automatically via GitHub Actions (requires approval from a maintainer in the "release" environment)
 
 ## Governance
 

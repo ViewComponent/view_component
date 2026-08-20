@@ -1,0 +1,132 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      major:
+        description: 'Major version'
+        required: true
+        type: string
+      minor:
+        description: 'Minor version'
+        required: true
+        type: string
+      patch:
+        description: 'Patch version'
+        required: true
+        type: string
+      pre:
+        description: 'Pre-release version (leave empty for release)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  validate-inputs:
+    name: Validate version inputs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate inputs are numeric
+        env:
+          MAJOR: ${{ inputs.major }}
+          MINOR: ${{ inputs.minor }}
+          PATCH: ${{ inputs.patch }}
+          PRE: ${{ inputs.pre }}
+        run: |
+          if ! [[ "$MAJOR" =~ ^[0-9]+$ ]]; then
+            echo "Error: major version must be numeric"
+            exit 1
+          fi
+          if ! [[ "$MINOR" =~ ^[0-9]+$ ]]; then
+            echo "Error: minor version must be numeric"
+            exit 1
+          fi
+          if ! [[ "$PATCH" =~ ^[0-9]+$ ]]; then
+            echo "Error: patch version must be numeric"
+            exit 1
+          fi
+          if [ -n "$PRE" ] && ! [[ "$PRE" =~ ^[a-zA-Z0-9.-]+$ ]]; then
+            echo "Error: pre-release version contains invalid characters"
+            exit 1
+          fi
+
+  prepare-release:
+    name: Get current version
+    needs: validate-inputs
+    runs-on: ubuntu-latest
+    outputs:
+      current-major: ${{ steps.current-version.outputs.major }}
+      current-minor: ${{ steps.current-version.outputs.minor }}
+      current-patch: ${{ steps.current-version.outputs.patch }}
+      current-pre: ${{ steps.current-version.outputs.pre }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Read current version
+        id: current-version
+        run: |
+          major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+          minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+          patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
+          pre=$(grep "PRE = " lib/view_component/version.rb | grep -o "\"[^\"]*\"" | tr -d '"')
+          echo "major=$major" >> $GITHUB_OUTPUT
+          echo "minor=$minor" >> $GITHUB_OUTPUT
+          echo "patch=$patch" >> $GITHUB_OUTPUT
+          echo "pre=$pre" >> $GITHUB_OUTPUT
+
+      - name: Show current version
+        env:
+          CURRENT_MAJOR: ${{ steps.current-version.outputs.major }}
+          CURRENT_MINOR: ${{ steps.current-version.outputs.minor }}
+          CURRENT_PATCH: ${{ steps.current-version.outputs.patch }}
+          CURRENT_PRE: ${{ steps.current-version.outputs.pre }}
+          INPUT_MAJOR: ${{ inputs.major }}
+          INPUT_MINOR: ${{ inputs.minor }}
+          INPUT_PATCH: ${{ inputs.patch }}
+          INPUT_PRE: ${{ inputs.pre }}
+        run: |
+          current="$CURRENT_MAJOR.$CURRENT_MINOR.$CURRENT_PATCH"
+          [ -n "$CURRENT_PRE" ] && current="$current-$CURRENT_PRE"
+          echo "Current version: $current"
+          release="$INPUT_MAJOR.$INPUT_MINOR.$INPUT_PATCH"
+          [ -n "$INPUT_PRE" ] && release="$release-$INPUT_PRE"
+          echo "Release version: $release"
+
+  release:
+    name: Create release
+    needs: [prepare-release, validate-inputs]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        with:
+          bundler-cache: true
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAJOR: ${{ inputs.major }}
+          MINOR: ${{ inputs.minor }}
+          PATCH: ${{ inputs.patch }}
+          PRE: ${{ inputs.pre }}
+        run: |
+          script/release "$MAJOR" "$MINOR" "$PATCH" "$PRE"

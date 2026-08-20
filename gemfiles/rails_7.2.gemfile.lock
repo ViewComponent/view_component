@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    view_component (4.12.0)
+    view_component (4.13.0)
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
@@ -145,6 +145,7 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
+    herb (0.8.2)
     herb (0.8.2-aarch64-linux-gnu)
     herb (0.8.2-aarch64-linux-musl)
     herb (0.8.2-arm-linux-gnu)
@@ -183,6 +184,7 @@ GEM
     matrix (0.4.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
@@ -202,6 +204,9 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
+    nokogiri (1.19.3)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.19.3-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.19.3-aarch64-linux-musl)
@@ -473,7 +478,7 @@ DEPENDENCIES
   yard-lint (~> 1.5)
 
 RUBY VERSION
-   ruby 3.3.8p144
+  ruby 3.3.8p144
 
 BUNDLED WITH
-   2.6.2
+  4.1.0.dev

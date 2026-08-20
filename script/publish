@@ -1,5 +1,48 @@
 #!/usr/bin/env bash
 
+set -e
+
+# Check GitHub permissions
+check_github_permissions() {
+  if ! gh auth status > /dev/null 2>&1; then
+    echo "Error: not authenticated with GitHub. Run 'gh auth login'"
+    exit 1
+  fi
+
+  # Check if user has push access to the repo
+  if ! gh repo view ViewComponent/view_component > /dev/null 2>&1; then
+    echo "Error: cannot access ViewComponent/view_component repository"
+    exit 1
+  fi
+
+  # Check if user can create releases (requires write access)
+  # Attempt a dry-run by checking repo permissions
+  local perms=$(gh api repos/ViewComponent/view_component -q '.permissions.push // false')
+  if [ "$perms" != "true" ]; then
+    echo "Error: insufficient permissions to create releases in ViewComponent/view_component"
+    echo "You need at least 'push' (write) access to the repository"
+    exit 1
+  fi
+}
+
+# Get version from version.rb
+major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
+version="$major.$minor.$patch"
+tag="v$version"
+
+# Check permissions before proceeding
+check_github_permissions
+
+# Create and push git tag
+git tag "$tag"
+git push origin "$tag"
+
+# Extract changelog for this version
+# Find the section for this version and capture until the next ## heading
+changelog=$(sed -n "/^## $version$/,/^## /p" docs/CHANGELOG.md | sed '$ d')
+
 # Publish gem
 # this step has been replaced by .github/workflows/push_gem.yml
 
@@ -8,3 +51,9 @@ git branch -D gh-pages
 git checkout -b gh-pages main
 git push origin gh-pages --force
 git checkout main
+
+# Create GitHub release
+gh release create "$tag" \
+  --title "$version" \
+  --notes "$changelog" \
+  --repo ViewComponent/view_component
