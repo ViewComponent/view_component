@@ -342,6 +342,33 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     end
   end
 
+  def test_setting_a_slot_on_a_cached_component_raises
+    error = assert_raises(ViewComponent::ContentPassedToCachedComponentError) do
+      render_inline(CacheableSlotComponent.new(title: "a").tap { |c| c.with_header { "set" } })
+    end
+
+    assert_includes error.message, "CacheableSlotComponent"
+  end
+
+  # A slot the component fills in for itself isn't caller-provided, so it's
+  # part of the component's own output and safe to cache.
+  def test_a_default_filled_slot_does_not_raise
+    render_inline(CacheableSlotComponent.new(title: "a"))
+
+    assert_selector(".header", text: "default header")
+    assert_selector(".title", text: "a")
+  end
+
+  def test_default_filled_slots_are_cached
+    with_caching do
+      render_inline(CacheableSlotComponent.new(title: "cached"))
+
+      refute_nil Rails.cache.read(
+        CacheableSlotComponent.new(title: "cached").cache_key(vc_test_controller.view_context)
+      )
+    end
+  end
+
   # Raised regardless of whether caching is on, so the conflict is caught in
   # development and test rather than only in production.
   def test_content_raises_even_when_caching_is_enabled

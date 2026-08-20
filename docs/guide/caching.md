@@ -158,20 +158,39 @@ Declared components must include `ViewComponent::ExperimentallyCacheable` themse
 
 ## Caveats
 
-**Self-caching components can't take content.** Content passed by the caller isn't part of the cache key, so caching it would risk serving one caller's content to another. Passing a block or `with_content` to a component that declares `cache_on` raises:
+**Self-caching components can't take content from their callers.** Content passed by the caller isn't part of the cache key, so caching it would risk serving one caller's content to another. Passing a block, `with_content`, or a slot to a component that declares `cache_on` raises:
 
 ```erb
 <%# Raises ContentPassedToCachedComponentError %>
 <%= render PostComponent.new(post: @post) do %>
   Hello
 <% end %>
+
+<%# Also raises %>
+<%= render PostComponent.new(post: @post) do |component| %>
+  <% component.with_header { "Hello" } %>
+<% end %>
 ```
 
 The error is raised whether or not caching is enabled, so the conflict surfaces in development and test rather than only in production.
 
-To cache a component that takes content, move the content into the component and derive it from values declared in `cache_on`. Components that don't declare `cache_on` are unaffected: they still accept content, and a `<% cache %>` block around them still invalidates correctly.
+Slots a component fills in for itself with a `default_*` method are part of its own output, not the caller's, so those are cached normally:
 
-**Slot content set by the caller isn't part of the key either**, and isn't currently detected. Declare the values it depends on in `cache_on`.
+```ruby
+class PostComponent < ViewComponent::Base
+  include ViewComponent::ExperimentallyCacheable
+
+  renders_one :header
+
+  cache_on :post
+
+  def default_header
+    post.title # cached, because the component decides it
+  end
+end
+```
+
+To cache a component that takes content, move the content into the component and derive it from values declared in `cache_on`. Components that don't declare `cache_on` are unaffected: they still accept content and slots, and a `<% cache %>` block around them still invalidates correctly.
 
 **`cache_on` methods run before the component renders**, so they can only depend on the component's own state, not on `helpers` or the view context. A cache key that depends on the view context is usually a sign the value should be passed to the component instead.
 

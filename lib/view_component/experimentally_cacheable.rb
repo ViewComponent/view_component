@@ -122,7 +122,7 @@ module ViewComponent
       # it would serve one caller's content to another. Raised whether or not
       # caching is currently enabled, so the conflict surfaces in development
       # and test rather than only in production.
-      if block || __vc_content_set_by_with_content_defined?
+      if block || __vc_content_set_by_with_content_defined? || __vc_slots_set_by_caller?
         raise ContentPassedToCachedComponentError.new(self.class.name)
       end
 
@@ -166,6 +166,13 @@ module ViewComponent
     end
 
     private
+
+    # Slots set by the caller via `with_*`. Checked before rendering, so slots
+    # a component fills in for itself with a `default_*` method — which resolve
+    # lazily during the render — aren't counted.
+    def __vc_slots_set_by_caller?
+      defined?(@__vc_set_slots) && @__vc_set_slots.present?
+    end
 
     def __vc_cache_enabled?(view_context)
       return false unless defined?(Rails) && Rails.respond_to?(:cache) && Rails.cache

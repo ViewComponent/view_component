@@ -244,8 +244,8 @@ module ViewComponent
 
   class ContentPassedToCachedComponentError < StandardError
     MESSAGE =
-      "Content was passed to COMPONENT, which caches its own output because it declares `cache_on`.\n\n" \
-      "Content provided by the caller isn't part of the cache key, so caching it would risk " \
+      "COMPONENT declares `cache_on`, so it caches its own output, but its caller passed it content.\n\n" \
+      "Content and slots set by the caller aren't part of the cache key, so caching them would risk " \
       "serving one caller's content to another.\n\n" \
       "To fix this issue, either remove `cache_on` from COMPONENT, or move the content into the " \
       "component and derive it from the values declared in `cache_on`.".freeze
