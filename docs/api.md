@@ -10,6 +10,15 @@ nav_order: 3
 
 ## Class methods
 
+### `.after_compile`
+
+Hook called by the compiler after a component is compiled.
+
+Extensions can override this class method to run logic after
+compilation (e.g., generate helpers, register metadata, etc.).
+
+By default, this is a no-op.
+
 ### `.config` → [ActiveSupport::OrderedOptions]
 
 Returns the current config.
@@ -17,11 +26,6 @@ Returns the current config.
 ### `.identifier` → [String]
 
 The file path of the component Ruby file.
-
-### `.new(...)`
-
-Redefine `new` so we can pre-allocate instance variables to optimize
-for Ruby object shapes.
 
 ### `.sidecar_files(extensions)`
 
@@ -64,6 +68,11 @@ with_collection_parameter :item
 
 ## Instance methods
 
+### `#around_render` → [void]
+
+Called around rendering the component. Override to wrap the rendering of a
+component in custom instrumentation, etc.
+
 ### `#before_render` → [void]
 
 Called before rendering the component. Override to perform operations that
@@ -86,10 +95,20 @@ that inhibits encapsulation & reuse, often making testing difficult.
 
 Returns the value of attribute current_template.
 
+### `#format`
+
+Rails expects us to define `format` on all renderables,
+but we do not know the `format` of a ViewComponent until runtime.
+
 ### `#helpers` → [ActionView::Base]
 
 A proxy through which to access helpers. Use sparingly as doing so introduces
 coupling that inhibits encapsulation & reuse, often making testing difficult.
+
+### `#initialize` → [Base]
+
+Including `Rails.application.routes.url_helpers` defines an initializer that accepts (...),
+so we have to define our own empty initializer to overwrite it.
 
 ### `#output_postamble` → [String]
 
@@ -103,7 +122,7 @@ Optional content to be returned before the rendered template.
 
 Override to determine whether the ViewComponent should render.
 
-### `#render_in(view_context, &block)` → [String]
+### `#render_in(view_context, **, &block)` → [String]
 
 Entrypoint for rendering components.
 
@@ -311,13 +330,6 @@ render_preview(:default)
 assert_text("Hello, World!")
 ```
 
-Note: `#rendered_preview` expects a preview to be defined with the same class
-name as the calling test, but with `Test` replaced with `Preview`:
-
-MyComponentTest -> MyComponentPreview etc.
-
-In RSpec, `Preview` is appended to `described_class`.
-
 ### `#rendered_content` → [ActionView::OutputBuffer]
 
 Returns the result of a render_inline call.
@@ -365,6 +377,11 @@ test "component does not render in Firefox" do
 end
 ```
 
+### `#vc_test_view_context` → [ActionView::Base]
+
+Returns the view context used to render components in tests. Note that the view context
+is reset after each call to `render_inline`.
+
 ### `#with_controller_class(klass)`
 
 Set the controller to be used while executing the given block,
@@ -386,7 +403,7 @@ with_format(:json) do
 end
 ```
 
-### `#with_request_url(full_path, host: nil, method: nil)`
+### `#with_request_url(full_path, host: nil, method: nil, protocol: nil)`
 
 Set the URL of the current request (such as when using request-dependent path helpers):
 
@@ -408,6 +425,14 @@ To specify a request method, pass the method param:
 
 ```ruby
 with_request_url("/users/42", method: "POST") do
+  render_inline(MyComponent.new)
+end
+```
+
+To specify a protocol, pass the protocol param:
+
+```ruby
+with_request_url("/users/42", protocol: :https) do
   render_inline(MyComponent.new)
 end
 ```
