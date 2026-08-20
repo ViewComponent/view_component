@@ -1,5 +1,6 @@
 {
   "class-level-state|lib/view_component/base.rb": 9,
+  "class-level-state|lib/view_component/cache_digest.rb": 1,
   "class-level-state|lib/view_component/preview.rb": 2,
   "class-variables|lib/view_component/base.rb": 2,
   "runtime-class-state|/Users/joelhawksley/.local/share/mise/installs/ruby/4.0.5/lib/ruby/4.0.0/delegate.rb": 1,

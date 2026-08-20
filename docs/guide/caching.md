@@ -16,7 +16,7 @@ Since 4.14.0
 
 Rails computes a digest for every template from its source and from the templates it renders. That digest is mixed into the key of every `<% cache %>` block in the template, so editing a partial invalidates the caches of everything that renders it.
 
-Components are invisible to that mechanism. 
+Components are invisible to that mechanism.
 
 ```erb
 <% cache @post do %>

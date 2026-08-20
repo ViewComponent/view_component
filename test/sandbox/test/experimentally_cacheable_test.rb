@@ -204,24 +204,28 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   end
 
   def test_partial_path_extraction_swallows_parser_errors
-    ViewComponent::CacheDigest.stub(:render_parser, ->(*) { raise "boom" }) do
+    ViewComponent::CacheDigest::RENDER_PARSER.stub(:new, ->(*) { raise "boom" }) do
       assert_empty ViewComponent::CacheDigest.partial_paths_in("render \"a/b\"", "a/b")
     end
   end
 
-  # Rails 7.1 exposes the parser as a class, 7.2+ as a module with `Default`.
+  # Action View has shipped the parser as a class (7.1, main) and as a module
+  # with a `Default` implementation (7.2 through 8.1). Exercised with doubles so
+  # both shapes are covered whichever version is running.
   def test_render_parser_supports_both_action_view_shapes
-    with_reset_render_parser do
-      ActionView::RenderParser.stub(:is_a?, true) do
-        assert_equal ActionView::RenderParser, ViewComponent::CacheDigest.render_parser
-      end
-    end
+    parser_class = Class.new
 
-    with_reset_render_parser do
-      ActionView::RenderParser.stub(:is_a?, false) do
-        assert_equal ActionView::RenderParser::Default, ViewComponent::CacheDigest.render_parser
-      end
-    end
+    assert_equal parser_class, ViewComponent::CacheDigest.resolve_render_parser(parser_class)
+
+    default = Class.new
+    parser_module = Module.new
+    parser_module.const_set(:Default, default)
+
+    assert_equal default, ViewComponent::CacheDigest.resolve_render_parser(parser_module)
+  end
+
+  def test_render_parser_is_resolved_for_the_running_action_view
+    assert_respond_to ViewComponent::CacheDigest::RENDER_PARSER, :new
   end
 
   def test_cache_digest_is_unaffected_by_unrelated_changes
@@ -326,6 +330,8 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
         end
       end
     end
+  ensure
+    recompile(CacheableChildComponent)
   end
 
   def test_passing_a_block_to_a_cached_component_raises
@@ -472,13 +478,13 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
 
   private
 
-  def with_reset_render_parser
-    cache_digest = ViewComponent::CacheDigest
-    original = cache_digest.instance_variable_get(:@render_parser)
-    cache_digest.instance_variable_set(:@render_parser, nil)
-    yield
-  ensure
-    cache_digest.instance_variable_set(:@render_parser, original)
+  # `with_new_cache` compiles components against whatever is on disk, then
+  # restores the previous compile cache on exit. A component compiled while its
+  # template was modified is therefore still registered as compiled, and keeps
+  # rendering the modified output after the file is restored. Force it back.
+  def recompile(component)
+    ViewComponent::CompileCache.cache.delete(component)
+    component.__vc_compile(force: true)
   end
 
   def build_template(source)

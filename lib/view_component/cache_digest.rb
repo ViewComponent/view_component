@@ -55,7 +55,6 @@ module ViewComponent
 
     # Rails' escape hatch for dependencies static analysis can't see.
     EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
-
     class << self
       # Virtual paths of components that have opted into caching, mapped to
       # their class names.
@@ -144,7 +143,7 @@ module ViewComponent
       def partial_paths_in(source, name)
         return [] unless source.is_a?(String) && source.include?("render")
 
-        render_parser.new(name, source).render_calls.uniq.select do |path|
+        RENDER_PARSER.new(name, source).render_calls.uniq.select do |path|
           source.include?(path) || source.include?(path.sub(%r{(\A|/)_}, '\1'))
         end
       rescue
@@ -152,17 +151,14 @@ module ViewComponent
         []
       end
 
-      # Rails 7.1 exposes the parser as a class; 7.2+ as a module with a
-      # `Default` implementation chosen from Prism or Ripper.
+      # Action View has shipped its render parser as a class (Rails 7.1, and
+      # again on main) and as a module holding a `Default` implementation
+      # chosen from Prism or Ripper (Rails 7.2 through 8.1).
       #
+      # @param parser [Class, Module] `ActionView::RenderParser`
       # @return [Class]
-      def render_parser
-        @render_parser ||=
-          if ActionView::RenderParser.is_a?(Class)
-            ActionView::RenderParser
-          else
-            ActionView::RenderParser::Default
-          end
+      def resolve_render_parser(parser)
+        parser.is_a?(Class) ? parser : parser::Default
       end
 
       # Resolve `# Template Dependency: SomeComponent` declarations.
@@ -209,16 +205,13 @@ module ViewComponent
 
       # Wire the tracker and resolver into Action View.
       #
-      # Idempotent, and called the first time a component includes
-      # `ExperimentallyCacheable`. Both hooks short-circuit while the registry
-      # is empty, so applications that never opt in are unaffected.
+      # Called each time a component includes `ExperimentallyCacheable`. Both
+      # steps below are individually idempotent, so no "already installed" flag
+      # is kept. Both hooks short-circuit while the registry is empty, so
+      # applications that never opt in are unaffected.
       #
       # @private
       def install!
-        return if @installed
-
-        @installed = true
-
         DependencyTracking.install!
 
         ActiveSupport.on_load(:action_controller_base) do
@@ -246,5 +239,9 @@ module ViewComponent
         nil
       end
     end
+
+    # Resolved once at load time rather than memoized, so no class-level state
+    # is written after boot.
+    RENDER_PARSER = resolve_render_parser(ActionView::RenderParser)
   end
 end

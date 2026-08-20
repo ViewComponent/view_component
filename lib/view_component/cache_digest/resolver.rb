@@ -20,7 +20,7 @@ module ViewComponent
 
       class << self
         def instance
-          @instance ||= new
+          INSTANCE
         end
       end
 
@@ -168,6 +168,11 @@ module ViewComponent
       def file_digest(path)
         ActiveSupport::Digest.hexdigest(::File.read(path))
       end
+
+      # Built once at load time rather than memoized, so no class-level state
+      # is written after boot. The resolver is stateless: it reads from disk on
+      # every call so it can't go stale when a component changes.
+      INSTANCE = new
     end
   end
 end
