@@ -98,11 +98,9 @@ push() {
 }
 
 main() {
-  version=$(ruby ./lib/view_component/version.rb)
-  version=(${version//./ })
-  major=${version[0]}
-  minor=${version[1]}
-  patch=${version[2]}
+  major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+  minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+  patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
 
   echo "==================="
   echo "Prerequisite Checks"
