@@ -80,11 +80,11 @@ module ViewComponent
           parts << "<%# Resolved Dependency: #{path} #{file_digest(path)} %>"
         end
 
-        # Dependencies declared with `# Template Dependency:` in the component's
-        # Ruby file, plus components rendered from Ruby rather than from a
-        # template (`#call` methods, helper methods). Re-emitted so the Digestor
-        # resolves them as tree nodes.
-        (explicit_dependencies(component) | ruby_component_dependencies(component)).each do |dependency|
+        # Everything the component renders from Ruby rather than from a
+        # template: `# Template Dependency:` declarations, components rendered
+        # from `#call` methods, and partials referenced by string path.
+        # Re-emitted so the Digestor resolves them as tree nodes.
+        ruby_dependencies(component).each do |dependency|
           parts << "<%# Template Dependency: #{dependency} %>"
         end
 
@@ -138,11 +138,18 @@ module ViewComponent
         ruby_sources(component).flat_map { |source| source.scan(EXPLICIT_DEPENDENCY).flatten }.uniq
       end
 
-      # Components rendered from Ruby code rather than from a template. Action
-      # View's trackers only read templates, so a `#call` method that renders
-      # another component would otherwise go unnoticed.
-      def ruby_component_dependencies(component)
-        ruby_sources(component).flat_map { |source| CacheDigest.component_paths_in(source) }.uniq
+      # Everything a component renders from Ruby code rather than from a
+      # template. Action View's trackers only read templates, so a `#call`
+      # method that renders another component or a partial would otherwise go
+      # unnoticed.
+      def ruby_dependencies(component)
+        virtual_path = CacheDigest.virtual_path_for(component)
+
+        explicit_dependencies(component) |
+          ruby_sources(component).flat_map { |source|
+            CacheDigest.component_paths_in(source) |
+              CacheDigest.partial_paths_in(source, virtual_path)
+          }.uniq
       end
 
       def ruby_sources(component)

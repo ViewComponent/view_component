@@ -16,7 +16,7 @@ Since 4.14.0
 
 Rails computes a digest for every template from its source and from the templates it renders. That digest is mixed into the key of every `<% cache %>` block in the template, so editing a partial invalidates the caches of everything that renders it.
 
-Components are invisible to that mechanism, which means this doesn't work:
+Components are invisible to that mechanism. 
 
 ```erb
 <% cache @post do %>
@@ -40,13 +40,11 @@ class PostComponent < ViewComponent::Base
 end
 ```
 
-That's all that's needed for the `<% cache %>` block above to work. The component is registered with Rails' digest tree, and the fragment is invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change, including children and partials rendered from an inline template and children rendered from a `#call` method. The one exception is a partial referenced by string path from a `#call` method, which needs [the escape hatch](#declaring-dependencies-static-analysis-cant-see).
+That's all that's needed for the `<% cache %>` block above to work. The component is registered with Rails' digest tree, and the fragment is invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change, including components and partials rendered from an inline template or a `#call` method.
 
-## Caching a component's own output
+## Self-caching
 
-Everything above is about making a `<% cache %>` block that wraps a component behave correctly. `cache_on` does something different: the component caches itself, so **no `<% cache %>` block is needed anywhere**.
-
-Declare the methods whose values identify a rendering of the component:
+To have a component cache its own output without needing a `cache` block, use `cache_on` to declare methods used for the component's cache key.
 
 ```ruby
 class PostComponent < ViewComponent::Base
@@ -64,23 +62,19 @@ class PostComponent < ViewComponent::Base
 end
 ```
 
-Every call site is now cached, with nothing to wrap and nothing to remember:
+Every call site is now cached automatically:
 
 ```erb
 <%= render PostComponent.new(post: @post) %>
 ```
 
-That single line is equivalent to writing this at every call site:
+Which is equivalent to writing:
 
 ```erb
 <% cache [@post, PostComponent.cache_digest] do %>
   <%= render PostComponent.new(post: @post) %>
 <% end %>
 ```
-
-Moving caching into the component means it can't be forgotten at one of a dozen call sites, and the cache key lives next to the state it's derived from.
-
-Private methods are allowed, so the values that form the key don't have to be part of the component's public interface.
 
 The cache key combines:
 
@@ -90,7 +84,7 @@ The cache key combines:
 - the current `I18n.locale`
 - the values returned by the `cache_on` methods
 
-Caching is skipped unless `perform_caching` is enabled on the controller, matching the behavior of Rails' `cache` helper. Override `#cache_key` for full control.
+Caching is skipped unless `perform_caching` is enabled on the controller, matching the behavior of Rails' `cache` helper.
 
 ## Reading a component's digest
 
@@ -110,17 +104,15 @@ end
 
 ## Declaring dependencies static analysis can't see
 
-Dependencies are discovered by scanning template and Ruby source, so dynamic renders are invisible:
+Dependencies are discovered by scanning template and Ruby source for literal references, so renders resolved at runtime are invisible:
 
 ```erb
 <%= render @component %>
 ```
 
-The same applies to a partial referenced by string path from a `#call` method, which is the one dependency kind that isn't discovered automatically:
-
 ```ruby
 def call
-  render "posts/byline" # not tracked
+  render "posts/#{@post.style}" # interpolated, so not tracked
 end
 ```
 

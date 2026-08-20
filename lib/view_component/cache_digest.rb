@@ -2,6 +2,7 @@
 
 require "active_support/dependencies/autoload"
 require "action_view/digestor"
+require "action_view/render_parser"
 
 module ViewComponent
   # Integrates ViewComponents into Rails' template digest tree.
@@ -120,6 +121,45 @@ module ViewComponent
           component = constantize_component(constant_name)
           virtual_path_for(component) if component
         end
+      end
+
+      # Scan a component's Ruby source for partials referenced by string path,
+      # such as `render "posts/byline"` inside a `#call` method.
+      #
+      # Uses Rails' own render parser — the same one `RubyTracker` runs over
+      # compiled templates — rather than a second implementation of the same
+      # analysis. Its results are then narrowed to paths that appear verbatim in
+      # the source, which keeps string literals and discards the speculative
+      # `things/_thing` entries the parser infers from dynamic renders like
+      # `render @thing` or `render FooComponent.new`. Those would resolve to
+      # nothing and only add log noise; components rendered from Ruby are
+      # already found precisely by `component_paths_in`.
+      #
+      # @param source [String] Ruby source
+      # @param name [String] virtual path the source is being digested under
+      # @return [Array<String>] partial virtual paths
+      def partial_paths_in(source, name)
+        return [] unless source.is_a?(String) && source.include?("render")
+
+        render_parser.new(name, source).render_calls.uniq.select do |path|
+          source.include?(path) || source.include?(path.sub(%r{(\A|/)_}, '\1'))
+        end
+      rescue
+        # Never let digest computation break rendering.
+        []
+      end
+
+      # Rails 7.1 exposes the parser as a class; 7.2+ as a module with a
+      # `Default` implementation chosen from Prism or Ripper.
+      #
+      # @return [Class]
+      def render_parser
+        @render_parser ||=
+          if ActionView::RenderParser.is_a?(Class)
+            ActionView::RenderParser
+          else
+            ActionView::RenderParser::Default
+          end
       end
 
       # Compute the digest of a component using Rails' digest tree.

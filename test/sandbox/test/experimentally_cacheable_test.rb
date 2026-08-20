@@ -129,17 +129,66 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     ) { CacheableCallComponent.cache_digest }
   end
 
-  # The one dependency kind still requiring the escape hatch: a partial
-  # referenced by a string path from Ruby code. Discovering it would mean
-  # reimplementing Rails' partial static analysis for Ruby files.
-  def test_partials_rendered_from_call_methods_are_not_tracked
-    clear_digest_cache
-    before = CacheableCallPartialComponent.cache_digest
+  # Partials referenced by string path from Ruby are found with Rails' own
+  # render parser, the same one `RubyTracker` runs over compiled templates.
+  def test_cache_digest_changes_when_a_partial_of_a_call_method_changes
+    assert_digest_changes(
+      "app/views/integration_examples/_erb_partial.html.erb",
+      "<div>changed partial</div>\n"
+    ) { CacheableCallPartialComponent.cache_digest }
+  end
 
-    modify_file "app/views/integration_examples/_erb_partial.html.erb", "<div>changed</div>\n" do
-      clear_digest_cache
+  def test_partial_paths_are_extracted_from_ruby_source
+    source = <<~RUBY
+      def call
+        render "posts/byline"
+      end
+    RUBY
 
-      assert_equal before, CacheableCallPartialComponent.cache_digest
+    assert_equal(
+      ["posts/_byline"],
+      ViewComponent::CacheDigest.partial_paths_in(source, "view_component/cache_digest/post_component")
+    )
+  end
+
+  # The parser speculatively infers `things/_thing` from dynamic renders. Those
+  # resolve to nothing, so they're discarded rather than emitted as noise.
+  def test_speculative_partial_paths_are_discarded
+    source = <<~RUBY
+      def call
+        render @thing
+        render OtherComponent.new
+        render "bare_name"
+      end
+    RUBY
+
+    assert_empty(
+      ViewComponent::CacheDigest.partial_paths_in(source, "view_component/cache_digest/post_component")
+    )
+  end
+
+  def test_partial_paths_are_not_extracted_from_sources_without_render
+    assert_empty ViewComponent::CacheDigest.partial_paths_in("def call; end", "a/b")
+  end
+
+  def test_partial_path_extraction_swallows_parser_errors
+    ViewComponent::CacheDigest.stub(:render_parser, ->(*) { raise "boom" }) do
+      assert_empty ViewComponent::CacheDigest.partial_paths_in("render \"a/b\"", "a/b")
+    end
+  end
+
+  # Rails 7.1 exposes the parser as a class, 7.2+ as a module with `Default`.
+  def test_render_parser_supports_both_action_view_shapes
+    with_reset_render_parser do
+      ActionView::RenderParser.stub(:is_a?, true) do
+        assert_equal ActionView::RenderParser, ViewComponent::CacheDigest.render_parser
+      end
+    end
+
+    with_reset_render_parser do
+      ActionView::RenderParser.stub(:is_a?, false) do
+        assert_equal ActionView::RenderParser::Default, ViewComponent::CacheDigest.render_parser
+      end
     end
   end
 
@@ -350,6 +399,15 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   end
 
   private
+
+  def with_reset_render_parser
+    cache_digest = ViewComponent::CacheDigest
+    original = cache_digest.instance_variable_get(:@render_parser)
+    cache_digest.instance_variable_set(:@render_parser, nil)
+    yield
+  ensure
+    cache_digest.instance_variable_set(:@render_parser, original)
+  end
 
   def build_template(source)
     ActionView::Template.new(
