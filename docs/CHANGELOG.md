@@ -14,7 +14,7 @@ nav_order: 6
 
     Components have never participated in Rails' template digests, so a `<% cache %>` block wrapping `render MyComponent.new` was never invalidated when the component changed ([#234](https://github.com/ViewComponent/view_component/issues/234), open since 2020).
 
-    Including the module registers the component with Rails' own `ActionView::Digestor`, so fragment caches are invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change. Adding `cache_on` caches the component's own rendered output, and `.cache_digest` exposes the digest for use outside a request.
+    Including the module registers the component with Rails' own `ActionView::Digestor`, so fragment caches are invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change — including children rendered from inline templates and `#call` methods. Adding `cache_on` caches the component's own rendered output, and `.cache_digest` exposes the digest for use outside a request.
 
     ```ruby
     class MessageComponent < ViewComponent::Base

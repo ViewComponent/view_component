@@ -106,7 +106,14 @@ module ViewComponent
       def dependencies_in(template)
         return [] unless enabled?
 
-        source = template.source
+        component_paths_in(template.source)
+      end
+
+      # Scan arbitrary source (a template or a component's Ruby file) for
+      # renders of cacheable components.
+      #
+      # @return [Array<String>] synthetic virtual paths
+      def component_paths_in(source)
         return [] unless source.is_a?(String) && source.include?("render")
 
         source.scan(RENDER_CALL).flatten.uniq.filter_map do |constant_name|

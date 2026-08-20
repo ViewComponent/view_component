@@ -57,6 +57,9 @@ the following change:
 | A superclass's template or Ruby class | ✅ |
 | A child component rendered by the template | ✅ |
 | A partial rendered by the template | ✅ |
+| A child component rendered by an inline template or `#call` method | ✅ |
+| A partial rendered by an inline template | ✅ |
+| A partial rendered by a `#call` method | ❌ [use the escape hatch](#declaring-dependencies-static-analysis-cant-see) |
 
 Components that don't include the module are unaffected, and applications that
 never opt in pay no cost.
@@ -122,11 +125,20 @@ Use it to build cache keys by hand, or to key a cache in a background job:
 
 ## Declaring dependencies static analysis can't see
 
-Dependencies are discovered by scanning template source, so dynamic renders are
-invisible:
+Dependencies are discovered by scanning template and Ruby source, so dynamic
+renders are invisible:
 
 ```erb
 <%= render @component %>
+```
+
+The same applies to a partial referenced by string path from a `#call` method,
+which is the one dependency kind that isn't discovered automatically:
+
+```ruby
+def call
+  render "posts/byline" # not tracked
+end
 ```
 
 Declare these with Rails' `# Template Dependency:` comment, in either the Ruby
@@ -164,11 +176,6 @@ on the component's own state, not on `helpers` or the view context. A cache key
 that depends on the view context is usually a sign the value should be passed to
 the component instead.
 
-**Inline templates and `#call` methods** are digested through the component's Ruby
-file, so edits to them invalidate correctly. Partials and components they render
-aren't discovered, because there's no template source to scan; use
-`# Template Dependency:` for those.
-
 **Included modules aren't tracked.** A component's superclasses are, but a module
-included into a component isn't. Use `# Template Dependency:` or bump
-`config.action_controller.perform_caching` cache versions on deploy.
+included into a component isn't, since a module has no template or source file of
+its own to hash. Use `# Template Dependency:` for those.

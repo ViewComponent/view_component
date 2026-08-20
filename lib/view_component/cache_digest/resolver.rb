@@ -81,8 +81,10 @@ module ViewComponent
         end
 
         # Dependencies declared with `# Template Dependency:` in the component's
-        # Ruby file. Re-emitted so the Digestor resolves them as tree nodes.
-        explicit_dependencies(component).each do |dependency|
+        # Ruby file, plus components rendered from Ruby rather than from a
+        # template (`#call` methods, helper methods). Re-emitted so the Digestor
+        # resolves them as tree nodes.
+        (explicit_dependencies(component) | ruby_component_dependencies(component)).each do |dependency|
           parts << "<%# Template Dependency: #{dependency} %>"
         end
 
@@ -119,17 +121,35 @@ module ViewComponent
           .select { |path| ::File.exist?(path) }
       end
 
+      # Sidecar template files plus inline templates, which live in the Ruby
+      # file and so are invisible to Action View's trackers.
       def template_sources(component)
-        template_files(component).map { |path| ::File.read(path) }
+        sources = template_files(component).map { |path| ::File.read(path) }
+
+        component_ancestors(component).each do |ancestor|
+          inline_template = ancestor.__vc_inline_template
+          sources << inline_template.source if inline_template
+        end
+
+        sources.uniq
       end
 
       def explicit_dependencies(component)
-        component_ancestors(component).flat_map { |ancestor|
-          path = ancestor.identifier
-          next [] unless path && ::File.exist?(path)
+        ruby_sources(component).flat_map { |source| source.scan(EXPLICIT_DEPENDENCY).flatten }.uniq
+      end
 
-          ::File.read(path).scan(EXPLICIT_DEPENDENCY).flatten
-        }.uniq
+      # Components rendered from Ruby code rather than from a template. Action
+      # View's trackers only read templates, so a `#call` method that renders
+      # another component would otherwise go unnoticed.
+      def ruby_component_dependencies(component)
+        ruby_sources(component).flat_map { |source| CacheDigest.component_paths_in(source) }.uniq
+      end
+
+      def ruby_sources(component)
+        component_ancestors(component).filter_map { |ancestor|
+          path = ancestor.identifier
+          ::File.read(path) if path && ::File.exist?(path)
+        }
       end
 
       def file_digest(path)

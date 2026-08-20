@@ -96,6 +96,53 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     ) { CacheableExplicitDependencyComponent.cache_digest }
   end
 
+  # Components rendered from an inline template are invisible to Action View's
+  # trackers, which only read template files.
+  def test_cache_digest_changes_when_a_child_of_an_inline_template_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableInlineTemplateComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_a_partial_of_an_inline_template_changes
+    assert_digest_changes(
+      "app/views/integration_examples/_erb_partial.html.erb",
+      "<div>changed partial</div>\n"
+    ) { CacheableInlinePartialComponent.cache_digest }
+  end
+
+  # Components rendered from a `#call` method live in Ruby, not in a template.
+  def test_cache_digest_changes_when_a_child_of_a_call_method_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableCallComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_a_call_method_child_ruby_file_changes
+    original = File.read(Rails.root.join("app/components/cacheable_child_component.rb"))
+
+    assert_digest_changes(
+      "app/components/cacheable_child_component.rb",
+      original + "\n# a comment\n"
+    ) { CacheableCallComponent.cache_digest }
+  end
+
+  # The one dependency kind still requiring the escape hatch: a partial
+  # referenced by a string path from Ruby code. Discovering it would mean
+  # reimplementing Rails' partial static analysis for Ruby files.
+  def test_partials_rendered_from_call_methods_are_not_tracked
+    clear_digest_cache
+    before = CacheableCallPartialComponent.cache_digest
+
+    modify_file "app/views/integration_examples/_erb_partial.html.erb", "<div>changed</div>\n" do
+      clear_digest_cache
+
+      assert_equal before, CacheableCallPartialComponent.cache_digest
+    end
+  end
+
   def test_cache_digest_is_unaffected_by_unrelated_changes
     clear_digest_cache
     before = CacheableComponent.cache_digest
