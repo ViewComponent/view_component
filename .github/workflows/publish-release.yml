@@ -19,19 +19,19 @@ jobs:
     # Only run if this is a release commit (created by script/release)
     if: startsWith(github.event.head_commit.message, 'release ')
     steps:
-      - uses: actions/checkout@a5ac7e51b41094c7467c0571fcf3efa5d718588e # v4.1.6
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@40952e3fccbed86cb109344f62e64d30d5487b6e1 # v1.180.1
+        uses: ruby/setup-ruby@d4526e8c8037b1e4c2537ccf714d62c4bacda6cb # v1.182.0
         with:
           bundler-cache: true
 
       - name: Harden runner
-        uses: step-security/harden-runner@17d0e2bd7d51742c71814c7e8a1e8e7489a06eb5 # v2.8.1
+        uses: step-security/harden-runner@7c9f3a5f68b15e1e07de259dffa5cdb5133f32e0 # v2.9.1
         with:
           egress-policy: audit
 
