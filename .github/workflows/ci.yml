@@ -17,6 +17,8 @@ jobs:
       BUNDLE_GEMFILE: gemfiles/rails_8.1.gemfile
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -50,6 +52,8 @@ jobs:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -78,9 +82,11 @@ jobs:
         repository: 'primer/view_components'
         path: 'primer_view_components'
         ref: 'main'
+        persist-credentials: false
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
         path: 'view_component'
+        persist-credentials: false
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -107,6 +113,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
