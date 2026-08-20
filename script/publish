@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+set -e
+
+# Get version from version.rb
+major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
+version="$major.$minor.$patch"
+tag="v$version"
+
+# Extract changelog for this version
+# Find the section for this version and capture until the next ## heading
+changelog=$(sed -n "/^## $version$/,/^## /p" docs/CHANGELOG.md | sed '$ d')
+
 # Publish gem
 # this step has been replaced by .github/workflows/push_gem.yml
 
@@ -8,3 +21,9 @@ git branch -D gh-pages
 git checkout -b gh-pages main
 git push origin gh-pages --force
 git checkout main
+
+# Create GitHub release
+gh release create "$tag" \
+  --title "$version" \
+  --notes "$changelog" \
+  --repo ViewComponent/view_component
