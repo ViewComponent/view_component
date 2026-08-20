@@ -58,7 +58,7 @@ jobs:
       current-patch: ${{ steps.current-version.outputs.patch }}
       current-pre: ${{ steps.current-version.outputs.pre }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
 
@@ -86,16 +86,11 @@ jobs:
           INPUT_PRE: ${{ inputs.pre }}
         run: |
           current="$CURRENT_MAJOR.$CURRENT_MINOR.$CURRENT_PATCH"
-          if [ -n "$CURRENT_PRE" ]; then
-            current="$current-$CURRENT_PRE"
-          fi
+          [ -n "$CURRENT_PRE" ] && current="$current-$CURRENT_PRE"
           echo "Current version: $current"
-          echo ""
           release="$INPUT_MAJOR.$INPUT_MINOR.$INPUT_PATCH"
-          if [ -n "$INPUT_PRE" ]; then
-            release="$release-$INPUT_PRE"
-          fi
-          echo "Release version will be: $release"
+          [ -n "$INPUT_PRE" ] && release="$release-$INPUT_PRE"
+          echo "Release version: $release"
 
   release:
     name: Create release
@@ -105,14 +100,14 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@e5517072e87f198d9533967ae13d97c11b604005 # v1
+        uses: ruby/setup-ruby@e5517072e87f198d9533967ae13d97c11b604005
         with:
           bundler-cache: true
 
