@@ -88,12 +88,27 @@ commit() {
 push() {
   git push origin release-$1-$2-$3
 
+  # Open PR
+  pr_url=$(gh pr create \
+    --title "Release $1.$2.$3" \
+    --base main \
+    --head release-$1-$2-$3 \
+    --repo ViewComponent/view_component \
+    --web)
+
   echo "####################################################"
-  echo "Now, open a PR with this branch and merge it to main"
-  echo "Then, run script/publish on main to publish the docs"
-  echo "The gem will be pushed to RubyGems automatically by"
-  echo "Github Actions, using Trusted Publishing."
-  echo "Finally, create a GitHub release https://github.com/viewcomponent/view_component/releases/new with the changes from docs/CHANGELOG"
+  echo "PR opened: $pr_url"
+  echo ""
+  echo "After merging to main, run:"
+  echo "  git checkout main"
+  echo "  git pull"
+  echo "  script/publish"
+  echo ""
+  echo "This will:"
+  echo "  1. Publish updated docs to gh-pages"
+  echo "  2. Create a GitHub release with CHANGELOG entries"
+  echo "  3. The gem will be pushed to RubyGems automatically by"
+  echo "     Github Actions using Trusted Publishing."
   echo "####################################################"
 }
 
