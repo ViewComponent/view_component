@@ -58,7 +58,7 @@ jobs:
       current-patch: ${{ steps.current-version.outputs.patch }}
       current-pre: ${{ steps.current-version.outputs.pre }}
     steps:
-      - uses: actions/checkout@a5ac7e51b41094c7467c0571fcf3efa5d718588e # v4.1.6
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -75,15 +75,27 @@ jobs:
           echo "pre=$pre" >> $GITHUB_OUTPUT
 
       - name: Show current version
+        env:
+          CURRENT_MAJOR: ${{ steps.current-version.outputs.major }}
+          CURRENT_MINOR: ${{ steps.current-version.outputs.minor }}
+          CURRENT_PATCH: ${{ steps.current-version.outputs.patch }}
+          CURRENT_PRE: ${{ steps.current-version.outputs.pre }}
+          INPUT_MAJOR: ${{ inputs.major }}
+          INPUT_MINOR: ${{ inputs.minor }}
+          INPUT_PATCH: ${{ inputs.patch }}
+          INPUT_PRE: ${{ inputs.pre }}
         run: |
-          current="${{ steps.current-version.outputs.major }}.${{ steps.current-version.outputs.minor }}.${{ steps.current-version.outputs.patch }}"
-          pre="${{ steps.current-version.outputs.pre }}"
-          if [ -n "$pre" ]; then
-            current="$current-$pre"
+          current="$CURRENT_MAJOR.$CURRENT_MINOR.$CURRENT_PATCH"
+          if [ -n "$CURRENT_PRE" ]; then
+            current="$current-$CURRENT_PRE"
           fi
           echo "Current version: $current"
           echo ""
-          echo "Release version will be: ${{ inputs.major }}.${{ inputs.minor }}.${{ inputs.patch }}${{ inputs.pre && format('-{0}', inputs.pre) || '' }}"
+          release="$INPUT_MAJOR.$INPUT_MINOR.$INPUT_PATCH"
+          if [ -n "$INPUT_PRE" ]; then
+            release="$release-$INPUT_PRE"
+          fi
+          echo "Release version will be: $release"
 
   release:
     name: Create release
@@ -93,14 +105,14 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@a5ac7e51b41094c7467c0571fcf3efa5d718588e # v4.1.6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@40952e3fccbed86cb109344f62e64d30d5487b6e1 # v1.180.1
+        uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
 
