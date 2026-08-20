@@ -15,7 +15,18 @@ module ViewComponent
     # @private
     module DependencyTracking
       def find_dependencies(name, template, view_paths = nil)
-        super + CacheDigest.dependencies_in(template)
+        dependencies = super
+        source = template.source
+
+        # `# Template Dependency: SomeComponent` names a class, which Rails
+        # would resolve as a template path and never find. Swap it for the path
+        # the component is digested under, so the declaration resolves instead
+        # of becoming a missing node.
+        CacheDigest.explicit_component_dependencies(source).each do |declared, virtual_path|
+          dependencies = dependencies - [declared] + [virtual_path]
+        end
+
+        dependencies + CacheDigest.dependencies_in(template)
       rescue
         # A broken digest is preferable to a broken render. Falling back to the
         # dependencies Rails found on its own means the component simply isn't

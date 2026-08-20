@@ -96,6 +96,38 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     ) { CacheableExplicitDependencyComponent.cache_digest }
   end
 
+  # A component rendered dynamically can be declared by class name, without
+  # naming the internal path it's digested under.
+  def test_cache_digest_changes_when_a_component_declared_by_class_name_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableDynamicConstantComponent.cache_digest }
+  end
+
+  def test_declared_component_class_names_resolve_to_the_component
+    template = build_template("<%# Template Dependency: CacheableChildComponent %>")
+    dependencies = ActionView::DependencyTracker.find_dependencies("test/template", template, [])
+
+    assert_includes dependencies, "view_component/cache_digest/cacheable_child_component"
+    # The raw class name would resolve to nothing, so it's replaced rather than added.
+    refute_includes dependencies, "CacheableChildComponent"
+  end
+
+  def test_declared_template_paths_are_left_alone
+    template = build_template("<%# Template Dependency: integration_examples/erb_partial %>")
+    dependencies = ActionView::DependencyTracker.find_dependencies("test/template", template, [])
+
+    assert_includes dependencies, "integration_examples/erb_partial"
+  end
+
+  def test_declared_names_that_are_not_cacheable_components_are_left_alone
+    assert_empty ViewComponent::CacheDigest.explicit_component_dependencies(
+      "# Template Dependency: ErbComponent"
+    )
+    assert_empty ViewComponent::CacheDigest.explicit_component_dependencies("no declarations here")
+  end
+
   # Components rendered from an inline template are invisible to Action View's
   # trackers, which only read template files.
   def test_cache_digest_changes_when_a_child_of_an_inline_template_changes

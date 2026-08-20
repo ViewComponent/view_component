@@ -116,7 +116,7 @@ def call
 end
 ```
 
-Declare these with Rails' `# Template Dependency:` comment, in either the Ruby file or the template:
+Declare these with Rails' `# Template Dependency:` comment, in either the Ruby file or the template. Partials are named by path:
 
 ```ruby
 class PostComponent < ViewComponent::Base
@@ -125,6 +125,36 @@ class PostComponent < ViewComponent::Base
   # Template Dependency: posts/byline
 end
 ```
+
+Components are named by class, listing each one the component might render:
+
+```ruby
+class PostComponent < ViewComponent::Base
+  include ViewComponent::ExperimentallyCacheable
+
+  # Template Dependency: PostSummaryComponent
+  # Template Dependency: PostDetailComponent
+
+  def call
+    render(@detailed ? PostDetailComponent : PostSummaryComponent).new(post: @post)
+  end
+end
+```
+
+The same works in a template, where the branch is often the more natural place for it:
+
+```erb
+<% if params[:style] == "summary" %>
+  <%# Template Dependency: PostSummaryComponent %>
+  <% component = PostSummaryComponent %>
+<% else %>
+  <%# Template Dependency: PostDetailComponent %>
+  <% component = PostDetailComponent %>
+<% end %>
+<%= render component.new(post: @post) %>
+```
+
+Declared components must include `ViewComponent::ExperimentallyCacheable` themselves, since a component that hasn't opted in has no digest to depend on.
 
 ## Caveats
 

@@ -53,6 +53,9 @@ module ViewComponent
       )
     /x
 
+    # Rails' escape hatch for dependencies static analysis can't see.
+    EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
+
     class << self
       # Virtual paths of components that have opted into caching, mapped to
       # their class names.
@@ -160,6 +163,26 @@ module ViewComponent
           else
             ActionView::RenderParser::Default
           end
+      end
+
+      # Resolve `# Template Dependency: SomeComponent` declarations.
+      #
+      # Rails' escape hatch takes a template path, but the path a component is
+      # digested under is an internal detail. Naming the class instead keeps
+      # that detail out of application code, so `SomeComponent` is translated
+      # to the path the Digestor can resolve.
+      #
+      # @return [Array<Array(String, String)>] pairs of declared name and
+      #   synthetic virtual path
+      def explicit_component_dependencies(source)
+        return [] unless source.is_a?(String) && source.include?("Template Dependency:")
+
+        source.scan(EXPLICIT_DEPENDENCY).flatten.uniq.filter_map do |declared|
+          next unless /\A(?:::)?[A-Z]/.match?(declared)
+
+          component = constantize_component(declared)
+          [declared, virtual_path_for(component)] if component
+        end
       end
 
       # Compute the digest of a component using Rails' digest tree.

@@ -18,10 +18,6 @@ module ViewComponent
       # Extensions whose contents are hashed into the synthetic source.
       SIDECAR_EXTENSIONS = %w[yml yaml].freeze
 
-      # `# Template Dependency: foo/bar` comments in a component's Ruby file, the
-      # escape hatch for dependencies static analysis can't see.
-      EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
-
       class << self
         def instance
           @instance ||= new
@@ -135,7 +131,17 @@ module ViewComponent
       end
 
       def explicit_dependencies(component)
-        ruby_sources(component).flat_map { |source| source.scan(EXPLICIT_DEPENDENCY).flatten }.uniq
+        ruby_sources(component).flat_map { |source|
+          declared = source.scan(CacheDigest::EXPLICIT_DEPENDENCY).flatten
+
+          # Component class names are translated to the path they're digested
+          # under; anything else is a template path already.
+          CacheDigest.explicit_component_dependencies(source).each do |name, virtual_path|
+            declared = declared - [name] + [virtual_path]
+          end
+
+          declared
+        }.uniq
       end
 
       # Everything a component renders from Ruby code rather than from a
