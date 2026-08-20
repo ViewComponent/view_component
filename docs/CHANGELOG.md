@@ -10,6 +10,30 @@ nav_order: 6
 
 ## main
 
+* Add experimental caching support, opt-in per component via `include ViewComponent::ExperimentallyCacheable`.
+
+    Components have never participated in Rails' template digests, so a `<% cache %>` block wrapping `render MyComponent.new` was never invalidated when the component changed ([#234](https://github.com/ViewComponent/view_component/issues/234), open since 2020).
+
+    Including the module registers the component with Rails' own `ActionView::Digestor`, so fragment caches are invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change. Adding `cache_on` caches the component's own rendered output, and `.cache_digest` exposes the digest for use outside a request.
+
+    ```ruby
+    class MessageComponent < ViewComponent::Base
+      include ViewComponent::ExperimentallyCacheable
+
+      cache_on :message
+
+      def initialize(message:)
+        @message = message
+      end
+    end
+    ```
+
+    **This API is experimental and may change or be removed in a non-major release.** It's shipping opt-in and per-component precisely so we can iterate on it in response to real-world use. **Please try it and tell us what breaks, what's missing, and what feels wrong in [#234](https://github.com/ViewComponent/view_component/issues/234).** We're especially interested in feedback on: whether `cache_on` is the right shape for declaring cache keys, how the feature behaves with slots and content blocks, and whether the `# Template Dependency:` escape hatch is sufficient for dynamic renders. See [the caching guide](https://viewcomponent.org/guide/caching.html) for details and known caveats.
+
+    This work builds directly on prior art from the community: the `cache_on` API and the case for component-local caching come from [#2126](https://github.com/ViewComponent/view_component/pull/2126) by *Reegan Viljoen*; the approach of integrating with Rails' digest tree rather than reimplementing it comes from [`view_component-cache_digest`](https://github.com/tildeio/view_component-cache_digest) by *Godfrey Chan*; the invalidation cases it's tested against were contributed by *JWShuff* and *timburgan*, drawing on [`view_component-fragment_caching`](https://github.com/patrickarnett/view_component-fragment_caching) by *Patrick Arnett*. The issue was opened and researched by *ozzyaaron*, *pinzonjulian*, and *Derek Kniffin*, and the digest workaround that surfaced the superclass gap came from *cannikin* and *rnestler*.
+
+    *Reegan Viljoen*, *Godfrey Chan*, *JWShuff*, *timburgan*, *Patrick Arnett*, *ozzyaaron*, *pinzonjulian*, *Derek Kniffin*, *cannikin*, *rnestler*, *Joel Hawksley*
+
 ## 4.13.0
 
 * Add support for Turbo-streaming ViewComponents.
