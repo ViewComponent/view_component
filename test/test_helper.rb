@@ -168,6 +168,27 @@ def modify_file(file, content)
   end
 end
 
+# Rails caches template digests globally and clears them from the reloader on
+# each code reload. Tests that change files on disk have to do the same.
+def clear_digest_cache
+  ActionView::LookupContext::DetailsKey.clear
+end
+
+# Modify a file and assert the block's return value changes while it's modified,
+# clearing Rails' digest cache the way a code reload would.
+def assert_digest_changes(file, content)
+  clear_digest_cache
+  before = yield
+
+  modify_file(file, content) do
+    clear_digest_cache
+    refute_equal before, yield, "Expected the digest to change when #{file} changed"
+  end
+
+  clear_digest_cache
+  assert_equal before, yield, "Expected the digest to be restored when #{file} was restored"
+end
+
 def with_default_preview_layout(layout, &block)
   with_previews_option(:default_layout, layout, &block)
 end

@@ -219,4 +219,39 @@ module ViewComponent
       super(MESSAGE.gsub("SETTER_METHOD_NAME", setter_method_name.to_s).gsub("SETTER_NAME", setter_name.to_s))
     end
   end
+
+  class CacheDigestTemplateError < StandardError
+    MESSAGE =
+      "The synthetic cache digest template for COMPONENT was rendered.\n\n" \
+      "This template exists only so Rails can compute a cache digest for the " \
+      "component and is never meant to be rendered. Render the component " \
+      "itself instead.".freeze
+
+    def initialize(component_name)
+      super(MESSAGE.gsub("COMPONENT", component_name.to_s))
+    end
+  end
+
+  class UndefinedCacheKeyMethodError < StandardError
+    MESSAGE =
+      "`cache_on` declared `METHOD` on COMPONENT, but no such method is defined.\n\n" \
+      "To fix this issue, define `METHOD` or remove it from `cache_on`.".freeze
+
+    def initialize(component_name, method_name)
+      super(MESSAGE.gsub("COMPONENT", component_name.to_s).gsub("METHOD", method_name.to_s))
+    end
+  end
+
+  class ContentPassedToCachedComponentError < StandardError
+    MESSAGE =
+      "COMPONENT declares `cache_on`, so it caches its own output, but its caller passed it content.\n\n" \
+      "Content and slots set by the caller aren't part of the cache key, so caching them would risk " \
+      "serving one caller's content to another.\n\n" \
+      "To fix this issue, either remove `cache_on` from COMPONENT, or move the content into the " \
+      "component and derive it from the values declared in `cache_on`.".freeze
+
+    def initialize(component_name)
+      super(MESSAGE.gsub("COMPONENT", component_name.to_s))
+    end
+  end
 end
