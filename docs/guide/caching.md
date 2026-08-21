@@ -86,6 +86,26 @@ The cache key combines:
 
 Caching is skipped unless `perform_caching` is enabled on the controller, matching the behavior of Rails' `cache` helper.
 
+To cache only some renders, pass `if:` or `unless:`. Both accept a method name or a proc evaluated on the component:
+
+```ruby
+class PostComponent < ViewComponent::Base
+  include ViewComponent::ExperimentallyCacheable
+
+  cache_on :post, unless: -> { post.draft? }
+
+  def initialize(post:)
+    @post = post
+  end
+
+  private
+
+  attr_reader :post
+end
+```
+
+Drafts now render every time, while published posts are cached. Note that this controls whether the cache is *used*, not what goes into the key: a `cache_on` method returning `nil` or `false` still contributes that value to the key rather than disabling caching.
+
 A component that declares `cache_on` can't accept content from its callers. A block, `with_content`, or a slot set by the caller isn't part of the cache key, so passing one raises `ContentPassedToCachedComponentError`:
 
 ```erb

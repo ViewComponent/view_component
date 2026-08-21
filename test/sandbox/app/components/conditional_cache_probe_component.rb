@@ -4,7 +4,7 @@
 class ConditionalCacheProbeComponent < ViewComponent::Base
   include ViewComponent::ExperimentallyCacheable
 
-  cache_on :identity
+  cache_on :identity, if: :cacheable?
 
   class_attribute :render_count, default: 0
 
@@ -19,7 +19,9 @@ class ConditionalCacheProbeComponent < ViewComponent::Base
 
   private
 
-  attr_reader :cacheable
+  def cacheable?
+    @cacheable
+  end
 
   def identity
     "constant"

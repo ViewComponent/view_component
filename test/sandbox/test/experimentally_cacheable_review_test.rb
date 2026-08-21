@@ -77,6 +77,85 @@ class ExperimentallyCacheableReviewTest < ViewComponent::TestCase
     end
   end
 
+  def test_cache_conditions_accept_a_proc
+    component = Class.new(ConditionalCacheProbeComponent) do
+      def self.name
+        "ProcConditionCacheProbeComponent"
+      end
+
+      cache_on :identity, if: -> { false }
+    end
+
+    with_caching do
+      render_inline(component.new(cacheable: true))
+      render_inline(component.new(cacheable: true))
+
+      assert_equal 2, component.render_count
+    end
+  end
+
+  def test_cache_conditions_accept_unless
+    component = Class.new(ConditionalCacheProbeComponent) do
+      def self.name
+        "UnlessConditionCacheProbeComponent"
+      end
+
+      cache_on :identity, unless: :cacheable?
+    end
+
+    with_caching do
+      render_inline(component.new(cacheable: true))
+      render_inline(component.new(cacheable: true))
+
+      assert_equal 2, component.render_count
+    end
+  end
+
+  def test_cache_conditions_are_inherited
+    component = Class.new(ConditionalCacheProbeComponent) do
+      def self.name
+        "InheritedConditionCacheProbeComponent"
+      end
+    end
+
+    with_caching do
+      render_inline(component.new(cacheable: false))
+      render_inline(component.new(cacheable: false))
+
+      assert_equal 2, component.render_count
+    end
+  end
+
+  def test_cache_on_rejects_unknown_options
+    error = assert_raises(ArgumentError) do
+      Class.new(ViewComponent::Base) do
+        include ViewComponent::ExperimentallyCacheable
+
+        cache_on :identity, when: :something
+      end
+    end
+
+    assert_match(/:when/, error.message)
+  end
+
+  def test_undefined_cache_condition_method_raises
+    component = Class.new(ConditionalCacheProbeComponent) do
+      def self.name
+        "MissingConditionCacheProbeComponent"
+      end
+
+      cache_on :identity, if: :nonexistent?
+    end
+
+    with_caching do
+      error = assert_raises(ViewComponent::UndefinedCacheKeyMethodError) do
+        render_inline(component.new(cacheable: true))
+      end
+
+      assert_includes error.message, "nonexistent?"
+    end
+  end
+
   # Issue 4: a block passed to `cache_on` is silently dropped, leaving the
   # component uncached with no indication why.
   def test_cache_on_rejects_a_block

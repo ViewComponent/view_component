@@ -32,6 +32,11 @@ module ViewComponent
   module ExperimentallyCacheable
     extend ActiveSupport::Concern
 
+    # Stands in for `nil` in the cache key. Without it, `expand_cache_key`
+    # renders `nil` and `""` identically, so two components differing only in
+    # that respect would share an entry.
+    NIL_CACHE_VALUE = :__vc_nil
+
     included do
       ViewComponent::CacheDigest.install!
       ViewComponent::CacheDigest.register(self)
@@ -52,19 +57,65 @@ module ViewComponent
       # Without it, including this module only registers the component with
       # Rails' digest tree.
       #
+      # Pass `if:` or `unless:` to cache only some renders. Both accept a method
+      # name or a proc evaluated on the component:
+      #
+      # ```ruby
+      # cache_on :message, if: :persisted?
+      # cache_on :message, unless: -> { message.draft? }
+      # ```
+      #
       # These methods are called before the component renders, so they can only
       # depend on the component's own state, not on `helpers` or the view
       # context.
       #
       # @param methods [Array<Symbol>] Methods whose values form the cache key.
+      # @param options [Hash] `:if` and/or `:unless` conditions.
       # @return [void]
-      def cache_on(*methods)
+      def cache_on(*methods, **options, &block)
+        if block
+          raise ArgumentError,
+            "`cache_on` doesn't accept a block. Name the methods whose values form the cache key, " \
+            "such as `cache_on :message`."
+        end
+
+        methods.each do |method|
+          next if method.is_a?(Symbol) || method.is_a?(String)
+
+          raise ArgumentError,
+            "`cache_on` expects method names as symbols, got #{method.class}. " \
+            "Define a method for the value and name it, such as `cache_on :message`."
+        end
+
+        unknown = options.keys - %i[if unless]
+        if unknown.any?
+          raise ArgumentError,
+            "`cache_on` received unknown #{"option".pluralize(unknown.count)} " \
+            "#{unknown.map(&:inspect).to_sentence}. Supported options are `:if` and `:unless`."
+        end
+
         @__vc_cache_on = __vc_cache_on | methods.map(&:to_sym)
+        @__vc_cache_if = options[:if] if options.key?(:if)
+        @__vc_cache_unless = options[:unless] if options.key?(:unless)
       end
 
       # @private
       def __vc_cache_on
         @__vc_cache_on ||= superclass.respond_to?(:__vc_cache_on) ? superclass.__vc_cache_on : []
+      end
+
+      # @private
+      def __vc_cache_if
+        return @__vc_cache_if if defined?(@__vc_cache_if)
+
+        superclass.__vc_cache_if if superclass.respond_to?(:__vc_cache_if)
+      end
+
+      # @private
+      def __vc_cache_unless
+        return @__vc_cache_unless if defined?(@__vc_cache_unless)
+
+        superclass.__vc_cache_unless if superclass.respond_to?(:__vc_cache_unless)
       end
 
       # @private
@@ -152,16 +203,25 @@ module ViewComponent
     # @return [String]
     def cache_key(view_context = nil)
       lookup_context = view_context&.lookup_context
+      format = __vc_cache_format(lookup_context)
 
+      parts = [
+        "view_component",
+        self.class.virtual_path,
+        self.class.cache_digest(finder: lookup_context, format: format),
+        # Included in its own right, not just as a digest input: components that
+        # render every format from one template have the same digest for each.
+        format,
+        __vc_cache_variant(lookup_context),
+        I18n.locale,
+        *__vc_cache_on_values
+      ]
+
+      # Positions are significant, so nils are substituted rather than removed.
+      # Compacting the array would let a nil in one position collapse into a nil
+      # in another.
       ActiveSupport::Cache.expand_cache_key(
-        [
-          "view_component",
-          self.class.virtual_path,
-          self.class.cache_digest(finder: lookup_context, format: __vc_cache_format(lookup_context)),
-          __vc_cache_variant(lookup_context),
-          I18n.locale,
-          *__vc_cache_on_values
-        ].compact
+        parts.map { |part| part.nil? ? NIL_CACHE_VALUE : part }
       )
     end
 
@@ -176,9 +236,32 @@ module ViewComponent
 
     def __vc_cache_enabled?(view_context)
       return false unless defined?(Rails) && Rails.respond_to?(:cache) && Rails.cache
+      return false unless __vc_cache_conditions_met?
 
       controller = view_context.try(:controller)
       controller.respond_to?(:perform_caching) && controller.perform_caching
+    end
+
+    def __vc_cache_conditions_met?
+      if (condition = self.class.__vc_cache_if)
+        return false unless __vc_evaluate_cache_condition(condition)
+      end
+
+      if (condition = self.class.__vc_cache_unless)
+        return false if __vc_evaluate_cache_condition(condition)
+      end
+
+      true
+    end
+
+    def __vc_evaluate_cache_condition(condition)
+      return instance_exec(&condition) if condition.respond_to?(:to_proc) && !condition.is_a?(Symbol)
+
+      unless respond_to?(condition, true)
+        raise UndefinedCacheKeyMethodError.new(self.class.name, condition)
+      end
+
+      send(condition)
     end
 
     def __vc_cache_on_values
