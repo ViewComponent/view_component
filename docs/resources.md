@@ -14,6 +14,7 @@ _Is this page missing a link? Open a PR!_
 - [GOV.UK Rails Components](https://govuk-components.x-govuk.org/)
 - [Polaris ViewComponents](https://github.com/baoagency/polaris_view_components)
 - [Rails Designer](https://railsdesigner.com/)
+- [Flowbite Components](https://flowbite-components.substancelab.com)
 
 ## Frameworks using ViewComponent
 
