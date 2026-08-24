@@ -71,3 +71,13 @@ gh release create "$tag" \
   --title "$version" \
   --notes "$changelog" \
   --repo ViewComponent/view_component
+
+# Kick off the Push Gem workflow explicitly. GitHub Actions does not
+# trigger downstream workflows for events driven by GITHUB_TOKEN — so
+# the tag push above will not fire push_gem.yml on its own when this
+# script runs inside the publish-release workflow. Dispatch it here so
+# 'script/publish' always results in a gem being pushed to RubyGems.
+gh workflow run push_gem.yml \
+  --repo ViewComponent/view_component \
+  --ref main \
+  --field tag="$tag" || true
