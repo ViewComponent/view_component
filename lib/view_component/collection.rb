@@ -72,13 +72,18 @@ module ViewComponent
       @options.merge(item_options)
     end
 
+    # Render the spacer through a fresh `dup` so a collection rendered multiple
+    # times does not reuse (and trip the single-render guard on) the spacer
+    # instance passed by the caller.
     def rendered_spacer(view_context)
-      if @spacer_component
-        @spacer_component.set_original_view_context(__vc_original_view_context) if @spacer_component.respond_to?(:set_original_view_context)
-        @spacer_component.render_in(view_context)
-      else
-        ""
+      return "" unless @spacer_component
+
+      spacer = @spacer_component.dup
+      if spacer.instance_variable_defined?(:@__vc_rendered)
+        spacer.remove_instance_variable(:@__vc_rendered)
       end
+      spacer.set_original_view_context(__vc_original_view_context) if spacer.respond_to?(:set_original_view_context)
+      spacer.render_in(view_context)
     end
   end
 end
