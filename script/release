@@ -49,7 +49,7 @@ update_ruby_version() {
   # Update deprecation horizon version
   major=$1
   sed -i \
-      -e "s/DEPRECATION_HORIZON = [0-9]*/DEPRECATION_HORIZON = $((major + 1))/g" \
+      -e "s/DEPRECATION_HORIZON = \"[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\"/DEPRECATION_HORIZON = \"$((major + 1)).0.0\"/g" \
       lib/view_component/deprecation.rb
 }
 
@@ -91,10 +91,10 @@ push() {
   # Open PR
   pr_url=$(gh pr create \
     --title "Release $1.$2.$3" \
+    --body "Automated release PR for version $1.$2.$3." \
     --base main \
     --head release-$1-$2-$3 \
-    --repo ViewComponent/view_component \
-    --web)
+    --repo ViewComponent/view_component)
 
   echo "####################################################"
   echo "PR opened: $pr_url"
