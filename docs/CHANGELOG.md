@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.14.0
+
 * Freeze `ReusedInstanceError::MESSAGE` and update `test_renders_component_with_asset_url` to build a fresh `AssetComponent` per render, fixing CI regressions introduced by the GHSA-8qw7-6phv-7q6p remediation.
 
     *Joel Hawksley*
