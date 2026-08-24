@@ -341,19 +341,23 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_renders_component_with_asset_url
-    component = AssetComponent.new
-    assert_match(%r{http://assets\.example\.com/assets/application-\w+\.css}, render_inline(component).text)
+    assert_match(%r{http://assets\.example\.com/assets/application-\w+\.css}, render_inline(AssetComponent.new).text)
 
     if Rails.version.to_f < 8.0
       # Propshaft doesn't allow setting custom hosts so this only works in Rails < 8
-      component.config.asset_host = nil
-      assert_match(%r{/assets/application-\w+\.css}, render_inline(component).text)
+      original_asset_host = ActionController::Base.asset_host
+      begin
+        ActionController::Base.asset_host = nil
+        assert_match(%r{/assets/application-\w+\.css}, render_inline(AssetComponent.new).text)
 
-      component.config.asset_host = "http://assets.example.com"
-      assert_match(%r{http://assets\.example\.com/assets/application-\w+\.css}, render_inline(component).text)
+        ActionController::Base.asset_host = "http://assets.example.com"
+        assert_match(%r{http://assets\.example\.com/assets/application-\w+\.css}, render_inline(AssetComponent.new).text)
 
-      component.config.asset_host = "assets.example.com"
-      assert_match(%r{http://assets\.example\.com/assets/application-\w+\.css}, render_inline(component).text)
+        ActionController::Base.asset_host = "assets.example.com"
+        assert_match(%r{http://assets\.example\.com/assets/application-\w+\.css}, render_inline(AssetComponent.new).text)
+      ensure
+        ActionController::Base.asset_host = original_asset_host
+      end
     end
   end
 
