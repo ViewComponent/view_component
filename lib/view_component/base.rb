@@ -106,6 +106,7 @@ module ViewComponent
     def render_in(view_context, **, &block)
       self.class.__vc_compile(raise_errors: true) unless self.class.__vc_compiled?
 
+      __vc_check_reused_instance!
       __vc_reset_render_state!
 
       @view_context = view_context
@@ -180,6 +181,7 @@ module ViewComponent
     ensure
       view_context.instance_variable_set(:@virtual_path, @old_virtual_path)
       @current_template = old_current_template
+      @__vc_rendered = true
     end
 
     # Subclass components that call `super` inside their template code will cause a
@@ -468,7 +470,9 @@ module ViewComponent
     # state from a previous render. Slot state (`@__vc_set_slots`,
     # `@__vc_content_set_by_with_content`) is intentionally preserved because it
     # is populated by callers _before_ `render_in` runs (e.g. via `with_*`
-    # slot setters or `with_content`).
+    # slot setters or `with_content`); reuse of an instance that has slot or
+    # `with_content` state is guarded against separately by
+    # `__vc_check_reused_instance!`.
     RENDER_STATE_IVARS = %i[
       @__vc_controller
       @__vc_helpers
@@ -479,6 +483,17 @@ module ViewComponent
       RENDER_STATE_IVARS.each do |ivar|
         remove_instance_variable(ivar) if instance_variable_defined?(ivar)
       end
+    end
+
+    # Raises when a component instance is rendered more than once.
+    # Reusing a component instance across renders can leak request-scoped state
+    # (controller, helpers, request, view_flow, slot content, `with_content`)
+    # from an earlier render into a later one. See
+    # `ViewComponent::ReusedInstanceError` and GHSA-8qw7-6phv-7q6p.
+    def __vc_check_reused_instance!
+      return unless defined?(@__vc_rendered) && @__vc_rendered
+
+      raise ReusedInstanceError.new(self.class.name)
     end
 
     # Configuration for generators.
