@@ -15,6 +15,17 @@ check_github_permissions() {
     exit 1
   fi
 
+  # Skip the push-permission probe when running in GitHub Actions.
+  # GET /repos/:owner/:repo only returns `.permissions` for user/OAuth
+  # tokens — for the workflow's GITHUB_TOKEN the field is absent, so
+  # the probe would incorrectly report no push access even when the
+  # workflow has `contents: write`. In CI we rely on the job's declared
+  # permissions; failures will surface from the actual git push / gh
+  # release create calls below with clear messages.
+  if [ -n "${GITHUB_ACTIONS:-}" ]; then
+    return 0
+  fi
+
   # Check if user can create releases (requires write access)
   # Attempt a dry-run by checking repo permissions
   local perms=$(gh api repos/ViewComponent/view_component -q '.permissions.push // false')
