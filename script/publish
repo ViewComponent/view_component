@@ -1,10 +1,92 @@
 #!/usr/bin/env bash
 
-# Publish gem
-bundle exec rake release
+set -e
 
-# Publish updated docs
-git branch -D gh-pages
-git checkout -b gh-pages main
-git push origin gh-pages --force
-git checkout main
+# Check GitHub permissions
+check_github_permissions() {
+  if ! gh auth status > /dev/null 2>&1; then
+    echo "Error: not authenticated with GitHub. Run 'gh auth login'"
+    exit 1
+  fi
+
+  # Check if user has push access to the repo
+  if ! gh repo view ViewComponent/view_component > /dev/null 2>&1; then
+    echo "Error: cannot access ViewComponent/view_component repository"
+    exit 1
+  fi
+
+  # Skip the push-permission probe when running in GitHub Actions.
+  # GET /repos/:owner/:repo only returns `.permissions` for user/OAuth
+  # tokens — for the workflow's GITHUB_TOKEN the field is absent, so
+  # the probe would incorrectly report no push access even when the
+  # workflow has `contents: write`. In CI we rely on the job's declared
+  # permissions; failures will surface from the actual git push / gh
+  # release create calls below with clear messages.
+  if [ -n "${GITHUB_ACTIONS:-}" ]; then
+    return 0
+  fi
+
+  # Check if user can create releases (requires write access)
+  # Attempt a dry-run by checking repo permissions
+  local perms=$(gh api repos/ViewComponent/view_component -q '.permissions.push // false')
+  if [ "$perms" != "true" ]; then
+    echo "Error: insufficient permissions to create releases in ViewComponent/view_component"
+    echo "You need at least 'push' (write) access to the repository"
+    exit 1
+  fi
+}
+
+# Get version from version.rb
+major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
+patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
+version="$major.$minor.$patch"
+tag="v$version"
+
+# Check permissions before proceeding
+check_github_permissions
+
+# Create and push git tag (idempotent so re-running after a partial
+# release doesn't abort on an already-existing tag)
+if ! git rev-parse --quiet --verify "refs/tags/$tag" > /dev/null; then
+  git tag "$tag"
+fi
+git push origin "$tag" || true
+
+# Extract changelog for this version
+# Find the section for this version and capture until the next ## heading
+changelog=$(sed -n "/^## $version$/,/^## /p" docs/CHANGELOG.md | sed '$ d')
+
+# Publish gem
+# this step has been replaced by .github/workflows/push_gem.yml
+
+# Publish updated docs — but only from main. gh-pages hosts a single
+# docs site, so publishing from 3.x would clobber the current (4.x)
+# docs. 3.x is a maintenance branch: skip gh-pages here.
+current_branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "")
+if [ "$current_branch" = "main" ]; then
+  git branch -D gh-pages 2>/dev/null || true
+  git checkout -b gh-pages main
+  git push origin gh-pages --force
+  git checkout main
+else
+  echo "Skipping gh-pages publish (current branch is '$current_branch', not 'main')"
+fi
+
+# Create GitHub release
+gh release create "$tag" \
+  --title "$version" \
+  --notes "$changelog" \
+  --repo ViewComponent/view_component
+
+# Kick off the Push Gem workflow explicitly. GitHub Actions does not
+# trigger downstream workflows for events driven by GITHUB_TOKEN — so
+# the tag push above will not fire push_gem.yml on its own when this
+# script runs inside the publish-release workflow. Dispatch it here so
+# 'script/publish' always results in a gem being pushed to RubyGems.
+#
+# Dispatch against the tag ref (not main) because the 'release'
+# environment restricts deployments to v* tags.
+gh workflow run push_gem.yml \
+  --repo ViewComponent/view_component \
+  --ref "$tag" || true
