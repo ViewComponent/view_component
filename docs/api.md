@@ -565,6 +565,14 @@ COMPONENT declares a slot named SLOT_NAME, which is a reserved word in the ViewC
 
 To fix this issue, choose a different name.
 
+### `ReusedInstanceError`
+
+ViewComponent instances are single-use; a COMPONENT instance was rendered more than once.
+
+Reusing a component instance across renders can leak request-scoped state (controller, helpers, request, view_flow, slot content, `with_content`) from an earlier render into a later one, which has security and correctness implications (GHSA-8qw7-6phv-7q6p).
+
+To fix this issue, create a new component instance per render.
+
 ### `SlotPredicateNameError`
 
 COMPONENT declares a slot named SLOT_NAME, which ends with a question mark.

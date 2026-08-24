@@ -34,6 +34,16 @@ nav_order: 6
 
     *Reegan Viljoen*, *Godfrey Chan*, *JWShuff*, *timburgan*, *Patrick Arnett*, *ozzyaaron*, *pinzonjulian*, *Derek Kniffin*, *cannikin*, *rnestler*, *Joel Hawksley*
 
+## 4.14.0
+
+* Freeze `ReusedInstanceError::MESSAGE` and update `test_renders_component_with_asset_url` to build a fresh `AssetComponent` per render, fixing CI regressions introduced by the GHSA-8qw7-6phv-7q6p remediation.
+
+    *Joel Hawksley*
+
+* [Security] Fix incomplete remediation for CVE-2026-54497 (GHSA-8qw7-6phv-7q6p): reused ViewComponent instances could still leak `with_content` and `renders_one`/`renders_many` slot content from an earlier render into a later render because slot state and content set via `with_content` are populated by the caller before `render_in` runs and were not cleared by the previous per-render reset. Reinstate the `ViewComponent::ReusedInstanceError` guard that raises when a component instance is rendered more than once. Rebuild collection child components per render and dup collection spacer components before each render so that legitimate re-rendering of `Collection`/spacer objects continues to work.
+
+    *Yazan Balawneh, Cystack.ps*
+
 * Update GitHub Actions workflows to use `actions/checkout` v7.
 
     *Richard Macklin*

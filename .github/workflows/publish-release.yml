@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,18 +17,26 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
-    # Only run if this is a release commit (created by script/release)
-    if: startsWith(github.event.head_commit.message, 'release ')
+    # Only run if this is a release commit created by script/release.
+    # Match either the direct commit message from script/release
+    # ("release X.Y.Z") or the merge-commit body containing the release
+    # PR title ("Release X.Y.Z"), so a normal PR merge still triggers.
+    # Also always run on manual workflow_dispatch.
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.event.head_commit.message, 'release ') ||
+      contains(github.event.head_commit.message, 'Release ')
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-          persist-credentials: false
+          persist-credentials: true
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
         with:
+          ruby-version: 4.0
           bundler-cache: true
 
       - name: Harden runner
