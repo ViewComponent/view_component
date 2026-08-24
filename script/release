@@ -95,15 +95,25 @@ commit() {
 }
 
 push() {
-  git push origin release-$1-$2-$3
+  # Force-push: the release-X-Y-Z branch is auto-generated and is safe
+  # to overwrite. A previous failed run may have left the branch on the
+  # remote, which would otherwise reject a non-fast-forward push.
+  git push --force origin release-$1-$2-$3
 
-  # Open PR
-  pr_url=$(gh pr create \
-    --title "Release $1.$2.$3" \
-    --body "Automated release PR for version $1.$2.$3." \
-    --base main \
-    --head release-$1-$2-$3 \
-    --repo ViewComponent/view_component)
+  # Open PR (or reuse an existing one from a previous failed run).
+  pr_url=$(gh pr view "release-$1-$2-$3" \
+    --repo ViewComponent/view_component \
+    --json url --jq .url 2>/dev/null || true)
+  if [ -z "$pr_url" ]; then
+    pr_url=$(gh pr create \
+      --title "Release $1.$2.$3" \
+      --body "Automated release PR for version $1.$2.$3." \
+      --base main \
+      --head release-$1-$2-$3 \
+      --repo ViewComponent/view_component)
+  else
+    echo "Reusing existing PR: $pr_url"
+  fi
 
   echo "####################################################"
   echo "PR opened: $pr_url"
