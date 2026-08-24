@@ -165,6 +165,12 @@ def modify_file(file, content)
     yield
   ensure
     File.open(filename, "wb+") { |f| f.write(old_content) }
+    # A component that rendered while `file` was modified had its
+    # `render_template_for` method defined against the modified source. That
+    # method stays on the class until the compiler runs again, so invalidate
+    # every compiled component's cache entry: the next render of any of them
+    # recompiles from the now-restored file.
+    ViewComponent::CompileCache.invalidate!
   end
 end
 
