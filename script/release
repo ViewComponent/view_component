@@ -47,10 +47,13 @@ update_ruby_version() {
       -e "s/PATCH = [0-9]+/PATCH = $3/g" \
       lib/view_component/version.rb
 
-  # Update deprecation horizon version
+  # Update deprecation horizon version. deprecation.rb stores the value
+  # as a quoted string (e.g. "4.0.0"), so match/replace the full quoted
+  # X.Y.Z — the previous [0-9]+ pattern matched no digits before the
+  # opening quote and silently no-oped on every release.
   major=$1
   sed -E -i '' \
-      -e "s/DEPRECATION_HORIZON = [0-9]+/DEPRECATION_HORIZON = $((major + 1))/g" \
+      -e "s/DEPRECATION_HORIZON = \"[0-9]+\.[0-9]+\.[0-9]+\"/DEPRECATION_HORIZON = \"$((major + 1)).0.0\"/g" \
       lib/view_component/deprecation.rb
 }
 
