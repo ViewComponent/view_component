@@ -77,7 +77,9 @@ gh release create "$tag" \
 # the tag push above will not fire push_gem.yml on its own when this
 # script runs inside the publish-release workflow. Dispatch it here so
 # 'script/publish' always results in a gem being pushed to RubyGems.
+#
+# Dispatch against the tag ref (not main) because the 'release'
+# environment restricts deployments to v* tags.
 gh workflow run push_gem.yml \
   --repo ViewComponent/view_component \
-  --ref main \
-  --field tag="$tag" || true
+  --ref "$tag" || true
