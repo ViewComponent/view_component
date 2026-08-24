@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# bundler-cache: true in setup-ruby enables frozen mode, which blocks
+# updating Gemfile.lock after the gemspec version bump. Disable it for
+# every bundler invocation in this script so the lockfile can be
+# regenerated to match the new version.
+export BUNDLE_FROZEN=false
+export BUNDLE_DEPLOYMENT=false
+
 fetch() {
   git fetch --all
 }
@@ -54,8 +61,10 @@ update_ruby_version() {
 }
 
 update_gemfiles() {
-  # Update Gemfile.lock
-  bundle
+  # Update Gemfile.lock. Use `bundle lock` (not `bundle install`) so we
+  # only rewrite the lockfile with the new version — no gem installs
+  # needed, and it avoids re-triggering the bundler-cache frozen check.
+  bundle lock
 
   # Update appraisal gemfile locks.
   # BUNDLE_IGNORE_RUBY_VERSION is needed because the gemfiles declare ruby
@@ -66,8 +75,8 @@ update_gemfiles() {
 }
 
 build_docs() {
-  ruby script/sync_contributors.rb
-  bundle exec rake docs:build
+  ruby script/sync_contributors.rb || { echo "Error: sync_contributors.rb failed"; exit 1; }
+  bundle exec rake docs:build || { echo "Error: rake docs:build failed"; exit 1; }
 }
 
 add_changed_files() {
