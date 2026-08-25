@@ -115,7 +115,7 @@ A component that declares `cache_on` can't accept content from its callers. A bl
 <% end %>
 ```
 
-The error is raised whether or not caching is enabled, so the conflict surfaces in development and test rather than only in production. See [Caveats](#caveats) for how to restructure a component that needs to take content.
+The error is raised even when caching is disabled, so the conflict surfaces in development and test rather than only in production. See [Caveats](#caveats) for how to restructure a component that needs to take content.
 
 `cache_on` is inherited, so declaring it on a base class opts every subclass into self-caching, and into that restriction. Declare it on the components that should cache themselves rather than on `ApplicationComponent`.
 
