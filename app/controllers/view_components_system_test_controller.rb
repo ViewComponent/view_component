@@ -11,6 +11,7 @@ class ViewComponentsSystemTestController < ActionController::Base # :nodoc:
     end
 
     rescue_from ViewComponent::SystemTestControllerNefariousPathError, with: :render_not_found
+    rescue_from Errno::ENOENT, with: :render_not_found
 
     def system_test_entrypoint
       render file: @path

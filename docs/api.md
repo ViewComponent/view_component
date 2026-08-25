@@ -455,9 +455,23 @@ A method called 'SETTER_METHOD_NAME' already exists and would be overwritten by 
 
 Please choose a different setter name.
 
+### `CacheDigestTemplateError`
+
+The synthetic cache digest template for COMPONENT was rendered.
+
+This template exists only so Rails can compute a cache digest for the component and is never meant to be rendered. Render the component itself instead.
+
 ### `ContentAlreadySetForPolymorphicSlotError`
 
 Content for slot SLOT_NAME has already been provided.
+
+### `ContentPassedToCachedComponentError`
+
+COMPONENT declares `cache_on`, so it caches its own output, but its caller passed it content.
+
+Content and slots set by the caller aren't part of the cache key, so caching them would risk serving one caller's content to another.
+
+To fix this issue, either remove `cache_on` from COMPONENT, or move the content into the component and derive it from the values declared in `cache_on`.
 
 ### `ContentSlotNameError`
 
@@ -582,3 +596,9 @@ It's sometimes possible to fix this issue by moving code dependent on `#translat
 COMPONENT declares a slot named SLOT_NAME, which is an uncountable word
 
 To fix this issue, choose a different name.
+
+### `UndefinedCacheKeyMethodError`
+
+`cache_on` declared `METHOD` on COMPONENT, but no such method is defined.
+
+To fix this issue, define `METHOD` or remove it from `cache_on`.

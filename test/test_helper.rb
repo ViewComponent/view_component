@@ -165,7 +165,34 @@ def modify_file(file, content)
     yield
   ensure
     File.open(filename, "wb+") { |f| f.write(old_content) }
+    # A component that rendered while `file` was modified had its
+    # `render_template_for` method defined against the modified source. That
+    # method stays on the class until the compiler runs again, so invalidate
+    # every compiled component's cache entry: the next render of any of them
+    # recompiles from the now-restored file.
+    ViewComponent::CompileCache.invalidate!
   end
+end
+
+# Rails caches template digests globally and clears them from the reloader on
+# each code reload. Tests that change files on disk have to do the same.
+def clear_digest_cache
+  ActionView::LookupContext::DetailsKey.clear
+end
+
+# Modify a file and assert the block's return value changes while it's modified,
+# clearing Rails' digest cache the way a code reload would.
+def assert_digest_changes(file, content)
+  clear_digest_cache
+  before = yield
+
+  modify_file(file, content) do
+    clear_digest_cache
+    refute_equal before, yield, "Expected the digest to change when #{file} changed"
+  end
+
+  clear_digest_cache
+  assert_equal before, yield, "Expected the digest to be restored when #{file} was restored"
 end
 
 def with_default_preview_layout(layout, &block)

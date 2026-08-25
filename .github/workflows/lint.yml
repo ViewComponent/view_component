@@ -31,6 +31,8 @@ jobs:
           persist-credentials: false
       - name: Vale
         uses: errata-ai/vale-action@d89dee975228ae261d22c15adcd03578634d429c
+        with:
+          fail_on_error: true
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   markdown:
