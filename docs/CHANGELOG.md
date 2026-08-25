@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.15.0
+
 * Add experimental caching support, opt-in per component via `include ViewComponent::ExperimentallyCacheable`.
 
     Components have never participated in Rails' template digests, so a `<% cache %>` block wrapping `render MyComponent.new` was never invalidated when the component changed ([#234](https://github.com/ViewComponent/view_component/issues/234), open since 2020).
