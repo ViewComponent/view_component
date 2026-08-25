@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
+      actions: write
     # Only run if this is a release commit created by script/release.
     # Match either the direct commit message from script/release
     # ("release X.Y.Z") or the merge-commit body containing the release
