@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Invalidate Action View's memoized template digests when a component registers with `ViewComponent::CacheDigest`, so a digest computed before the component loaded isn't served for the rest of the process.
+
+    *Erik Axel Nielsen*
+
 * Raise errors encountered while computing a component's cache digest instead of degrading to an untracked component that can serve stale fragments.
 
     *Erik Axel Nielsen*
