@@ -39,7 +39,7 @@ module ViewComponent
     # Always rebuild child component instances per render to avoid leaking
     # request-scoped state from a previous render into a later one (GHSA).
     def components
-      component.__vc_validate_collection_parameter!(validate_default: true) unless component.__vc_compiled?
+      component.__vc_validate_collection_parameter!(validate_default: true)
 
       iterator = ActionView::PartialIteration.new(@collection.size)
       collection_param = component.__vc_collection_parameter
