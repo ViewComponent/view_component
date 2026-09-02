@@ -75,6 +75,28 @@ class ExperimentallyCacheableIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # Components register as they're autoloaded, so under lazy loading a template
+  # can be digested before the components it renders have loaded. Action View
+  # memoizes digests for the life of the process, so that first digest sticks:
+  # without invalidation the same source digests differently depending on the
+  # order things happened to load in.
+  def test_digest_does_not_depend_on_when_the_component_registered
+    registered_first = with_registry("cacheable_component" => "CacheableComponent") do
+      clear_digest_cache
+      fragment_digest_for("integration_examples/cached_component")
+    end
+
+    registered_late = with_registry({}) do
+      clear_digest_cache
+      fragment_digest_for("integration_examples/cached_component")
+      ViewComponent::CacheDigest.register(CacheableComponent)
+
+      fragment_digest_for("integration_examples/cached_component")
+    end
+
+    assert_equal registered_first, registered_late
+  end
+
   def test_component_output_is_cached_between_requests
     get "/cached_component"
     assert_select(".cacheable", text: "cached")
@@ -96,6 +118,15 @@ class ExperimentallyCacheableIntegrationTest < ActionDispatch::IntegrationTest
       format: :html,
       finder: ActionView::LookupContext.new(ActionController::Base.view_paths)
     )
+  end
+
+  def with_registry(entries)
+    saved = ViewComponent::CacheDigest.registry.dup
+    ViewComponent::CacheDigest.registry.replace(entries)
+    yield
+  ensure
+    ViewComponent::CacheDigest.registry.replace(saved)
+    clear_digest_cache
   end
 
   def view_context
