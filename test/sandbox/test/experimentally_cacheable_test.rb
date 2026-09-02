@@ -20,6 +20,32 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     )
   end
 
+  # Registration runs on every class load, so an unchanged component must not
+  # throw away digests other templates are still using.
+  def test_registering_an_unchanged_component_leaves_memoized_digests_alone
+    clear_digest_cache
+    CacheableComponent.cache_digest
+    memoized = digest_cache_size
+
+    assert_operator memoized, :>, 0
+
+    ViewComponent::CacheDigest.register(CacheableComponent)
+
+    assert_equal memoized, digest_cache_size
+  end
+
+  def test_registering_a_new_component_expires_memoized_digests
+    clear_digest_cache
+    CacheableComponent.cache_digest
+
+    assert_operator digest_cache_size, :>, 0
+
+    ViewComponent::CacheDigest.registry.delete("cacheable_component")
+    ViewComponent::CacheDigest.register(CacheableComponent)
+
+    assert_equal 0, digest_cache_size
+  end
+
   def test_component_is_marked_cacheable
     assert_predicate CacheableComponent, :__vc_cacheable?
     refute_respond_to ErbComponent, :__vc_cacheable?
@@ -485,6 +511,11 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   def recompile(component)
     ViewComponent::CompileCache.cache.delete(component)
     component.__vc_compile(force: true)
+  end
+
+  # Every digest Action View has memoized, across all details keys.
+  def digest_cache_size
+    ActionView::LookupContext::DetailsKey.digest_caches.sum(&:size)
   end
 
   def build_template(source)
