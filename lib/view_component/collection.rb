@@ -12,6 +12,9 @@ module ViewComponent
 
     delegate :size, to: :@collection
 
+    EMPTY_SPACER = "".html_safe.freeze
+    private_constant :EMPTY_SPACER
+
     def render_in(view_context, **_, &block)
       rendered = components.map! do |component|
         component.render_in(view_context, &block)
@@ -36,18 +39,27 @@ module ViewComponent
     # Always rebuild child component instances per render to avoid leaking
     # request-scoped state from a previous render into a later one (GHSA).
     def components
-      iterator = ActionView::PartialIteration.new(@collection.size)
+      component.__vc_validate_collection_parameter!(validate_default: true) unless component.__vc_compiled?
 
-      component.__vc_validate_collection_parameter!(validate_default: true)
+      iterator = ActionView::PartialIteration.new(@collection.size)
+      collection_param  = component.__vc_collection_parameter
+      counter_present   = component.__vc_counter_argument_present?
+      counter_param     = component.__vc_collection_counter_parameter if counter_present
+      iteration_present = component.__vc_iteration_argument_present?
+      iteration_param   = component.__vc_collection_iteration_parameter if iteration_present
+      item_options      = @options.dup
 
       @collection.map do |item|
-        component.new(**component_options(item, iterator)).tap do |_|
-          iterator.iterate!
-        end
+        item_options[collection_param] = item
+        item_options[counter_param]    = iterator.index if counter_present
+        item_options[iteration_param]  = iterator.dup   if iteration_present
+        instance = component.new(**item_options)
+        iterator.iterate!
+        instance
       end
     end
 
-    def initialize(component, object, spacer_component, **options)
+    def initialize(component, object, spacer_component, options = {})
       @component = component
       @collection = collection_variable(object || [])
       @spacer_component = spacer_component
@@ -62,20 +74,11 @@ module ViewComponent
       end
     end
 
-    def component_options(item, iterator)
-      item_options = @options.dup
-      item_options[component.__vc_collection_parameter] = item
-      item_options[component.__vc_collection_counter_parameter] = iterator.index if component.__vc_counter_argument_present?
-      item_options[component.__vc_collection_iteration_parameter] = iterator.dup if component.__vc_iteration_argument_present?
-
-      item_options
-    end
-
     # Render the spacer through a fresh `dup` so a collection rendered multiple
     # times does not reuse (and trip the single-render guard on) the spacer
     # instance passed by the caller.
     def rendered_spacer(view_context)
-      return "" unless @spacer_component
+      return EMPTY_SPACER unless @spacer_component
 
       spacer = @spacer_component.dup
       if spacer.instance_variable_defined?(:@__vc_rendered)

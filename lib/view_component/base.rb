@@ -631,7 +631,7 @@ module ViewComponent
       # @param spacer_component [ViewComponent::Base] Component instance to be rendered between items.
       # @param args [Arguments] Arguments to pass to the ViewComponent every time.
       def with_collection(collection, spacer_component: nil, **args)
-        Collection.new(self, collection, spacer_component, **args)
+        Collection.new(self, collection, spacer_component, args)
       end
 
       # @private
