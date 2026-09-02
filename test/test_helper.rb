@@ -7,17 +7,6 @@ require "minitest/autorun"
 require "minitest/memory"
 require "minitest/mock"
 
-# Workaround for Ruby head: net/http/response.rb references Net::ReadLimitExceeded
-# but doesn't require net/protocol where it's defined. Force-load it so Capybara's
-# server responsiveness check doesn't raise NameError under ruby-head.
-require "net/protocol"
-require "net/http"
-unless defined?(Net::ReadLimitExceeded)
-  module Net
-    class ReadLimitExceeded < StandardError; end
-  end
-end
-
 Minitest::Test.include(Minitest::Memory)
 
 module Warning
