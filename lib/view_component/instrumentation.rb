@@ -12,7 +12,7 @@ module ViewComponent # :nodoc:
       attr_accessor :enabled
     end
 
-    def render_in(view_context, &block)
+    def render_in(...)
       return super unless Instrumentation.enabled
 
       payload = {

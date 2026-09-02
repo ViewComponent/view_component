@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Reduce per-render allocations. Inline renders drop 2-3 allocations and collection renders drop 4-8 depending on Rails/Ruby version by caching the instrumentation-enabled flag at the module level, memoizing the empty-details `Requested` per `LookupContext`, hoisting per-item metadata lookups out of the collection render loop, and dropping a few gratuitous `**` splats on the `Collection` API boundary.
+
+    *Joel Hawksley*
+
 ## 4.15.0
 
 * Add experimental caching support, opt-in per component via `include ViewComponent::ExperimentallyCacheable`.
