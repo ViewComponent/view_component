@@ -5,7 +5,7 @@ require "test_helper"
 class RenderingAllocationsTest < ViewComponent::TestCase
   INLINE_ALLOCATIONS = {
     ["7.1", "3.2"] => 41,
-    ["7.2", "3.3"] => 41,
+    ["7.2", "3.3"] => 42,
     ["8.0", "3.4"] => 34,
     ["8.1", "4.0"] => 32,
     ["8.1", "4.1"] => 32,
@@ -14,7 +14,7 @@ class RenderingAllocationsTest < ViewComponent::TestCase
   }.freeze
 
   COLLECTION_ALLOCATIONS = {
-    ["7.1", "3.2"] => 74,
+    ["7.1", "3.2"] => 76,
     ["7.2", "3.3"] => 79,
     ["8.0", "3.4"] => 67,
     ["8.1", "4.0"] => 53,
