@@ -12,6 +12,11 @@ require "minitest/mock"
 # server responsiveness check doesn't raise NameError under ruby-head.
 require "net/protocol"
 require "net/http"
+unless defined?(Net::ReadLimitExceeded)
+  module Net
+    class ReadLimitExceeded < StandardError; end
+  end
+end
 
 Minitest::Test.include(Minitest::Memory)
 
