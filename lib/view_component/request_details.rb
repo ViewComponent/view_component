@@ -24,8 +24,21 @@ module ViewComponent
         # The hash `user_details` would normally be the standard arguments that
         # `render` accepts, but there's currently no mechanism for users to
         # provide these when calling render on a ViewComponent.
-        details, cached = detail_args_for(user_details)
-        cached || ActionView::TemplateDetails::Requested.new(**details)
+        if user_details.equal?(EMPTY_DETAILS)
+          # Fast path: memoize the empty-details Requested per LookupContext.
+          # Rendered many times with the same context, the tuple/Requested
+          # allocations from ActionView are then paid at most once.
+          cached = instance_variable_defined?(:@__vc_requested_details_cache) &&
+            @__vc_requested_details_cache
+          return cached if cached
+
+          details, from_cache = detail_args_for(EMPTY_DETAILS)
+          @__vc_requested_details_cache =
+            from_cache || ActionView::TemplateDetails::Requested.new(**details)
+        else
+          details, from_cache = detail_args_for(user_details)
+          from_cache || ActionView::TemplateDetails::Requested.new(**details)
+        end
       end
     end
   end
