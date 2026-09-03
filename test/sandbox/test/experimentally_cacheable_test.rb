@@ -73,6 +73,24 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     ) { CacheableParentComponent.cache_digest }
   end
 
+  # A child that never included `ExperimentallyCacheable` is still part of what
+  # the parent renders, so it has to be part of the parent's digest.
+  def test_cache_digest_changes_when_an_untracked_child_component_template_changes
+    assert_digest_changes(
+      "app/components/untracked_child_component.html.erb",
+      "<span class=\"untracked-child\">changed</span>\n"
+    ) { CacheableUntrackedParentComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_an_untracked_child_component_ruby_file_changes
+    original = File.read(Rails.root.join("app/components/untracked_child_component.rb"))
+
+    assert_digest_changes(
+      "app/components/untracked_child_component.rb",
+      original + "\n# a comment\n"
+    ) { CacheableUntrackedParentComponent.cache_digest }
+  end
+
   def test_cache_digest_changes_when_a_superclass_template_changes
     assert_digest_changes(
       "app/components/cacheable_component.html.erb",
@@ -121,9 +139,9 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_includes dependencies, "integration_examples/erb_partial"
   end
 
-  def test_declared_names_that_are_not_cacheable_components_are_left_alone
+  def test_declared_names_that_are_not_components_are_left_alone
     assert_empty ViewComponent::CacheDigest.explicit_component_dependencies(
-      "# Template Dependency: ErbComponent"
+      "# Template Dependency: IntegrationExamplesController"
     )
     assert_empty ViewComponent::CacheDigest.explicit_component_dependencies("no declarations here")
   end
@@ -407,8 +425,27 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_nil ViewComponent::CacheDigest.component_for("integration_examples/cached_component")
   end
 
-  def test_component_for_returns_nil_for_unregistered_paths
+  def test_component_for_returns_nil_for_paths_that_name_no_component
     assert_nil ViewComponent::CacheDigest.component_for("view_component/cache_digest/nope")
+  end
+
+  # Unregistered components aren't in the registry to look up, so they're
+  # resolved by reversing the underscoring `ViewComponent::Base` applies.
+  def test_component_for_resolves_a_component_that_did_not_opt_in
+    refute_includes ViewComponent::CacheDigest.registry, "erb_component"
+
+    assert_equal ErbComponent, ViewComponent::CacheDigest.component_for("view_component/cache_digest/erb_component")
+  end
+
+  # Deriving the constant from the path only holds while the path is the
+  # underscored class name. A component that moved its own path is digested
+  # somewhere its name doesn't lead, so it has to register to be found.
+  def test_component_for_ignores_a_component_that_moved_its_virtual_path
+    Object.const_set(:MovedPathComponent, Class.new(ViewComponent::Base) { self.virtual_path = "somewhere/else" })
+
+    assert_nil ViewComponent::CacheDigest.component_for("view_component/cache_digest/moved_path_component")
+  ensure
+    Object.send(:remove_const, :MovedPathComponent)
   end
 
   def test_dependencies_are_not_scanned_for_sources_without_render
@@ -422,8 +459,19 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     )
   end
 
-  def test_dependencies_ignore_components_that_did_not_opt_in
-    assert_empty ViewComponent::CacheDigest.dependencies_in(build_template("<%= render ErbComponent.new(message: 'a') %>"))
+  # Tracking only the components that opted in would make the digest silently
+  # partial: it would look complete while omitting every child that hasn't.
+  def test_dependencies_are_found_for_components_that_did_not_opt_in
+    assert_equal(
+      ["view_component/cache_digest/erb_component"],
+      ViewComponent::CacheDigest.dependencies_in(build_template("<%= render ErbComponent.new(message: 'a') %>"))
+    )
+  end
+
+  def test_dependencies_ignore_constants_that_are_not_components
+    assert_empty(
+      ViewComponent::CacheDigest.dependencies_in(build_template("<%= render IntegrationExamplesController %>"))
+    )
   end
 
   def test_resolver_is_identified_by_class
@@ -455,7 +503,7 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
 
   def test_constantizing_swallows_unexpected_errors
     Object.const_set(:BoomComponent, Class.new do
-      def self.__vc_cacheable?
+      def self.<(other)
         raise ArgumentError
       end
     end)

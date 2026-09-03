@@ -1,0 +1,4 @@
+<% cache "cached-untracked-component-fragment" do %>
+  <%= render CacheableComponent.new(title: "cached") %>
+  <%= render UntrackedChildComponent.new %>
+<% end %>
