@@ -28,7 +28,7 @@ Editing `PostComponent`'s template, Ruby class, or sidecar files doesn't invalid
 
 ## Opting in
 
-Include `ViewComponent::ExperimentallyCacheable` in each component that should participate in caching:
+Include `ViewComponent::ExperimentallyCacheable` in the component rendered inside the `cache` block:
 
 ```ruby
 class PostComponent < ViewComponent::Base
@@ -41,6 +41,8 @@ end
 ```
 
 That's all that's needed for the `<% cache %>` block above to work. The component is registered with Rails' digest tree, and the fragment is invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change, including components and partials rendered from an inline template or a `#call` method.
+
+Once any component in the application has opted in, the whole render tree is tracked: the child components `PostComponent` renders, and the components *they* render, invalidate the fragment even when they don't include the module.
 
 ## Self-caching
 
@@ -187,7 +189,7 @@ The same works in a template, where the branch is often the more natural place f
 <%= render component.new(post: @post) %>
 ```
 
-Declared components must include `ViewComponent::ExperimentallyCacheable` themselves, since a component that hasn't opted in has no digest to depend on.
+Declared components don't need to include `ViewComponent::ExperimentallyCacheable` themselves. A component that overrides `virtual_path` does, since it's otherwise digested under a path that doesn't lead back to it.
 
 ## Caveats
 

@@ -65,6 +65,36 @@ class ExperimentallyCacheableIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # The failure this guards against is silent: the digest looks complete while
+  # covering only the children that happened to opt in, so an edit to an
+  # untracked one sits invisible until an unrelated tracked component changes.
+  def test_cache_block_is_invalidated_when_an_untracked_component_changes
+    get "/cached_untracked_component"
+    assert_select(".untracked-child", text: "untracked")
+
+    before = fragment_digest_for("integration_examples/cached_untracked_component")
+
+    modify_file "app/components/untracked_child_component.html.erb", "<span class=\"untracked-child\">changed</span>\n" do
+      clear_digest_cache
+
+      refute_equal before, fragment_digest_for("integration_examples/cached_untracked_component")
+    end
+  end
+
+  def test_cached_markup_of_an_untracked_component_is_not_served_stale
+    get "/cached_untracked_component"
+    assert_select(".untracked-child", text: "untracked")
+
+    modify_file "app/components/untracked_child_component.html.erb", "<span class=\"untracked-child\">changed</span>\n" do
+      clear_digest_cache
+      with_new_cache do
+        get "/cached_untracked_component"
+
+        assert_select(".untracked-child", text: "changed")
+      end
+    end
+  end
+
   def test_cache_block_digest_is_unaffected_by_unrelated_components
     before = fragment_digest_for("integration_examples/cached_component")
 

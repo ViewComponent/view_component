@@ -21,9 +21,11 @@ module ViewComponent
   #    not just its template.
   #
   # This module fixes both, reusing Rails' own `ActionView::Digestor` rather than
-  # reimplementing static analysis. Components opt in individually by including
-  # `ViewComponent::ExperimentallyCacheable`; until at least one component does,
-  # every hook here short-circuits.
+  # reimplementing static analysis. Until at least one component opts in by
+  # including `ViewComponent::ExperimentallyCacheable`, every hook here
+  # short-circuits. Once one has, every component reachable from a digested
+  # template is tracked, whether or not it included the module: a digest that
+  # covered only part of the render tree would look exactly like a complete one.
   #
   # @private
   module CacheDigest
@@ -90,17 +92,26 @@ module ViewComponent
 
       # Resolve a synthetic virtual path back to the component that owns it.
       #
+      # Components that opted in are looked up in the registry. Everything else
+      # is derived from the path, which `ViewComponent::Base` builds by
+      # underscoring the class name. The derived constant has to underscore back
+      # to the same path, so a component that overrides `virtual_path` — and
+      # would therefore be digested under a path that isn't its own — is left
+      # unresolved rather than confused with another component.
+      #
       # @return [Class, nil]
       def component_for(virtual_path)
         return unless virtual_path.start_with?("#{VIRTUAL_PATH_PREFIX}/")
 
-        name = registry[virtual_path.delete_prefix("#{VIRTUAL_PATH_PREFIX}/")]
-        return unless name
+        path = virtual_path.delete_prefix("#{VIRTUAL_PATH_PREFIX}/")
+        name = registry[path]
+        return constantize_component(name) if name
 
-        constantize_component(name)
+        component = constantize_component(path.camelize)
+        component if component&.virtual_path == path
       end
 
-      # Scan a template's source for renders of cacheable components.
+      # Scan a template's source for renders of components.
       #
       # Called for every template Rails digests, so it exits early when the
       # feature is unused.
@@ -113,7 +124,7 @@ module ViewComponent
       end
 
       # Scan arbitrary source (a template or a component's Ruby file) for
-      # renders of cacheable components.
+      # renders of components.
       #
       # @return [Array<String>] synthetic virtual paths
       def component_paths_in(source)
@@ -223,7 +234,16 @@ module ViewComponent
 
       private
 
-      # Resolve a constant name to a component that opted into caching.
+      # Resolve a constant name to a component.
+      #
+      # Any component counts, not only those that included
+      # `ExperimentallyCacheable`. Tracking only the ones that opted in makes
+      # dependency tracking transitive: a parent's digest covers the children
+      # that happen to have included the module and silently omits the rest,
+      # which is indistinguishable from a complete digest until the untracked
+      # child changes and stale HTML stays on. Applications that never opt in
+      # are unaffected either way, because every hook here short-circuits while
+      # the registry is empty.
       #
       # Returns nil for anything else, including constants that don't exist.
       # Autoloading here is safe: the template is about to render this constant
@@ -231,7 +251,7 @@ module ViewComponent
       def constantize_component(constant_name)
         component = constant_name.safe_constantize
         return unless component.is_a?(Class)
-        return unless component.respond_to?(:__vc_cacheable?) && component.__vc_cacheable?
+        return unless component < ViewComponent::Base
 
         component
       rescue

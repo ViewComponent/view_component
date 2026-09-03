@@ -10,6 +10,14 @@ nav_order: 6
 
 ## main
 
+* Track every component in a fragment's render tree when the experimental caching feature is enabled, not only the components that included `ViewComponent::ExperimentallyCacheable`.
+
+    Dependency tracking used to be transitively opt-in: a parent that included the module got a digest covering only the children that also included it. The digest looked complete regardless, and the gap surfaced as stale HTML at an arbitrary later time, whenever an unrelated tracked component happened to change.
+
+    Only the component wrapped in the `<% cache %>` block needs the include now. Applications that never opt in are unaffected, since dependency tracking still short-circuits until the first component registers.
+
+    *Erik Axel Nielsen*
+
 ## 4.15.0
 
 * Add experimental caching support, opt-in per component via `include ViewComponent::ExperimentallyCacheable`.
