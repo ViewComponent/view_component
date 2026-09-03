@@ -15,6 +15,7 @@ module ViewComponent
         options[config_option] ||= ViewComponent::Base.public_send(config_option)
       end
       options.instrumentation_enabled = false if options.instrumentation_enabled.nil?
+      options.raise_on_cache_digest_errors = Rails.env.local? if options.raise_on_cache_digest_errors.nil?
       options.previews.enabled = (Rails.env.development? || Rails.env.test?) if options.previews.enabled.nil?
 
       if options.previews.enabled

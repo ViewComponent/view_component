@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/dependencies/autoload"
+require "active_support/log_subscriber"
 require "action_view/digestor"
 require "action_view/render_parser"
 
@@ -146,8 +147,8 @@ module ViewComponent
         RENDER_PARSER.new(name, source).render_calls.uniq.select do |path|
           source.include?(path) || source.include?(path.sub(%r{(\A|/)_}, '\1'))
         end
-      rescue
-        # Never let digest computation break rendering.
+      rescue => error
+        handle_error(error, "scanning #{name} for rendered partials")
         []
       end
 
@@ -221,6 +222,30 @@ module ViewComponent
         end
       end
 
+      # Report an exception the digest machinery swallowed.
+      #
+      # Every rescue here degrades to "this component has no dependencies",
+      # which is indistinguishable from a component that was never cached: the
+      # digest stops changing and the application serves stale HTML. A
+      # misconfiguration, an autoload failure, or a raising `inherited` hook is
+      # therefore completely invisible.
+      #
+      # In production a stale fragment beats a failed render, so the exception
+      # is only logged. Locally the trade goes the other way, so it's re-raised
+      # by default; see `config.view_component.raise_on_cache_digest_errors`.
+      #
+      # @private
+      def handle_error(error, context)
+        raise error if ViewComponent::Base.config.raise_on_cache_digest_errors
+
+        logger&.warn { "[ViewComponent] Ignored an error while #{context}: #{error.class}: #{error.message}" }
+      end
+
+      # @return [ActiveSupport::BroadcastLogger, Logger, nil] nil outside a Rails application.
+      def logger
+        ActiveSupport::LogSubscriber.logger
+      end
+
       private
 
       # Resolve a constant name to a component that opted into caching.
@@ -234,8 +259,8 @@ module ViewComponent
         return unless component.respond_to?(:__vc_cacheable?) && component.__vc_cacheable?
 
         component
-      rescue
-        # Never let digest computation break rendering.
+      rescue => error
+        handle_error(error, "resolving #{constant_name}")
         nil
       end
     end

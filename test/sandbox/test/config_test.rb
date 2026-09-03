@@ -13,6 +13,7 @@ module ViewComponent
       assert_equal @config.previews.controller, "ViewComponentsController"
       assert_equal @config.previews.route, "/rails/view_components"
       assert_equal @config.instrumentation_enabled, false
+      assert_equal @config.raise_on_cache_digest_errors, Rails.env.local?
       assert_equal @config.previews.paths, ["#{Rails.root}/test/components/previews"]
     end
 
