@@ -121,11 +121,33 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_includes dependencies, "integration_examples/erb_partial"
   end
 
-  def test_declared_names_that_are_not_cacheable_components_are_left_alone
+  def test_declared_names_that_are_not_components_are_left_alone
     assert_empty ViewComponent::CacheDigest.explicit_component_dependencies(
-      "# Template Dependency: ErbComponent"
+      "# Template Dependency: NotAConstantAnywhere"
+    )
+    assert_empty ViewComponent::CacheDigest.explicit_component_dependencies(
+      "# Template Dependency: ActiveSupport::Digest"
     )
     assert_empty ViewComponent::CacheDigest.explicit_component_dependencies("no declarations here")
+  end
+
+  # The hatch exists for dependencies static analysis can't see, which are
+  # exactly the ones whose target an application may not control. Declaring a
+  # component is the opt-in, so the target needn't include the module itself.
+  def test_declared_components_resolve_without_opting_into_caching
+    refute_respond_to ErbComponent, :__vc_cacheable?
+
+    assert_equal(
+      [["ErbComponent", "view_component/cache_digest/erb_component"]],
+      ViewComponent::CacheDigest.explicit_component_dependencies("# Template Dependency: ErbComponent")
+    )
+  end
+
+  def test_cache_digest_changes_when_a_component_declared_without_opting_in_changes
+    assert_digest_changes(
+      "app/components/erb_component.html.erb",
+      "<div>changed</div>\n"
+    ) { CacheablePlainDependencyComponent.cache_digest }
   end
 
   # Components rendered from an inline template are invisible to Action View's
