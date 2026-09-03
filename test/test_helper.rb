@@ -207,6 +207,21 @@ ensure
   ViewComponent::Compiler.__vc_development_mode = previous_mode
 end
 
+# The key of the first fragment read while the block runs. Taken from the
+# instrumentation rather than recomputed, so assertions cover the key rendering
+# actually used.
+def capture_fragment_key
+  key = nil
+  subscriber = ActiveSupport::Notifications.subscribe("read_fragment.action_controller") do |*, payload|
+    key ||= payload[:key]
+  end
+
+  yield
+  key
+ensure
+  ActiveSupport::Notifications.unsubscribe(subscriber)
+end
+
 def capture_warnings(&block)
   [].tap do |warnings|
     Kernel.stub(:warn, ->(msg) { warnings << msg }) do
