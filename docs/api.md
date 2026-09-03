@@ -294,6 +294,19 @@ A custom default layout used for the previews index page and individual previews
 
     config.view_component.previews.default_layout = "preview_layout"
 
+### `.raise_on_cache_digest_errors`
+
+Whether to raise when computing a component's cache digest fails.
+
+Digest failures are otherwise swallowed, since a stale fragment is
+preferable to a failed render, and reported to the log at `warn`. That
+trade is wrong in development and test, where an untracked component
+looks exactly like a component that was never cached.
+
+Defaults to `true` in local environments and `false` elsewhere:
+
+    config.view_component.raise_on_cache_digest_errors = false
+
 ## ViewComponent::TestHelpers
 
 ### `#render_in_view_context(...)`

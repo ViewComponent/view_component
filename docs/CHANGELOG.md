@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Report the errors swallowed while computing a component's cache digest, instead of degrading to an untracked component with no indication that anything went wrong. Digest errors are now raised in local environments and logged at `warn` elsewhere, configurable with `config.view_component.raise_on_cache_digest_errors`.
+
+    *Erik Axel Nielsen*
+
 ## 4.15.0
 
 * Add experimental caching support, opt-in per component via `include ViewComponent::ExperimentallyCacheable`.

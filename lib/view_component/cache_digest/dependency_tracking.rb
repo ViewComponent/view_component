@@ -27,10 +27,10 @@ module ViewComponent
         end
 
         dependencies + CacheDigest.dependencies_in(template)
-      rescue
-        # A broken digest is preferable to a broken render. Falling back to the
-        # dependencies Rails found on its own means the component simply isn't
-        # tracked, which is the pre-existing behavior.
+      rescue => error
+        # Falling back to the dependencies Rails found on its own means the
+        # component simply isn't tracked, which is the pre-existing behavior.
+        CacheDigest.handle_error(error, "tracking component dependencies in #{name}")
         super
       end
 

@@ -14,7 +14,8 @@ module ViewComponent
         ActiveSupport::OrderedOptions.new.merge!({
           generate: default_generate_options,
           previews: default_previews_options,
-          instrumentation_enabled: false
+          instrumentation_enabled: false,
+          raise_on_cache_digest_errors: default_raise_on_cache_digest_errors
         })
       end
 
@@ -131,6 +132,20 @@ module ViewComponent
       # Whether ActiveSupport notifications are enabled.
       # Defaults to `false`.
 
+      # @!attribute raise_on_cache_digest_errors
+      #
+      # @return [Boolean]
+      # Whether to raise when computing a component's cache digest fails.
+      #
+      # Digest failures are otherwise swallowed, since a stale fragment is
+      # preferable to a failed render, and reported to the log at `warn`. That
+      # trade is wrong in development and test, where an untracked component
+      # looks exactly like a component that was never cached.
+      #
+      # Defaults to `true` in local environments and `false` elsewhere:
+      #
+      #     config.view_component.raise_on_cache_digest_errors = false
+
       def default_preview_paths
         (default_rails_preview_paths + default_rails_engines_preview_paths).uniq
       end
@@ -153,6 +168,10 @@ module ViewComponent
         Rails::Engine.descendants.select do |descendant|
           defined?(descendant.root) && Dir.exist?("#{descendant.root}/test/components/previews")
         end
+      end
+
+      def default_raise_on_cache_digest_errors
+        defined?(Rails.env) && Rails.env.local?
       end
 
       def default_generate_options

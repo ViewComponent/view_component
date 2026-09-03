@@ -204,8 +204,22 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   end
 
   def test_partial_path_extraction_swallows_parser_errors
+    swallowing_digest_errors do |log|
+      ViewComponent::CacheDigest::RENDER_PARSER.stub(:new, ->(*) { raise "boom" }) do
+        assert_empty ViewComponent::CacheDigest.partial_paths_in("render \"a/b\"", "a/b")
+      end
+
+      assert_match "Ignored an error while scanning a/b for rendered partials: RuntimeError: boom", log.string
+    end
+  end
+
+  def test_partial_path_extraction_raises_parser_errors_locally
     ViewComponent::CacheDigest::RENDER_PARSER.stub(:new, ->(*) { raise "boom" }) do
-      assert_empty ViewComponent::CacheDigest.partial_paths_in("render \"a/b\"", "a/b")
+      error = assert_raises(RuntimeError) do
+        ViewComponent::CacheDigest.partial_paths_in("render \"a/b\"", "a/b")
+      end
+
+      assert_equal "boom", error.message
     end
   end
 
@@ -437,32 +451,74 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   def test_resolver_returns_no_template_when_synthesis_fails
     resolver = ViewComponent::CacheDigest::Resolver.instance
 
+    swallowing_digest_errors do |log|
+      ViewComponent::CacheDigest.stub(:component_for, ->(_) { raise "boom" }) do
+        assert_empty resolver.find_templates("cacheable_component", "view_component/cache_digest", true, {})
+      end
+
+      assert_match(
+        "Ignored an error while building the digest template for " \
+          "view_component/cache_digest/cacheable_component: RuntimeError: boom",
+        log.string
+      )
+    end
+  end
+
+  def test_resolver_raises_when_synthesis_fails_locally
+    resolver = ViewComponent::CacheDigest::Resolver.instance
+
     ViewComponent::CacheDigest.stub(:component_for, ->(_) { raise "boom" }) do
-      assert_empty resolver.find_templates("cacheable_component", "view_component/cache_digest", true, {})
+      assert_raises(RuntimeError) do
+        resolver.find_templates("cacheable_component", "view_component/cache_digest", true, {})
+      end
     end
   end
 
   def test_dependency_tracking_falls_back_when_scanning_fails
     template = build_template("<%= render CacheableComponent.new(title: 'a') %>")
 
+    swallowing_digest_errors do |log|
+      ViewComponent::CacheDigest.stub(:dependencies_in, ->(_) { raise "boom" }) do
+        refute_includes(
+          ActionView::DependencyTracker.find_dependencies("some/template", template, []),
+          "view_component/cache_digest/cacheable_component"
+        )
+      end
+
+      assert_match "Ignored an error while tracking component dependencies in some/template", log.string
+    end
+  end
+
+  def test_dependency_tracking_raises_when_scanning_fails_locally
+    template = build_template("<%= render CacheableComponent.new(title: 'a') %>")
+
     ViewComponent::CacheDigest.stub(:dependencies_in, ->(_) { raise "boom" }) do
-      refute_includes(
-        ActionView::DependencyTracker.find_dependencies("some/template", template, []),
-        "view_component/cache_digest/cacheable_component"
-      )
+      assert_raises(RuntimeError) { ActionView::DependencyTracker.find_dependencies("some/template", template, []) }
     end
   end
 
   def test_constantizing_swallows_unexpected_errors
-    Object.const_set(:BoomComponent, Class.new do
-      def self.__vc_cacheable?
-        raise ArgumentError
-      end
-    end)
+    with_boom_component do
+      swallowing_digest_errors do |log|
+        assert_nil ViewComponent::CacheDigest.send(:constantize_component, "BoomComponent")
 
-    assert_nil ViewComponent::CacheDigest.send(:constantize_component, "BoomComponent")
-  ensure
-    Object.send(:remove_const, :BoomComponent)
+        assert_match "Ignored an error while resolving BoomComponent: ArgumentError", log.string
+      end
+    end
+  end
+
+  def test_constantizing_raises_unexpected_errors_locally
+    with_boom_component do
+      assert_raises(ArgumentError) { ViewComponent::CacheDigest.send(:constantize_component, "BoomComponent") }
+    end
+  end
+
+  def test_digest_errors_are_swallowed_without_a_logger
+    without_raising_digest_errors do
+      ViewComponent::CacheDigest.stub(:logger, nil) do
+        assert_nil ViewComponent::CacheDigest.handle_error(RuntimeError.new("boom"), "digesting")
+      end
+    end
   end
 
   def test_install_is_idempotent
@@ -485,6 +541,37 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   def recompile(component)
     ViewComponent::CompileCache.cache.delete(component)
     component.__vc_compile(force: true)
+  end
+
+  # The digest machinery raises in local environments, and the sandbox runs as
+  # `test`, so the swallow-and-report path has to be opted into explicitly.
+  def without_raising_digest_errors
+    previous = ViewComponent::Base.config.raise_on_cache_digest_errors
+    ViewComponent::Base.config.raise_on_cache_digest_errors = false
+
+    yield
+  ensure
+    ViewComponent::Base.config.raise_on_cache_digest_errors = previous
+  end
+
+  def swallowing_digest_errors
+    log = StringIO.new
+
+    without_raising_digest_errors do
+      ViewComponent::CacheDigest.stub(:logger, ActiveSupport::Logger.new(log)) { yield log }
+    end
+  end
+
+  def with_boom_component
+    Object.const_set(:BoomComponent, Class.new do
+      def self.__vc_cacheable?
+        raise ArgumentError
+      end
+    end)
+
+    yield
+  ensure
+    Object.send(:remove_const, :BoomComponent)
   end
 
   def build_template(source)
