@@ -12,9 +12,10 @@ module ViewComponent
   # Including this module does two things:
   #
   # 1. Registers the component with Rails' template digest tree, so a
-  #    `<% cache %>` block wrapping the component in a view is invalidated when
-  #    the component's template, Ruby class, sidecar files, or child components
-  #    change.
+  #    `<% cache %>` block is invalidated when the component's template, Ruby
+  #    class, sidecar files, or child components change. This covers blocks
+  #    wrapping the component in a view and blocks inside the component's own
+  #    template.
   # 2. Enables the `cache_on` macro, which caches the component's own rendered
   #    output.
   #
@@ -223,6 +224,30 @@ module ViewComponent
       ActiveSupport::Cache.expand_cache_key(
         parts.map { |part| part.nil? ? NIL_CACHE_VALUE : part }
       )
+    end
+
+    # The digest Rails mixes into the key of a `<% cache %>` block.
+    #
+    # `ActionView::Helpers::CacheHelper` digests the virtual path of whichever
+    # template is rendering. Inside a component that path is the component's
+    # own, which resolves to nothing: component templates aren't in the view
+    # paths. The Digestor returns an empty digest, `CacheHelper` falls back to
+    # the bare virtual path, and the fragment never invalidates.
+    #
+    # Substituting the digest the component already computes makes a `cache`
+    # block in a component template behave like one in a view. Everything else
+    # the component renders — a partial, say — keeps Rails' behavior.
+    #
+    # @private
+    def digest_path_from_template(template)
+      component_path = self.class.virtual_path
+      return super unless component_path && template.virtual_path == component_path
+
+      digest = self.class.cache_digest(finder: lookup_context, format: template.format || :html)
+
+      # An empty digest means the component couldn't be resolved. Falling back
+      # to the bare virtual path matches what `CacheHelper` does with one.
+      digest.present? ? "#{component_path}:#{digest}" : component_path
     end
 
     private

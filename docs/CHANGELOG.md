@@ -10,6 +10,12 @@ nav_order: 6
 
 ## main
 
+* Give `<% cache %>` blocks inside a component's own template a digest, for components that `include ViewComponent::ExperimentallyCacheable`.
+
+    Rails digests the virtual path of whichever template is rendering. Inside a component that path resolves to no template, because component templates aren't in the view paths, so the Digestor returned an empty digest and the fragment was never invalidated — silently, apart from a `Couldn't find template for digesting` line in the log. 4.15.0 fixed the case where the `cache` block wraps the component in a view; this fixes the case where the block sits in the component's template.
+
+    *Erik Axel Nielsen*
+
 ## 4.15.0
 
 * Add experimental caching support, opt-in per component via `include ViewComponent::ExperimentallyCacheable`.

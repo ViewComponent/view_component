@@ -42,6 +42,21 @@ end
 
 That's all that's needed for the `<% cache %>` block above to work. The component is registered with Rails' digest tree, and the fragment is invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change, including components and partials rendered from an inline template or a `#call` method.
 
+## Caching inside a component template
+
+A `<% cache %>` block written inside a component's own template has the same problem, for the same reason: Rails digests the template that's rendering, and a component's template isn't in the view paths, so there's nothing to digest.
+
+```erb
+<%# app/components/post_component.html.erb %>
+<% cache @post do %>
+  <%= render CommentComponent.new(post: @post) %>
+<% end %>
+```
+
+Including the module fixes this too. The component's own digest is substituted for the empty one Rails computes, so the fragment is invalidated by the same set of changes listed above. A component that hasn't opted in gets no digest at all, and the fragment is never invalidated.
+
+`cache` blocks in partials the component renders are unaffected: those templates resolve through the view paths like any other, so Rails digests them itself.
+
 ## Self-caching
 
 To have a component cache its own output without needing a `cache` block, use `cache_on` to declare methods used for the component's cache key.
