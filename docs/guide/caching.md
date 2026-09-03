@@ -187,7 +187,7 @@ The same works in a template, where the branch is often the more natural place f
 <%= render component.new(post: @post) %>
 ```
 
-Declared components must include `ViewComponent::ExperimentallyCacheable` themselves, since a component that hasn't opted in has no digest to depend on.
+A declared component doesn't have to include `ViewComponent::ExperimentallyCacheable` itself. The declaration alone gets its template, Ruby class, sidecar files, and superclasses digested, which matters because the components this escape hatch exists for are often ones you don't control.
 
 ## Caveats
 

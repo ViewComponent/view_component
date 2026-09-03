@@ -97,7 +97,7 @@ module ViewComponent
         name = registry[virtual_path.delete_prefix("#{VIRTUAL_PATH_PREFIX}/")]
         return unless name
 
-        constantize_component(name)
+        constantize_view_component(name)
       end
 
       # Scan a template's source for renders of cacheable components.
@@ -168,6 +168,10 @@ module ViewComponent
       # that detail out of application code, so `SomeComponent` is translated
       # to the path the Digestor can resolve.
       #
+      # Any component resolves here, not just ones that opted into caching. The
+      # hatch exists for dependencies the source scanner can't see, which are
+      # exactly the ones whose target the application may not control.
+      #
       # @return [Array<Array(String, String)>] pairs of declared name and
       #   synthetic virtual path
       def explicit_component_dependencies(source)
@@ -176,8 +180,18 @@ module ViewComponent
         source.scan(EXPLICIT_DEPENDENCY).flatten.uniq.filter_map do |declared|
           next unless /\A(?:::)?[A-Z]/.match?(declared)
 
-          component = constantize_component(declared)
-          [declared, virtual_path_for(component)] if component
+          component = constantize_view_component(declared)
+          next unless component
+
+          virtual_path = virtual_path_for(component)
+          next unless virtual_path
+
+          # Being named by a declaration is what makes a component resolvable:
+          # the Resolver synthesizes templates from the registry, so a component
+          # that never opted in has to be added to it before the Digestor asks.
+          register(component)
+
+          [declared, virtual_path]
         end
       end
 
@@ -232,6 +246,20 @@ module ViewComponent
         component = constant_name.safe_constantize
         return unless component.is_a?(Class)
         return unless component.respond_to?(:__vc_cacheable?) && component.__vc_cacheable?
+
+        component
+      rescue
+        # Never let digest computation break rendering.
+        nil
+      end
+
+      # Resolve a constant name to a component, whether or not it opted into
+      # caching.
+      #
+      # @return [Class, nil]
+      def constantize_view_component(constant_name)
+        component = constant_name.safe_constantize
+        return unless component.is_a?(Class) && component < ViewComponent::Base
 
         component
       rescue
