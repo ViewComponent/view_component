@@ -42,8 +42,6 @@ For example, `User::AvatarComponent` accepts a `User` ActiveRecord object and re
 
 ### Extract general-purpose ViewComponents
 
-"Good frameworks are extracted, not invented" - [DHH](https://dhh.dk/arc/000416.html)
-
 Just as ViewComponent itself was extracted from GitHub.com, general-purpose components are best extracted once they've proven helpful across more than one area:
 
 1. Single use-case component implemented.
