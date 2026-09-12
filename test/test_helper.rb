@@ -155,7 +155,7 @@ def without_template_annotations(&block)
   app.reloader.reload! if defined?(app)
 
   with_new_cache(&block)
-
+ensure
   ActionView::Base.annotate_rendered_view_with_filenames = old_value
   app.reloader.reload! if defined?(app)
 end
