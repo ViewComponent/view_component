@@ -116,9 +116,12 @@ end
 def with_instrumentation_enabled_option(value)
   old_value = Rails.application.config.view_component.instrumentation_enabled
   Rails.application.config.view_component.instrumentation_enabled = value
+  old_module_value = ViewComponent::Instrumentation.enabled
+  ViewComponent::Instrumentation.enabled = value
   yield
 ensure
   Rails.application.config.view_component.instrumentation_enabled = old_value
+  ViewComponent::Instrumentation.enabled = old_module_value
 end
 
 def with_generate_sidecar(enabled, &block)
@@ -152,7 +155,7 @@ def without_template_annotations(&block)
   app.reloader.reload! if defined?(app)
 
   with_new_cache(&block)
-
+ensure
   ActionView::Base.annotate_rendered_view_with_filenames = old_value
   app.reloader.reload! if defined?(app)
 end

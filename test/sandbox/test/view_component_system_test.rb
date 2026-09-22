@@ -5,6 +5,13 @@ require "test_helper"
 class ViewComponentSystemTest < ViewComponent::SystemTestCase
   driven_by :system_test_driver
 
+  # Ruby head ships a net-protocol whose Net::BufferedIO#readuntil signature
+  # doesn't match Ruby head's IO, which prevents Capybara from booting its
+  # server. Skip these system tests on Ruby head until upstream catches up.
+  if RUBY_VERSION.start_with?("4.1.")
+    setup { skip "Skipping system tests on Ruby head (net-protocol/Capybara incompatible)" }
+  end
+
   def test_simple_js_interaction_in_browser_without_layout
     with_rendered_component_path(render_inline(SimpleJavascriptInteractionWithJsIncludedComponent.new)) do |path|
       visit path
