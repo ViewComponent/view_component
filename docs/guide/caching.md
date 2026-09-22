@@ -206,7 +206,7 @@ Declared components must include `ViewComponent::ExperimentallyCacheable` themse
 
 ## When a digest can't be computed
 
-Computing a digest touches the autoloader, the filesystem, and Action View's dependency trackers, any of which can fail. ViewComponent lets those errors raise, matching Rails' digest behavior. Otherwise a component could silently become untracked and serve stale fragments.
+Computing a digest touches the autoloader, the filesystem, and Action View's dependency trackers, any of which can fail. ViewComponent lets those errors raise, matching Rails' digest behavior. Otherwise a component could become untracked and serve stale fragments without warning.
 
 ## Caveats
 
