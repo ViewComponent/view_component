@@ -27,11 +27,6 @@ module ViewComponent
         end
 
         dependencies + CacheDigest.dependencies_in(template)
-      rescue => error
-        # Falling back to the dependencies Rails found on its own means the
-        # component simply isn't tracked, which is the pre-existing behavior.
-        CacheDigest.handle_error(error, "tracking component dependencies in #{name}")
-        super
       end
 
       # @private
