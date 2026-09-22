@@ -243,7 +243,10 @@ module ViewComponent
       component_path = self.class.virtual_path
       return super unless component_path && template.virtual_path == component_path
 
-      digest = self.class.cache_digest(finder: lookup_context, format: template.format || :html)
+      digest = self.class.cache_digest(
+        finder: lookup_context,
+        format: template.format || __vc_cache_format(lookup_context)
+      )
 
       # An empty digest means the component couldn't be resolved. Falling back
       # to the bare virtual path matches what `CacheHelper` does with one.
