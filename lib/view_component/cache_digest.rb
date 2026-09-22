@@ -146,9 +146,6 @@ module ViewComponent
         RENDER_PARSER.new(name, source).render_calls.uniq.select do |path|
           source.include?(path) || source.include?(path.sub(%r{(\A|/)_}, '\1'))
         end
-      rescue
-        # Never let digest computation break rendering.
-        []
       end
 
       # Action View has shipped its render parser as a class (Rails 7.1, and
@@ -234,9 +231,6 @@ module ViewComponent
         return unless component.respond_to?(:__vc_cacheable?) && component.__vc_cacheable?
 
         component
-      rescue
-        # Never let digest computation break rendering.
-        nil
       end
     end
 

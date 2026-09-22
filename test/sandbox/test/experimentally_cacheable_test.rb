@@ -41,6 +41,24 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     refute_empty digest
   end
 
+  def test_cache_digest_raises_when_a_ruby_dependency_fails_to_load
+    error = assert_raises(RuntimeError) { CacheableRaisingRubyDependencyComponent.cache_digest }
+
+    assert_equal "raising Ruby dependency", error.message
+  end
+
+  def test_cache_digest_raises_when_a_template_dependency_fails_to_load
+    error = assert_raises(RuntimeError) { CacheableRaisingTemplateDependencyComponent.cache_digest }
+
+    assert_equal "raising template dependency", error.message
+  end
+
+  def test_cache_digest_raises_when_a_digest_source_cannot_be_read
+    error = assert_raises(Errno::EISDIR) { CacheableUnreadableDigestSourceComponent.cache_digest }
+
+    assert_includes error.message, "cacheable_unreadable_digest_source_component.yml"
+  end
+
   def test_cache_digest_changes_when_the_template_changes
     assert_digest_changes(
       "app/components/cacheable_component.html.erb",
@@ -201,12 +219,6 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
 
   def test_partial_paths_are_not_extracted_from_sources_without_render
     assert_empty ViewComponent::CacheDigest.partial_paths_in("def call; end", "a/b")
-  end
-
-  def test_partial_path_extraction_swallows_parser_errors
-    ViewComponent::CacheDigest::RENDER_PARSER.stub(:new, ->(*) { raise "boom" }) do
-      assert_empty ViewComponent::CacheDigest.partial_paths_in("render \"a/b\"", "a/b")
-    end
   end
 
   # Action View has shipped the parser as a class (7.1, main) and as a module
@@ -477,37 +489,6 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_equal "ViewComponent::CacheDigest::Resolver", resolver.to_s
     assert_equal "ViewComponent::CacheDigest::Resolver", resolver.to_path
     assert_equal resolver, ViewComponent::CacheDigest::Resolver.new
-  end
-
-  def test_resolver_returns_no_template_when_synthesis_fails
-    resolver = ViewComponent::CacheDigest::Resolver.instance
-
-    ViewComponent::CacheDigest.stub(:component_for, ->(_) { raise "boom" }) do
-      assert_empty resolver.find_templates("cacheable_component", "view_component/cache_digest", true, {})
-    end
-  end
-
-  def test_dependency_tracking_falls_back_when_scanning_fails
-    template = build_template("<%= render CacheableComponent.new(title: 'a') %>")
-
-    ViewComponent::CacheDigest.stub(:dependencies_in, ->(_) { raise "boom" }) do
-      refute_includes(
-        ActionView::DependencyTracker.find_dependencies("some/template", template, []),
-        "view_component/cache_digest/cacheable_component"
-      )
-    end
-  end
-
-  def test_constantizing_swallows_unexpected_errors
-    Object.const_set(:BoomComponent, Class.new do
-      def self.__vc_cacheable?
-        raise ArgumentError
-      end
-    end)
-
-    assert_nil ViewComponent::CacheDigest.send(:constantize_component, "BoomComponent")
-  ensure
-    Object.send(:remove_const, :BoomComponent)
   end
 
   def test_install_is_idempotent

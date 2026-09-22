@@ -204,6 +204,10 @@ The same works in a template, where the branch is often the more natural place f
 
 Declared components must include `ViewComponent::ExperimentallyCacheable` themselves, since a component that hasn't opted in has no digest to depend on.
 
+## When a digest can't be computed
+
+Computing a digest touches the autoloader, the filesystem, and Action View's dependency trackers, any of which can fail. ViewComponent lets those errors raise, matching Rails' digest behavior. Otherwise a component could become untracked and serve stale fragments without warning.
+
 ## Caveats
 
 **Self-caching components can't take content from their callers.** Besides a block, this covers `with_content` and slots set by the caller:

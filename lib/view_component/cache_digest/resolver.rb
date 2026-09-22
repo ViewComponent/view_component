@@ -30,11 +30,6 @@ module ViewComponent
         return [] unless component
 
         [build_template(component, virtual_path, details)]
-      rescue
-        # Never let digest resolution break rendering. Returning no template
-        # makes the Digestor treat this as a missing node, which degrades to
-        # the behavior components have without this feature.
-        []
       end
 
       def to_s
