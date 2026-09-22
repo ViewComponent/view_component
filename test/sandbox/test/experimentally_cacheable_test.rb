@@ -41,12 +41,22 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     refute_empty digest
   end
 
-  def test_cache_on_method_errors_are_raised
-    error = with_caching do
-      assert_raises(RuntimeError) { render_inline(RaisingCacheKeyComponent.new) }
-    end
+  def test_cache_digest_raises_when_a_ruby_dependency_fails_to_load
+    error = assert_raises(RuntimeError) { CacheableRaisingRubyDependencyComponent.cache_digest }
 
-    assert_equal "boom", error.message
+    assert_equal "raising Ruby dependency", error.message
+  end
+
+  def test_cache_digest_raises_when_a_template_dependency_fails_to_load
+    error = assert_raises(RuntimeError) { CacheableRaisingTemplateDependencyComponent.cache_digest }
+
+    assert_equal "raising template dependency", error.message
+  end
+
+  def test_cache_digest_raises_when_a_digest_source_cannot_be_read
+    error = assert_raises(Errno::EISDIR) { CacheableUnreadableDigestSourceComponent.cache_digest }
+
+    assert_includes error.message, "cacheable_unreadable_digest_source_component.yml"
   end
 
   def test_cache_digest_changes_when_the_template_changes
