@@ -60,13 +60,7 @@ module ViewComponent
       # Strip the annotation line to maintain correct line numbers when coverage
       # is running (avoids segfault from negative lineno)
       def strip_annotation_line?
-        erb_newline_compensation_needed? &&
-          coverage_running? &&
-          ActionView::Base.annotate_rendered_view_with_filenames
-      end
-
-      def erb_newline_compensation_needed?
-        Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
+        erb_newline_compensation_needed? && coverage_running?
       end
 
       def compiled_source
@@ -82,22 +76,11 @@ module ViewComponent
       def initialize(component:, inline_template:)
         details = ActionView::TemplateDetails.new(nil, inline_template.language.to_sym, nil, nil)
 
-        # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).
-        # Subtract 1 to compensate for correct line numbers in stack traces.
-        # Inline templates start at line 2+ (defined inside a class), so this
-        # won't result in negative line numbers that cause segfaults with coverage.
-        lineno =
-          if Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 && details.handler == :erb
-            inline_template.lineno - 1
-          else
-            inline_template.lineno
-          end
-
         super(
           component: component,
           details: details,
           path: inline_template.path,
-          lineno: lineno,
+          lineno: inline_template.lineno,
         )
 
         @source = inline_template.source.dup
@@ -105,6 +88,19 @@ module ViewComponent
 
       def type
         :inline
+      end
+
+      private
+
+      # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).
+      # Subtract 1 to compensate for correct line numbers in stack traces.
+      # Inline templates start at line 2+ (defined inside a class), so this
+      # won't result in negative line numbers that cause segfaults with coverage.
+      #
+      # Computed at compile time rather than at initialization because the
+      # annotation setting can change between the two.
+      def lineno
+        erb_newline_compensation_needed? ? super - 1 : super
       end
     end
 
@@ -195,6 +191,20 @@ module ViewComponent
     private
 
     attr_reader :lineno
+
+    def erb_newline_compensation_needed?
+      Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 &&
+        details.handler == :erb &&
+        annotated?
+    end
+
+    # The newline compensated for lives inside the `<!-- BEGIN ... -->`
+    # annotation, which Rails only prepends to HTML templates, and only when
+    # annotations are enabled. Compensating outside those conditions shifts
+    # backtraces by a line and, under coverage, strips real template source.
+    def annotated?
+      ActionView::Base.annotate_rendered_view_with_filenames && html?
+    end
 
     def compiled_source
       handler = details.handler_class

@@ -126,10 +126,8 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 4.0
-    # audition needs Ruby 4.0+; installed standalone since rubydex is a
-    # precompiled native gem. Fails only on findings not in
-    # .audition-baseline.json. Static-only skips Ractor issues in dependencies.
-    - name: Install audition
-      run: gem install audition
+        bundler-cache: true
+    # Fails only on findings not in .audition-baseline.json. Static-only skips
+    # Ractor issues in dependencies.
     - name: Audition (Ractor readiness)
-      run: audition . --static-only --plain
+      run: bundle exec audition . --static-only --plain

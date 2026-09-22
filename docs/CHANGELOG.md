@@ -14,6 +14,24 @@ nav_order: 6
 
     *Erik Axel Nielsen*
 
+* Give `<% cache %>` blocks inside a component's own template a digest, for components that `include ViewComponent::ExperimentallyCacheable`.
+
+    Rails digests the virtual path of whichever template is rendering. Inside a component that path resolves to no template, because component templates aren't in the view paths, so the Digestor returned an empty digest and the fragment was never invalidated. The only signal was a `Couldn't find template for digesting` line in the log. 4.15.0 fixed the case where the `cache` block wraps the component in a view. This fixes the case where the block sits in the component's template.
+
+    *Erik Axel Nielsen*
+
+* Fix line numbers and, under coverage, missing output for ERB templates that Rails doesn't annotate.
+
+    On Rails 8.1+, ViewComponent compensated for the newline Rails adds to compiled ERB output ([rails/rails#53731](https://github.com/rails/rails/pull/53731)) for every ERB template, whether from a file or from `erb_template`. That newline lives inside the `<!-- BEGIN ... -->` annotation, which Rails only emits when `annotate_rendered_view_with_filenames` is enabled *and* the template's format is HTML. Compensating unconditionally shifted backtraces for non-HTML templates (`.text.erb`, `.css.erb`) and for every ERB template when annotations are disabled, such as in production, by one line. When coverage was running, the same mismatch made the annotation-stripping workaround remove real template source, so non-HTML templates rendered empty.
+
+    Inline templates now decide the compensation when they compile rather than when the component class is defined, matching file templates.
+
+    *Ryutaro Mizokami*
+
+* Reduce per-render allocations. Inline renders drop 2 to 3 allocations and collection renders drop 4 to 8 depending on Rails/Ruby version by caching the instrumentation-enabled flag at the module level, memoizing the empty-details `Requested` per `LookupContext`, hoisting per-item metadata lookups out of the collection render loop, and dropping a few gratuitous `**` splats on the `Collection` API boundary.
+
+    *Joel Hawksley*
+
 ## 4.15.0
 
 * Add experimental caching support, opt-in per component via `include ViewComponent::ExperimentallyCacheable`.

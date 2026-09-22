@@ -1,6 +1,13 @@
 require "spec_helper"
 
 RSpec.describe "System specs for isolated view components", type: :system do
+  # Ruby head ships a net-protocol whose Net::BufferedIO#readuntil signature
+  # doesn't match Ruby head's IO, which prevents Capybara from booting its
+  # server. Skip these specs on Ruby head until upstream catches up.
+  if RUBY_VERSION.start_with?("4.1.")
+    before { skip "Skipping system specs on Ruby head (net-protocol/Capybara incompatible)" }
+  end
+
   before do
     driven_by(:system_test_driver)
   end
