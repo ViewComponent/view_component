@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Raise errors encountered while computing a component's cache digest, instead of degrading to an untracked component that can serve stale fragments.
+* Raise errors encountered while computing a component's cache digest instead of degrading to an untracked component that can serve stale fragments.
 
     *Erik Axel Nielsen*
 
