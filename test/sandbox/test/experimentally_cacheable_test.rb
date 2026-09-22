@@ -41,13 +41,12 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     refute_empty digest
   end
 
-  def test_cache_digest_errors_are_raised
-    RaisingCacheDigestComponent.raise_on_digest = true
-    error = assert_raises(RuntimeError) { RaisingCacheDigestComponent.cache_digest }
+  def test_cache_on_method_errors_are_raised
+    error = with_caching do
+      assert_raises(RuntimeError) { render_inline(RaisingCacheKeyComponent.new) }
+    end
 
     assert_equal "boom", error.message
-  ensure
-    RaisingCacheDigestComponent.raise_on_digest = false
   end
 
   def test_cache_digest_changes_when_the_template_changes
