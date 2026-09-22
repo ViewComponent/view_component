@@ -256,6 +256,51 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_includes key, CacheableComponent.cache_digest
   end
 
+  # A `cache` block in a component template is digested from the component's
+  # own path, which resolves to no template: component templates aren't in the
+  # view paths. Without a digest of its own the fragment never invalidates.
+  def test_a_cache_block_in_a_component_template_is_digested
+    with_caching do
+      key = capture_fragment_key { render_inline(CacheBlockComponent.new) }
+
+      assert_equal(
+        [:views, "cache_block_component:#{CacheBlockComponent.cache_digest}", "cache-block-fragment"],
+        key
+      )
+    end
+  end
+
+  # A subclass renders its parent's template, so the digest has to come from the
+  # component being rendered rather than from whichever class owns the file.
+  # Otherwise the two share a fragment despite having different digests.
+  def test_a_subclass_rendering_an_inherited_template_uses_its_own_digest
+    with_caching do
+      key = capture_fragment_key { render_inline(CacheBlockSubclassComponent.new) }
+
+      assert_equal(
+        [
+          :views,
+          "cache_block_subclass_component:#{CacheBlockSubclassComponent.cache_digest}",
+          "cache-block-fragment"
+        ],
+        key
+      )
+    end
+  end
+
+  # A `cache` block in a partial the component renders is Rails' business, not
+  # ours: the partial resolves through the view paths like any other template.
+  def test_digest_path_for_anything_else_is_left_to_rails
+    component = CacheBlockComponent.new
+    render_inline(component)
+    template = build_template("", virtual_path: "integration_examples/_erb_partial")
+
+    assert_equal(
+      "integration_examples/_erb_partial:#{digest_of("integration_examples/_erb_partial")}",
+      component.digest_path_from_template(template)
+    )
+  end
+
   def test_undefined_cache_on_method_raises
     component = Class.new(CacheableComponent) do
       cache_on :nonexistent
@@ -487,14 +532,22 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     component.__vc_compile(force: true)
   end
 
-  def build_template(source)
+  def build_template(source, virtual_path: "test/template")
     ActionView::Template.new(
       source,
       "test template",
       ActionView::Template.handler_for_extension(:erb),
       locals: [],
       format: :html,
-      virtual_path: "test/template"
+      virtual_path: virtual_path
+    )
+  end
+
+  def digest_of(virtual_path)
+    ActionView::Digestor.digest(
+      name: virtual_path,
+      format: :html,
+      finder: ActionView::LookupContext.new(ActionController::Base.view_paths)
     )
   end
 
