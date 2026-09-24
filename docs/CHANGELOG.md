@@ -10,6 +10,12 @@ nav_order: 6
 
 ## main
 
+* Resolve `# Template Dependency: SomeComponent` declarations naming a component that hasn't included `ViewComponent::ExperimentallyCacheable`.
+
+    The declaration was previously dropped: the class name was emitted to the Digestor verbatim, which looked for a template at that path, found none, and logged `Couldn't find template for digesting: SomeComponent`. That made the escape hatch unusable for exactly the dependencies it exists for, since a component reached through a local variable or a helper module is often one you don't control and can't add the module to. Naming a component in a declaration now digests it, opted in or not.
+
+    *Erik Axel Nielsen*
+
 * Invalidate Action View's memoized template digests when a component registers with `ViewComponent::CacheDigest`, so a digest computed before the component loaded isn't served for the rest of the process.
 
     *Erik Axel Nielsen*
