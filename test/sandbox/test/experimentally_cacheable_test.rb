@@ -20,6 +20,32 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     )
   end
 
+  # Registration runs on every class load, so an unchanged component must not
+  # throw away digests other templates are still using.
+  def test_registering_an_unchanged_component_leaves_memoized_digests_alone
+    clear_digest_cache
+    CacheableComponent.cache_digest
+    memoized = digest_cache_size
+
+    assert_operator memoized, :>, 0
+
+    ViewComponent::CacheDigest.register(CacheableComponent)
+
+    assert_equal memoized, digest_cache_size
+  end
+
+  def test_registering_a_new_component_expires_memoized_digests
+    clear_digest_cache
+    CacheableComponent.cache_digest
+
+    assert_operator digest_cache_size, :>, 0
+
+    ViewComponent::CacheDigest.registry.delete("cacheable_component")
+    ViewComponent::CacheDigest.register(CacheableComponent)
+
+    assert_equal 0, digest_cache_size
+  end
+
   def test_component_is_marked_cacheable
     assert_predicate CacheableComponent, :__vc_cacheable?
     refute_respond_to ErbComponent, :__vc_cacheable?
@@ -39,6 +65,24 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
 
     assert_kind_of String, digest
     refute_empty digest
+  end
+
+  def test_cache_digest_raises_when_a_ruby_dependency_fails_to_load
+    error = assert_raises(RuntimeError) { CacheableRaisingRubyDependencyComponent.cache_digest }
+
+    assert_equal "raising Ruby dependency", error.message
+  end
+
+  def test_cache_digest_raises_when_a_template_dependency_fails_to_load
+    error = assert_raises(RuntimeError) { CacheableRaisingTemplateDependencyComponent.cache_digest }
+
+    assert_equal "raising template dependency", error.message
+  end
+
+  def test_cache_digest_raises_when_a_digest_source_cannot_be_read
+    error = assert_raises(Errno::EISDIR) { CacheableUnreadableDigestSourceComponent.cache_digest }
+
+    assert_includes error.message, "cacheable_unreadable_digest_source_component.yml"
   end
 
   def test_cache_digest_changes_when_the_template_changes
@@ -225,12 +269,6 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_empty ViewComponent::CacheDigest.partial_paths_in("def call; end", "a/b")
   end
 
-  def test_partial_path_extraction_swallows_parser_errors
-    ViewComponent::CacheDigest::RENDER_PARSER.stub(:new, ->(*) { raise "boom" }) do
-      assert_empty ViewComponent::CacheDigest.partial_paths_in("render \"a/b\"", "a/b")
-    end
-  end
-
   # Action View has shipped the parser as a class (7.1, main) and as a module
   # with a `Default` implementation (7.2 through 8.1). Exercised with doubles so
   # both shapes are covered whichever version is running.
@@ -276,6 +314,51 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     key = CacheableComponent.new(title: "a").cache_key
 
     assert_includes key, CacheableComponent.cache_digest
+  end
+
+  # A `cache` block in a component template is digested from the component's
+  # own path, which resolves to no template: component templates aren't in the
+  # view paths. Without a digest of its own the fragment never invalidates.
+  def test_a_cache_block_in_a_component_template_is_digested
+    with_caching do
+      key = capture_fragment_key { render_inline(CacheBlockComponent.new) }
+
+      assert_equal(
+        [:views, "cache_block_component:#{CacheBlockComponent.cache_digest}", "cache-block-fragment"],
+        key
+      )
+    end
+  end
+
+  # A subclass renders its parent's template, so the digest has to come from the
+  # component being rendered rather than from whichever class owns the file.
+  # Otherwise the two share a fragment despite having different digests.
+  def test_a_subclass_rendering_an_inherited_template_uses_its_own_digest
+    with_caching do
+      key = capture_fragment_key { render_inline(CacheBlockSubclassComponent.new) }
+
+      assert_equal(
+        [
+          :views,
+          "cache_block_subclass_component:#{CacheBlockSubclassComponent.cache_digest}",
+          "cache-block-fragment"
+        ],
+        key
+      )
+    end
+  end
+
+  # A `cache` block in a partial the component renders is Rails' business, not
+  # ours: the partial resolves through the view paths like any other template.
+  def test_digest_path_for_anything_else_is_left_to_rails
+    component = CacheBlockComponent.new
+    render_inline(component)
+    template = build_template("", virtual_path: "integration_examples/_erb_partial")
+
+    assert_equal(
+      "integration_examples/_erb_partial:#{digest_of("integration_examples/_erb_partial")}",
+      component.digest_path_from_template(template)
+    )
   end
 
   def test_undefined_cache_on_method_raises
@@ -456,37 +539,6 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_equal resolver, ViewComponent::CacheDigest::Resolver.new
   end
 
-  def test_resolver_returns_no_template_when_synthesis_fails
-    resolver = ViewComponent::CacheDigest::Resolver.instance
-
-    ViewComponent::CacheDigest.stub(:component_for, ->(_) { raise "boom" }) do
-      assert_empty resolver.find_templates("cacheable_component", "view_component/cache_digest", true, {})
-    end
-  end
-
-  def test_dependency_tracking_falls_back_when_scanning_fails
-    template = build_template("<%= render CacheableComponent.new(title: 'a') %>")
-
-    ViewComponent::CacheDigest.stub(:dependencies_in, ->(_) { raise "boom" }) do
-      refute_includes(
-        ActionView::DependencyTracker.find_dependencies("some/template", template, []),
-        "view_component/cache_digest/cacheable_component"
-      )
-    end
-  end
-
-  def test_constantizing_swallows_unexpected_errors
-    Object.const_set(:BoomComponent, Class.new do
-      def self.__vc_cacheable?
-        raise ArgumentError
-      end
-    end)
-
-    assert_nil ViewComponent::CacheDigest.send(:constantize_component, "BoomComponent")
-  ensure
-    Object.send(:remove_const, :BoomComponent)
-  end
-
   def test_install_is_idempotent
     resolver_count = ActionController::Base.view_paths.count { |path| path.is_a?(ViewComponent::CacheDigest::Resolver) }
 
@@ -509,14 +561,27 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     component.__vc_compile(force: true)
   end
 
-  def build_template(source)
+  # Every digest Action View has memoized, across all details keys.
+  def digest_cache_size
+    ActionView::LookupContext::DetailsKey.digest_caches.sum(&:size)
+  end
+
+  def build_template(source, virtual_path: "test/template")
     ActionView::Template.new(
       source,
       "test template",
       ActionView::Template.handler_for_extension(:erb),
       locals: [],
       format: :html,
-      virtual_path: "test/template"
+      virtual_path: virtual_path
+    )
+  end
+
+  def digest_of(virtual_path)
+    ActionView::Digestor.digest(
+      name: virtual_path,
+      format: :html,
+      finder: ActionView::LookupContext.new(ActionController::Base.view_paths)
     )
   end
 

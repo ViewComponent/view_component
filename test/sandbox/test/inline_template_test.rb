@@ -119,6 +119,17 @@ class InlineErbTest < ViewComponent::TestCase
     assert_match %r{test/sandbox/test/inline_template_test.rb:22}, error.backtrace[0]
   end
 
+  test "error backtrace locations work when template annotations are disabled" do
+    error = nil
+
+    without_template_annotations do
+      InlineRaiseErbComponent.__vc_compile(force: true)
+      error = assert_raises(ArgumentError) { render_inline(InlineRaiseErbComponent.new("Fox Mulder")) }
+    end
+
+    assert_match %r{test/sandbox/test/inline_template_test.rb:22}, error.backtrace[0]
+  end
+
   test "error backtrace locations work in slim" do
     error = assert_raises ArgumentError do
       render_inline(InlineRaiseSlimComponent.new("Fox Mulder"))

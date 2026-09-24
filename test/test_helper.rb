@@ -116,9 +116,12 @@ end
 def with_instrumentation_enabled_option(value)
   old_value = Rails.application.config.view_component.instrumentation_enabled
   Rails.application.config.view_component.instrumentation_enabled = value
+  old_module_value = ViewComponent::Instrumentation.enabled
+  ViewComponent::Instrumentation.enabled = value
   yield
 ensure
   Rails.application.config.view_component.instrumentation_enabled = old_value
+  ViewComponent::Instrumentation.enabled = old_module_value
 end
 
 def with_generate_sidecar(enabled, &block)
@@ -152,7 +155,7 @@ def without_template_annotations(&block)
   app.reloader.reload! if defined?(app)
 
   with_new_cache(&block)
-
+ensure
   ActionView::Base.annotate_rendered_view_with_filenames = old_value
   app.reloader.reload! if defined?(app)
 end
@@ -205,6 +208,21 @@ def with_compiler_development_mode(mode)
   yield
 ensure
   ViewComponent::Compiler.__vc_development_mode = previous_mode
+end
+
+# The key of the first fragment read while the block runs. Taken from the
+# instrumentation rather than recomputed, so assertions cover the key rendering
+# actually used.
+def capture_fragment_key
+  key = nil
+  subscriber = ActiveSupport::Notifications.subscribe("read_fragment.action_controller") do |*, payload|
+    key ||= payload[:key]
+  end
+
+  yield
+  key
+ensure
+  ActiveSupport::Notifications.unsubscribe(subscriber)
 end
 
 def capture_warnings(&block)

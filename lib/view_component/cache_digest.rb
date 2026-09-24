@@ -75,8 +75,16 @@ module ViewComponent
       # @private
       def register(component)
         return unless component.virtual_path && component.name
+        return if registry[component.virtual_path] == component.name
 
         registry[component.virtual_path] = component.name
+
+        # Components register as they load, and under lazy loading that happens
+        # after Action View has already digested and memoized some templates.
+        # Those digests were computed without this component's dependencies and
+        # would otherwise be served for the rest of the process, making the
+        # digest a function of load order rather than of source.
+        expire_digests
       end
 
       # The synthetic virtual path a component is digested under.
@@ -146,9 +154,6 @@ module ViewComponent
         RENDER_PARSER.new(name, source).render_calls.uniq.select do |path|
           source.include?(path) || source.include?(path.sub(%r{(\A|/)_}, '\1'))
         end
-      rescue
-        # Never let digest computation break rendering.
-        []
       end
 
       # Action View has shipped its render parser as a class (Rails 7.1, and
@@ -237,6 +242,13 @@ module ViewComponent
 
       private
 
+      # Drop Action View's memoized template digests, leaving its resolver
+      # caches alone: no template changed, only the set of dependencies the
+      # Digestor can see.
+      def expire_digests
+        ActionView::LookupContext::DetailsKey.digest_caches.each(&:clear)
+      end
+
       # Resolve a constant name to a component that opted into caching.
       #
       # Returns nil for anything else, including constants that don't exist.
@@ -248,9 +260,6 @@ module ViewComponent
         return unless component.respond_to?(:__vc_cacheable?) && component.__vc_cacheable?
 
         component
-      rescue
-        # Never let digest computation break rendering.
-        nil
       end
 
       # Resolve a constant name to a component, whether or not it opted into
