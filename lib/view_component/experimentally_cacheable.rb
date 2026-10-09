@@ -186,7 +186,7 @@ module ViewComponent
       if (cached = store.read(key))
         # Safe to mark as HTML-safe: the cached string was produced by this same
         # rendering pipeline, which escapes output before it's written.
-        return cached.html_safe # rubocop:disable Rails/OutputSafety
+        return cached.html_safe
       end
 
       super.tap do |output|

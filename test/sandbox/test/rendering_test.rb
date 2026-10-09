@@ -581,7 +581,7 @@ class RenderingTest < ViewComponent::TestCase
 
     assert_includes(
       error.message,
-      "Colliding templates 'mini-watch' and 'mini__watch' found in VariantTemplatesCollisionComponent." \
+      "Colliding templates 'mini-watch' and 'mini__watch' found in VariantTemplatesCollisionComponent."
     )
   end
 
