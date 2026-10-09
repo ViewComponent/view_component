@@ -28,7 +28,7 @@ Editing `PostComponent`'s template, Ruby class, or sidecar files doesn't invalid
 
 ## Opting in
 
-Include `ViewComponent::ExperimentallyCacheable` in each component that should participate in caching:
+Include `ViewComponent::ExperimentallyCacheable` in a component to enable experimental caching:
 
 ```ruby
 class PostComponent < ViewComponent::Base
@@ -41,6 +41,10 @@ end
 ```
 
 That's all that's needed for the `<% cache %>` block above to work. The component is registered with Rails' digest tree, and the fragment is invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change, including components and partials rendered from an inline template or a `#call` method.
+
+Once any component in the application includes the module, dependency tracking discovers components throughout digested views and their render trees, even when those components don't include the module. This includes transitively rendered components, components with acronym names, and components that override `virtual_path`. Applications that never include the module are unaffected.
+
+Discovery only tracks source dependencies. It doesn't cache a component's output or make `cache` blocks inside its own template digest-aware. Those still require the opt-ins described below. Dynamic renders still need explicit dependency declarations.
 
 ## Caching inside a component template
 
@@ -202,7 +206,7 @@ The same works in a template, where the branch is often the more natural place f
 <%= render component.new(post: @post) %>
 ```
 
-Declared components must include `ViewComponent::ExperimentallyCacheable` themselves, since a component that hasn't opted in has no digest to depend on.
+Once experimental caching is enabled, declared components don't need to include `ViewComponent::ExperimentallyCacheable` themselves. The declaration registers the component's actual class name and virtual path, so its template, Ruby class, sidecar files, superclasses, and discoverable dependencies are digested too.
 
 ## When a digest can't be computed
 
