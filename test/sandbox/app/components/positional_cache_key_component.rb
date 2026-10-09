@@ -13,7 +13,7 @@ class PositionalCacheKeyComponent < ViewComponent::Base
   end
 
   def call
-    "#{first}-#{second}".html_safe # rubocop:disable Rails/OutputSafety
+    "#{first}-#{second}".html_safe
   end
 
   private

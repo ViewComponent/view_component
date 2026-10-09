@@ -44,7 +44,7 @@ That's all that's needed for the `<% cache %>` block above to work. The componen
 
 Once any component in the application includes the module, dependency tracking discovers components throughout digested views and their render trees, even when those components don't include the module. This includes transitively rendered components, components with acronym names, and components that override `virtual_path`. Applications that never include the module are unaffected.
 
-Discovery only tracks source dependencies. It doesn't cache a component's output or make `cache` blocks inside its own template digest-aware; those still require the opt-ins described below. Dynamic renders still need explicit dependency declarations.
+Discovery only tracks source dependencies. It doesn't cache a component's output or make `cache` blocks inside its own template digest-aware. Those still require the opt-ins described below. Dynamic renders still need explicit dependency declarations.
 
 ## Caching inside a component template
 
