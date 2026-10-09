@@ -21,9 +21,10 @@ module ViewComponent
   #    not just its template.
   #
   # This module fixes both, reusing Rails' own `ActionView::Digestor` rather than
-  # reimplementing static analysis. Components opt in individually by including
-  # `ViewComponent::ExperimentallyCacheable`; until at least one component does,
-  # every hook here short-circuits.
+  # reimplementing static analysis. Until at least one component includes
+  # `ViewComponent::ExperimentallyCacheable`, dependency discovery short-circuits.
+  # Once enabled, every discovered component is tracked, whether or not it
+  # included the module.
   #
   # @private
   module CacheDigest
@@ -56,8 +57,8 @@ module ViewComponent
     # Rails' escape hatch for dependencies static analysis can't see.
     EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
     class << self
-      # Virtual paths of components that have opted into caching, mapped to
-      # their class names.
+      # Virtual paths of opted-in and discovered components, mapped to their
+      # class names.
       #
       # Class *names* rather than class objects so the registry survives
       # autoloader reloads without pinning stale constants in memory.
@@ -108,7 +109,7 @@ module ViewComponent
         constantize_component(name)
       end
 
-      # Scan a template's source for renders of cacheable components.
+      # Scan a template's source for renders of components.
       #
       # Called for every template Rails digests, so it exits early when the
       # feature is unused.
@@ -121,15 +122,15 @@ module ViewComponent
       end
 
       # Scan arbitrary source (a template or a component's Ruby file) for
-      # renders of cacheable components.
+      # renders of components.
       #
       # @return [Array<String>] synthetic virtual paths
       def component_paths_in(source)
+        return [] unless enabled?
         return [] unless source.is_a?(String) && source.include?("render")
 
         source.scan(RENDER_CALL).flatten.uniq.filter_map do |constant_name|
-          component = constantize_component(constant_name)
-          virtual_path_for(component) if component
+          registered_path_for(constantize_component(constant_name))
         end
       end
 
@@ -176,13 +177,15 @@ module ViewComponent
       # @return [Array<Array(String, String)>] pairs of declared name and
       #   synthetic virtual path
       def explicit_component_dependencies(source)
+        return [] unless enabled?
         return [] unless source.is_a?(String) && source.include?("Template Dependency:")
 
         source.scan(EXPLICIT_DEPENDENCY).flatten.uniq.filter_map do |declared|
           next unless /\A(?:::)?[A-Z]/.match?(declared)
 
           component = constantize_component(declared)
-          [declared, virtual_path_for(component)] if component
+          virtual_path = registered_path_for(component)
+          [declared, virtual_path] if virtual_path
         end
       end
 
@@ -228,6 +231,15 @@ module ViewComponent
 
       private
 
+      # Record the actual class name rather than trying to reverse a virtual
+      # path, which may contain acronyms or be overridden by the component.
+      def registered_path_for(component)
+        return unless component
+
+        register(component)
+        virtual_path_for(component)
+      end
+
       # Drop Action View's memoized template digests, leaving its resolver
       # caches alone: no template changed, only the set of dependencies the
       # Digestor can see.
@@ -235,15 +247,14 @@ module ViewComponent
         ActionView::LookupContext::DetailsKey.digest_caches.each(&:clear)
       end
 
-      # Resolve a constant name to a component that opted into caching.
+      # Resolve a constant name to any ViewComponent.
       #
       # Returns nil for anything else, including constants that don't exist.
       # Autoloading here is safe: the template is about to render this constant
       # anyway.
       def constantize_component(constant_name)
         component = constant_name.safe_constantize
-        return unless component.is_a?(Class)
-        return unless component.respond_to?(:__vc_cacheable?) && component.__vc_cacheable?
+        return unless component.is_a?(Class) && component < ViewComponent::Base
 
         component
       end

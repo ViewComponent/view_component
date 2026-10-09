@@ -15,7 +15,8 @@ module ViewComponent
   #    `<% cache %>` block is invalidated when the component's template, Ruby
   #    class, sidecar files, or child components change. This covers blocks
   #    wrapping the component in a view and blocks inside the component's own
-  #    template.
+  #    template. Once enabled, dependency tracking also discovers components
+  #    that haven't included this module.
   # 2. Enables the `cache_on` macro, which caches the component's own rendered
   #    output.
   #

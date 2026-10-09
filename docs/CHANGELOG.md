@@ -10,6 +10,12 @@ nav_order: 6
 
 ## main
 
+* Track discovered components without requiring each dependency to include `ViewComponent::ExperimentallyCacheable`, once experimental caching is enabled.
+
+    Literal renders and `# Template Dependency:` declarations register the component's actual class name and virtual path, including acronym names and custom paths. Changes to unopted-in dependencies now invalidate enclosing fragments. Component output caching and digest-aware `cache` blocks inside component templates remain opt-in, and unexpected digest errors continue to raise.
+
+    *Erik Axel Nielsen, Joel Hawksley*
+
 * Invalidate Action View's memoized template digests when a component registers with `ViewComponent::CacheDigest`, so a digest computed before the component loaded isn't served for the rest of the process.
 
     *Erik Axel Nielsen*
