@@ -423,6 +423,33 @@ class RenderingTest < ViewComponent::TestCase
     assert_no_text("component was rendered")
   end
 
+  def test_before_render_is_not_called_when_render_is_false
+    component = ConditionalRenderComponent.new(should_render: false)
+    callbacks = []
+    component.define_singleton_method(:before_render) { callbacks << :before_render }
+
+    render_inline(component)
+
+    assert_empty callbacks
+    refute_component_rendered
+    assert_predicate rendered_content, :html_safe?
+  end
+
+  def test_before_render_is_called_after_render_predicate
+    component = ConditionalRenderComponent.new(should_render: true)
+    callbacks = []
+    component.define_singleton_method(:render?) do
+      callbacks << :render?
+      super()
+    end
+    component.define_singleton_method(:before_render) { callbacks << :before_render }
+
+    render_inline(component)
+
+    assert_equal [:render?, :before_render], callbacks
+    assert_text("component was rendered")
+  end
+
   def test_conditional_rendering_if_content_provided
     render_inline(ConditionalContentComponent.new)
 

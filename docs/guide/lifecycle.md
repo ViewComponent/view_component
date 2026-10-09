@@ -13,6 +13,8 @@ Since 2.8.0
 
 Define a `before_render` method to be called before a component is rendered, when `helpers` is able to be used:
 
+`before_render` is only called if `render?` returns true. Since `render?` runs first, it must not depend on state set in `before_render`.
+
 ```ruby
 # app/components/example_component.rb
 class ExampleComponent < ViewComponent::Base

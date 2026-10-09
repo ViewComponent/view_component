@@ -139,9 +139,9 @@ module ViewComponent
       @__vc_render_in_block = block
       @view_context.instance_variable_set(:@virtual_path, virtual_path)
 
-      before_render
-
       if render?
+        before_render
+
         value = nil
 
         @output_buffer.with_buffer do
@@ -239,6 +239,7 @@ module ViewComponent
 
     # Called before rendering the component. Override to perform operations that
     # depend on having access to the view context, such as helpers.
+    # Only called if `render?` returns true.
     #
     # @return [void]
     def before_render
