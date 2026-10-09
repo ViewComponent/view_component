@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Update development and documentation dependencies, baseline existing Audition findings, and accommodate updated lint rules.
+
+    *Joel Hawksley*
+
 * Invalidate Action View's memoized template digests when a component registers with `ViewComponent::CacheDigest`, so a digest computed before the component loaded isn't served for the rest of the process.
 
     *Erik Axel Nielsen*

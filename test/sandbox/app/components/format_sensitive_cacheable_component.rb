@@ -8,7 +8,7 @@ class FormatSensitiveCacheableComponent < ViewComponent::Base
   cache_on :identity
 
   def call
-    view_context.lookup_context.formats.first.to_s.html_safe # rubocop:disable Rails/OutputSafety
+    view_context.lookup_context.formats.first.to_s.html_safe
   end
 
   private
