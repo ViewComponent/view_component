@@ -58,12 +58,20 @@ Render a component for each element in a collection ([documentation](/guide/coll
 render(ProductsComponent.with_collection(@products, foo: :bar))
 ```
 
-### `.with_collection_parameter(parameter)`
+### `.with_collection_parameter(parameter = nil, counter: nil, iteration: nil)`
 
 Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
 
 ```ruby
 with_collection_parameter :item
+```
+
+By default, the `_counter` and `_iteration` arguments are passed when the
+initializer's signature accepts them. Set `counter:` or `iteration:` to
+explicitly always (`true`) or never (`false`) pass them:
+
+```ruby
+with_collection_parameter :item, counter: true, iteration: true
 ```
 
 ## Instance methods

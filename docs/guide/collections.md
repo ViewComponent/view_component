@@ -70,10 +70,12 @@ end
 Since 2.5.0
 {: .label }
 
-ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, add it to `initialize` as an argument:
+ViewComponent defines a counter variable matching the parameter name above, followed by `_counter`. To access the variable, declare it with `counter: true` and add it to `initialize` as an argument:
 
 ```ruby
 class ProductComponent < ViewComponent::Base
+  with_collection_parameter counter: true
+
   erb_template <<-ERB
     <li>
       <%= @counter %> <%= @product.name %>
@@ -94,10 +96,12 @@ Since 2.33.0
 
 ViewComponent defines an iteration variable matching the parameter name above, followed by `_iteration`. This gives contextual information about the iteration to components within the collection (`#size`, `#index`, `#first?`, and `#last?`).
 
-To access the variable, add it to `initialize` as an argument:
+To access the variable, declare it with `iteration: true` and add it to `initialize` as an argument:
 
 ```ruby
 class ProductComponent < ViewComponent::Base
+  with_collection_parameter iteration: true
+
   erb_template <<-ERB
     <li class="<%= "featured" if @iteration.first? %>">
       <%= @product.name %>
@@ -110,6 +114,16 @@ class ProductComponent < ViewComponent::Base
   end
 end
 ```
+
+## Declaring the counter and iteration
+
+`counter:` and `iteration:` can be combined with a custom parameter name, and are inherited by subclasses:
+
+```ruby
+with_collection_parameter :item, counter: true, iteration: true
+```
+
+Set either to `false` to never pass it. If neither is declared, ViewComponent passes `_counter` and `_iteration` when it finds them in the component's `initialize` signature.
 
 ## Spacer components
 

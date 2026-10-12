@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add `counter:` and `iteration:` options to `with_collection_parameter`, and make its parameter name optional, to explicitly declare whether a component receives the `_counter` and `_iteration` arguments when rendered as a collection.
+
+    *Ben Sheldon*
+
 * Update development and documentation dependencies, baseline existing Audition findings, and accommodate updated lint rules.
 
     *Joel Hawksley*

@@ -70,6 +70,8 @@ module ViewComponent
 
     # Config option that strips trailing whitespace in templates before compiling them.
     class_attribute :__vc_strip_trailing_whitespace, instance_accessor: false, instance_predicate: false, default: false
+    class_attribute :__vc_collection_counter, instance_accessor: false, instance_predicate: false, default: nil
+    class_attribute :__vc_collection_iteration, instance_accessor: false, instance_predicate: false, default: nil
 
     attr_accessor :__vc_original_view_context
     attr_reader :current_template
@@ -713,9 +715,21 @@ module ViewComponent
       # with_collection_parameter :item
       # ```
       #
+      # By default, the `_counter` and `_iteration` arguments are passed when the
+      # initializer's signature accepts them. Set `counter:` or `iteration:` to
+      # explicitly always (`true`) or never (`false`) pass them:
+      #
+      # ```ruby
+      # with_collection_parameter :item, counter: true, iteration: true
+      # ```
+      #
       # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
-      def with_collection_parameter(parameter)
-        @__vc_provided_collection_parameter = parameter
+      # @param counter [Boolean] Whether to pass the `_counter` argument.
+      # @param iteration [Boolean] Whether to pass the `_iteration` argument.
+      def with_collection_parameter(parameter = nil, counter: nil, iteration: nil)
+        @__vc_provided_collection_parameter = parameter if parameter
+        self.__vc_collection_counter = counter unless counter.nil?
+        self.__vc_collection_iteration = iteration unless iteration.nil?
         @__vc_initialize_parameters = nil
       end
 
@@ -776,7 +790,7 @@ module ViewComponent
 
       # @private
       def __vc_counter_argument_present?
-        __vc_initialize_parameter_names.include?(__vc_collection_counter_parameter)
+        __vc_collection_argument_present?(__vc_collection_counter, __vc_collection_counter_parameter)
       end
 
       # @private
@@ -786,10 +800,14 @@ module ViewComponent
 
       # @private
       def __vc_iteration_argument_present?
-        __vc_initialize_parameter_names.include?(__vc_collection_iteration_parameter)
+        __vc_collection_argument_present?(__vc_collection_iteration, __vc_collection_iteration_parameter)
       end
 
       private
+
+      def __vc_collection_argument_present?(provided, parameter)
+        provided.nil? ? __vc_initialize_parameter_names.include?(parameter) : provided
+      end
 
       def __vc_splatted_keyword_argument_present?
         __vc_initialize_parameters.flatten.include?(:keyrest)
