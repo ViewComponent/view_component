@@ -716,7 +716,7 @@ module ViewComponent
       # @param parameter [Symbol] The parameter name used when rendering elements of a collection.
       def with_collection_parameter(parameter)
         @__vc_provided_collection_parameter = parameter
-        @__vc_initialize_parameters = nil
+        @__vc_collection_arguments = nil
       end
 
       # Strips trailing whitespace from templates before compiling them.
@@ -746,10 +746,14 @@ module ViewComponent
       # rendering is optional.
       # @private
       def __vc_validate_collection_parameter!(validate_default: false)
-        parameter = validate_default ? __vc_collection_parameter : __vc_provided_collection_parameter
+        if validate_default
+          return if __vc_collection_arguments[:parameter]
 
-        return unless parameter
-        return if __vc_initialize_parameter_names.include?(parameter) || __vc_splatted_keyword_argument_present?
+          raise MissingCollectionArgumentError.new(name, __vc_collection_parameter)
+        end
+
+        parameter = __vc_provided_collection_parameter
+        return if __vc_collection_parameter_accepted?(parameter)
 
         raise MissingCollectionArgumentError.new(name, parameter)
       end
@@ -776,7 +780,7 @@ module ViewComponent
 
       # @private
       def __vc_counter_argument_present?
-        __vc_initialize_parameter_names.include?(__vc_collection_counter_parameter)
+        __vc_collection_arguments[:counter]
       end
 
       # @private
@@ -786,13 +790,31 @@ module ViewComponent
 
       # @private
       def __vc_iteration_argument_present?
-        __vc_initialize_parameter_names.include?(__vc_collection_iteration_parameter)
+        __vc_collection_arguments[:iteration]
       end
 
       private
 
+      def __vc_collection_arguments
+        @__vc_collection_arguments ||= {
+          parameter: __vc_collection_parameter_accepted?(__vc_collection_parameter),
+          counter: __vc_initialize_parameter_names.include?(__vc_collection_counter_parameter),
+          iteration: __vc_initialize_parameter_names.include?(__vc_collection_iteration_parameter)
+        }.freeze
+      end
+
+      def __vc_collection_parameter_accepted?(parameter)
+        parameter.nil? || __vc_initialize_parameter_names.include?(parameter) || __vc_splatted_keyword_argument_present?
+      end
+
       def __vc_splatted_keyword_argument_present?
-        __vc_initialize_parameters.flatten.include?(:keyrest)
+        prepended_modules = ancestors.grep(Class).flat_map { |klass| klass.ancestors.take_while { |mod| mod != klass } }
+
+        __vc_initialize_signatures.any? do |owner, parameters|
+          parameters.any? do |type, name|
+            type == :keyrest && (name != :** || !prepended_modules.include?(owner))
+          end
+        end
       end
 
       def __vc_initialize_parameter_names
@@ -800,12 +822,20 @@ module ViewComponent
           if respond_to?(:attribute_names)
             attribute_names.map(&:to_sym)
           else
-            __vc_initialize_parameters.map(&:last)
+            __vc_initialize_signatures.flat_map { |_owner, parameters| parameters.map(&:last) }
           end
       end
 
-      def __vc_initialize_parameters
-        @__vc_initialize_parameters ||= instance_method(:initialize).parameters
+      def __vc_initialize_signatures
+        signatures = []
+        method = instance_method(:initialize)
+        while method
+          signatures << [method.owner, method.parameters]
+          break unless method.parameters.any? { |type, _| type == :keyrest }
+
+          method = method.super_method
+        end
+        signatures
       end
 
       def __vc_provided_collection_parameter
