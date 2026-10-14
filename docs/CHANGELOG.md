@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix subclasses defined after their parent renders a collection using the parent's default collection parameter name instead of their own. Fix recompiling a component not refreshing its collection parameter, counter, and iteration detection. Compute that detection when a component compiles, and store the results frozen so they're shareable across Ractors.
+
+    *Ben Sheldon*
+
 * Fix collection counter and iteration detection, and collection and reserved parameter validation, when `initialize` arguments are forwarded through anonymous arguments (`...` or `**`), such as by prepended modules and subclasses calling `super`.
 
     *Ben Sheldon*
