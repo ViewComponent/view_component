@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix collection counter and iteration detection, and collection and reserved parameter validation, when `initialize` arguments are forwarded through anonymous arguments (`...` or `**`), such as by prepended modules and subclasses calling `super`.
+
+    *Ben Sheldon*
+
 * Update development and documentation dependencies, baseline existing Audition findings, and accommodate updated lint rules.
 
     *Joel Hawksley*
