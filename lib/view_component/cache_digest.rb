@@ -21,10 +21,8 @@ module ViewComponent
   #    not just its template.
   #
   # This module fixes both, reusing Rails' own `ActionView::Digestor` rather than
-  # reimplementing static analysis. Until at least one component includes
-  # `ViewComponent::ExperimentallyCacheable`, dependency discovery short-circuits.
-  # Once enabled, every discovered component is tracked, whether or not it
-  # included the module.
+  # reimplementing static analysis. Every discovered component is tracked
+  # automatically, independently of output caching.
   #
   # @private
   module CacheDigest
@@ -57,8 +55,7 @@ module ViewComponent
     # Rails' escape hatch for dependencies static analysis can't see.
     EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
     class << self
-      # Virtual paths of opted-in and discovered components, mapped to their
-      # class names.
+      # Virtual paths of components, mapped to their class names.
       #
       # Class *names* rather than class objects so the registry survives
       # autoloader reloads without pinning stale constants in memory.
@@ -66,11 +63,6 @@ module ViewComponent
       # @return [Hash{String => String}]
       def registry
         @registry ||= {}
-      end
-
-      # @return [Boolean] whether any component has opted in.
-      def enabled?
-        !registry.empty?
       end
 
       # @private
@@ -111,13 +103,8 @@ module ViewComponent
 
       # Scan a template's source for renders of components.
       #
-      # Called for every template Rails digests, so it exits early when the
-      # feature is unused.
-      #
       # @return [Array<String>] synthetic virtual paths
       def dependencies_in(template)
-        return [] unless enabled?
-
         component_paths_in(template.source)
       end
 
@@ -126,7 +113,6 @@ module ViewComponent
       #
       # @return [Array<String>] synthetic virtual paths
       def component_paths_in(source)
-        return [] unless enabled?
         return [] unless source.is_a?(String) && source.include?("render")
 
         source.scan(RENDER_CALL).flatten.uniq.filter_map do |constant_name|
@@ -177,7 +163,6 @@ module ViewComponent
       # @return [Array<Array(String, String)>] pairs of declared name and
       #   synthetic virtual path
       def explicit_component_dependencies(source)
-        return [] unless enabled?
         return [] unless source.is_a?(String) && source.include?("Template Dependency:")
 
         source.scan(EXPLICIT_DEPENDENCY).flatten.uniq.filter_map do |declared|
@@ -191,11 +176,12 @@ module ViewComponent
 
       # Compute the digest of a component using Rails' digest tree.
       #
-      # @param component [Class] a component that includes `ExperimentallyCacheable`
+      # @param component [Class] a component class
       # @param finder [ActionView::LookupContext]
       # @param format [Symbol]
       # @return [String]
       def digest(component, finder: default_finder, format: :html)
+        register(component)
         virtual_path = virtual_path_for(component)
         return "" unless virtual_path
 
@@ -213,10 +199,7 @@ module ViewComponent
 
       # Wire the tracker and resolver into Action View.
       #
-      # Called each time a component includes `ExperimentallyCacheable`. Both
-      # steps below are individually idempotent, so no "already installed" flag
-      # is kept. Both hooks short-circuit while the registry is empty, so
-      # applications that never opt in are unaffected.
+      # Installed during engine initialization. Both steps are idempotent.
       #
       # @private
       def install!

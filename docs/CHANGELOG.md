@@ -10,9 +10,9 @@ nav_order: 6
 
 ## main
 
-* Track discovered components without requiring each dependency to include `ViewComponent::ExperimentallyCacheable`, once experimental caching is enabled.
+* Automatically track source digests for all components, without requiring `ViewComponent::ExperimentallyCacheable`.
 
-    Literal renders and `# Template Dependency:` declarations register the component's actual class name and virtual path, including acronym names and custom paths. Changes to unopted-in dependencies now invalidate enclosing fragments. Component output caching and digest-aware `cache` blocks inside component templates remain opt-in, and unexpected digest errors continue to raise.
+    Literal renders and `# Template Dependency:` declarations register the component's actual class name and virtual path, including acronym names and custom paths. Changes to dependencies invalidate enclosing fragments, including `cache` blocks inside any component template. Every component exposes `.cache_digest`. Only component output caching through `cache_on` remains opt-in, and unexpected digest errors continue to raise.
 
     *Erik Axel Nielsen, Joel Hawksley*
 

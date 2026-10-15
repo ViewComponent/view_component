@@ -373,6 +373,8 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   # own path, which resolves to no template: component templates aren't in the
   # view paths. Without a digest of its own the fragment never invalidates.
   def test_a_cache_block_in_a_component_template_is_digested
+    refute_includes CacheBlockComponent.ancestors, ViewComponent::ExperimentallyCacheable
+
     with_caching do
       key = capture_fragment_key { render_inline(CacheBlockComponent.new) }
 
@@ -612,14 +614,24 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_empty ViewComponent::CacheDigest.dependencies_in(build_template("<%= render IntegrationExamplesController %>"))
   end
 
-  def test_dependency_discovery_does_not_enable_caching_without_opt_in
+  def test_dependency_discovery_works_without_any_registered_components
     with_registry({}) do
       source = "<%# Template Dependency: UntrackedChildComponent %><%= render HTTPUntrackedComponent.new %>"
+      dependencies = ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
 
-      assert_empty ViewComponent::CacheDigest.dependencies_in(build_template(source))
-      assert_empty ViewComponent::CacheDigest.component_paths_in(source)
-      assert_empty ViewComponent::CacheDigest.explicit_component_dependencies(source)
-      assert_empty ViewComponent::CacheDigest.registry
+      assert_includes dependencies, "view_component/cache_digest/http_untracked_component"
+      assert_includes dependencies, "view_component/cache_digest/custom/untracked_child"
+      refute_respond_to HTTPUntrackedComponent, :__vc_caches_output?
+      refute_includes UntrackedChildComponent.ancestors, ViewComponent::ExperimentallyCacheable
+    end
+  end
+
+  def test_unopted_component_digest_is_computable_without_registration
+    with_registry({}) do
+      refute_includes UntrackedChildComponent.ancestors, ViewComponent::ExperimentallyCacheable
+
+      refute_empty UntrackedChildComponent.cache_digest
+      assert_equal "UntrackedChildComponent", ViewComponent::CacheDigest.registry["custom/untracked_child"]
     end
   end
 

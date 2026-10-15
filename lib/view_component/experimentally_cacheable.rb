@@ -9,16 +9,9 @@ module ViewComponent
   # release. Please share feedback in
   # https://github.com/ViewComponent/view_component/issues/234.
   #
-  # Including this module does two things:
-  #
-  # 1. Registers the component with Rails' template digest tree, so a
-  #    `<% cache %>` block is invalidated when the component's template, Ruby
-  #    class, sidecar files, or child components change. This covers blocks
-  #    wrapping the component in a view and blocks inside the component's own
-  #    template. Once enabled, dependency tracking also discovers components
-  #    that haven't included this module.
-  # 2. Enables the `cache_on` macro, which caches the component's own rendered
-  #    output.
+  # Enables the `cache_on` macro, which caches the component's own rendered
+  # output. Source digest tracking is automatic for all components and does
+  # not require this module.
   #
   # ```ruby
   # class MessageComponent < ViewComponent::Base
@@ -39,11 +32,6 @@ module ViewComponent
     # that respect would share an entry.
     NIL_CACHE_VALUE = :__vc_nil
 
-    included do
-      ViewComponent::CacheDigest.install!
-      ViewComponent::CacheDigest.register(self)
-    end
-
     class_methods do
       # Declare the values that identify a rendering of this component.
       #
@@ -56,8 +44,7 @@ module ViewComponent
       # ```
       #
       # Calling `cache_on` opts the component into caching its own output.
-      # Without it, including this module only registers the component with
-      # Rails' digest tree.
+      # Without it, including this module does not cache rendered output.
       #
       # Pass `if:` or `unless:` to cache only some renders. Both accept a method
       # name or a proc evaluated on the component:
@@ -131,37 +118,6 @@ module ViewComponent
       def __vc_caches_output?
         __vc_cache_on.any?
       end
-
-      # A digest of everything this component renders from: its template, its
-      # Ruby class, its sidecar files, its superclasses, and the components and
-      # partials it renders.
-      #
-      # Computed with Rails' own `ActionView::Digestor`, so it's the same digest
-      # used to invalidate `<% cache %>` blocks.
-      #
-      # Usable outside a request, where no view context exists:
-      #
-      # ```ruby
-      # MessageComponent.cache_digest
-      # ```
-      #
-      # @param finder [ActionView::LookupContext] Defaults to a lookup context
-      #   built from `ActionController::Base.view_paths`.
-      # @param format [Symbol]
-      # @return [String]
-      def cache_digest(finder: nil, format: :html)
-        ViewComponent::CacheDigest.digest(
-          self,
-          finder: finder || ViewComponent::CacheDigest.default_finder,
-          format: format
-        )
-      end
-
-      # @private
-      def inherited(child)
-        super
-        ViewComponent::CacheDigest.register(child)
-      end
     end
 
     # Renders the component, reading from and writing to the Rails cache when
@@ -225,33 +181,6 @@ module ViewComponent
       ActiveSupport::Cache.expand_cache_key(
         parts.map { |part| part.nil? ? NIL_CACHE_VALUE : part }
       )
-    end
-
-    # The digest Rails mixes into the key of a `<% cache %>` block.
-    #
-    # `ActionView::Helpers::CacheHelper` digests the virtual path of whichever
-    # template is rendering. Inside a component that path is the component's
-    # own, which resolves to nothing: component templates aren't in the view
-    # paths. The Digestor returns an empty digest, `CacheHelper` falls back to
-    # the bare virtual path, and the fragment never invalidates.
-    #
-    # Substituting the digest the component already computes makes a `cache`
-    # block in a component template behave like one in a view. Everything else
-    # the component renders — a partial, say — keeps Rails' behavior.
-    #
-    # @private
-    def digest_path_from_template(template)
-      component_path = self.class.virtual_path
-      return super unless component_path && template.virtual_path == component_path
-
-      digest = self.class.cache_digest(
-        finder: lookup_context,
-        format: template.format || __vc_cache_format(lookup_context)
-      )
-
-      # An empty digest means the component couldn't be resolved. Falling back
-      # to the bare virtual path matches what `CacheHelper` does with one.
-      digest.present? ? "#{component_path}:#{digest}" : component_path
     end
 
     private

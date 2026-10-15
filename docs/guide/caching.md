@@ -16,7 +16,7 @@ Since 4.14.0
 
 Rails computes a digest for every template from its source and from the templates it renders. That digest is mixed into the key of every `<% cache %>` block in the template, so editing a partial invalidates the caches of everything that renders it.
 
-Components are invisible to that mechanism.
+ViewComponent automatically integrates every component into that mechanism:
 
 ```erb
 <% cache @post do %>
@@ -24,31 +24,29 @@ Components are invisible to that mechanism.
 <% end %>
 ```
 
-Editing `PostComponent`'s template, Ruby class, or sidecar files doesn't invalidate the fragment, so the stale markup is served until the cache is cleared by hand.
+Editing `PostComponent`'s template, Ruby class, or sidecar files invalidates the fragment.
 
-## Opting in
+## Automatic digest tracking
 
-Include `ViewComponent::ExperimentallyCacheable` in a component to enable experimental caching:
+All components participate in Rails' digest tree without including a module or configuring caching:
 
 ```ruby
 class PostComponent < ViewComponent::Base
-  include ViewComponent::ExperimentallyCacheable
-
   def initialize(post:)
     @post = post
   end
 end
 ```
 
-That's all that's needed for the `<% cache %>` block above to work. The component is registered with Rails' digest tree, and the fragment is invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change, including components and partials rendered from an inline template or a `#call` method.
+The fragment is invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change, including components and partials rendered from an inline template or a `#call` method.
 
-Once any component in the application includes the module, dependency tracking discovers components throughout digested views and their render trees, even when those components don't include the module. This includes transitively rendered components, components with acronym names, and components that override `virtual_path`. Applications that never include the module are unaffected.
+Dependency tracking discovers components throughout digested views and their render trees. This includes transitively rendered components, components with acronym names, and components that override `virtual_path`.
 
-Discovery only tracks source dependencies. It doesn't cache a component's output or make `cache` blocks inside its own template digest-aware. Those still require the opt-ins described below. Dynamic renders still need explicit dependency declarations.
+Tracking source dependencies doesn't cache a component's output by itself. Use a Rails `cache` block or opt into `cache_on` as described below. Dynamic renders still need explicit dependency declarations.
 
 ## Caching inside a component template
 
-A `<% cache %>` block written inside a component's own template has the same problem, for the same reason: Rails digests the template that's rendering, and a component's template isn't in the view paths, so there's nothing to digest.
+A `<% cache %>` block written inside a component's own template also uses the component's source digest automatically:
 
 ```erb
 <%# app/components/post_component.html.erb %>
@@ -57,13 +55,13 @@ A `<% cache %>` block written inside a component's own template has the same pro
 <% end %>
 ```
 
-Including the module fixes this too. The component's own digest is substituted for the empty one Rails computes, so the fragment is invalidated by the same set of changes listed above. A component that hasn't opted in gets no digest at all, and the fragment is never invalidated.
+The fragment is invalidated by the same set of changes listed above. No module include is required.
 
 `cache` blocks in partials the component renders are unaffected: those templates resolve through the view paths like any other, so Rails digests them itself.
 
 ## Self-caching
 
-To have a component cache its own output without needing a `cache` block, use `cache_on` to declare methods used for the component's cache key.
+To have a component cache its own output without needing a `cache` block, include `ViewComponent::ExperimentallyCacheable` and use `cache_on` to declare methods used for the component's cache key.
 
 ```ruby
 class PostComponent < ViewComponent::Base
@@ -172,8 +170,6 @@ Declare these with Rails' `# Template Dependency:` comment, in either the Ruby f
 
 ```ruby
 class PostComponent < ViewComponent::Base
-  include ViewComponent::ExperimentallyCacheable
-
   # Template Dependency: posts/byline
 end
 ```
@@ -182,8 +178,6 @@ Components are named by class, listing each one the component might render:
 
 ```ruby
 class PostComponent < ViewComponent::Base
-  include ViewComponent::ExperimentallyCacheable
-
   # Template Dependency: PostSummaryComponent
   # Template Dependency: PostDetailComponent
 
@@ -206,7 +200,7 @@ The same works in a template, where the branch is often the more natural place f
 <%= render component.new(post: @post) %>
 ```
 
-Once experimental caching is enabled, declared components don't need to include `ViewComponent::ExperimentallyCacheable` themselves. The declaration registers the component's actual class name and virtual path, so its template, Ruby class, sidecar files, superclasses, and discoverable dependencies are digested too.
+Declared components don't need to include `ViewComponent::ExperimentallyCacheable`. The declaration registers the component's actual class name and virtual path, so its template, Ruby class, sidecar files, superclasses, and discoverable dependencies are digested too.
 
 ## When a digest can't be computed
 
