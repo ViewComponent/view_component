@@ -19,6 +19,10 @@ compilation (e.g., generate helpers, register metadata, etc.).
 
 By default, this is a no-op.
 
+### `.cache_digest(finder: nil, format: :html)` → [String]
+
+A digest of the component's source, ancestors, and rendered dependencies.
+
 ### `.config` → [ActiveSupport::OrderedOptions]
 
 Returns the current config.

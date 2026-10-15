@@ -3,10 +3,15 @@
 require "rails"
 require "view_component/config"
 require "view_component/deprecation"
+require "view_component/cache_digest"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
     config.view_component = ViewComponent::Config.current
+
+    initializer "view_component.cache_digest" do
+      ViewComponent::CacheDigest.install!
+    end
 
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component

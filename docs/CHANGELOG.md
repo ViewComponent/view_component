@@ -10,6 +10,12 @@ nav_order: 6
 
 ## main
 
+* Automatically track source digests for all components, without requiring `ViewComponent::ExperimentallyCacheable`.
+
+    Literal renders and `# Template Dependency:` declarations register the component's actual class name and virtual path, including acronym names and custom paths. Changes to dependencies invalidate enclosing fragments, including `cache` blocks inside any component template. Every component exposes `.cache_digest`. Only component output caching through `cache_on` remains opt-in, and unexpected digest errors continue to raise.
+
+    *Erik Axel Nielsen, Joel Hawksley*
+
 * Fix subclasses defined after their parent renders a collection using the parent's default collection parameter name instead of their own. Fix recompiling a component not refreshing its collection parameter, counter, and iteration detection. Compute that detection when a component compiles, and store the results frozen so they're shareable across Ractors.
 
     *Ben Sheldon*

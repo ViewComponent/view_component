@@ -3,6 +3,7 @@
 require "action_view"
 require "action_view/base"
 require "view_component/collection"
+require "view_component/cache_digest"
 require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
@@ -31,6 +32,20 @@ end
 module ViewComponent
   class Base
     class << self
+      # A digest of the component's source, ancestors, and rendered dependencies.
+      #
+      # @param finder [ActionView::LookupContext, nil]
+      # @param format [Symbol]
+      #
+      # @return [String]
+      def cache_digest(finder: nil, format: :html)
+        ViewComponent::CacheDigest.digest(
+          self,
+          finder: finder || ViewComponent::CacheDigest.default_finder,
+          format: format
+        )
+      end
+
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
       # Returns the current config.
@@ -423,6 +438,21 @@ module ViewComponent
       @view_context.instance_variable_set(:@virtual_path, old_virtual_path)
     end
 
+    # Use the component's source digest for fragments inside its own template.
+    #
+    # @private
+    def digest_path_from_template(template)
+      component_path = self.class.virtual_path
+      return super unless component_path && template.virtual_path == component_path
+
+      digest = self.class.cache_digest(
+        finder: lookup_context,
+        format: template.format || lookup_context.formats.first || :html
+      )
+
+      digest.present? ? "#{component_path}:#{digest}" : component_path
+    end
+
     private
 
     attr_reader :view_context
@@ -668,6 +698,7 @@ module ViewComponent
         # owner is included in a prefix like `ApplicationComponent.inherited`.
         child.identifier = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
         child.virtual_path = child.name&.underscore
+        ViewComponent::CacheDigest.register(child)
 
         # Set collection parameter to the extended component
         child.with_collection_parameter(__vc_provided_collection_parameter)
