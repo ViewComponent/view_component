@@ -224,5 +224,97 @@ module ViewComponent
       assert_selector("p", text: "Radio clock")
       assert_selector("p", text: "Mints")
     end
+
+    def test_collection_arguments_are_ractor_shareable
+      ForwardedCounterComponent.__vc_compile
+
+      assert Ractor.shareable?(ForwardedCounterComponent.send(:__vc_collection_arguments))
+    end
+
+    class RecompiledCounterComponent < ViewComponent::Base
+      with_collection_parameter :item
+
+      def initialize(item:)
+        @item = item
+      end
+
+      def call
+        "<p>#{@item.name} #{@counter}</p>".html_safe
+      end
+    end
+
+    def test_recompiling_refreshes_collection_arguments
+      render_inline(RecompiledCounterComponent.with_collection(@products))
+      RecompiledCounterComponent.prepend(ConsumeCounter)
+      RecompiledCounterComponent.__vc_compile(force: true)
+
+      render_inline(RecompiledCounterComponent.with_collection(@products))
+
+      assert_selector("p", text: "Radio clock 0")
+      assert_selector("p", text: "Mints 1")
+    end
+
+    class DefaultParameterParentComponent < ViewComponent::Base
+      def initialize(**)
+      end
+
+      def call
+        ""
+      end
+    end
+
+    def test_subclass_defined_after_parent_renders_uses_its_own_collection_parameter
+      render_inline(DefaultParameterParentComponent.with_collection(@products))
+
+      self.class.class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
+        class DefaultParameterChildComponent < DefaultParameterParentComponent
+          def initialize(default_parameter_child:)
+            @product = default_parameter_child
+          end
+
+          def call
+            "<p>\#{@product.name}</p>".html_safe
+          end
+        end
+      RUBY
+
+      assert_equal :default_parameter_child, DefaultParameterChildComponent.__vc_collection_parameter
+
+      render_inline(DefaultParameterChildComponent.with_collection(@products))
+
+      assert_selector("p", text: "Radio clock")
+      assert_selector("p", text: "Mints")
+    end
+
+    class ReservedParameterParentComponent < ViewComponent::Base
+      def initialize(title:, content: nil)
+      end
+
+      def call
+        ""
+      end
+    end
+
+    class NamedKeywordSplatChildComponent < ReservedParameterParentComponent
+      def initialize(**options)
+        super(title: options[:title])
+      end
+    end
+
+    class AnonymousKeywordSplatChildComponent < ReservedParameterParentComponent
+      def initialize(**)
+        super
+      end
+    end
+
+    def test_keyword_splat_subclass_raises_for_reserved_parameter_in_parent
+      assert_raises(ViewComponent::ReservedParameterError) do
+        NamedKeywordSplatChildComponent.__vc_validate_initialization_parameters!
+      end
+
+      assert_raises(ViewComponent::ReservedParameterError) do
+        AnonymousKeywordSplatChildComponent.__vc_validate_initialization_parameters!
+      end
+    end
   end
 end

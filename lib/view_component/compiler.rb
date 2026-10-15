@@ -41,6 +41,8 @@ module ViewComponent
           return false
         end
 
+        @component.__vc_build_collection_arguments
+
         if raise_errors
           @component.__vc_validate_initialization_parameters!
           @component.__vc_validate_collection_parameter!

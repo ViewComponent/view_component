@@ -747,7 +747,7 @@ module ViewComponent
       # @private
       def __vc_validate_collection_parameter!(validate_default: false)
         if validate_default
-          return if __vc_collection_arguments[:parameter]
+          return if __vc_collection_arguments[:parameter_accepted]
 
           raise MissingCollectionArgumentError.new(name, __vc_collection_parameter)
         end
@@ -770,12 +770,12 @@ module ViewComponent
 
       # @private
       def __vc_collection_parameter
-        @__vc_provided_collection_parameter ||= name && name.demodulize.underscore.chomp("_component").to_sym
+        __vc_collection_arguments[:parameter]
       end
 
       # @private
       def __vc_collection_counter_parameter
-        @__vc_collection_counter_parameter ||= :"#{__vc_collection_parameter}_counter"
+        __vc_collection_arguments[:counter_parameter]
       end
 
       # @private
@@ -785,7 +785,7 @@ module ViewComponent
 
       # @private
       def __vc_collection_iteration_parameter
-        @__vc_collection_iteration_parameter ||= :"#{__vc_collection_parameter}_iteration"
+        __vc_collection_arguments[:iteration_parameter]
       end
 
       # @private
@@ -793,14 +793,35 @@ module ViewComponent
         __vc_collection_arguments[:iteration]
       end
 
+      # @private
+      def __vc_build_collection_arguments
+        names =
+          if respond_to?(:attribute_names)
+            attribute_names.map(&:to_sym)
+          else
+            __vc_initialize_signatures.flat_map { |_owner, parameters| parameters.map(&:last) }
+          end
+        parameter = __vc_provided_collection_parameter || (name && name.demodulize.underscore.chomp("_component").to_sym)
+        counter_parameter = :"#{parameter}_counter"
+        iteration_parameter = :"#{parameter}_iteration"
+
+        @__vc_collection_arguments = Ractor.make_shareable(
+          {
+            initialize_parameter_names: names,
+            parameter: parameter,
+            parameter_accepted: parameter.nil? || names.include?(parameter) || __vc_splatted_keyword_argument_present?,
+            counter_parameter: counter_parameter,
+            counter: names.include?(counter_parameter),
+            iteration_parameter: iteration_parameter,
+            iteration: names.include?(iteration_parameter)
+          }
+        )
+      end
+
       private
 
       def __vc_collection_arguments
-        @__vc_collection_arguments ||= {
-          parameter: __vc_collection_parameter_accepted?(__vc_collection_parameter),
-          counter: __vc_initialize_parameter_names.include?(__vc_collection_counter_parameter),
-          iteration: __vc_initialize_parameter_names.include?(__vc_collection_iteration_parameter)
-        }.freeze
+        @__vc_collection_arguments || __vc_build_collection_arguments
       end
 
       def __vc_collection_parameter_accepted?(parameter)
@@ -818,12 +839,7 @@ module ViewComponent
       end
 
       def __vc_initialize_parameter_names
-        @__vc_initialize_parameter_names ||=
-          if respond_to?(:attribute_names)
-            attribute_names.map(&:to_sym)
-          else
-            __vc_initialize_signatures.flat_map { |_owner, parameters| parameters.map(&:last) }
-          end
+        __vc_collection_arguments[:initialize_parameter_names]
       end
 
       def __vc_initialize_signatures
@@ -838,9 +854,7 @@ module ViewComponent
         signatures
       end
 
-      def __vc_provided_collection_parameter
-        @__vc_provided_collection_parameter ||= nil
-      end
+      attr_reader :__vc_provided_collection_parameter
     end
 
     ActiveSupport.run_load_hooks(:view_component, self)
