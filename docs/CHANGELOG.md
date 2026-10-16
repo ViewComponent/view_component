@@ -12,6 +12,10 @@ nav_order: 6
 
 ## 4.16.0
 
+* Fix `script/release` on macOS, stop it on the first error, and streamline its prerequisite checks.
+
+    *Joel Hawksley*
+
 * Fix subclasses defined after their parent renders a collection using the parent's default collection parameter name instead of their own. Fix recompiling a component not refreshing its collection parameter, counter, and iteration detection. Compute that detection when a component compiles, and store the results frozen so they're shareable across Ractors.
 
     *Ben Sheldon*
