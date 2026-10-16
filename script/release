@@ -183,20 +183,7 @@ push() {
     echo "Reusing existing PR: $pr_url"
   fi
 
-  echo "####################################################"
   echo "PR opened: $pr_url"
-  echo ""
-  echo "After merging to main, run:"
-  echo "  git checkout main"
-  echo "  git pull"
-  echo "  script/publish"
-  echo ""
-  echo "This will:"
-  echo "  1. Publish updated docs to gh-pages"
-  echo "  2. Create a GitHub release with CHANGELOG entries"
-  echo "  3. The gem will be pushed to RubyGems automatically by"
-  echo "     Github Actions using Trusted Publishing."
-  echo "####################################################"
 }
 
 main() {
