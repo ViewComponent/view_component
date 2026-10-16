@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -Eeuo pipefail
+
 # bundler-cache: true in setup-ruby enables frozen mode, which blocks
 # updating Gemfile.lock after the gemspec version bump. Disable it for
 # every bundler invocation in this script so the lockfile can be
@@ -7,85 +9,140 @@
 export BUNDLE_FROZEN=false
 export BUNDLE_DEPLOYMENT=false
 
-fetch() {
-  git fetch --all
+release_branch=""
+
+header() {
+  echo "==============================="
+  echo "$1"
+  echo "==============================="
+}
+
+fail() {
+  echo "Error: $1" >&2
+  exit 1
+}
+
+on_exit() {
+  local status=$?
+  [ "$status" == "0" ] && return
+  echo "" >&2
+  echo "Release failed (exit $status)." >&2
+  if [ -n "$release_branch" ]; then
+    echo "To reset and try again:" >&2
+    echo "  git reset --hard && git clean -fd" >&2
+    echo "  git switch main && git branch -D $release_branch" >&2
+  fi
+}
+trap on_exit EXIT
+
+# In-place file edits via perl, since `sed -i` is incompatible between
+# GNU (Linux/CI) and BSD (macOS) sed.
+inplace() {
+  local expression=$1
+  shift
+  perl -pi -e "$expression" "$@"
 }
 
 branch_name() {
   git symbolic-ref --short HEAD
 }
 
-local_history_is_clean() {
-  history=$(git rev-list --count --right-only @{u}...HEAD)
-  [ "$history" == "0" ]
-}
-
-remote_history_is_clean() {
-  history=$(git rev-list --count --left-only @{u}...HEAD)
-  [ "$history" == "0" ]
-}
-
-tag_exists_on_remote() {
-  git rev-parse --quiet --verify refs/tags/$1.$2.$3 > /dev/null
-}
-
 working_tree_is_clean() {
-  status=$(git status --porcelain)
-  [ "$status" == "" ]
+  [ -z "$(git status --porcelain)" ]
 }
 
-create_release_branch() {
-  git switch -c release-$1-$2-$3
+commits_behind_remote() {
+  git rev-list --count --left-only @{u}...HEAD
 }
 
-update_readme() {
-  sed -i "/## main/ {a\\
-\\
-## $1.$2.$3
-  }" docs/CHANGELOG.md
+commits_ahead_of_remote() {
+  git rev-list --count --right-only @{u}...HEAD
+}
+
+tag_exists() {
+  git rev-parse --quiet --verify "refs/tags/v$1" > /dev/null ||
+    [ -n "$(git ls-remote --tags origin "refs/tags/v$1")" ]
+}
+
+prerequisite_checks() {
+  header "Prerequisite Checks"
+
+  working_tree_is_clean || fail "unclean working tree"
+  [ "$(branch_name)" == "main" ] || fail "can only make a release on the main branch"
+
+  git fetch --all --tags --quiet
+
+  [ "$(commits_ahead_of_remote)" == "0" ] ||
+    fail "changes exist that haven't been pushed to origin"
+
+  if [ "$(commits_behind_remote)" != "0" ]; then
+    echo "Pulling latest changes from origin..."
+    git pull --ff-only --quiet
+  fi
+}
+
+prompt_for_version() {
+  echo "Current version is $major.$minor.$patch."
+  echo "Type the number of an option to bump, or pick Manual to enter a version number"
+  select bump in Major Minor Patch Manual; do
+    case "$bump" in
+      Major) major=$((major + 1)); minor=0; patch=0 ;;
+      Minor) minor=$((minor + 1)); patch=0 ;;
+      Patch) patch=$((patch + 1)) ;;
+      *)
+        read -r -p "What version? (Currently $major.$minor.$patch): " new_version
+        [[ "$new_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "version must look like X.Y.Z"
+        [ "$new_version" != "$major.$minor.$patch" ] || fail "can't be the same version"
+        IFS=. read -r major minor patch <<< "$new_version"
+        ;;
+    esac
+    break
+  done
+}
+
+update_changelog() {
+  VERSION="$1" perl -0777 -pi -e 's/^## main\n/## main\n\n## $ENV{VERSION}\n/m' docs/CHANGELOG.md
+  grep -q "^## $1\$" docs/CHANGELOG.md || fail "failed to add $1 heading to docs/CHANGELOG.md"
 }
 
 update_ruby_version() {
-  # Update version file
-  sed -i \
-      -e "s/MAJOR = [0-9]*/MAJOR = $1/g" \
-      -e "s/MINOR = [0-9]*/MINOR = $2/g" \
-      -e "s/PATCH = [0-9]*/PATCH = $3/g" \
-      lib/view_component/version.rb
+  inplace "s/MAJOR = \\d+/MAJOR = $1/; s/MINOR = \\d+/MINOR = $2/; s/PATCH = \\d+/PATCH = $3/" \
+    lib/view_component/version.rb
+  inplace "s/DEPRECATION_HORIZON = \"\\d+\\.\\d+\\.\\d+\"/DEPRECATION_HORIZON = \"$(($1 + 1)).0.0\"/" \
+    lib/view_component/deprecation.rb
 
-  # Update deprecation horizon version
-  major=$1
-  sed -i \
-      -e "s/DEPRECATION_HORIZON = \"[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\"/DEPRECATION_HORIZON = \"$((major + 1)).0.0\"/g" \
-      lib/view_component/deprecation.rb
+  grep -q "MAJOR = $1\$" lib/view_component/version.rb &&
+    grep -q "MINOR = $2\$" lib/view_component/version.rb &&
+    grep -q "PATCH = $3\$" lib/view_component/version.rb ||
+    fail "failed to update lib/view_component/version.rb"
 }
 
-update_gemfiles() {
-  major=$1
-  minor=$2
-  patch=$3
-  new_version="$major.$minor.$patch"
-
+update_lockfiles() {
   # The only lockfile change during a release is the view_component
-  # version pinned by the path gemspec. Update it in place across every
-  # lockfile. Running `bundle lock` from a mismatched Ruby (e.g. ruby-head
-  # appraisals from Ruby 4.0) produces lockfiles CI cannot consume in
-  # frozen mode, so we edit them directly instead.
-  for lockfile in Gemfile.lock gemfiles/*.gemfile.lock; do
-    [ -f "$lockfile" ] || continue
-    sed -i \
-      -e "s/^\(    view_component \)([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*)/\1($new_version)/" \
-      -e "s/^\(  view_component \)([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*)/\1($new_version)/" \
-      "$lockfile"
+  # version pinned by the path gemspec. Running `bundle install`/`bundle
+  # exec` locally can add platform-specific entries (e.g. on a dev Ruby
+  # without precompiled gems), and `bundle lock` from a mismatched Ruby
+  # produces lockfiles CI cannot consume in frozen mode. So restore the
+  # committed lockfiles and edit just the version in place.
+  local lockfiles=(Gemfile.lock gemfiles/*.gemfile.lock)
+  git restore --source=HEAD -- "${lockfiles[@]}"
+  VERSION="$1" perl -pi -e 's/^(  |    )view_component \(\d+\.\d+\.\d+\)/$1view_component ($ENV{VERSION})/' "${lockfiles[@]}"
+
+  local lockfile
+  for lockfile in "${lockfiles[@]}"; do
+    grep -q "view_component ($1)" "$lockfile" || fail "failed to update $lockfile"
   done
 }
 
 build_docs() {
-  ruby script/sync_contributors.rb || { echo "Error: sync_contributors.rb failed"; exit 1; }
-  bundle exec rake docs:build || { echo "Error: rake docs:build failed"; exit 1; }
+  echo "version: $1" > docs/_data/library.yml
+  ruby script/sync_contributors.rb
+  # Install after the version bump, which changes the resolved gemspec.
+  bundle install --quiet
+  bundle exec rake docs:build
 }
 
-add_changed_files() {
+commit() {
   git add \
     docs/api.md \
     docs/CHANGELOG.md \
@@ -93,29 +150,34 @@ add_changed_files() {
     docs/_data/library.yml \
     Gemfile.lock \
     gemfiles/*.gemfile.lock \
+    lib/view_component/deprecation.rb \
     lib/view_component/version.rb
-}
-
-commit() {
-  git commit -m "release $1.$2.$3"
+  git commit --quiet -m "release $1"
 }
 
 push() {
+  local version=$1
+
+  if [ -n "${RELEASE_DRY_RUN:-}" ]; then
+    echo "RELEASE_DRY_RUN set; skipping push and PR creation."
+    return
+  fi
+
   # Force-push: the release-X-Y-Z branch is auto-generated and is safe
   # to overwrite. A previous failed run may have left the branch on the
   # remote, which would otherwise reject a non-fast-forward push.
-  git push --force origin release-$1-$2-$3
+  git push --force origin "$release_branch"
 
   # Open PR (or reuse an existing one from a previous failed run).
-  pr_url=$(gh pr view "release-$1-$2-$3" \
+  pr_url=$(gh pr view "$release_branch" \
     --repo ViewComponent/view_component \
     --json url --jq .url 2>/dev/null || true)
   if [ -z "$pr_url" ]; then
     pr_url=$(gh pr create \
-      --title "Release $1.$2.$3" \
-      --body "Automated release PR for version $1.$2.$3." \
+      --title "Release $version" \
+      --body "Automated release PR for version $version." \
       --base main \
-      --head release-$1-$2-$3 \
+      --head "$release_branch" \
       --repo ViewComponent/view_component)
   else
     echo "Reusing existing PR: $pr_url"
@@ -138,120 +200,37 @@ push() {
 }
 
 main() {
+  prerequisite_checks
+
   major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
   minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
   patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
-  pre=$(grep "PRE = " lib/view_component/version.rb | grep -o "\"[^\"]*\"" | tr -d '"')
 
-  # If arguments provided, use them (for CI/workflow usage)
+  # Arguments are used by the release workflow: MAJOR MINOR PATCH [PRE]
   if [ $# -gt 0 ]; then
+    [ $# -ge 3 ] || fail "usage: script/release [MAJOR MINOR PATCH [PRE]]"
     major=$1
     minor=$2
     patch=$3
-    [ $# -gt 3 ] && pre=$4 || pre=""
   else
-    # Interactive mode
-    echo "==================="
-    echo "Prerequisite Checks"
-    echo "==================="
-
-    if ! working_tree_is_clean; then
-      echo "Error: unclean working tree"
-      exit 1
-    fi
-
-    if [ "$(branch_name)" != "main" ]; then
-      echo "Error: can only make a release on the main branch"
-      exit 1
-    fi
-
-    fetch
-
-    if ! remote_history_is_clean; then
-      echo "Error: changes exist on origin not pulled into this branch. Please pull"
-      exit 1
-    fi
-
-    if ! local_history_is_clean; then
-      echo "Error: changes exist that haven't been pushed to origin. Please pull"
-      exit 1
-    fi
-
-    echo "Type the number of an option to bump, or pick Manual to enter a version number"
-    select bump in Major Minor Patch Manual
-    do
-      if [ "$bump" == "Major" ]; then
-        major=$((major + 1))
-        minor=0
-        patch=0
-      elif [ "$bump" == "Minor" ]; then
-        minor=$((minor + 1))
-        patch=0
-      elif [ "$bump" == "Patch" ]; then
-        patch=$((patch + 1))
-      else
-        read -p "What version? (Currently $major.$minor.$patch): " new_version
-        if [ "$new_version" == "$major.$minor.$patch" ]; then
-          echo "Error: Can't be the same version"
-          exit 1
-        fi
-
-        new_version=(${new_version//./ })
-
-        major=${new_version[0]}
-        minor=${new_version[1]}
-        patch=${new_version[2]}
-      fi
-
-      break
-    done
+    prompt_for_version
   fi
 
-  echo "==================="
-  echo "Prerequisite Checks"
-  echo "==================="
+  version="$major.$minor.$patch"
 
-  if ! working_tree_is_clean; then
-    echo "Error: unclean working tree"
-    exit 1
-  fi
+  tag_exists "$version" && fail "tag v$version already exists"
 
-  if [ "$(branch_name)" != "main" ]; then
-    echo "Error: can only make a release on the main branch"
-    exit 1
-  fi
+  release_branch="release-$major-$minor-$patch"
 
-  fetch
+  header "Creating release for $version"
 
-  if ! remote_history_is_clean; then
-    echo "Error: changes exist on origin not pulled into this branch. Please pull"
-    exit 1
-  fi
-
-  if ! local_history_is_clean; then
-    echo "Error: changes exist that haven't been pushed to origin. Please pull"
-    exit 1
-  fi
-
-  if tag_exists_on_remote $major $minor $patch; then
-    echo "Error: tag exists on remote"
-    exit 1
-  fi
-
-  echo "==============================="
-  echo "Creating release for $major.$minor.$patch"
-  echo "==============================="
-
-  create_release_branch $major $minor $patch
-  update_readme $major $minor $patch
-  update_ruby_version $major $minor $patch
-  update_gemfiles $major $minor $patch
-  echo "version: $major.$minor.$patch" > docs/_data/library.yml
-  build_docs
-  add_changed_files $major $minor $patch
-  commit $major $minor $patch
-  push $major $minor $patch
-  exit 0
+  git switch --quiet -C "$release_branch"
+  update_changelog "$version"
+  update_ruby_version "$major" "$minor" "$patch"
+  build_docs "$version"
+  update_lockfiles "$version"
+  commit "$version"
+  push "$version"
 }
 
 main "$@"
