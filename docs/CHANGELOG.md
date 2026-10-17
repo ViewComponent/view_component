@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Only register the executor hook that clears the compile cache when Action View doesn't cache templates. With template caching on, as in production, the hook did nothing but still read `ActionView::Base.cache_template_loading` on every request. That value lives in a class variable, which non-main Ractors can't read on Ruby 4.0, so under Rails' experimental `Rails.application.ractorize!` every request failed.
+
+    *Mikael Henriksson*
+
 ## 4.16.0
 
 * Fix subclasses defined after their parent renders a collection using the parent's default collection parameter name instead of their own. Fix recompiling a component not refreshing its collection parameter, counter, and iteration detection. Compute that detection when a component compiles, and store the results frozen so they're shareable across Ractors.
