@@ -59,7 +59,16 @@ module ViewComponent
         locale = options.delete(:locale) || ::I18n.locale
         key = __vc_i18n_key(key, options.delete(:scope))
 
-        __vc_i18n_backend.translate(locale, key, options)
+        if __vc_i18n_backend
+          translated = catch(:exception) do
+            __vc_i18n_backend.translate(locale, key, options)
+          end
+
+          return translated unless translated.is_a?(::I18n::MissingTranslation)
+        end
+
+        # Fallback to the global translations
+        ::I18n.translate(key, locale: locale, **options)
       end
 
       alias_method :t, :translate
