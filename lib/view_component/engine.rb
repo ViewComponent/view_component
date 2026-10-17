@@ -132,8 +132,14 @@ module ViewComponent
         end
       end
 
-      app.executor.to_run :before do
-        CompileCache.invalidate! unless ActionView::Base.cache_template_loading
+      # Only when templates can change: with template caching on, as in
+      # production, the hook would do nothing on every request.
+      ActiveSupport.on_load(:action_view) do
+        unless ActionView::Base.cache_template_loading
+          app.executor.to_run :before do
+            CompileCache.invalidate! unless ActionView::Base.cache_template_loading
+          end
+        end
       end
     end
   end
