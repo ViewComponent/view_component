@@ -59,11 +59,30 @@ class RactorTest < ActiveSupport::TestCase
       end
     RUBY
     "app/components/translated_component.en.yml" => "en:\n  hello: Hi from sidecar\n",
-    "app/views/greetings/slots.html.erb" => <<~ERB,
-      <%= render(SlotsComponent.new) do |c| %><% c.with_header(title: "T") %><% c.with_item(item: "a") %><% c.with_item(item: "b") %><% end %>
-    ERB
-    "app/views/greetings/collection.html.erb" => "<%= render(ItemComponent.with_collection(%w[x y])) %>",
-    "app/views/greetings/content.html.erb" => "<%= render(GreetingComponent.new(name: \"blk\")) do %>!<% end %>",
+    # Wrapper components instead of ActionView templates: Rails compiles views
+    # lazily in each Ractor, which recent Ruby head builds don't allow.
+    "app/components/slots_page_component.rb" => <<~RUBY,
+      class SlotsPageComponent < ViewComponent::Base
+        def call
+          render(SlotsComponent.new) do |c|
+            c.with_header(title: "T")
+            c.with_item(item: "a")
+            c.with_item(item: "b")
+            nil
+          end
+        end
+      end
+    RUBY
+    "app/components/collection_page_component.rb" => <<~RUBY,
+      class CollectionPageComponent < ViewComponent::Base
+        def call = render(ItemComponent.with_collection(%w[x y]))
+      end
+    RUBY
+    "app/components/content_page_component.rb" => <<~RUBY,
+      class ContentPageComponent < ViewComponent::Base
+        def call = render(GreetingComponent.new(name: "blk")) { "!" }
+      end
+    RUBY
     "app/controllers/greetings_controller.rb" => <<~RUBY,
       class GreetingsController < ActionController::Base
         def plain = render(plain: "ok")
@@ -71,6 +90,9 @@ class RactorTest < ActiveSupport::TestCase
         def inline = render(InlineComponent.new)
         def child = render(ChildComponent.new)
         def translated = render(TranslatedComponent.new)
+        def slots = render(SlotsPageComponent.new)
+        def collection = render(CollectionPageComponent.new)
+        def content = render(ContentPageComponent.new)
 
         def variant
           request.variant = params[:v]&.to_sym
@@ -158,10 +180,22 @@ class RactorTest < ActiveSupport::TestCase
       config.view_component.previews.enabled = false
     end
     app.initialize!
-    # Rails doesn't make `action_methods` shareable yet, and reading it from a
-    # non-main Ractor crashes recent Ruby head builds.
-    AbstractController::Base.descendants.each { Ractor.make_shareable(_1.action_methods) }
     app.ractorize!
+    # Rails leaves some frozen Sets unshareable, such as `action_methods`, the
+    # Mime registry, and renderers. Reading them from a non-main Ractor crashes
+    # Ruby head instead of raising an IsolationError, so share them up front,
+    # skipping ViewComponent's own state.
+    AbstractController::Base.descendants.each(&:action_methods)
+    ObjectSpace.each_object(Module) do |mod|
+      next if mod.name&.start_with?("ViewComponent") || mod <= ViewComponent::Base
+
+      mod.instance_variables.each do |ivar|
+        value = mod.instance_variable_get(ivar)
+        Ractor.make_shareable(value) if value.frozen? && !Ractor.shareable?(value)
+      rescue Ractor::Error, TypeError
+        nil
+      end
+    end
   end
 
   def request(path)
