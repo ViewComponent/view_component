@@ -50,24 +50,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  def test_template_changes_are_not_reflected_on_new_request_when_cache_template_loading_is_true
-    with_template_caching do
-      get "/controller_inline"
-      assert_select("div", "bar")
-      assert_response :success
-
-      modify_file "app/components/controller_inline_component.html.erb", "<div>Goodbye world!</div>" do
-        get "/controller_inline"
-        assert_select("div", "bar")
-        assert_response :success
-      end
-
-      get "/controller_inline"
-      assert_select("div", "bar")
-      assert_response :success
-    end
-  end
-
   def test_template_changes_are_reflected_on_new_request_when_cache_template_loading_is_false
     with_new_cache do
       get "/controller_inline"

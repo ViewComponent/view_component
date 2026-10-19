@@ -3,6 +3,7 @@
 require "bundler/setup"
 require "minitest/autorun"
 require "minitest/mock"
+require "tmpdir"
 require "rails"
 require "action_controller/railtie"
 require "active_support/testing/isolation"
@@ -42,17 +43,41 @@ class TemplateCachingTest < ActiveSupport::TestCase
     assert_equal 0, reads
   end
 
+  def test_template_changes_are_not_reflected_on_new_request_when_templates_are_cached
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Hello</div>")
+
+      app = boot_app("production", root: root)
+      app.routes.draw do
+        get "/", to: ->(_env) { [200, {"content-type" => "text/html"}, [ActionController::Base.render(GreetingComponent.new)]] }
+      end
+      request = Rack::MockRequest.new(app)
+
+      assert_equal "<div>Hello</div>", request.get("/").body.strip
+
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Goodbye</div>")
+
+      assert_equal "<div>Hello</div>", request.get("/").body.strip
+    end
+  end
+
   private
 
-  def boot_app(env)
+  def boot_app(env, root: __dir__)
     Rails.env = env
 
     Class.new(Rails::Application) do
-      config.root = __dir__
+      config.root = root
       config.eager_load = env == "production"
       config.enable_reloading = env == "development"
       config.secret_key_base = "test"
       config.logger = Logger.new(nil)
     end.tap(&:initialize!)
+  end
+
+  def write_file(root, path, content)
+    FileUtils.mkdir_p(File.dirname(File.join(root, path)))
+    File.write(File.join(root, path), content)
   end
 end
