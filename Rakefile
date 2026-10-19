@@ -14,7 +14,13 @@ RSpec::Core::RakeTask.new(:spec)
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
-  t.test_files = FileList["test/**/*_test.rb"]
+  t.test_files = FileList["test/**/*_test.rb"].exclude("test/isolated/**/*")
+end
+
+# Each test boots its own application, so these can't share a process with the sandbox.
+Rake::TestTask.new(:isolated_test) do |t|
+  t.libs << "lib"
+  t.test_files = FileList["test/isolated/**/*_test.rb"]
 end
 
 Rake::TestTask.new(:engine_test) do |t|
@@ -174,6 +180,10 @@ task :all_tests do
   puts
   puts "Running Minitests"
   Rake::Task["test"].invoke
+  puts
+  puts
+  puts "Running isolated Minitests"
+  Rake::Task["isolated_test"].invoke
   puts
   puts
   puts "Running Minitests for Rails Engine compatibility"

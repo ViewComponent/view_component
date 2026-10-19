@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Only register the executor hook that watches component templates when Action View doesn't cache templates at boot. With template caching on, as in production, the hook did nothing but still read `ActionView::Base.cache_template_loading` on every request. That value lives in a class variable, which non-main Ractors can't read on Ruby 4.0, so under Rails' experimental `Rails.application.ractorize!` every request failed.
+
+    *Mikael Henriksson*
+
 * Fix `Component.translate` raising `UncaughtThrowError` for keys missing from the sidecar translations, and `NoMethodError` for components without sidecar translations. It now falls back to the global translations, like the instance method does. Fix `translate` returning the `default:` value instead of an existing global translation.
 
     *Andrii Furmanets*
