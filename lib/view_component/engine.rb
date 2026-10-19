@@ -132,9 +132,16 @@ module ViewComponent
         end
       end
 
+      template_watcher = nil
+
       app.executor.to_run :before do
-        CompileCache.invalidate! unless ActionView::Base.cache_template_loading
+        next if ActionView::Base.cache_template_loading
+
+        template_watcher ||= CompileCache.template_watcher(app.config.file_watcher)
+        template_watcher.execute_if_updated
       end
+
+      app.reloader.before_class_unload { CompileCache.invalidate! }
     end
   end
 end
