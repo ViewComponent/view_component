@@ -9,14 +9,13 @@ module ViewComponent
   # release. Please share feedback in
   # https://github.com/ViewComponent/view_component/issues/234.
   #
-  # Enables the `cache_on` macro, which caches the component's own rendered
-  # output. Source digest tracking is automatic for all components and does
-  # not require this module.
+  # Provides the `cache_on` macro, which caches the component's own rendered
+  # output. Included in every component by `ViewComponent::Base`, so there's
+  # no need to include it. Components don't cache their output until they
+  # call `cache_on`.
   #
   # ```ruby
   # class MessageComponent < ViewComponent::Base
-  #   include ViewComponent::ExperimentallyCacheable
-  #
   #   cache_on :message
   #
   #   def initialize(message:)
@@ -44,7 +43,7 @@ module ViewComponent
       # ```
       #
       # Calling `cache_on` opts the component into caching its own output.
-      # Without it, including this module does not cache rendered output.
+      # Components that don't call it aren't cached.
       #
       # Pass `if:` or `unless:` to cache only some renders. Both accept a method
       # name or a proc evaluated on the component:
@@ -105,11 +104,6 @@ module ViewComponent
         return @__vc_cache_unless if defined?(@__vc_cache_unless)
 
         superclass.__vc_cache_unless if superclass.respond_to?(:__vc_cache_unless)
-      end
-
-      # @private
-      def __vc_cacheable?
-        true
       end
 
       # Whether this component caches its own rendered output.

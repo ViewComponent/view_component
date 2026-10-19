@@ -42,7 +42,7 @@ The fragment is invalidated when the component's template, Ruby class, sidecar f
 
 Dependency tracking discovers components throughout digested views and their render trees. This includes transitively rendered components, components with acronym names, and components that override `virtual_path`.
 
-Tracking source dependencies doesn't cache a component's output by itself. Use a Rails `cache` block or opt into `cache_on` as described below. Dynamic renders still need explicit dependency declarations.
+Tracking source dependencies doesn't cache a component's output by itself. Use a Rails `cache` block or declare `cache_on` as described below. Dynamic renders still need explicit dependency declarations.
 
 ## Caching inside a component template
 
@@ -61,12 +61,10 @@ The fragment is invalidated by the same set of changes listed above. No module i
 
 ## Self-caching
 
-To have a component cache its own output without needing a `cache` block, include `ViewComponent::ExperimentallyCacheable` and use `cache_on` to declare methods used for the component's cache key.
+To have a component cache its own output without needing a `cache` block, use `cache_on` to declare methods used for the component's cache key. `cache_on` is available on every component; there's no module to include. Components that don't call it aren't cached.
 
 ```ruby
 class PostComponent < ViewComponent::Base
-  include ViewComponent::ExperimentallyCacheable
-
   cache_on :post
 
   def initialize(post:)
@@ -107,8 +105,6 @@ To cache only some renders, pass `if:` or `unless:`. Both accept a method name o
 
 ```ruby
 class PostComponent < ViewComponent::Base
-  include ViewComponent::ExperimentallyCacheable
-
   cache_on :post, unless: -> { post.draft? }
 
   def initialize(post:)
@@ -200,7 +196,7 @@ The same works in a template, where the branch is often the more natural place f
 <%= render component.new(post: @post) %>
 ```
 
-Declared components don't need to include `ViewComponent::ExperimentallyCacheable`. The declaration registers the component's actual class name and virtual path, so its template, Ruby class, sidecar files, superclasses, and discoverable dependencies are digested too.
+The declaration registers the component's actual class name and virtual path, so its template, Ruby class, sidecar files, superclasses, and discoverable dependencies are digested too.
 
 ## When a digest can't be computed
 
@@ -221,8 +217,6 @@ Slots a component fills in for itself with a `default_*` method are part of its 
 
 ```ruby
 class PostComponent < ViewComponent::Base
-  include ViewComponent::ExperimentallyCacheable
-
   renders_one :header
 
   cache_on :post

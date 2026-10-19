@@ -8,6 +8,7 @@ require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
 require "view_component/errors"
+require "view_component/experimentally_cacheable"
 require "view_component/inline_template"
 require "view_component/preview"
 require "view_component/request_details"
@@ -887,6 +888,9 @@ module ViewComponent
 
       attr_reader :__vc_provided_collection_parameter
     end
+
+    # Prepended so its `render_in` wraps the one defined above.
+    prepend ViewComponent::ExperimentallyCacheable
 
     ActiveSupport.run_load_hooks(:view_component, self)
   end

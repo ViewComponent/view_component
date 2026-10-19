@@ -46,9 +46,9 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_equal 0, digest_cache_size
   end
 
-  def test_component_is_marked_cacheable
-    assert_predicate CacheableComponent, :__vc_cacheable?
-    refute_respond_to ErbComponent, :__vc_cacheable?
+  def test_only_components_declaring_cache_on_cache_their_output
+    assert_predicate CacheableComponent, :__vc_caches_output?
+    refute_predicate ErbComponent, :__vc_caches_output?
   end
 
   def test_cache_on_declares_key_methods
@@ -140,8 +140,8 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   end
 
   def test_cache_digest_changes_when_a_transitive_untracked_dependency_changes
-    refute_respond_to UntrackedChildComponent, :__vc_cacheable?
-    refute_respond_to HTTPUntrackedComponent, :__vc_cacheable?
+    refute_predicate UntrackedChildComponent, :__vc_caches_output?
+    refute_predicate HTTPUntrackedComponent, :__vc_caches_output?
 
     assert_digest_changes(
       "app/components/http_untracked_component.html.erb",
@@ -208,7 +208,7 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   end
 
   def test_declared_components_resolve_without_opting_into_caching
-    refute_respond_to ErbComponent, :__vc_cacheable?
+    refute_predicate ErbComponent, :__vc_caches_output?
 
     with_registry("cacheable_component" => "CacheableComponent") do
       template = build_template("<%# Template Dependency: ErbComponent %>")
@@ -373,7 +373,7 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   # own path, which resolves to no template: component templates aren't in the
   # view paths. Without a digest of its own the fragment never invalidates.
   def test_a_cache_block_in_a_component_template_is_digested
-    refute_includes CacheBlockComponent.ancestors, ViewComponent::ExperimentallyCacheable
+    refute_predicate CacheBlockComponent, :__vc_caches_output?
 
     with_caching do
       key = capture_fragment_key { render_inline(CacheBlockComponent.new) }
@@ -605,8 +605,8 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
         ViewComponent::CacheDigest.component_for("view_component/cache_digest/http_untracked_component")
       assert_equal UntrackedChildComponent,
         ViewComponent::CacheDigest.component_for("view_component/cache_digest/custom/untracked_child")
-      refute_respond_to HTTPUntrackedComponent, :__vc_caches_output?
-      refute_includes UntrackedChildComponent.ancestors, ViewComponent::ExperimentallyCacheable
+      refute_predicate HTTPUntrackedComponent, :__vc_caches_output?
+      refute_predicate UntrackedChildComponent, :__vc_caches_output?
     end
   end
 
@@ -621,14 +621,14 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
 
       assert_includes dependencies, "view_component/cache_digest/http_untracked_component"
       assert_includes dependencies, "view_component/cache_digest/custom/untracked_child"
-      refute_respond_to HTTPUntrackedComponent, :__vc_caches_output?
-      refute_includes UntrackedChildComponent.ancestors, ViewComponent::ExperimentallyCacheable
+      refute_predicate HTTPUntrackedComponent, :__vc_caches_output?
+      refute_predicate UntrackedChildComponent, :__vc_caches_output?
     end
   end
 
   def test_unopted_component_digest_is_computable_without_registration
     with_registry({}) do
-      refute_includes UntrackedChildComponent.ancestors, ViewComponent::ExperimentallyCacheable
+      refute_predicate UntrackedChildComponent, :__vc_caches_output?
 
       refute_empty UntrackedChildComponent.cache_digest
       assert_equal "UntrackedChildComponent", ViewComponent::CacheDigest.registry["custom/untracked_child"]

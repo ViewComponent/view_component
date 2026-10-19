@@ -126,11 +126,31 @@ class ExperimentallyCacheableReviewTest < ViewComponent::TestCase
     end
   end
 
+  def test_cache_on_is_available_without_including_the_module
+    component = Class.new(ViewComponent::Base)
+
+    refute_predicate component, :__vc_caches_output?
+
+    component.cache_on :identity
+
+    assert_predicate component, :__vc_caches_output?
+    refute_predicate ViewComponent::Base, :__vc_caches_output?
+  end
+
+  def test_including_the_module_explicitly_is_harmless
+    component = Class.new(ViewComponent::Base) do
+      include ViewComponent::ExperimentallyCacheable
+
+      cache_on :identity
+    end
+
+    assert_equal 1, component.ancestors.count(ViewComponent::ExperimentallyCacheable)
+    assert_equal [:identity], component.__vc_cache_on
+  end
+
   def test_cache_on_rejects_unknown_options
     error = assert_raises(ArgumentError) do
       Class.new(ViewComponent::Base) do
-        include ViewComponent::ExperimentallyCacheable
-
         cache_on :identity, when: :something
       end
     end
@@ -161,8 +181,6 @@ class ExperimentallyCacheableReviewTest < ViewComponent::TestCase
   def test_cache_on_rejects_a_block
     assert_raises(ArgumentError) do
       Class.new(ViewComponent::Base) do
-        include ViewComponent::ExperimentallyCacheable
-
         cache_on { :identity }
       end
     end
@@ -173,8 +191,6 @@ class ExperimentallyCacheableReviewTest < ViewComponent::TestCase
   def test_cache_on_rejects_a_proc_with_a_useful_error
     error = assert_raises(ArgumentError) do
       Class.new(ViewComponent::Base) do
-        include ViewComponent::ExperimentallyCacheable
-
         cache_on -> { :identity }
       end
     end

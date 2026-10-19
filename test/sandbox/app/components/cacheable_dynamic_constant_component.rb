@@ -3,8 +3,6 @@
 # Same as CacheableDynamicComponent, but naming the component class directly
 # rather than its internal digest path.
 class CacheableDynamicConstantComponent < ViewComponent::Base
-  include ViewComponent::ExperimentallyCacheable
-
   # Template Dependency: CacheableChildComponent
 
   def initialize(component: CacheableChildComponent)
