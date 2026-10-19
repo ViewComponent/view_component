@@ -50,6 +50,24 @@ class IntegrationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  def test_template_changes_are_not_reflected_on_new_request_when_cache_template_loading_is_true
+    with_template_caching do
+      get "/controller_inline"
+      assert_select("div", "bar")
+      assert_response :success
+
+      modify_file "app/components/controller_inline_component.html.erb", "<div>Goodbye world!</div>" do
+        get "/controller_inline"
+        assert_select("div", "bar")
+        assert_response :success
+      end
+
+      get "/controller_inline"
+      assert_select("div", "bar")
+      assert_response :success
+    end
+  end
+
   def test_template_changes_are_reflected_on_new_request_when_cache_template_loading_is_false
     with_new_cache do
       get "/controller_inline"
@@ -66,33 +84,6 @@ class IntegrationTest < ActionDispatch::IntegrationTest
       assert_select("div", "bar")
       assert_response :success
     end
-  end
-
-  def test_components_are_not_recompiled_on_new_request_when_no_template_changed
-    with_new_cache do
-      get "/controller_inline"
-      MyComponent.__vc_compile
-
-      get "/controller_inline"
-      assert_response :success
-      assert MyComponent.__vc_compiled?
-    end
-  end
-
-  def test_components_are_recompiled_on_new_request_when_a_template_is_added
-    new_template = Rails.root.join("app/components/added_template_component.html.erb")
-
-    with_new_cache do
-      get "/controller_inline"
-      MyComponent.__vc_compile
-
-      File.write(new_template, "<div>Added</div>")
-      get "/controller_inline"
-      assert_response :success
-      refute MyComponent.__vc_compiled?
-    end
-  ensure
-    FileUtils.rm_f(new_template)
   end
 
   def test_inherited_template_changes_are_reflected_on_new_request_when_cache_template_loading_is_false

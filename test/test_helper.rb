@@ -128,13 +128,22 @@ def with_generate_sidecar(enabled, &block)
   with_generate_option(:sidecar, enabled, &block)
 end
 
+# Template caching is decided at boot, so also skip the template watcher that
+# the sandbox registered because it boots without template caching.
 def with_template_caching
+  executor = Rails.application.executor
+  watcher_hook = executor._run_callbacks.find do |callback|
+    callback.filter.is_a?(Proc) && callback.filter.source_location&.first&.end_with?("view_component/compile_cache.rb")
+  end&.filter
+  executor.skip_callback(:run, :before, watcher_hook) if watcher_hook
+
   old_cache_template_loading = ActionView::Base.cache_template_loading
   ActionView::Base.cache_template_loading = true
 
   yield
 ensure
   ActionView::Base.cache_template_loading = old_cache_template_loading
+  executor.set_callback(:run, :before, watcher_hook) if watcher_hook
 end
 
 def with_new_cache
