@@ -6,13 +6,8 @@ parent: How-to guide
 
 # Caching
 
-Experimental
-{: .label .label-yellow }
-
 Since 4.14.0
 {: .label }
-
-**This API is experimental.** It may change or be removed in a non-major release. Please share feedback in [#234](https://github.com/ViewComponent/view_component/issues/234).
 
 Rails computes a digest for every template from its source and from the templates it renders. That digest is mixed into the key of every `<% cache %>` block in the template, so editing a partial invalidates the caches of everything that renders it.
 

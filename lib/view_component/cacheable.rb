@@ -3,11 +3,7 @@
 require "view_component/cache_digest"
 
 module ViewComponent
-  # Experimental caching support for ViewComponents.
-  #
-  # **This API is experimental.** It may change or be removed in a non-major
-  # release. Please share feedback in
-  # https://github.com/ViewComponent/view_component/issues/234.
+  # Caching support for ViewComponents.
   #
   # Provides the `cache_on` macro, which caches the component's own rendered
   # output. Included in every component by `ViewComponent::Base`, so there's
