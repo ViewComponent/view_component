@@ -44,12 +44,10 @@ module ViewComponent
       "To fix this issue, provide a suitable template.".freeze
 
     def initialize(component, request_detail)
-      detail = {
-        locale: request_detail.locale,
-        formats: request_detail.formats,
-        variants: request_detail.variants,
-        handlers: request_detail.handlers
-      }
+      detail = {locale: :locale_idx, formats: :formats_idx, variants: :variants_idx, handlers: :handlers_idx}.to_h do |name, idx|
+        # Rails 8.2+ only exposes the requested details as index hashes.
+        [name, request_detail.respond_to?(name) ? request_detail.public_send(name) : request_detail.public_send(idx).keys.compact]
+      end
       super(MESSAGE.gsub("COMPONENT", component).gsub("DETAIL", detail.inspect))
     end
   end

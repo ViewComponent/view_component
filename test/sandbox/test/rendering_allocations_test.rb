@@ -9,8 +9,8 @@ class RenderingAllocationsTest < ViewComponent::TestCase
     ["8.0", "3.4"] => 34,
     ["8.1", "4.0"] => 32,
     ["8.1", "4.1"] => 32,
-    ["8.2", "4.0"] => 51,
-    ["8.2", "4.1"] => 51
+    ["8.2", "4.0"] => 42,
+    ["8.2", "4.1"] => 42
   }.freeze
 
   COLLECTION_ALLOCATIONS = {
@@ -19,8 +19,8 @@ class RenderingAllocationsTest < ViewComponent::TestCase
     ["8.0", "3.4"] => 67,
     ["8.1", "4.0"] => 53,
     ["8.1", "4.1"] => 53,
-    ["8.2", "4.0"] => 71,
-    ["8.2", "4.1"] => 71
+    ["8.2", "4.0"] => 62,
+    ["8.2", "4.1"] => 62
   }.freeze
 
   class TestController < IntegrationExamplesController

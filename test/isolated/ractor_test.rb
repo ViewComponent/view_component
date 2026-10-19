@@ -11,6 +11,8 @@ require "view_component"
 # Boots a production application, calls the experimental
 # `Rails.application.ractorize!`, and renders components in non-main Ractors.
 # Requires Ruby 4.0+ and a Rails/Rack version that supports `ractorize!`.
+# Skips elsewhere, except in the rails_main_head CI job (Ruby head, pinned
+# Rails, Rack, and i18n), where every prerequisite is expected to be met.
 class RactorTest < ActiveSupport::TestCase
   include ActiveSupport::Testing::Isolation
 
@@ -86,14 +88,14 @@ class RactorTest < ActiveSupport::TestCase
   }.freeze
 
   def setup
-    skip "Ractor rendering requires Ruby 4.0+" if RUBY_VERSION < "4.0"
-    skip "Rails.application.ractorize! is unavailable" unless Rails::Application.method_defined?(:ractorize!)
+    skip_unless_required "Ractor rendering requires Ruby 4.0+" if RUBY_VERSION < "4.0"
+    skip_unless_required "Rails.application.ractorize! is unavailable" unless Rails::Application.method_defined?(:ractorize!)
 
     begin
       require "rack/ractorize"
       require "active_support/ractors"
     rescue LoadError
-      skip "rack/ractorize is unavailable"
+      skip_unless_required "rack/ractorize is unavailable"
     end
   end
 
@@ -101,7 +103,7 @@ class RactorTest < ActiveSupport::TestCase
     boot_ractorized_app
 
     status, body = request("/plain")
-    skip "Rails can't render in a non-main Ractor in this environment: #{body}" unless status == 200
+    skip_unless_required "Rails can't render in a non-main Ractor in this environment: #{body}" unless status == 200
 
     {
       "/show" => "<div>Hello RACTOR</div>",
@@ -122,12 +124,16 @@ class RactorTest < ActiveSupport::TestCase
 
     # Requires an i18n release with Ractor support (ruby-i18n/i18n#741).
     status, body = request("/translated")
-    skip "i18n can't translate in a non-main Ractor: #{body}" if status != 200 && body.include?("I18n")
+    skip_unless_required "i18n can't translate in a non-main Ractor: #{body}" if status != 200 && body.include?("I18n")
 
     assert_equal [200, "Hi from sidecar"], [status, body]
   end
 
   private
+
+  def skip_unless_required(message)
+    (ENV["RAILS_VERSION"] == "main_head") ? flunk(message) : skip(message)
+  end
 
   def boot_ractorized_app
     root = Dir.mktmpdir
@@ -168,6 +174,7 @@ class RactorTest < ActiveSupport::TestCase
       body.close if body.respond_to?(:close)
       [status, out.strip]
     rescue Exception => e # standard:disable Lint/RescueException
+      e = e.cause while e.cause
       [e.class.name, "#{e.class}: #{e.message} #{e.backtrace&.first(3)&.join(" ")}"]
     end.value
   end

@@ -101,6 +101,9 @@ module ViewComponent
 
     initializer "view_component.ractorize" do
       ActiveSupport.on_load(:before_ractorize) do
+        # I18n memoizes the separator in a class ivar on first use, which non-main
+        # Ractors can't set, so read it before the application is frozen.
+        I18n.default_separator
         [ViewComponent::Base, *ViewComponent::Base.descendants].each(&:__vc_make_ractor_shareable!)
       end
     end

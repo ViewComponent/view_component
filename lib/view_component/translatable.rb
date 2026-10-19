@@ -134,7 +134,8 @@ module ViewComponent
     end
 
     def __vc_html_escape_translation_options!(options)
-      options.except(*::I18n::RESERVED_KEYS).each do |name, value|
+      reserved_keys = ::I18n.respond_to?(:reserved_keys) ? ::I18n.reserved_keys : ::I18n::RESERVED_KEYS
+      options.except(*reserved_keys).each do |name, value|
         next if name == :count && value.is_a?(Numeric)
 
         options[name] = ERB::Util.html_escape(value.to_s)
