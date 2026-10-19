@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Fix `Component.translate` raising `UncaughtThrowError` for keys missing from the sidecar translations, and `NoMethodError` for components without sidecar translations. It now falls back to the global translations, like the instance method does.
+* Fix `Component.translate` raising `UncaughtThrowError` for keys missing from the sidecar translations, and `NoMethodError` for components without sidecar translations. It now falls back to the global translations, like the instance method does. Fix `translate` returning the `default:` value instead of an existing global translation.
 
     *Andrii Furmanets*
 
