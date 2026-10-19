@@ -430,6 +430,12 @@ module ViewComponent
 
     attr_reader :view_context
 
+    # Called by the compiled `render_template_for`.
+    def __vc_render_compiled_template(template, safe_call)
+      @current_template = template
+      instance_exec(&safe_call)
+    end
+
     def __vc_render_in_block_provided?
       defined?(@view_context) && @view_context && @__vc_render_in_block
     end

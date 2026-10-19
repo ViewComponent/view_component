@@ -158,6 +158,9 @@ class RactorTest < ActiveSupport::TestCase
       config.view_component.previews.enabled = false
     end
     app.initialize!
+    # Rails doesn't make `action_methods` shareable yet, and reading it from a
+    # non-main Ractor crashes recent Ruby head builds.
+    AbstractController::Base.descendants.each { Ractor.make_shareable(_1.action_methods) }
     app.ractorize!
   end
 

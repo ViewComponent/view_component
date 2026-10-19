@@ -90,10 +90,7 @@ module ViewComponent
       safe_call = Ractor.make_shareable(template.safe_method_name_call)
 
       Ractor.make_shareable(
-        proc do |_|
-          @current_template = template
-          instance_exec(&safe_call)
-        end
+        proc { |_| __vc_render_compiled_template(template, safe_call) }
       )
     end
 
@@ -101,8 +98,8 @@ module ViewComponent
     def self.render_multiple_templates_proc(templates)
       Ractor.make_shareable(
         proc do |details|
-          if (@current_template = Compiler.find_templates_for(templates, details).first)
-            instance_exec(&@current_template.safe_method_name_call)
+          if (template = Compiler.find_templates_for(templates, details).first)
+            __vc_render_compiled_template(template, template.safe_method_name_call)
           else
             raise MissingTemplateError.new(self.class.name, details)
           end

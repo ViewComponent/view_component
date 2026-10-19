@@ -5,21 +5,22 @@ module ViewComponent
   # This isn't part of the public API
   module CompileCache
     # The cache is a frozen, Ractor-shareable Set stored in a module instance
-    # variable, so it can be read from non-main Ractors. Writes replace it with
-    # an updated copy under a lock.
-    @cache = Ractor.make_shareable(Set.new)
-    LOCK = Mutex.new
+    # variable, so it can be read from non-main Ractors. Writes, which only
+    # happen in the main Ractor while compiling or reloading, replace it with an
+    # updated copy under a lock.
+    @cache = Ractor.make_shareable(Set.new) # audition:disable class-level-state
+    LOCK = Mutex.new # audition:disable mutable-constants
     private_constant :LOCK
 
     class << self
       attr_reader :cache
 
       def cache=(set)
-        LOCK.synchronize { @cache = Ractor.make_shareable(set) }
+        update { set }
       end
 
       def register(klass)
-        LOCK.synchronize { @cache = Ractor.make_shareable(@cache | [klass]) }
+        update { |cache| cache | [klass] }
       end
 
       def compiled?(klass)
@@ -27,11 +28,11 @@ module ViewComponent
       end
 
       def invalidate_class!(klass)
-        LOCK.synchronize { @cache = Ractor.make_shareable(@cache - [klass]) }
+        update { |cache| cache - [klass] }
       end
 
       def invalidate!
-        LOCK.synchronize { @cache = Ractor.make_shareable(Set.new) }
+        update { Set.new }
       end
 
       # Invalidates the cache when a template or a translation file is added,
@@ -41,6 +42,12 @@ module ViewComponent
         directories = ActiveSupport::Dependencies.autoload_paths.index_with(extensions)
 
         file_watcher.new([], directories) { invalidate! }
+      end
+
+      private
+
+      def update
+        LOCK.synchronize { @cache = Ractor.make_shareable(yield(@cache)) } # audition:disable class-level-state
       end
     end
   end
