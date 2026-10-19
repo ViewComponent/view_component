@@ -148,12 +148,6 @@ class CacheableReviewTest < ViewComponent::TestCase
     assert_equal [:identity], component.__vc_cache_on
   end
 
-  def test_experimentally_cacheable_is_a_deprecated_alias
-    assert_deprecated(/ViewComponent::ExperimentallyCacheable.*ViewComponent::Cacheable/, ViewComponent::Deprecation) do
-      assert_same ViewComponent::Cacheable, ViewComponent::ExperimentallyCacheable
-    end
-  end
-
   def test_cache_on_rejects_unknown_options
     error = assert_raises(ArgumentError) do
       Class.new(ViewComponent::Base) do
