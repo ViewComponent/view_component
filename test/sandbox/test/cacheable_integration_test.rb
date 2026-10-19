@@ -6,7 +6,7 @@ require "test_helper"
 # a `<% cache %>` block is invalidated when the component changes, whether the
 # block sits in a view that renders the component or in the component's own
 # template.
-class ExperimentallyCacheableIntegrationTest < ActionDispatch::IntegrationTest
+class CacheableIntegrationTest < ActionDispatch::IntegrationTest
   def setup
     Rails.cache.clear
     clear_digest_cache

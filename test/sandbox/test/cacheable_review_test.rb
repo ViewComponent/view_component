@@ -4,7 +4,7 @@ require "test_helper"
 
 # Failing tests for the issues @reeganviljoen reported reviewing #2685.
 # https://github.com/ViewComponent/view_component/pull/2685
-class ExperimentallyCacheableReviewTest < ViewComponent::TestCase
+class CacheableReviewTest < ViewComponent::TestCase
   def setup
     super
     Rails.cache.clear
@@ -139,13 +139,19 @@ class ExperimentallyCacheableReviewTest < ViewComponent::TestCase
 
   def test_including_the_module_explicitly_is_harmless
     component = Class.new(ViewComponent::Base) do
-      include ViewComponent::ExperimentallyCacheable
+      include ViewComponent::Cacheable
 
       cache_on :identity
     end
 
-    assert_equal 1, component.ancestors.count(ViewComponent::ExperimentallyCacheable)
+    assert_equal 1, component.ancestors.count(ViewComponent::Cacheable)
     assert_equal [:identity], component.__vc_cache_on
+  end
+
+  def test_experimentally_cacheable_is_a_deprecated_alias
+    assert_deprecated(/ViewComponent::ExperimentallyCacheable.*ViewComponent::Cacheable/, ViewComponent::Deprecation) do
+      assert_same ViewComponent::Cacheable, ViewComponent::ExperimentallyCacheable
+    end
   end
 
   def test_cache_on_rejects_unknown_options

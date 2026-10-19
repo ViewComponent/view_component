@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ExperimentallyCacheableTest < ViewComponent::TestCase
+class CacheableTest < ViewComponent::TestCase
   def setup
     super
     Rails.cache.clear

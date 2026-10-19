@@ -23,7 +23,7 @@ module ViewComponent
   #   end
   # end
   # ```
-  module ExperimentallyCacheable
+  module Cacheable
     extend ActiveSupport::Concern
 
     # Stands in for `nil` in the cache key. Without it, `expand_cache_key`

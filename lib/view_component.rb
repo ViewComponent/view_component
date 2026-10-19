@@ -2,6 +2,7 @@
 
 require "action_view"
 require "active_support/dependencies/autoload"
+require "active_support/deprecation"
 require "view_component/version"
 
 module ViewComponent
@@ -9,11 +10,11 @@ module ViewComponent
 
   autoload :Base
   autoload :CacheDigest
+  autoload :Cacheable
   autoload :Compiler
   autoload :CompileCache
   autoload :Config
   autoload :Deprecation
-  autoload :ExperimentallyCacheable
   autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview
@@ -27,6 +28,11 @@ module ViewComponent
     autoload :TestCase
     autoload :SystemTestCase
   end
+
+  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
+
+  deprecate_constant :ExperimentallyCacheable, "ViewComponent::Cacheable",
+    deprecator: ViewComponent::Deprecation
 end
 
 require "view_component/engine" if defined?(Rails::Engine)

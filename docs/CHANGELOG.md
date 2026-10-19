@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Enable caching support for all components by default. Including `ViewComponent::ExperimentallyCacheable` is no longer necessary, and existing includes are harmless.
+* Enable caching support for all components by default, and rename `ViewComponent::ExperimentallyCacheable` to `ViewComponent::Cacheable`. Including the module is no longer necessary, and existing includes are harmless. `ViewComponent::ExperimentallyCacheable` remains as a deprecated alias, to be removed in v5.0.0.
 
     Every component's source digest is tracked automatically. Literal renders and `# Template Dependency:` declarations register the component's actual class name and virtual path, including acronym names and custom paths. Changes to dependencies invalidate enclosing fragments, including `cache` blocks inside any component template. Every component exposes `.cache_digest` and `cache_on`. Components cache their own output only when they declare `cache_on`, and unexpected digest errors continue to raise.
 
