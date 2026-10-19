@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.17.0
+
 * Only register the executor hook that watches component templates when Action View doesn't cache templates at boot. With template caching on, as in production, the hook did nothing but still read `ActionView::Base.cache_template_loading` on every request. That value lives in a class variable, which non-main Ractors can't read on Ruby 4.0, so under Rails' experimental `Rails.application.ractorize!` every request failed.
 
     *Mikael Henriksson*
