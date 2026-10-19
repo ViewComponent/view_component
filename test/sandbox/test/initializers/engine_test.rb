@@ -2,8 +2,6 @@
 
 require "test_helper"
 
-require "open3"
-
 class EngineTest < Minitest::Test
   def test_set_no_duplicate_autoload_paths
     test_path = "#{Rails.root}/my/components/previews" # set in sandbox/config/application.rb
@@ -11,29 +9,26 @@ class EngineTest < Minitest::Test
   end
 
   # Non-main Ractors can't read ActionView::Resolver's class variable on Ruby 4.0,
-  # so the executor must not read it on every request when templates are cached.
-  def test_executor_does_not_read_cache_template_loading_when_templates_are_cached
-    reads, errors, status = Open3.capture3({"RAILS_ENV" => "production"}, RbConfig.ruby, "-rbundler/setup", "-e", <<~RUBY)
-      require "rails"
-      require "action_controller/railtie"
-      require "view_component"
+  # so no per-request hook may read it when templates are cached.
+  def test_watch_templates_registers_no_executor_hook_when_templates_are_cached
+    app = app_with_new_executor
 
-      class CachedTemplatesApp < Rails::Application
-        config.eager_load = true
-        config.enable_reloading = false
-        config.secret_key_base = "test"
-        config.logger = Logger.new(nil)
-      end
+    with_template_caching { ViewComponent::CompileCache.watch_templates(app) }
 
-      CachedTemplatesApp.initialize!
+    assert_empty app.executor._run_callbacks
+  end
 
-      reads = 0
-      ActionView::Resolver.singleton_class.prepend(Module.new { define_method(:caching?) { reads += 1; super() } })
-      CachedTemplatesApp.executor.wrap {}
-      print reads
-    RUBY
+  def test_watch_templates_registers_an_executor_hook_when_templates_are_not_cached
+    app = app_with_new_executor
 
-    assert status.success?, errors
-    assert_equal "0", reads
+    with_new_cache { ViewComponent::CompileCache.watch_templates(app) }
+
+    assert_equal 1, app.executor._run_callbacks.count
+  end
+
+  private
+
+  def app_with_new_executor
+    Struct.new(:executor, :config).new(Class.new(ActiveSupport::Executor), Rails.application.config)
   end
 end
