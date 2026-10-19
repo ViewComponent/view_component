@@ -133,7 +133,7 @@ end
 def with_template_caching
   executor = Rails.application.executor
   watcher_hook = executor._run_callbacks.find do |callback|
-    callback.filter.is_a?(Proc) && callback.filter.source_location&.first&.end_with?("view_component/compile_cache.rb")
+    callback.filter.is_a?(Proc) && callback.filter.source_location&.first&.end_with?("view_component/engine.rb")
   end&.filter
   executor.skip_callback(:run, :before, watcher_hook) if watcher_hook
 
