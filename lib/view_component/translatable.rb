@@ -59,7 +59,11 @@ module ViewComponent
         locale = options.delete(:locale) || ::I18n.locale
         key = __vc_i18n_key(key, options.delete(:scope))
 
-        __vc_i18n_backend.translate(locale, key, options)
+        if __vc_i18n_backend&.exists?(locale, key)
+          __vc_i18n_backend.translate(locale, key, options)
+        else
+          ::I18n.translate(key, locale: locale, **options)
+        end
       end
 
       alias_method :t, :translate
@@ -102,17 +106,8 @@ module ViewComponent
 
       __vc_html_escape_translation_options!(options) if as_html
 
-      if key.start_with?(__vc_i18n_scope + ".")
-        translated =
-          catch(:exception) do
-            __vc_i18n_backend.translate(locale, key, options)
-          end
-
-        # Fallback to the global translations
-        if translated.is_a? ::I18n::MissingTranslation
-          return @view_context.translate(key, locale: locale, **options)
-        end
-
+      if __vc_i18n_backend.exists?(locale, key)
+        translated = __vc_i18n_backend.translate(locale, key, options)
         translated = __vc_html_safe_translation(translated) if as_html
         translated
       else

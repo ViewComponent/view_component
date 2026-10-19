@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix `Component.translate` raising `UncaughtThrowError` for keys missing from the sidecar translations, and `NoMethodError` for components without sidecar translations. It now falls back to the global translations, like the instance method does. Fix `translate` returning the `default:` value instead of an existing global translation.
+
+    *Andrii Furmanets*
+
 * Only recompile components when a template or a translation file changed, instead of before every request, when templates aren't cached. Pages render about twice as fast in development.
 
     *Clément Joubert*

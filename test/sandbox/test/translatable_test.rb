@@ -165,6 +165,32 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal({sidecar: "This is coming from the sidecar"}, TranslatableComponent.translate(".from"))
   end
 
+  def test_translating_from_the_class_falls_back_to_global_translations
+    assert_equal "This is coming from Rails", TranslatableComponent.t("from.rails")
+    assert_equal "Relative key from Rails", TranslatableComponent.t(".relative_rails_key")
+    assert_equal "Translation missing: en.translatable_component.missing", TranslatableComponent.t(".missing")
+    assert_equal "Default", TranslatableComponent.t(".missing", default: "Default")
+
+    assert_raises(I18n::MissingTranslationData) do
+      TranslatableComponent.t(".missing", raise: true)
+    end
+  end
+
+  def test_translating_from_the_class_without_sidecar_translations
+    assert_equal "OH NO! (you shouldn't see me)", MyComponent.t(".message")
+    assert_equal "This is coming from Rails", MyComponent.translate("from.rails")
+  end
+
+  def test_default_does_not_shadow_global_translations
+    assert_equal "This is coming from Rails", TranslatableComponent.t("from.rails", default: "Default")
+    assert_equal "Relative key from Rails", TranslatableComponent.t(".relative_rails_key", default: "Default")
+    assert_equal "Default", TranslatableComponent.t(".missing", default: "Default")
+
+    assert_equal "This is coming from Rails", translate("from.rails", default: "Default")
+    assert_equal "Relative key from Rails", translate(".relative_rails_key", default: "Default")
+    assert_equal "Default", translate(".missing", default: "Default")
+  end
+
   def test_inheriting_and_overriding_translations
     render_inline(TranslatableSubclassComponent.new)
 
