@@ -99,6 +99,12 @@ module ViewComponent
       end
     end
 
+    initializer "view_component.ractorize" do
+      ActiveSupport.on_load(:before_ractorize) do
+        [ViewComponent::Base, *ViewComponent::Base.descendants].each(&:__vc_make_ractor_shareable!)
+      end
+    end
+
     initializer "compiler mode" do |_app|
       ViewComponent::Compiler.__vc_development_mode = (Rails.env.development? || Rails.env.test?)
     end
@@ -107,18 +113,21 @@ module ViewComponent
       options = app.config.view_component
 
       if options.previews.enabled
+        # Avoid capturing local variables, so the block stays Ractor-shareable.
         app.routes.prepend do
-          preview_controller = options.previews.controller.sub(/Controller$/, "").underscore
+          previews_options = Rails.application.config.view_component.previews
+          preview_controller = previews_options.controller.sub(/Controller$/, "").underscore
+          preview_route = previews_options.route
 
           get(
-            options.previews.route,
+            preview_route,
             to: "#{preview_controller}#index",
             as: :preview_view_components,
             internal: true
           )
 
           get(
-            "#{options.previews.route}/*path",
+            "#{preview_route}/*path",
             to: "#{preview_controller}#previews",
             as: :preview_view_component,
             internal: true

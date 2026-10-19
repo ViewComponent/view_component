@@ -20,7 +20,7 @@ module ViewComponent
 
     class_methods do
       def __vc_i18n_scope
-        @__vc_i18n_scope ||= virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
+        @__vc_i18n_scope ||= -virtual_path.sub(%r{^/}, "").gsub(%r{/_?}, ".")
       end
 
       def __vc_build_i18n_backend

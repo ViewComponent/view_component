@@ -82,19 +82,19 @@ module ViewComponent
 
           setter_method_name = :"with_#{slot_name}"
 
-          define_method setter_method_name do |*args, **kwargs, &block|
+          __vc_define_shareable_method(self, setter_method_name) do |*args, **kwargs, &block|
             __vc_set_slot(slot_name, nil, *args, **kwargs, &block)
           end
 
-          self::GeneratedSlotMethods.define_method slot_name do
+          __vc_define_shareable_method(self::GeneratedSlotMethods, slot_name) do
             __vc_get_slot(slot_name)
           end
 
-          self::GeneratedSlotMethods.define_method :"#{slot_name}?" do
+          __vc_define_shareable_method(self::GeneratedSlotMethods, :"#{slot_name}?") do
             __vc_get_slot(slot_name).present?
           end
 
-          define_method :"with_#{slot_name}_content" do |content|
+          __vc_define_shareable_method(self, :"with_#{slot_name}_content") do |content|
             send(setter_method_name) { content.to_s }
 
             self
@@ -152,17 +152,17 @@ module ViewComponent
 
           setter_method_name = :"with_#{singular_name}"
 
-          define_method setter_method_name do |*args, **kwargs, &block|
+          __vc_define_shareable_method(self, setter_method_name) do |*args, **kwargs, &block|
             __vc_set_slot(slot_name, nil, *args, **kwargs, &block)
           end
 
-          define_method :"with_#{singular_name}_content" do |content|
+          __vc_define_shareable_method(self, :"with_#{singular_name}_content") do |content|
             send(setter_method_name) { content.to_s }
 
             self
           end
 
-          define_method :"with_#{slot_name}" do |collection_args = nil, &block|
+          __vc_define_shareable_method(self, :"with_#{slot_name}") do |collection_args = nil, &block|
             collection_args.map do |args|
               if args.respond_to?(:to_hash)
                 __vc_set_slot(slot_name, nil, **args, &block)
@@ -172,11 +172,11 @@ module ViewComponent
             end
           end
 
-          self::GeneratedSlotMethods.define_method slot_name do
+          __vc_define_shareable_method(self::GeneratedSlotMethods, slot_name) do
             __vc_get_slot(slot_name)
           end
 
-          self::GeneratedSlotMethods.define_method :"#{slot_name}?" do
+          __vc_define_shareable_method(self::GeneratedSlotMethods, :"#{slot_name}?") do
             __vc_get_slot(slot_name).present?
           end
 
@@ -229,11 +229,11 @@ module ViewComponent
       end
 
       def __vc_register_polymorphic_slot(slot_name, types, collection:)
-        self::GeneratedSlotMethods.define_method(slot_name) do
+        __vc_define_shareable_method(self::GeneratedSlotMethods, slot_name) do
           __vc_get_slot(slot_name)
         end
 
-        self::GeneratedSlotMethods.define_method(:"#{slot_name}?") do
+        __vc_define_shareable_method(self::GeneratedSlotMethods, :"#{slot_name}?") do
           __vc_get_slot(slot_name).present?
         end
 
@@ -263,11 +263,11 @@ module ViewComponent
             raise AlreadyDefinedPolymorphicSlotSetterError.new(setter_method_name, poly_slot_name)
           end
 
-          define_method(setter_method_name) do |*args, **kwargs, &block|
+          __vc_define_shareable_method(self, setter_method_name) do |*args, **kwargs, &block|
             __vc_set_polymorphic_slot(slot_name, poly_type, *args, **kwargs, &block)
           end
 
-          define_method :"with_#{poly_slot_name}_content" do |content|
+          __vc_define_shareable_method(self, :"with_#{poly_slot_name}_content") do |content|
             send(setter_method_name) { content.to_s }
 
             self
@@ -278,6 +278,19 @@ module ViewComponent
           collection: collection,
           renderable_hash: renderable_hash
         }
+      end
+
+      # Defines methods with Ractor-shareable procs where possible, so they can
+      # be called from non-main Ractors. Falls back to the original block when
+      # it captures unshareable state.
+      def __vc_define_shareable_method(owner, method_name, &block)
+        block = begin
+          Ractor.make_shareable(block)
+        rescue Ractor::Error, ArgumentError
+          block
+        end
+
+        owner.define_method(method_name, block)
       end
 
       def __vc_define_slot(slot_name, collection:, callable:)
@@ -294,7 +307,7 @@ module ViewComponent
           # If slot doesn't respond to `render_in`, we assume it's a proc,
           # define a method, and save a reference to it to call when setting
           method_name = :"_call_#{slot_name}"
-          define_method method_name, &callable
+          __vc_define_shareable_method(self, method_name, &callable)
           slot[:renderable_function] = instance_method(method_name)
         else
           raise(InvalidSlotDefinitionError)

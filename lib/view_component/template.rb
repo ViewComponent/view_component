@@ -124,7 +124,7 @@ module ViewComponent
       end
 
       def safe_method_name_call
-        m = safe_method_name
+        m = -safe_method_name
         proc do
           __vc_maybe_escape_html(send(m)) do
             Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. " \
@@ -157,7 +157,7 @@ module ViewComponent
     end
 
     def safe_method_name_call
-      m = safe_method_name
+      m = -safe_method_name
       proc { send(m) }
     end
 
@@ -209,7 +209,7 @@ module ViewComponent
     def compiled_source
       handler = details.handler_class
       this_source = source
-      this_source.rstrip! if @component.strip_trailing_whitespace?
+      this_source = this_source.rstrip if @component.strip_trailing_whitespace?
 
       short_identifier = defined?(Rails.root) ? @path.sub("#{Rails.root}/", "") : @path
       format = self.format || DEFAULT_FORMAT

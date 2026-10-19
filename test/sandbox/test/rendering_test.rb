@@ -1014,7 +1014,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_multithread_render
-    ViewComponent::CompileCache.cache.delete(MyComponent)
+    ViewComponent::CompileCache.invalidate_class!(MyComponent)
     Rails.env.stub :test?, true do
       threads = Array.new(100) do
         Thread.new do

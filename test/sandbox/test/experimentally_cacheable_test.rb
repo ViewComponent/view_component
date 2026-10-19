@@ -535,7 +535,7 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   # template was modified is therefore still registered as compiled, and keeps
   # rendering the modified output after the file is restored. Force it back.
   def recompile(component)
-    ViewComponent::CompileCache.cache.delete(component)
+    ViewComponent::CompileCache.invalidate_class!(component)
     component.__vc_compile(force: true)
   end
 

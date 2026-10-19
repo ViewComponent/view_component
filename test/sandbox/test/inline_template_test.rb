@@ -211,7 +211,7 @@ class InlineErbTest < ViewComponent::TestCase
     with_new_cache do
       with_coverage_running do
         # Force recompilation with coverage "enabled"
-        ViewComponent::CompileCache.cache.delete(ErbComponent)
+        ViewComponent::CompileCache.invalidate_class!(ErbComponent)
 
         # This would segfault before the fix due to negative lineno
         render_inline(ErbComponent.new(message: "Foo bar"))
@@ -229,7 +229,7 @@ class InlineErbTest < ViewComponent::TestCase
     without_template_annotations do
       with_coverage_running do
         # Force recompilation with coverage "enabled" but annotations disabled
-        ViewComponent::CompileCache.cache.delete(ErbComponent)
+        ViewComponent::CompileCache.invalidate_class!(ErbComponent)
 
         # This would segfault in v4.3.0 because it only avoided -1 lineno
         # when annotations were enabled
@@ -246,7 +246,7 @@ class InlineErbTest < ViewComponent::TestCase
     with_new_cache do
       with_coverage_running do
         # Force recompilation with coverage "enabled"
-        ViewComponent::CompileCache.cache.delete(InlineRaiseErbComponent)
+        ViewComponent::CompileCache.invalidate_class!(InlineRaiseErbComponent)
 
         # Inline templates should still work (lineno is 2+, so -1 won't be negative)
         error = assert_raises ArgumentError do

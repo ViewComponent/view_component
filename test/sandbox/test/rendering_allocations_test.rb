@@ -47,7 +47,7 @@ class RenderingAllocationsTest < ViewComponent::TestCase
   def test_render_inline_allocations
     # Stabilize compilation status ahead of testing allocations to simulate rendering
     # performance with compiled component
-    ViewComponent::CompileCache.cache.delete(MyComponent)
+    ViewComponent::CompileCache.invalidate_class!(MyComponent)
     MyComponent.__vc_ensure_compiled
 
     # Ensure any one-time render allocations are done.
@@ -67,7 +67,7 @@ class RenderingAllocationsTest < ViewComponent::TestCase
   def test_render_collection_inline_allocations
     # Stabilize compilation status ahead of testing allocations to simulate rendering
     # performance with compiled component
-    ViewComponent::CompileCache.cache.delete(ProductComponent)
+    ViewComponent::CompileCache.invalidate_class!(ProductComponent)
     ProductComponent.__vc_ensure_compiled
 
     products = [Product.new(name: "Radio clock"), Product.new(name: "Mints")]

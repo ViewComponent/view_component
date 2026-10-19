@@ -63,7 +63,12 @@ module ViewComponent
     #
     # @return all matching compiled templates, in priority order based on the requested details from LookupContext
     def find_templates_for(requested_details)
-      filtered_templates = @templates.select do |template|
+      self.class.find_templates_for(@templates, requested_details)
+    end
+
+    # @private
+    def self.find_templates_for(templates, requested_details)
+      filtered_templates = templates.select do |template|
         template.details.matches?(requested_details)
       end
 
@@ -74,6 +79,35 @@ module ViewComponent
       end
 
       filtered_templates
+    end
+
+    # `render_template_for` is defined with procs built here, in a class method,
+    # so that they (and the templates they capture) can be made Ractor-shareable,
+    # allowing compiled components to render in non-main Ractors.
+    #
+    # @private
+    def self.render_single_template_proc(template)
+      safe_call = Ractor.make_shareable(template.safe_method_name_call)
+
+      Ractor.make_shareable(
+        proc do |_|
+          @current_template = template
+          instance_exec(&safe_call)
+        end
+      )
+    end
+
+    # @private
+    def self.render_multiple_templates_proc(templates)
+      Ractor.make_shareable(
+        proc do |details|
+          if (@current_template = Compiler.find_templates_for(templates, details).first)
+            instance_exec(&@current_template.safe_method_name_call)
+          else
+            raise MissingTemplateError.new(self.class.name, details)
+          end
+        end
+      )
     end
 
     private
@@ -87,23 +121,16 @@ module ViewComponent
 
       @component.silence_redefinition_of_method(:render_template_for)
 
-      if @templates.one?
-        template = @templates.first
-        safe_call = template.safe_method_name_call
-        @component.define_method(:render_template_for) do |_|
-          @current_template = template
-          instance_exec(&safe_call)
+      @templates = Ractor.make_shareable(@templates)
+
+      @component.define_method(
+        :render_template_for,
+        if @templates.one?
+          self.class.render_single_template_proc(@templates.first)
+        else
+          self.class.render_multiple_templates_proc(@templates)
         end
-      else
-        compiler = self
-        @component.define_method(:render_template_for) do |details|
-          if (@current_template = compiler.find_templates_for(details).first)
-            instance_exec(&@current_template.safe_method_name_call)
-          else
-            raise MissingTemplateError.new(self.class.name, details)
-          end
-        end
-      end
+      )
     end
 
     def template_errors

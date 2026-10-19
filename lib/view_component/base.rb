@@ -214,7 +214,7 @@ module ViewComponent
       @__vc_parent_render_level ||= 0 # ensure a good starting value
 
       begin
-        target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
+        target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level].instance_method(:render_template_for)
         @__vc_parent_render_level += 1
 
         target_render.bind_call(self, @__vc_requested_details)
@@ -223,18 +223,21 @@ module ViewComponent
       end
     end
 
+    EMPTY_SAFE_BUFFER = Ractor.make_shareable("".html_safe)
+    private_constant :EMPTY_SAFE_BUFFER
+
     # Optional content to be returned before the rendered template.
     #
     # @return [String]
     def output_preamble
-      @@default_output_preamble ||= "".html_safe
+      EMPTY_SAFE_BUFFER
     end
 
     # Optional content to be returned after the rendered template.
     #
     # @return [String]
     def output_postamble
-      @@default_output_postamble ||= "".html_safe
+      EMPTY_SAFE_BUFFER
     end
 
     # Called before rendering the component. Override to perform operations that
@@ -666,8 +669,8 @@ module ViewComponent
         # has been re-defined by the consuming application, likely in ApplicationComponent.
         # We use `base_label` method here instead of `label` to avoid cases where the method
         # owner is included in a prefix like `ApplicationComponent.inherited`.
-        child.identifier = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
-        child.virtual_path = child.name&.underscore
+        child.identifier = -caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
+        child.virtual_path = child.name&.underscore&.freeze
 
         # Set collection parameter to the extended component
         child.with_collection_parameter(__vc_provided_collection_parameter)
@@ -675,8 +678,8 @@ module ViewComponent
         if method_defined?(:render_template_for, false)
           vc_ancestor_calls = defined?(@__vc_ancestor_calls) ? @__vc_ancestor_calls.dup : []
 
-          vc_ancestor_calls.unshift(instance_method(:render_template_for))
-          child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls)
+          vc_ancestor_calls.unshift(self)
+          child.instance_variable_set(:@__vc_ancestor_calls, vc_ancestor_calls.freeze)
         end
 
         super
@@ -684,7 +687,21 @@ module ViewComponent
 
       # @private
       def __vc_compiled?
-        __vc_compiler.compiled?
+        CompileCache.compiled?(self)
+      end
+
+      # @private
+      # Makes class-level state read while rendering Ractor-shareable, so that
+      # compiled components can render in non-main Ractors. Called before
+      # `Rails.application.ractorize!` freezes the application.
+      def __vc_make_ractor_shareable!
+        Ractor.make_shareable(registered_slots)
+        __vc_i18n_scope if virtual_path
+
+        if (i18n_backend = __vc_i18n_backend)
+          i18n_backend.eager_load!
+          Ractor.make_shareable(i18n_backend)
+        end
       end
 
       # Hook called by the compiler after a component is compiled.

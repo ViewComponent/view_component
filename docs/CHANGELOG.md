@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Support rendering compiled components, including slots, collections, variants, inheritance, and sidecar translations, in non-main Ractors under Rails' experimental `Rails.application.ractorize!`. Methods ViewComponent generates are now defined with Ractor-shareable procs, the compile cache is shareable, and class-level state read while rendering is made shareable before the application is ractorized. Sidecar translations also require an i18n release with Ractor support.
+
+    *Joel Hawksley*
+
 * Only register the executor hook that watches component templates when Action View doesn't cache templates at boot. With template caching on, as in production, the hook did nothing but still read `ActionView::Base.cache_template_loading` on every request. That value lives in a class variable, which non-main Ractors can't read on Ruby 4.0, so under Rails' experimental `Rails.application.ractorize!` every request failed.
 
     *Mikael Henriksson*
