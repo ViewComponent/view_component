@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Only recompile components when a template or a translation file changed, instead of before every request, when templates aren't cached. Pages render about twice as fast in development.
+
+    *Clément Joubert*
+
 ## 4.16.0
 
 * Fix subclasses defined after their parent renders a collection using the parent's default collection parameter name instead of their own. Fix recompiling a component not refreshing its collection parameter, counter, and iteration detection. Compute that detection when a component compiles, and store the results frozen so they're shareable across Ractors.
