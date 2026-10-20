@@ -76,6 +76,14 @@ module ViewComponent
       filtered_templates
     end
 
+    # Formats the component has templates for. Inline templates and `#call`
+    # methods have no format of their own and render as HTML.
+    #
+    # @return [Array<Symbol>]
+    def template_formats
+      gather_templates.map { |template| template.format || :html }.uniq
+    end
+
     private
 
     attr_reader :templates

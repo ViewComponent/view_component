@@ -635,6 +635,31 @@ class CacheableTest < ViewComponent::TestCase
     end
   end
 
+  def test_precompute_serves_digests_without_reading_source_files
+    components = [CacheableParentComponent, CacheableChildComponent]
+    clear_digest_cache
+    expected = CacheableParentComponent.cache_digest
+    clear_digest_cache
+
+    ViewComponent::CacheDigest.precompute!(components)
+
+    assert_equal ViewComponent::CacheDigest::Resolver.instance.source_for(CacheableChildComponent),
+      CacheableChildComponent.__vc_cache_digest_source
+    assert_predicate CacheableChildComponent.__vc_cache_digest_source, :frozen?
+
+    finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [:html])
+    assert_equal expected, finder.digest_cache["view_component/cache_digest/cacheable_parent_component.html"]
+
+    # Rebuilding the tree uses the stored sources rather than the files on disk.
+    clear_digest_cache
+    File.stub(:read, ->(*) { flunk "read a source file" }) do
+      assert_equal expected, CacheableParentComponent.cache_digest
+    end
+  ensure
+    components.each { |component| component.__vc_cache_digest_source = nil }
+    clear_digest_cache
+  end
+
   def test_resolver_is_identified_by_class
     resolver = ViewComponent::CacheDigest::Resolver.instance
 

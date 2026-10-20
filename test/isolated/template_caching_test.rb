@@ -62,6 +62,30 @@ class TemplateCachingTest < ActiveSupport::TestCase
     end
   end
 
+  def test_component_digests_are_computed_at_boot_when_templates_are_cached
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Hello</div>")
+
+      boot_app("production", root: root)
+      finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [:html])
+
+      assert GreetingComponent.__vc_cache_digest_source
+      assert finder.digest_cache["view_component/cache_digest/greeting_component.html"]
+    end
+  end
+
+  def test_component_digests_are_not_computed_at_boot_when_templates_are_not_cached
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Hello</div>")
+
+      boot_app("development", root: root)
+
+      assert_nil GreetingComponent.__vc_cache_digest_source
+    end
+  end
+
   private
 
   def boot_app(env, root: __dir__)

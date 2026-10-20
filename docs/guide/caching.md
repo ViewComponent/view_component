@@ -37,6 +37,8 @@ The fragment is invalidated when the component's template, Ruby class, sidecar f
 
 Dependency tracking discovers components throughout digested views and their render trees. This includes transitively rendered components, components with acronym names, and components that override `virtual_path`.
 
+When components are eager loaded and templates are cached at boot, as in production, component digests are computed at boot rather than on the first request that needs them. Otherwise they're computed on demand, so changes in development are picked up.
+
 Tracking source dependencies doesn't cache a component's output by itself. Use a Rails `cache` block or declare `cache_on` as described below. Dynamic renders still need explicit dependency declarations.
 
 ## Caching inside a component template

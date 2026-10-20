@@ -739,6 +739,17 @@ module ViewComponent
         @__vc_compiler ||= Compiler.new(self)
       end
 
+      # Synthetic digest source computed at boot. Not inherited, since each
+      # component's source differs.
+      #
+      # @private
+      attr_accessor :__vc_cache_digest_source
+
+      # @private
+      def __vc_template_formats
+        __vc_compiler.template_formats
+      end
+
       # Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
       #
       # ```ruby

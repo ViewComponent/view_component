@@ -42,21 +42,11 @@ module ViewComponent
       end
       alias_method :==, :eql?
 
-      private
-
-      def build_template(component, virtual_path, details)
-        ActionView::Template.new(
-          source_for(component),
-          "view_component cache digest for #{component.name}",
-          ActionView::Template.handler_for_extension(:erb),
-          locals: [],
-          format: Array(details[:formats]).first || :html,
-          virtual_path: virtual_path
-        )
-      end
-
       # The synthetic source. Every section exists to change this string when
       # something the component renders from changes.
+      #
+      # @param component [Class]
+      # @return [String]
       def source_for(component)
         parts = []
 
@@ -86,6 +76,19 @@ module ViewComponent
         end
 
         parts.join("\n")
+      end
+
+      private
+
+      def build_template(component, virtual_path, details)
+        ActionView::Template.new(
+          component.__vc_cache_digest_source || source_for(component),
+          "view_component cache digest for #{component.name}",
+          ActionView::Template.handler_for_extension(:erb),
+          locals: [],
+          format: Array(details[:formats]).first || :html,
+          virtual_path: virtual_path
+        )
       end
 
       # The component and any component superclasses, nearest first. Including
@@ -165,8 +168,9 @@ module ViewComponent
       end
 
       # Built once at load time rather than memoized, so no class-level state
-      # is written after boot. The resolver is stateless: it reads from disk on
-      # every call so it can't go stale when a component changes.
+      # is written after boot. Unless sources were precomputed at boot, the
+      # resolver reads from disk on every call so it can't go stale when a
+      # component changes.
       INSTANCE = new
     end
   end
