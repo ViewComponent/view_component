@@ -137,9 +137,22 @@ module ViewComponent
         end
       end
 
-      app.executor.to_run :before do
-        CompileCache.invalidate! unless ActionView::Base.cache_template_loading
+      # Like Rails' own template cache expiry, only watch templates when they
+      # aren't cached at boot. With template caching on, as in production, no
+      # hook runs per request, so requests never read ActionView's caching
+      # class variable, which non-main Ractors can't access.
+      ActiveSupport.on_load(:action_view) do
+        next if ActionView::Base.cache_template_loading
+
+        template_watcher = nil
+
+        app.executor.to_run :before do
+          template_watcher ||= CompileCache.template_watcher(app.config.file_watcher)
+          template_watcher.execute_if_updated
+        end
       end
+
+      app.reloader.before_class_unload { CompileCache.invalidate! }
     end
   end
 end

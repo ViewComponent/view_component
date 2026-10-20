@@ -16,6 +16,22 @@ nav_order: 6
 
     *Erik Axel Nielsen, Joel Hawksley*
 
+## 4.17.0
+
+* Only register the executor hook that watches component templates when Action View doesn't cache templates at boot. With template caching on, as in production, the hook did nothing but still read `ActionView::Base.cache_template_loading` on every request. That value lives in a class variable, which non-main Ractors can't read on Ruby 4.0, so under Rails' experimental `Rails.application.ractorize!` every request failed.
+
+    *Mikael Henriksson*
+
+* Fix `Component.translate` raising `UncaughtThrowError` for keys missing from the sidecar translations, and `NoMethodError` for components without sidecar translations. It now falls back to the global translations, like the instance method does. Fix `translate` returning the `default:` value instead of an existing global translation.
+
+    *Andrii Furmanets*
+
+* Only recompile components when a template or a translation file changed, instead of before every request, when templates aren't cached. Pages render about twice as fast in development.
+
+    *Clément Joubert*
+
+## 4.16.0
+
 * Fix subclasses defined after their parent renders a collection using the parent's default collection parameter name instead of their own. Fix recompiling a component not refreshing its collection parameter, counter, and iteration detection. Compute that detection when a component compiles, and store the results frozen so they're shareable across Ractors.
 
     *Ben Sheldon*
