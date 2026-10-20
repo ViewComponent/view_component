@@ -644,14 +644,18 @@ class CacheableTest < ViewComponent::TestCase
   end
 
   def test_install_is_idempotent
-    resolver_count = ActionController::Base.view_paths.count { |path| path.is_a?(ViewComponent::CacheDigest::Resolver) }
-
     ViewComponent::CacheDigest.install!
 
     assert_equal(
-      resolver_count,
-      ActionController::Base.view_paths.count { |path| path.is_a?(ViewComponent::CacheDigest::Resolver) }
+      1,
+      ActionView::Digestor.singleton_class.ancestors.count(ViewComponent::CacheDigest::DigestorLookup)
     )
+  end
+
+  def test_install_leaves_view_paths_alone
+    ViewComponent::CacheDigest.install!
+
+    assert ActionController::Base.view_paths.all? { |path| path.is_a?(ActionView::FileSystemResolver) }
   end
 
   private

@@ -29,6 +29,7 @@ module ViewComponent
     extend ActiveSupport::Autoload
 
     autoload :DependencyTracking
+    autoload :DigestorLookup
     autoload :Resolver
 
     # Prefix for the synthetic virtual paths components are digested under.
@@ -204,12 +205,7 @@ module ViewComponent
       # @private
       def install!
         DependencyTracking.install!
-
-        ActiveSupport.on_load(:action_controller_base) do
-          resolver = ViewComponent::CacheDigest::Resolver.instance
-
-          append_view_path(resolver) unless view_paths.include?(resolver)
-        end
+        DigestorLookup.install!
       end
 
       private
