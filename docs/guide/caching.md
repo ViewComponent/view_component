@@ -9,9 +9,7 @@ parent: How-to guide
 Since 4.14.0
 {: .label }
 
-Rails computes a digest for every template from its source and from the templates it renders. That digest is mixed into the key of every `<% cache %>` block in the template, so editing a partial invalidates the caches of everything that renders it.
-
-ViewComponent automatically integrates every component into that mechanism:
+Components work with Rails fragment caching. Editing a component's template, Ruby class, sidecar files, superclasses, or anything it renders invalidates every `cache` block that contains it, whether that block is in a view or inside a component's own template:
 
 ```erb
 <% cache @post do %>
@@ -19,46 +17,9 @@ ViewComponent automatically integrates every component into that mechanism:
 <% end %>
 ```
 
-Editing `PostComponent`'s template, Ruby class, or sidecar files invalidates the fragment.
-
-## Automatic digest tracking
-
-All components participate in Rails' digest tree without including a module or configuring caching:
-
-```ruby
-class PostComponent < ViewComponent::Base
-  def initialize(post:)
-    @post = post
-  end
-end
-```
-
-The fragment is invalidated when the component's template, Ruby class, sidecar files, superclasses, child components, or rendered partials change, including components and partials rendered from an inline template or a `#call` method.
-
-Dependency tracking discovers components throughout digested views and their render trees. This includes transitively rendered components, components with acronym names, and components that override `virtual_path`.
-
-When components are eager loaded and templates are cached at boot, as in production, component digests are computed at boot rather than on the first request that needs them. Otherwise they're computed on demand, so changes in development are picked up.
-
-Tracking source dependencies doesn't cache a component's output by itself. Use a Rails `cache` block or declare `cache_on` as described below. Dynamic renders still need explicit dependency declarations.
-
-## Caching inside a component template
-
-A `<% cache %>` block written inside a component's own template also uses the component's source digest automatically:
-
-```erb
-<%# app/components/post_component.html.erb %>
-<% cache @post do %>
-  <%= render CommentComponent.new(post: @post) %>
-<% end %>
-```
-
-The fragment is invalidated by the same set of changes listed above. No module include is required.
-
-`cache` blocks in partials the component renders are unaffected: those templates resolve through the view paths like any other, so Rails digests them itself.
-
 ## Self-caching
 
-To have a component cache its own output without needing a `cache` block, use `cache_on` to declare methods used for the component's cache key. `cache_on` is available on every component, with no module to include. Components that don't call it aren't cached.
+Use `cache_on` to have a component cache its own output, keyed by the values of the named methods:
 
 ```ruby
 class PostComponent < ViewComponent::Base
@@ -74,70 +35,21 @@ class PostComponent < ViewComponent::Base
 end
 ```
 
-Every call site is now cached automatically:
+The cache key also includes the component's digest, format, variant, and locale. As with Rails' `cache` helper, caching only happens when `perform_caching` is enabled.
 
-```erb
-<%= render PostComponent.new(post: @post) %>
-```
-
-Which is equivalent to writing:
-
-```erb
-<% cache [@post, PostComponent.cache_digest] do %>
-  <%= render PostComponent.new(post: @post) %>
-<% end %>
-```
-
-The cache key combines:
-
-- the component's virtual path
-- its digest, computed by Rails' `ActionView::Digestor`
-- the requested format and variant
-- the current `I18n.locale`
-- the values returned by the `cache_on` methods
-
-Caching is skipped unless `perform_caching` is enabled on the controller, matching the behavior of Rails' `cache` helper.
-
-To cache only some renders, pass `if:` or `unless:`. Both accept a method name or a proc evaluated on the component:
+To cache only some renders, pass `if:` or `unless:` with a method name or a proc:
 
 ```ruby
-class PostComponent < ViewComponent::Base
-  cache_on :post, unless: -> { post.draft? }
-
-  def initialize(post:)
-    @post = post
-  end
-
-  private
-
-  attr_reader :post
-end
+cache_on :post, unless: -> { post.draft? }
 ```
 
-Drafts now render every time, while published posts are cached. Note that this controls whether the cache is *used*, not what goes into the key: a `cache_on` method returning `nil` or `false` still contributes that value to the key rather than disabling caching.
+A component that declares `cache_on` can't take content from its callers, since that content isn't part of the cache key. Passing a block, `with_content`, or a slot raises `ContentPassedToCachedComponentError`, even when caching is disabled. Slots filled by the component's own `default_*` methods are fine.
 
-A component that declares `cache_on` can't accept content from its callers. A block, `with_content`, or a slot set by the caller isn't part of the cache key, so passing one raises `ContentPassedToCachedComponentError`:
-
-```erb
-<%# Raises: the block's content isn't in the cache key %>
-<%= render PostComponent.new(post: @post) do %>
-  Hello
-<% end %>
-```
-
-The error is raised even when caching is disabled, so the conflict surfaces in development and test rather than only in production. See [Caveats](#caveats) for how to restructure a component that needs to take content.
-
-`cache_on` is inherited, so declaring it on a base class opts every subclass into self-caching, and into that restriction. Declare it on the components that should cache themselves rather than on `ApplicationComponent`.
+`cache_on` methods run before the component renders, so they can't use `helpers` or the view context.
 
 ## Reading a component's digest
 
-`.cache_digest` returns the digest of everything the component renders from. It works outside a request, where no view context exists:
-
-```ruby
-PostComponent.cache_digest # => "a1b2c3..."
-```
-
-Use it when a cache needs to be tied to a component's source but is written somewhere the component isn't rendered, such as a background job:
+`.cache_digest` returns the digest of everything a component renders from, for tying a cache to a component outside a render:
 
 ```ruby
 Rails.cache.fetch(["post-summary", post, PostComponent.cache_digest]) do
@@ -145,32 +57,13 @@ Rails.cache.fetch(["post-summary", post, PostComponent.cache_digest]) do
 end
 ```
 
-## Declaring dependencies static analysis can't see
+## Declaring dependencies
 
-Dependencies are discovered by scanning template and Ruby source for literal references, so renders resolved at runtime are invisible:
-
-```erb
-<%= render @component %>
-```
-
-```ruby
-def call
-  render "posts/#{@post.style}" # interpolated, so not tracked
-end
-```
-
-Declare these with Rails' `# Template Dependency:` comment, in either the Ruby file or the template. Partials are named by path:
+Dependencies are found by scanning source for literal references, so dynamic renders and included modules aren't tracked. Declare them with Rails' `# Template Dependency:` comment in the Ruby file or template, naming partials by path and components by class:
 
 ```ruby
 class PostComponent < ViewComponent::Base
   # Template Dependency: posts/byline
-end
-```
-
-Components are named by class, listing each one the component might render:
-
-```ruby
-class PostComponent < ViewComponent::Base
   # Template Dependency: PostSummaryComponent
   # Template Dependency: PostDetailComponent
 
@@ -179,53 +72,3 @@ class PostComponent < ViewComponent::Base
   end
 end
 ```
-
-The same works in a template, where the branch is often the more natural place for it:
-
-```erb
-<% if params[:style] == "summary" %>
-  <%# Template Dependency: PostSummaryComponent %>
-  <% component = PostSummaryComponent %>
-<% else %>
-  <%# Template Dependency: PostDetailComponent %>
-  <% component = PostDetailComponent %>
-<% end %>
-<%= render component.new(post: @post) %>
-```
-
-The declaration registers the component's actual class name and virtual path, so its template, Ruby class, sidecar files, superclasses, and discoverable dependencies are digested too.
-
-## When a digest can't be computed
-
-Computing a digest touches the autoloader, the filesystem, and Action View's dependency trackers, any of which can fail. ViewComponent lets those errors raise, matching Rails' digest behavior. Otherwise a component could become untracked and serve stale fragments without warning.
-
-## Caveats
-
-**Self-caching components can't take content from their callers.** Besides a block, this covers `with_content` and slots set by the caller:
-
-```erb
-<%# Also raises ContentPassedToCachedComponentError %>
-<%= render PostComponent.new(post: @post) do |component| %>
-  <% component.with_header { "Hello" } %>
-<% end %>
-```
-
-Slots a component fills in for itself with a `default_*` method are part of its own output, not the caller's, so those are cached normally:
-
-```ruby
-class PostComponent < ViewComponent::Base
-  renders_one :header
-
-  cache_on :post
-
-  def default_header
-    post.title # cached, because the component decides it
-  end
-end
-```
-
-To cache a component that takes content, move the content into the component and derive it from values declared in `cache_on`. Components that don't declare `cache_on` are unaffected: they still accept content and slots, and a `<% cache %>` block around them still invalidates correctly.
-
-**`cache_on` methods run before the component renders**, so they can only depend on the component's own state, not on `helpers` or the view context. A cache key that depends on the view context is usually a sign the value should be passed to the component instead.
-
-**Included modules aren't tracked.** A component's superclasses are, but a module included into a component isn't, since a module has no template or source file of its own to hash. Use `# Template Dependency:` for those.
