@@ -120,6 +120,12 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, **, &block)
+      return __vc_render_in(view_context, &block) unless self.class.__vc_caches_output?
+
+      __vc_render_cached(view_context, block) { __vc_render_in(view_context, &block) }
+    end
+
+    private def __vc_render_in(view_context, &block)
       self.class.__vc_compile(raise_errors: true) unless self.class.__vc_compiled?
 
       __vc_check_reused_instance!
