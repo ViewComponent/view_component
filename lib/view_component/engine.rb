@@ -3,10 +3,15 @@
 require "rails"
 require "view_component/config"
 require "view_component/deprecation"
+require "view_component/cache_digest"
 
 module ViewComponent
   class Engine < Rails::Engine # :nodoc:
     config.view_component = ViewComponent::Config.current
+
+    initializer "view_component.cache_digest" do
+      ViewComponent::CacheDigest.install!
+    end
 
     initializer "view_component.set_configs" do |app|
       options = app.config.view_component
@@ -89,10 +94,11 @@ module ViewComponent
       ActiveSupport.on_load(:after_initialize) do
         if Rails.application.config.eager_load
           ActiveSupport::Notifications.instrument("compile.view_component") do
-            ViewComponent::Base.descendants.each do |component|
-              next if component.anonymous?
+            components = ViewComponent::Base.descendants.reject(&:anonymous?)
+            components.each(&:__vc_compile)
 
-              component.__vc_compile
+            if ActionView::Base.cache_template_loading
+              ViewComponent::CacheDigest.precompute!(components.select(&:__vc_compiled?))
             end
           end
         end

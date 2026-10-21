@@ -3,8 +3,6 @@
 # Renders the requested format, so a cache entry shared across formats is
 # visible in the output.
 class FormatSensitiveCacheableComponent < ViewComponent::Base
-  include ViewComponent::ExperimentallyCacheable
-
   cache_on :identity
 
   def call

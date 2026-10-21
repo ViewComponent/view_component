@@ -2,8 +2,6 @@
 
 # Counts renders so cache hits are observable.
 class ConditionalCacheProbeComponent < ViewComponent::Base
-  include ViewComponent::ExperimentallyCacheable
-
   cache_on :identity, if: :cacheable?
 
   class_attribute :render_count, default: 0

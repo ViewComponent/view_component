@@ -52,6 +52,8 @@ module Sandbox
   end
 end
 
+Rails.autoloaders.main.inflector.inflect("http_untracked_component" => "HTTPUntrackedComponent")
+
 Sandbox::Application.config.secret_key_base = "foo"
 
 # Don't silence library backtraces in test reports

@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Enable caching support for all components by default, and rename `ViewComponent::ExperimentallyCacheable` to `ViewComponent::Cacheable`. Including the module is no longer necessary. Breaking: remove existing `include ViewComponent::ExperimentallyCacheable` lines. Caching is no longer experimental.
+
+    *Erik Axel Nielsen, Joel Hawksley*
+
 ## 4.17.0
 
 * Only register the executor hook that watches component templates when Action View doesn't cache templates at boot. With template caching on, as in production, the hook did nothing but still read `ActionView::Base.cache_template_loading` on every request. That value lives in a class variable, which non-main Ractors can't read on Ruby 4.0, so under Rails' experimental `Rails.application.ractorize!` every request failed.

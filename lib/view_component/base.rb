@@ -3,10 +3,12 @@
 require "action_view"
 require "action_view/base"
 require "view_component/collection"
+require "view_component/cache_digest"
 require "view_component/compile_cache"
 require "view_component/compiler"
 require "view_component/config"
 require "view_component/errors"
+require "view_component/cacheable"
 require "view_component/inline_template"
 require "view_component/preview"
 require "view_component/request_details"
@@ -31,6 +33,20 @@ end
 module ViewComponent
   class Base
     class << self
+      # A digest of the component's source, ancestors, and rendered dependencies.
+      #
+      # @param finder [ActionView::LookupContext, nil]
+      # @param format [Symbol]
+      #
+      # @return [String]
+      def cache_digest(finder: nil, format: :html)
+        ViewComponent::CacheDigest.digest(
+          self,
+          finder: finder || ViewComponent::CacheDigest.default_finder,
+          format: format
+        )
+      end
+
       delegate(*ViewComponent::Config.defaults.keys, to: :config)
 
       # Returns the current config.
@@ -105,6 +121,10 @@ module ViewComponent
     # @return [String]
     def render_in(view_context, **, &block)
       self.class.__vc_compile(raise_errors: true) unless self.class.__vc_compiled?
+
+      if self.class.__vc_cache_output && !@__vc_cache_bypassed
+        return __vc_render_cached(view_context, block)
+      end
 
       __vc_check_reused_instance!
       __vc_reset_render_state!
@@ -423,6 +443,21 @@ module ViewComponent
       @view_context.instance_variable_set(:@virtual_path, old_virtual_path)
     end
 
+    # Use the component's source digest for fragments inside its own template.
+    #
+    # @private
+    def digest_path_from_template(template)
+      component_path = self.class.virtual_path
+      return super unless component_path && template.virtual_path == component_path
+
+      digest = self.class.cache_digest(
+        finder: lookup_context,
+        format: template.format || lookup_context.formats.first || :html
+      )
+
+      digest.present? ? "#{component_path}:#{digest}" : component_path
+    end
+
     private
 
     attr_reader :view_context
@@ -668,6 +703,7 @@ module ViewComponent
         # owner is included in a prefix like `ApplicationComponent.inherited`.
         child.identifier = caller_locations(1, 10).reject { |l| l.base_label == "inherited" }[0].path
         child.virtual_path = child.name&.underscore
+        ViewComponent::CacheDigest.register(child)
 
         # Set collection parameter to the extended component
         child.with_collection_parameter(__vc_provided_collection_parameter)
@@ -705,6 +741,17 @@ module ViewComponent
       # @private
       def __vc_compiler
         @__vc_compiler ||= Compiler.new(self)
+      end
+
+      # Synthetic digest source computed at boot. Not inherited, since each
+      # component's source differs.
+      #
+      # @private
+      attr_accessor :__vc_cache_digest_source
+
+      # @private
+      def __vc_template_formats
+        __vc_compiler.template_formats
       end
 
       # Set the parameter name used when rendering elements of a collection ([documentation](/guide/collections)):
@@ -856,6 +903,8 @@ module ViewComponent
 
       attr_reader :__vc_provided_collection_parameter
     end
+
+    include ViewComponent::Cacheable
 
     ActiveSupport.run_load_hooks(:view_component, self)
   end

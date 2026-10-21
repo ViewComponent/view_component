@@ -21,15 +21,15 @@ module ViewComponent
   #    not just its template.
   #
   # This module fixes both, reusing Rails' own `ActionView::Digestor` rather than
-  # reimplementing static analysis. Components opt in individually by including
-  # `ViewComponent::ExperimentallyCacheable`; until at least one component does,
-  # every hook here short-circuits.
+  # reimplementing static analysis. Every discovered component is tracked
+  # automatically, independently of output caching.
   #
   # @private
   module CacheDigest
     extend ActiveSupport::Autoload
 
     autoload :DependencyTracking
+    autoload :DigestorLookup
     autoload :Resolver
 
     # Prefix for the synthetic virtual paths components are digested under.
@@ -56,8 +56,7 @@ module ViewComponent
     # Rails' escape hatch for dependencies static analysis can't see.
     EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
     class << self
-      # Virtual paths of components that have opted into caching, mapped to
-      # their class names.
+      # Virtual paths of components, mapped to their class names.
       #
       # Class *names* rather than class objects so the registry survives
       # autoloader reloads without pinning stale constants in memory.
@@ -65,11 +64,6 @@ module ViewComponent
       # @return [Hash{String => String}]
       def registry
         @registry ||= {}
-      end
-
-      # @return [Boolean] whether any component has opted in.
-      def enabled?
-        !registry.empty?
       end
 
       # @private
@@ -108,28 +102,22 @@ module ViewComponent
         constantize_component(name)
       end
 
-      # Scan a template's source for renders of cacheable components.
-      #
-      # Called for every template Rails digests, so it exits early when the
-      # feature is unused.
+      # Scan a template's source for renders of components.
       #
       # @return [Array<String>] synthetic virtual paths
       def dependencies_in(template)
-        return [] unless enabled?
-
         component_paths_in(template.source)
       end
 
       # Scan arbitrary source (a template or a component's Ruby file) for
-      # renders of cacheable components.
+      # renders of components.
       #
       # @return [Array<String>] synthetic virtual paths
       def component_paths_in(source)
         return [] unless source.is_a?(String) && source.include?("render")
 
         source.scan(RENDER_CALL).flatten.uniq.filter_map do |constant_name|
-          component = constantize_component(constant_name)
-          virtual_path_for(component) if component
+          registered_path_for(constantize_component(constant_name))
         end
       end
 
@@ -182,17 +170,19 @@ module ViewComponent
           next unless /\A(?:::)?[A-Z]/.match?(declared)
 
           component = constantize_component(declared)
-          [declared, virtual_path_for(component)] if component
+          virtual_path = registered_path_for(component)
+          [declared, virtual_path] if virtual_path
         end
       end
 
       # Compute the digest of a component using Rails' digest tree.
       #
-      # @param component [Class] a component that includes `ExperimentallyCacheable`
+      # @param component [Class] a component class
       # @param finder [ActionView::LookupContext]
       # @param format [Symbol]
       # @return [String]
       def digest(component, finder: default_finder, format: :html)
+        register(component)
         virtual_path = virtual_path_for(component)
         return "" unless virtual_path
 
@@ -210,23 +200,52 @@ module ViewComponent
 
       # Wire the tracker and resolver into Action View.
       #
-      # Called each time a component includes `ExperimentallyCacheable`. Both
-      # steps below are individually idempotent, so no "already installed" flag
-      # is kept. Both hooks short-circuit while the registry is empty, so
-      # applications that never opt in are unaffected.
+      # Installed during engine initialization. Both steps are idempotent.
       #
       # @private
       def install!
         DependencyTracking.install!
+        DigestorLookup.install!
+      end
 
-        ActiveSupport.on_load(:action_controller_base) do
-          resolver = ViewComponent::CacheDigest::Resolver.instance
+      # Compute component digests at boot, so requests read them from memory
+      # instead of reading and scanning source files.
+      #
+      # Only safe when templates are cached at boot: the precomputed sources are
+      # never refreshed.
+      #
+      # @param components [Array<Class>]
+      # @return [void]
+      # @private
+      def precompute!(components)
+        # Register everything first: a registration expires every memoized
+        # digest, so registering midway would discard digests already warmed.
+        components.each { |component| register(component) }
 
-          append_view_path(resolver) unless view_paths.include?(resolver)
+        components.each do |component|
+          component.__vc_cache_digest_source = Resolver.instance.source_for(component).freeze
+        end
+
+        # Warms the same digest cache requests read, since a lookup context's
+        # cache is shared by every context with the same details.
+        components.each do |component|
+          component.__vc_template_formats.each do |format|
+            finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [format])
+            component.cache_digest(finder: finder, format: format)
+          end
         end
       end
 
       private
+
+      # Record the actual class name rather than trying to reverse a virtual
+      # path, which may contain acronyms or be overridden by the component.
+      def registered_path_for(component)
+        return unless component
+
+        register(component)
+        virtual_path_for(component)
+      end
 
       # Drop Action View's memoized template digests, leaving its resolver
       # caches alone: no template changed, only the set of dependencies the
@@ -235,15 +254,14 @@ module ViewComponent
         ActionView::LookupContext::DetailsKey.digest_caches.each(&:clear)
       end
 
-      # Resolve a constant name to a component that opted into caching.
+      # Resolve a constant name to any ViewComponent.
       #
       # Returns nil for anything else, including constants that don't exist.
       # Autoloading here is safe: the template is about to render this constant
       # anyway.
       def constantize_component(constant_name)
         component = constant_name.safe_constantize
-        return unless component.is_a?(Class)
-        return unless component.respond_to?(:__vc_cacheable?) && component.__vc_cacheable?
+        return unless component.is_a?(Class) && component < ViewComponent::Base
 
         component
       end

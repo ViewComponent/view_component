@@ -3,26 +3,13 @@
 require "view_component/cache_digest"
 
 module ViewComponent
-  # Experimental caching support for ViewComponents.
+  # Caching support for ViewComponents.
   #
-  # **This API is experimental.** It may change or be removed in a non-major
-  # release. Please share feedback in
-  # https://github.com/ViewComponent/view_component/issues/234.
-  #
-  # Including this module does two things:
-  #
-  # 1. Registers the component with Rails' template digest tree, so a
-  #    `<% cache %>` block is invalidated when the component's template, Ruby
-  #    class, sidecar files, or child components change. This covers blocks
-  #    wrapping the component in a view and blocks inside the component's own
-  #    template.
-  # 2. Enables the `cache_on` macro, which caches the component's own rendered
-  #    output.
+  # Provides the `cache_on` macro, which caches the component's own rendered
+  # output. Components don't cache their output until they call `cache_on`.
   #
   # ```ruby
   # class MessageComponent < ViewComponent::Base
-  #   include ViewComponent::ExperimentallyCacheable
-  #
   #   cache_on :message
   #
   #   def initialize(message:)
@@ -30,18 +17,13 @@ module ViewComponent
   #   end
   # end
   # ```
-  module ExperimentallyCacheable
+  module Cacheable
     extend ActiveSupport::Concern
 
     # Stands in for `nil` in the cache key. Without it, `expand_cache_key`
     # renders `nil` and `""` identically, so two components differing only in
     # that respect would share an entry.
     NIL_CACHE_VALUE = :__vc_nil
-
-    included do
-      ViewComponent::CacheDigest.install!
-      ViewComponent::CacheDigest.register(self)
-    end
 
     class_methods do
       # Declare the values that identify a rendering of this component.
@@ -55,8 +37,7 @@ module ViewComponent
       # ```
       #
       # Calling `cache_on` opts the component into caching its own output.
-      # Without it, including this module only registers the component with
-      # Rails' digest tree.
+      # Components that don't call it aren't cached.
       #
       # Pass `if:` or `unless:` to cache only some renders. Both accept a method
       # name or a proc evaluated on the component:
@@ -119,11 +100,6 @@ module ViewComponent
         superclass.__vc_cache_unless if superclass.respond_to?(:__vc_cache_unless)
       end
 
-      # @private
-      def __vc_cacheable?
-        true
-      end
-
       # Whether this component caches its own rendered output.
       #
       # @return [Boolean]
@@ -131,67 +107,11 @@ module ViewComponent
         __vc_cache_on.any?
       end
 
-      # A digest of everything this component renders from: its template, its
-      # Ruby class, its sidecar files, its superclasses, and the components and
-      # partials it renders.
+      # `__vc_caches_output?`, stored when the component compiles so rendering
+      # reads a flag instead of computing it.
       #
-      # Computed with Rails' own `ActionView::Digestor`, so it's the same digest
-      # used to invalidate `<% cache %>` blocks.
-      #
-      # Usable outside a request, where no view context exists:
-      #
-      # ```ruby
-      # MessageComponent.cache_digest
-      # ```
-      #
-      # @param finder [ActionView::LookupContext] Defaults to a lookup context
-      #   built from `ActionController::Base.view_paths`.
-      # @param format [Symbol]
-      # @return [String]
-      def cache_digest(finder: nil, format: :html)
-        ViewComponent::CacheDigest.digest(
-          self,
-          finder: finder || ViewComponent::CacheDigest.default_finder,
-          format: format
-        )
-      end
-
       # @private
-      def inherited(child)
-        super
-        ViewComponent::CacheDigest.register(child)
-      end
-    end
-
-    # Renders the component, reading from and writing to the Rails cache when
-    # `cache_on` has been declared.
-    #
-    # @private
-    def render_in(view_context, **, &block)
-      return super unless self.class.__vc_caches_output?
-
-      # Content provided by the caller isn't part of the cache key, so caching
-      # it would serve one caller's content to another. Raised whether or not
-      # caching is currently enabled, so the conflict surfaces in development
-      # and test rather than only in production.
-      if block || __vc_content_set_by_with_content_defined? || __vc_slots_set_by_caller?
-        raise ContentPassedToCachedComponentError.new(self.class.name)
-      end
-
-      return super unless __vc_cache_enabled?(view_context)
-
-      store = Rails.cache
-      key = cache_key(view_context)
-
-      if (cached = store.read(key))
-        # Safe to mark as HTML-safe: the cached string was produced by this same
-        # rendering pipeline, which escapes output before it's written.
-        return cached.html_safe
-      end
-
-      super.tap do |output|
-        store.write(key, output.to_s)
-      end
+      attr_accessor :__vc_cache_output
     end
 
     # The cache key for this rendering of the component.
@@ -226,34 +146,39 @@ module ViewComponent
       )
     end
 
-    # The digest Rails mixes into the key of a `<% cache %>` block.
-    #
-    # `ActionView::Helpers::CacheHelper` digests the virtual path of whichever
-    # template is rendering. Inside a component that path is the component's
-    # own, which resolves to nothing: component templates aren't in the view
-    # paths. The Digestor returns an empty digest, `CacheHelper` falls back to
-    # the bare virtual path, and the fragment never invalidates.
-    #
-    # Substituting the digest the component already computes makes a `cache`
-    # block in a component template behave like one in a view. Everything else
-    # the component renders — a partial, say — keeps Rails' behavior.
-    #
-    # @private
-    def digest_path_from_template(template)
-      component_path = self.class.virtual_path
-      return super unless component_path && template.virtual_path == component_path
+    private
 
-      digest = self.class.cache_digest(
-        finder: lookup_context,
-        format: template.format || __vc_cache_format(lookup_context)
-      )
+    # Renders through the Rails cache. Called by `Base#render_in` for
+    # components that declare `cache_on`.
+    def __vc_render_cached(view_context, content_block)
+      # Content provided by the caller isn't part of the cache key, so caching
+      # it would serve one caller's content to another. Raised whether or not
+      # caching is currently enabled, so the conflict surfaces in development
+      # and test rather than only in production.
+      if content_block || __vc_content_set_by_with_content_defined? || __vc_slots_set_by_caller?
+        raise ContentPassedToCachedComponentError.new(self.class.name)
+      end
 
-      # An empty digest means the component couldn't be resolved. Falling back
-      # to the bare virtual path matches what `CacheHelper` does with one.
-      digest.present? ? "#{component_path}:#{digest}" : component_path
+      return __vc_render_uncached(view_context) unless __vc_cache_enabled?(view_context)
+
+      store = Rails.cache
+      key = cache_key(view_context)
+
+      if (cached = store.read(key))
+        # Safe to mark as HTML-safe: the cached string was produced by this same
+        # rendering pipeline, which escapes output before it's written.
+        return cached.html_safe
+      end
+
+      __vc_render_uncached(view_context).tap do |output|
+        store.write(key, output.to_s)
+      end
     end
 
-    private
+    def __vc_render_uncached(view_context)
+      @__vc_cache_bypassed = true
+      render_in(view_context)
+    end
 
     # Slots set by the caller via `with_*`. Checked before rendering, so slots
     # a component fills in for itself with a `default_*` method — which resolve

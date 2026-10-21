@@ -1,9 +1,9 @@
 {
-  "class-level-state|lib/view_component/base.rb": 7,
+  "class-level-state|lib/view_component/base.rb": 8,
   "class-level-state|lib/view_component/cache_digest.rb": 1,
   "class-level-state|lib/view_component/configurable.rb": 1,
   "class-level-state|lib/view_component/engine.rb": 1,
-  "class-level-state|lib/view_component/experimentally_cacheable.rb": 4,
+  "class-level-state|lib/view_component/cacheable.rb": 4,
   "class-level-state|lib/view_component/inline_template.rb": 3,
   "class-level-state|lib/view_component/instrumentation.rb": 1,
   "class-level-state|lib/view_component/preview.rb": 2,

@@ -6,7 +6,7 @@ require "test_helper"
 # a `<% cache %>` block is invalidated when the component changes, whether the
 # block sits in a view that renders the component or in the component's own
 # template.
-class ExperimentallyCacheableIntegrationTest < ActionDispatch::IntegrationTest
+class CacheableIntegrationTest < ActionDispatch::IntegrationTest
   def setup
     Rails.cache.clear
     clear_digest_cache
@@ -73,6 +73,38 @@ class ExperimentallyCacheableIntegrationTest < ActionDispatch::IntegrationTest
       clear_digest_cache
 
       assert_equal before, fragment_digest_for("integration_examples/cached_component")
+    end
+  end
+
+  def test_cache_block_is_invalidated_when_an_untracked_component_changes
+    get "/cached_untracked_component"
+    assert_select(".untracked-child", text: "untracked")
+
+    before = fragment_digest_for("integration_examples/cached_untracked_component")
+
+    modify_file "app/components/untracked_child_component.html.erb", "<span class=\"untracked-child\">changed</span>\n" do
+      clear_digest_cache
+
+      refute_equal before, fragment_digest_for("integration_examples/cached_untracked_component")
+      with_new_cache do
+        get "/cached_untracked_component"
+
+        assert_select(".untracked-child", text: "changed")
+      end
+    end
+  end
+
+  def test_cache_block_is_invalidated_when_a_transitive_untracked_component_changes
+    get "/cached_untracked_component"
+    assert_select(".http-untracked", text: "HTTP")
+
+    modify_file "app/components/http_untracked_component.html.erb", "<span class=\"http-untracked\">changed</span>\n" do
+      clear_digest_cache
+      with_new_cache do
+        get "/cached_untracked_component"
+
+        assert_select(".http-untracked", text: "changed")
+      end
     end
   end
 

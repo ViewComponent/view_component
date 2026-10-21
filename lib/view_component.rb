@@ -9,11 +9,11 @@ module ViewComponent
 
   autoload :Base
   autoload :CacheDigest
+  autoload :Cacheable
   autoload :Compiler
   autoload :CompileCache
   autoload :Config
   autoload :Deprecation
-  autoload :ExperimentallyCacheable
   autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview

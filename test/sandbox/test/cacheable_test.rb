@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class ExperimentallyCacheableTest < ViewComponent::TestCase
+class CacheableTest < ViewComponent::TestCase
   def setup
     super
     Rails.cache.clear
@@ -46,9 +46,9 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_equal 0, digest_cache_size
   end
 
-  def test_component_is_marked_cacheable
-    assert_predicate CacheableComponent, :__vc_cacheable?
-    refute_respond_to ErbComponent, :__vc_cacheable?
+  def test_only_components_declaring_cache_on_cache_their_output
+    assert_predicate CacheableComponent, :__vc_caches_output?
+    refute_predicate ErbComponent, :__vc_caches_output?
   end
 
   def test_cache_on_declares_key_methods
@@ -77,6 +77,12 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     error = assert_raises(RuntimeError) { CacheableRaisingTemplateDependencyComponent.cache_digest }
 
     assert_equal "raising template dependency", error.message
+  end
+
+  def test_cache_digest_raises_when_an_explicit_dependency_fails_to_load
+    error = assert_raises(RuntimeError) { CacheableRaisingExplicitDependencyComponent.cache_digest }
+
+    assert_equal "raising Ruby dependency", error.message
   end
 
   def test_cache_digest_raises_when_a_digest_source_cannot_be_read
@@ -115,6 +121,32 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
       "app/components/cacheable_child_component.rb",
       original + "\n# a comment\n"
     ) { CacheableParentComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_an_untracked_child_template_changes
+    assert_digest_changes(
+      "app/components/untracked_child_component.html.erb",
+      "<span class=\"untracked-child\">changed</span>\n"
+    ) { CacheableUntrackedParentComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_an_untracked_child_ruby_file_changes
+    original = File.read(Rails.root.join("app/components/untracked_child_component.rb"))
+
+    assert_digest_changes(
+      "app/components/untracked_child_component.rb",
+      original + "\n# a comment\n"
+    ) { CacheableUntrackedParentComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_a_transitive_untracked_dependency_changes
+    refute_predicate UntrackedChildComponent, :__vc_caches_output?
+    refute_predicate HTTPUntrackedComponent, :__vc_caches_output?
+
+    assert_digest_changes(
+      "app/components/http_untracked_component.html.erb",
+      "<span class=\"http-untracked\">changed</span>\n"
+    ) { CacheableUntrackedParentComponent.cache_digest }
   end
 
   def test_cache_digest_changes_when_a_superclass_template_changes
@@ -165,11 +197,54 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     assert_includes dependencies, "integration_examples/erb_partial"
   end
 
-  def test_declared_names_that_are_not_cacheable_components_are_left_alone
+  def test_declared_names_that_are_not_components_are_left_alone
     assert_empty ViewComponent::CacheDigest.explicit_component_dependencies(
-      "# Template Dependency: ErbComponent"
+      "# Template Dependency: NotAConstantAnywhere"
+    )
+    assert_empty ViewComponent::CacheDigest.explicit_component_dependencies(
+      "# Template Dependency: ActiveSupport::Digest"
     )
     assert_empty ViewComponent::CacheDigest.explicit_component_dependencies("no declarations here")
+  end
+
+  def test_declared_components_resolve_without_opting_into_caching
+    refute_predicate ErbComponent, :__vc_caches_output?
+
+    with_registry("cacheable_component" => "CacheableComponent") do
+      template = build_template("<%# Template Dependency: ErbComponent %>")
+      dependencies = ActionView::DependencyTracker.find_dependencies("test/template", template, [])
+
+      assert_includes dependencies, "view_component/cache_digest/erb_component"
+      refute_includes dependencies, "ErbComponent"
+      assert_equal ErbComponent, ViewComponent::CacheDigest.component_for("view_component/cache_digest/erb_component")
+    end
+  end
+
+  def test_cache_digest_changes_when_a_declared_untracked_component_changes
+    assert_digest_changes(
+      "app/components/erb_component.html.erb",
+      "<div>changed</div>\n"
+    ) { CacheablePlainDependencyComponent.cache_digest }
+  end
+
+  def test_declared_components_register_acronym_names_and_custom_virtual_paths
+    with_registry("cacheable_component" => "CacheableComponent") do
+      dependencies = ViewComponent::CacheDigest.explicit_component_dependencies(
+        "# Template Dependency: HTTPUntrackedComponent\n# Template Dependency: UntrackedChildComponent"
+      )
+
+      assert_equal(
+        [
+          ["HTTPUntrackedComponent", "view_component/cache_digest/http_untracked_component"],
+          ["UntrackedChildComponent", "view_component/cache_digest/custom/untracked_child"]
+        ],
+        dependencies
+      )
+      assert_equal HTTPUntrackedComponent,
+        ViewComponent::CacheDigest.component_for("view_component/cache_digest/http_untracked_component")
+      assert_equal UntrackedChildComponent,
+        ViewComponent::CacheDigest.component_for("view_component/cache_digest/custom/untracked_child")
+    end
   end
 
   # Components rendered from an inline template are invisible to Action View's
@@ -298,6 +373,8 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   # own path, which resolves to no template: component templates aren't in the
   # view paths. Without a digest of its own the fragment never invalidates.
   def test_a_cache_block_in_a_component_template_is_digested
+    refute_predicate CacheBlockComponent, :__vc_caches_output?
+
     with_caching do
       key = capture_fragment_key { render_inline(CacheBlockComponent.new) }
 
@@ -505,8 +582,82 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
     )
   end
 
-  def test_dependencies_ignore_components_that_did_not_opt_in
-    assert_empty ViewComponent::CacheDigest.dependencies_in(build_template("<%= render ErbComponent.new(message: 'a') %>"))
+  def test_dependencies_are_found_for_components_that_did_not_opt_in
+    assert_equal(
+      ["view_component/cache_digest/erb_component"],
+      ViewComponent::CacheDigest.dependencies_in(build_template("<%= render ErbComponent.new(message: 'a') %>"))
+    )
+  end
+
+  def test_discovered_components_register_acronym_names_and_custom_virtual_paths
+    with_registry("cacheable_component" => "CacheableComponent") do
+      dependencies = ViewComponent::CacheDigest.dependencies_in(
+        build_template("<%= render HTTPUntrackedComponent.new %><%= render UntrackedChildComponent.new %>")
+      )
+
+      assert_equal(
+        ["view_component/cache_digest/http_untracked_component", "view_component/cache_digest/custom/untracked_child"],
+        dependencies
+      )
+      assert_equal "HTTPUntrackedComponent", ViewComponent::CacheDigest.registry["http_untracked_component"]
+      assert_equal "UntrackedChildComponent", ViewComponent::CacheDigest.registry["custom/untracked_child"]
+      assert_equal HTTPUntrackedComponent,
+        ViewComponent::CacheDigest.component_for("view_component/cache_digest/http_untracked_component")
+      assert_equal UntrackedChildComponent,
+        ViewComponent::CacheDigest.component_for("view_component/cache_digest/custom/untracked_child")
+      refute_predicate HTTPUntrackedComponent, :__vc_caches_output?
+      refute_predicate UntrackedChildComponent, :__vc_caches_output?
+    end
+  end
+
+  def test_dependencies_ignore_constants_that_are_not_components
+    assert_empty ViewComponent::CacheDigest.dependencies_in(build_template("<%= render IntegrationExamplesController %>"))
+  end
+
+  def test_dependency_discovery_works_without_any_registered_components
+    with_registry({}) do
+      source = "<%# Template Dependency: UntrackedChildComponent %><%= render HTTPUntrackedComponent.new %>"
+      dependencies = ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
+
+      assert_includes dependencies, "view_component/cache_digest/http_untracked_component"
+      assert_includes dependencies, "view_component/cache_digest/custom/untracked_child"
+      refute_predicate HTTPUntrackedComponent, :__vc_caches_output?
+      refute_predicate UntrackedChildComponent, :__vc_caches_output?
+    end
+  end
+
+  def test_unopted_component_digest_is_computable_without_registration
+    with_registry({}) do
+      refute_predicate UntrackedChildComponent, :__vc_caches_output?
+
+      refute_empty UntrackedChildComponent.cache_digest
+      assert_equal "UntrackedChildComponent", ViewComponent::CacheDigest.registry["custom/untracked_child"]
+    end
+  end
+
+  def test_precompute_serves_digests_without_reading_source_files
+    components = [CacheableParentComponent, CacheableChildComponent]
+    clear_digest_cache
+    expected = CacheableParentComponent.cache_digest
+    clear_digest_cache
+
+    ViewComponent::CacheDigest.precompute!(components)
+
+    assert_equal ViewComponent::CacheDigest::Resolver.instance.source_for(CacheableChildComponent),
+      CacheableChildComponent.__vc_cache_digest_source
+    assert_predicate CacheableChildComponent.__vc_cache_digest_source, :frozen?
+
+    finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [:html])
+    assert_equal expected, finder.digest_cache["view_component/cache_digest/cacheable_parent_component.html"]
+
+    # Rebuilding the tree uses the stored sources rather than the files on disk.
+    clear_digest_cache
+    File.stub(:read, ->(*) { flunk "read a source file" }) do
+      assert_equal expected, CacheableParentComponent.cache_digest
+    end
+  ensure
+    components.each { |component| component.__vc_cache_digest_source = nil }
+    clear_digest_cache
   end
 
   def test_resolver_is_identified_by_class
@@ -518,17 +669,30 @@ class ExperimentallyCacheableTest < ViewComponent::TestCase
   end
 
   def test_install_is_idempotent
-    resolver_count = ActionController::Base.view_paths.count { |path| path.is_a?(ViewComponent::CacheDigest::Resolver) }
-
     ViewComponent::CacheDigest.install!
 
     assert_equal(
-      resolver_count,
-      ActionController::Base.view_paths.count { |path| path.is_a?(ViewComponent::CacheDigest::Resolver) }
+      1,
+      ActionView::Digestor.singleton_class.ancestors.count(ViewComponent::CacheDigest::DigestorLookup)
     )
   end
 
+  def test_install_leaves_view_paths_alone
+    ViewComponent::CacheDigest.install!
+
+    assert ActionController::Base.view_paths.all? { |path| path.is_a?(ActionView::FileSystemResolver) }
+  end
+
   private
+
+  def with_registry(entries)
+    saved = ViewComponent::CacheDigest.registry.dup
+    ViewComponent::CacheDigest.registry.replace(entries)
+    yield
+  ensure
+    ViewComponent::CacheDigest.registry.replace(saved)
+    clear_digest_cache
+  end
 
   # `with_new_cache` compiles components against whatever is on disk, then
   # restores the previous compile cache on exit. A component compiled while its

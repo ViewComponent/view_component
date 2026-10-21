@@ -50,6 +50,8 @@ module ViewComponent
 
         define_render_template_for
 
+        @component.__vc_cache_output = @component.__vc_caches_output?
+
         @component.__vc_register_default_slots
         @component.__vc_build_i18n_backend
 
@@ -74,6 +76,14 @@ module ViewComponent
       end
 
       filtered_templates
+    end
+
+    # Formats the component has templates for. Inline templates and `#call`
+    # methods have no format of their own and render as HTML.
+    #
+    # @return [Array<Symbol>]
+    def template_formats
+      gather_templates.map { |template| template.format || :html }.uniq
     end
 
     private
