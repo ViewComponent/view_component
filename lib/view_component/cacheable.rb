@@ -6,9 +6,7 @@ module ViewComponent
   # Caching support for ViewComponents.
   #
   # Provides the `cache_on` macro, which caches the component's own rendered
-  # output. Included in every component by `ViewComponent::Base`, so there's
-  # no need to include it. Components don't cache their output until they
-  # call `cache_on`.
+  # output. Components don't cache their output until they call `cache_on`.
   #
   # ```ruby
   # class MessageComponent < ViewComponent::Base

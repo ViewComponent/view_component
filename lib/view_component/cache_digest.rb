@@ -226,14 +226,11 @@ module ViewComponent
           component.__vc_cache_digest_source = Resolver.instance.source_for(component).freeze
         end
 
-        # Warms the same digest cache requests read, since a lookup context's
-        # cache is shared by every context with the same details.
-        components.each do |component|
-          component.__vc_template_formats.each do |format|
-            finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [format])
-            component.cache_digest(finder: finder, format: format)
-          end
-        end
+        # Warms the same digest cache HTML requests read, since a lookup
+        # context's cache is shared by every context with the same details.
+        # Other formats are digested on first use.
+        finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [:html])
+        components.each { |component| component.cache_digest(finder: finder, format: :html) }
       end
 
       private
