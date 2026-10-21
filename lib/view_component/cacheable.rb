@@ -106,6 +106,12 @@ module ViewComponent
       def __vc_caches_output?
         __vc_cache_on.any?
       end
+
+      # `__vc_caches_output?`, stored when the component compiles so rendering
+      # reads a flag instead of computing it.
+      #
+      # @private
+      attr_accessor :__vc_cache_output
     end
 
     # The cache key for this rendering of the component.
@@ -143,7 +149,7 @@ module ViewComponent
     private
 
     # Renders through the Rails cache. Called by `Base#render_in` for
-    # components that declare `cache_on`, with a block that does the render.
+    # components that declare `cache_on`.
     def __vc_render_cached(view_context, content_block)
       # Content provided by the caller isn't part of the cache key, so caching
       # it would serve one caller's content to another. Raised whether or not
@@ -153,7 +159,7 @@ module ViewComponent
         raise ContentPassedToCachedComponentError.new(self.class.name)
       end
 
-      return yield unless __vc_cache_enabled?(view_context)
+      return __vc_render_uncached(view_context) unless __vc_cache_enabled?(view_context)
 
       store = Rails.cache
       key = cache_key(view_context)
@@ -164,9 +170,14 @@ module ViewComponent
         return cached.html_safe
       end
 
-      yield.tap do |output|
+      __vc_render_uncached(view_context).tap do |output|
         store.write(key, output.to_s)
       end
+    end
+
+    def __vc_render_uncached(view_context)
+      @__vc_cache_bypassed = true
+      render_in(view_context)
     end
 
     # Slots set by the caller via `with_*`. Checked before rendering, so slots

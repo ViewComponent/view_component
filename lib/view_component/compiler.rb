@@ -50,6 +50,8 @@ module ViewComponent
 
         define_render_template_for
 
+        @component.__vc_cache_output = @component.__vc_caches_output?
+
         @component.__vc_register_default_slots
         @component.__vc_build_i18n_backend
 
