@@ -58,7 +58,7 @@ The fragment is invalidated by the same set of changes listed above. No module i
 
 ## Self-caching
 
-To have a component cache its own output without needing a `cache` block, use `cache_on` to declare methods used for the component's cache key. `cache_on` is available on every component; there's no module to include. Components that don't call it aren't cached.
+To have a component cache its own output without needing a `cache` block, use `cache_on` to declare methods used for the component's cache key. `cache_on` is available on every component, with no module to include. Components that don't call it aren't cached.
 
 ```ruby
 class PostComponent < ViewComponent::Base

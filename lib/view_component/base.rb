@@ -900,8 +900,7 @@ module ViewComponent
       attr_reader :__vc_provided_collection_parameter
     end
 
-    # Prepended so its `render_in` wraps the one defined above.
-    prepend ViewComponent::Cacheable
+    include ViewComponent::Cacheable
 
     ActiveSupport.run_load_hooks(:view_component, self)
   end

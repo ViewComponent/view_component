@@ -27,6 +27,43 @@ module ViewComponent
     # that respect would share an entry.
     NIL_CACHE_VALUE = :__vc_nil
 
+    # Wraps `render_in` with the caching logic. Prepended by `cache_on` only to
+    # components that cache, so the rest render without the extra layer.
+    #
+    # @private
+    module Rendering
+      # Renders the component, reading from and writing to the Rails cache when
+      # `cache_on` has been declared.
+      #
+      # @private
+      def render_in(view_context, **, &block)
+        return super unless self.class.__vc_caches_output?
+
+        # Content provided by the caller isn't part of the cache key, so caching
+        # it would serve one caller's content to another. Raised whether or not
+        # caching is currently enabled, so the conflict surfaces in development
+        # and test rather than only in production.
+        if block || __vc_content_set_by_with_content_defined? || __vc_slots_set_by_caller?
+          raise ContentPassedToCachedComponentError.new(self.class.name)
+        end
+
+        return super unless __vc_cache_enabled?(view_context)
+
+        store = Rails.cache
+        key = cache_key(view_context)
+
+        if (cached = store.read(key))
+          # Safe to mark as HTML-safe: the cached string was produced by this same
+          # rendering pipeline, which escapes output before it's written.
+          return cached.html_safe
+        end
+
+        super.tap do |output|
+          store.write(key, output.to_s)
+        end
+      end
+    end
+
     class_methods do
       # Declare the values that identify a rendering of this component.
       #
@@ -81,6 +118,8 @@ module ViewComponent
         @__vc_cache_on = __vc_cache_on | methods.map(&:to_sym)
         @__vc_cache_if = options[:if] if options.key?(:if)
         @__vc_cache_unless = options[:unless] if options.key?(:unless)
+
+        prepend Rendering unless self < Rendering
       end
 
       # @private
@@ -107,37 +146,6 @@ module ViewComponent
       # @return [Boolean]
       def __vc_caches_output?
         __vc_cache_on.any?
-      end
-    end
-
-    # Renders the component, reading from and writing to the Rails cache when
-    # `cache_on` has been declared.
-    #
-    # @private
-    def render_in(view_context, **, &block)
-      return super unless self.class.__vc_caches_output?
-
-      # Content provided by the caller isn't part of the cache key, so caching
-      # it would serve one caller's content to another. Raised whether or not
-      # caching is currently enabled, so the conflict surfaces in development
-      # and test rather than only in production.
-      if block || __vc_content_set_by_with_content_defined? || __vc_slots_set_by_caller?
-        raise ContentPassedToCachedComponentError.new(self.class.name)
-      end
-
-      return super unless __vc_cache_enabled?(view_context)
-
-      store = Rails.cache
-      key = cache_key(view_context)
-
-      if (cached = store.read(key))
-        # Safe to mark as HTML-safe: the cached string was produced by this same
-        # rendering pipeline, which escapes output before it's written.
-        return cached.html_safe
-      end
-
-      super.tap do |output|
-        store.write(key, output.to_s)
       end
     end
 
