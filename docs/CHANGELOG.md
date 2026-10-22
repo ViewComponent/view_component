@@ -14,6 +14,10 @@ nav_order: 6
 
     *Anthony Veaudry*
 
+* Fix the template annotations integration test failing when it ran after the coverage compile tests, which left components compiled without the annotation in the test cache.
+
+    *Anthony Veaudry*
+
 ## 4.18.0
 
 * Enable caching support for all components by default, and rename `ViewComponent::ExperimentallyCacheable` to `ViewComponent::Cacheable`. Including the module is no longer necessary. Breaking: remove existing `include ViewComponent::ExperimentallyCacheable` lines. Caching is no longer experimental.
