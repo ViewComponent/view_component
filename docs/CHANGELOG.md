@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.18.0
+
 * Enable caching support for all components by default, and rename `ViewComponent::ExperimentallyCacheable` to `ViewComponent::Cacheable`. Including the module is no longer necessary. Breaking: remove existing `include ViewComponent::ExperimentallyCacheable` lines. Caching is no longer experimental.
 
     *Erik Axel Nielsen, Joel Hawksley*
