@@ -137,6 +137,9 @@ def with_new_cache
   yield
 ensure
   ActionView::Base.cache_template_loading = old_cache_template_loading
+  # Components compiled in the block were compiled under its settings, such as
+  # coverage or annotations, so make them compile again the next time they render.
+  old_cache.subtract(ViewComponent::CompileCache.cache)
   ViewComponent::CompileCache.cache = old_cache
 end
 
