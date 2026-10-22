@@ -30,7 +30,7 @@ module ViewComponent
     # changed, or removed. Changes to Ruby files reload the application instead.
     def template_watcher(file_watcher)
       extensions = ActionView::Template::Handlers.extensions.map(&:to_s) + %w[yml yaml]
-      directories = ActiveSupport::Dependencies.autoload_paths.index_with(extensions)
+      directories = ActiveSupport::Dependencies.autoload_paths.map(&:to_s).index_with(extensions)
 
       file_watcher.new([], directories) { invalidate! }
     end

@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix every request raising `NoMethodError` in development when an autoload path is a `Pathname`, as engines such as Madmin add. The template watcher now passes the autoload paths to the file watcher as strings.
+
+    *Anthony Veaudry*
+
 ## 4.18.0
 
 * Enable caching support for all components by default, and rename `ViewComponent::ExperimentallyCacheable` to `ViewComponent::Cacheable`. Including the module is no longer necessary. Breaking: remove existing `include ViewComponent::ExperimentallyCacheable` lines. Caching is no longer experimental.

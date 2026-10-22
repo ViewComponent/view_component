@@ -25,6 +25,20 @@ class TemplateCachingTest < ActiveSupport::TestCase
     watcher.verify
   end
 
+  # Applications and engines often add autoload paths as Pathnames, which
+  # ActiveSupport::FileUpdateChecker can't build its glob from.
+  def test_executor_watches_autoload_paths_given_as_pathnames
+    Dir.mktmpdir do |root|
+      FileUtils.mkdir_p(File.join(root, "lib/components"))
+      app = boot_app("development", root: root) do
+        config.autoload_paths << Pathname.new(root).join("lib/components")
+      end
+      refute ActionView::Base.cache_template_loading
+
+      app.executor.wrap {}
+    end
+  end
+
   # Non-main Ractors can't read ActionView::Resolver's class variable on Ruby 4.0,
   # so the executor must not read it on every request when templates are cached.
   def test_executor_does_nothing_when_templates_are_cached
@@ -88,7 +102,7 @@ class TemplateCachingTest < ActiveSupport::TestCase
 
   private
 
-  def boot_app(env, root: __dir__)
+  def boot_app(env, root: __dir__, &configure)
     Rails.env = env
 
     Class.new(Rails::Application) do
@@ -97,6 +111,7 @@ class TemplateCachingTest < ActiveSupport::TestCase
       config.enable_reloading = env == "development"
       config.secret_key_base = "test"
       config.logger = Logger.new(nil)
+      class_eval(&configure) if configure
     end.tap(&:initialize!)
   end
 
