@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.19.0
+
 * Remove the unused `concurrent-ruby` dependency. `require "concurrent-ruby"` loaded every concurrent-ruby class at boot, a leftover from the `Concurrent::ReadWriteLock` the compiler no longer uses.
 
     *Clément Joubert*
