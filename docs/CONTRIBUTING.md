@@ -160,4 +160,4 @@ ViewComponent maintainers have `admin` access, enabling them to manage repositor
 
 Committers are welcome to request maintainership access by opening a pull request to update this list:
 
-The maintainers team is @boardfish, @spone, @camertron, @blakewilliams, and @joelhawksley.
+The maintainers team is @finalburn, @spone, @camertron, @blakewilliams, and @joelhawksley.
