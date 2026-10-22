@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix every request raising `NoMethodError` in development when an autoload path is a `Pathname`, as engines such as Madmin add. The template watcher now passes the autoload paths to the file watcher as strings.
+
+    *Anthony Veaudry*
+
 * Fix the template annotations integration test failing when it ran after the coverage compile tests, which left components compiled without the annotation in the test cache.
 
     *Anthony Veaudry*
