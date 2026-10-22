@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "concurrent-ruby"
-
 module ViewComponent
   class Compiler
     # Compiler development mode. Can be either:

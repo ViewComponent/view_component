@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Remove the unused `concurrent-ruby` dependency. `require "concurrent-ruby"` loaded every concurrent-ruby class at boot, a leftover from the `Concurrent::ReadWriteLock` the compiler no longer uses.
+
+    *Clément Joubert*
+
 * Fix every request raising `NoMethodError` in development when an autoload path is a `Pathname`, as engines such as Madmin add. The template watcher now passes the autoload paths to the file watcher as strings.
 
     *Anthony Veaudry*
