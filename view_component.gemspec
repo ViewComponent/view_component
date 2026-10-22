@@ -35,5 +35,4 @@ Gem::Specification.new do |spec|
   supported_rails_version = [">= 7.1.0"]
   spec.add_runtime_dependency "activesupport", supported_rails_version
   spec.add_runtime_dependency "actionview", supported_rails_version
-  spec.add_runtime_dependency "concurrent-ruby", "~> 1"
 end

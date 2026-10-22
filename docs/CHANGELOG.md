@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Remove the unused `concurrent-ruby` dependency. `require "concurrent-ruby"` loaded every concurrent-ruby class at boot, a leftover from the `Concurrent::ReadWriteLock` the compiler no longer uses.
+
+    *Clément Joubert*
+
 ## 4.18.0
 
 * Enable caching support for all components by default, and rename `ViewComponent::ExperimentallyCacheable` to `ViewComponent::Cacheable`. Including the module is no longer necessary. Breaking: remove existing `include ViewComponent::ExperimentallyCacheable` lines. Caching is no longer experimental.
