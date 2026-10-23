@@ -121,7 +121,17 @@ Dir.mktmpdir do |root|
   components = File.join(root, "app", "components")
   FileUtils.mkdir_p(components)
 
+  # Each component renders another, so boot also discovers cache digest dependencies.
+  render_call = lambda do |i|
+    case i % 3
+    when 0 then "render Sidecar#{i}Component.new(name: 'x')"
+    when 1 then "render(Inline#{i}Component.new) { 'x' }"
+    else "render Slots#{i}Component.new"
+    end
+  end
+
   Integer(ENV.fetch("BOOT_COMPONENTS", 300)).times do |i|
+    rendered = render_call.call(i.zero? ? 1 : (i - 1) / 2)
     case i % 3
     when 0
       File.write(File.join(components, "sidecar#{i}_component.rb"), <<~RUBY)
@@ -131,11 +141,11 @@ Dir.mktmpdir do |root|
           end
         end
       RUBY
-      File.write(File.join(components, "sidecar#{i}_component.html.erb"), "<p><%= @name %></p>\n")
+      File.write(File.join(components, "sidecar#{i}_component.html.erb"), "<p><%= @name %></p><%= #{rendered} %>\n")
     when 1
       File.write(File.join(components, "inline#{i}_component.rb"), <<~RUBY)
         class Inline#{i}Component < ViewComponent::Base
-          erb_template "<p><%= content %></p>"
+          erb_template "<p><%= content %></p><%= #{rendered} %>"
         end
       RUBY
     else
@@ -145,7 +155,7 @@ Dir.mktmpdir do |root|
           renders_many :items
         end
       RUBY
-      File.write(File.join(components, "slots#{i}_component.html.erb"), "<%= header %><% items.each do |item| %><%= item %><% end %>\n")
+      File.write(File.join(components, "slots#{i}_component.html.erb"), "<%= header %><% items.each do |item| %><%= item %><% end %><%= #{rendered} %>\n")
     end
   end
 
