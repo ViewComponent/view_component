@@ -624,7 +624,10 @@ module ViewComponent
         return [] unless identifier
         return [] unless name
 
-        extensions = extensions.join(",")
+        # One glob per directory, filtered by extension, rather than a brace
+        # pattern per extension: Dir expands braces into one directory listing
+        # per extension.
+        extensions = extensions.map(&:to_s)
 
         # view files in a directory named like the component
         directory = File.dirname(identifier)
@@ -643,15 +646,15 @@ module ViewComponent
         # Without this, `MyOtherComponent` will not look for `my_component/my_other_component.html.erb`
         nested_component_files =
           if name.include?("::") && component_name != filename
-            Dir["#{directory}/#{filename}/#{component_name}.*{#{extensions}}"]
+            __vc_files_ending_with(extensions, "#{directory}/#{filename}/#{component_name}.*")
           else
             []
           end
 
         # view files in the same directory as the component
-        sidecar_files = Dir["#{directory}/#{component_name}.*{#{extensions}}"]
+        sidecar_files = __vc_files_ending_with(extensions, "#{directory}/#{component_name}.*")
 
-        sidecar_directory_files = Dir["#{directory}/#{component_name}/#{filename}.*{#{extensions}}"]
+        sidecar_directory_files = __vc_files_ending_with(extensions, "#{directory}/#{component_name}/#{filename}.*")
 
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
       end
@@ -899,6 +902,11 @@ module ViewComponent
           method = method.super_method
         end
         signatures
+      end
+
+      def __vc_files_ending_with(extensions, pattern)
+        paths = Dir[pattern]
+        extensions.flat_map { |extension| paths.select { |path| path.end_with?(extension) } }
       end
 
       attr_reader :__vc_provided_collection_parameter

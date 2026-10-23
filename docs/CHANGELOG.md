@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Speed up `sidecar_files`, which 4.18's cache digest precomputation calls for every component and superclass at boot, by globbing each directory once instead of once per extension. On an app with 302 components, `compile.view_component` drops from 2.3 s to 1.2 s.
+
+    *Clément Joubert*
+
 ## 4.19.0
 
 * Remove the unused `concurrent-ruby` dependency. `require "concurrent-ruby"` loaded every concurrent-ruby class at boot, a leftover from the `Concurrent::ReadWriteLock` the compiler no longer uses.
