@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fail the test suite when a gem in the Gemfile or gemspec isn't loaded.
+
+    *Joel Hawksley*
+
 * Remove the unused `selenium-webdriver` and `tailwindcss-rails` development dependencies.
 
     *Joel Hawksley*
