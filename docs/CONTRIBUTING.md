@@ -89,6 +89,19 @@ Specify one of the supported versions listed in [Appraisals](https://github.com/
 bundle exec appraisal rails-8.0 rake
 ```
 
+### Performance
+
+CI compares each pull request against its base branch on Rails 8.1 and Rails main. For each scenario in `performance/measure.rb`, it divides the component render time by the render time of an equivalent partial. It also boots a production app with 300 generated components and divides the time spent in ViewComponent (requiring it, loading components, and compiling them) by the rest of boot. It fails if any ratio is more than 5% higher than the base branch's ratio.
+
+To run the comparison locally:
+
+```command
+git worktree add tmp/base main
+VIEW_COMPONENT_LIB=tmp/base/lib bundle exec ruby performance/measure.rb tmp/performance/base.json
+bundle exec ruby performance/measure.rb tmp/performance/head.json
+bundle exec ruby performance/compare.rb tmp/performance/base.json tmp/performance/head.json
+```
+
 ## Documentation
 
 ### Previewing changes locally
