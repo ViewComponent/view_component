@@ -26,7 +26,13 @@ module ViewComponent
           dependencies = dependencies - [declared] + [virtual_path]
         end
 
-        dependencies + CacheDigest.dependencies_in(template)
+        # Swap the partials Action View wrongly infers from component renders,
+        # such as `news/new` from `render ChildComponent.new`, for the
+        # components themselves.
+        component_paths, inferred_partials =
+          CacheDigest.component_renders_in(CacheDigest.compiled_source(template), name)
+
+        (dependencies - inferred_partials + component_paths).uniq
       end
 
       # @private

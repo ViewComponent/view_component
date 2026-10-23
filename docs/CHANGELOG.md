@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix `Couldn't find template for digesting` errors when computing cache digests for templates that render components. Action View inferred a partial from `render SomeComponent.new`, so partials inferred from component renders are now discarded. Component renders are found with Prism rather than a regular expression, adding a dependency on the `prism` gem.
+
+    *Joel Hawksley*
+
 * Measure cache digest precomputation in the boot benchmark by disabling class reloading in the benchmark app and having each generated component render another.
 
     *Joel Hawksley*

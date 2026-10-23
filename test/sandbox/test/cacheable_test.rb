@@ -263,6 +263,20 @@ class CacheableTest < ViewComponent::TestCase
     ) { CacheableInlinePartialComponent.cache_digest }
   end
 
+  def test_cache_digest_changes_when_a_child_of_a_haml_template_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableHamlComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_a_child_of_a_slim_template_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableSlimComponent.cache_digest }
+  end
+
   # Components rendered from a `#call` method live in Ruby, not in a template.
   def test_cache_digest_changes_when_a_child_of_a_call_method_changes
     assert_digest_changes(
@@ -582,6 +596,18 @@ class CacheableTest < ViewComponent::TestCase
     )
   end
 
+  def test_template_dependencies_reuse_sources_compiled_at_boot
+    template = build_template("<%= render 'posts/byline' %>")
+
+    dependencies = ViewComponent::CacheDigest.retaining_compiled_sources do
+      ViewComponent::CacheDigest.compiled(template.handler, template.source, "render CacheableComponent.new(title: 'a')")
+      ViewComponent::CacheDigest.template_dependencies_in(template, "test/template")
+    end
+
+    assert_equal ["view_component/cache_digest/cacheable_component"], dependencies
+    assert_equal ["posts/byline"], ViewComponent::CacheDigest.template_dependencies_in(template, "test/template")
+  end
+
   def test_dependencies_are_found_for_components_that_did_not_opt_in
     assert_equal(
       ["view_component/cache_digest/erb_component"],
@@ -623,6 +649,54 @@ class CacheableTest < ViewComponent::TestCase
       assert_includes dependencies, "view_component/cache_digest/custom/untracked_child"
       refute_predicate HTTPUntrackedComponent, :__vc_caches_output?
       refute_predicate UntrackedChildComponent, :__vc_caches_output?
+    end
+  end
+
+  # Action View reads `render Foo.new` as a dynamic render of a partial named
+  # after the last method, inferring `news/new`. That partial doesn't exist.
+  def test_templates_without_constant_renders_are_not_compiled
+    assert_empty ViewComponent::CacheDigest.compiled_source(build_template(%(<%= render "posts/byline" %><%= render @post %>)))
+
+    [
+      "<%= render CacheableComponent.new(title: 'x') %>",
+      "<%= render(\n  ::CacheableComponent.new(title: 'x')) %>",
+      "<%= render_to_string CacheableComponent.new(title: 'x') %>"
+    ].each do |source|
+      refute_empty ViewComponent::CacheDigest.compiled_source(build_template(source)), source
+    end
+  end
+
+  def test_partials_inferred_from_component_renders_are_discarded
+    source = <<~ERB
+      <%= render ErbComponent.new(message: "a") %>
+      <%= render(CacheableComponent.with_collection([])) %>
+      <%= render "integration_examples/erb_partial" %>
+    ERB
+
+    each_render_tracker do
+      dependencies = ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
+
+      assert_equal(
+        [
+          "integration_examples/erb_partial",
+          "view_component/cache_digest/erb_component",
+          "view_component/cache_digest/cacheable_component"
+        ],
+        dependencies
+      )
+    end
+  end
+
+  def test_partials_named_like_inferred_component_partials_are_kept
+    source = <<~ERB
+      <%= render ErbComponent.new(message: "a") %>
+      <%= render "news/new" %>
+    ERB
+
+    each_render_tracker do
+      dependencies = ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
+
+      assert_equal ["news/new", "view_component/cache_digest/erb_component"], dependencies
     end
   end
 
@@ -717,6 +791,24 @@ class CacheableTest < ViewComponent::TestCase
       format: :html,
       virtual_path: virtual_path
     )
+  end
+
+  # Run the block under both of Action View's ERB trackers.
+  def each_render_tracker
+    handler = ActionView::Template.handler_for_extension(:erb)
+    trackers = ActionView::DependencyTracker.instance_variable_get(:@trackers)
+    original = trackers[handler]
+
+    # Rails 7.1 names the Ruby tracker `RipperTracker`.
+    ruby_tracker = %i[RubyTracker RipperTracker].find { ActionView::DependencyTracker.const_defined?(_1) }
+
+    [:ERBTracker, ruby_tracker].each do |name|
+      tracker = ActionView::DependencyTracker.const_get(name)
+      ActionView::DependencyTracker.register_tracker(:erb, tracker)
+      yield
+    end
+  ensure
+    trackers[handler] = original
   end
 
   def digest_of(virtual_path)
