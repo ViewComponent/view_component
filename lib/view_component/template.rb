@@ -208,14 +208,16 @@ module ViewComponent
 
     def compiled_source
       handler = details.handler_class
-      this_source = source
-      this_source.rstrip! if @component.strip_trailing_whitespace?
+      original_source = source
+      this_source = @component.strip_trailing_whitespace? ? original_source.rstrip : original_source
 
       short_identifier = defined?(Rails.root) ? @path.sub("#{Rails.root}/", "") : @path
       format = self.format || DEFAULT_FORMAT
       type = ActionView::Template::Types[format]
 
-      handler.call(DataWithSource.new(format:, identifier: @path, short_identifier:, type:), this_source)
+      handler.call(DataWithSource.new(format:, identifier: @path, short_identifier:, type:), this_source).tap do |compiled|
+        CacheDigest.compiled(handler, original_source, compiled)
+      end
     end
   end
 end

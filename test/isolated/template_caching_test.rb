@@ -89,6 +89,22 @@ class TemplateCachingTest < ActiveSupport::TestCase
     end
   end
 
+  # Action View infers a `news/new` partial from `render ChildComponent.new`.
+  def test_component_renders_do_not_log_missing_templates_at_boot
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/child_component.rb", "class ChildComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/child_component.html.erb", "<div>Child</div>")
+      write_file(root, "app/components/parent_component.rb", "class ParentComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/parent_component.html.erb", "<%= render ChildComponent.new %>")
+
+      log = StringIO.new
+      boot_app("production", root: root) { config.logger = Logger.new(log) }
+
+      assert ParentComponent.__vc_cache_digest_source
+      refute_match "Couldn't find template", log.string
+    end
+  end
+
   def test_component_digests_are_not_computed_at_boot_when_templates_are_not_cached
     Dir.mktmpdir do |root|
       write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")

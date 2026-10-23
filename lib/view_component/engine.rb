@@ -95,10 +95,13 @@ module ViewComponent
         if Rails.application.config.eager_load
           ActiveSupport::Notifications.instrument("compile.view_component") do
             components = ViewComponent::Base.descendants.reject(&:anonymous?)
-            components.each(&:__vc_compile)
 
-            if ActionView::Base.cache_template_loading
-              ViewComponent::CacheDigest.precompute!(components.select(&:__vc_compiled?))
+            ViewComponent::CacheDigest.retaining_compiled_sources do
+              components.each(&:__vc_compile)
+
+              if ActionView::Base.cache_template_loading
+                ViewComponent::CacheDigest.precompute!(components.select(&:__vc_compiled?))
+              end
             end
           end
         end
