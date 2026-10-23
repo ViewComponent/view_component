@@ -12,22 +12,54 @@ on:
 
 jobs:
   benchmark:
+    if: always()
+    needs: benchmark-rails
     runs-on: ubuntu-latest
+    steps:
+    - name: Check benchmark results
+      env:
+        RESULT: ${{ needs.benchmark-rails.result }}
+      run: test "$RESULT" = success || test "$RESULT" = skipped
+  benchmark-rails:
+    name: benchmark (Rails ${{ matrix.rails_version }})
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rails_version: ["8.1", "main"]
     env:
-      BUNDLE_GEMFILE: gemfiles/rails_8.1.gemfile
+      BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
         persist-credentials: false
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
+        ref: ${{ github.event.pull_request.base.sha }}
+        path: tmp/base
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1
       with:
         ruby-version: 4.0
         bundler-cache: true
-    - name: Run benchmarks
+    - name: Compare performance against base
+      shell: bash
+      env:
+        PASSES: 5
       run: |
-        bundle exec appraisal rails-8.1 rake partial_benchmark
-        bundle exec appraisal rails-8.1 rake translatable_benchmark
+        for round in 1 2 3; do
+          VIEW_COMPONENT_LIB=tmp/base/lib bundle exec ruby performance/measure.rb "tmp/performance/base/$round.json"
+          bundle exec ruby performance/measure.rb "tmp/performance/head/$round.json"
+        done
+        bundle exec ruby performance/compare.rb tmp/performance/base tmp/performance/head | tee -a "$GITHUB_STEP_SUMMARY"
+    - name: Upload performance results
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      if: always()
+      with:
+        name: performance-rails-${{ matrix.rails_version }}
+        path: tmp/performance
   test:
     name: test (Rails ${{ matrix.rails_version }}, Ruby ${{ matrix.ruby_version }})
     runs-on: ubuntu-latest
