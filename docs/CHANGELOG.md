@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Remove the unused `selenium-webdriver` and `tailwindcss-rails` development dependencies.
+
+    *Joel Hawksley*
+
 * Speed up `sidecar_files`, which 4.18's cache digest precomputation calls for every component and superclass at boot, by globbing each directory once instead of once per extension. On an app with 302 components, `compile.view_component` drops from 2.3 s to 1.2 s.
 
     *Clément Joubert*

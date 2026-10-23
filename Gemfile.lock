@@ -150,7 +150,6 @@ GEM
       base64 (~> 0.2)
       concurrent-ruby (~> 1.1)
       websocket-driver (~> 0.7)
-    ffi (1.17.4)
     ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-aarch64-linux-musl)
     ffi (1.17.4-arm-linux-gnu)
@@ -364,13 +363,7 @@ GEM
     rubydex (0.4.1-arm64-darwin)
     rubydex (0.4.1-x86_64-darwin)
     rubydex (0.4.1-x86_64-linux)
-    rubyzip (3.7.0)
     securerandom (0.4.1)
-    selenium-webdriver (4.50.0)
-      base64 (~> 0.2)
-      logger (~> 1.4)
-      rubyzip (>= 1.2.2, < 4.0)
-      websocket (~> 1.0)
     simplecov (1.3.2)
     simplecov-console (0.9.5)
       ansi
@@ -406,16 +399,6 @@ GEM
       memo_wise (~> 1.13)
       paint (~> 2.3)
       unicode-display_width (~> 3.2)
-    tailwindcss-rails (4.6.0)
-      railties (>= 7.0.0)
-      tailwindcss-ruby (~> 4.0)
-    tailwindcss-ruby (4.3.3)
-    tailwindcss-ruby (4.3.3-aarch64-linux-gnu)
-    tailwindcss-ruby (4.3.3-aarch64-linux-musl)
-    tailwindcss-ruby (4.3.3-arm64-darwin)
-    tailwindcss-ruby (4.3.3-x86_64-darwin)
-    tailwindcss-ruby (4.3.3-x86_64-linux-gnu)
-    tailwindcss-ruby (4.3.3-x86_64-linux-musl)
     temple (0.10.7)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
@@ -489,13 +472,11 @@ DEPENDENCIES
   redis (>= 4, < 6)
   rspec-rails
   rubocop-md (~> 2)
-  selenium-webdriver (~> 4)
   simplecov (< 2)
   simplecov-console (< 1)
   slim (~> 5)
   sprockets-rails (~> 3)
   standard (~> 1)
-  tailwindcss-rails (~> 4)
   turbo-rails
   view_component!
   warning
@@ -550,7 +531,6 @@ CHECKSUMS
   erb_lint (0.9.0) sha256=dfb5e40ad839e8d1f0d56ca85ec9a7ac4c9cd966ec281138282f35b323ca7c31
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   ferrum (0.18.0) sha256=4cb8be16e352fc1d75f087e9214b34ec1b93ba932410c730a4724909ca89d7c6
-  ffi (1.17.4) sha256=bcd1642e06f0d16fc9e09ac6d49c3a7298b9789bcb58127302f934e437d60acf
   ffi (1.17.4-aarch64-linux-gnu) sha256=b208f06f91ffd8f5e1193da3cae3d2ccfc27fc36fba577baf698d26d91c080df
   ffi (1.17.4-aarch64-linux-musl) sha256=9286b7a615f2676245283aef0a0a3b475ae3aae2bb5448baace630bb77b91f39
   ffi (1.17.4-arm-linux-gnu) sha256=d6dbddf7cb77bf955411af5f187a65b8cd378cb003c15c05697f5feee1cb1564
@@ -645,9 +625,7 @@ CHECKSUMS
   rubydex (0.4.1-arm64-darwin) sha256=d23720253876d88fb98954e5d3a1ef9696a269697acf50e3ab53cdfbb2b66b96
   rubydex (0.4.1-x86_64-darwin) sha256=a9681db5bc9be6a62f226d96d6889b6b600d0b09e7576391702aafd29912145b
   rubydex (0.4.1-x86_64-linux) sha256=4e2c8398c9fc585485b54edd28f5ecf76b5a02255e177b6f8402e9d2afffd51b
-  rubyzip (3.7.0) sha256=65c19294da75297a939006f3516deacc33185fbd721ff1954f7a231db6d3e121
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
-  selenium-webdriver (4.50.0) sha256=d12f94025bc33af44428ed6b8def4896a7bb9c4521212579241650d6cb060fcb
   simplecov (1.3.2) sha256=2a22ec1759f1b8db60881a2e038758956fc69ef93ed669be0bde0678de6d0e85
   simplecov-console (0.9.5) sha256=b1108bcfff5f210143e2b8301698c367b01586f20d25a73e95475a5df6fc6ff6
   slim (5.2.2) sha256=d1b5a575fcfa904a5eb66ec0a8f48a2363c7b9c57d50debb42dbab31524ef5e3
@@ -658,14 +636,6 @@ CHECKSUMS
   standard-custom (1.0.2) sha256=424adc84179a074f1a2a309bb9cf7cd6bfdb2b6541f20c6bf9436c0ba22a652b
   standard-performance (1.9.0) sha256=49483d31be448292951d80e5e67cdcb576c2502103c7b40aec6f1b6e9c88e3f2
   table_tennis (1.0.0) sha256=955f76ca4debd42ee88682af8d4554a74d533c89de4f1581bc37855b15faa956
-  tailwindcss-rails (4.6.0) sha256=d99512867173d55c5ef8890427682299d8539f550cec1408b3d8667a538bd365
-  tailwindcss-ruby (4.3.3) sha256=ee0a64030749862deb501acab4c4aaf5adbee13865746a33299d46d7b5d0952a
-  tailwindcss-ruby (4.3.3-aarch64-linux-gnu) sha256=c86d6dd3eccc85fe0d792a832b06f2bf3c0a7a83b399308aeb9d8f5725f42a6a
-  tailwindcss-ruby (4.3.3-aarch64-linux-musl) sha256=72b77ca9edea82383dd09510ab520a122e3cb9f9864ca5b38e27698098d2b899
-  tailwindcss-ruby (4.3.3-arm64-darwin) sha256=776c51fc734aac64bde0c253eadd2ed2e610b2ba0d8e760501fe7cbec55fd6cf
-  tailwindcss-ruby (4.3.3-x86_64-darwin) sha256=483011e5d3792cf5ef4afdfb04c1d95daccf42c30cdb6fe53b77520954e7b922
-  tailwindcss-ruby (4.3.3-x86_64-linux-gnu) sha256=2337017ff8b02698480eae1e9637cf01faa0e4824db89d067a13c5a5ee38c9b2
-  tailwindcss-ruby (4.3.3-x86_64-linux-musl) sha256=27d478c417bcf73828e5b544744c5bdfd5b5cb54f1a266fc4f185281c32efe6c
   temple (0.10.7) sha256=369fe560adb6534674ce232899c2232df614bcb29c5359b05efedff7a57ed9c0
   terminal-table (4.0.0) sha256=f504793203f8251b2ea7c7068333053f0beeea26093ec9962e62ea79f94301d2
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73

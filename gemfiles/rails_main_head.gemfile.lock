@@ -283,7 +283,6 @@ GEM
     regexp_parser (2.12.0)
     reline (0.6.3)
       io-console (~> 0.5)
-    rexml (3.4.4)
     rspec-core (3.13.6)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
@@ -323,14 +322,7 @@ GEM
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.47.1, < 2.0)
     ruby-progressbar (1.13.0)
-    rubyzip (3.3.0)
     securerandom (0.4.1)
-    selenium-webdriver (4.44.0)
-      base64 (~> 0.2)
-      logger (~> 1.4)
-      rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2, < 4.0)
-      websocket (~> 1.0)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -366,11 +358,6 @@ GEM
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.26.0)
     stringio (3.2.0)
-    tailwindcss-rails (4.4.0)
-      railties (>= 7.0.0)
-      tailwindcss-ruby (~> 4.0)
-    tailwindcss-ruby (4.3.0)
-    tailwindcss-ruby (4.3.0-arm64-darwin)
     temple (0.10.4)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
@@ -390,7 +377,6 @@ GEM
     useragent (0.16.11)
     warning (1.6.0)
     webrick (1.9.2)
-    websocket (1.2.11)
     websocket-driver (0.8.0)
       base64
       websocket-extensions (>= 0.1.0)
@@ -437,13 +423,11 @@ DEPENDENCIES
   redis
   rspec-rails (~> 8)
   rubocop-md (~> 2)
-  selenium-webdriver (~> 4)
   simplecov (< 1)
   simplecov-console (< 1)
   slim (~> 5)
   sprockets-rails (~> 3)
   standard (~> 1)
-  tailwindcss-rails (~> 4)
   turbo-rails (~> 2)
   view_component!
   warning
@@ -543,7 +527,6 @@ CHECKSUMS
   redis-client (0.29.0) sha256=0c65bf1f8f6dca22063ddb085c0bb2054feef6f03a84869f4161b18a9a15bea3
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
   reline (0.6.3) sha256=1198b04973565b36ec0f11542ab3f5cfeeec34823f4e54cebde90968092b1835
-  rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   rspec-core (3.13.6) sha256=a8823c6411667b60a8bca135364351dda34cd55e44ff94c4be4633b37d828b2d
   rspec-expectations (3.13.5) sha256=33a4d3a1d95060aea4c94e9f237030a8f9eae5615e9bd85718fe3a09e4b58836
   rspec-mocks (3.13.8) sha256=086ad3d3d17533f4237643de0b5c42f04b66348c28bf6b9c2d3f4a3b01af1d47
@@ -554,9 +537,7 @@ CHECKSUMS
   rubocop-md (2.0.4) sha256=0d076b6b5e99dea2ddc928c4bd702497decb9a8400da7808091e02ebcafcfb93
   rubocop-performance (1.26.1) sha256=cd19b936ff196df85829d264b522fd4f98b6c89ad271fa52744a8c11b8f71834
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
-  rubyzip (3.3.0) sha256=a372fc67892a4f8c0bc8ec906b720353d8e48807a64b2e63adf99b1e3583a034
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
-  selenium-webdriver (4.44.0) sha256=6f1df072529af369589c46f0e01132952aabb250cfd683c274d74dc1eb5d8477
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
   simplecov-console (0.9.5) sha256=b1108bcfff5f210143e2b8301698c367b01586f20d25a73e95475a5df6fc6ff6
   simplecov-html (0.13.2) sha256=bd0b8e54e7c2d7685927e8d6286466359b6f16b18cb0df47b508e8d73c777246
@@ -569,9 +550,6 @@ CHECKSUMS
   standard-custom (1.0.2) sha256=424adc84179a074f1a2a309bb9cf7cd6bfdb2b6541f20c6bf9436c0ba22a652b
   standard-performance (1.9.0) sha256=49483d31be448292951d80e5e67cdcb576c2502103c7b40aec6f1b6e9c88e3f2
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
-  tailwindcss-rails (4.4.0) sha256=efa2961351a52acebe616e645a81a30bb4f27fde46cc06ce7688d1cd1131e916
-  tailwindcss-ruby (4.3.0) sha256=4fd3219d97419d2b4f8c0f52c8a73972e55e29a0e0da38fb5fe8a16bf1a68b51
-  tailwindcss-ruby (4.3.0-arm64-darwin) sha256=828f49ddb3f19f67b36a1c5cb5c25175f7c93619a2ecf66e95d74408db9b73fd
   temple (0.10.4) sha256=b7a1e94b6f09038ab0b6e4fe0126996055da2c38bec53a8a336f075748fff72c
   terminal-table (4.0.0) sha256=f504793203f8251b2ea7c7068333053f0beeea26093ec9962e62ea79f94301d2
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
@@ -587,7 +565,6 @@ CHECKSUMS
   view_component (4.19.0)
   warning (1.6.0) sha256=a49cdfae19fb77d19afff2efbe45f8ab759e9cd25b4e4ce2c79dbaf46bdb6c9e
   webrick (1.9.2) sha256=beb4a15fc474defed24a3bda4ffd88a490d517c9e4e6118c3edce59e45864131
-  websocket (1.2.11) sha256=b7e7a74e2410b5e85c25858b26b3322f29161e300935f70a0e0d3c35e0462737
   websocket-driver (0.8.0) sha256=ed0dba4b943c22f17f9a734817e808bc84cdce6a7e22045f5315aa57676d4962
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
