@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Measure cache digest precomputation in the boot benchmark by disabling class reloading in the benchmark app and having each generated component render another.
+
+    *Joel Hawksley*
+
 * Add a CI performance check that fails a pull request when any benchmark scenario's component/partial render-time ratio, or ViewComponent's share of app boot time, regresses by more than 5% against the base branch on Rails 8.1 or Rails main.
 
     *Joel Hawksley*

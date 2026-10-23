@@ -32,6 +32,7 @@ measure.call { require "view_component" }
 class BootApp < Rails::Application
   config.root = ARGV.fetch(0)
   config.load_defaults Rails::VERSION::STRING.to_f
+  config.cache_classes = true
   config.eager_load = true
   config.secret_key_base = "performance"
   config.logger = Logger.new(nil)
