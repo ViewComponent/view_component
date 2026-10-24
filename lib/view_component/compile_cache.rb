@@ -8,6 +8,10 @@ module ViewComponent
       Set.new
     end
 
+    mattr_accessor :sidecar_files_by_component, instance_reader: false, instance_accessor: false do
+      {}
+    end
+
     module_function
 
     def register(klass)
@@ -18,12 +22,19 @@ module ViewComponent
       cache.include? klass
     end
 
+    def sidecar_files_for(klass, extensions)
+      sidecar_files = sidecar_files_by_component[klass] ||= {}
+      sidecar_files[extensions] ||= yield
+    end
+
     def invalidate_class!(klass)
       cache.delete(klass)
+      sidecar_files_by_component.delete(klass)
     end
 
     def invalidate!
       cache.clear
+      sidecar_files_by_component.clear
     end
 
     # Invalidates the cache when a template or a translation file is added,
