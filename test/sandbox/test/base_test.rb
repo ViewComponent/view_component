@@ -88,20 +88,21 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     )
   end
 
-  def test_sidecar_files_are_cached_until_the_compile_cache_is_invalidated
+  def test_sidecar_files_are_looked_up_once_while_eager_loading
     Dir.mktmpdir do |directory|
       component = Class.new(ViewComponent::Base)
       component.identifier = File.join(directory, "temporary_component.rb")
       component.define_singleton_method(:name) { "TemporaryComponent" }
       template = File.join(directory, "temporary_component.html.erb")
 
-      assert_empty component.__vc_sidecar_files(["erb"])
+      ViewComponent::CompileCache.with_sidecar_files_cache do
+        assert_empty component.__vc_sidecar_files(["erb"])
 
-      File.write(template, "<div></div>")
-      assert_empty component.__vc_sidecar_files(["erb"])
-      assert_equal [template], component.sidecar_files(["erb"])
+        File.write(template, "<div></div>")
+        assert_empty component.__vc_sidecar_files(["erb"])
+        assert_equal [template], component.sidecar_files(["erb"])
+      end
 
-      ViewComponent::CompileCache.invalidate!
       assert_equal [template], component.__vc_sidecar_files(["erb"])
     end
   end

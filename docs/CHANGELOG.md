@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Look up each component's sidecar templates and translations once per compile cache instead of on every compile, i18n backend build, and cache digest of the component and its subclasses. Time spent in ViewComponent during the boot benchmark drops from 700 ms to 538 ms. `sidecar_files` itself is unchanged.
+* Look up each component's sidecar templates and translations once while eager loading, instead of again when it compiles, loads its translations, and computes its cache digest, and for each of its subclasses. Time spent in ViewComponent during the boot benchmark drops by about a quarter.
 
     *Clément Joubert*
 

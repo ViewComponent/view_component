@@ -659,15 +659,14 @@ module ViewComponent
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
       end
 
-      # `sidecar_files`, cached until the compile cache is invalidated. Every
-      # component looks up its superclasses' templates and translations too,
-      # when it compiles, builds its i18n backend, and computes its cache
-      # digest. Only for template and translation extensions: the template
-      # watcher invalidates the compile cache when those files change.
+      # `sidecar_files`, looked up once per component while eager loading:
+      # every component looks up its superclasses' templates and translations
+      # too, when it compiles, loads its translations, and computes its cache
+      # digest.
       #
       # @private
       def __vc_sidecar_files(extensions)
-        CompileCache.sidecar_files_for(self, extensions) { sidecar_files(extensions).freeze }
+        CompileCache.sidecar_files_for(self, extensions) { sidecar_files(extensions) }
       end
 
       # Render a component for each element in a collection ([documentation](/guide/collections)):
