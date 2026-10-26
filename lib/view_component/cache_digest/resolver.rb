@@ -104,13 +104,13 @@ module ViewComponent
 
       def source_files(component)
         component_ancestors(component).flat_map { |ancestor|
-          [ancestor.identifier, *ancestor.sidecar_files(SIDECAR_EXTENSIONS)]
+          [ancestor.identifier, *ancestor.__vc_sidecar_files(SIDECAR_EXTENSIONS)]
         }.compact.uniq.select { |path| ::File.exist?(path) }
       end
 
       def template_files(component)
         component_ancestors(component)
-          .flat_map { |ancestor| ancestor.sidecar_files(ActionView::Template::Handlers.extensions) }
+          .flat_map { |ancestor| ancestor.__vc_sidecar_files(ActionView::Template::Handlers.extensions) }
           .uniq
           .select { |path| ::File.exist?(path) }
       end
