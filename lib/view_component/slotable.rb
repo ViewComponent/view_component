@@ -408,19 +408,19 @@ module ViewComponent
           self.class.const_get(slot_definition[:renderable_class_name]).new(*args, **kwargs)
       # If passed a lambda
       elsif slot_definition[:renderable_function]
-        # Use `bind(self)` to ensure lambda is executed in the context of the
+        # Use `bind_call(self)` to ensure lambda is executed in the context of the
         # current component. This is necessary to allow the lambda to access helper
         # methods like `content_tag` as well as parent component state.
-        renderable_function = slot_definition[:renderable_function].bind(self)
+        renderable_function = slot_definition[:renderable_function]
         renderable_value =
           if block
-            renderable_function.call(*args, **kwargs) do |*rargs|
+            renderable_function.bind_call(self, *args, **kwargs) do |*rargs|
               with_captured_virtual_path(captured_block_virtual_path) do
                 view_context.capture(*rargs, &block)
               end
             end
           else
-            renderable_function.call(*args, **kwargs)
+            renderable_function.bind_call(self, *args, **kwargs)
           end
 
         # Function calls can return components, so if it's a component handle it specially

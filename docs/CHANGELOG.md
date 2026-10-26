@@ -14,6 +14,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Speed up rendering with direct compiled-template calls and avoid intermediate method allocations when invoking lambda-backed slots.
+
+    *Joel Hawksley*
+
 * Fix `Couldn't find template for digesting` errors when computing cache digests for templates that render components. Action View inferred a partial from `render SomeComponent.new`, so partials inferred from component renders are now discarded. Component renders are found with Prism rather than a regular expression, adding a dependency on the `prism` gem.
 
     *Joel Hawksley*
