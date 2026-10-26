@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix `Couldn't find template for digesting` errors when computing cache digests for templates that render components. Action View inferred a partial from `render SomeComponent.new`, so partials inferred from component renders are now discarded. Component renders are found with Prism rather than a regular expression, adding a dependency on the `prism` gem.
+
+    *Joel Hawksley*
+
 * Fix components rendering the template for the first format a lookup context rendered in, instead of the current one. An Action Mailer email that declares `format.text` before `format.html` rendered the text template of each component into its HTML part. Components now reuse the details key Action View memoizes, which Action View resets whenever a detail such as `formats` changes. Regression from 4.16.0.
 
     *Jan Schilbach*

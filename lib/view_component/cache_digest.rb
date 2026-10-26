@@ -3,6 +3,7 @@
 require "active_support/dependencies/autoload"
 require "action_view/digestor"
 require "action_view/render_parser"
+require "prism"
 
 module ViewComponent
   # Integrates ViewComponents into Rails' template digest tree.
@@ -38,20 +39,14 @@ module ViewComponent
     # application partial.
     VIRTUAL_PATH_PREFIX = "view_component/cache_digest"
 
-    # Matches `render FooComponent`, `render(Foo::BarComponent.new(...))`,
-    # `render FooComponent.with_collection(...)`, etc.
-    #
-    # Deliberately a plain source scan rather than a tracker-specific hook: it
-    # behaves identically for the ERB tracker, the Prism-based Ruby tracker, and
-    # third-party Haml/Slim trackers.
-    RENDER_CALL = /
-      \brender(?:_to_string)?\b   # render or render_to_string
-      \s*\(?\s*                   # optional opening paren
-      (?<const>
-        (?:::)?[A-Z]\w*           # a constant
-        (?:::[A-Z]\w*)*           # optionally namespaced
-      )
-    /x
+    RENDER_METHODS = %i[render render_to_string].freeze
+
+    COMPILED_SOURCES = :view_component_cache_digest_compiled_sources
+    private_constant :COMPILED_SOURCES
+
+    # A render call whose first argument starts with a constant, such as
+    # `render FooComponent.new` or `render(Foo::Bar.with_collection(...))`.
+    CONSTANT_RENDER = /\brender(?:_to_string)?[\s(]*(?:::)?[A-Z]/
 
     # Rails' escape hatch for dependencies static analysis can't see.
     EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
@@ -102,46 +97,50 @@ module ViewComponent
         constantize_component(name)
       end
 
-      # Scan a template's source for renders of components.
+      # Compile a template to Ruby with its own handler, so ERB, Haml, Slim and
+      # any other template language can be analyzed the same way. Reuses the
+      # Ruby compiled at boot, when there is some.
       #
-      # @return [Array<String>] synthetic virtual paths
-      def dependencies_in(template)
-        component_paths_in(template.source)
+      # @return [String] Ruby source
+      def compiled_source(template)
+        source = template.source
+        Thread.current[COMPILED_SOURCES]&.dig(template.handler, source) || template.handler.call(template, source)
       end
 
-      # Scan arbitrary source (a template or a component's Ruby file) for
-      # renders of components.
+      # Find the components and partials Ruby source renders.
       #
-      # @return [Array<String>] synthetic virtual paths
-      def component_paths_in(source)
-        return [] unless source.is_a?(String) && source.include?("render")
-
-        source.scan(RENDER_CALL).flatten.uniq.filter_map do |constant_name|
-          registered_path_for(constantize_component(constant_name))
-        end
-      end
-
-      # Scan a component's Ruby source for partials referenced by string path,
-      # such as `render "posts/byline"` inside a `#call` method.
-      #
-      # Uses Rails' own render parser — the same one `RubyTracker` runs over
-      # compiled templates — rather than a second implementation of the same
-      # analysis. Its results are then narrowed to paths that appear verbatim in
-      # the source, which keeps string literals and discards the speculative
-      # `things/_thing` entries the parser infers from dynamic renders like
-      # `render @thing` or `render FooComponent.new`. Those would resolve to
-      # nothing and only add log noise; components rendered from Ruby are
-      # already found precisely by `component_paths_in`.
+      # Action View's render parser only sees the calls that don't render a
+      # component, so it can't infer partials from them.
       #
       # @param source [String] Ruby source
       # @param name [String] virtual path the source is being digested under
-      # @return [Array<String>] partial virtual paths
-      def partial_paths_in(source, name)
-        return [] unless source.is_a?(String) && source.include?("render")
+      # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
+      #   components and partial virtual paths
+      def renders_in(source, name)
+        components, other_calls = partition_render_calls(source)
 
-        RENDER_PARSER.new(name, source).render_calls.uniq.select do |path|
-          source.include?(path) || source.include?(path.sub(%r{(\A|/)_}, '\1'))
-        end
+        [component_paths(components), partials_rendered_by(other_calls, name)]
+      end
+
+      # Find the components Ruby source renders, along with the partials Action
+      # View infers from them.
+      #
+      # Action View reads `render FooComponent.new` as a dynamic render of a
+      # partial named after the last method, inferring `news/new`. Partials also
+      # rendered some other way aren't returned.
+      #
+      # @param source [String] Ruby source
+      # @param name [String] virtual path the source is being digested under
+      # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
+      #   components and inferred partial virtual paths
+      def component_renders_in(source, name)
+        components, other_calls = partition_render_calls(source)
+        return [[], []] if components.empty?
+
+        [
+          component_paths(components),
+          partials_rendered_by(components.keys, name) - partials_rendered_by(other_calls, name)
+        ]
       end
 
       # Action View has shipped its render parser as a class (Rails 7.1, and
@@ -208,6 +207,25 @@ module ViewComponent
         DigestorLookup.install!
       end
 
+      # Keep the Ruby that templates compile to while the block runs, so
+      # `precompute!` can analyze templates components just compiled without
+      # compiling them again. Kept in a thread local rather than on the module,
+      # which isn't writable from other Ractors.
+      #
+      # @private
+      def retaining_compiled_sources
+        Thread.current[COMPILED_SOURCES] = {}
+        yield
+      ensure
+        Thread.current[COMPILED_SOURCES] = nil
+      end
+
+      # @private
+      def compiled(handler, source, compiled_source)
+        sources = Thread.current[COMPILED_SOURCES]
+        (sources[handler] ||= {})[source] = compiled_source if sources
+      end
+
       # Compute component digests at boot, so requests read them from memory
       # instead of reading and scanning source files.
       #
@@ -237,6 +255,62 @@ module ViewComponent
       end
 
       private
+
+      # Receiverless `render` and `render_to_string` calls, split into those
+      # that render a component and the rest.
+      #
+      # @return [Array(Hash{Prism::CallNode => Class}, Array<Prism::CallNode>)]
+      def partition_render_calls(source)
+        components = {}
+        other_calls = []
+        return [components, other_calls] unless source.include?("render")
+
+        nodes = [Prism.parse(source).value]
+        while (node = nodes.pop)
+          if node.is_a?(Prism::CallNode) && node.receiver.nil? && RENDER_METHODS.include?(node.name)
+            if (component = rendered_component(node))
+              components[node] = component
+            else
+              other_calls << node
+            end
+          end
+          nodes.concat(node.compact_child_nodes.reverse!)
+        end
+
+        [components, other_calls]
+      end
+
+      # The component a render call renders, from the constant at the root of
+      # its first argument: `FooComponent`, `FooComponent.new(...)`,
+      # `FooComponent.with_collection(...)`, and so on.
+      #
+      # @return [Class, nil]
+      def rendered_component(call)
+        node = call.arguments&.arguments&.first
+        node = node.receiver while node.is_a?(Prism::CallNode) && node.receiver
+
+        case node
+        when Prism::ConstantReadNode, Prism::ConstantPathNode
+          constantize_component(node.slice)
+        end
+      end
+
+      def component_paths(components)
+        components.values.uniq.filter_map { |component| registered_path_for(component) }
+      end
+
+      # Partials Action View's render parser finds in the given calls,
+      # normalized to the form its trackers report. The calls are parsed
+      # together, so the parser runs once rather than once per call. Blocks are
+      # left out, as any renders inside them are calls of their own.
+      def partials_rendered_by(calls, name)
+        return [] if calls.empty?
+
+        source = calls.map { |call| "#{call.name}(#{call.arguments&.slice})" }.join("\n")
+        RENDER_PARSER.new(name, source).render_calls
+          .map { |path| path.gsub(%r{/_}, "/") }
+          .uniq
+      end
 
       # Record the actual class name rather than trying to reverse a virtual
       # path, which may contain acronyms or be overridden by the component.
