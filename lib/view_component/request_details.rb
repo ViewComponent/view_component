@@ -25,16 +25,11 @@ module ViewComponent
         # `render` accepts, but there's currently no mechanism for users to
         # provide these when calling render on a ViewComponent.
         if user_details.equal?(EMPTY_DETAILS)
-          # Fast path: memoize the empty-details Requested per LookupContext.
-          # Rendered many times with the same context, the tuple/Requested
-          # allocations from ActionView are then paid at most once.
-          cached = instance_variable_defined?(:@__vc_requested_details_cache) &&
-            @__vc_requested_details_cache
-          return cached if cached
-
-          details, from_cache = detail_args_for(EMPTY_DETAILS)
-          @__vc_requested_details_cache =
-            from_cache || ActionView::TemplateDetails::Requested.new(**details)
+          # Fast path: with template caching on, `details_key` is the
+          # Requested for the current details, memoized by ActionView and
+          # reset whenever a detail such as `formats` changes. Using it
+          # directly skips the tuple `detail_args_for` allocates.
+          details_key || ActionView::TemplateDetails::Requested.new(**@details)
         else
           details, from_cache = detail_args_for(user_details)
           from_cache || ActionView::TemplateDetails::Requested.new(**details)

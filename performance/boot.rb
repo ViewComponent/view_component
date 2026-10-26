@@ -25,6 +25,7 @@ end
 ENV["RAILS_ENV"] = "production"
 require "rails"
 require "action_controller/railtie"
+require "slim"
 
 $LOAD_PATH.unshift(ENV.fetch("VIEW_COMPONENT_LIB"))
 measure.call { require "view_component" }

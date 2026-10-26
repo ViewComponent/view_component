@@ -49,6 +49,7 @@ module ViewComponent
       # @return [String]
       def source_for(component)
         parts = []
+        templates = template_sources(component)
 
         # Safety net: this template should never be rendered, only digested.
         parts << "<% raise ViewComponent::CacheDigestTemplateError.new(#{component.name.inspect}) %>"
@@ -61,18 +62,19 @@ module ViewComponent
           parts << "<%# Resolved Dependency: #{path} #{file_digest(path)} %>"
         end
 
-        # Everything the component renders from Ruby rather than from a
-        # template: `# Template Dependency:` declarations, components rendered
-        # from `#call` methods, and partials referenced by string path.
-        # Re-emitted so the Digestor resolves them as tree nodes.
-        ruby_dependencies(component).each do |dependency|
+        # Everything the component renders: `# Template Dependency:`
+        # declarations, components, and partials, whether rendered from
+        # templates in any language or from Ruby. Emitted as declarations so
+        # the Digestor resolves them as tree nodes without trackers having to
+        # find them in the template sources, where they'd also infer partials
+        # from component renders.
+        dependencies(component, templates).each do |dependency|
           parts << "<%# Template Dependency: #{dependency} %>"
         end
 
-        # Template sources verbatim, so trackers can discover the partials and
-        # components they render.
-        template_sources(component).each do |source|
-          parts << source
+        # Content hashes of the templates, including inline ones.
+        templates.each do |source, _extension|
+          parts << "<%# Template Digest: #{ActiveSupport::Digest.hexdigest(source)} %>"
         end
 
         parts.join("\n")
@@ -104,32 +106,34 @@ module ViewComponent
 
       def source_files(component)
         component_ancestors(component).flat_map { |ancestor|
-          [ancestor.identifier, *ancestor.sidecar_files(SIDECAR_EXTENSIONS)]
+          [ancestor.identifier, *ancestor.__vc_sidecar_files(SIDECAR_EXTENSIONS)]
         }.compact.uniq.select { |path| ::File.exist?(path) }
       end
 
       def template_files(component)
         component_ancestors(component)
-          .flat_map { |ancestor| ancestor.sidecar_files(ActionView::Template::Handlers.extensions) }
+          .flat_map { |ancestor| ancestor.__vc_sidecar_files(ActionView::Template::Handlers.extensions) }
           .uniq
           .select { |path| ::File.exist?(path) }
       end
 
       # Sidecar template files plus inline templates, which live in the Ruby
       # file and so are invisible to Action View's trackers.
+      #
+      # @return [Array<Array(String, String)>] pairs of source and extension
       def template_sources(component)
-        sources = template_files(component).map { |path| ::File.read(path) }
+        sources = template_files(component).map { |path| [::File.read(path), ::File.extname(path).delete_prefix(".")] }
 
         component_ancestors(component).each do |ancestor|
           inline_template = ancestor.__vc_inline_template
-          sources << inline_template.source if inline_template
+          sources << [inline_template.source, inline_template.language.to_s] if inline_template
         end
 
         sources.uniq
       end
 
-      def explicit_dependencies(component)
-        ruby_sources(component).flat_map { |source|
+      def explicit_dependencies(sources)
+        sources.flat_map { |source|
           declared = source.scan(CacheDigest::EXPLICIT_DEPENDENCY).flatten
 
           # Component class names are translated to the path they're digested
@@ -142,18 +146,39 @@ module ViewComponent
         }.uniq
       end
 
-      # Everything a component renders from Ruby code rather than from a
-      # template. Action View's trackers only read templates, so a `#call`
-      # method that renders another component or a partial would otherwise go
-      # unnoticed.
-      def ruby_dependencies(component)
+      def dependencies(component, templates)
         virtual_path = CacheDigest.virtual_path_for(component)
+        ruby = ruby_sources(component)
 
-        explicit_dependencies(component) |
-          ruby_sources(component).flat_map { |source|
-            CacheDigest.component_paths_in(source) |
-              CacheDigest.partial_paths_in(source, virtual_path)
-          }.uniq
+        explicit_dependencies(ruby + templates.map(&:first)) |
+          ruby.flat_map { |source| ruby_dependencies(source, virtual_path) } |
+          templates.flat_map { |source, extension| template_dependencies(component, source, extension, virtual_path) }
+      end
+
+      # Components and partials rendered from Ruby, such as a `#call` method.
+      # Partials are narrowed to paths that appear in the source, discarding
+      # the speculative `things/thing` Action View infers from dynamic renders
+      # like `render @thing`, which would resolve to nothing.
+      def ruby_dependencies(source, virtual_path)
+        components, partials = CacheDigest.renders_in(source, virtual_path)
+
+        components | partials.select { |path|
+          source.include?(path) || source.include?(path.sub(%r{[^/]+\z}, '_\0'))
+        }
+      end
+
+      def template_dependencies(component, source, extension, virtual_path)
+        return [] unless source.include?("render")
+
+        template = ActionView::Template.new(
+          source,
+          "view_component cache digest for #{component.name}",
+          ActionView::Template.handler_for_extension(extension),
+          locals: [],
+          format: nil,
+          virtual_path: virtual_path
+        )
+        CacheDigest.renders_in(CacheDigest.compiled_source(template), virtual_path).flatten
       end
 
       def ruby_sources(component)

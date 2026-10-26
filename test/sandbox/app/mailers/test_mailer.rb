@@ -24,4 +24,15 @@ class TestMailer < ActionMailer::Base
       subject: "Testing ViewComponent with url_for in ActionMailer"
     )
   end
+
+  def test_multipart_email
+    mail(
+      from: "no-reply@example.com",
+      to: "test@example.com",
+      subject: "Testing ViewComponent in a multipart ActionMailer email"
+    ) do |format|
+      format.text
+      format.html
+    end
+  end
 end

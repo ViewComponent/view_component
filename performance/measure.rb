@@ -122,6 +122,7 @@ Dir.mktmpdir do |root|
   FileUtils.mkdir_p(components)
 
   # Each component renders another, so boot also discovers cache digest dependencies.
+  # Every component has a Slim counterpart, so non-ERB templates are covered too.
   render_call = lambda do |i|
     case i % 3
     when 0 then "render Sidecar#{i}Component.new(name: 'x')"
@@ -157,6 +158,15 @@ Dir.mktmpdir do |root|
       RUBY
       File.write(File.join(components, "slots#{i}_component.html.erb"), "<%= header %><% items.each do |item| %><%= item %><% end %><%= #{rendered} %>\n")
     end
+
+    File.write(File.join(components, "slim#{i}_component.rb"), <<~RUBY)
+      class Slim#{i}Component < ViewComponent::Base
+        def initialize(name:)
+          @name = name
+        end
+      end
+    RUBY
+    File.write(File.join(components, "slim#{i}_component.html.slim"), "p = @name\n== render Slim#{i.zero? ? 1 : (i - 1) / 2}Component.new(name: 'x')\n")
   end
 
   boot = lambda do

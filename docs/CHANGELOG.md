@@ -14,6 +14,18 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Fix `Couldn't find template for digesting` errors when computing cache digests for templates that render components. Action View inferred a partial from `render SomeComponent.new`, so partials inferred from component renders are now discarded. Component renders are found with Prism rather than a regular expression, adding a dependency on the `prism` gem.
+
+    *Joel Hawksley*
+
+* Fix components rendering the template for the first format a lookup context rendered in, instead of the current one. An Action Mailer email that declares `format.text` before `format.html` rendered the text template of each component into its HTML part. Components now reuse the details key Action View memoizes, which Action View resets whenever a detail such as `formats` changes. Regression from 4.16.0.
+
+    *Jan Schilbach*
+
+* Look up each component's sidecar templates and translations once while eager loading, instead of again when it compiles, loads its translations, and computes its cache digest, and for each of its subclasses. Time spent in ViewComponent during the boot benchmark drops by about a quarter.
+
+    *Clément Joubert*
+
 * Measure cache digest precomputation in the boot benchmark by disabling class reloading in the benchmark app and having each generated component render another.
 
     *Joel Hawksley*
