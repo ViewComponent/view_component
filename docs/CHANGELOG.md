@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Look up each component's sidecar templates and translations once while eager loading, instead of again when it compiles, loads its translations, and computes its cache digest, and for each of its subclasses. Time spent in ViewComponent during the boot benchmark drops by about a quarter.
+
+    *Clément Joubert*
+
 * Measure cache digest precomputation in the boot benchmark by disabling class reloading in the benchmark app and having each generated component render another.
 
     *Joel Hawksley*
