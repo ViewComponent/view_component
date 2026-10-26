@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Speed up rendering with direct compiled-template calls and avoid intermediate method allocations when invoking lambda-backed slots.
+
+    *Joel Hawksley*
+
 * Measure cache digest precomputation in the boot benchmark by disabling class reloading in the benchmark app and having each generated component render another.
 
     *Joel Hawksley*
