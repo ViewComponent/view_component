@@ -123,14 +123,13 @@ module ViewComponent
         @component.define_method(safe_method_name, @component.instance_method(@call_method_name))
       end
 
-      def safe_method_name_call
-        m = safe_method_name
-        proc do
-          __vc_maybe_escape_html(send(m)) do
-            Kernel.warn("WARNING: The #{self.class} component rendered HTML-unsafe output. " \
+      def safe_method_call
+        <<~RUBY
+          __vc_maybe_escape_html(#{super}) do
+            Kernel.warn("WARNING: The \#{self.class} component rendered HTML-unsafe output. " \
                           "The output will be automatically escaped, but you may want to investigate.")
           end
-        end
+        RUBY
       end
 
       def defined_on_self?
@@ -156,9 +155,13 @@ module ViewComponent
       defined?(Coverage) && Coverage.running?
     end
 
-    def safe_method_name_call
-      m = safe_method_name
-      proc { send(m) }
+    def safe_method_call
+      method_name = safe_method_name
+      if /\A[a-zA-Z_]\w*[!?]?\z/.match?(method_name)
+        method_name
+      else
+        "send(#{method_name.to_sym.inspect})"
+      end
     end
 
     def requires_compiled_superclass?
