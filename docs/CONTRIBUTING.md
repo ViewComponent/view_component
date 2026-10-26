@@ -102,6 +102,39 @@ bundle exec ruby performance/measure.rb tmp/performance/head.json
 bundle exec ruby performance/compare.rb tmp/performance/base.json tmp/performance/head.json
 ```
 
+### Regression coverage
+
+The **Added test regression check** CI job runs added and modified Minitest tests on Ruby 4.0 and Rails 8.1. It repeats the same tests with packaged `app/` and `lib/` implementation files restored to the pull request's merge base. Both runs retain the pull request's dependencies, tests, and fixtures, including `app/views/test_mailer/`.
+
+Each test has its own result:
+
+| Result | Meaning |
+| --- | --- |
+| `demonstrated` | Passes on the pull request. An assertion fails without the implementation. |
+| `not_demonstrated` | Also passes without the implementation. Review whether it exercises the change. |
+| `head_failed` | Fails or errors on the pull request. |
+| `inconclusive` | Errors, skips, times out, makes no assertions, or doesn't run. Inspect the logs. |
+
+Results are informational by default. The `regression-test` label requires every selected test to demonstrate a regression, with no warnings or unsupported cases. An assertion failure demonstrates a behavioral difference, not necessarily a bug. New APIs can produce legitimate pre-fix exceptions. Those remain inconclusive rather than counting arbitrary errors as evidence.
+
+The job selects individual `def test_*` methods and literal Rails `test "..."` blocks using Prism. RSpec and dynamic definitions are reported as unsupported. Changes only to helpers, shared setup, or fixtures don't automatically select existing tests. Dependency changes are reported but not reverted. The Actions summary and `regression-check` artifact contain results, exceptions, and process logs.
+
+To run locally against committed changes:
+
+```command
+ruby script/regression_check.rb --base origin/main
+```
+
+Use `--strict` to require demonstrated regressions and `--install` to install missing dependencies in the temporary checkout. The working tree is never modified.
+
+To audit the latest 100 pull requests, including open and closed pull requests:
+
+```command
+ruby script/regression_check_history.rb --limit 100
+```
+
+The audit uses `gh`, freezes the PR list, fetches their revisions, and writes a per-test report and aggregate summary under `tmp/regression-history`. Repeating the command resumes comparisons made with the same checker from that directory. Historical dependency or runtime incompatibilities aren't counted as coverage results.
+
 ## Documentation
 
 ### Previewing changes locally

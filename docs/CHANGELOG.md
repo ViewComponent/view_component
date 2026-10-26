@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add an informational CI check that runs added and modified tests without a pull request's implementation changes to identify regression coverage.
+
+    *Joel Hawksley*
+
 * Fix `Couldn't find template for digesting` errors when computing cache digests for templates that render components. Action View inferred a partial from `render SomeComponent.new`, so partials inferred from component renders are now discarded. Component renders are found with Prism rather than a regular expression, adding a dependency on the `prism` gem.
 
     *Joel Hawksley*
