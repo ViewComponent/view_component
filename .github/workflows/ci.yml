@@ -107,7 +107,33 @@ jobs:
         include-hidden-files: true
   primer_view_components_compatibility:
     name: Test compatibility with Primer ViewComponents (main)
+    if: always()
+    needs: primer_view_components_tests
     runs-on: ubuntu-latest
+    steps:
+    - name: Check compatibility results
+      env:
+        RESULT: ${{ needs.primer_view_components_tests.result }}
+      run: test "$RESULT" = success
+  primer_view_components_tests:
+    name: Primer ViewComponents (${{ matrix.suite }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: Ruby
+            tasks: test:components test:lib test:performance
+          - suite: System
+            tasks: test:system
+          - suite: Accessibility
+            tasks: test:accessibility
+    defaults:
+      run:
+        working-directory: primer_view_components
+    env:
+      VIEW_COMPONENT_PATH: ../view_component
+      RAILS_VERSION: '8.1.0'
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
@@ -120,26 +146,36 @@ jobs:
         path: 'view_component'
         persist-credentials: false
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1
+      with:
+        ruby-version: 4.0
+        working-directory: 'primer_view_components'
+    - name: Resolve Primer dependencies against this checkout
+      run: bundle lock
+    - name: Cache Ruby gems
+      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1
       with:
         ruby-version: 4.0
         bundler-cache: true
-        working-directory: 'view_component'
-    - uses: actions/setup-node@v5
+        working-directory: 'primer_view_components'
+    - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
       with:
         node-version: 22
         cache: 'npm'
-        cache-dependency-path: 'primer_view_components/package-lock.json'
-    - name: Build and test with Rake
+        cache-dependency-path: |
+          primer_view_components/package-lock.json
+          primer_view_components/demo/package-lock.json
+    - name: Install JavaScript dependencies
       run: |
-        cd primer_view_components
         npm ci
-        cd demo && npm ci && cd ..
-        bundle --quiet && bundle exec rake
+        npm ci --prefix demo
+    - name: Test with Rake
+      shell: bash
       env:
-        VIEW_COMPONENT_PATH: ../view_component
-        RAILS_VERSION: '8.1.0'
-        PARALLEL_WORKERS: '1'
+        RAKE_TASKS: ${{ matrix.tasks }}
+      run: |
+        read -r -a tasks <<< "$RAKE_TASKS"
+        bundle exec rake "${tasks[@]}"
   coverage:
     needs: test
     runs-on: ubuntu-latest
