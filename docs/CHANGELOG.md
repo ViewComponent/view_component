@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix components rendering the template for the first format a lookup context rendered in, instead of the current one. An Action Mailer email that declares `format.text` before `format.html` rendered the text template of each component into its HTML part. Components now reuse the details key Action View memoizes, which Action View resets whenever a detail such as `formats` changes. Regression from 4.16.0.
+
+    *Jan Schilbach*
+
 * Measure cache digest precomputation in the boot benchmark by disabling class reloading in the benchmark app and having each generated component render another.
 
     *Joel Hawksley*
