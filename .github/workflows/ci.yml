@@ -146,19 +146,19 @@ jobs:
         path: 'view_component'
         persist-credentials: false
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1
       with:
         ruby-version: 4.0
         working-directory: 'primer_view_components'
     - name: Resolve Primer dependencies against this checkout
       run: bundle lock
     - name: Cache Ruby gems
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1
       with:
         ruby-version: 4.0
         bundler-cache: true
         working-directory: 'primer_view_components'
-    - uses: actions/setup-node@v5
+    - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
       with:
         node-version: 22
         cache: 'npm'
