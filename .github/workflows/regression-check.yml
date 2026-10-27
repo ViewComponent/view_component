@@ -1,0 +1,49 @@
+name: Regression coverage
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  regression-check:
+    name: Added test regression check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BUNDLE_GEMFILE: gemfiles/rails_8.1.gemfile
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+      with:
+        ruby-version: 4.0
+        bundler-cache: true
+    - name: Compare added and modified tests without the implementation
+      env:
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        REQUIRE_REGRESSION: ${{ contains(github.event.pull_request.labels.*.name, 'regression-test') }}
+      shell: bash
+      run: |
+        args=(--base "$BASE_SHA" --output tmp/regression-check)
+        if [ "$REQUIRE_REGRESSION" = true ]; then
+          args+=(--strict)
+        fi
+        ruby script/regression_check.rb "${args[@]}"
+    - name: Summarize regression results
+      if: always()
+      run: |
+        if [ -f tmp/regression-check/summary.md ]; then
+          cat tmp/regression-check/summary.md >> "$GITHUB_STEP_SUMMARY"
+        fi
+    - name: Upload regression results
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      if: always()
+      with:
+        name: regression-check
+        path: tmp/regression-check
