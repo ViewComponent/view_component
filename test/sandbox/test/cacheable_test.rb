@@ -411,6 +411,29 @@ class CacheableTest < ViewComponent::TestCase
     )
   end
 
+  def test_component_references_and_partial_renders_are_found_together
+    source = <<~RUBY
+      child = CacheableChildComponent
+      render child.new do
+        render "posts/byline"
+        render ErbComponent.new(message: "a")
+      end
+      render "news/new"
+      CacheableChildComponent
+    RUBY
+
+    assert_equal(
+      [
+        [
+          "view_component/cache_digest/cacheable_child_component",
+          "view_component/cache_digest/erb_component"
+        ],
+        ["news/new", "posts/byline"]
+      ],
+      ViewComponent::CacheDigest.renders_in(source, "view_component/cache_digest/post_component")
+    )
+  end
+
   # The parser speculatively infers `things/_thing` from dynamic renders. Those
   # resolve to nothing, so they're discarded rather than emitted as noise.
   def test_speculative_partial_paths_are_discarded
@@ -828,46 +851,6 @@ class CacheableTest < ViewComponent::TestCase
     File.stub(:read, ->(*) { flunk "read a source file" }) do
       assert_equal expected, CacheableParentComponent.cache_digest
     end
-  ensure
-    components.each { |component| component.__vc_cache_digest_source = nil }
-    clear_digest_cache
-  end
-
-  def test_a_digest_builds_the_source_of_a_component_it_reaches_twice_once
-    resolver = ViewComponent::CacheDigest::Resolver.instance
-    source_for = resolver.method(:source_for)
-    built = Hash.new(0)
-    clear_digest_cache
-
-    counting = lambda do |component|
-      built[component] += 1
-      source_for.call(component)
-    end
-    resolver.stub(:source_for, counting) { CacheableSharedChildComponent.cache_digest }
-
-    assert_equal 1, built[CacheableChildComponent]
-  ensure
-    clear_digest_cache
-  end
-
-  # Precomputing builds a digest tree for every component, and most of those
-  # trees reach the same dependencies.
-  def test_precompute_shares_the_node_of_a_dependency_between_trees
-    components = [CacheableSharedChildComponent, CacheableParentComponent, CacheableCallComponent, CacheableChildComponent]
-    resolver = ViewComponent::CacheDigest::Resolver.instance
-    find_templates = resolver.method(:find_templates)
-    lookups = 0
-    clear_digest_cache
-
-    counting = lambda do |name, *args|
-      lookups += 1 if name == "cacheable_child_component"
-      find_templates.call(name, *args)
-    end
-    resolver.stub(:find_templates, counting) { ViewComponent::CacheDigest.precompute!(components) }
-
-    # Once for the node every tree that renders the child shares, and once for
-    # the child's own tree.
-    assert_equal 2, lookups
   ensure
     components.each { |component| component.__vc_cache_digest_source = nil }
     clear_digest_cache

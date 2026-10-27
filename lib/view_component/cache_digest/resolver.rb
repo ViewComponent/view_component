@@ -88,10 +88,8 @@ module ViewComponent
       private
 
       def build_template(component, virtual_path, details)
-        source = component.__vc_cache_digest_source || CacheDigest.analyzing(:source, component) { source_for(component) }
-
         ActionView::Template.new(
-          source,
+          component.__vc_cache_digest_source || source_for(component),
           "view_component cache digest for #{component.name}",
           ActionView::Template.handler_for_extension(:erb),
           locals: [],
@@ -127,9 +125,13 @@ module ViewComponent
       end
 
       def source_files(component)
-        component_ancestors(component).flat_map { |ancestor|
-          [ancestor.identifier, *ancestor.__vc_sidecar_files(SIDECAR_EXTENSIONS)]
-        }.concat(module_files(component)).compact.uniq.select { |path| ::File.exist?(path) }
+        sidecars = component_ancestors(component).flat_map { |ancestor| ancestor.__vc_sidecar_files(SIDECAR_EXTENSIONS) }
+        (ruby_files(component) + sidecars).uniq.select { |path| ::File.exist?(path) }
+      end
+
+      def ruby_files(component)
+        component_ancestors(component).map(&:identifier).concat(module_files(component))
+          .compact.uniq.select { |path| ::File.exist?(path) }
       end
 
       def template_files(component)
@@ -210,9 +212,7 @@ module ViewComponent
       end
 
       def ruby_sources(component)
-        component_ancestors(component).map(&:identifier).concat(module_files(component)).uniq.filter_map { |path|
-          ::File.read(path) if path && ::File.exist?(path)
-        }
+        ruby_files(component).map { |path| ::File.read(path) }
       end
 
       def file_digest(path)

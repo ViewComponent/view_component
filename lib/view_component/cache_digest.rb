@@ -44,9 +44,6 @@ module ViewComponent
     COMPILED_SOURCES = :view_component_cache_digest_compiled_sources
     private_constant :COMPILED_SOURCES
 
-    ANALYSES = :view_component_cache_digest_analyses
-    private_constant :ANALYSES
-
     # A render call whose first argument starts with a constant, such as
     # `render FooComponent.new` or `render(Foo::Bar.with_collection(...))`.
     CONSTANT_RENDER = /\brender(?:_to_string)?[\s(]*(?:::)?[A-Z]/
@@ -132,12 +129,19 @@ module ViewComponent
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and partial virtual paths
       def renders_in(source, name)
-        components, other_calls = analyzing(:renders_in, source) do
-          program = Prism.parse(source).value
-          [component_paths(referenced_components(program)), partition_render_calls(program).last]
+        names = []
+        other_calls = []
+
+        each_node(Prism.parse(source).value) do |node|
+          if node.is_a?(Prism::ConstantReadNode) || node.is_a?(Prism::ConstantPathNode)
+            names << node.slice if CONSTANT_NAME.match?(node.slice)
+          elsif render_call?(node) && !rendered_component(node)
+            other_calls << node
+          end
         end
 
-        [components, partials_rendered_by(other_calls, name)]
+        components = names.uniq.filter_map { |constant_name| constantize_component(constant_name) }
+        [component_paths(components), partials_rendered_by(other_calls, name)]
       end
 
       # Find the components Ruby source renders, along with the partials Action
@@ -252,36 +256,6 @@ module ViewComponent
         Thread.current[COMPILED_SOURCES] = nil
       end
 
-      # Analyze each component and each source once while the block runs.
-      #
-      # A digest tree reaches a component once for every component that renders
-      # it, and every component reads the same superclasses and included
-      # modules, so a tree would otherwise analyze the same source many times.
-      # Nothing on disk changes while one tree is built. Kept in a thread local
-      # for the same reason as `retaining_compiled_sources`.
-      #
-      # @private
-      def analyzing_once
-        return yield if Thread.current[ANALYSES]
-
-        begin
-          Thread.current[ANALYSES] = {}
-          yield
-        ensure
-          Thread.current[ANALYSES] = nil
-        end
-      end
-
-      # The block's result, computed once per key inside `analyzing_once`.
-      #
-      # @private
-      def analyzing(*key)
-        analyses = Thread.current[ANALYSES]
-        return yield unless analyses
-
-        analyses.fetch(key) { analyses[key] = yield }
-      end
-
       # @private
       def compiled(handler, source, compiled_source)
         sources = Thread.current[COMPILED_SOURCES]
@@ -302,18 +276,16 @@ module ViewComponent
         # digest, so registering midway would discard digests already warmed.
         components.each { |component| register(component) }
 
-        analyzing_once do
-          components.each do |component|
-            component.__vc_cache_digest_source = Resolver.instance.source_for(component).freeze
-          end
+        components.each do |component|
+          component.__vc_cache_digest_source = Resolver.instance.source_for(component).freeze
+        end
 
-          # Warms the same digest cache requests read, since a lookup context's
-          # cache is shared by every context with the same details.
-          components.each do |component|
-            component.__vc_template_formats.each do |format|
-              finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [format])
-              component.cache_digest(finder: finder, format: format)
-            end
+        # Warms the same digest cache requests read, since a lookup context's
+        # cache is shared by every context with the same details.
+        components.each do |component|
+          component.__vc_template_formats.each do |format|
+            finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [format])
+            component.cache_digest(finder: finder, format: format)
           end
         end
       end
@@ -329,7 +301,7 @@ module ViewComponent
         other_calls = []
 
         each_node(program) do |node|
-          next unless node.is_a?(Prism::CallNode) && node.receiver.nil? && RENDER_METHODS.include?(node.name)
+          next unless render_call?(node)
 
           if (component = rendered_component(node))
             components[node] = component
@@ -341,22 +313,8 @@ module ViewComponent
         [components, other_calls]
       end
 
-      # The components the constants in a program name, in source order. Every
-      # namespace of a constant path is tried too, so `FooComponent::SIZES`
-      # counts `FooComponent`.
-      #
-      # @return [Array<Class>]
-      def referenced_components(program)
-        names = []
-
-        each_node(program) do |node|
-          next unless node.is_a?(Prism::ConstantReadNode) || node.is_a?(Prism::ConstantPathNode)
-
-          name = node.slice
-          names << name if CONSTANT_NAME.match?(name)
-        end
-
-        names.uniq.filter_map { |name| constantize_component(name) }.uniq
+      def render_call?(node)
+        node.is_a?(Prism::CallNode) && node.receiver.nil? && RENDER_METHODS.include?(node.name)
       end
 
       # Visit every node of a Prism tree, in source order.
