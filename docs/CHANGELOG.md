@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.20.0
+
 * Fix `invalid byte sequence in UTF-8` errors when precomputing cache digests for components loaded from encrypted or binary source files.
 
     *Joel Junström*
