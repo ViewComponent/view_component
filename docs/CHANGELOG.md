@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add an informational CI check that runs added and modified tests without a pull request's implementation changes to identify regression coverage.
+
+    *Joel Hawksley*
+
 * Speed up rendering with direct compiled-template calls and avoid intermediate method allocations when invoking lambda-backed slots.
 
     *Joel Hawksley*
