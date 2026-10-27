@@ -18,6 +18,10 @@ module ViewComponent
       # Extensions whose contents are hashed into the synthetic source.
       SIDECAR_EXTENSIONS = %w[yml yaml].freeze
 
+      # Where ViewComponent's own modules, such as the ones it includes into
+      # every component, are defined.
+      VIEW_COMPONENT_LIB = "#{::File.expand_path("..", __dir__)}/".freeze
+
       class << self
         def instance
           INSTANCE
@@ -55,19 +59,20 @@ module ViewComponent
         parts << "<% raise ViewComponent::CacheDigestTemplateError.new(#{component.name.inspect}) %>"
 
         # Content hashes of the Ruby files and sidecar files backing the
-        # component and its component superclasses. Hashing rather than
-        # inlining keeps the source small and avoids embedding Ruby that a
-        # tracker might misread as a render call.
+        # component, its component superclasses, and the modules they include.
+        # Hashing rather than inlining keeps the source small and avoids
+        # embedding Ruby that a tracker might misread as a render call.
         source_files(component).each do |path|
           parts << "<%# Resolved Dependency: #{path} #{file_digest(path)} %>"
         end
 
         # Everything the component renders: `# Template Dependency:`
-        # declarations, components, and partials, whether rendered from
-        # templates in any language or from Ruby. Emitted as declarations so
-        # the Digestor resolves them as tree nodes without trackers having to
-        # find them in the template sources, where they'd also infer partials
-        # from component renders.
+        # declarations, the components its slots are declared with, and the
+        # components and partials referenced from its templates, in any
+        # language, and from its Ruby. Emitted as declarations so the Digestor
+        # resolves them as tree nodes without trackers having to find them in
+        # the template sources, where they'd also infer partials from component
+        # renders.
         dependencies(component, templates).each do |dependency|
           parts << "<%# Template Dependency: #{dependency} %>"
         end
@@ -83,8 +88,10 @@ module ViewComponent
       private
 
       def build_template(component, virtual_path, details)
+        source = component.__vc_cache_digest_source || CacheDigest.analyzing(:source, component) { source_for(component) }
+
         ActionView::Template.new(
-          component.__vc_cache_digest_source || source_for(component),
+          source,
           "view_component cache digest for #{component.name}",
           ActionView::Template.handler_for_extension(:erb),
           locals: [],
@@ -104,10 +111,25 @@ module ViewComponent
         end
       end
 
+      # Modules the component and its component superclasses include, such as
+      # a module of helpers that render other components. Modules included
+      # into `ViewComponent::Base` and above are left out, as superclasses
+      # are, and so are the modules ViewComponent adds to every component.
+      #
+      # @return [Array<String>] the files the modules are defined in
+      def module_files(component)
+        component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base }.filter_map { |ancestor|
+          next if ancestor.is_a?(Class) || ancestor.name.nil?
+
+          path, _line = Object.const_source_location(ancestor.name)
+          path unless path.nil? || path.start_with?(VIEW_COMPONENT_LIB)
+        }.uniq
+      end
+
       def source_files(component)
         component_ancestors(component).flat_map { |ancestor|
           [ancestor.identifier, *ancestor.__vc_sidecar_files(SIDECAR_EXTENSIONS)]
-        }.compact.uniq.select { |path| ::File.exist?(path) }
+        }.concat(module_files(component)).compact.uniq.select { |path| ::File.exist?(path) }
       end
 
       def template_files(component)
@@ -146,13 +168,19 @@ module ViewComponent
         }.uniq
       end
 
+      # Everything but the component and its superclasses, which a component
+      # references in its own source but are digested as part of it already.
       def dependencies(component, templates)
         virtual_path = CacheDigest.virtual_path_for(component)
         ruby = ruby_sources(component)
+        own_paths = component_ancestors(component).filter_map { |ancestor| CacheDigest.virtual_path_for(ancestor) }
 
-        explicit_dependencies(ruby + templates.map(&:first)) |
+        dependencies = explicit_dependencies(ruby + templates.map(&:first)) |
           ruby.flat_map { |source| ruby_dependencies(source, virtual_path) } |
+          CacheDigest.slot_renders_of(component) |
           templates.flat_map { |source, extension| template_dependencies(component, source, extension, virtual_path) }
+
+        dependencies - own_paths
       end
 
       # Components and partials rendered from Ruby, such as a `#call` method.
@@ -182,8 +210,7 @@ module ViewComponent
       end
 
       def ruby_sources(component)
-        component_ancestors(component).filter_map { |ancestor|
-          path = ancestor.identifier
+        component_ancestors(component).map(&:identifier).concat(module_files(component)).uniq.filter_map { |path|
           ::File.read(path) if path && ::File.exist?(path)
         }
       end

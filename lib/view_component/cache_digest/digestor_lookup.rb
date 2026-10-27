@@ -21,6 +21,17 @@ module ViewComponent
         digestor.prepend(self)
       end
 
+      # Build the node for each template once, rather than once for every
+      # template that depends on it. A node's children depend only on its
+      # template, so a node built under one root is the node any other root
+      # would build. Precomputing digests at boot builds a tree for every
+      # component, and most components render much of the same tree.
+      def tree(name, finder, partial = false, seen = {})
+        CacheDigest.analyzing_once do
+          CacheDigest.analyzing(:tree, name, partial, finder.details_key) { super }
+        end
+      end
+
       private
 
       def find_template(finder, name, prefixes, partial, keys)

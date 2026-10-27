@@ -303,6 +303,101 @@ class CacheableTest < ViewComponent::TestCase
     ) { CacheableCallPartialComponent.cache_digest }
   end
 
+  def test_cache_digest_changes_when_a_component_a_slot_is_declared_with_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableSlotClassComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_a_component_a_slot_names_changes
+    assert_digest_changes(
+      "app/components/http_untracked_component.html.erb",
+      "<span class=\"http-untracked\">changed</span>\n"
+    ) { CacheableSlotClassNameComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_a_component_a_polymorphic_slot_names_changes
+    assert_digest_changes(
+      "app/components/untracked_child_component.html.erb",
+      "<span class=\"untracked-child\">changed</span>\n"
+    ) { CacheableSlotClassNameComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_a_component_built_by_a_method_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableMethodBuiltComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_a_component_assigned_to_a_local_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableLocalAliasComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_an_included_module_changes
+    original = File.read(Rails.root.join("app/helpers/cacheable_child_helper.rb"))
+
+    assert_digest_changes(
+      "app/helpers/cacheable_child_helper.rb",
+      original + "\n# a comment\n"
+    ) { CacheableHelperComponent.cache_digest }
+  end
+
+  def test_cache_digest_changes_when_a_component_an_included_module_renders_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableHelperComponent.cache_digest }
+  end
+
+  # Every component includes modules from ViewComponent itself, which would
+  # otherwise tie every digest to the installed version of the gem.
+  def test_modules_view_component_includes_are_not_digested
+    source = ViewComponent::CacheDigest::Resolver.instance.source_for(CacheableComponent)
+
+    assert_includes source, "app/components/cacheable_component.rb"
+    refute_includes source, ViewComponent::CacheDigest::Resolver::VIEW_COMPONENT_LIB
+  end
+
+  # A component names itself and its superclass in its own source, but both
+  # are digested as part of it already.
+  def test_a_component_does_not_depend_on_itself_or_its_superclasses
+    source = ViewComponent::CacheDigest::Resolver.instance.source_for(CacheableSubclassComponent)
+
+    refute_includes source, "Template Dependency: view_component/cache_digest/cacheable_component"
+    refute_includes source, "Template Dependency: view_component/cache_digest/cacheable_subclass_component"
+  end
+
+  def test_components_referenced_outside_render_calls_are_found_in_ruby_source
+    source = <<~RUBY
+      renders_one :header, CacheableChildComponent
+
+      def row
+        ::ErbComponent.new(message: "a")
+      end
+
+      def size
+        CacheableComponent::SIZES.fetch(@size, IntegrationExamplesController) || self.class::Missing
+      end
+    RUBY
+
+    assert_equal(
+      [
+        [
+          "view_component/cache_digest/cacheable_child_component",
+          "view_component/cache_digest/erb_component",
+          "view_component/cache_digest/cacheable_component"
+        ],
+        []
+      ],
+      ViewComponent::CacheDigest.renders_in(source, "view_component/cache_digest/post_component")
+    )
+  end
+
   def test_partial_paths_are_extracted_from_ruby_source
     source = <<~RUBY
       def call
@@ -733,6 +828,46 @@ class CacheableTest < ViewComponent::TestCase
     File.stub(:read, ->(*) { flunk "read a source file" }) do
       assert_equal expected, CacheableParentComponent.cache_digest
     end
+  ensure
+    components.each { |component| component.__vc_cache_digest_source = nil }
+    clear_digest_cache
+  end
+
+  def test_a_digest_builds_the_source_of_a_component_it_reaches_twice_once
+    resolver = ViewComponent::CacheDigest::Resolver.instance
+    source_for = resolver.method(:source_for)
+    built = Hash.new(0)
+    clear_digest_cache
+
+    counting = lambda do |component|
+      built[component] += 1
+      source_for.call(component)
+    end
+    resolver.stub(:source_for, counting) { CacheableSharedChildComponent.cache_digest }
+
+    assert_equal 1, built[CacheableChildComponent]
+  ensure
+    clear_digest_cache
+  end
+
+  # Precomputing builds a digest tree for every component, and most of those
+  # trees reach the same dependencies.
+  def test_precompute_shares_the_node_of_a_dependency_between_trees
+    components = [CacheableSharedChildComponent, CacheableParentComponent, CacheableCallComponent, CacheableChildComponent]
+    resolver = ViewComponent::CacheDigest::Resolver.instance
+    find_templates = resolver.method(:find_templates)
+    lookups = 0
+    clear_digest_cache
+
+    counting = lambda do |name, *args|
+      lookups += 1 if name == "cacheable_child_component"
+      find_templates.call(name, *args)
+    end
+    resolver.stub(:find_templates, counting) { ViewComponent::CacheDigest.precompute!(components) }
+
+    # Once for the node every tree that renders the child shares, and once for
+    # the child's own tree.
+    assert_equal 2, lookups
   ensure
     components.each { |component| component.__vc_cache_digest_source = nil }
     clear_digest_cache
