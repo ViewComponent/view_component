@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix cache digests missing components rendered through a slot declared with the component's class, through a method or variable that holds the component, or through a module the component includes. Any constant naming a component in a component's Ruby or templates now counts as a dependency, and included modules are digested like superclasses.
+
+    *Erik Axel Nielsen*
+
 * Add an informational CI check that runs added and modified tests without a pull request's implementation changes to identify regression coverage.
 
     *Joel Hawksley*

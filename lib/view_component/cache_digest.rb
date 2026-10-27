@@ -50,6 +50,11 @@ module ViewComponent
 
     # Rails' escape hatch for dependencies static analysis can't see.
     EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
+
+    # A constant path made only of constants, such as `Foo` or `::Foo::Bar`,
+    # rather than one hanging off an expression, such as `self.class::Bar`.
+    CONSTANT_NAME = /\A(?:::)?[A-Z]\w*(?:::[A-Z]\w*)*\z/
+
     class << self
       # Virtual paths of components, mapped to their class names.
       #
@@ -107,7 +112,14 @@ module ViewComponent
         Thread.current[COMPILED_SOURCES]&.dig(template.handler, source) || template.handler.call(template, source)
       end
 
-      # Find the components and partials Ruby source renders.
+      # Find the components Ruby source references and the partials it
+      # renders.
+      #
+      # Every constant that names a component counts, not only one passed
+      # straight to `render`: a component can also be rendered from a method
+      # that builds it, from a local variable, or from a slot declared with its
+      # class. A component referenced without being rendered only makes the
+      # digest change more often than it needs to.
       #
       # Action View's render parser only sees the calls that don't render a
       # component, so it can't infer partials from them.
@@ -117,8 +129,18 @@ module ViewComponent
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and partial virtual paths
       def renders_in(source, name)
-        components, other_calls = partition_render_calls(source)
+        names = []
+        other_calls = []
 
+        each_node(Prism.parse(source).value) do |node|
+          if node.is_a?(Prism::ConstantReadNode) || node.is_a?(Prism::ConstantPathNode)
+            names << node.slice if CONSTANT_NAME.match?(node.slice)
+          elsif render_call?(node) && !rendered_component(node)
+            other_calls << node
+          end
+        end
+
+        components = names.uniq.filter_map { |constant_name| constantize_component(constant_name) }
         [component_paths(components), partials_rendered_by(other_calls, name)]
       end
 
@@ -134,13 +156,27 @@ module ViewComponent
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and inferred partial virtual paths
       def component_renders_in(source, name)
-        components, other_calls = partition_render_calls(source)
+        components, other_calls = partition_render_calls(Prism.parse(source).value)
         return [[], []] if components.empty?
 
         [
-          component_paths(components),
+          component_paths(components.values),
           partials_rendered_by(components.keys, name) - partials_rendered_by(other_calls, name)
         ]
+      end
+
+      # Find the components a component's slots render, from the class each
+      # slot was declared with: `renders_one :header, HeaderComponent` or
+      # `renders_many :items, "ItemComponent"`. Read from the slot definitions
+      # rather than from source, since a class named by a string, or by a name
+      # relative to the component, resolves against the component at runtime.
+      #
+      # @param component [Class]
+      # @return [Array<String>] synthetic virtual paths of components
+      def slot_renders_of(component)
+        definitions = component.registered_slots.values.flat_map { |slot| slot[:renderable_hash]&.values || [slot] }
+
+        component_paths(definitions.filter_map { |slot| slot_component(component, slot) })
       end
 
       # Action View has shipped its render parser as a class (Rails 7.1, and
@@ -260,24 +296,34 @@ module ViewComponent
       # that render a component and the rest.
       #
       # @return [Array(Hash{Prism::CallNode => Class}, Array<Prism::CallNode>)]
-      def partition_render_calls(source)
+      def partition_render_calls(program)
         components = {}
         other_calls = []
-        return [components, other_calls] unless source.include?("render")
 
-        nodes = [Prism.parse(source).value]
-        while (node = nodes.pop)
-          if node.is_a?(Prism::CallNode) && node.receiver.nil? && RENDER_METHODS.include?(node.name)
-            if (component = rendered_component(node))
-              components[node] = component
-            else
-              other_calls << node
-            end
+        each_node(program) do |node|
+          next unless render_call?(node)
+
+          if (component = rendered_component(node))
+            components[node] = component
+          else
+            other_calls << node
           end
-          nodes.concat(node.compact_child_nodes.reverse!)
         end
 
         [components, other_calls]
+      end
+
+      def render_call?(node)
+        node.is_a?(Prism::CallNode) && node.receiver.nil? && RENDER_METHODS.include?(node.name)
+      end
+
+      # Visit every node of a Prism tree, in source order.
+      def each_node(program)
+        nodes = [program]
+        while (node = nodes.pop)
+          yield node
+          nodes.concat(node.compact_child_nodes.reverse!)
+        end
       end
 
       # The component a render call renders, from the constant at the root of
@@ -296,7 +342,17 @@ module ViewComponent
       end
 
       def component_paths(components)
-        components.values.uniq.filter_map { |component| registered_path_for(component) }
+        components.uniq.filter_map { |component| registered_path_for(component) }
+      end
+
+      # The component a slot renders, resolving a class name the way the slot
+      # does when it's set. A name that doesn't resolve is left to fail there.
+      def slot_component(component, slot)
+        renderable = slot[:renderable]
+        name = slot[:renderable_class_name]
+        renderable ||= component.const_get(name) if name && component.const_defined?(name)
+
+        renderable if renderable.is_a?(Class) && renderable < ViewComponent::Base
       end
 
       # Partials Action View's render parser finds in the given calls,
