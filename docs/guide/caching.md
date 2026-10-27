@@ -9,7 +9,7 @@ parent: How-to guide
 Since 4.14.0
 {: .label }
 
-Components work with Rails fragment caching. Editing a component's template, Ruby class, sidecar files, superclasses, or anything it renders invalidates every `cache` block that contains it, whether that block is in a view or inside a component's own template:
+Components work with Rails fragment caching. Editing a component's template, Ruby class, sidecar files, superclasses, included modules, or anything it renders invalidates every `cache` block that contains it, whether that block is in a view or inside a component's own template:
 
 ```erb
 <% cache @post do %>
@@ -59,7 +59,9 @@ end
 
 ## Declaring dependencies
 
-Dependencies are found by scanning source for literal references, so dynamic renders and included modules aren't tracked. Declare them with Rails' `# Template Dependency:` comment in the Ruby file or template, naming partials by path and components by class:
+Dependencies are found by scanning the component's templates, its Ruby class, and the modules it includes. Every component class named there counts, whether it's passed to `render`, built by a method, or assigned to a variable, and so does every partial rendered by its path. Slots count the class they're declared with, including one named by a string.
+
+A class or partial name built at runtime can't be found that way. Declare it with Rails' `# Template Dependency:` comment in the Ruby file or template, naming partials by path and components by class:
 
 ```ruby
 class PostComponent < ViewComponent::Base
@@ -68,7 +70,7 @@ class PostComponent < ViewComponent::Base
   # Template Dependency: PostDetailComponent
 
   def call
-    render(@detailed ? PostDetailComponent : PostSummaryComponent).new(post: @post)
+    render "Post#{@style.to_s.camelize}Component".constantize.new(post: @post)
   end
 end
 ```
