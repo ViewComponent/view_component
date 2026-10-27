@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Fix `invalid byte sequence in UTF-8` errors when precomputing cache digests for components loaded from encrypted or binary source files, such as those in `avo-advanced_search`.
+* Fix `invalid byte sequence in UTF-8` errors when precomputing cache digests for components loaded from encrypted or binary source files.
 
     *Joel Junström*
 
