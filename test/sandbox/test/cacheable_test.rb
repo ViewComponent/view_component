@@ -91,6 +91,21 @@ class CacheableTest < ViewComponent::TestCase
     assert_includes error.message, "cacheable_unreadable_digest_source_component.yml"
   end
 
+  def test_digest_source_hashes_binary_ruby_files_without_scanning_them
+    Dir.mktmpdir do |dir|
+      path = File.join(dir, "encrypted_component.enc")
+      component = Class.new(CacheableComponent)
+      component.identifier = path
+
+      File.binwrite(path, "\xFF\xFE render Template Dependency:".b)
+      source = ViewComponent::CacheDigest::Resolver.instance.source_for(component)
+      assert_includes source, "Resolved Dependency: #{path} #{ActiveSupport::Digest.hexdigest(File.binread(path))}"
+
+      File.binwrite(path, "\xFF\xFD".b)
+      refute_equal source, ViewComponent::CacheDigest::Resolver.instance.source_for(component)
+    end
+  end
+
   def test_cache_digest_changes_when_the_template_changes
     assert_digest_changes(
       "app/components/cacheable_component.html.erb",

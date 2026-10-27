@@ -181,15 +181,21 @@ module ViewComponent
         CacheDigest.renders_in(CacheDigest.compiled_source(template), virtual_path).flatten
       end
 
+      # Components loaded from encrypted files, as some commercial gems ship
+      # them, have binary identifiers that can't be scanned. They're still
+      # hashed by `file_digest`.
       def ruby_sources(component)
         component_ancestors(component).filter_map { |ancestor|
           path = ancestor.identifier
-          ::File.read(path) if path && ::File.exist?(path)
+          next unless path && ::File.exist?(path)
+
+          source = ::File.read(path)
+          source if source.valid_encoding?
         }
       end
 
       def file_digest(path)
-        ActiveSupport::Digest.hexdigest(::File.read(path))
+        ActiveSupport::Digest.hexdigest(::File.binread(path))
       end
 
       # Built once at load time rather than memoized, so no class-level state
