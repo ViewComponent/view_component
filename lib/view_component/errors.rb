@@ -267,4 +267,20 @@ module ViewComponent
       super(MESSAGE.gsub("COMPONENT", component_name.to_s))
     end
   end
+
+  class UnknownConfigOptionError < StandardError
+    def initialize(option, renamed_to: nil, removed: false, hint: nil, valid_options: [])
+      message =
+        if renamed_to
+          "`#{option}` was renamed to `#{renamed_to}` in ViewComponent 4.0."
+        elsif removed
+          "`#{option}` was removed in ViewComponent 4.0."
+        else
+          "`#{option}` isn't a ViewComponent configuration option. " \
+            "Valid options are: #{valid_options.join(", ")}."
+        end
+
+      super([message, hint].compact.join(" "))
+    end
+  end
 end
