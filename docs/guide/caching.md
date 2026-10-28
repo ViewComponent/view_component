@@ -74,3 +74,5 @@ class PostComponent < ViewComponent::Base
   end
 end
 ```
+
+This also applies to facades such as `render UI.button`: declare the component the facade returns in the calling template. Facade methods aren't executed during dependency discovery. Unresolved partial paths guessed from dynamic renders are ignored; literal partial paths and explicit dependency declarations are still checked.

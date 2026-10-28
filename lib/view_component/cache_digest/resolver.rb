@@ -186,15 +186,8 @@ module ViewComponent
       end
 
       # Components and partials rendered from Ruby, such as a `#call` method.
-      # Partials are narrowed to paths that appear in the source, discarding
-      # the speculative `things/thing` Action View infers from dynamic renders
-      # like `render @thing`, which would resolve to nothing.
       def ruby_dependencies(source, virtual_path)
-        components, partials = CacheDigest.renders_in(source, virtual_path)
-
-        components | partials.select { |path|
-          source.include?(path) || source.include?(path.sub(%r{[^/]+\z}, '_\0'))
-        }
+        CacheDigest.renders_in(source, virtual_path, view_paths: ActionController::Base.view_paths).flatten
       end
 
       def template_dependencies(component, source, extension, virtual_path)
@@ -208,7 +201,9 @@ module ViewComponent
           format: nil,
           virtual_path: virtual_path
         )
-        CacheDigest.renders_in(CacheDigest.compiled_source(template), virtual_path).flatten
+        CacheDigest.renders_in(
+          CacheDigest.compiled_source(template), virtual_path, view_paths: ActionController::Base.view_paths
+        ).flatten
       end
 
       # Components loaded from encrypted files, as some commercial gems ship

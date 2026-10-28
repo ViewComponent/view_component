@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "action_view/testing/resolvers"
 
 class CacheableTest < ViewComponent::TestCase
   def setup
@@ -457,13 +458,36 @@ class CacheableTest < ViewComponent::TestCase
       def call
         render @thing
         render OtherComponent.new
-        render "bare_name"
       end
     RUBY
 
     assert_empty(
       ViewComponent::CacheDigest::Resolver.instance.send(:ruby_dependencies, source, "view_component/cache_digest/post_component")
     )
+  end
+
+  def test_literal_relative_partial_paths_are_kept_in_ruby_source
+    assert_equal(
+      ["view_component/cache_digest/bare_name"],
+      ViewComponent::CacheDigest::Resolver.instance.send(
+        :ruby_dependencies, 'render "bare_name"', "view_component/cache_digest/post_component"
+      )
+    )
+  end
+
+  def test_facade_dependencies_are_filtered_in_ruby_and_each_template_language
+    resolver = ViewComponent::CacheDigest::Resolver.instance
+    virtual_path = "view_component/cache_digest/post_component"
+
+    assert_empty resolver.send(:ruby_dependencies, "render UI.button", virtual_path)
+
+    {
+      erb: "<%= render UI.button %>",
+      haml: "= render UI.button",
+      slim: "= render UI.button"
+    }.each do |extension, source|
+      assert_empty resolver.send(:template_dependencies, CacheableComponent, source, extension, virtual_path)
+    end
   end
 
   def test_partial_paths_are_not_extracted_from_sources_without_render
@@ -786,22 +810,141 @@ class CacheableTest < ViewComponent::TestCase
     end
   end
 
-  # Action View reads `render Foo.new` as a dynamic render of a partial named
-  # after the last method, inferring `news/new`. That partial doesn't exist.
-  def test_templates_without_constant_renders_are_not_compiled
+  def test_templates_without_renders_are_not_compiled
     ViewComponent::CacheDigest.stub(:compiled_source, ->(*) { flunk "compiled the template" }) do
-      ActionView::DependencyTracker.find_dependencies(
-        "test/template", build_template(%(<%= render "posts/byline" %><%= render @post %>)), []
+      assert_empty(
+        ActionView::DependencyTracker.find_dependencies("test/template", build_template("no calls here"), [])
+      )
+    end
+  end
+
+  def test_unresolved_dynamic_partial_dependencies_are_discarded
+    sources = [
+      "render UI.button(label: 'Save')",
+      "render(::UI.button)",
+      "render_to_string UI.cancel_button",
+      "render partial: UI.button",
+      "button = UI.button; render button",
+      "render @button"
+    ]
+
+    each_render_tracker do
+      sources.each do |source|
+        dependencies = ActionView::DependencyTracker.find_dependencies(
+          "test/template", build_template("<%= #{source} %>"), []
+        )
+
+        assert_empty dependencies, source
+        assert_equal [[], []], ViewComponent::CacheDigest.renders_in(source, "test/template", view_paths: [])
+      end
+    end
+  end
+
+  def test_existing_dynamic_partial_dependencies_are_kept
+    view_paths = ActionView::PathSet.new([
+      ActionView::FixtureResolver.new("buttons/_button.html.erb" => "Button")
+    ])
+    source = "render @button"
+
+    each_render_tracker do
+      assert_equal(
+        ["buttons/button"],
+        ActionView::DependencyTracker.find_dependencies("test/template", build_template("<%= #{source} %>"), view_paths)
       )
     end
 
-    [
-      "<%= render CacheableComponent.new(title: 'x') %>",
-      "<%= render(\n  ::CacheableComponent.new(title: 'x')) %>",
-      "<%= render_to_string CacheableComponent.new(title: 'x') %>"
-    ].each do |source|
-      assert_match ViewComponent::CacheDigest::CONSTANT_RENDER, source
+    assert_equal(
+      [[], ["buttons/button"]],
+      ViewComponent::CacheDigest.renders_in(source, "test/template", view_paths: view_paths)
+    )
+  end
+
+  def test_existing_dynamic_partials_still_change_the_digest
+    digests = %w[before after].map do |content|
+      clear_digest_cache
+      resolver = ActionView::FixtureResolver.new(
+        "test/template.html.erb" => "<%= render @button %>",
+        "buttons/_button.html.erb" => content
+      )
+
+      ActionView::Digestor.digest(
+        name: "test/template", format: :html, finder: ActionView::LookupContext.new([resolver])
+      )
     end
+
+    refute_equal(*digests)
+  ensure
+    clear_digest_cache
+  end
+
+  def test_dynamic_partial_dependencies_are_kept_for_other_variants_formats_and_locales
+    I18n.stub(:available_locales, [:en, :fr]) do
+      %w[buttons/_button.html+phone.erb buttons/_button.text.erb buttons/_button.fr.html.erb].each do |path|
+        view_paths = ActionView::PathSet.new([ActionView::FixtureResolver.new(path => "Button")])
+
+        assert_equal(
+          [[], ["buttons/button"]],
+          ViewComponent::CacheDigest.renders_in("render @button", "test/template", view_paths: view_paths)
+        )
+      end
+    end
+  end
+
+  def test_literal_wildcard_dependencies_are_kept_alongside_dynamic_renders
+    source = "<%= render UI.button %><%= render \"buttons/\#{@kind}\" %>"
+    view_paths = ActionView::PathSet.new([
+      ActionView::FixtureResolver.new("buttons/_button.html.erb" => "Button")
+    ])
+
+    each_render_tracker do
+      dependencies = ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), view_paths)
+      assert_equal(
+        ["buttons/button"],
+        dependencies.map { |path| path.gsub(%r{/_}, "/") }.uniq
+      )
+      assert_empty ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
+    end
+  end
+
+  def test_missing_literal_dependencies_are_kept_alongside_dynamic_renders
+    sources = [
+      '<%= render UI.button %><%= render "buttons/button" %>',
+      '<%= render UI.button %><%= render("buttons/_button") %>',
+      '<%= render UI.button %><%= render(("buttons/button")) %>',
+      '<%= render partial: UI.button, layout: "buttons/button" %>',
+      '<%= render partial: UI.button, spacer_template: "buttons/button" %>'
+    ]
+
+    each_render_tracker do
+      sources.each do |source|
+        dependencies = ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
+
+        assert_includes dependencies.map { |path| path.gsub(%r{/_}, "/") }, "buttons/button", source
+        components, partials = ViewComponent::CacheDigest.renders_in(
+          ViewComponent::CacheDigest.compiled_source(build_template(source)), "test/template", view_paths: []
+        )
+        assert_empty components
+        assert_equal ["buttons/button"], partials.map { |path| path.gsub(%r{/_}, "/") }
+      end
+    end
+  end
+
+  def test_explicit_dependencies_are_kept_alongside_dynamic_renders
+    source = "<%# Template Dependency: buttons/button %><%= render UI.button %>"
+
+    each_render_tracker do
+      assert_equal(
+        ["buttons/button"],
+        ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
+      )
+    end
+  end
+
+  def test_dynamic_dependencies_are_not_filtered_without_view_paths
+    assert_equal(
+      ["buttons/button"],
+      ActionView::DependencyTracker.find_dependencies("test/template", build_template("<%= render UI.button %>"))
+    )
   end
 
   def test_partials_inferred_from_component_renders_are_discarded
