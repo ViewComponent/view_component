@@ -3,6 +3,18 @@
 require "test_helper"
 
 class RenderingTest < ViewComponent::TestCase
+  class NonComponentRenderable
+    attr_reader :original_view_context
+
+    def set_original_view_context(view_context)
+      @original_view_context = view_context
+    end
+
+    def render_in(view_context, **, &block)
+      view_context.capture(&block)
+    end
+  end
+
   def vc_test_controller_class
     IntegrationExamplesController
   end
@@ -65,18 +77,7 @@ class RenderingTest < ViewComponent::TestCase
   end
 
   def test_nested_render_sets_original_view_context_on_non_component_renderables
-    renderable = Class.new do
-      attr_reader :original_view_context
-
-      def set_original_view_context(view_context)
-        @original_view_context = view_context
-      end
-
-      def render_in(view_context, &block)
-        view_context.capture(&block)
-      end
-    end.new
-
+    renderable = NonComponentRenderable.new
     wrapper = WrapperComponent.new
     render_inline(wrapper) do |component|
       component.render(renderable) { "content" }
