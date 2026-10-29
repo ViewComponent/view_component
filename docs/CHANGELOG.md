@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Resolve cache dependencies in their Ruby lexical namespaces and component template scopes.
+
+    *Joel Hawksley*
+
 * Keep default slot configuration isolated between parent components and subclasses.
 
     *Joel Hawksley*

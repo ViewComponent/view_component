@@ -123,21 +123,22 @@ module ViewComponent
       # @param source [String] Ruby source
       # @param name [String] virtual path the source is being digested under
       # @param view_paths [ActionView::PathSet, nil] paths to check dynamic partial guesses against
+      # @param nesting [Array<Module>] lexical scope of compiled template source
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and partial virtual paths
-      def renders_in(source, name, view_paths: nil)
+      def renders_in(source, name, view_paths: nil, nesting: [])
         names = []
         other_calls = []
 
-        each_node(Prism.parse(source).value) do |node|
+        each_node(Prism.parse(source).value, nesting) do |node, scope|
           if node.is_a?(Prism::ConstantReadNode) || node.is_a?(Prism::ConstantPathNode)
-            names << node.slice if CONSTANT_NAME.match?(node.slice)
-          elsif render_call?(node) && !rendered_component(node)
+            names << [node.slice, scope] if CONSTANT_NAME.match?(node.slice)
+          elsif render_call?(node) && !rendered_component(node, scope)
             other_calls << node
           end
         end
 
-        components = names.uniq.filter_map { |constant_name| constantize_component(constant_name) }
+        components = names.uniq.filter_map { |constant_name, scope| constantize_component(constant_name, scope) }
         partials = partials_rendered_by(other_calls, name) - unresolved_partials_rendered_by(other_calls, name, view_paths)
         [component_paths(components), partials]
       end
@@ -300,10 +301,10 @@ module ViewComponent
         components = {}
         other_calls = []
 
-        each_node(program) do |node|
+        each_node(program) do |node, nesting|
           next unless render_call?(node)
 
-          if (component = rendered_component(node))
+          if (component = rendered_component(node, nesting))
             components[node] = component
           else
             other_calls << node
@@ -317,12 +318,25 @@ module ViewComponent
         node.is_a?(Prism::CallNode) && node.receiver.nil? && RENDER_METHODS.include?(node.name)
       end
 
-      # Visit every node of a Prism tree, in source order.
-      def each_node(program)
-        nodes = [program]
-        while (node = nodes.pop)
-          yield node
-          nodes.concat(node.compact_child_nodes.reverse!)
+      # Class/module bodies add one lexical scope, even for qualified names:
+      # `class UI::Card` adds Card, not UI, to Module.nesting.
+      def each_node(program, nesting = [])
+        nodes = [[program, nesting]]
+        while (entry = nodes.pop)
+          node, scope = entry
+          yield node, scope
+
+          body = nil
+          body_scope = scope
+          if node.is_a?(Prism::ClassNode) || node.is_a?(Prism::ModuleNode)
+            body = node.body
+            namespace = resolve_constant(node.constant_path.slice, scope)
+            body_scope = [namespace, *scope] if namespace.is_a?(Module)
+          end
+
+          node.compact_child_nodes.reverse_each do |child|
+            nodes << [child, child.equal?(body) ? body_scope : scope]
+          end
         end
       end
 
@@ -331,13 +345,13 @@ module ViewComponent
       # `FooComponent.with_collection(...)`, and so on.
       #
       # @return [Class, nil]
-      def rendered_component(call)
+      def rendered_component(call, nesting = [])
         node = call.arguments&.arguments&.first
         node = node.receiver while node.is_a?(Prism::CallNode) && node.receiver
 
         case node
         when Prism::ConstantReadNode, Prism::ConstantPathNode
-          constantize_component(node.slice)
+          constantize_component(node.slice, nesting)
         end
       end
 
@@ -437,11 +451,30 @@ module ViewComponent
       # Returns nil for anything else, including constants that don't exist.
       # Autoloading here is safe: the template is about to render this constant
       # anyway.
-      def constantize_component(constant_name)
-        component = constant_name.safe_constantize
+      def constantize_component(constant_name, nesting = [])
+        component = resolve_constant(constant_name, nesting)
         return unless component.is_a?(Class) && component < ViewComponent::Base
 
         component
+      end
+
+      def resolve_constant(name, nesting)
+        return unless CONSTANT_NAME.match?(name)
+        return name.safe_constantize if nesting.empty? || name.start_with?("::")
+
+        first, *rest = name.split("::")
+        # Lexical constants precede inherited constants. Once a name resolves,
+        # do not fall back to a top-level component if it names something else.
+        owner = nesting.find { |namespace| namespace.const_defined?(first, false) }
+        owner ||= nesting.first if nesting.first.const_defined?(first)
+        owner ||= Object if Object.const_defined?(first)
+        return unless owner
+
+        constant = owner.const_get(first)
+        return constant if rest.empty?
+        return unless constant.is_a?(Module) && constant.name
+
+        "#{constant.name}::#{rest.join("::")}".safe_constantize
       end
     end
 
