@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Include all requested variants in output cache keys, preserving fallback order.
+
+    *Joel Hawksley*
+
 * Resolve cache dependencies in their Ruby lexical namespaces and component template scopes.
 
     *Joel Hawksley*

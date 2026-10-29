@@ -736,6 +736,20 @@ class CacheableTest < ViewComponent::TestCase
     end
   end
 
+  def test_cached_output_respects_the_ordered_variant_fallbacks
+    with_caching do
+      with_variant(:unknown, :phone, :tablet) do
+        render_inline(CacheableVariantsComponent.new)
+        assert_text "Phone"
+      end
+
+      with_variant(:unknown, :tablet, :phone) do
+        render_inline(CacheableVariantsComponent.new)
+        assert_text "Tablet"
+      end
+    end
+  end
+
   def test_cached_output_is_html_safe
     with_caching do
       render_inline(CacheableComponent.new(title: "<b>bold</b>"))

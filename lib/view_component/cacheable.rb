@@ -117,7 +117,7 @@ module ViewComponent
     # The cache key for this rendering of the component.
     #
     # Combines the component's identity, its source digest, the requested
-    # format and variant, the current locale, and the values declared with
+    # format and ordered variants, the current locale, and the values declared with
     # `cache_on`. Override for full control.
     #
     # @param view_context [ActionView::Base]
@@ -133,7 +133,7 @@ module ViewComponent
         # Included in its own right, not just as a digest input: components that
         # render every format from one template have the same digest for each.
         format,
-        __vc_cache_variant(lookup_context),
+        __vc_cache_variants(lookup_context),
         I18n.locale,
         *__vc_cache_on_values
       ]
@@ -231,8 +231,8 @@ module ViewComponent
       Array(lookup_context&.formats).first || :html
     end
 
-    def __vc_cache_variant(lookup_context)
-      Array(lookup_context&.variants).first
+    def __vc_cache_variants(lookup_context)
+      Array(lookup_context&.variants)
     end
   end
 end
