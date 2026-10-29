@@ -41,12 +41,12 @@ module ViewComponent
     def components
       component.__vc_validate_collection_parameter!(validate_default: true)
 
-      iterator = ActionView::PartialIteration.new(@collection.size)
       collection_param = component.__vc_collection_parameter
       counter_present = component.__vc_counter_argument_present?
       counter_param = component.__vc_collection_counter_parameter if counter_present
       iteration_present = component.__vc_iteration_argument_present?
       iteration_param = component.__vc_collection_iteration_parameter if iteration_present
+      iterator = ActionView::PartialIteration.new(@collection.size) if counter_present || iteration_present
       item_options = @options.dup
 
       @collection.map do |item|
@@ -54,7 +54,7 @@ module ViewComponent
         item_options[counter_param] = iterator.index if counter_present
         item_options[iteration_param] = iterator.dup if iteration_present
         instance = component.new(**item_options)
-        iterator.iterate!
+        iterator&.iterate!
         instance
       end
     end

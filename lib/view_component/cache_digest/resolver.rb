@@ -102,11 +102,12 @@ module ViewComponent
       # ancestors means editing `ApplicationComponent` invalidates every
       # component that inherits from it.
       def component_ancestors(component)
-        component.ancestors.select do |ancestor|
-          ancestor.is_a?(Class) &&
-            ancestor <= ViewComponent::Base &&
-            ancestor != ViewComponent::Base
+        ancestors = []
+        until component == ViewComponent::Base
+          ancestors << component
+          component = component.superclass
         end
+        ancestors
       end
 
       # Modules the component and its component superclasses include, such as

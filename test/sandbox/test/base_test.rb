@@ -218,6 +218,58 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     end
   end
 
+  def test_template_path_parser_is_shared_only_while_eager_loading
+    parser = nil
+    ViewComponent::CompileCache.with_sidecar_files_cache do
+      parser = ViewComponent::CompileCache.path_parser
+      assert_same parser, ViewComponent::CompileCache.path_parser
+      details = parser.parse("example.en.html+phone.erb").details
+      assert_equal [:en, :html, :phone, :erb], [details.locale, details.format, details.variant, details.handler]
+    end
+
+    refute_same parser, ViewComponent::CompileCache.path_parser
+    refute_same ViewComponent::CompileCache.path_parser, ViewComponent::CompileCache.path_parser
+  end
+
+  def test_template_path_parser_is_discarded_after_an_error
+    parser = nil
+    assert_raises(RuntimeError) do
+      ViewComponent::CompileCache.with_sidecar_files_cache do
+        parser = ViewComponent::CompileCache.path_parser
+        raise "compilation failed"
+      end
+    end
+
+    refute_same parser, ViewComponent::CompileCache.path_parser
+  end
+
+  def test_compiled_status_tracks_cache_invalidation
+    MyComponent.__vc_compile
+    assert_predicate MyComponent, :__vc_compiled?
+
+    ViewComponent::CompileCache.invalidate_class!(MyComponent)
+    refute_predicate MyComponent, :__vc_compiled?
+
+    MyComponent.__vc_compile
+    assert_predicate MyComponent, :__vc_compiled?
+  end
+
+  def test_default_output_preamble_and_postamble
+    component = MyComponent.new
+    [component.output_preamble, component.output_postamble].each do |output|
+      assert_empty output
+      assert_predicate output, :html_safe?
+      assert_predicate output, :frozen?
+    end
+  end
+
+  def test_html_safe_output_does_not_need_a_blankness_check
+    output = "<p>safe</p>".html_safe
+    output.stub(:blank?, -> { flunk "HTML-safe output should not be scanned for whitespace" }) do
+      assert_same output, MyComponent.new.send(:__vc_maybe_escape_html, output) { flunk "HTML-safe output should not warn" }
+    end
+  end
+
   def test_does_not_render_additional_newline_with_render_in
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true

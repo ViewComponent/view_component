@@ -15,7 +15,7 @@ module ViewComponent
     end
 
     def compiled?(klass)
-      cache.include? klass
+      @@cache.include? klass
     end
 
     def invalidate_class!(klass)
@@ -33,11 +33,19 @@ module ViewComponent
       Fiber[:__vc_sidecar_files] = {}
       Fiber[:__vc_sidecar_directories] = {}
       Fiber[:__vc_source_files] = {}
+      Fiber[:__vc_path_parser] = ActionView::Resolver::PathParser.new
       yield
     ensure
       Fiber[:__vc_sidecar_files] = nil
       Fiber[:__vc_sidecar_directories] = nil
       Fiber[:__vc_source_files] = nil
+      Fiber[:__vc_path_parser] = nil
+    end
+
+    def path_parser
+      # Its regular expression depends on registered handlers, formats and locales.
+      # Reuse it during eager loading, but not across reloads.
+      Fiber[:__vc_path_parser] || ActionView::Resolver::PathParser.new
     end
 
     def read_file(path)
