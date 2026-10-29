@@ -74,3 +74,5 @@ class PostComponent < ViewComponent::Base
   end
 end
 ```
+
+For facades such as `render UI.button`, declare the returned component with a `Template Dependency` comment in the calling template. Dependency discovery doesn't execute facade methods. It ignores unresolved partial guesses but checks literal paths and explicit dependencies.

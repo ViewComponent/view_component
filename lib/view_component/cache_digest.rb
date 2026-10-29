@@ -44,10 +44,6 @@ module ViewComponent
     COMPILED_SOURCES = :view_component_cache_digest_compiled_sources
     private_constant :COMPILED_SOURCES
 
-    # A render call whose first argument starts with a constant, such as
-    # `render FooComponent.new` or `render(Foo::Bar.with_collection(...))`.
-    CONSTANT_RENDER = /\brender(?:_to_string)?[\s(]*(?:::)?[A-Z]/
-
     # Rails' escape hatch for dependencies static analysis can't see.
     EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
 
@@ -126,9 +122,10 @@ module ViewComponent
       #
       # @param source [String] Ruby source
       # @param name [String] virtual path the source is being digested under
+      # @param view_paths [ActionView::PathSet, nil] paths to check dynamic partial guesses against
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and partial virtual paths
-      def renders_in(source, name)
+      def renders_in(source, name, view_paths: nil)
         names = []
         other_calls = []
 
@@ -141,27 +138,30 @@ module ViewComponent
         end
 
         components = names.uniq.filter_map { |constant_name| constantize_component(constant_name) }
-        [component_paths(components), partials_rendered_by(other_calls, name)]
+        partials = partials_rendered_by(other_calls, name) - unresolved_partials_rendered_by(other_calls, name, view_paths)
+        [component_paths(components), partials]
       end
 
-      # Find the components Ruby source renders, along with the partials Action
-      # View infers from them.
+      # Find the components Ruby source renders, along with partial guesses
+      # Action View should discard.
       #
       # Action View reads `render FooComponent.new` as a dynamic render of a
       # partial named after the last method, inferring `news/new`. Partials also
-      # rendered some other way aren't returned.
+      # rendered some other way aren't returned. Unresolved guesses from other
+      # dynamic renders are discarded when view paths are available.
       #
       # @param source [String] Ruby source
       # @param name [String] virtual path the source is being digested under
+      # @param view_paths [ActionView::PathSet, nil] paths to check dynamic partial guesses against
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and inferred partial virtual paths
-      def component_renders_in(source, name)
+      def template_renders_in(source, name, view_paths: nil)
         components, other_calls = partition_render_calls(Prism.parse(source).value)
-        return [[], []] if components.empty?
 
         [
           component_paths(components.values),
-          partials_rendered_by(components.keys, name) - partials_rendered_by(other_calls, name)
+          (partials_rendered_by(components.keys, name) - partials_rendered_by(other_calls, name)) |
+            unresolved_partials_rendered_by(other_calls, name, view_paths)
         ]
       end
 
@@ -363,9 +363,57 @@ module ViewComponent
         return [] if calls.empty?
 
         source = calls.map { |call| "#{call.name}(#{call.arguments&.slice})" }.join("\n")
+        partial_paths_in(source, name)
+      end
+
+      def partial_paths_in(source, name)
         RENDER_PARSER.new(name, source).render_calls
           .map { |path| path.gsub(%r{/_}, "/") }
           .uniq
+      end
+
+      # Dynamic renders can return components without naming their classes,
+      # such as `render UI.button`. Keep Action View's guess only if it resolves,
+      # without executing application methods to discover what they return.
+      def unresolved_partials_rendered_by(calls, name, view_paths)
+        return [] unless view_paths
+
+        targets = calls.flat_map { |call| render_targets(call) }
+        literal, dynamic = targets.partition do |target|
+          target.is_a?(Prism::StringNode) || target.is_a?(Prism::InterpolatedStringNode)
+        end
+        return [] if dynamic.empty?
+
+        inferred = partial_paths_in(dynamic.map { |target| "render(#{target.slice})" }.join("\n"), name)
+        declared = partial_paths_in(literal.map { |target| "render(#{target.slice})" }.join("\n"), name)
+        finder = ActionView::LookupContext.new(view_paths, variants: :any, locale: I18n.available_locales)
+
+        inferred.reject do |path|
+          declared.include?(path) || finder.exists?(path, [], true)
+        end
+      end
+
+      def render_targets(call)
+        arguments = call.arguments&.arguments || []
+        targets = arguments.flat_map do |argument|
+          if argument.is_a?(Prism::KeywordHashNode) || argument.is_a?(Prism::HashNode)
+            argument.elements.filter_map do |element|
+              next unless element.is_a?(Prism::AssocNode) && element.key.is_a?(Prism::SymbolNode)
+              next unless %w[partial template layout spacer_template].include?(element.key.unescaped)
+
+              element.value
+            end
+          elsif argument.equal?(arguments.first)
+            argument
+          end
+        end.compact
+
+        targets.map do |target|
+          while target.is_a?(Prism::ParenthesesNode) && target.body.is_a?(Prism::StatementsNode) && target.body.body.one?
+            target = target.body.body.first
+          end
+          target
+        end
       end
 
       # Record the actual class name rather than trying to reverse a virtual

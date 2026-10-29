@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Ignore unresolved partial dependencies inferred from dynamic renders, such as `render UI.button`, without requiring configuration for component facades. Real partials and explicit dependencies are preserved.
+
+    *Joel Hawksley*
+
 ## 4.20.0
 
 * Fix `invalid byte sequence in UTF-8` errors when precomputing cache digests for components loaded from encrypted or binary source files.

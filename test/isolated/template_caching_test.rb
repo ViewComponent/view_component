@@ -116,6 +116,47 @@ class TemplateCachingTest < ActiveSupport::TestCase
     end
   end
 
+  def test_facade_renders_do_not_log_missing_templates_at_boot
+    Dir.mktmpdir do |root|
+      write_file(root, "app/models/design_system.rb", <<~RUBY)
+        class DesignSystem
+          module Methods
+            def button(...) = ChildComponent.new(...)
+          end
+          extend Methods
+        end
+      RUBY
+      write_file(root, "app/components/child_component.rb", "class ChildComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/child_component.html.erb", "<div>Child</div>")
+      write_file(root, "app/components/parent_component.rb", "class ParentComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/parent_component.html.erb", "<%= render DesignSystem.button %>")
+
+      log = StringIO.new
+      boot_app("production", root: root) { config.logger = Logger.new(log) }
+
+      assert ParentComponent.__vc_cache_digest_source
+      refute_match "Couldn't find template", log.string
+      assert_equal "<div>Child</div>", ActionController::Base.render(ParentComponent.new).strip
+    end
+  end
+
+  def test_missing_literal_and_explicit_dependencies_still_log_at_boot
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/parent_component.rb", "class ParentComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/parent_component.html.erb", <<~ERB)
+        <%# Template Dependency: buttons/button %>
+        <%= render UI.button %>
+        <%= render "missing/partial" %>
+      ERB
+
+      log = StringIO.new
+      boot_app("production", root: root) { config.logger = Logger.new(log) }
+
+      assert_match "Couldn't find template for digesting: buttons/button", log.string
+      assert_match "Couldn't find template for digesting: missing/partial", log.string
+    end
+  end
+
   private
 
   def boot_app(env, root: __dir__, &configure)
