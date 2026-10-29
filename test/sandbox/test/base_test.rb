@@ -179,6 +179,45 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     end
   end
 
+  def test_source_file_contents_are_shared_only_while_eager_loading
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, "temporary_component.html.erb")
+      File.write(path, "original")
+
+      ViewComponent::CompileCache.with_sidecar_files_cache do
+        ViewComponent::CompileCache.read_file(path).replace("modified by a template handler")
+        File.write(path, "edited")
+
+        assert_equal "original", ViewComponent::CompileCache.read_file(path)
+      end
+
+      assert_equal "edited", ViewComponent::CompileCache.read_file(path)
+      File.write(path, "edited again")
+      assert_equal "edited again", ViewComponent::CompileCache.read_file(path)
+
+      ViewComponent::CompileCache.with_sidecar_files_cache do
+        assert_equal "edited again", ViewComponent::CompileCache.read_file(path)
+      end
+    end
+  end
+
+  def test_source_file_contents_are_discarded_after_an_error
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, "temporary_component.html.erb")
+      File.write(path, "original")
+
+      assert_raises(RuntimeError) do
+        ViewComponent::CompileCache.with_sidecar_files_cache do
+          assert_equal "original", ViewComponent::CompileCache.read_file(path)
+          raise "compilation failed"
+        end
+      end
+
+      File.write(path, "edited")
+      assert_equal "edited", ViewComponent::CompileCache.read_file(path)
+    end
+  end
+
   def test_does_not_render_additional_newline_with_render_in
     without_template_annotations do
       ActionView::Template::Handlers::ERB.strip_trailing_newlines = true
@@ -189,6 +228,27 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     end
   ensure
     ActionView::Template::Handlers::ERB.strip_trailing_newlines = false
+  end
+
+  def test_render_looks_up_the_overridden_virtual_path_once
+    component = MyComponent.new
+    view_context = ActionController::Base.new.view_context
+    view_context.instance_variable_set(:@virtual_path, "original")
+    lookups = 0
+    paths = nil
+    component.define_singleton_method(:virtual_path) do
+      lookups += 1
+      "custom/component"
+    end
+    component.define_singleton_method(:before_render) do
+      paths = [@virtual_path, @view_context.instance_variable_get(:@virtual_path)]
+    end
+
+    component.render_in(view_context)
+
+    assert_equal 1, lookups
+    assert_equal ["custom/component", "custom/component"], paths
+    assert_equal "original", view_context.instance_variable_get(:@virtual_path)
   end
 
   def test_evaled_component

@@ -35,9 +35,9 @@ module ViewComponent
         :file
       end
 
-      # Load file each time we look up #source in case the file has been modified
+      # Only reuse file contents while eager loading; otherwise reflect edits.
       def source
-        ::File.read(@path)
+        CompileCache.read_file(@path)
       end
 
       private

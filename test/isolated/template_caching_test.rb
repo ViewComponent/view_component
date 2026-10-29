@@ -89,6 +89,25 @@ class TemplateCachingTest < ActiveSupport::TestCase
     end
   end
 
+  def test_compilation_and_digest_precomputation_share_template_source_reads
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      template_path = File.join(root, "app/components/greeting_component.html.erb")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Hello</div>")
+      reads = 0
+      read = File.method(:read)
+
+      File.stub(:read, lambda { |path, *args, **kwargs|
+        reads += 1 if path == template_path
+        read.call(path, *args, **kwargs)
+      }) { boot_app("production", root: root) }
+
+      assert_equal 1, reads
+      assert GreetingComponent.__vc_cache_digest_source
+      assert_equal "<div>Hello</div>", ActionController::Base.render(GreetingComponent.new).strip
+    end
+  end
+
   # Action View infers a `news/new` partial from `render ChildComponent.new`.
   def test_component_renders_do_not_log_missing_templates_at_boot
     Dir.mktmpdir do |root|

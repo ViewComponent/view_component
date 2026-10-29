@@ -216,7 +216,7 @@ module ViewComponent
       def __vc_register_default_slots
         registered_slots.each do |slot_name, config|
           default_method_name = :"default_#{slot_name}"
-          config[:default_method] = instance_methods.find { |method_name| method_name == default_method_name }
+          config[:default_method] = method_defined?(default_method_name) ? default_method_name : nil
 
           registered_slots[slot_name] = config
         end

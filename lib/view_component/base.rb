@@ -141,7 +141,8 @@ module ViewComponent
       @view_flow = view_context.view_flow
 
       # For i18n
-      @virtual_path ||= virtual_path
+      component_virtual_path = virtual_path
+      @virtual_path ||= component_virtual_path
 
       # Describes the inferred request constraints (locales, formats, variants)
       @__vc_requested_details = @lookup_context.vc_requested_details
@@ -157,7 +158,7 @@ module ViewComponent
       @__vc_content_evaluated = false
       remove_instance_variable(:@__vc_content) if defined?(@__vc_content)
       @__vc_render_in_block = block
-      @view_context.instance_variable_set(:@virtual_path, virtual_path)
+      @view_context.instance_variable_set(:@virtual_path, component_virtual_path)
 
       before_render
 
@@ -289,7 +290,7 @@ module ViewComponent
     #
     # @private
     def render(options = {}, args = {}, &block)
-      if options.respond_to?(:set_original_view_context)
+      if options.is_a?(ViewComponent::Base) || options.respond_to?(:set_original_view_context)
         options.set_original_view_context(__vc_original_view_context)
 
         # We assume options is a component, so there's no need to evaluate the

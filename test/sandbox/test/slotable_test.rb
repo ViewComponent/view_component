@@ -788,6 +788,38 @@ class SlotableTest < ViewComponent::TestCase
     assert_text "hello,world!", count: 1
   end
 
+  def test_default_slot_method_visibility
+    %i[public protected private].each do |visibility|
+      component = Class.new(ViewComponent::Base) do
+        renders_one :header
+        define_method(:default_header) { "default" }
+        send(visibility, :default_header)
+      end
+
+      component.__vc_register_default_slots
+
+      if visibility == :private
+        assert_nil component.registered_slots[:header][:default_method]
+      else
+        assert_equal :default_header, component.registered_slots[:header][:default_method]
+      end
+    end
+  end
+
+  def test_inherited_default_slot_methods_are_updated_when_removed
+    parent = Class.new(ViewComponent::Base) do
+      renders_one :header
+      define_method(:default_header) { "default" }
+    end
+    component = Class.new(parent)
+    component.__vc_register_default_slots
+    assert_equal :default_header, component.registered_slots[:header][:default_method]
+
+    component.undef_method(:default_header)
+    component.__vc_register_default_slots
+    assert_nil component.registered_slots[:header][:default_method]
+  end
+
   def test_slot_name_can_be_overriden
     # Uses overridden `title` slot method
     render_inline(SlotNameOverrideComponent.new(title: "Simple Title"))
