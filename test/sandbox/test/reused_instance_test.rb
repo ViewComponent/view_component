@@ -99,6 +99,16 @@ module ViewComponent
       end
     end
 
+    def test_reset_render_state_removes_nil_memoized_values
+      component = ContextSnapshotComponent.new
+      variables = %i[@__vc_controller @__vc_helpers @__vc_request]
+      variables.each { |variable| component.instance_variable_set(variable, nil) }
+
+      component.send(:__vc_reset_render_state!)
+
+      variables.each { |variable| refute component.instance_variable_defined?(variable) }
+    end
+
     def test_rendering_same_collection_twice_does_not_raise
       # Collection rebuilds child components per render, so the same Collection
       # object can be safely rendered twice (each child instance is fresh).

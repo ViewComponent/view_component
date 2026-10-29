@@ -508,16 +508,10 @@ module ViewComponent
     # slot setters or `with_content`); reuse of an instance that has slot or
     # `with_content` state is guarded against separately by
     # `__vc_check_reused_instance!`.
-    RENDER_STATE_IVARS = %i[
-      @__vc_controller
-      @__vc_helpers
-      @__vc_request
-    ].freeze
-
     def __vc_reset_render_state!
-      RENDER_STATE_IVARS.each do |ivar|
-        remove_instance_variable(ivar) if instance_variable_defined?(ivar)
-      end
+      remove_instance_variable(:@__vc_controller) if defined?(@__vc_controller)
+      remove_instance_variable(:@__vc_helpers) if defined?(@__vc_helpers)
+      remove_instance_variable(:@__vc_request) if defined?(@__vc_request)
     end
 
     # Raises when a component instance is rendered more than once.
@@ -915,7 +909,7 @@ module ViewComponent
       end
 
       def __vc_files_ending_with(extensions, pattern)
-        paths = Dir[pattern]
+        paths = CompileCache.sidecar_files_matching(pattern)
         extensions.flat_map { |extension| paths.select { |path| path.end_with?(extension) } }
       end
 

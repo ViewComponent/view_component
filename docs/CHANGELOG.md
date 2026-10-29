@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Speed up eager loading by sharing sidecar directory listings during compilation, and reduce per-render state reset overhead.
+
+    *Joel Hawksley*
+
 * Ignore unresolved partial dependencies inferred from dynamic renders, such as `render UI.button`, without requiring configuration for component facades. Real partials and explicit dependencies are preserved.
 
     *Joel Hawksley*
