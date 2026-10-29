@@ -130,6 +130,8 @@ module ViewComponent
     end
 
     def template_errors
+      return [] if @templates.one?
+
       @_template_errors ||= begin
         errors = []
 
@@ -200,7 +202,7 @@ module ViewComponent
             inline_template: @component.__vc_inline_template
           )]
         else
-          path_parser = ActionView::Resolver::PathParser.new
+          path_parser = CompileCache.path_parser
           templates = @component.__vc_sidecar_files(
             ActionView::Template::Handlers.extensions
           ).map do |path|

@@ -42,6 +42,15 @@ module ViewComponent
       assert_selector("*[data-name='#{@products.last.name}']", text: @products.last.name)
     end
 
+    def test_collection_without_iteration_arguments_does_not_build_an_iterator
+      ActionView::PartialIteration.stub(:new, ->(*) { flunk "Unused collection iterator was allocated" }) do
+        render_inline(ProductComponent.with_collection(@products))
+      end
+
+      assert_selector("*[data-name='#{@products.first.name}']", text: @products.first.name)
+      assert_selector("*[data-name='#{@products.last.name}']", text: @products.last.name)
+    end
+
     def test_supports_collection_with_spacer_component
       render_inline(ProductComponent.with_collection(@products, spacer_component: SpacerComponent.new))
       assert_selector("hr", count: 1)

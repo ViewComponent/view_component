@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Reduce rendering and collection overhead, and speed up eager loading by sharing template-path parsing and avoiding redundant template and ancestor checks.
+
+    *Joel Hawksley*
+
 * Speed up eager loading by sharing source-file reads between template compilation and cache digest precomputation, and reduce nested-render and default-slot lookup overhead.
 
     *Joel Hawksley*

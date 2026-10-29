@@ -32,6 +32,9 @@ end
 
 module ViewComponent
   class Base
+    EMPTY_OUTPUT = "".html_safe.freeze
+    private_constant :EMPTY_OUTPUT
+
     class << self
       # A digest of the component's source, ancestors, and rendered dependencies.
       #
@@ -248,14 +251,14 @@ module ViewComponent
     #
     # @return [String]
     def output_preamble
-      @@default_output_preamble ||= "".html_safe
+      EMPTY_OUTPUT
     end
 
     # Optional content to be returned after the rendered template.
     #
     # @return [String]
     def output_postamble
-      @@default_output_postamble ||= "".html_safe
+      EMPTY_OUTPUT
     end
 
     # Called before rendering the component. Override to perform operations that
@@ -472,15 +475,12 @@ module ViewComponent
     end
 
     def __vc_maybe_escape_html(text)
+      return text if text.html_safe?
       return text if @current_template && !@current_template.html?
       return text if text.blank?
 
-      if text.html_safe?
-        text
-      else
-        yield
-        html_escape(text)
-      end
+      yield
+      html_escape(text)
     end
 
     def __vc_safe_output_preamble
@@ -728,7 +728,7 @@ module ViewComponent
 
       # @private
       def __vc_compiled?
-        __vc_compiler.compiled?
+        CompileCache.compiled?(self)
       end
 
       # Hook called by the compiler after a component is compiled.
