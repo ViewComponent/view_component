@@ -1,42 +1,33 @@
 # frozen_string_literal: true
 
-require "view_component/deprecation"
 require "view_component/errors"
 
 module ViewComponent
   class Config
     # An `ActiveSupport::OrderedOptions` that raises when an option it doesn't
     # know about is set, rather than silently storing it.
-    #
-    # To rename an option, first add the old name to `deprecated`, mapped to
-    # the path of the new option relative to this namespace (or `nil` if the
-    # option is being removed). Setting or reading the old name then emits a
-    # deprecation warning and uses the new option. In the next major version,
-    # move the old name to `renamed` (or `removed`) so that setting it raises.
     class Options < ActiveSupport::OrderedOptions # :nodoc:
       ROOT_NAMESPACE = "config.view_component"
 
-      def initialize(namespace, allowed_keys, default: nil, renamed: {}, removed: {}, deprecated: {})
+      def initialize(namespace, allowed_keys, default: nil, renamed: {}, removed: {})
         super(default)
         @namespace = namespace
         @allowed_keys = allowed_keys
         @renamed = renamed
         @removed = removed
-        @deprecated_options = deprecated
       end
-
-      attr_reader :deprecated_options
 
       def []=(key, value)
         key = key.to_sym
 
-        if @deprecated_options.key?(key)
-          warn_deprecated(key)
-          path = @deprecated_options[key]
-          return if path.nil?
+        if @allowed_keys.include?(key)
+          if self[key].is_a?(Options)
+            raise TypeError, "#{@namespace}.#{key} must be a Hash" unless value.is_a?(Hash)
 
-          path[0...-1].reduce(self) { |options, path_key| options[path_key] }[path.last] = value
-        elsif @allowed_keys.include?(key)
+            value = self[key].dup.clear.tap do |options|
+              value.each_pair { |nested_key, nested_value| options[nested_key] = nested_value }
+            end
+          end
           super
         else
           raise UnknownConfigOptionError.new(
@@ -47,24 +38,6 @@ module ViewComponent
             valid_options: @allowed_keys
           )
         end
-      end
-
-      def [](key)
-        key = key.to_sym
-        return super unless @deprecated_options.key?(key)
-
-        warn_deprecated(key)
-        @deprecated_options[key]&.reduce(self) { |options, path_key| options[path_key] }
-      end
-
-      private
-
-      def warn_deprecated(key)
-        path = @deprecated_options[key]
-        message = "`#{@namespace}.#{key}` is deprecated and will be removed in ViewComponent #{DEPRECATION_HORIZON}."
-        message += " Use `#{@namespace}.#{path.join(".")}` instead." if path
-        # Point the warning at the app's config rather than at this file.
-        ViewComponent::Deprecation.warn(message, caller_locations.drop_while { |location| location.path == __FILE__ })
       end
     end
 
@@ -77,11 +50,6 @@ module ViewComponent
       default_preview_layout: "previews.default_layout",
       component_parent_class: "generate.parent_class",
       view_component_path: "generate.path"
-    }.freeze
-
-    # Generator options renamed in 4.0, mapped to their new name.
-    RENAMED_GENERATE_OPTIONS = {
-      component_parent_class: "generate.parent_class"
     }.freeze
 
     # Options removed in 4.0, mapped to a hint about what to do instead.
@@ -254,7 +222,7 @@ module ViewComponent
           "#{Options::ROOT_NAMESPACE}.generate",
           %i[path preview_path parent_class sidecar stimulus_controller typescript locale distinct_locale_files preview use_component_path_for_rspec_tests],
           default: false,
-          renamed: RENAMED_GENERATE_OPTIONS
+          renamed: RENAMED_OPTIONS
         )
         options.preview_path = ""
         options.path = "app/components"

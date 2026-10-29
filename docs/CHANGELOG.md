@@ -14,7 +14,7 @@ nav_order: 6
 
     *Joel Hawksley*
 
-* Raise `ViewComponent::UnknownConfigOptionError` when setting a `config.view_component` option that doesn't exist, rather than silently ignoring it. This includes options renamed or removed in 4.0, such as `preview_controller` (now `previews.controller`), and the error names the replacement.
+* Raise `ViewComponent::UnknownConfigOptionError` when setting a `config.view_component` option that doesn't exist, rather than silently ignoring it. This includes options renamed or removed in 4.0, such as `preview_controller` (now `previews.controller`), and the error names the replacement. Replacing `previews` or `generate` with a hash preserves this validation.
 
     *Fiona Burcombe*
 

@@ -103,40 +103,48 @@ module ViewComponent
       assert_equal false, @config.generate.typescript
     end
 
-    def test_setting_a_deprecated_option_sets_its_replacement
-      options = deprecated_options
+    def test_replacing_nested_options_preserves_strictness
+      %i[previews generate].each do |namespace|
+        @config[namespace] = ActiveSupport::OrderedOptions.new
 
-      assert_deprecated(/`test.nested.new_name` instead/, ViewComponent::Deprecation) do
-        options.old_name = "value"
+        assert_raises(ViewComponent::UnknownConfigOptionError) do
+          @config[namespace].typo = true
+        end
       end
-      assert_equal "value", options.nested.new_name
+      assert_equal false, @config.generate.typescript
     end
 
-    def test_reading_a_deprecated_option_reads_its_replacement
-      options = deprecated_options
-      options.nested.new_name = "value"
+    def test_replacing_nested_options_preserves_values
+      @config.previews = {"controller" => "MyPreviewController"}
+      @config.generate = {parent_class: "MyBaseComponent"}
 
-      assert_deprecated(/`test.old_name` is deprecated/, ViewComponent::Deprecation) do
-        assert_equal "value", options.old_name
+      assert_equal({controller: "MyPreviewController"}, @config.previews)
+      assert_equal({parent_class: "MyBaseComponent"}, @config.generate)
+      assert_equal false, @config.generate.typescript
+      assert_raises(ViewComponent::UnknownConfigOptionError) do
+        @config.generate.component_parent_class = "OtherComponent"
       end
     end
 
-    def test_setting_a_deprecated_removed_option_stores_nothing
-      options = deprecated_options
+    def test_replacing_nested_options_rejects_unknown_keys
+      original = @config.previews
+      replacement = ActiveSupport::OrderedOptions.new
+      replacement.contoller = "MyPreviewController"
 
-      assert_deprecated(/`test.removed_name` is deprecated/, ViewComponent::Deprecation) do
-        options.removed_name = "value"
+      error = assert_raises(ViewComponent::UnknownConfigOptionError) do
+        @config.previews = replacement
       end
-      assert_equal({nested: {}}, options.to_h)
+
+      assert_includes error.message, "`config.view_component.previews.contoller`"
+      assert_same original, @config.previews
     end
 
-    def test_no_deprecated_options_remain_past_the_deprecation_horizon
-      skip if Gem::Version.new(ViewComponent::DEPRECATION_HORIZON).segments.first > ViewComponent::VERSION::MAJOR
-
-      defaults = ViewComponent::Config.defaults
-      options = [defaults, defaults.generate, defaults.previews]
-      assert options.all? { |namespace| namespace.deprecated_options.empty? },
-        "Move deprecated options to `RENAMED_OPTIONS` or `REMOVED_OPTIONS` so that setting them raises."
+    def test_replacing_nested_options_rejects_non_hash_values
+      %i[previews generate].each do |namespace|
+        original = @config[namespace]
+        assert_raises(TypeError) { @config[namespace] = nil }
+        assert_same original, @config[namespace]
+      end
     end
 
     def test_all_methods_are_documented
@@ -158,18 +166,6 @@ module ViewComponent
         "Not all configuration options are documented: #{options_defined_on_instance.to_a - configuration_methods_to_document.map(&:name)}"
       assert configuration_methods_to_document.map(&:docstring).all?(&:present?),
         "Configuration options are missing docstrings."
-    end
-
-    private
-
-    def deprecated_options
-      options = ViewComponent::Config::Options.new(
-        "test",
-        %i[nested],
-        deprecated: {old_name: %i[nested new_name], removed_name: nil}
-      )
-      options.nested = ViewComponent::Config::Options.new("test.nested", %i[new_name])
-      options
     end
   end
 end
