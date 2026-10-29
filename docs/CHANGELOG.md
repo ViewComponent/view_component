@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Reset the assertion page when rendering a preview so assertions inspect the latest output.
+
+    *Joel Hawksley*
+
 * Rediscover templates after development changes, including added or removed variants and parent templates.
 
     *Joel Hawksley*
