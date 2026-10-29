@@ -14,6 +14,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Raise `ViewComponent::UnknownConfigOptionError` when setting a `config.view_component` option that doesn't exist, rather than ignoring it. This includes options renamed or removed in 4.0, such as `preview_controller` (now `previews.controller`), and the error names the replacement. Replacing `previews` or `generate` with a hash preserves this validation.
+
+    *Fiona Burcombe*
+
 ## 4.20.0
 
 * Fix `invalid byte sequence in UTF-8` errors when precomputing cache digests for components loaded from encrypted or binary source files.
