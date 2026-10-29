@@ -203,7 +203,8 @@ module ViewComponent
           virtual_path: virtual_path
         )
         CacheDigest.renders_in(
-          CacheDigest.compiled_source(template), virtual_path, view_paths: ActionController::Base.view_paths
+          CacheDigest.compiled_source(template), virtual_path,
+          view_paths: ActionController::Base.view_paths, nesting: [component]
         ).flatten
       end
 

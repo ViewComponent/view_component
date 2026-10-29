@@ -811,6 +811,7 @@ class SlotableTest < ViewComponent::TestCase
       renders_one :header
       define_method(:default_header) { "default" }
     end
+    parent.__vc_register_default_slots
     component = Class.new(parent)
     component.__vc_register_default_slots
     assert_equal :default_header, component.registered_slots[:header][:default_method]
@@ -818,6 +819,30 @@ class SlotableTest < ViewComponent::TestCase
     component.undef_method(:default_header)
     component.__vc_register_default_slots
     assert_nil component.registered_slots[:header][:default_method]
+    assert_equal :default_header, parent.registered_slots[:header][:default_method]
+    assert_equal "default", parent.new.header.to_s
+  end
+
+  def test_subclass_default_slots_do_not_change_parent_or_sibling_slots
+    parent = Class.new(ViewComponent::Base) { renders_one :header }
+    parent.__vc_register_default_slots
+    sibling = Class.new(parent)
+    child = Class.new(parent) do
+      define_method(:default_header) { "child default" }
+    end
+
+    child.__vc_register_default_slots
+
+    assert_nil parent.registered_slots[:header][:default_method]
+    assert_nil sibling.registered_slots[:header][:default_method]
+    assert_nil parent.new.header
+    assert_nil sibling.new.header
+    assert_equal "child default", child.new.header.to_s
+
+    parent.__vc_register_default_slots
+    sibling.__vc_register_default_slots
+
+    assert_equal "child default", child.new.header.to_s
   end
 
   def test_slot_name_can_be_overriden

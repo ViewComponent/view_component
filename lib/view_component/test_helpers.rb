@@ -85,6 +85,7 @@ module ViewComponent
     #
     #   In RSpec, `Preview` is appended to `described_class`.
     def render_preview(name, from: __vc_test_helpers_preview_class, params: {})
+      @page = nil
       previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.previews.controller.constantize)
 
       # From what I can tell, it's not possible to overwrite all request parameters

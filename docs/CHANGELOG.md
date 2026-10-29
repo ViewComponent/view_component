@@ -10,6 +10,30 @@ nav_order: 6
 
 ## main
 
+* Reset the assertion page when rendering a preview so assertions inspect the latest output.
+
+    *Joel Hawksley*
+
+* Rediscover templates after development changes, including added or removed variants and parent templates.
+
+    *Joel Hawksley*
+
+* Include all requested variants in output cache keys, preserving fallback order.
+
+    *Joel Hawksley*
+
+* Resolve cache dependencies in their Ruby lexical namespaces and component template scopes.
+
+    *Joel Hawksley*
+
+* Keep default slot configuration isolated between parent components and subclasses.
+
+    *Joel Hawksley*
+
+* Preserve the calling view's translation scope when a component returns cached output or rejects content.
+
+    *Joel Hawksley*
+
 * Reduce rendering and collection overhead, and speed up eager loading by sharing template-path parsing and avoiding redundant template and ancestor checks.
 
     *Joel Hawksley*

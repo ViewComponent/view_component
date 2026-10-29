@@ -15,12 +15,13 @@ class TemplateCachingTest < ActiveSupport::TestCase
   include ActiveSupport::Testing::Isolation
 
   def test_executor_checks_for_template_changes_when_templates_are_not_cached
-    app = boot_app("development")
-    refute ActionView::Base.cache_template_loading
-
     watcher = Minitest::Mock.new
     watcher.expect(:execute_if_updated, nil)
-    ViewComponent::CompileCache.stub(:template_watcher, watcher) { app.executor.wrap {} }
+    ViewComponent::CompileCache.stub(:template_watcher, watcher) do
+      app = boot_app("development")
+      refute ActionView::Base.cache_template_loading
+      app.executor.wrap {}
+    end
 
     watcher.verify
   end
@@ -86,6 +87,91 @@ class TemplateCachingTest < ActiveSupport::TestCase
 
       assert GreetingComponent.__vc_cache_digest_source
       assert finder.digest_cache["view_component/cache_digest/greeting_component.html"]
+    end
+  end
+
+  def test_new_variant_templates_are_discovered_on_the_next_development_request
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Default</div>")
+
+      app = boot_app("development", root: root) { config.hosts.clear }
+      request = component_request(app, "GreetingComponent", variants: [:phone])
+      assert_equal "<div>Default</div>", request.get("/").body.strip
+
+      write_file(root, "app/components/greeting_component.html+phone.erb", "<div>Phone</div>")
+
+      assert_equal "<div>Phone</div>", request.get("/").body.strip
+    end
+  end
+
+  def test_removed_variant_templates_are_forgotten_on_the_next_development_request
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Default</div>")
+      write_file(root, "app/components/greeting_component.html+phone.erb", "<div>Phone</div>")
+
+      app = boot_app("development", root: root) { config.hosts.clear }
+      request = component_request(app, "GreetingComponent", variants: [:phone])
+      assert_equal "<div>Phone</div>", request.get("/").body.strip
+
+      File.delete(File.join(root, "app/components/greeting_component.html+phone.erb"))
+
+      assert_equal "<div>Default</div>", request.get("/").body.strip
+    end
+  end
+
+  def test_parent_rendering_discovers_new_variant_templates
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Default</div>")
+      write_file(root, "app/components/child_component.rb", <<~RUBY)
+        class ChildComponent < GreetingComponent
+          erb_template "<section><% render_parent %></section>"
+        end
+      RUBY
+
+      app = boot_app("development", root: root) { config.hosts.clear }
+      request = component_request(app, "ChildComponent", variants: [:phone])
+      assert_equal "<section><div>Default</div></section>", request.get("/").body.strip
+
+      write_file(root, "app/components/greeting_component.html+phone.erb", "<div>Phone</div>")
+
+      assert_equal "<section><div>Phone</div></section>", request.get("/").body.strip
+    end
+  end
+
+  def test_compilation_recovers_after_a_duplicate_template_is_removed
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Default</div>")
+      write_file(root, "app/components/greeting_component/greeting_component.html.erb", "<div>Duplicate</div>")
+      boot_app("development", root: root)
+
+      GreetingComponent.__vc_compile
+      refute GreetingComponent.__vc_compiled?
+
+      File.delete(File.join(root, "app/components/greeting_component/greeting_component.html.erb"))
+      ViewComponent::CompileCache.invalidate!
+      GreetingComponent.__vc_compile
+
+      assert GreetingComponent.__vc_compiled?
+    end
+  end
+
+  def test_inherited_templates_discover_new_parent_variants
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Default</div>")
+      write_file(root, "app/components/child_component.rb", "class ChildComponent < GreetingComponent; end")
+
+      app = boot_app("development", root: root) { config.hosts.clear }
+      request = component_request(app, "ChildComponent", variants: [:phone])
+      assert_equal "<div>Default</div>", request.get("/").body.strip
+
+      write_file(root, "app/components/greeting_component.html+phone.erb", "<div>Phone</div>")
+
+      assert_equal "<div>Phone</div>", request.get("/").body.strip
     end
   end
 
@@ -177,6 +263,17 @@ class TemplateCachingTest < ActiveSupport::TestCase
   end
 
   private
+
+  def component_request(app, component_name, variants:)
+    app.routes.draw do
+      get "/", to: lambda { |_env|
+        context = ActionController::Base.new.view_context
+        context.lookup_context.variants = variants
+        [200, {"content-type" => "text/html"}, [component_name.constantize.new.render_in(context)]]
+      }
+    end
+    Rack::MockRequest.new(app)
+  end
 
   def boot_app(env, root: __dir__, &configure)
     Rails.env = env

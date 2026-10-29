@@ -140,6 +140,81 @@ class CacheableTest < ViewComponent::TestCase
     ) { CacheableParentComponent.cache_digest }
   end
 
+  def test_cache_digest_tracks_lexically_namespaced_children
+    render_inline(CacheDigestNamespace::ParentComponent.new)
+    assert_text "namespaced child"
+
+    assert_digest_changes(
+      "app/components/cache_digest_namespace/child_component.html.erb",
+      "<span>updated namespaced child</span>\n"
+    ) { CacheDigestNamespace::ParentComponent.cache_digest }
+  end
+
+  def test_relative_dependencies_respect_lexical_nesting
+    source = <<~RUBY
+      module CacheDigestNamespace
+        class ParentComponent
+          def call
+            render ChildComponent.new
+          end
+        end
+      end
+    RUBY
+    dependencies, partials = ViewComponent::CacheDigest.renders_in(source, "test/template")
+
+    assert_includes dependencies, "view_component/cache_digest/cache_digest_namespace/child_component"
+    refute_includes dependencies, "view_component/cache_digest/child_component"
+    assert_empty partials
+  end
+
+  def test_absolute_dependencies_ignore_lexical_nesting
+    source = "module CacheDigestNamespace; render ::ChildComponent.new; end"
+    dependencies, = ViewComponent::CacheDigest.renders_in(source, "test/template")
+
+    assert_equal ["view_component/cache_digest/child_component"], dependencies
+  end
+
+  def test_qualified_class_declarations_do_not_add_enclosing_namespaces_to_nesting
+    source = "class CacheDigestNamespace::ParentComponent; render ChildComponent.new; end"
+    dependencies, = ViewComponent::CacheDigest.renders_in(source, "test/template")
+
+    assert_includes dependencies, "view_component/cache_digest/child_component"
+    refute_includes dependencies, "view_component/cache_digest/cache_digest_namespace/child_component"
+  end
+
+  def test_template_dependencies_resolve_constants_in_the_component
+    dependencies = ViewComponent::CacheDigest::Resolver.instance.send(
+      :template_dependencies,
+      CacheDigestNamespace::TemplateComponent,
+      "<%= render Child.new %>",
+      "erb",
+      "test/template"
+    )
+
+    assert_equal ["view_component/cache_digest/cache_digest_namespace/child_component"], dependencies
+  end
+
+  def test_dependency_lookup_finds_inherited_constants
+    source = "class CacheDigestNamespace::InheritedTemplateComponent; render Child.new; end"
+    dependencies, = ViewComponent::CacheDigest.renders_in(source, "test/template")
+
+    assert_includes dependencies, "view_component/cache_digest/cache_digest_namespace/child_component"
+  end
+
+  def test_dependency_lookup_respects_non_component_constants_shadowing_components
+    source = "class CacheDigestNamespace::TemplateComponent; value = ErbComponent; end"
+    dependencies, = ViewComponent::CacheDigest.renders_in(source, "test/template")
+
+    refute_includes dependencies, "view_component/cache_digest/erb_component"
+  end
+
+  def test_qualified_dependency_lookup_does_not_fall_back_to_top_level_constants
+    source = "module CacheDigestNamespace; value = TemplateComponent::MyComponent; end"
+    dependencies, = ViewComponent::CacheDigest.renders_in(source, "test/template")
+
+    refute_includes dependencies, "view_component/cache_digest/my_component"
+  end
+
   def test_cache_digest_changes_when_an_untracked_child_template_changes
     assert_digest_changes(
       "app/components/untracked_child_component.html.erb",
@@ -627,6 +702,30 @@ class CacheableTest < ViewComponent::TestCase
     end
   end
 
+  def test_cache_hits_preserve_the_callers_virtual_path
+    with_caching do
+      context = vc_test_controller.view_context
+      context.instance_variable_set(:@virtual_path, "pages/show")
+
+      2.times do
+        CacheableComponent.new(title: "same").render_in(context)
+
+        assert_equal "pages/show", context.instance_variable_get(:@virtual_path)
+      end
+    end
+  end
+
+  def test_rejected_cached_content_preserves_the_callers_virtual_path
+    context = vc_test_controller.view_context
+    context.instance_variable_set(:@virtual_path, "pages/show")
+
+    assert_raises(ViewComponent::ContentPassedToCachedComponentError) do
+      CacheableComponent.new(title: "same").render_in(context) { "content" }
+    end
+
+    assert_equal "pages/show", context.instance_variable_get(:@virtual_path)
+  end
+
   def test_different_cache_on_values_produce_different_output
     with_caching do
       render_inline(CacheableComponent.new(title: "one"))
@@ -634,6 +733,20 @@ class CacheableTest < ViewComponent::TestCase
 
       render_inline(CacheableComponent.new(title: "two"))
       assert_selector(".cacheable", text: "two")
+    end
+  end
+
+  def test_cached_output_respects_the_ordered_variant_fallbacks
+    with_caching do
+      with_variant(:unknown, :phone, :tablet) do
+        render_inline(CacheableVariantsComponent.new)
+        assert_text "Phone"
+      end
+
+      with_variant(:unknown, :tablet, :phone) do
+        render_inline(CacheableVariantsComponent.new)
+        assert_text "Tablet"
+      end
     end
   end
 

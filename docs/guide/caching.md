@@ -35,7 +35,7 @@ class PostComponent < ViewComponent::Base
 end
 ```
 
-The cache key also includes the component's digest, format, variant, and locale. As with Rails' `cache` helper, caching only happens when `perform_caching` is enabled.
+The cache key also includes the component's digest, format, ordered variants, and locale. As with Rails' `cache` helper, caching only happens when `perform_caching` is enabled.
 
 To cache only some renders, pass `if:` or `unless:` with a method name or a proc:
 

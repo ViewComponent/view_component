@@ -150,10 +150,9 @@ module ViewComponent
       ActiveSupport.on_load(:action_view) do
         next if ActionView::Base.cache_template_loading
 
-        template_watcher = nil
+        template_watcher = CompileCache.template_watcher(app.config.file_watcher)
 
         app.executor.to_run :before do
-          template_watcher ||= CompileCache.template_watcher(app.config.file_watcher)
           template_watcher.execute_if_updated
         end
       end
