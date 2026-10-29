@@ -26,16 +26,25 @@ module ViewComponent
       cache.clear
     end
 
-    # Sidecar files can't change while the application eager loads: share
-    # directory listings and look up each component's files once within the
-    # block. Fiber storage keeps the cache from surviving boot.
+    # Source files can't change while the application eager loads: share
+    # directory listings, sidecar lookups, and file contents within the block.
+    # Fiber storage keeps the caches from surviving boot.
     def with_sidecar_files_cache
       Fiber[:__vc_sidecar_files] = {}
       Fiber[:__vc_sidecar_directories] = {}
+      Fiber[:__vc_source_files] = {}
       yield
     ensure
       Fiber[:__vc_sidecar_files] = nil
       Fiber[:__vc_sidecar_directories] = nil
+      Fiber[:__vc_source_files] = nil
+    end
+
+    def read_file(path)
+      files = Fiber[:__vc_source_files]
+      return File.read(path) unless files
+
+      (files[path] ||= File.read(path).freeze).dup
     end
 
     def sidecar_files_for(klass, extensions)

@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Speed up eager loading by sharing source-file reads between template compilation and cache digest precomputation, and reduce nested-render and default-slot lookup overhead.
+
+    *Joel Hawksley*
+
 * Speed up eager loading by sharing sidecar directory listings during compilation, and reduce per-render state reset overhead.
 
     *Joel Hawksley*

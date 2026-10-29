@@ -146,7 +146,7 @@ module ViewComponent
       #
       # @return [Array<Array(String, String)>] pairs of source and extension
       def template_sources(component)
-        sources = template_files(component).map { |path| [::File.read(path), ::File.extname(path).delete_prefix(".")] }
+        sources = template_files(component).map { |path| [CompileCache.read_file(path), ::File.extname(path).delete_prefix(".")] }
 
         component_ancestors(component).each do |ancestor|
           inline_template = ancestor.__vc_inline_template
@@ -211,7 +211,7 @@ module ViewComponent
       # hashed by `file_digest`.
       def ruby_sources(component)
         ruby_files(component).filter_map { |path|
-          source = ::File.read(path)
+          source = CompileCache.read_file(path)
           source if source.valid_encoding?
         }
       end

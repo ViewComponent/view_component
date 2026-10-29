@@ -64,6 +64,28 @@ class RenderingTest < ViewComponent::TestCase
     assert_selector("span", text: "content")
   end
 
+  def test_nested_render_sets_original_view_context_on_non_component_renderables
+    renderable = Class.new do
+      attr_reader :original_view_context
+
+      def set_original_view_context(view_context)
+        @original_view_context = view_context
+      end
+
+      def render_in(view_context, &block)
+        view_context.capture(&block)
+      end
+    end.new
+
+    wrapper = WrapperComponent.new
+    render_inline(wrapper) do |component|
+      component.render(renderable) { "content" }
+    end
+
+    assert_same wrapper.__vc_original_view_context, renderable.original_view_context
+    assert_selector("span", text: "content", count: 1)
+  end
+
   def test_raise_error_when_content_already_set
     error =
       assert_raises ViewComponent::DuplicateContentError do
