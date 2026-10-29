@@ -26,14 +26,16 @@ module ViewComponent
       cache.clear
     end
 
-    # Sidecar files can't change while the application eager loads: within the
-    # block, each component's are looked up once. Fiber storage rather than
-    # module state, so the cache is gone once boot is done.
+    # Sidecar files can't change while the application eager loads: share
+    # directory listings and look up each component's files once within the
+    # block. Fiber storage keeps the cache from surviving boot.
     def with_sidecar_files_cache
       Fiber[:__vc_sidecar_files] = {}
+      Fiber[:__vc_sidecar_directories] = {}
       yield
     ensure
       Fiber[:__vc_sidecar_files] = nil
+      Fiber[:__vc_sidecar_directories] = nil
     end
 
     def sidecar_files_for(klass, extensions)
@@ -42,6 +44,23 @@ module ViewComponent
 
       sidecar_files = sidecar_files_by_component[klass] ||= {}
       sidecar_files[extensions] ||= yield.freeze
+    end
+
+    def sidecar_files_matching(pattern)
+      directories = Fiber[:__vc_sidecar_directories]
+      return Dir[pattern] unless directories
+
+      filename = File.basename(pattern)
+      prefix = filename.delete_suffix(".*")
+      return Dir[pattern] if prefix.match?(/[*?{}\[\]\\]/)
+
+      directory = File.dirname(pattern)
+      # Index the shared directory by component name instead of scanning all
+      # its entries again for every component and extension.
+      entries = directories[directory] ||= Dir.glob("#{directory}/*", File::FNM_DOTMATCH)
+        .group_by { |path| File.basename(path).split(".", 2).first }
+      candidates = entries.fetch(prefix.split(".", 2).first, [])
+      candidates.select { |path| File.fnmatch?(filename, File.basename(path)) }
     end
 
     # Invalidates the cache when a template or a translation file is added,

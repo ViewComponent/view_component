@@ -100,10 +100,82 @@ class ViewComponent::Base::UnitTest < Minitest::Test
 
         File.write(template, "<div></div>")
         assert_empty component.__vc_sidecar_files(["erb"])
-        assert_equal [template], component.sidecar_files(["erb"])
+        assert_empty component.sidecar_files(["erb"])
       end
 
       assert_equal [template], component.__vc_sidecar_files(["erb"])
+    end
+  end
+
+  def test_cached_sidecar_directory_listings_preserve_file_discovery
+    components = [
+      TemplateAndSidecarDirectoryTemplateComponent,
+      CssSidecarFileComponent,
+      TranslatableComponent,
+      SlotsComponent::MyHighlightComponent
+    ]
+    extensions = %w[erb css yml]
+    expected = components.map { |component| component.sidecar_files(extensions) }
+
+    ViewComponent::CompileCache.with_sidecar_files_cache do
+      assert_equal expected, components.map { |component| component.__vc_sidecar_files(extensions) }
+    end
+  end
+
+  def test_sidecar_directory_listings_are_shared_across_components_and_extensions
+    Dir.mktmpdir do |directory|
+      paths = %w[first_component.html.erb first_component.yml second_component.html+phone.erb].map do |name|
+        File.join(directory, name).tap { |path| File.write(path, "") }
+      end
+      scans = 0
+      glob = Dir.method(:glob)
+
+      scan = lambda do |*args|
+        scans += 1
+        glob.call(*args)
+      end
+
+      Dir.stub(:glob, scan) do
+        ViewComponent::CompileCache.with_sidecar_files_cache do
+          assert_equal paths.first(2).sort, ViewComponent::CompileCache.sidecar_files_matching("#{directory}/first_component.*")
+          assert_equal [paths.last], ViewComponent::CompileCache.sidecar_files_matching("#{directory}/second_component.*")
+          assert_equal 1, scans
+        end
+      end
+    end
+  end
+
+  def test_sidecar_directory_listings_are_discarded_after_an_error
+    Dir.mktmpdir do |directory|
+      pattern = "#{directory}/temporary_component.*"
+      assert_raises(RuntimeError) do
+        ViewComponent::CompileCache.with_sidecar_files_cache do
+          assert_empty ViewComponent::CompileCache.sidecar_files_matching(pattern)
+          raise "compilation failed"
+        end
+      end
+
+      template = File.join(directory, "temporary_component.html.erb")
+      File.write(template, "")
+      assert_equal [template], ViewComponent::CompileCache.sidecar_files_matching(pattern)
+      ViewComponent::CompileCache.with_sidecar_files_cache do
+        assert_equal [template], ViewComponent::CompileCache.sidecar_files_matching(pattern)
+      end
+    end
+  end
+
+  def test_cached_sidecar_directory_listings_preserve_glob_matching
+    Dir.mktmpdir do |directory|
+      %w[example.html.erb example.part.html.erb example_other.html.erb .example.html.erb].each do |name|
+        File.write(File.join(directory, name), "")
+      end
+      patterns = %w[example.* example.part.* example_other.* .example.* example{,_other}.* missing.* subdirectory/example.*]
+        .map { |name| File.join(directory, name) }
+      expected = patterns.map { |pattern| Dir[pattern] }
+
+      ViewComponent::CompileCache.with_sidecar_files_cache do
+        assert_equal expected, patterns.map { |pattern| ViewComponent::CompileCache.sidecar_files_matching(pattern) }
+      end
     end
   end
 
