@@ -123,6 +123,7 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, **, &block)
+      old_virtual_path = view_context.instance_variable_get(:@virtual_path)
       self.class.__vc_compile(raise_errors: true) unless self.class.__vc_compiled?
 
       if self.class.__vc_cache_output && !@__vc_cache_bypassed
@@ -133,7 +134,7 @@ module ViewComponent
       __vc_reset_render_state!
 
       @view_context = view_context
-      @old_virtual_path = view_context.instance_variable_get(:@virtual_path)
+      @old_virtual_path = old_virtual_path
       self.__vc_original_view_context = view_context
 
       @output_buffer = view_context.output_buffer
@@ -203,7 +204,7 @@ module ViewComponent
         "".html_safe
       end
     ensure
-      view_context.instance_variable_set(:@virtual_path, @old_virtual_path)
+      view_context.instance_variable_set(:@virtual_path, old_virtual_path)
       @current_template = old_current_template
       @__vc_rendered = true
     end

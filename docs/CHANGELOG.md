@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Preserve the calling view's translation scope when a component returns cached output or rejects content.
+
+    *Joel Hawksley*
+
 * Reduce rendering and collection overhead, and speed up eager loading by sharing template-path parsing and avoiding redundant template and ancestor checks.
 
     *Joel Hawksley*

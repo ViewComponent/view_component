@@ -627,6 +627,30 @@ class CacheableTest < ViewComponent::TestCase
     end
   end
 
+  def test_cache_hits_preserve_the_callers_virtual_path
+    with_caching do
+      context = vc_test_controller.view_context
+      context.instance_variable_set(:@virtual_path, "pages/show")
+
+      2.times do
+        CacheableComponent.new(title: "same").render_in(context)
+
+        assert_equal "pages/show", context.instance_variable_get(:@virtual_path)
+      end
+    end
+  end
+
+  def test_rejected_cached_content_preserves_the_callers_virtual_path
+    context = vc_test_controller.view_context
+    context.instance_variable_set(:@virtual_path, "pages/show")
+
+    assert_raises(ViewComponent::ContentPassedToCachedComponentError) do
+      CacheableComponent.new(title: "same").render_in(context) { "content" }
+    end
+
+    assert_equal "pages/show", context.instance_variable_get(:@virtual_path)
+  end
+
   def test_different_cache_on_values_produce_different_output
     with_caching do
       render_inline(CacheableComponent.new(title: "one"))
