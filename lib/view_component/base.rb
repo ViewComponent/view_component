@@ -242,6 +242,11 @@ module ViewComponent
         target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
         @__vc_parent_render_level += 1
 
+        unless target_render.owner.__vc_compiled?
+          target_render.owner.__vc_compile(raise_errors: true)
+          target_render = target_render.owner.instance_method(:render_template_for)
+        end
+
         target_render.bind_call(self, @__vc_requested_details)
       ensure
         @__vc_parent_render_level -= 1

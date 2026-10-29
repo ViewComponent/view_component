@@ -26,10 +26,14 @@ module ViewComponent
         # early exit
         return if compiled? && !force
 
+        reset_templates
+
         gather_templates
 
         if self.class.__vc_development_mode && @templates.any?(&:requires_compiled_superclass?)
           @component.superclass.__vc_compile(raise_errors: raise_errors)
+          @templates = nil
+          gather_templates
         end
 
         if template_errors.present?
@@ -88,6 +92,22 @@ module ViewComponent
 
     attr_reader :templates
 
+    def reset_templates
+      @templates&.each do |template|
+        next if template.inline_call?
+
+        call_method = template.call_method_name
+        safe_method = template.safe_method_name
+        next unless @component.method_defined?(call_method, false) && @component.method_defined?(safe_method, false)
+        next unless @component.instance_method(call_method) == @component.instance_method(safe_method)
+
+        @component.remove_method(call_method)
+      end
+
+      @templates = nil
+      @_template_errors = nil
+    end
+
     def define_render_template_for
       @templates.each do |template|
         template.compile_to_component
@@ -127,6 +147,13 @@ module ViewComponent
         end
       RUBY
       @component.define_method(:render_template_for, methods.instance_method(:render_template_for))
+
+      # Descendants retain these unbound methods for render_parent.
+      render_method = @component.instance_method(:render_template_for)
+      @component.descendants.each do |descendant|
+        ancestor_calls = descendant.instance_variable_get(:@__vc_ancestor_calls)
+        ancestor_calls&.map! { |call| (call.owner == @component) ? render_method : call }
+      end
     end
 
     def template_errors

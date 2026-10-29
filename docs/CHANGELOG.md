@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Rediscover templates after development changes, including added or removed variants and parent templates.
+
+    *Joel Hawksley*
+
 * Include all requested variants in output cache keys, preserving fallback order.
 
     *Joel Hawksley*
