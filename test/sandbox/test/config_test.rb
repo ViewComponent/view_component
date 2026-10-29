@@ -69,6 +69,135 @@ module ViewComponent
       )
     end
 
+    def test_generate_options_do_not_use_root_rename_hints
+      error = assert_raises(ViewComponent::UnknownConfigOptionError) do
+        @config.generate.preview_paths = "spec/components/previews"
+      end
+
+      assert_includes error.message, "`config.view_component.generate.preview_paths` isn't a ViewComponent configuration option."
+      assert_includes error.message, "Valid options are: path, preview_path, parent_class"
+      refute_includes error.message, "was renamed"
+    end
+
+    def test_hash_writers_validate_keys
+      %i[merge! update replace].each do |method|
+        options = ViewComponent::Config.defaults
+        assert_raises(ViewComponent::UnknownConfigOptionError) do
+          options.public_send(method, preview_controller: "MyPreviewController")
+        end
+      end
+
+      assert_raises(ViewComponent::UnknownConfigOptionError) do
+        @config.store(:test_controller, "MyController")
+      end
+    end
+
+    def test_hash_writers_wrap_nested_namespaces
+      %i[merge! update replace store].each do |method|
+        options = ViewComponent::Config.defaults
+        if method == :store
+          options.store("generate", {"parent_class" => "MyBaseComponent"})
+        else
+          assert_same options, options.public_send(method, "generate" => {"parent_class" => "MyBaseComponent"})
+        end
+
+        assert_equal "MyBaseComponent", options.generate.parent_class
+        assert_equal false, options.generate.typescript
+        assert_raises(ViewComponent::UnknownConfigOptionError) { options.generate.typo = true }
+        assert_raises(ViewComponent::UnknownConfigOptionError) do
+          if method == :store
+            options.generate.store(:typo, true)
+          else
+            options.generate.public_send(method, typo: true)
+          end
+        end
+      end
+    end
+
+    def test_hash_writers_reject_invalid_nested_values
+      %i[merge! update replace store].each do |method|
+        options = ViewComponent::Config.defaults
+        [nil, {contoller: "MyPreviewController"}].each do |value|
+          original = options.previews
+          error = value.nil? ? TypeError : ViewComponent::UnknownConfigOptionError
+          assert_raises(error) do
+            if method == :store
+              options.store(:previews, value)
+            else
+              options.public_send(method, previews: value)
+            end
+          end
+          assert_same original, options.previews
+        end
+      end
+    end
+
+    def test_merge_accepts_multiple_hashes_and_a_conflict_block
+      options = @config.generate
+      conflicts = []
+      result = options.update({"path" => "lib/components"}, {path: "other/components", sidecar: true}) do |key, old, new|
+        conflicts << [key, old, new]
+        "#{old}/#{new}"
+      end
+
+      assert_same options, result
+      assert_equal "app/components/lib/components/other/components", options.path
+      assert_equal true, options.sidecar
+      assert_equal [
+        [:path, "app/components", "lib/components"],
+        [:path, "app/components/lib/components", "other/components"]
+      ], conflicts
+      assert_same options, options.merge!
+      assert_raises(TypeError) { options.merge!(nil) }
+      assert_raises(TypeError) { options.replace(nil) }
+    end
+
+    def test_replacing_options_validates_before_removing_existing_values
+      original = @config.previews.dup
+
+      assert_raises(ViewComponent::UnknownConfigOptionError) do
+        @config.previews.replace(controller: "MyPreviewController", typo: true)
+      end
+
+      assert_equal original, @config.previews
+    end
+
+    def test_removed_namespaces_retain_their_validation_when_reassigned
+      %i[clear replace delete shift].each do |method|
+        options = ViewComponent::Config.defaults
+        case method
+        when :replace then options.replace({})
+        when :delete then options.delete(:generate)
+        else options.public_send(method)
+        end
+        replacement = {generate: {parent_class: "MyBaseComponent"}}
+        options.merge!(replacement)
+
+        assert_equal "MyBaseComponent", options.generate.parent_class
+        assert_equal false, options.generate.typescript
+        assert_raises(ViewComponent::UnknownConfigOptionError) { options.generate.typo = true }
+      end
+    end
+
+    def test_transforming_keys_validates_new_keys
+      options = @config.generate
+      assert_kind_of Enumerator, options.transform_keys!
+      assert_same options, options.transform_keys!(&:to_s)
+      assert_raises(ViewComponent::UnknownConfigOptionError) do
+        options.transform_keys!(path: :typo)
+      end
+      assert_equal "app/components", options.path
+    end
+
+    def test_transforming_values_preserves_nested_validation
+      options = ViewComponent::Config.defaults
+      assert_kind_of Enumerator, options.transform_values!
+      assert_same options, options.transform_values! { |value| value.is_a?(Hash) ? value.to_h : value }
+      assert_equal false, options.generate.typescript
+      assert_raises(ViewComponent::UnknownConfigOptionError) { options.previews.typo = true }
+      assert_raises(TypeError) { options.transform_values! { nil } }
+    end
+
     def test_setting_a_misspelled_option_raises
       error = assert_raises(ViewComponent::UnknownConfigOptionError) do
         @config.instrumentaton_enabled = true

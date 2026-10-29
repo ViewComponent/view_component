@@ -15,19 +15,22 @@ module ViewComponent
         @allowed_keys = allowed_keys
         @renamed = renamed
         @removed = removed
+        @nested_options = {}
       end
 
       def []=(key, value)
         key = key.to_sym
 
         if @allowed_keys.include?(key)
-          if self[key].is_a?(Options)
+          @nested_options[key] ||= value if value.is_a?(Options)
+          if (nested_options = @nested_options[key])
             raise TypeError, "#{@namespace}.#{key} must be a Hash" unless value.is_a?(Hash)
 
-            value = self[key].dup.clear.tap do |options|
+            value = nested_options.dup.clear.tap do |options|
               value.each_pair { |nested_key, nested_value| options[nested_key] = nested_value }
             end
           end
+
           super
         else
           raise UnknownConfigOptionError.new(
@@ -38,6 +41,39 @@ module ViewComponent
             valid_options: @allowed_keys
           )
         end
+      end
+
+      alias_method :store, :[]=
+
+      def merge!(*others)
+        others.each do |other|
+          {}.merge!(other).each_pair do |key, value|
+            key = key.to_sym
+            value = yield(key, self[key], value) if block_given? && key?(key)
+            self[key] = value
+          end
+        end
+        self
+      end
+
+      alias_method :update, :merge!
+
+      def replace(other)
+        replacement = dup.clear
+        replacement.merge!(other)
+        super(replacement)
+      end
+
+      def transform_keys!(*args, &block)
+        return enum_for(:transform_keys!) if args.empty? && !block
+
+        replace(to_h.transform_keys!(*args, &block))
+      end
+
+      def transform_values!(&block)
+        return enum_for(:transform_values!) unless block
+
+        replace(to_h.transform_values!(&block))
       end
     end
 
@@ -222,7 +258,7 @@ module ViewComponent
           "#{Options::ROOT_NAMESPACE}.generate",
           %i[path preview_path parent_class sidecar stimulus_controller typescript locale distinct_locale_files preview use_component_path_for_rspec_tests],
           default: false,
-          renamed: RENAMED_OPTIONS
+          renamed: {component_parent_class: RENAMED_OPTIONS.fetch(:component_parent_class)}
         )
         options.preview_path = ""
         options.path = "app/components"
