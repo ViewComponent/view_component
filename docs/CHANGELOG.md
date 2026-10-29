@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Keep default slot configuration isolated between parent components and subclasses.
+
+    *Joel Hawksley*
+
 * Preserve the calling view's translation scope when a component returns cached output or rejects content.
 
     *Joel Hawksley*
