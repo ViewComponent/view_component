@@ -117,14 +117,17 @@ module ViewComponent
     # The cache key for this rendering of the component.
     #
     # Combines the component's identity, its source digest, the requested
-    # ordered formats and variants, the current locale, and the values declared with
-    # `cache_on`. Override for full control.
+    # ordered formats, variants and partial lookup prefixes, the current locale,
+    # and the values declared with `cache_on`. Override for full control.
     #
     # @param view_context [ActionView::Base]
     # @return [String]
     def cache_key(view_context = nil)
       lookup_context = view_context&.lookup_context
       formats = Array(lookup_context&.formats).presence || [:html]
+      values = __vc_cache_on_values.map do |value|
+        value.nil? ? nil : ActiveSupport::Cache.expand_cache_key(value)
+      end
 
       parts = [
         "view_component",
@@ -135,8 +138,11 @@ module ViewComponent
         # Encode each list to keep format and variant boundaries distinct.
         formats.to_json,
         __vc_cache_variants(lookup_context).to_json,
+        Array(lookup_context&.prefixes).to_json,
         I18n.locale,
-        *__vc_cache_on_values
+        # Expand records using Rails' versioned keys, then preserve the boundaries
+        # between declared values, including nils and strings containing slashes.
+        values.to_json
       ]
 
       # Positions are significant, so nils are substituted rather than removed.

@@ -82,6 +82,8 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+Each call uses isolated request parameters and runs the preview controller's callbacks. Pass `params: {locale: "fr"}` to render in a different locale.
+
 ## Testing components with behaviors
 
 To test ViewComponents with behaviors, visit a preview in a system test:

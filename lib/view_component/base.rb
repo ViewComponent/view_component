@@ -45,7 +45,7 @@ module ViewComponent
       def cache_digest(finder: nil, format: :html)
         ViewComponent::CacheDigest.digest(
           self,
-          finder: finder || ViewComponent::CacheDigest.default_finder,
+          finder: finder,
           format: format
         )
       end

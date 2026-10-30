@@ -37,10 +37,7 @@ check_github_permissions() {
 }
 
 # Get version from version.rb
-major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
-minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
-patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
-version="$major.$minor.$patch"
+version=$(ruby -Ilib -rview_component/version -e 'print Gem::Version.new(ViewComponent::VERSION::STRING)')
 tag="v$version"
 
 # Check permissions before proceeding
@@ -51,7 +48,7 @@ check_github_permissions
 if ! git rev-parse --quiet --verify "refs/tags/$tag" > /dev/null; then
   git tag "$tag"
 fi
-git push origin "$tag" || true
+git push origin "$tag"
 
 # Extract changelog for this version
 # Find the section for this version and capture until the next ## heading
@@ -67,10 +64,15 @@ git push origin gh-pages --force
 git checkout main
 
 # Create GitHub release
+release_options=()
+if [[ "$version" =~ [a-zA-Z] ]]; then
+  release_options+=(--prerelease)
+fi
 gh release create "$tag" \
   --title "$version" \
   --notes "$changelog" \
-  --repo ViewComponent/view_component
+  --repo ViewComponent/view_component \
+  "${release_options[@]}"
 
 # Kick off the Push Gem workflow explicitly. GitHub Actions does not
 # trigger downstream workflows for events driven by GITHUB_TOKEN — so
@@ -82,4 +84,4 @@ gh release create "$tag" \
 # environment restricts deployments to v* tags.
 gh workflow run push_gem.yml \
   --repo ViewComponent/view_component \
-  --ref "$tag" || true
+  --ref "$tag"

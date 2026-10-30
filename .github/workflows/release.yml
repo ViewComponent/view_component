@@ -48,8 +48,8 @@ jobs:
             echo "Error: patch version must be numeric"
             exit 1
           fi
-          if [ -n "$PRE" ] && ! [[ "$PRE" =~ ^[a-zA-Z0-9.-]+$ ]]; then
-            echo "Error: pre-release version contains invalid characters"
+          if [ -n "$PRE" ] && ! [[ "$PRE" =~ ^[a-zA-Z0-9.-]+$ && "$PRE" =~ [a-zA-Z] ]]; then
+            echo "Error: pre-release version must contain a letter and only use letters, numbers, dots, and hyphens"
             exit 1
           fi
 
@@ -73,7 +73,7 @@ jobs:
           major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
           minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
           patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
-          pre=$(grep "PRE = " lib/view_component/version.rb | grep -o "\"[^\"]*\"" | tr -d '"')
+          pre=$(sed -n 's/.*PRE = "\(.*\)"/\1/p' lib/view_component/version.rb)
           echo "major=$major" >> $GITHUB_OUTPUT
           echo "minor=$minor" >> $GITHUB_OUTPUT
           echo "patch=$patch" >> $GITHUB_OUTPUT

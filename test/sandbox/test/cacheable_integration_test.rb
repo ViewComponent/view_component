@@ -189,7 +189,7 @@ class CacheableIntegrationTest < ActionDispatch::IntegrationTest
 
     # The component's own `cache_on` entry is written on first render.
     component = CacheableComponent.new(title: "cached")
-    context = view_context
+    context = controller.view_context
     context.lookup_context.formats = [:html]
     refute_nil Rails.cache.read(component.cache_key(context))
   end

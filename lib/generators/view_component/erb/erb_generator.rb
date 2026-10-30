@@ -9,10 +9,10 @@ module ViewComponent
       include ViewComponent::AbstractGenerator
 
       source_root File.expand_path("templates", __dir__)
-      class_option :sidecar, type: :boolean, default: false
+      class_option :sidecar, type: :boolean
       class_option :inline, type: :boolean, default: false
       class_option :call, type: :boolean, default: false
-      class_option :stimulus, type: :boolean, default: false
+      class_option :stimulus, type: :boolean
 
       def engine_name
         "erb"

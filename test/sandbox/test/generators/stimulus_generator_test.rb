@@ -47,4 +47,18 @@ class StimulusGeneratorTest < Rails::Generators::TestCase
       assert_file "app/components/user_component/user_component_controller.js"
     end
   end
+
+  def test_no_typescript_overrides_configuration
+    with_generate_option(:typescript, true) { run_generator %w[user --no-typescript] }
+
+    assert_file "app/components/user_component_controller.js"
+    assert_no_file "app/components/user_component_controller.ts"
+  end
+
+  def test_typescript_configuration_applies_when_the_option_is_omitted
+    with_generate_option(:typescript, true) { run_generator %w[user] }
+
+    assert_file "app/components/user_component_controller.ts"
+    assert_no_file "app/components/user_component_controller.js"
+  end
 end

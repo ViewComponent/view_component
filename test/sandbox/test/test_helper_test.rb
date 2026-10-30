@@ -50,6 +50,70 @@ class TestHelperTest < ViewComponent::TestCase
     assert_selector("label[for=foo]", text: "Label content")
   end
 
+  def test_with_controller_class_replaces_and_restores_the_view_context
+    original_controller = vc_test_controller
+    original_context = vc_test_view_context
+
+    with_controller_class(CustomTestControllerController) do
+      assert_instance_of CustomTestControllerController, vc_test_view_context.controller
+      render_inline(CustomTestControllerComponent.new)
+      assert_text "foo"
+    end
+
+    assert_same original_controller, vc_test_controller
+    assert_same original_context, vc_test_view_context
+  end
+
+  def test_with_controller_class_restores_the_view_context_after_an_error
+    original_controller = vc_test_controller
+    original_context = vc_test_view_context
+
+    assert_raises(RuntimeError) do
+      with_controller_class(CustomTestControllerController) do
+        vc_test_view_context
+        raise "restore controller"
+      end
+    end
+
+    assert_same original_controller, vc_test_controller
+    assert_same original_context, vc_test_view_context
+  end
+
+  def test_with_request_url_refreshes_existing_controller_parameters
+    controller = vc_test_controller
+    original_params = controller.params
+
+    %w[first second].each do |filter|
+      with_request_url("/products?filter=#{filter}") do
+        render_in_view_context { params[:filter] }
+        assert_text filter
+        assert_same controller, vc_test_controller
+      end
+
+      assert_same original_params, controller.params
+    end
+  end
+
+  def test_with_request_url_restores_parameters_after_nested_blocks_and_errors
+    controller = vc_test_controller
+    original_params = controller.params
+
+    with_request_url("/products?filter=outer") do
+      assert_equal "outer", controller.params[:filter]
+
+      assert_raises(RuntimeError) do
+        with_request_url("/slots?filter=inner") do
+          assert_equal "inner", controller.params[:filter]
+          raise "restore parameters"
+        end
+      end
+
+      assert_equal "outer", controller.params[:filter]
+    end
+
+    assert_same original_params, controller.params
+  end
+
   def test_with_request_url_specifying_http_protocol
     with_request_url "/products", protocol: :http do
       render_inline(ProtocolComponent.new)

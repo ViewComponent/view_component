@@ -10,6 +10,18 @@ nav_order: 6
 
 ## main
 
+* Prevent self-cache key collisions and track component references in views and format-specific partial dependencies.
+
+    *Joel Hawksley*
+
+* Isolate preview and request parameters, honor preview locale callbacks, restore controller view contexts, and accept nil translation keys.
+
+    *Joel Hawksley*
+
+* Honor negative generator flags and preserve pre-release versions throughout release automation. Report gem publishing failures.
+
+    *Joel Hawksley*
+
 * Fix fragment cache collisions after `render_parent`, missing relative-partial and inherited-template dependencies, format fallback cache collisions, and stale cached output after development template edits.
 
     *Joel Hawksley*

@@ -333,6 +333,55 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_no_sidecar_overrides_configuration_for_all_generated_files
+    with_generate_sidecar(true) do
+      run_generator %w[user --no-sidecar --locale --stimulus]
+    end
+
+    assert_file "app/components/user_component.html.erb"
+    assert_file "app/components/user_component.yml"
+    assert_file "app/components/user_component_controller.js"
+    assert_no_directory "app/components/user_component"
+  end
+
+  def test_no_stimulus_overrides_configuration_in_templates
+    with_generate_option(:stimulus_controller, true) do
+      run_generator %w[user --no-stimulus]
+    end
+
+    assert_file "app/components/user_component.html.erb" do |template|
+      refute_includes template, "data-controller"
+    end
+    assert_no_file "app/components/user_component_controller.js"
+  end
+
+  def test_stimulus_configuration_applies_to_the_template_and_controller
+    with_generate_option(:stimulus_controller, true) do
+      run_generator %w[user]
+    end
+
+    assert_file "app/components/user_component.html.erb" do |template|
+      assert_includes template, 'data-controller="user-component"'
+    end
+    assert_file "app/components/user_component_controller.js"
+  end
+
+  def test_no_typescript_overrides_configuration_in_the_stimulus_hook
+    with_generate_option(:typescript, true) do
+      run_generator %w[user --stimulus --no-typescript]
+    end
+
+    assert_file "app/components/user_component_controller.js"
+    assert_no_file "app/components/user_component_controller.ts"
+  end
+
+  def test_typescript_option_is_forwarded_to_the_stimulus_hook
+    run_generator %w[user --stimulus --typescript]
+
+    assert_file "app/components/user_component_controller.ts"
+    assert_no_file "app/components/user_component_controller.js"
+  end
+
   private
 
   def with_package_json(content, &block)

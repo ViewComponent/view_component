@@ -8,8 +8,8 @@ module ViewComponent
       include ViewComponent::AbstractGenerator
 
       source_root File.expand_path("templates", __dir__)
-      class_option :sidecar, type: :boolean, default: false
-      class_option :typescript, type: :boolean, default: false
+      class_option :sidecar, type: :boolean
+      class_option :typescript, type: :boolean
 
       def create_stimulus_controller
         template "component_controller.#{filetype}", destination

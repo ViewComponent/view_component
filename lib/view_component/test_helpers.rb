@@ -86,19 +86,20 @@ module ViewComponent
     #   In RSpec, `Preview` is appended to `described_class`.
     def render_preview(name, from: __vc_test_helpers_preview_class, params: {})
       @page = nil
-      previews_controller = __vc_test_helpers_build_controller(Rails.application.config.view_component.previews.controller.constantize)
-
-      # From what I can tell, it's not possible to overwrite all request parameters
-      # at once, so we set them individually here.
-      params.each do |k, v|
-        previews_controller.request.params[k] = v
-      end
-
-      previews_controller.request.params[:path] = "#{from.preview_name}/#{name}"
+      controller_class = Rails.application.config.view_component.previews.controller.constantize
+      request = ActionDispatch::TestRequest.new(vc_test_request.env.dup)
+      query_parameters = vc_test_request.query_parameters.deep_dup.merge(params.stringify_keys)
+      request.path_parameters = vc_test_request.path_parameters.except(*params.keys.map(&:to_sym)).merge(
+        controller: controller_class.controller_path,
+        action: "previews",
+        path: "#{from.preview_name}/#{name}"
+      )
+      request.set_header("action_dispatch.request.query_parameters", query_parameters)
+      request.set_header(Rack::QUERY_STRING, query_parameters.to_query)
+      previews_controller = __vc_test_helpers_build_controller(controller_class, request: request)
       previews_controller.set_response!(ActionDispatch::Response.new)
-      result = previews_controller.previews
-
-      @rendered_content = result
+      previews_controller.process(:previews)
+      @rendered_content = previews_controller.response.body
 
       Nokogiri::HTML5.fragment(@rendered_content)
     end
@@ -150,11 +151,14 @@ module ViewComponent
     # @param klass [Class<ActionController::Base>] The controller to be used.
     def with_controller_class(klass)
       old_controller = defined?(@vc_test_controller) && @vc_test_controller
+      old_view_context = defined?(@vc_test_view_context) && @vc_test_view_context
 
+      @vc_test_view_context = nil
       @vc_test_controller = __vc_test_helpers_build_controller(klass)
       yield
     ensure
       @vc_test_controller = old_controller
+      @vc_test_view_context = old_view_context
     end
 
     # Set format of the current request
@@ -223,6 +227,7 @@ module ViewComponent
       old_request_format = vc_test_request.format.symbol
       old_request_scheme = vc_test_request.scheme
       old_controller = defined?(@vc_test_controller) && @vc_test_controller
+      old_controller_params = old_controller.params if old_controller
 
       path, query = full_path.split("?", 2)
       vc_test_request.instance_variable_set(:@fullpath, full_path)
@@ -235,6 +240,7 @@ module ViewComponent
       vc_test_request.set_header("action_dispatch.request.query_parameters",
         Rack::Utils.parse_nested_query(query).with_indifferent_access)
       vc_test_request.set_header(Rack::QUERY_STRING, query)
+      old_controller.params = nil if old_controller
       yield
     ensure
       vc_test_request.host = old_request_host
@@ -247,6 +253,7 @@ module ViewComponent
       vc_test_request.instance_variable_set(:@fullpath, old_request_fullpath)
       vc_test_request.instance_variable_set(:@original_fullpath, old_request_original_fullpath)
       vc_test_request.format = old_request_format
+      old_controller.params = old_controller_params if old_controller
       @vc_test_controller = old_controller
     end
 
@@ -303,8 +310,8 @@ module ViewComponent
     # Note: We prefix private methods here to prevent collisions in consumer's tests.
     private
 
-    def __vc_test_helpers_build_controller(klass)
-      klass.new.tap { |c| c.request = vc_test_request }.extend(Rails.application.routes.url_helpers)
+    def __vc_test_helpers_build_controller(klass, request: vc_test_request)
+      klass.new.tap { |c| c.request = request }.extend(Rails.application.routes.url_helpers)
     end
 
     def __vc_test_helpers_preview_class

@@ -8,7 +8,7 @@ module ViewComponent
       include ViewComponent::AbstractGenerator
 
       source_root File.expand_path("templates", __dir__)
-      class_option :sidecar, type: :boolean, default: false
+      class_option :sidecar, type: :boolean
 
       def engine_name
         "haml"

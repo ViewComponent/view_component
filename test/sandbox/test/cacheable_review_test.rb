@@ -56,6 +56,38 @@ class CacheableReviewTest < ViewComponent::TestCase
     refute_equal nils.cache_key, empties.cache_key
   end
 
+  def test_cache_on_values_preserve_argument_boundaries
+    with_caching do
+      render_inline(PositionalCacheKeyComponent.new(first: "a/b", second: "c"))
+      assert_text "a/b-c"
+
+      render_inline(PositionalCacheKeyComponent.new(first: "a", second: "b/c"))
+      assert_text "a-b/c"
+    end
+  end
+
+  def test_cache_on_array_values_preserve_argument_boundaries
+    left = PositionalCacheKeyComponent.new(first: %w[a b], second: ["c"])
+    right = PositionalCacheKeyComponent.new(first: ["a"], second: %w[b c])
+
+    refute_equal left.cache_key, right.cache_key
+  end
+
+  def test_nil_cache_on_values_do_not_collide_with_the_nil_marker
+    nil_value = PositionalCacheKeyComponent.new(first: nil, second: "same")
+    marker = PositionalCacheKeyComponent.new(first: "__vc_nil", second: "same")
+
+    refute_equal nil_value.cache_key, marker.cache_key
+  end
+
+  def test_cache_on_preserves_versioned_record_keys
+    record = Struct.new(:cache_key_with_version).new("records/1-v1")
+    before = PositionalCacheKeyComponent.new(first: record, second: "same").cache_key
+    record.cache_key_with_version = "records/1-v2"
+
+    refute_equal before, PositionalCacheKeyComponent.new(first: record, second: "same").cache_key
+  end
+
   # Issue 3: there's no way to skip caching for a single render. A false or nil
   # value from a `cache_on` method becomes an ordinary key component (or is
   # dropped from the key) rather than disabling the cache.

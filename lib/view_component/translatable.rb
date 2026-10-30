@@ -53,6 +53,7 @@ module ViewComponent
 
       def translate(key = nil, **options)
         return key.map { |k| translate(k, **options) } if key.is_a?(Array)
+        return ::I18n.translate(key, **options) if key.nil?
 
         __vc_ensure_compiled
 
@@ -97,7 +98,7 @@ module ViewComponent
     def translate(key = nil, **options)
       raise ViewComponent::TranslateCalledBeforeRenderError if view_context.nil?
 
-      return @view_context.translate(key, **options) unless __vc_i18n_backend
+      return @view_context.translate(key, **options) if key.nil? || !__vc_i18n_backend
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
 
       locale = options.delete(:locale) || ::I18n.locale

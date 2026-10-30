@@ -170,6 +170,92 @@ class TemplateRegressionTest < ViewComponent::TestCase
     end
   end
 
+  def test_view_fragments_track_components_assigned_to_locals
+    with_component_files(
+      "leaf_component.rb" => "class TemplateRegressionFixtures::LeafComponent < ViewComponent::Base; end",
+      "leaf_component.html.erb" => "Before leaf edit",
+      "views/examples/page.html.erb" => <<~ERB,
+        <% cache "local-component" do %>
+          <% child = TemplateRegressionFixtures::LeafComponent.new %>
+          <%= render child %>
+        <% end %>
+      ERB
+      "views/examples/direct.html.erb" => <<~ERB
+        <% cache "direct-component" do %>
+          <%= render TemplateRegressionFixtures::LeafComponent.new %>
+        <% end %>
+      ERB
+    ) do |directory|
+      with_caching do
+        vc_test_controller.prepend_view_path(File.join(directory, "views"))
+        context = vc_test_controller.view_context
+        assert_includes context.render(template: "examples/page"), "Before leaf edit"
+        assert_includes context.render(template: "examples/direct"), "Before leaf edit"
+
+        File.write(File.join(directory, "leaf_component.html.erb"), "After leaf edit")
+        ViewComponent::CompileCache.invalidate!
+        clear_digest_cache
+        context = context.class.new(
+          ActionView::LookupContext.new(context.lookup_context.view_paths), {}, vc_test_controller
+        )
+
+        assert_includes context.render(template: "examples/direct"), "After leaf edit"
+        assert_includes context.render(template: "examples/page"), "After leaf edit"
+      end
+    end
+  end
+
+  def test_output_cache_distinguishes_relative_partial_prefixes
+    with_component_files(
+      "relative_component.rb" => <<~RUBY,
+        class TemplateRegressionFixtures::RelativeComponent < ViewComponent::Base
+          cache_on :identity
+          def identity = "same"
+          def call = render("heading")
+        end
+      RUBY
+      "views/first/_heading.html.erb" => "First controller heading",
+      "views/second/_heading.html.erb" => "Second controller heading"
+    ) do |directory|
+      with_caching do
+        vc_test_controller.prepend_view_path(File.join(directory, "views"))
+        context = vc_test_controller.view_context
+        context.lookup_context.prefixes = ["first"]
+        assert_includes TemplateRegressionFixtures::RelativeComponent.new.render_in(context), "First controller heading"
+
+        context = context.class.new(
+          ActionView::LookupContext.new(context.lookup_context.view_paths), {}, vc_test_controller
+        )
+        context.lookup_context.prefixes = ["second"]
+        assert_includes TemplateRegressionFixtures::RelativeComponent.new.render_in(context), "Second controller heading"
+      end
+    end
+  end
+
+  def test_explicit_digest_format_selects_matching_partial_dependencies
+    old_paths = ActionController::Base.view_paths
+    with_component_files(
+      "json_component.rb" => "class TemplateRegressionFixtures::JsonComponent < ViewComponent::Base; end",
+      "json_component.json.erb" => '<%= render "examples/data" %>',
+      "views/examples/_data.html.erb" => "HTML data",
+      "views/examples/_data.json.erb" => '{"value":"before"}'
+    ) do |directory|
+      ActionController::Base.prepend_view_path(File.join(directory, "views"))
+      component = TemplateRegressionFixtures::JsonComponent
+      before = component.cache_digest(format: :json)
+
+      File.write(File.join(directory, "views/examples/_data.json.erb"), '{"value":"after"}')
+      clear_digest_cache
+
+      refute_equal before, component.cache_digest(format: :json)
+    end
+  ensure
+    ActionController::Base.view_paths = old_paths
+    # Process the view-path reload here, rather than blocking a system-test
+    # server on this thread's test executor.
+    Rails.application.reloader.reload!
+  end
+
   private
 
   def with_component_files(files)
