@@ -35,11 +35,7 @@ module ViewComponent
 
       def destination(locale = nil)
         extension = ".#{locale}" if locale
-        if sidecar?
-          File.join(component_path, class_path, "#{file_name}_component", "#{file_name}_component#{extension}.yml")
-        else
-          File.join(component_path, class_path, "#{file_name}_component#{extension}.yml")
-        end
+        File.join(destination_directory, "#{destination_file_name}#{extension}.yml")
       end
     end
   end

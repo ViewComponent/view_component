@@ -36,6 +36,19 @@ module ViewComponent
       end
     end
 
+    class SlottedSpacerComponent < ViewComponent::Base
+      renders_one :title
+      renders_one :snapshot, ContextSnapshotComponent
+      renders_many :headers, HeaderComponent
+      erb_template "<%= title %><%= snapshot %><% headers.each do |header| %><%= header %><% end %>"
+    end
+
+    class DefaultSpacerComponent < SlottedSpacerComponent
+      def default_snapshot
+        @snapshot ||= ContextSnapshotComponent.new
+      end
+    end
+
     def test_rendering_same_instance_twice_raises
       component = ContextSnapshotComponent.new
       render_inline(component)
@@ -131,6 +144,52 @@ module ViewComponent
       assert_nothing_raised do
         render_inline(collection)
       end
+    end
+
+    def test_collection_spacer_slots_are_copied_with_their_parent
+      spacer = SlottedSpacerComponent.new
+      label = "first label"
+      spacer.with_title { label }
+      spacer.with_snapshot
+      spacer.with_header.with_title_content("nested title")
+      collection = ContextSnapshotComponent.with_collection([1, 2], spacer_component: spacer)
+
+      2.times do
+        context = vc_test_controller.view_context
+        output = collection.render_in(context)
+
+        assert_includes output, label
+        assert_includes output, "<h1>nested title</h1>"
+        assert_equal 3, output.scan(context.object_id.to_s).size
+        label = "second label"
+      end
+
+      render_inline(spacer)
+      assert_text "second label"
+    end
+
+    def test_collection_rejects_an_already_rendered_spacer
+      spacer = SlottedSpacerComponent.new
+      spacer.with_title_content("previous render")
+      render_inline(spacer)
+
+      assert_raises(ViewComponent::ReusedInstanceError) do
+        render_inline(ContextSnapshotComponent.with_collection([1, 2], spacer_component: spacer))
+      end
+    end
+
+    def test_collection_spacer_copies_previously_read_default_slots
+      DefaultSpacerComponent.__vc_compile(raise_errors: true)
+      spacer = DefaultSpacerComponent.new
+      assert_same spacer.snapshot, spacer.snapshot
+      collection = ContextSnapshotComponent.with_collection([1, 2], spacer_component: spacer)
+
+      2.times do
+        context = vc_test_controller.view_context
+        assert_equal 3, collection.render_in(context).scan(context.object_id.to_s).size
+      end
+
+      assert_nothing_raised { render_inline(spacer) }
     end
   end
 end

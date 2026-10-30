@@ -74,16 +74,11 @@ module ViewComponent
       end
     end
 
-    # Render the spacer through a fresh `dup` so a collection rendered multiple
-    # times does not reuse (and trip the single-render guard on) the spacer
-    # instance passed by the caller.
+    # Keep the caller's spacer unrendered, including its nested slot components.
     def rendered_spacer(view_context)
       return EMPTY_SPACER unless @spacer_component
 
-      spacer = @spacer_component.dup
-      if spacer.instance_variable_defined?(:@__vc_rendered)
-        spacer.remove_instance_variable(:@__vc_rendered)
-      end
+      spacer = @spacer_component.is_a?(Base) ? @spacer_component.__vc_dup_for_render : @spacer_component.dup
       spacer.render_in(view_context)
     end
   end

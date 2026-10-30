@@ -35,7 +35,7 @@ class PostComponent < ViewComponent::Base
 end
 ```
 
-The cache key also includes the component's digest, format, ordered variants, and locale. As with Rails' `cache` helper, caching only happens when `perform_caching` is enabled.
+The cache key also includes the component's digest, ordered format and variant fallbacks, and locale. As with Rails' `cache` helper, caching only happens when `perform_caching` is enabled.
 
 To cache only some renders, pass `if:` or `unless:` with a method name or a proc:
 
@@ -60,6 +60,8 @@ end
 ## Declaring dependencies
 
 Dependencies are found by scanning the component's templates, its Ruby class, and the modules it includes. Every component class named there counts, whether it's passed to `render`, built by a method, or assigned to a variable, and so does every partial rendered by its path. Slots count the class they're declared with, including one named by a string.
+
+Relative partial names, such as `render "heading"`, track matching partials in every directory of the view paths, since the calling controller determines which one renders. Use a full path to limit invalidation to one partial.
 
 A class or partial name built at runtime can't be found that way. Declare it with Rails' `# Template Dependency:` comment in the Ruby file or template, naming partials by path and components by class:
 

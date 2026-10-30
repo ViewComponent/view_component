@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class <%= namespaced? ? "#{namespace.name}::" : '' %><%= class_name %>ComponentTest < ViewComponent::TestCase
+class <%= namespaced? ? "#{namespace.name}::" : '' %><%= component_class_name %>Test < ViewComponent::TestCase
   def test_component_renders_something_useful
     # assert_equal(
     #   %(<span>Hello, components!</span>),
-    #   render_inline(<%= class_name %>Component.new(message: "Hello, components!")).css("span").to_html
+    #   render_inline(<%= component_class_name %>.new(message: "Hello, components!")).css("span").to_html
     # )
   end
 end

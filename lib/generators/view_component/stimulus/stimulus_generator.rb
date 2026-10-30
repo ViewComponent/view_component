@@ -28,11 +28,7 @@ module ViewComponent
       end
 
       def destination
-        if sidecar?
-          File.join(component_path, class_path, "#{file_name}_component", "#{file_name}_component_controller.#{filetype}")
-        else
-          File.join(component_path, class_path, "#{file_name}_component_controller.#{filetype}")
-        end
+        File.join(destination_directory, "#{destination_file_name}_controller.#{filetype}")
       end
 
       def legacy_stimulus?

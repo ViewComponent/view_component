@@ -137,6 +137,19 @@ module ViewComponent
       end
     end
 
+    class Inherited < InlineCall
+      def initialize(component:, template:)
+        super(component: component, method_name: template.call_method_name, defined_on_self: false)
+        @details = template.details
+        @path = template.path
+        @template = template
+      end
+
+      def compile_to_component
+        @component.define_method(safe_method_name, @component.instance_method(@template.safe_method_name))
+      end
+    end
+
     def compile_to_component
       @component.silence_redefinition_of_method(call_method_name)
 
@@ -184,7 +197,7 @@ module ViewComponent
     end
 
     def safe_method_name
-      "_#{call_method_name}_#{@component.name.underscore.gsub("/", "__")}"
+      "_#{call_method_name}_#{format}_#{@component.name.underscore.gsub("/", "__")}"
     end
 
     def normalized_variant_name

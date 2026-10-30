@@ -32,6 +32,64 @@ class ComponentGeneratorTest < Rails::Generators::TestCase
     end
   end
 
+  def test_component_without_suffix_renders
+    run_generator %w[unsuffixed_card --skip-suffix]
+
+    assert_file "app/components/unsuffixed_card.html.erb"
+    assert_no_file "app/components/unsuffixed_card_component.html.erb"
+    load File.join(destination_root, "app/components/unsuffixed_card.rb")
+
+    assert_includes ActionController::Base.render(UnsuffixedCard.new), "Add UnsuffixedCard template here"
+  ensure
+    Object.send(:remove_const, :UnsuffixedCard) if Object.const_defined?(:UnsuffixedCard, false)
+  end
+
+  def test_skip_suffix_applies_to_sidecars_previews_and_tests
+    with_preview_paths([]) do
+      run_generator %w[unsuffixed_card --skip-suffix --sidecar --locale --stimulus --preview --test-framework test_unit]
+
+      assert_file "app/components/unsuffixed_card/unsuffixed_card.html.erb" do |template|
+        assert_includes template, 'data-controller="unsuffixed-card--unsuffixed-card"'
+      end
+      assert_file "app/components/unsuffixed_card/unsuffixed_card_controller.js"
+      assert_file "app/components/unsuffixed_card/unsuffixed_card.yml"
+      assert_file "test/components/unsuffixed_card_test.rb" do |test|
+        assert_includes test, "class UnsuffixedCardTest"
+        assert_includes test, "render_inline(UnsuffixedCard.new"
+      end
+      assert_file "test/components/previews/unsuffixed_card_preview.rb" do |preview|
+        assert_includes preview, "class UnsuffixedCardPreview"
+        assert_includes preview, "render(UnsuffixedCard.new)"
+      end
+
+      load File.join(destination_root, "app/components/unsuffixed_card.rb")
+      assert_includes ActionController::Base.render(UnsuffixedCard.new), "Add UnsuffixedCard template here"
+    end
+  ensure
+    Object.send(:remove_const, :UnsuffixedCard) if Object.const_defined?(:UnsuffixedCard, false)
+  end
+
+  def test_skip_suffix_applies_to_namespaced_rspec_components
+    run_generator %w[admin/card --skip-suffix --test-framework rspec]
+
+    assert_file "app/components/admin/card.rb" do |component|
+      assert_includes component, "class Admin::Card <"
+    end
+    assert_file "app/components/admin/card.html.erb"
+    assert_file "spec/components/admin/card_spec.rb" do |spec|
+      assert_includes spec, "RSpec.describe Admin::Card,"
+    end
+  end
+
+  def test_skip_suffix_checks_the_unsuffixed_class_for_collisions
+    assert_raises(Rails::Generators::Error) do
+      generator = ViewComponent::Generators::ComponentGenerator.new(
+        ["ViewComponent::Base"], ["--skip-suffix"], destination_root: destination_root
+      )
+      generator.check_class_collision
+    end
+  end
+
   def test_component_preview
     with_preview_paths([]) do
       run_generator %w[user --preview]

@@ -10,7 +10,7 @@ module ViewComponent
       source_root File.expand_path("templates", __dir__)
 
       def create_test_file
-        template "component_spec.rb", File.join(spec_component_path, class_path, "#{file_name}_component_spec.rb")
+        template "component_spec.rb", File.join(spec_component_path, class_path, "#{destination_file_name}_spec.rb")
       end
 
       private

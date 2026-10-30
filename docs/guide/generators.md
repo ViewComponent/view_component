@@ -197,3 +197,13 @@ To always use a specific parent class, set `config.view_component.generate.paren
 ### Skip collision check
 
 The generator prevents naming collisions with existing components. To skip this check and force the generator to run, use the `--skip-collision-check` or `--force` option.
+
+### Skip the component suffix
+
+Use `--skip-suffix` to generate `Example` instead of `ExampleComponent`:
+
+```console
+bin/rails generate view_component:component Example title --skip-suffix
+```
+
+The template, sidecar directory, locale files, Stimulus controller, tests, and previews use the same unsuffixed name.

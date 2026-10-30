@@ -18,6 +18,10 @@ module ViewComponent
       # Extensions whose contents are hashed into the synthetic source.
       SIDECAR_EXTENSIONS = %w[yml yaml].freeze
 
+      RELATIVE_PARTIAL_PREFIX = "view_component/relative_partial/"
+      RELATIVE_DEPENDENCY = /<%# Relative Template Dependency: (\S+) %>/
+      private_constant :RELATIVE_PARTIAL_PREFIX, :RELATIVE_DEPENDENCY
+
       # Where ViewComponent's own modules, such as the ones it includes into
       # every component, are defined.
       VIEW_COMPONENT_LIB = "#{::File.expand_path("..", __dir__)}/".freeze
@@ -28,12 +32,12 @@ module ViewComponent
         end
       end
 
-      def find_templates(name, prefix, partial, details, locals = [])
+      def find_templates(name, prefix, partial, details, locals = [], view_paths: ActionController::Base.view_paths)
         virtual_path = [prefix.presence, name].compact.join("/")
         component = CacheDigest.component_for(virtual_path)
         return [] unless component
 
-        [build_template(component, virtual_path, details)]
+        [build_template(component, virtual_path, details, view_paths)]
       end
 
       def to_s
@@ -74,7 +78,11 @@ module ViewComponent
         # the template sources, where they'd also infer partials from component
         # renders.
         dependencies(component, templates).each do |dependency|
-          parts << "<%# Template Dependency: #{dependency} %>"
+          parts << if dependency.start_with?(RELATIVE_PARTIAL_PREFIX)
+            "<%# Relative Template Dependency: #{dependency.delete_prefix(RELATIVE_PARTIAL_PREFIX)} %>"
+          else
+            "<%# Template Dependency: #{dependency} %>"
+          end
         end
 
         # Content hashes of the templates, including inline ones.
@@ -87,15 +95,32 @@ module ViewComponent
 
       private
 
-      def build_template(component, virtual_path, details)
+      def build_template(component, virtual_path, details, view_paths)
+        source = component.__vc_cache_digest_source || source_for(component)
         ActionView::Template.new(
-          component.__vc_cache_digest_source || source_for(component),
+          resolve_relative_dependencies(source, view_paths),
           "view_component cache digest for #{component.name}",
           ActionView::Template.handler_for_extension(:erb),
           locals: [],
           format: Array(details[:formats]).first || :html,
           virtual_path: virtual_path
         )
+      end
+
+      # A relative render uses the calling controller's prefixes. Track all
+      # matching partials so precomputed sources work for every controller.
+      def resolve_relative_dependencies(source, view_paths)
+        return source unless source.include?("Relative Template Dependency:")
+
+        paths = view_paths.flat_map(&:all_template_paths).uniq
+        source.gsub(RELATIVE_DEPENDENCY) do
+          name = Regexp.last_match(1)
+          matches = paths.filter_map do |path|
+            path.to_s if path.partial? && ::File.fnmatch?(name.delete_prefix("_"), path.name)
+          end.sort
+          matches = [name] if matches.empty?
+          matches.map { |path| "<%# Template Dependency: #{path} %>" }.join("\n")
+        end
       end
 
       # The component and any component superclasses, nearest first. Including
@@ -135,26 +160,20 @@ module ViewComponent
           .compact.uniq.select { |path| ::File.exist?(path) }
       end
 
-      def template_files(component)
-        component_ancestors(component)
-          .flat_map { |ancestor| ancestor.__vc_sidecar_files(ActionView::Template::Handlers.extensions) }
-          .uniq
-          .select { |path| ::File.exist?(path) }
-      end
-
       # Sidecar template files plus inline templates, which live in the Ruby
       # file and so are invisible to Action View's trackers.
       #
-      # @return [Array<Array(String, String)>] pairs of source and extension
+      # @return [Array<Array(String, String, Class)>] source, extension, and defining component
       def template_sources(component)
-        sources = template_files(component).map { |path| [CompileCache.read_file(path), ::File.extname(path).delete_prefix(".")] }
-
-        component_ancestors(component).each do |ancestor|
+        component_ancestors(component).flat_map do |ancestor|
+          sources = ancestor.__vc_sidecar_files(ActionView::Template::Handlers.extensions).filter_map do |path|
+            [CompileCache.read_file(path), ::File.extname(path).delete_prefix("."), ancestor] if ::File.exist?(path)
+          end
           inline_template = ancestor.__vc_inline_template
-          sources << [inline_template.source, inline_template.language.to_s] if inline_template
-        end
+          sources << [inline_template.source, inline_template.language.to_s, ancestor] if inline_template
 
-        sources.uniq
+          sources
+        end.uniq
       end
 
       def explicit_dependencies(sources)
@@ -174,14 +193,14 @@ module ViewComponent
       # Everything but the component and its superclasses, which a component
       # references in its own source but are digested as part of it already.
       def dependencies(component, templates)
-        virtual_path = CacheDigest.virtual_path_for(component)
+        virtual_path = "#{RELATIVE_PARTIAL_PREFIX}template"
         ruby = ruby_sources(component)
         own_paths = component_ancestors(component).filter_map { |ancestor| CacheDigest.virtual_path_for(ancestor) }
 
         dependencies = explicit_dependencies(ruby + templates.map(&:first)) |
           ruby.flat_map { |source| ruby_dependencies(source, virtual_path) } |
           CacheDigest.slot_renders_of(component) |
-          templates.flat_map { |source, extension| template_dependencies(component, source, extension, virtual_path) }
+          templates.flat_map { |source, extension, owner| template_dependencies(owner, source, extension, virtual_path) }
 
         dependencies - own_paths
       end

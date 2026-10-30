@@ -24,7 +24,9 @@ module ViewComponent
       private
 
       def find_template(finder, name, prefixes, partial, keys)
-        Resolver.instance.find_templates(name, prefixes.first, partial, {formats: finder.formats}).first || super
+        Resolver.instance.find_templates(
+          name, prefixes.first, partial, {formats: finder.formats}, view_paths: finder.view_paths
+        ).first || super
       end
     end
   end

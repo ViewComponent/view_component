@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 <% module_namespacing do -%>
-class <%= class_name %>ComponentPreview < ViewComponent::Preview
+class <%= component_class_name %>Preview < ViewComponent::Preview
   def default
-    render(<%= class_name %>Component.new<%= "(#{render_signature})" if render_signature %>)
+    render(<%= component_class_name %>.new<%= "(#{render_signature})" if render_signature %>)
   end
 end
 <% end -%>

@@ -218,6 +218,8 @@ module ViewComponent
       old_request_path_parameters = vc_test_request.path_parameters
       old_request_query_parameters = vc_test_request.query_parameters
       old_request_query_string = vc_test_request.query_string
+      old_request_fullpath = vc_test_request.fullpath
+      old_request_original_fullpath = vc_test_request.original_fullpath
       old_request_format = vc_test_request.format.symbol
       old_request_scheme = vc_test_request.scheme
       old_controller = defined?(@vc_test_controller) && @vc_test_controller
@@ -242,6 +244,8 @@ module ViewComponent
       vc_test_request.path_parameters = old_request_path_parameters
       vc_test_request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
       vc_test_request.set_header(Rack::QUERY_STRING, old_request_query_string)
+      vc_test_request.instance_variable_set(:@fullpath, old_request_fullpath)
+      vc_test_request.instance_variable_set(:@original_fullpath, old_request_original_fullpath)
       vc_test_request.format = old_request_format
       @vc_test_controller = old_controller
     end

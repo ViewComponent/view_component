@@ -85,4 +85,26 @@ class TestHelperTest < ViewComponent::TestCase
 
     assert_selector(".protocol", text: "Protocol: https, SSL: true")
   end
+
+  def test_with_request_url_restores_full_paths_after_nested_blocks_and_errors
+    request = vc_test_request
+    original_fullpath = request.fullpath
+    original_original_fullpath = request.original_fullpath
+
+    with_request_url("/products?outer=true") do
+      assert_raises(RuntimeError) do
+        with_request_url("/slots?inner=true") do
+          assert_equal "/slots?inner=true", request.fullpath
+          assert_equal "/slots?inner=true", request.original_fullpath
+          raise "restore request"
+        end
+      end
+
+      assert_equal "/products?outer=true", request.fullpath
+      assert_equal "/products?outer=true", request.original_fullpath
+    end
+
+    assert_equal original_fullpath, request.fullpath
+    assert_equal original_original_fullpath, request.original_fullpath
+  end
 end

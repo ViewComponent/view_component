@@ -86,7 +86,10 @@ module ViewComponent
       extensions = ActionView::Template::Handlers.extensions.map(&:to_s) + %w[yml yaml]
       directories = ActiveSupport::Dependencies.autoload_paths.map(&:to_s).index_with(extensions)
 
-      file_watcher.new([], directories) { invalidate! }
+      file_watcher.new([], directories) do
+        invalidate!
+        ActionView::LookupContext::DetailsKey.clear
+      end
     end
   end
 end

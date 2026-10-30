@@ -820,6 +820,19 @@ class CacheableTest < ViewComponent::TestCase
     end
   end
 
+  def test_reading_a_default_slot_does_not_make_it_caller_supplied
+    CacheableSlotComponent.__vc_compile(raise_errors: true)
+    component = CacheableSlotComponent.new(title: "cached")
+    assert_same component.header, component.header
+
+    with_caching do
+      render_inline(component)
+
+      assert_selector(".header", text: "default header")
+      refute_nil Rails.cache.read(component.cache_key(vc_test_controller.view_context))
+    end
+  end
+
   # Raised regardless of whether caching is on, so the conflict is caught in
   # development and test rather than only in production.
   def test_content_raises_even_when_caching_is_enabled

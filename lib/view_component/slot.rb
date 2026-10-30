@@ -12,6 +12,18 @@ module ViewComponent
       @parent = parent
     end
 
+    # @private
+    def __vc_dup(parent)
+      dup.tap do |copy|
+        copy.instance_variable_set(:@parent, parent)
+        copy.remove_instance_variable(:@content) if defined?(@content)
+        if __vc_component_instance?
+          component = @__vc_component_instance
+          copy.__vc_component_instance = component.is_a?(Base) ? component.__vc_dup_for_render : component.dup
+        end
+      end
+    end
+
     def content?
       return true if defined?(@__vc_content) && @__vc_content.present?
       return true if defined?(@__vc_content_set_by_with_content) && @__vc_content_set_by_with_content.present?
