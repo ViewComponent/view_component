@@ -127,18 +127,7 @@ module ViewComponent
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and partial virtual paths
       def renders_in(source, name, view_paths: nil, nesting: [])
-        names = []
-        other_calls = []
-
-        each_node(Prism.parse(source).value, nesting) do |node, scope|
-          if node.is_a?(Prism::ConstantReadNode) || node.is_a?(Prism::ConstantPathNode)
-            names << [node.slice, scope] if CONSTANT_NAME.match?(node.slice)
-          elsif render_call?(node) && !rendered_component(node, scope)
-            other_calls << node
-          end
-        end
-
-        components = names.uniq.filter_map { |constant_name, scope| constantize_component(constant_name, scope) }
+        components, _component_calls, other_calls = partition_render_calls(Prism.parse(source).value, nesting)
         partials = partials_rendered_by(other_calls, name) - unresolved_partials_rendered_by(other_calls, name, view_paths)
         [component_paths(components), partials]
       end
@@ -157,11 +146,11 @@ module ViewComponent
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and inferred partial virtual paths
       def template_renders_in(source, name, view_paths: nil)
-        components, other_calls = partition_render_calls(Prism.parse(source).value)
+        components, component_calls, other_calls = partition_render_calls(Prism.parse(source).value)
 
         [
-          component_paths(components.values),
-          (partials_rendered_by(components.keys, name) - partials_rendered_by(other_calls, name)) |
+          component_paths(components),
+          (partials_rendered_by(component_calls, name) - partials_rendered_by(other_calls, name)) |
             unresolved_partials_rendered_by(other_calls, name, view_paths)
         ]
       end
@@ -214,24 +203,28 @@ module ViewComponent
       # Compute the digest of a component using Rails' digest tree.
       #
       # @param component [Class] a component class
-      # @param finder [ActionView::LookupContext]
+      # @param finder [ActionView::LookupContext, nil]
       # @param format [Symbol]
+      #
       # @return [String]
-      def digest(component, finder: default_finder, format: :html)
+      def digest(component, finder: nil, format: :html)
         register(component)
         virtual_path = virtual_path_for(component)
         return "" unless virtual_path
 
+        finder ||= default_finder(format: format)
         ActionView::Digestor.digest(name: virtual_path, format: format, finder: finder)
       end
 
       # A lookup context for digesting components outside a request, where no
       # view context (and therefore no finder) exists.
       #
+      # @param format [Symbol]
+      #
       # @return [ActionView::LookupContext]
-      def default_finder
+      def default_finder(format: :html)
         # Not memoized across reloads: view paths change when the app reloads.
-        ActionView::LookupContext.new(ActionController::Base.view_paths)
+        ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [format])
       end
 
       # Wire the tracker and resolver into Action View.
@@ -293,25 +286,29 @@ module ViewComponent
 
       private
 
-      # Receiverless `render` and `render_to_string` calls, split into those
-      # that render a component and the rest.
+      # Component references and receiverless render calls, split into those
+      # that render a component directly and the rest.
       #
-      # @return [Array(Hash{Prism::CallNode => Class}, Array<Prism::CallNode>)]
-      def partition_render_calls(program)
-        components = {}
+      # @return [Array(Array<Class>, Array<Prism::CallNode>, Array<Prism::CallNode>)]
+      def partition_render_calls(program, nesting = [])
+        names = []
+        component_calls = []
         other_calls = []
 
-        each_node(program) do |node, nesting|
-          next unless render_call?(node)
-
-          if (component = rendered_component(node, nesting))
-            components[node] = component
-          else
-            other_calls << node
+        each_node(program, nesting) do |node, scope|
+          if node.is_a?(Prism::ConstantReadNode) || node.is_a?(Prism::ConstantPathNode)
+            names << [node.slice, scope] if CONSTANT_NAME.match?(node.slice)
+          elsif render_call?(node)
+            if rendered_component(node, scope)
+              component_calls << node
+            else
+              other_calls << node
+            end
           end
         end
 
-        [components, other_calls]
+        components = names.uniq.filter_map { |constant_name, scope| constantize_component(constant_name, scope) }
+        [components, component_calls, other_calls]
       end
 
       def render_call?(node)

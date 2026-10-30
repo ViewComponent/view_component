@@ -55,4 +55,19 @@ class ErbGeneratorTest < Rails::Generators::TestCase
       end
     end
   end
+
+  def test_no_sidecar_overrides_configuration
+    with_generate_sidecar(true) { run_generator %w[user --no-sidecar] }
+
+    assert_file "app/components/user_component.html.erb"
+    assert_no_directory "app/components/user_component"
+  end
+
+  def test_no_stimulus_overrides_configuration
+    with_generate_option(:stimulus_controller, true) { run_generator %w[user --no-stimulus] }
+
+    assert_file "app/components/user_component.html.erb" do |template|
+      refute_includes template, "data-controller"
+    end
+  end
 end

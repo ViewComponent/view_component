@@ -38,6 +38,8 @@ bin/rails generate view_component:component Sections::Example title content
 
 You can specify options when running the generator. To alter the default values project-wide, define the configuration settings described in [API docs](/api.html#configuration).
 
+Use `--no-sidecar`, `--no-stimulus`, or `--no-typescript` to override an enabled default for one invocation.
+
 Generated ViewComponents are added to `app/components` by default. Set `config.view_component.generate.path` to use a different path.
 
 ```ruby

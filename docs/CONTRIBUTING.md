@@ -166,7 +166,7 @@ Releases are automated using GitHub Actions. Here's the process:
    - **major**: Major version number
    - **minor**: Minor version number
    - **patch**: Patch version number
-   - **pre**: Optional pre-release label (leave blank for stable release)
+   - **pre**: Optional pre-release label, such as `rc1` or `beta.1` (leave blank for a stable release)
 3. Click **Run workflow**
 4. The workflow will:
    - Create a release branch
@@ -179,6 +179,8 @@ Releases are automated using GitHub Actions. Here's the process:
    - Creates a GitHub release
    - Pushes the tag to trigger gem publishing
 7. The gem is published to RubyGems automatically via GitHub Actions (requires approval from a maintainer in the "release" environment)
+
+Pre-release labels must contain a letter. They're included in the version, release branch, and tag, and the GitHub release is marked as a pre-release. Failures to push the tag or start gem publishing fail the workflow.
 
 ## Governance
 

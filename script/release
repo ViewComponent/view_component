@@ -92,7 +92,6 @@ prompt_for_version() {
       *)
         read -r -p "What version? (Currently $major.$minor.$patch): " new_version
         [[ "$new_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "version must look like X.Y.Z"
-        [ "$new_version" != "$major.$minor.$patch" ] || fail "can't be the same version"
         IFS=. read -r major minor patch <<< "$new_version"
         ;;
     esac
@@ -106,14 +105,17 @@ update_changelog() {
 }
 
 update_ruby_version() {
-  inplace "s/MAJOR = \\d+/MAJOR = $1/; s/MINOR = \\d+/MINOR = $2/; s/PATCH = \\d+/PATCH = $3/" \
+  local pre_value=nil
+  [ -n "$4" ] && pre_value="\"$4\""
+  inplace "s/MAJOR = \\d+/MAJOR = $1/; s/MINOR = \\d+/MINOR = $2/; s/PATCH = \\d+/PATCH = $3/; s/PRE = (nil|\"[^\"]*\")/PRE = $pre_value/" \
     lib/view_component/version.rb
   inplace "s/DEPRECATION_HORIZON = \"\\d+\\.\\d+\\.\\d+\"/DEPRECATION_HORIZON = \"$(($1 + 1)).0.0\"/" \
     lib/view_component/deprecation.rb
 
   grep -q "MAJOR = $1\$" lib/view_component/version.rb &&
     grep -q "MINOR = $2\$" lib/view_component/version.rb &&
-    grep -q "PATCH = $3\$" lib/view_component/version.rb ||
+    grep -q "PATCH = $3\$" lib/view_component/version.rb &&
+    grep -q "PRE = $pre_value\$" lib/view_component/version.rb ||
     fail "failed to update lib/view_component/version.rb"
 }
 
@@ -126,7 +128,7 @@ update_lockfiles() {
   # committed lockfiles and edit just the version in place.
   local lockfiles=(Gemfile.lock gemfiles/*.gemfile.lock)
   git restore --source=HEAD -- "${lockfiles[@]}"
-  VERSION="$1" perl -pi -e 's/^(  |    )view_component \(\d+\.\d+\.\d+\)/$1view_component ($ENV{VERSION})/' "${lockfiles[@]}"
+  VERSION="$1" perl -pi -e 's/^(  |    )view_component \([0-9][0-9A-Za-z.-]*\)/$1view_component ($ENV{VERSION})/' "${lockfiles[@]}"
 
   local lockfile
   for lockfile in "${lockfiles[@]}"; do
@@ -192,6 +194,7 @@ main() {
   major=$(grep "MAJOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
   minor=$(grep "MINOR = " lib/view_component/version.rb | grep -o "[0-9]\+")
   patch=$(grep "PATCH = " lib/view_component/version.rb | grep -o "[0-9]\+")
+  pre=${4:-}
 
   # Arguments are used by the release workflow: MAJOR MINOR PATCH [PRE]
   if [ $# -gt 0 ]; then
@@ -203,17 +206,34 @@ main() {
     prompt_for_version
   fi
 
+  for number in "$major" "$minor" "$patch"; do
+    [[ "$number" =~ ^(0|[1-9][0-9]*)$ ]] ||
+      fail "major, minor, and patch must be non-negative integers without leading zeros"
+  done
+
   version="$major.$minor.$patch"
+  if [ -n "$pre" ]; then
+    version=$(ruby -e '
+      begin
+        version = Gem::Version.new(ARGV.fetch(0))
+        abort "pre-release version must contain a letter" unless version.prerelease?
+        puts version
+      rescue ArgumentError => error
+        abort error.message
+      end
+    ' "$version.$pre") || fail "invalid pre-release version"
+    pre=${version#"$major.$minor.$patch."}
+  fi
 
   tag_exists "$version" && fail "tag v$version already exists"
 
-  release_branch="release-$major-$minor-$patch"
+  release_branch="release-${version//./-}"
 
   header "Creating release for $version"
 
   git switch --quiet -C "$release_branch"
   update_changelog "$version"
-  update_ruby_version "$major" "$minor" "$patch"
+  update_ruby_version "$major" "$minor" "$patch" "$pre"
   build_docs "$version"
   update_lockfiles "$version"
   commit "$version"

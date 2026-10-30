@@ -125,6 +125,13 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal "Hello from sidecar translations!", translate(".hello", default: default_value)
   end
 
+  def test_nil_keys_use_defaults
+    assert_equal "fallback", translate(nil, default: "fallback")
+    assert_equal "fallback", TranslatableComponent.translate(nil, default: "fallback")
+    assert_equal "fallback", TranslatableComponent.translate(nil, scope: ".from", default: "fallback")
+    assert_equal "fallback", MyComponent.translate(nil, default: "fallback")
+  end
+
   def test_translate_returns_lists
     assert_equal ["This", "returns", "a list"], translate(".list")
   end

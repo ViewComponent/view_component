@@ -9,7 +9,7 @@ module ViewComponent
 
       source_root File.expand_path("templates", __dir__)
       argument :attributes, type: :array, default: [], banner: "attribute"
-      class_option :sidecar, type: :boolean, default: false
+      class_option :sidecar, type: :boolean
 
       def create_locale_file
         if ViewComponent::Base.config.generate.distinct_locale_files

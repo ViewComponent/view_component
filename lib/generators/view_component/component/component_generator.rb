@@ -16,9 +16,9 @@ module ViewComponent
       class_option :locale, type: :boolean, default: ViewComponent::Base.config.generate.locale
       class_option :parent, type: :string, desc: "The parent class for the generated component"
       class_option :preview, type: :boolean, default: ViewComponent::Base.config.generate.preview
-      class_option :sidecar, type: :boolean, default: false
-      class_option :stimulus, type: :boolean,
-        default: ViewComponent::Base.config.generate.stimulus_controller
+      class_option :sidecar, type: :boolean
+      class_option :stimulus, type: :boolean
+      class_option :typescript, type: :boolean
 
       def check_class_collision
         class_collisions component_class_name
