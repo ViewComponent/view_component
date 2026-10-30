@@ -237,6 +237,7 @@ module ViewComponent
     # When rendering the parent inside an .erb template, use `#render_parent` instead.
     def render_parent_to_string
       @__vc_parent_render_level ||= 0 # ensure a good starting value
+      old_current_template = @current_template
 
       begin
         target_render = self.class.instance_variable_get(:@__vc_ancestor_calls)[@__vc_parent_render_level]
@@ -250,6 +251,7 @@ module ViewComponent
         target_render.bind_call(self, @__vc_requested_details)
       ensure
         @__vc_parent_render_level -= 1
+        @current_template = old_current_template
       end
     end
 
@@ -458,14 +460,14 @@ module ViewComponent
     # @private
     def digest_path_from_template(template)
       component_path = self.class.virtual_path
-      return super unless component_path && template.virtual_path == component_path
+      return super unless component_path && template.is_a?(ViewComponent::Template)
 
       digest = self.class.cache_digest(
         finder: lookup_context,
         format: template.format || lookup_context.formats.first || :html
       )
 
-      digest.present? ? "#{component_path}:#{digest}" : component_path
+      digest.present? ? "#{template.virtual_path}:#{digest}" : template.virtual_path
     end
 
     private

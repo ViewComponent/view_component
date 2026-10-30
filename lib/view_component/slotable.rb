@@ -361,6 +361,9 @@ module ViewComponent
 
       # If there is a default method for the slot, call it
       if (default_method = registered_slots[slot_name][:default_method])
+        @__vc_default_slots ||= {}
+        return @__vc_default_slots[slot_name] if @__vc_default_slots.key?(slot_name)
+
         renderable_value = send(default_method)
         slot = Slot.new(self)
 
@@ -370,10 +373,31 @@ module ViewComponent
           slot.__vc_content = renderable_value
         end
 
-        slot
+        @__vc_default_slots[slot_name] = slot
       elsif self.class.registered_slots[slot_name][:collection]
         # If empty slot is a collection, return an empty array
         []
+      end
+    end
+
+    # @private
+    # Collection spacers need independent slots whose parent is the new copy.
+    def __vc_dup_for_render
+      __vc_check_reused_instance!
+
+      dup.tap do |copy|
+        %i[@__vc_set_slots @__vc_default_slots].each do |variable|
+          next unless instance_variable_defined?(variable)
+
+          slots = instance_variable_get(variable).transform_values do |slot|
+            if slot.is_a?(Array)
+              slot.map { |item| item.__vc_dup(copy) }
+            else
+              slot.__vc_dup(copy)
+            end
+          end
+          copy.instance_variable_set(variable, slots)
+        end
       end
     end
 

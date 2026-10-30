@@ -105,6 +105,32 @@ class TemplateCachingTest < ActiveSupport::TestCase
     end
   end
 
+  def test_cached_component_template_edits_are_visible_on_the_next_development_request
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", <<~RUBY)
+        class GreetingComponent < ViewComponent::Base
+          cache_on :identity
+          def identity = "greeting"
+        end
+      RUBY
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Before</div>")
+
+      app = boot_app("development", root: root) do
+        config.hosts.clear
+        config.action_controller.perform_caching = true
+        config.cache_store = :memory_store
+        config.file_watcher = ActiveSupport::FileUpdateChecker
+      end
+      request = component_request(app, "GreetingComponent", variants: [])
+
+      assert_equal "<div>Before</div>", request.get("/").body.strip
+
+      write_file(root, "app/components/greeting_component.html.erb", "<div>After</div>")
+
+      assert_equal "<div>After</div>", request.get("/").body.strip
+    end
+  end
+
   def test_removed_variant_templates_are_forgotten_on_the_next_development_request
     Dir.mktmpdir do |root|
       write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")

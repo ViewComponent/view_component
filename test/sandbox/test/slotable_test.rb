@@ -788,6 +788,49 @@ class SlotableTest < ViewComponent::TestCase
     assert_text "hello,world!", count: 1
   end
 
+  class DefaultHeaderBodyComponent < ViewComponent::Base
+    erb_template "<%= content %>"
+  end
+
+  class DefaultHeaderComponent < ViewComponent::Base
+    renders_one :header
+    erb_template "<%= header %><%= header %>"
+
+    def default_header
+      @header ||= DefaultHeaderBodyComponent.new.with_content("default header")
+    end
+  end
+
+  class ConfiguredDefaultHeaderComponent < DefaultHeaderComponent
+    def before_render
+      header.with_content("configured header")
+    end
+  end
+
+  def test_default_slot_preserves_configuration_between_accesses
+    render_inline(ConfiguredDefaultHeaderComponent.new)
+
+    assert_text "configured header", count: 2
+  end
+
+  def test_default_slot_memoizes_rendered_content
+    render_inline(DefaultHeaderComponent.new)
+
+    assert_text "default header", count: 2
+  end
+
+  def test_default_slot_can_be_overridden_after_it_is_read
+    DefaultHeaderComponent.__vc_compile(raise_errors: true)
+    component = DefaultHeaderComponent.new
+    assert_same component.header, component.header
+    component.with_header_content("override")
+
+    render_inline(component)
+
+    assert_text "override", count: 2
+    refute_text "default header"
+  end
+
   def test_default_slot_method_visibility
     %i[public protected private].each do |visibility|
       component = Class.new(ViewComponent::Base) do

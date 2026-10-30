@@ -10,7 +10,6 @@ module ViewComponent
       source_root File.expand_path("templates", __dir__)
 
       argument :attributes, type: :array, default: [], banner: "attribute"
-      check_class_collision suffix: "Component"
 
       class_option :call, type: :boolean, default: false
       class_option :inline, type: :boolean, default: false
@@ -20,10 +19,13 @@ module ViewComponent
       class_option :sidecar, type: :boolean, default: false
       class_option :stimulus, type: :boolean,
         default: ViewComponent::Base.config.generate.stimulus_controller
-      class_option :skip_suffix, type: :boolean, default: false
+
+      def check_class_collision
+        class_collisions component_class_name
+      end
 
       def create_component_file
-        template "component.rb", File.join(component_path, class_path, "#{file_name}#{"_component" unless options[:skip_suffix]}.rb")
+        template "component.rb", File.join(component_path, class_path, "#{destination_file_name}.rb")
       end
 
       hook_for :test_framework

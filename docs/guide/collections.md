@@ -122,4 +122,4 @@ Set `:spacer_component` as an instantiated component to render between items:
 <%= render(ProductComponent.with_collection(@products, spacer_component: SpacerComponent.new)) %>
 ```
 
-Which will render the SpacerComponent component between `ProductComponent`s.
+The spacer renders between `ProductComponent` instances. Pass an unrendered spacer instance. Each collection render uses an independent copy of the spacer and its slots.

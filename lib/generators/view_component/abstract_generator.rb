@@ -2,6 +2,10 @@
 
 module ViewComponent
   module AbstractGenerator
+    def self.included(generator)
+      generator.class_option :skip_suffix, type: :boolean, default: false
+    end
+
     def copy_view_file
       template("component.html.#{engine_name}", destination) unless options["inline"] || options["call"]
     end
@@ -21,7 +25,11 @@ module ViewComponent
     end
 
     def destination_file_name
-      "#{file_name}_component"
+      "#{file_name}#{"_component" unless options[:skip_suffix]}"
+    end
+
+    def component_class_name
+      "#{class_name}#{"Component" unless options[:skip_suffix]}"
     end
 
     def file_name

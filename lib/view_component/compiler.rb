@@ -88,6 +88,11 @@ module ViewComponent
       gather_templates.map { |template| template.format || :html }.uniq
     end
 
+    # @private
+    def templates_for_call(method_name)
+      gather_templates.select { |template| template.call_method_name == method_name }
+    end
+
     private
 
     attr_reader :templates
@@ -244,6 +249,20 @@ module ViewComponent
           ).flat_map { |ancestor| ancestor.instance_methods(false).grep(/^call(_|$)/) }
             .uniq
             .each do |method_name|
+            unless component_instance_methods_on_self.include?(method_name)
+              owner = @component.instance_method(method_name).owner
+              inherited = owner.respond_to?(:__vc_compiler) ? owner.__vc_compiler.templates_for_call(method_name) : []
+              if inherited.any?
+                # A format and a variant can share a public call_* alias.
+                inherited.each do |template|
+                  next if templates.any? { |own| own.variant == template.variant && own.format == template.format }
+
+                  templates << Template::Inherited.new(component: @component, template: template)
+                end
+                next
+              end
+            end
+
             templates << Template::InlineCall.new(
               component: @component,
               method_name: method_name,

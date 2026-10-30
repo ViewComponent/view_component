@@ -378,3 +378,5 @@ class SlotableDefaultInstanceComponent < ViewComponent::Base
   end
 end
 ```
+
+Default slots retain their content and configuration between accesses within a component render. Like explicitly supplied slots, their rendered output is memoized.

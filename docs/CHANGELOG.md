@@ -10,6 +10,18 @@ nav_order: 6
 
 ## main
 
+* Fix fragment cache collisions after `render_parent`, missing relative-partial and inherited-template dependencies, format fallback cache collisions, and stale cached output after development template edits.
+
+    *Joel Hawksley*
+
+* Fix template method collisions between formats and variants, preserve default slot state, and copy collection spacer slots independently.
+
+    *Joel Hawksley*
+
+* Apply `--skip-suffix` to all generated component files and restore full request URLs after `with_request_url` blocks.
+
+    *Joel Hawksley*
+
 * Reset the assertion page when rendering a preview so assertions inspect the latest output.
 
     *Joel Hawksley*
