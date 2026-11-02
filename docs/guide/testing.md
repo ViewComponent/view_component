@@ -240,6 +240,8 @@ Rails routes that have a subdomain constraint require `request.host` to be set c
 
 To set `request.host` for a test case, use `with_request_url` from `ViewComponent::TestHelpers`:
 
+The previous URL, protocol, port, and URL-helper state are restored after the block, including nested blocks.
+
 ```ruby
 class ExampleComponentTest < ViewComponent::TestCase
   def test_with_request_url

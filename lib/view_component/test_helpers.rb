@@ -216,7 +216,7 @@ module ViewComponent
     # @param method [String] The request method to set for the current request.
     # @param protocol [Symbol] The protocol to set for the current request (e.g., `:http` or `:https`).
     def with_request_url(full_path, host: nil, method: nil, protocol: nil)
-      old_request_host = vc_test_request.host
+      old_request_host = vc_test_request.get_header("HTTP_HOST")
       old_request_method = vc_test_request.request_method
       old_request_path_info = vc_test_request.path_info
       old_request_path_parameters = vc_test_request.path_parameters
@@ -226,8 +226,11 @@ module ViewComponent
       old_request_original_fullpath = vc_test_request.original_fullpath
       old_request_format = vc_test_request.format.symbol
       old_request_scheme = vc_test_request.scheme
+      old_request_protocol = vc_test_request.instance_variable_get(:@protocol)
+      old_request_port = vc_test_request.instance_variable_get(:@port)
       old_controller = defined?(@vc_test_controller) && @vc_test_controller
       old_controller_params = old_controller.params if old_controller
+      old_controller_url_options = old_controller.instance_variable_get(:@_url_options) if old_controller
 
       path, query = full_path.split("?", 2)
       vc_test_request.instance_variable_set(:@fullpath, full_path)
@@ -235,17 +238,22 @@ module ViewComponent
       vc_test_request.host = host if host
       vc_test_request.request_method = method if method
       vc_test_request.set_header(Rack::RACK_URL_SCHEME, protocol.to_s) if protocol
+      vc_test_request.instance_variable_set(:@protocol, nil)
+      vc_test_request.instance_variable_set(:@port, nil)
       vc_test_request.path_info = path
       vc_test_request.path_parameters = Rails.application.routes.recognize_path_with_request(vc_test_request, path, {})
       vc_test_request.set_header("action_dispatch.request.query_parameters",
         Rack::Utils.parse_nested_query(query).with_indifferent_access)
       vc_test_request.set_header(Rack::QUERY_STRING, query)
       old_controller.params = nil if old_controller
+      old_controller&.instance_variable_set(:@_url_options, nil)
       yield
     ensure
-      vc_test_request.host = old_request_host
+      vc_test_request.set_header("HTTP_HOST", old_request_host)
       vc_test_request.request_method = old_request_method
       vc_test_request.set_header(Rack::RACK_URL_SCHEME, old_request_scheme)
+      vc_test_request.instance_variable_set(:@protocol, old_request_protocol)
+      vc_test_request.instance_variable_set(:@port, old_request_port)
       vc_test_request.path_info = old_request_path_info
       vc_test_request.path_parameters = old_request_path_parameters
       vc_test_request.set_header("action_dispatch.request.query_parameters", old_request_query_parameters)
@@ -254,6 +262,8 @@ module ViewComponent
       vc_test_request.instance_variable_set(:@original_fullpath, old_request_original_fullpath)
       vc_test_request.format = old_request_format
       old_controller.params = old_controller_params if old_controller
+      @vc_test_controller&.instance_variable_set(:@_url_options, nil)
+      old_controller&.instance_variable_set(:@_url_options, old_controller_url_options)
       @vc_test_controller = old_controller
     end
 

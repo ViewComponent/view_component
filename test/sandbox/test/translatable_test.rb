@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "i18n/backend/cache"
 
 class TranslatableTest < ViewComponent::TestCase
   def test_isolated_translations
@@ -130,6 +131,83 @@ class TranslatableTest < ViewComponent::TestCase
     assert_equal "fallback", TranslatableComponent.translate(nil, default: "fallback")
     assert_equal "fallback", TranslatableComponent.translate(nil, scope: ".from", default: "fallback")
     assert_equal "fallback", MyComponent.translate(nil, default: "fallback")
+  end
+
+  def test_symbolic_defaults_resolve_sidecar_translations
+    assert_equal "Hello from sidecar translations!", translate(".missing", default: :".hello")
+    assert_equal "Hello from sidecar translations!", TranslatableComponent.t(".missing", default: :".hello")
+    assert_equal "Hello from sidecar translations!", translate(nil, default: :".hello")
+    assert_equal "Hello from sidecar translations!", TranslatableComponent.t(nil, default: :".hello")
+  end
+
+  def test_symbolic_defaults_preserve_primary_and_default_precedence
+    defaults = [nil, :".not_found", :".hello", "literal"].freeze
+    assert_equal "Hello from sidecar translations!", translate(".missing", default: defaults)
+    assert_equal "Hello from sidecar translations!", TranslatableComponent.t(".missing", default: defaults)
+    assert_equal [nil, :".not_found", :".hello", "literal"], defaults
+
+    assert_equal "Hello from Rails translations!", translate("hello", default: :".hello")
+    assert_equal "Hello from Rails translations!", TranslatableComponent.t("hello", default: :".hello")
+    assert_equal "This is coming from Rails", translate(".missing", default: [:"from.rails", :".hello"])
+    assert_equal "This is coming from Rails", TranslatableComponent.t(".missing", default: [:"from.rails", :".hello"])
+    assert_equal "literal", translate(".missing", default: ["literal", :".hello"])
+    assert_equal false, translate(".missing", default: [false, :".hello"])
+  end
+
+  def test_symbolic_defaults_work_with_a_caching_i18n_backend
+    backend = I18n.backend.dup.extend(I18n::Backend::Cache)
+    with_config_option(:backend, backend, config_entrypoint: I18n) do
+      with_config_option(:cache_store, ActiveSupport::Cache::MemoryStore.new, config_entrypoint: I18n) do
+        2.times do
+          assert_equal "Hello from sidecar translations!", translate(".missing", default: :".hello")
+          assert_equal "Hello from sidecar translations!", TranslatableComponent.t(".missing", default: :".hello")
+        end
+      end
+    end
+  end
+
+  def test_symbolic_defaults_preserve_scope_and_locale
+    assert_equal "This is coming from the sidecar", translate(:missing, scope: ".from", default: :sidecar)
+    assert_equal "This is coming from the sidecar", TranslatableComponent.t(:missing, scope: ".from", default: :sidecar)
+    assert_equal "French fallback", translate(".missing", locale: :fr, default: [:".hello", "French fallback"])
+    assert_equal "French fallback", TranslatableComponent.t(".missing", locale: :fr, default: [:".hello", "French fallback"])
+  end
+
+  def test_symbolic_defaults_use_the_resolved_keys_html_safety
+    translation = translate(".missing", default: :".interpolated_html", horse_count: "<em>4</em>")
+    assert_predicate translation, :html_safe?
+    assert_includes translation, "&lt;em&gt;4&lt;/em&gt;"
+    assert_includes translation, "<strong>barn</strong>"
+    refute_predicate translate(".missing_html", default: :".hello"), :html_safe?
+    refute_predicate TranslatableComponent.t(".missing", default: :".hello_html"), :html_safe?
+  end
+
+  def test_symbolic_defaults_only_evaluate_necessary_procs_once
+    calls = 0
+    defaults = [->(*) {
+      calls += 1
+      nil
+    }, :".hello"]
+    assert_equal "Hello from sidecar translations!", translate(".missing", default: defaults)
+    assert_equal 1, calls
+    assert_equal "Hello from sidecar translations!", TranslatableComponent.t(".missing", default: defaults)
+    assert_equal 2, calls
+    assert_equal "Hello from sidecar translations!", translate(".hello", default: defaults)
+    assert_equal 2, calls
+
+    assert_equal "Hello world", translate(".missing", default: [->(*) { "Hello %{name}" }, :".hello"], name: "world")
+  end
+
+  def test_unresolved_symbolic_defaults_raise_for_the_original_key
+    error = assert_raises(I18n::MissingTranslationData) do
+      translate(".missing", default: [:".not_found", :".also_missing"], raise: true)
+    end
+    assert_includes error.message, "translatable_component.missing"
+
+    error = assert_raises(I18n::MissingTranslationData) do
+      TranslatableComponent.t(".missing", default: [:".not_found", :".also_missing"], raise: true)
+    end
+    assert_includes error.message, "translatable_component.missing"
   end
 
   def test_translate_returns_lists

@@ -182,6 +182,8 @@ Releases are automated using GitHub Actions. Here's the process:
 
 Pre-release labels must contain a letter. They're included in the version, release branch, and tag, and the GitHub release is marked as a pre-release. Failures to push the tag or start gem publishing fail the workflow.
 
+Re-running **Publish Release** reuses existing tags and GitHub releases before retrying gem publishing.
+
 ## Governance
 
 ViewComponent is built by over a hundred members of the community. Project membership has several levels:

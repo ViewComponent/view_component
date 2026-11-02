@@ -30,7 +30,7 @@ module ViewComponent
 
         gather_templates
 
-        if self.class.__vc_development_mode && @templates.any?(&:requires_compiled_superclass?)
+        if (self.class.__vc_development_mode || !@component.superclass.__vc_compiled?) && @templates.any?(&:requires_compiled_superclass?)
           @component.superclass.__vc_compile(raise_errors: raise_errors)
           @templates = nil
           gather_templates

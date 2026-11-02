@@ -232,6 +232,46 @@ class TemplateRegressionTest < ViewComponent::TestCase
     end
   end
 
+  def test_helper_calls_track_components_in_output_and_view_fragment_caches
+    with_component_files(
+      "leaf_component.rb" => "class TemplateRegressionFixtures::LeafComponent < ViewComponent::Base; end",
+      "leaf_component.html.erb" => "Before leaf edit",
+      "helper_component.rb" => <<~RUBY,
+        class TemplateRegressionFixtures::HelperComponent < ViewComponent::Base
+          cache_on :identity
+          def identity = "helper"
+        end
+      RUBY
+      "helper_component.html.erb" => "<%= helpers.embed(TemplateRegressionFixtures::LeafComponent.new) %>",
+      "views/examples/page.html.erb" => <<~ERB
+        <% cache "helper-component" do %>
+          <%= embed(TemplateRegressionFixtures::LeafComponent.new) %>
+        <% end %>
+      ERB
+    ) do |directory|
+      with_caching do
+        vc_test_controller.prepend_view_path(File.join(directory, "views"))
+        context = vc_test_controller.view_context
+        context.define_singleton_method(:embed) { |component| render(component) }
+        assert_includes TemplateRegressionFixtures::HelperComponent.new.render_in(context), "Before leaf edit"
+        assert_includes context.render(template: "examples/page"), "Before leaf edit"
+
+        File.write(File.join(directory, "leaf_component.html.erb"), "After leaf edit")
+        ViewComponent::CompileCache.invalidate!
+        context.lookup_context.view_paths.each(&:clear_cache)
+        clear_digest_cache
+        context = context.class.new(
+          ActionView::LookupContext.new(context.lookup_context.view_paths), {}, vc_test_controller
+        )
+        context.define_singleton_method(:embed) { |component| render(component) }
+
+        assert_includes TemplateRegressionFixtures::LeafComponent.new.render_in(context), "After leaf edit"
+        assert_includes TemplateRegressionFixtures::HelperComponent.new.render_in(context), "After leaf edit"
+        assert_includes context.render(template: "examples/page"), "After leaf edit"
+      end
+    end
+  end
+
   def test_explicit_digest_format_selects_matching_partial_dependencies
     old_paths = ActionController::Base.view_paths
     with_component_files(

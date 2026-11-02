@@ -123,89 +123,15 @@ module ViewComponent
     #
     # @return [String]
     def render_in(view_context, **, &block)
-      old_virtual_path = view_context.instance_variable_get(:@virtual_path)
       self.class.__vc_compile(raise_errors: true) unless self.class.__vc_compiled?
-
-      if self.class.__vc_cache_output && !@__vc_cache_bypassed
-        return __vc_render_cached(view_context, block)
-      end
-
       __vc_check_reused_instance!
-      __vc_reset_render_state!
 
-      @view_context = view_context
-      @old_virtual_path = old_virtual_path
-      self.__vc_original_view_context = view_context
-
-      @output_buffer = view_context.output_buffer
-
-      @lookup_context = view_context.lookup_context
-
-      # For content_for
-      @view_flow = view_context.view_flow
-
-      # For i18n
-      component_virtual_path = virtual_path
-      @virtual_path ||= component_virtual_path
-
-      # Describes the inferred request constraints (locales, formats, variants)
-      @__vc_requested_details = @lookup_context.vc_requested_details
-
-      # For caching, such as #cache_if
-      @current_template = nil unless defined?(@current_template)
-      old_current_template = @current_template
-
-      if block && defined?(@__vc_content_set_by_with_content)
-        raise DuplicateContentError.new(self.class.name)
-      end
-
-      @__vc_content_evaluated = false
-      remove_instance_variable(:@__vc_content) if defined?(@__vc_content)
-      @__vc_render_in_block = block
-      @view_context.instance_variable_set(:@virtual_path, component_virtual_path)
-
-      before_render
-
-      if render?
-        value = nil
-
-        @output_buffer.with_buffer do
-          inner_rendered_template = nil
-          around_rendered_template = around_render do
-            inner_rendered_template = render_template_for(@__vc_requested_details).to_s
-          end
-
-          # If `around_render` returned the same object the block yielded, the inner
-          # template's escaping is authoritative and we can trust the result. If the
-          # user replaced/wrapped the value, re-check HTML safety to prevent
-          # bypassing the escaping applied to normal `#call` return values
-          # (GHSA-97jw-64cj-jc58).
-          rendered_template = if around_rendered_template.equal?(inner_rendered_template)
-            around_rendered_template
-          else
-            __vc_safe_around_render_output(around_rendered_template)
-          end
-
-          # Avoid allocating new string when output_preamble and output_postamble are blank
-          value = if output_preamble.blank? && output_postamble.blank?
-            rendered_template
-          else
-            __vc_safe_output_preamble + rendered_template + __vc_safe_output_postamble
-          end
-        end
-
-        if ActionView::Base.annotate_rendered_view_with_filenames && current_template.inline_call? && request&.format == :html
-          identifier = defined?(Rails.root) ? self.class.identifier.sub("#{Rails.root}/", "") : self.class.identifier
-          value = "<!-- BEGIN #{identifier} -->".html_safe + value + "<!-- END #{identifier} -->".html_safe
-        end
-
-        value
+      if self.class.__vc_cache_output
+        __vc_render_cached(view_context, block)
       else
-        "".html_safe
+        __vc_render_uncached(view_context, &block)
       end
     ensure
-      view_context.instance_variable_set(:@virtual_path, old_virtual_path)
-      @current_template = old_current_template
       @__vc_rendered = true
     end
 
@@ -473,6 +399,85 @@ module ViewComponent
     private
 
     attr_reader :view_context
+
+    def __vc_render_uncached(view_context, &block)
+      old_virtual_path = view_context.instance_variable_get(:@virtual_path)
+      __vc_reset_render_state!
+
+      @view_context = view_context
+      @old_virtual_path = old_virtual_path
+      self.__vc_original_view_context = view_context
+
+      @output_buffer = view_context.output_buffer
+
+      @lookup_context = view_context.lookup_context
+
+      # For content_for
+      @view_flow = view_context.view_flow
+
+      # For i18n
+      component_virtual_path = virtual_path
+      @virtual_path ||= component_virtual_path
+
+      # Describes the inferred request constraints (locales, formats, variants)
+      @__vc_requested_details = @lookup_context.vc_requested_details
+
+      # For caching, such as #cache_if
+      @current_template = nil unless defined?(@current_template)
+      old_current_template = @current_template
+
+      if block && defined?(@__vc_content_set_by_with_content)
+        raise DuplicateContentError.new(self.class.name)
+      end
+
+      @__vc_content_evaluated = false
+      remove_instance_variable(:@__vc_content) if defined?(@__vc_content)
+      @__vc_render_in_block = block
+      @view_context.instance_variable_set(:@virtual_path, component_virtual_path)
+
+      before_render
+
+      if render?
+        value = nil
+
+        @output_buffer.with_buffer do
+          inner_rendered_template = nil
+          around_rendered_template = around_render do
+            inner_rendered_template = render_template_for(@__vc_requested_details).to_s
+          end
+
+          # If `around_render` returned the same object the block yielded, the inner
+          # template's escaping is authoritative and we can trust the result. If the
+          # user replaced/wrapped the value, re-check HTML safety to prevent
+          # bypassing the escaping applied to normal `#call` return values
+          # (GHSA-97jw-64cj-jc58).
+          rendered_template = if around_rendered_template.equal?(inner_rendered_template)
+            around_rendered_template
+          else
+            __vc_safe_around_render_output(around_rendered_template)
+          end
+
+          # Avoid allocating new string when output_preamble and output_postamble are blank
+          value = if output_preamble.blank? && output_postamble.blank?
+            rendered_template
+          else
+            __vc_safe_output_preamble + rendered_template + __vc_safe_output_postamble
+          end
+        end
+
+        if ActionView::Base.annotate_rendered_view_with_filenames && current_template.inline_call? && request&.format == :html
+          identifier = defined?(Rails.root) ? self.class.identifier.sub("#{Rails.root}/", "") : self.class.identifier
+          value = "<!-- BEGIN #{identifier} -->".html_safe + value + "<!-- END #{identifier} -->".html_safe
+        end
+
+        value
+      else
+        "".html_safe
+      end
+    ensure
+      view_context.instance_variable_set(:@virtual_path, old_virtual_path)
+      @current_template = old_current_template
+    end
 
     def __vc_render_in_block_provided?
       defined?(@view_context) && @view_context && @__vc_render_in_block

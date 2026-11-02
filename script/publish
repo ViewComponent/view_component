@@ -68,11 +68,15 @@ release_options=()
 if [[ "$version" =~ [a-zA-Z] ]]; then
   release_options+=(--prerelease)
 fi
-gh release create "$tag" \
-  --title "$version" \
-  --notes "$changelog" \
-  --repo ViewComponent/view_component \
-  "${release_options[@]}"
+if gh release view "$tag" --repo ViewComponent/view_component > /dev/null 2>&1; then
+  echo "Reusing existing release: $tag"
+else
+  gh release create "$tag" \
+    --title "$version" \
+    --notes "$changelog" \
+    --repo ViewComponent/view_component \
+    "${release_options[@]}"
+fi
 
 # Kick off the Push Gem workflow explicitly. GitHub Actions does not
 # trigger downstream workflows for events driven by GITHUB_TOKEN — so

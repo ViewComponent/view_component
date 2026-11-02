@@ -14,6 +14,34 @@ module ViewComponent
     TRANSLATION_EXTENSIONS = %w[yml yaml].freeze
     private_constant :TRANSLATION_EXTENSIONS
 
+    # Like Rails' translation helper, use a sentinel that survives cache serialization.
+    MISSING_TRANSLATION = -(2**61)
+    private_constant :MISSING_TRANSLATION
+
+    def self.symbolic_defaults?(options)
+      default = options[:default]
+      default.is_a?(Symbol) || (default.is_a?(Array) && default.any? { |value| value.is_a?(Symbol) })
+    end
+
+    def self.translate_with_defaults(translator, key, options)
+      defaults = options[:default].is_a?(Array) ? options[:default].compact : [options[:default]]
+      options = options.except(:default)
+
+      translated = translator.translate(key, **options, default: MISSING_TRANSLATION)
+      return translated unless translated == MISSING_TRANSLATION
+
+      defaults.each do |default|
+        translated = if default.is_a?(Symbol)
+          translator.translate(default, **options, default: MISSING_TRANSLATION)
+        else
+          translator.translate(key, **options, default: [default, MISSING_TRANSLATION])
+        end
+        return translated unless translated == MISSING_TRANSLATION
+      end
+
+      translator.translate(key, **options)
+    end
+
     included do
       class_attribute :__vc_i18n_backend, instance_writer: false, instance_predicate: false
     end
@@ -53,9 +81,12 @@ module ViewComponent
 
       def translate(key = nil, **options)
         return key.map { |k| translate(k, **options) } if key.is_a?(Array)
-        return ::I18n.translate(key, **options) if key.nil?
+        symbolic_defaults = Translatable.symbolic_defaults?(options)
+        return ::I18n.translate(key, **options) if key.nil? && !symbolic_defaults
 
         __vc_ensure_compiled
+
+        return Translatable.translate_with_defaults(self, key, options) if symbolic_defaults
 
         locale = options.delete(:locale) || ::I18n.locale
         key = __vc_i18n_key(key, options.delete(:scope))
@@ -98,8 +129,10 @@ module ViewComponent
     def translate(key = nil, **options)
       raise ViewComponent::TranslateCalledBeforeRenderError if view_context.nil?
 
-      return @view_context.translate(key, **options) if key.nil? || !__vc_i18n_backend
+      return @view_context.translate(key, **options) unless __vc_i18n_backend
       return key.map { |k| translate(k, **options) } if key.is_a?(Array)
+      return Translatable.translate_with_defaults(self, key, options) if Translatable.symbolic_defaults?(options)
+      return @view_context.translate(key, **options) if key.nil?
 
       locale = options.delete(:locale) || ::I18n.locale
       key = self.class.__vc_i18n_key(key, options.delete(:scope))

@@ -35,6 +35,12 @@ Access component-local translations with a leading dot:
 <%= t(".hello") %>
 ```
 
+Use a symbolic `default` to fall back to another sidecar or global translation:
+
+```erb
+<%= t(".greeting", default: :".hello") %>
+```
+
 Global Rails translations are available as well:
 
 ```erb
