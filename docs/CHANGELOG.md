@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Avoid `NameError` during eager loading when components include modules with temporary names.
+
+    *Joel Hawksley*
+
 * Prevent self-cache key collisions and track component references in views and format-specific partial dependencies.
 
     *Joel Hawksley*

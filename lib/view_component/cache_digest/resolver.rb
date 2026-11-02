@@ -145,7 +145,11 @@ module ViewComponent
         component.ancestors.take_while { |ancestor| ancestor != ViewComponent::Base }.filter_map { |ancestor|
           next if ancestor.is_a?(Class) || ancestor.name.nil?
 
-          path, _line = Object.const_source_location(ancestor.name)
+          begin
+            path, _line = Object.const_source_location(ancestor.name)
+          rescue NameError
+            next
+          end
           path unless path.nil? || path.start_with?(VIEW_COMPONENT_LIB)
         }.uniq
       end
