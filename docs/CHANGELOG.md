@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.21.0
+
 * Avoid `NameError` during eager loading when components include modules with temporary names.
 
     *Joel Hawksley*
