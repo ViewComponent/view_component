@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Avoid `NameError` during eager loading when components include modules with temporary names.
+
+    *Joel Hawksley*
+
 * Avoid repeated scanning of unterminated ERB tags during cache dependency discovery.
 
     *Joel Hawksley*

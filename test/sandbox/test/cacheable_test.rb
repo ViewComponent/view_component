@@ -447,6 +447,21 @@ class CacheableTest < ViewComponent::TestCase
     ) { CacheableHelperComponent.cache_digest }
   end
 
+  def test_modules_with_temporary_names_are_not_digested
+    skip "Module#set_temporary_name requires Ruby 3.3+" unless Module.method_defined?(:set_temporary_name)
+
+    component = CacheableHelperComponent.dup
+    resolver = ViewComponent::CacheDigest::Resolver.instance
+    source = resolver.source_for(component)
+    mod = Module.new
+    component.include(mod)
+
+    ["ViewComponent::Properties(Extension)", "MissingNamespace::Properties(Extension)"].each do |name|
+      mod.set_temporary_name(name)
+      assert_equal source, resolver.source_for(component)
+    end
+  end
+
   # Every component includes modules from ViewComponent itself, which would
   # otherwise tie every digest to the installed version of the gem.
   def test_modules_view_component_includes_are_not_digested
