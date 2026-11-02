@@ -14,6 +14,26 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Avoid repeated scanning of unterminated ERB tags during cache dependency discovery.
+
+    *Joel Hawksley*
+
+* Skip dependency compilation for static ERB markup and literal templates while preserving helper-rendered component tracking.
+
+    *Joel Hawksley*
+
+* Track helper-rendered component cache dependencies, enforce single-use instances on cache hits, and emit one render notification per self-cached render.
+
+    *Joel Hawksley*
+
+* Resolve symbolic translation defaults in sidecars, restore request URL state in tests, and refresh inherited templates whenever template reloading is enabled.
+
+    *Joel Hawksley*
+
+* Reuse existing GitHub releases when retrying a failed gem publish.
+
+    *Joel Hawksley*
+
 * Prevent self-cache key collisions and track component references in views and format-specific partial dependencies.
 
     *Joel Hawksley*

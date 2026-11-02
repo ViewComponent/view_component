@@ -182,11 +182,6 @@ module ViewComponent
       end
     end
 
-    def __vc_render_uncached(view_context)
-      @__vc_cache_bypassed = true
-      render_in(view_context)
-    end
-
     # Slots set by the caller via `with_*`. Checked before rendering, so slots
     # a component fills in for itself with a `default_*` method — which resolve
     # lazily during the render — aren't counted.

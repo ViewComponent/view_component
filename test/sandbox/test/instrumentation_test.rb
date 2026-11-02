@@ -54,4 +54,41 @@ class InstrumentationTest < ViewComponent::TestCase
     Rails.application.config.eager_load = old_eager_load
     ActiveSupport::Notifications.unsubscribe(subscriber)
   end
+
+  def test_self_cache_misses_and_hits_emit_one_render_event_each
+    Rails.cache.clear
+    with_config_option(:perform_caching, true, config_entrypoint: ActionController::Base) do
+      events = []
+      callback = ->(*args) { events << args.last }
+      ActiveSupport::Notifications.subscribed(callback, "render.view_component") do
+        render_inline(CacheableComponent.new(title: "instrumented"))
+        assert_equal 1, events.size
+        assert_match "cacheable_component.html.erb", events.first[:view_identifier]
+        assert_text "instrumented"
+
+        events.clear
+        render_inline(CacheableComponent.new(title: "instrumented"))
+        assert_equal 1, events.size
+        assert_equal "CacheableComponent", events.first[:name]
+        assert_nil events.first[:view_identifier]
+        assert_text "instrumented"
+      end
+    end
+  ensure
+    Rails.cache.clear
+  end
+
+  def test_self_caching_emits_one_render_event_when_caching_is_disabled
+    with_config_option(:perform_caching, false, config_entrypoint: ActionController::Base) do
+      events = []
+      callback = ->(*args) { events << args.last }
+      ActiveSupport::Notifications.subscribed(callback, "render.view_component") do
+        render_inline(CacheableComponent.new(title: "uncached"))
+      end
+
+      assert_equal 1, events.size
+      assert_match "cacheable_component.html.erb", events.first[:view_identifier]
+      assert_text "uncached"
+    end
+  end
 end

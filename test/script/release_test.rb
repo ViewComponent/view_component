@@ -139,6 +139,29 @@ class ReleaseTest < Minitest::Test
     end
   end
 
+  def test_publish_retries_gem_dispatch_without_recreating_the_release
+    with_release_files do
+      _output, status = run_script("publish", env: {"DISPATCH_STATUS" => "42"})
+      assert_equal 42, status.exitstatus
+
+      output, status = run_script("publish")
+
+      assert status.success?, output
+      assert_includes output, "Reusing existing release: v4.20.0"
+      assert_equal 1, commands.lines.count { |line| line.start_with?("gh release create ") }
+      assert_equal 2, commands.lines.count { |line| line.start_with?("gh workflow run ") }
+    end
+  end
+
+  def test_publish_stops_when_the_release_cannot_be_created
+    with_release_files do
+      _output, status = run_script("publish", env: {"RELEASE_STATUS" => "44"})
+
+      assert_equal 44, status.exitstatus
+      refute_includes commands, "gh workflow run"
+    end
+  end
+
   private
 
   def with_release_files(version: "4.20.0")
@@ -179,7 +202,21 @@ class ReleaseTest < Minitest::Test
           printf 'gh %s\\n' "$*" >> "$COMMAND_LOG"
           case "$1" in
             workflow) return "${DISPATCH_STATUS:-0}" ;;
-            auth|repo|release) return 0 ;;
+            release)
+              case "$2" in
+                view) test -f release-created ;;
+                create)
+                  if [ -f release-created ]; then
+                    printf 'a release with the same tag name already exists\\n' >&2
+                    return 1
+                  fi
+                  if [ "${RELEASE_STATUS:-0}" != "0" ]; then return "$RELEASE_STATUS"; fi
+                  touch release-created
+                  ;;
+                *) return 77 ;;
+              esac
+              ;;
+            auth|repo) return 0 ;;
             *) printf 'Unexpected gh operation: %s\\n' "$1" >&2; return 77 ;;
           esac
         }

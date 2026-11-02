@@ -171,4 +171,62 @@ class TestHelperTest < ViewComponent::TestCase
     assert_equal original_fullpath, request.fullpath
     assert_equal original_original_fullpath, request.original_fullpath
   end
+
+  def test_with_request_url_refreshes_memoized_request_and_controller_urls
+    request = vc_test_request
+    controller = vc_test_controller
+    original_url = request.url
+    original_products_url = controller.products_url
+
+    with_request_url("/products", host: "temporary.example:4321", protocol: :https) do
+      assert_equal "https://temporary.example:4321/products", request.url
+      assert_equal "https://temporary.example:4321/products", controller.products_url
+    end
+
+    assert_equal original_url, request.url
+    assert_equal original_products_url, controller.products_url
+  end
+
+  def test_with_request_url_restores_urls_first_read_inside_the_block
+    request = vc_test_request
+    original_url = ActionDispatch::TestRequest.new(request.env.dup).url
+    controller = nil
+
+    with_request_url("/", host: "temporary.example:4321", protocol: :https) do
+      assert_equal "https://temporary.example:4321/", request.url
+      controller = vc_test_controller
+      assert_equal "https://temporary.example:4321/", controller.root_url
+    end
+
+    assert_equal original_url, request.url
+    assert_equal original_url, controller.root_url
+  end
+
+  def test_with_request_url_restores_nondefault_ports_after_nested_blocks_and_errors
+    request = vc_test_request
+    request.host = "original.example:6789"
+    original_url = request.url
+    controller = vc_test_controller
+    original_products_url = controller.products_url
+
+    with_request_url("/products", host: "outer.example:1234", protocol: :https) do
+      assert_equal "https://outer.example:1234/products", request.url
+      assert_equal "https://outer.example:1234/products", controller.products_url
+
+      assert_raises(RuntimeError) do
+        with_request_url("/slots", host: "inner.example:4321", protocol: :http) do
+          assert_equal "http://inner.example:4321/slots", request.url
+          assert_equal "http://inner.example:4321/products", controller.products_url
+          raise "restore URL"
+        end
+      end
+
+      assert_equal "https://outer.example:1234/products", request.url
+      assert_equal "https://outer.example:1234/products", controller.products_url
+    end
+
+    assert_equal "original.example:6789", request.get_header("HTTP_HOST")
+    assert_equal original_url, request.url
+    assert_equal original_products_url, controller.products_url
+  end
 end

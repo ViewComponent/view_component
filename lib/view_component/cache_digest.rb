@@ -4,6 +4,7 @@ require "active_support/dependencies/autoload"
 require "action_view/digestor"
 require "action_view/render_parser"
 require "prism"
+require "strscan"
 
 module ViewComponent
   # Integrates ViewComponents into Rails' template digest tree.
@@ -106,6 +107,35 @@ module ViewComponent
       def compiled_source(template)
         source = template.source
         Thread.current[COMPILED_SOURCES]&.dig(template.handler, source) || template.handler.call(template, source)
+      end
+
+      # Skip literal templates and ERB markup before compiling Ruby for analysis.
+      # Other handlers keep a conservative check because their code syntax varies.
+      #
+      # @param source [String]
+      # @param handler [#call]
+      #
+      # @return [Boolean]
+      def template_dependencies?(source, handler)
+        return false unless source.match?(/render|[A-Z]/)
+
+        case handler
+        when ActionView::Template::Handlers::Raw, ActionView::Template::Handlers::Html
+          false
+        when ActionView::Template::Handlers::ERB
+          # Never restart the search at another opener after an unterminated tag.
+          scanner = StringScanner.new(source)
+          while scanner.skip_until(/<%/)
+            code = scanner.scan_until(/%>/)
+            return false unless code
+            next if code.start_with?("#", "%")
+
+            return true if code.match?(/render|[A-Z]/)
+          end
+          false
+        else
+          true
+        end
       end
 
       # Find the components Ruby source references and the partials it

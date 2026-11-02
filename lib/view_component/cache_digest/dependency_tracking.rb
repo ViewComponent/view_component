@@ -26,7 +26,9 @@ module ViewComponent
           dependencies = dependencies - [declared] + [virtual_path]
         end
 
-        return dependencies unless source.include?("render")
+        # Synthetic templates already declare every dependency found in their sources.
+        return dependencies if name.start_with?("#{CacheDigest::VIRTUAL_PATH_PREFIX}/")
+        return dependencies unless CacheDigest.template_dependencies?(source, template.handler)
 
         component_paths, inferred_partials =
           CacheDigest.template_renders_in(CacheDigest.compiled_source(template), name, view_paths: view_paths)

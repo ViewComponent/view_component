@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "action_view/testing/resolvers"
+require "timeout"
 
 class CacheableTest < ViewComponent::TestCase
   def setup
@@ -959,6 +960,90 @@ class CacheableTest < ViewComponent::TestCase
     end
   end
 
+  def test_static_erb_markup_is_not_compiled_for_dependencies
+    sources = [
+      "<span>Hello, world!</span>",
+      "<span>render ErbComponent</span>",
+      "<%# ErbComponent %><span>Hello</span>",
+      "<%%= helpers.embed(ErbComponent.new) %>",
+      "<span>Hello</span><%= @message %>"
+    ]
+
+    ViewComponent::CacheDigest.stub(:compiled_source, ->(*) { flunk "compiled static markup" }) do
+      sources.each do |source|
+        template = build_template(source)
+        rails_dependencies = ActionView::DependencyTracker.method(:find_dependencies).super_method.call("test/template", template, [])
+
+        assert_equal rails_dependencies, ActionView::DependencyTracker.find_dependencies("test/template", template, [])
+        assert_empty ViewComponent::CacheDigest::Resolver.instance.send(
+          :template_dependencies, CacheableComponent, source, :erb, "test/template"
+        )
+      end
+    end
+  end
+
+  def test_literal_template_handlers_are_not_compiled_for_dependencies
+    source = "<%= helpers.embed(ErbComponent.new) %>"
+
+    ViewComponent::CacheDigest.stub(:compiled_source, ->(*) { flunk "compiled a literal template" }) do
+      %i[raw html].each do |extension|
+        template = build_template(source, handler: ActionView::Template.handler_for_extension(extension))
+
+        assert_empty ActionView::DependencyTracker.find_dependencies("test/template", template, [])
+        assert_empty ViewComponent::CacheDigest::Resolver.instance.send(
+          :template_dependencies, CacheableComponent, source, extension, "test/template"
+        )
+      end
+    end
+  end
+
+  def test_erb_dependency_filter_handles_many_unterminated_tags
+    source = "<%A" + ("<%a" * 100_000)
+    handler = ActionView::Template.handler_for_extension(:erb)
+
+    Timeout.timeout(2) do
+      refute ViewComponent::CacheDigest.template_dependencies?(source, handler)
+    end
+  end
+
+  def test_static_templates_keep_explicit_component_dependencies
+    source = "<%# Template Dependency: ErbComponent %><span>Hello</span>"
+    ViewComponent::CacheDigest.stub(:compiled_source, ->(*) { flunk "compiled a dependency comment" }) do
+      dependencies = ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
+
+      assert_includes dependencies, "view_component/cache_digest/erb_component"
+    end
+  end
+
+  def test_helper_component_dependencies_are_found_in_each_template_language
+    {
+      erb: "<span>Hello</span><%% ignored %><%-\nchild = ErbComponent.new\n-%><%= helpers.embed(child) %>",
+      haml: "%span Hello\n= helpers.embed(ErbComponent.new)",
+      slim: "span Hello\n= helpers.embed(ErbComponent.new)",
+      ruby: "helpers.embed(ErbComponent.new)"
+    }.each do |extension, source|
+      template = build_template(source, handler: ActionView::Template.handler_for_extension(extension))
+      dependencies = ActionView::DependencyTracker.find_dependencies("test/template", template, [])
+
+      assert_includes dependencies, "view_component/cache_digest/erb_component"
+      assert_includes ViewComponent::CacheDigest::Resolver.instance.send(
+        :template_dependencies, CacheableComponent, source, extension, "test/template"
+      ), "view_component/cache_digest/erb_component"
+    end
+  end
+
+  def test_synthetic_templates_keep_dependencies_without_recompiling
+    virtual_path = ViewComponent::CacheDigest.virtual_path_for(CacheableParentComponent)
+    source = ViewComponent::CacheDigest::Resolver.instance.source_for(CacheableParentComponent)
+    template = build_template(source, virtual_path: virtual_path)
+
+    ViewComponent::CacheDigest.stub(:compiled_source, ->(*) { flunk "recompiled the synthetic template" }) do
+      dependencies = ActionView::DependencyTracker.find_dependencies(virtual_path, template, [])
+
+      assert_includes dependencies, "view_component/cache_digest/cacheable_child_component"
+    end
+  end
+
   def test_unresolved_dynamic_partial_dependencies_are_discarded
     sources = [
       "render UI.button(label: 'Save')",
@@ -1208,11 +1293,11 @@ class CacheableTest < ViewComponent::TestCase
     ViewComponent::CacheDigest.renders_in(ViewComponent::CacheDigest.compiled_source(template), "test/template").first
   end
 
-  def build_template(source, virtual_path: "test/template")
+  def build_template(source, virtual_path: "test/template", handler: ActionView::Template.handler_for_extension(:erb))
     ActionView::Template.new(
       source,
       "test template",
-      ActionView::Template.handler_for_extension(:erb),
+      handler,
       locals: [],
       format: :html,
       virtual_path: virtual_path
