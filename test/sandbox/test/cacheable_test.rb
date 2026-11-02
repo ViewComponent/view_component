@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "action_view/testing/resolvers"
+require "timeout"
 
 class CacheableTest < ViewComponent::TestCase
   def setup
@@ -978,6 +979,15 @@ class CacheableTest < ViewComponent::TestCase
           :template_dependencies, CacheableComponent, source, extension, "test/template"
         )
       end
+    end
+  end
+
+  def test_erb_dependency_filter_handles_many_unterminated_tags
+    source = "<%A" + ("<%a" * 100_000)
+    handler = ActionView::Template.handler_for_extension(:erb)
+
+    Timeout.timeout(2) do
+      refute ViewComponent::CacheDigest.template_dependencies?(source, handler)
     end
   end
 

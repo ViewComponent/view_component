@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Avoid repeated scanning of unterminated ERB tags during cache dependency discovery.
+
+    *Joel Hawksley*
+
 * Skip dependency compilation for static ERB markup and literal templates while preserving helper-rendered component tracking.
 
     *Joel Hawksley*

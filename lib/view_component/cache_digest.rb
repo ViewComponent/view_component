@@ -4,6 +4,7 @@ require "active_support/dependencies/autoload"
 require "action_view/digestor"
 require "action_view/render_parser"
 require "prism"
+require "strscan"
 
 module ViewComponent
   # Integrates ViewComponents into Rails' template digest tree.
@@ -122,8 +123,14 @@ module ViewComponent
         when ActionView::Template::Handlers::Raw, ActionView::Template::Handlers::Html
           false
         when ActionView::Template::Handlers::ERB
-          source.scan(/<%([#%]?)(.*?)%>/m) do |marker, code|
-            return true if marker.empty? && code.match?(/render|[A-Z]/)
+          # Never restart the search at another opener after an unterminated tag.
+          scanner = StringScanner.new(source)
+          while scanner.skip_until(/<%/)
+            code = scanner.scan_until(/%>/)
+            return false unless code
+            next if code.start_with?("#", "%")
+
+            return true if code.match?(/render|[A-Z]/)
           end
           false
         else
