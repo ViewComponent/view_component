@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Skip dependency compilation for static ERB markup and literal templates while preserving helper-rendered component tracking.
+
+    *Joel Hawksley*
+
 * Track helper-rendered component cache dependencies, enforce single-use instances on cache hits, and emit one render notification per self-cached render.
 
     *Joel Hawksley*

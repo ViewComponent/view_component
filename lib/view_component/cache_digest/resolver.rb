@@ -211,12 +211,13 @@ module ViewComponent
       end
 
       def template_dependencies(component, source, extension, virtual_path)
-        return [] unless source.match?(/render|[A-Z]/)
+        handler = ActionView::Template.handler_for_extension(extension)
+        return [] unless CacheDigest.template_dependencies?(source, handler)
 
         template = ActionView::Template.new(
           source,
           "view_component cache digest for #{component.name}",
-          ActionView::Template.handler_for_extension(extension),
+          handler,
           locals: [],
           format: nil,
           virtual_path: virtual_path
