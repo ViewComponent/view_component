@@ -211,7 +211,7 @@ module ViewComponent
       end
 
       def template_dependencies(component, source, extension, virtual_path)
-        return [] unless source.include?("render")
+        return [] unless source.match?(/render|[A-Z]/)
 
         template = ActionView::Template.new(
           source,

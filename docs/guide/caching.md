@@ -59,7 +59,7 @@ end
 
 ## Declaring dependencies
 
-Dependencies are found by scanning the component's templates, its Ruby class, and the modules it includes. Every component class named there counts, whether it's passed to `render`, built by a method, or assigned to a variable, and so does every partial rendered by its path. Slots count the class they're declared with, including one named by a string.
+Dependencies are found by scanning the component's templates, its Ruby class, and the modules it includes. Every component class named there counts, whether it's passed to `render` or a helper, built by a method, or assigned to a variable, and so does every partial rendered by its path. Slots count the class they're declared with, including one named by a string.
 
 Component classes assigned to variables in Rails view templates are tracked too.
 

@@ -944,6 +944,18 @@ class CacheableTest < ViewComponent::TestCase
     end
   end
 
+  def test_synthetic_templates_keep_dependencies_without_recompiling
+    virtual_path = ViewComponent::CacheDigest.virtual_path_for(CacheableParentComponent)
+    source = ViewComponent::CacheDigest::Resolver.instance.source_for(CacheableParentComponent)
+    template = build_template(source, virtual_path: virtual_path)
+
+    ViewComponent::CacheDigest.stub(:compiled_source, ->(*) { flunk "recompiled the synthetic template" }) do
+      dependencies = ActionView::DependencyTracker.find_dependencies(virtual_path, template, [])
+
+      assert_includes dependencies, "view_component/cache_digest/cacheable_child_component"
+    end
+  end
+
   def test_unresolved_dynamic_partial_dependencies_are_discarded
     sources = [
       "render UI.button(label: 'Save')",

@@ -28,6 +28,8 @@ end
 
 _Note: Enabling instrumentation negatively impacts the performance of ViewComponent._
 
+Self-cached renders emit one notification per render. Cache hits have a `nil` `view_identifier` because no template runs.
+
 ## Compile instrumentation
 
 Since 4.8.0

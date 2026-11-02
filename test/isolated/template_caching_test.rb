@@ -201,6 +201,26 @@ class TemplateCachingTest < ActiveSupport::TestCase
     end
   end
 
+  def test_inherited_templates_reload_outside_development_and_test
+    Dir.mktmpdir do |root|
+      write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")
+      write_file(root, "app/components/greeting_component.html.erb", "<div>Before</div>")
+      write_file(root, "app/components/child_component.rb", "class ChildComponent < GreetingComponent; end")
+      app = boot_app("staging", root: root) do
+        config.enable_reloading = true
+        config.action_view.cache_template_loading = false
+        config.file_watcher = ActiveSupport::FileUpdateChecker
+        config.hosts.clear
+      end
+      request = component_request(app, "ChildComponent", variants: [])
+      assert_equal "<div>Before</div>", request.get("/").body.strip
+
+      write_file(root, "app/components/greeting_component.html.erb", "<div>After parent edit</div>")
+
+      assert_equal "<div>After parent edit</div>", request.get("/").body.strip
+    end
+  end
+
   def test_compilation_and_digest_precomputation_share_template_source_reads
     Dir.mktmpdir do |root|
       write_file(root, "app/components/greeting_component.rb", "class GreetingComponent < ViewComponent::Base; end")

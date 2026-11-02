@@ -109,6 +109,26 @@ class CacheableReviewTest < ViewComponent::TestCase
     end
   end
 
+  def test_cache_hits_do_not_allow_reusing_component_instances
+    with_caching do
+      render_inline(CacheableComponent.new(title: "cached"))
+      component = CacheableComponent.new(title: "cached")
+      render_inline(component)
+      assert_text "cached"
+
+      assert_raises(ViewComponent::ReusedInstanceError) { render_inline(component) }
+    end
+  end
+
+  def test_cache_misses_do_not_allow_reusing_component_instances
+    with_caching do
+      component = CacheableComponent.new(title: "uncached")
+      render_inline(component)
+
+      assert_raises(ViewComponent::ReusedInstanceError) { render_inline(component) }
+    end
+  end
+
   def test_cache_conditions_accept_a_proc
     component = Class.new(ConditionalCacheProbeComponent) do
       def self.name
