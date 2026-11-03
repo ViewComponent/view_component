@@ -21,12 +21,54 @@ module ViewComponent
         digestor.prepend(self)
       end
 
+      def digest(**)
+        CacheDigest.memoizing do
+          previous = CacheDigest.memo[:pruned]
+          loop do
+            expirations = CacheDigest.expirations
+            pruned = CacheDigest.memo[:pruned] = []
+            digest = super
+
+            # A component that registered while the tree was built expired the
+            # digests the pruned nodes stood in for, so this one is missing
+            # their dependencies.
+            break digest if pruned.empty? || CacheDigest.expirations == expirations
+
+            CacheDigest.expire_digests
+          end
+        ensure
+          CacheDigest.memo[:pruned] = previous
+        end
+      end
+
+      # A dependency whose digest is cached already becomes a leaf:
+      # `Node#dependency_digest` reads the cache and never walks its children.
+      # Without this, every component digested at boot rebuilds the tree of
+      # everything it renders, which for components rendering a shared helper
+      # module is most of the application.
+      def tree(name, finder, partial = false, seen = {})
+        pruned = CacheDigest.memo&.fetch(:pruned, nil)
+        return super unless pruned && partial && finder.digest_cache.key?(name)
+
+        path = ActionView::TemplatePath.parse(name)
+        template = find_template(finder, path.name, [path.prefix], partial, [])
+        return super unless template
+
+        pruned << name
+        seen[template.identifier] ||= ActionView::Digestor::Node.create(name, name.gsub(%r{/_}, "/"), template, partial)
+      end
+
       private
 
       def find_template(finder, name, prefixes, partial, keys)
-        Resolver.instance.find_templates(
-          name, prefixes.first, partial, {formats: finder.formats}, view_paths: finder.view_paths
-        ).first || super
+        key = [:template, name, prefixes.first, partial, finder.formats, finder.view_paths]
+        template = CacheDigest.memoize(key) do
+          Resolver.instance.find_templates(
+            name, prefixes.first, partial, {formats: finder.formats}, view_paths: finder.view_paths
+          ).first
+        end
+
+        template || super
       end
     end
   end

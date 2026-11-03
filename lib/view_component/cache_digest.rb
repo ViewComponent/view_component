@@ -43,7 +43,8 @@ module ViewComponent
     RENDER_METHODS = %i[render render_to_string].freeze
 
     COMPILED_SOURCES = :view_component_cache_digest_compiled_sources
-    private_constant :COMPILED_SOURCES
+    MEMO = :view_component_cache_digest_memo
+    private_constant :COMPILED_SOURCES, :MEMO
 
     # Rails' escape hatch for dependencies static analysis can't see.
     EXPLICIT_DEPENDENCY = /#\s*Template Dependency:\s*(\S+)/
@@ -157,9 +158,13 @@ module ViewComponent
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and partial virtual paths
       def renders_in(source, name, view_paths: nil, nesting: [])
-        components, _component_calls, other_calls = partition_render_calls(Prism.parse(source).value, nesting)
-        partials = partials_rendered_by(other_calls, name) - unresolved_partials_rendered_by(other_calls, name, view_paths)
-        [component_paths(components), partials]
+        # Shared by every component that includes a module or inherits from
+        # the same superclass, so it's scanned once per digest computation.
+        memoize([:renders_in, source, name, view_paths, nesting]) do
+          components, _component_calls, other_calls = partition_render_calls(Prism.parse(source).value, nesting)
+          partials = partials_rendered_by(other_calls, name) - unresolved_partials_rendered_by(other_calls, name, view_paths)
+          [component_paths(components), partials]
+        end
       end
 
       # Find the components Ruby source renders, along with partial guesses
@@ -280,6 +285,58 @@ module ViewComponent
         Thread.current[COMPILED_SOURCES] = nil
       end
 
+      # How many times `expire_digests` has run, so a digest computed while
+      # one ran can tell.
+      #
+      # @private
+      def expirations
+        @expirations ||= 0
+      end
+
+      # Drop Action View's memoized template digests, leaving its resolver
+      # caches alone: no template changed, only the set of dependencies the
+      # Digestor can see.
+      #
+      # @private
+      def expire_digests
+        @expirations = expirations + 1
+        ActionView::LookupContext::DetailsKey.digest_caches.each(&:clear)
+      end
+
+      # Share synthetic templates between every lookup in the block.
+      #
+      # The Digestor looks a template up once per edge of the tree, before it
+      # checks whether it has seen the template already. Action View's own
+      # resolvers cache their templates, but building a synthetic one reads and
+      # parses the component's sources, so a component rendered from many
+      # places was rebuilt once per place. Kept for one digest computation
+      # only, so a source edited between requests is still seen.
+      #
+      # @private
+      def memoizing
+        return yield if Thread.current[MEMO]
+
+        begin
+          Thread.current[MEMO] = {}
+          yield
+        ensure
+          Thread.current[MEMO] = nil
+        end
+      end
+
+      # @private
+      def memo
+        Thread.current[MEMO]
+      end
+
+      # @private
+      def memoize(key)
+        memo = Thread.current[MEMO]
+        return yield unless memo
+
+        memo.fetch(key) { memo[key] = yield }
+      end
+
       # @private
       def compiled(handler, source, compiled_source)
         sources = Thread.current[COMPILED_SOURCES]
@@ -300,16 +357,18 @@ module ViewComponent
         # digest, so registering midway would discard digests already warmed.
         components.each { |component| register(component) }
 
-        components.each do |component|
-          component.__vc_cache_digest_source = Resolver.instance.source_for(component).freeze
-        end
+        memoizing do
+          components.each do |component|
+            component.__vc_cache_digest_source = Resolver.instance.source_for(component).freeze
+          end
 
-        # Warms the same digest cache requests read, since a lookup context's
-        # cache is shared by every context with the same details.
-        components.each do |component|
-          component.__vc_template_formats.each do |format|
-            finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [format])
-            component.cache_digest(finder: finder, format: format)
+          # Warms the same digest cache requests read, since a lookup context's
+          # cache is shared by every context with the same details.
+          components.each do |component|
+            component.__vc_template_formats.each do |format|
+              finder = ActionView::LookupContext.new(ActionController::Base.view_paths, formats: [format])
+              component.cache_digest(finder: finder, format: format)
+            end
           end
         end
       end
@@ -464,13 +523,6 @@ module ViewComponent
 
         register(component)
         virtual_path_for(component)
-      end
-
-      # Drop Action View's memoized template digests, leaving its resolver
-      # caches alone: no template changed, only the set of dependencies the
-      # Digestor can see.
-      def expire_digests
-        ActionView::LookupContext::DetailsKey.digest_caches.each(&:clear)
       end
 
       # Resolve a constant name to any ViewComponent.

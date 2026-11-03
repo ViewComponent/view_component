@@ -14,27 +14,31 @@ module ViewComponent
     #
     # @private
     module DependencyTracking
+      # Templates are memoized during a digest, so a template reached along
+      # many edges of the tree is scanned once.
       def find_dependencies(name, template, view_paths = nil)
-        dependencies = super
-        source = template.source
+        CacheDigest.memoize([:dependencies, name, template, view_paths]) do
+          dependencies = super
+          source = template.source
 
-        # `# Template Dependency: SomeComponent` names a class, which Rails
-        # would resolve as a template path and never find. Swap it for the path
-        # the component is digested under, so the declaration resolves instead
-        # of becoming a missing node.
-        CacheDigest.explicit_component_dependencies(source).each do |declared, virtual_path|
-          dependencies = dependencies - [declared] + [virtual_path]
+          # `# Template Dependency: SomeComponent` names a class, which Rails
+          # would resolve as a template path and never find. Swap it for the path
+          # the component is digested under, so the declaration resolves instead
+          # of becoming a missing node.
+          CacheDigest.explicit_component_dependencies(source).each do |declared, virtual_path|
+            dependencies = dependencies - [declared] + [virtual_path]
+          end
+
+          # Synthetic templates already declare every dependency found in their sources.
+          next dependencies if name.start_with?("#{CacheDigest::VIRTUAL_PATH_PREFIX}/")
+          next dependencies unless CacheDigest.template_dependencies?(source, template.handler)
+
+          component_paths, inferred_partials =
+            CacheDigest.template_renders_in(CacheDigest.compiled_source(template), name, view_paths: view_paths)
+          declared = source.scan(CacheDigest::EXPLICIT_DEPENDENCY).flatten
+
+          (dependencies - (inferred_partials - declared) + component_paths).uniq
         end
-
-        # Synthetic templates already declare every dependency found in their sources.
-        return dependencies if name.start_with?("#{CacheDigest::VIRTUAL_PATH_PREFIX}/")
-        return dependencies unless CacheDigest.template_dependencies?(source, template.handler)
-
-        component_paths, inferred_partials =
-          CacheDigest.template_renders_in(CacheDigest.compiled_source(template), name, view_paths: view_paths)
-        declared = source.scan(CacheDigest::EXPLICIT_DEPENDENCY).flatten
-
-        (dependencies - (inferred_partials - declared) + component_paths).uniq
       end
 
       # @private
