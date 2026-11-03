@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.22.0
+
 * Comment on release pull requests with benchmark results compared to the previous release.
 
     *Joel Hawksley*

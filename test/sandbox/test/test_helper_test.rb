@@ -3,6 +3,21 @@
 require "test_helper"
 
 class TestHelperTest < ViewComponent::TestCase
+  def test_modify_file_processes_pending_view_reloads
+    Rails.application.reloader.reload!
+    refute Rails.application.reloaders.any?(&:updated?)
+
+    path = "app/views/shared/_partial.html.erb"
+    original = File.read(Rails.root.join(path))
+
+    modify_file(path, "#{original}\n") do
+      assert_equal "#{original}\n", File.read(Rails.root.join(path))
+    end
+
+    assert_equal original, File.read(Rails.root.join(path))
+    refute Rails.application.reloaders.any?(&:updated?)
+  end
+
   def test_with_request_url_inside_slots_path
     with_request_url "/slots" do
       render_inline(CurrentPageComponent.new)
