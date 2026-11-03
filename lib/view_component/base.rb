@@ -667,10 +667,10 @@ module ViewComponent
         (sidecar_files - [identifier] + sidecar_directory_files + nested_component_files).uniq
       end
 
-      # `sidecar_files`, looked up once per component while eager loading:
-      # every component looks up its superclasses' templates and translations
-      # too, when it compiles, loads its translations, and computes its cache
-      # digest.
+      # `sidecar_files`, looked up once per component during eager loading or a
+      # digest computation: every component looks up its superclasses' templates
+      # and translations too, when it compiles, loads its translations, and
+      # computes its cache digest.
       #
       # @private
       def __vc_sidecar_files(extensions)

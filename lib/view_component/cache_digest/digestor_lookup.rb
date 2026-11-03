@@ -46,16 +46,18 @@ module ViewComponent
       # everything it renders, which for components rendering a shared helper
       # module is most of the application.
       def tree(name, finder, partial = false, seen = {})
-        pruned = CacheDigest.memo&.fetch(:pruned, nil)
-        cached = finder.digest_cache[name] if pruned && partial
-        return super unless cached
+        CompileCache.with_sidecar_files_cache do
+          pruned = CacheDigest.memo&.fetch(:pruned, nil)
+          cached = finder.digest_cache[name] if pruned && partial
+          next super unless cached
 
-        path = ActionView::TemplatePath.parse(name)
-        template = find_template(finder, path.name, [path.prefix], partial, [])
-        return super unless template
+          path = ActionView::TemplatePath.parse(name)
+          template = find_template(finder, path.name, [path.prefix], partial, [])
+          next super unless template
 
-        pruned[name] = cached
-        seen[template.identifier] ||= ActionView::Digestor::Node.create(name, name.gsub(%r{/_}, "/"), template, partial)
+          pruned[name] = cached
+          seen[template.identifier] ||= ActionView::Digestor::Node.create(name, name.gsub(%r{/_}, "/"), template, partial)
+        end
       end
 
       private

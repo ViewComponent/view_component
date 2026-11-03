@@ -218,6 +218,35 @@ class ViewComponent::Base::UnitTest < Minitest::Test
     end
   end
 
+  def test_nested_file_caches_preserve_the_outer_cache
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, "temporary_component.html.erb")
+      File.write(path, "original")
+
+      ViewComponent::CompileCache.with_sidecar_files_cache do
+        parser = ViewComponent::CompileCache.path_parser
+        assert_equal "original", ViewComponent::CompileCache.read_file(path)
+
+        ViewComponent::CompileCache.with_sidecar_files_cache do
+          assert_same parser, ViewComponent::CompileCache.path_parser
+          File.write(path, "edited")
+          assert_equal "original", ViewComponent::CompileCache.read_file(path)
+        end
+
+        assert_same parser, ViewComponent::CompileCache.path_parser
+        assert_equal "original", ViewComponent::CompileCache.read_file(path)
+
+        assert_raises(RuntimeError) do
+          ViewComponent::CompileCache.with_sidecar_files_cache { raise "nested failure" }
+        end
+        assert_same parser, ViewComponent::CompileCache.path_parser
+        assert_equal "original", ViewComponent::CompileCache.read_file(path)
+      end
+
+      assert_equal "edited", ViewComponent::CompileCache.read_file(path)
+    end
+  end
+
   def test_template_path_parser_is_shared_only_while_eager_loading
     parser = nil
     ViewComponent::CompileCache.with_sidecar_files_cache do

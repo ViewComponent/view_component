@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Share sidecar directory listings and source reads during cold cache digests, and hash shared Ruby and sidecar files once per digest computation or boot-time precomputation.
+
+    *Joel Hawksley*
+
 * Avoid missing-template digest errors for unresolvable interpolated render paths in components and included helpers.
 
     *Joel Hawksley*

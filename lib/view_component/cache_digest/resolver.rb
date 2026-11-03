@@ -160,8 +160,10 @@ module ViewComponent
       end
 
       def ruby_files(component)
-        component_ancestors(component).map(&:identifier).concat(module_files(component))
-          .compact.uniq.select { |path| ::File.exist?(path) }
+        CacheDigest.memoize([:ruby_files, component]) do
+          component_ancestors(component).map(&:identifier).concat(module_files(component))
+            .compact.uniq.select { |path| ::File.exist?(path) }
+        end
       end
 
       # Sidecar template files plus inline templates, which live in the Ruby
@@ -243,7 +245,7 @@ module ViewComponent
       end
 
       def file_digest(path)
-        ActiveSupport::Digest.hexdigest(::File.binread(path))
+        CacheDigest.memoize([:file_digest, path]) { ActiveSupport::Digest.hexdigest(::File.binread(path)) }
       end
 
       # Built once at load time rather than memoized, so no class-level state

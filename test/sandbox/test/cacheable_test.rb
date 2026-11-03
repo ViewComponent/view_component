@@ -472,6 +472,62 @@ class CacheableTest < ViewComponent::TestCase
     clear_digest_cache
   end
 
+  def test_cold_digest_shares_sidecar_directory_listings
+    clear_digest_cache
+    directory = File.dirname(CacheableDiamondComponent.identifier)
+    scans = 0
+    glob = Dir.method(:glob)
+    scan = lambda do |pattern, *args|
+      scans += 1 if pattern == "#{directory}/*"
+      glob.call(pattern, *args)
+    end
+
+    Dir.stub(:glob, scan) { CacheableDiamondComponent.cache_digest }
+
+    assert_equal 1, scans
+  ensure
+    clear_digest_cache
+  end
+
+  def test_file_caching_preserves_the_digest
+    clear_digest_cache
+    uncached = ->(&block) { block.call }
+    without_memoization = ->(_key, &block) { block.call }
+    expected = ViewComponent::CompileCache.stub(:with_sidecar_files_cache, uncached) do
+      ViewComponent::CacheDigest.stub(:memoize, without_memoization) do
+        CacheableDiamondComponent.cache_digest
+      end
+    end
+    clear_digest_cache
+
+    assert_equal expected, CacheableDiamondComponent.cache_digest
+  ensure
+    clear_digest_cache
+  end
+
+  def test_shared_source_files_are_hashed_once_per_computation
+    resolver = ViewComponent::CacheDigest::Resolver.instance
+    path = CacheableComponent.identifier
+    reads = 0
+    binread = File.method(:binread)
+    read = lambda do |filename, *args|
+      reads += 1 if filename == path
+      binread.call(filename, *args)
+    end
+    expected = resolver.source_for(CacheableComponent)
+
+    File.stub(:binread, read) do
+      ViewComponent::CacheDigest.memoizing do
+        assert_equal expected, resolver.source_for(CacheableComponent)
+        resolver.source_for(CacheableSubclassComponent)
+        assert_equal 1, reads
+      end
+
+      assert_equal expected, resolver.source_for(CacheableComponent)
+      assert_equal 2, reads
+    end
+  end
+
   # The children of a dependency whose digest is cached are left out of the
   # tree, so an expiry while the tree is built has to start the digest over.
   def test_digest_recomputes_when_digests_expire_while_the_tree_is_built
