@@ -26,25 +26,28 @@ module ViewComponent
       cache.clear
     end
 
-    # Source files can't change while the application eager loads: share
-    # directory listings, sidecar lookups, and file contents within the block.
-    # Fiber storage keeps the caches from surviving boot.
+    # Share directory listings, sidecar lookups, and file contents within one
+    # eager load or digest computation, but never across reloads.
     def with_sidecar_files_cache
-      Fiber[:__vc_sidecar_files] = {}
-      Fiber[:__vc_sidecar_directories] = {}
-      Fiber[:__vc_source_files] = {}
-      Fiber[:__vc_path_parser] = ActionView::Resolver::PathParser.new
-      yield
-    ensure
-      Fiber[:__vc_sidecar_files] = nil
-      Fiber[:__vc_sidecar_directories] = nil
-      Fiber[:__vc_source_files] = nil
-      Fiber[:__vc_path_parser] = nil
+      return yield if Fiber[:__vc_sidecar_files]
+
+      begin
+        Fiber[:__vc_sidecar_files] = {}
+        Fiber[:__vc_sidecar_directories] = {}
+        Fiber[:__vc_source_files] = {}
+        Fiber[:__vc_path_parser] = ActionView::Resolver::PathParser.new
+        yield
+      ensure
+        Fiber[:__vc_sidecar_files] = nil
+        Fiber[:__vc_sidecar_directories] = nil
+        Fiber[:__vc_source_files] = nil
+        Fiber[:__vc_path_parser] = nil
+      end
     end
 
     def path_parser
       # Its regular expression depends on registered handlers, formats and locales.
-      # Reuse it during eager loading, but not across reloads.
+      # Reuse it during eager loading or a digest computation, but not across reloads.
       Fiber[:__vc_path_parser] || ActionView::Resolver::PathParser.new
     end
 
