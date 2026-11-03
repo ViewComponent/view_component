@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Speed up cold cache digests by skipping the `# Template Dependency:` scan for sources that declare none, and by not translating class names in synthetic templates, which only declare paths.
+
+    *Erik Axel Nielsen*
+
 ## 4.22.0
 
 * Comment on release pull requests with benchmark results compared to the previous release.

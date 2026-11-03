@@ -184,6 +184,10 @@ module ViewComponent
 
       def explicit_dependencies(sources)
         sources.flat_map { |source|
+          # A cheap check first: most sources declare nothing, and the
+          # pattern is slow to scan for in sources with many comments.
+          next [] unless source.include?("Template Dependency:")
+
           declared = source.scan(CacheDigest::EXPLICIT_DEPENDENCY).flatten
 
           # Component class names are translated to the path they're digested
