@@ -285,24 +285,6 @@ module ViewComponent
         Thread.current[COMPILED_SOURCES] = nil
       end
 
-      # How many times `expire_digests` has run, so a digest computed while
-      # one ran can tell.
-      #
-      # @private
-      def expirations
-        @expirations ||= 0
-      end
-
-      # Drop Action View's memoized template digests, leaving its resolver
-      # caches alone: no template changed, only the set of dependencies the
-      # Digestor can see.
-      #
-      # @private
-      def expire_digests
-        @expirations = expirations + 1
-        ActionView::LookupContext::DetailsKey.digest_caches.each(&:clear)
-      end
-
       # Share synthetic templates between every lookup in the block.
       #
       # The Digestor looks a template up once per edge of the tree, before it
@@ -523,6 +505,13 @@ module ViewComponent
 
         register(component)
         virtual_path_for(component)
+      end
+
+      # Drop Action View's memoized template digests, leaving its resolver
+      # caches alone: no template changed, only the set of dependencies the
+      # Digestor can see.
+      def expire_digests
+        ActionView::LookupContext::DetailsKey.digest_caches.each(&:clear)
       end
 
       # Resolve a constant name to any ViewComponent.

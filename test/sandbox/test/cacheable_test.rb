@@ -483,8 +483,12 @@ class CacheableTest < ViewComponent::TestCase
     )
     resolver = ViewComponent::CacheDigest::Resolver.instance
     source_for = resolver.method(:source_for)
+    # Registering a component, as lazy loading does mid-tree, expires every digest.
     expire = lambda do |component|
-      ViewComponent::CacheDigest.expire_digests if component == CacheableLocalAliasComponent
+      if component == CacheableLocalAliasComponent
+        ViewComponent::CacheDigest.registry.delete("cacheable_component")
+        ViewComponent::CacheDigest.register(CacheableComponent)
+      end
       source_for.call(component)
     end
 

@@ -21,20 +21,19 @@ module ViewComponent
         digestor.prepend(self)
       end
 
-      def digest(**)
+      def digest(finder:, **)
         CacheDigest.memoizing do
           previous = CacheDigest.memo[:pruned]
           loop do
-            expirations = CacheDigest.expirations
-            pruned = CacheDigest.memo[:pruned] = []
+            pruned = CacheDigest.memo[:pruned] = {}
             digest = super
 
             # A component that registered while the tree was built expired the
-            # digests the pruned nodes stood in for, so this one is missing
-            # their dependencies.
-            break digest if pruned.empty? || CacheDigest.expirations == expirations
+            # digests the pruned nodes stood in for, so this one, and the
+            # digests computed for them since, are missing their dependencies.
+            break digest if pruned.all? { |name, cached| finder.digest_cache[name].equal?(cached) }
 
-            CacheDigest.expire_digests
+            finder.digest_cache.clear
           end
         ensure
           CacheDigest.memo[:pruned] = previous
@@ -48,13 +47,14 @@ module ViewComponent
       # module is most of the application.
       def tree(name, finder, partial = false, seen = {})
         pruned = CacheDigest.memo&.fetch(:pruned, nil)
-        return super unless pruned && partial && finder.digest_cache.key?(name)
+        cached = finder.digest_cache[name] if pruned && partial
+        return super unless cached
 
         path = ActionView::TemplatePath.parse(name)
         template = find_template(finder, path.name, [path.prefix], partial, [])
         return super unless template
 
-        pruned << name
+        pruned[name] = cached
         seen[template.identifier] ||= ActionView::Digestor::Node.create(name, name.gsub(%r{/_}, "/"), template, partial)
       end
 
