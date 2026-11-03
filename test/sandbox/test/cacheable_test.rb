@@ -447,6 +447,58 @@ class CacheableTest < ViewComponent::TestCase
     ) { CacheableHelperComponent.cache_digest }
   end
 
+  def test_cache_digest_changes_when_a_component_reached_along_two_paths_changes
+    assert_digest_changes(
+      "app/components/cacheable_child_component.html.erb",
+      "<span class=\"cacheable-child\">changed</span>\n"
+    ) { CacheableDiamondComponent.cache_digest }
+  end
+
+  # The Digestor looks a template up once per edge, so without memoizing a
+  # component rendered from two places is built twice.
+  def test_digest_builds_each_component_once
+    clear_digest_cache
+    built = []
+    resolver = ViewComponent::CacheDigest::Resolver.instance
+    source_for = resolver.method(:source_for)
+
+    resolver.stub(:source_for, ->(component) { built << component && source_for.call(component) }) do
+      CacheableDiamondComponent.cache_digest
+    end
+
+    assert_equal built.uniq, built
+    assert_includes built, CacheableChildComponent
+  ensure
+    clear_digest_cache
+  end
+
+  # The children of a dependency whose digest is cached are left out of the
+  # tree, so an expiry while the tree is built has to start the digest over.
+  def test_digest_recomputes_when_digests_expire_while_the_tree_is_built
+    clear_digest_cache
+    expected = CacheableDiamondComponent.cache_digest
+    # Keep the digests of its dependencies, so the next digest prunes them.
+    ViewComponent::CacheDigest.default_finder.digest_cache.delete(
+      "view_component/cache_digest/cacheable_diamond_component.html"
+    )
+    resolver = ViewComponent::CacheDigest::Resolver.instance
+    source_for = resolver.method(:source_for)
+    # Registering a component, as lazy loading does mid-tree, expires every digest.
+    expire = lambda do |component|
+      if component == CacheableLocalAliasComponent
+        ViewComponent::CacheDigest.registry.delete("cacheable_component")
+        ViewComponent::CacheDigest.register(CacheableComponent)
+      end
+      source_for.call(component)
+    end
+
+    resolver.stub(:source_for, expire) do
+      assert_equal expected, CacheableDiamondComponent.cache_digest
+    end
+  ensure
+    clear_digest_cache
+  end
+
   def test_modules_with_temporary_names_are_not_digested
     skip "Module#set_temporary_name requires Ruby 3.3+" unless Module.method_defined?(:set_temporary_name)
 

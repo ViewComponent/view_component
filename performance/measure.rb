@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Measures ViewComponent rendering relative to an equivalent ActionView partial,
+# Measures rendering and cold cache digests relative to ActionView partials,
 # and time spent in ViewComponent during app boot relative to the rest of boot.
 #
 #   bundle exec ruby performance/measure.rb [OUTPUT_JSON]
@@ -23,6 +23,7 @@ $LOAD_PATH.unshift(view_component_lib)
 ENV["RAILS_ENV"] = "production"
 require "rails"
 require "action_controller/railtie"
+require "slim"
 require "view_component"
 
 class PerformanceApp < Rails::Application
@@ -84,7 +85,7 @@ iterations_for = lambda do |block|
 end
 median = ->(values) { values.sort[values.size / 2] }
 
-results = scenarios.to_h do |name, scenario|
+measure = lambda do |name, reference, scenario|
   [reference, scenario].each { |block| 3.times(&block) }
   reference_iterations = iterations_for.call(reference)
   scenario_iterations = iterations_for.call(scenario)
@@ -112,11 +113,12 @@ results = scenarios.to_h do |name, scenario|
     "component_allocations" => allocations.call(scenario)
   }
   puts format("%-20s ratio %.3f  component %.3fms  partial %.3fms", name, ratio, result["component_ms"], result["reference_ms"])
-  [name, result]
+  result
 end
 
-# Boot: time spent in ViewComponent while booting a production app with eager-loaded
-# components, relative to the rest of that boot.
+results = scenarios.to_h { |name, scenario| [name, measure.call(name, reference, scenario)] }
+
+# Cold digests and boot share a generated app with overlapping dependencies.
 Dir.mktmpdir do |root|
   components = File.join(root, "app", "components")
   FileUtils.mkdir_p(components)
@@ -131,12 +133,31 @@ Dir.mktmpdir do |root|
     end
   end
 
-  Integer(ENV.fetch("BOOT_COMPONENTS", 300)).times do |i|
+  component_count = Integer(ENV.fetch("BOOT_COMPONENTS", 300))
+  raise "BOOT_COMPONENTS must be at least 2" if component_count < 2
+
+  # A helper included by every component makes dependencies converge and form
+  # cycles, rather than only following the mostly tree-shaped template renders.
+  shared_components = (([component_count - 6, 0].max)...component_count).to_a
+  shared_renders = shared_components.flat_map do |i|
+    [render_call.call(i), "render Slim#{i}Component.new(name: 'x')"]
+  end
+  File.write(File.join(components, "shared_component_helpers.rb"), <<~RUBY)
+    module SharedComponentHelpers
+      def shared_components
+    #{shared_renders.map { |render| "    #{render}" }.join("\n")}
+      end
+    end
+  RUBY
+
+  component_count.times do |i|
     rendered = render_call.call(i.zero? ? 1 : (i - 1) / 2)
     case i % 3
     when 0
       File.write(File.join(components, "sidecar#{i}_component.rb"), <<~RUBY)
         class Sidecar#{i}Component < ViewComponent::Base
+          include SharedComponentHelpers
+
           def initialize(name:)
             @name = name
           end
@@ -146,12 +167,16 @@ Dir.mktmpdir do |root|
     when 1
       File.write(File.join(components, "inline#{i}_component.rb"), <<~RUBY)
         class Inline#{i}Component < ViewComponent::Base
+          include SharedComponentHelpers
+
           erb_template "<p><%= content %></p><%= #{rendered} %>"
         end
       RUBY
     else
       File.write(File.join(components, "slots#{i}_component.rb"), <<~RUBY)
         class Slots#{i}Component < ViewComponent::Base
+          include SharedComponentHelpers
+
           renders_one :header
           renders_many :items
         end
@@ -161,6 +186,8 @@ Dir.mktmpdir do |root|
 
     File.write(File.join(components, "slim#{i}_component.rb"), <<~RUBY)
       class Slim#{i}Component < ViewComponent::Base
+        include SharedComponentHelpers
+
         def initialize(name:)
           @name = name
         end
@@ -168,6 +195,24 @@ Dir.mktmpdir do |root|
     RUBY
     File.write(File.join(components, "slim#{i}_component.html.slim"), "p = @name\n== render Slim#{i.zero? ? 1 : (i - 1) / 2}Component.new(name: 'x')\n")
   end
+
+  require File.join(components, "shared_component_helpers")
+  Dir[File.join(components, "*_component.rb")].sort.each { |file| require file }
+
+  # New lookup contexts are essential: existing contexts retain their digest
+  # caches even after DetailsKey.clear. Do not warm synthetic sources at boot.
+  cold_digest = lambda do |&block|
+    ActionView::LookupContext::DetailsKey.clear
+    finder = ActionView::LookupContext.new(BenchmarksController.view_paths, formats: [:html])
+    block.call(finder)
+  end
+  digest_reference = proc do
+    cold_digest.call { |finder| ActionView::Digestor.digest(name: "benchmarks/_partial", finder: finder) }
+  end
+  digest_scenario = proc do
+    cold_digest.call { |finder| Sidecar0Component.cache_digest(finder: finder) }
+  end
+  results["cold_digest"] = measure.call("cold_digest", digest_reference, digest_scenario)
 
   boot = lambda do
     output = IO.popen({"VIEW_COMPONENT_LIB" => view_component_lib}, [RbConfig.ruby, File.expand_path("boot.rb", __dir__), root], &:read)
