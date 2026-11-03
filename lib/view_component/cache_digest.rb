@@ -457,20 +457,29 @@ module ViewComponent
       # Dynamic renders can return components without naming their classes,
       # such as `render UI.button`. Keep Action View's guess only if it resolves,
       # without executing application methods to discover what they return.
+      # Interpolated paths are discarded if Rails cannot expand their wildcards.
       def unresolved_partials_rendered_by(calls, name, view_paths)
-        return [] unless view_paths
-
         targets = calls.flat_map { |call| render_targets(call) }
         literal, dynamic = targets.partition do |target|
           target.is_a?(Prism::StringNode) || target.is_a?(Prism::InterpolatedStringNode)
         end
-        return [] if dynamic.empty?
+        interpolated = literal.grep(Prism::InterpolatedStringNode)
+        unresolved = []
+        if interpolated.any?
+          paths = partial_paths_in(interpolated.map { |target| "render(#{target.slice})" }.join("\n"), name)
+          # Rails expands only directory wildcards with a literal prefix.
+          # Older parsers can return truncated paths without any wildcard.
+          unresolved = paths.reject { |path| path.match?(%r{\A[^*]+/\*\z}) }
+          static = literal.grep(Prism::StringNode)
+          unresolved -= partial_paths_in(static.map { |target| "render(#{target.slice})" }.join("\n"), name)
+        end
+        return unresolved unless view_paths && dynamic.any?
 
         inferred = partial_paths_in(dynamic.map { |target| "render(#{target.slice})" }.join("\n"), name)
         declared = partial_paths_in(literal.map { |target| "render(#{target.slice})" }.join("\n"), name)
         finder = ActionView::LookupContext.new(view_paths, variants: :any, locale: I18n.available_locales)
 
-        inferred.reject do |path|
+        unresolved | inferred.reject do |path|
           declared.include?(path) || finder.exists?(path, [], true)
         end
       end

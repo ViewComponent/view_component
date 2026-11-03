@@ -170,6 +170,62 @@ class TemplateRegressionTest < ViewComponent::TestCase
     end
   end
 
+  def test_precomputation_does_not_log_unresolvable_interpolated_helper_dependencies
+    with_component_files(
+      "interpolated_helper.rb" => <<~'RUBY',
+        module TemplateRegressionFixtures::InterpolatedHelper
+          def nested_fields(path, association)
+            render("#{path}/#{association}_fields")
+          end
+        end
+      RUBY
+      "base_component.rb" => <<~RUBY,
+        class TemplateRegressionFixtures::BaseComponent < ViewComponent::Base
+          include TemplateRegressionFixtures::InterpolatedHelper
+        end
+      RUBY
+      "greeting_component.rb" => "class TemplateRegressionFixtures::GreetingComponent < TemplateRegressionFixtures::BaseComponent; end",
+      "greeting_component.html.erb" => "<p>Hello</p>",
+      "control_component.rb" => "class TemplateRegressionFixtures::ControlComponent < ViewComponent::Base; end",
+      "control_component.html.erb" => "<%= render TemplateRegressionFixtures::GreetingComponent.new %>"
+    ) do
+      components = [TemplateRegressionFixtures::GreetingComponent, TemplateRegressionFixtures::ControlComponent]
+      components.each(&:__vc_compile)
+
+      ActionView::Digestor.logger.stub(:error, ->(message) { flunk message }) do
+        ViewComponent::CacheDigest.precompute!(components)
+      end
+
+      refute_includes components.first.__vc_cache_digest_source, "*/*_fields"
+      assert_includes components.last.__vc_cache_digest_source,
+        ViewComponent::CacheDigest.virtual_path_for(components.first)
+    end
+  end
+
+  def test_supported_interpolated_partial_edits_change_component_digest
+    parser = ViewComponent::CacheDigest::RENDER_PARSER.new("test/template", "render \"buttons/\#{kind}\"")
+    unless parser.render_calls.any? { |path| path.gsub(%r{/_}, "/") == "buttons/*" }
+      skip "Action View's render parser does not support interpolated directory wildcards"
+    end
+
+    with_component_files(
+      "wildcard_component.rb" => "class TemplateRegressionFixtures::WildcardComponent < ViewComponent::Base; end",
+      "wildcard_component.html.erb" => "<%= render \"buttons/\#{kind}\" %>",
+      "views/buttons/_button.html.erb" => "original partial"
+    ) do |directory|
+      component = TemplateRegressionFixtures::WildcardComponent
+      component.__vc_cache_digest_source = ViewComponent::CacheDigest::Resolver.instance.source_for(component).freeze
+      resolver = ActionView::FileSystemResolver.new(File.join(directory, "views"))
+      before = component.cache_digest(finder: ActionView::LookupContext.new([resolver]))
+
+      File.write(File.join(directory, "views/buttons/_button.html.erb"), "changed partial")
+      resolver.clear_cache
+      clear_digest_cache
+
+      refute_equal before, component.cache_digest(finder: ActionView::LookupContext.new([resolver]))
+    end
+  end
+
   def test_view_fragments_track_components_assigned_to_locals
     with_component_files(
       "leaf_component.rb" => "class TemplateRegressionFixtures::LeafComponent < ViewComponent::Base; end",

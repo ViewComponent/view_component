@@ -1137,6 +1137,40 @@ class CacheableTest < ViewComponent::TestCase
     )
   end
 
+  def test_unresolvable_interpolated_partial_dependencies_are_discarded
+    sources = [
+      "render(\"\#{path}/\#{association}_fields\")",
+      "render partial: \"\#{path}/\#{association}_fields\"",
+      "render_to_string \"\#{path}/\#{association}_fields\"",
+      "render \"buttons/\#{kind}_fields\"",
+      "render \"\#{path}/\#{name}\"",
+      "render \"\#{kind}_fields\""
+    ]
+
+    each_render_tracker do
+      sources.each do |source|
+        dependencies = ActionView::DependencyTracker.find_dependencies(
+          "test/template", build_template("<%= #{source} %>"), []
+        )
+
+        # Older ERB trackers leave interpolation markers, which the digestor skips.
+        assert_empty dependencies.reject { |path| path.include?("#") }, source
+        [nil, []].each do |view_paths|
+          assert_equal [[], []], ViewComponent::CacheDigest.renders_in(source, "test/template", view_paths: view_paths), source
+        end
+      end
+    end
+  end
+
+  def test_literal_wildcards_are_not_discarded_with_matching_interpolated_paths
+    source = "render \"buttons/*_fields\"; render \"buttons/\#{kind}_fields\""
+
+    assert_equal(
+      [[], ["buttons/*_fields"]],
+      ViewComponent::CacheDigest.renders_in(source, "test/template", view_paths: [])
+    )
+  end
+
   def test_existing_dynamic_partials_still_change_the_digest
     digests = %w[before after].map do |content|
       clear_digest_cache
