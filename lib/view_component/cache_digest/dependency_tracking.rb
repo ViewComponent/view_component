@@ -35,6 +35,8 @@ module ViewComponent
 
           component_paths, inferred_partials =
             CacheDigest.template_renders_in(CacheDigest.compiled_source(template), name, view_paths: view_paths)
+          # Older ERB trackers omit the underscore on unqualified partial paths.
+          inferred_partials |= inferred_partials.map { |path| path.delete_prefix("_") }
           declared = source.scan(CacheDigest::EXPLICIT_DEPENDENCY).flatten
 
           (dependencies - (inferred_partials - declared) + component_paths).uniq

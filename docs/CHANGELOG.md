@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Avoid missing-template digest errors for unresolvable interpolated render paths in components and included helpers.
+
+    *Joel Hawksley*
+
 * Cover shared helper dependencies in the boot benchmark and add a cold cache digest benchmark to the CI performance check.
 
     *Joel Hawksley*
