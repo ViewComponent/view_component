@@ -93,14 +93,22 @@ class BenchmarkWorkflowTest < Minitest::Test
     end
 
     write("artifacts/performance-rails-main/report.md", "Updated Rails main results\n")
-    stdout, stderr, status = run_step("benchmark-comment", "Post release benchmark results", env: {"COMMENT_ID" => "789"})
+    comment_pages = [
+      [
+        {"id" => 123, "user" => {"login" => "contributor"}, "body" => "<!-- view-component-release-benchmarks -->"},
+        {"id" => 456, "user" => {"login" => "github-actions[bot]"}, "body" => "Another comment"}
+      ],
+      [
+        {"id" => 789, "user" => {"login" => "github-actions[bot]"}, "body" => "<!-- view-component-release-benchmarks -->\nOld results"}
+      ]
+    ]
+    stdout, stderr, status = run_step("benchmark-comment", "Post release benchmark results", env: {"COMMENT_PAGES" => JSON.generate(comment_pages)})
 
     assert status.success?, "#{stdout}\n#{stderr}"
     assert_includes read("posted-comment.md"), "Updated Rails main results"
     assert_equal 1, read("commands.log").lines.count { |line| line.include?("--method POST") }
     assert_includes read("commands.log"), "--method PATCH repos/ViewComponent/view_component/issues/comments/789"
-    assert_includes read("commands.log"), '.user.login == "github-actions[bot]"'
-    assert_includes read("commands.log"), 'startswith("<!-- view-component-release-benchmarks -->")'
+    assert_includes read("commands.log"), "--paginate --slurp repos/ViewComponent/view_component/issues/456/comments?per_page=100"
   end
 
   def test_missing_results_are_reported_explicitly
@@ -210,6 +218,7 @@ class BenchmarkWorkflowTest < Minitest::Test
   def prepare_comments
     %w[8.1 main].each { |rails| write("artifacts/performance-rails-#{rails}/report.md", "Results for Rails #{rails}\n") }
     @environment["COMMAND_LOG"] = File.join(@directory, "commands.log")
+    @environment["COMMENT_PAGES"] = JSON.generate([[]])
     mock_commands(<<~BASH)
       gh() {
         printf '%s\\n' "$*" >> "$COMMAND_LOG"
@@ -217,7 +226,7 @@ class BenchmarkWorkflowTest < Minitest::Test
           repos/*/pulls/*) printf '%s\\n' "${CURRENT_HEAD:-$HEAD_SHA}" ;;
           --paginate)
             if [ "${LOOKUP_STATUS:-0}" != "0" ]; then return "$LOOKUP_STATUS"; fi
-            printf '%s' "${COMMENT_ID:-}"
+            printf '%s\\n' "$COMMENT_PAGES"
             ;;
           --method)
             if [ "${COMMENT_STATUS:-0}" != "0" ]; then return "$COMMENT_STATUS"; fi

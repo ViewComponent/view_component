@@ -169,11 +169,9 @@ def modify_file(file, content)
     # recompiles from the now-restored file.
     ViewComponent::CompileCache.invalidate!
 
-    # Restoring a Ruby file leaves a code reload pending. Apply it here, in the
-    # test's own thread: if a system test's server thread picked it up instead,
-    # it would wait for this thread's executor to finish, which never happens
-    # while the test waits on the request.
-    Rails.application.reloader.reload! if File.extname(filename) == ".rb"
+    # Restoring a watched file can leave a code or view reload pending. Apply it
+    # on the test thread before a system-test request can wait for its executor.
+    Rails.application.reloader.reload!
   end
 end
 

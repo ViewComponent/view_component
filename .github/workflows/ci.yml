@@ -68,8 +68,8 @@ jobs:
           done
         } > benchmark-comment.md
 
-        comment_id=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments?per_page=100" \
-          --jq '[.[][] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- view-component-release-benchmarks -->")))] | first | .id // empty')
+        comment_id=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments?per_page=100" |
+          jq -r '[.[][] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- view-component-release-benchmarks -->")))] | first | .id // empty')
         if [ -n "$comment_id" ]; then
           gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" \
             --field body=@benchmark-comment.md --silent
