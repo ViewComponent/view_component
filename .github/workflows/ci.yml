@@ -20,6 +20,63 @@ jobs:
       env:
         RESULT: ${{ needs.benchmark-rails.result }}
       run: test "$RESULT" = success || test "$RESULT" = skipped
+  benchmark-comment:
+    name: Comment on release benchmarks
+    if: >-
+      ${{ !cancelled() && github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          startsWith(github.head_ref, 'release-') }}
+    needs: benchmark-rails
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      pull-requests: write
+    concurrency:
+      group: release-benchmark-comment-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
+    steps:
+    - name: Download benchmark results
+      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+      with:
+        pattern: performance-rails-*
+        path: artifacts
+    - name: Post release benchmark results
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      run: |
+        current_head=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq .head.sha)
+        if [ "$current_head" != "$HEAD_SHA" ]; then
+          echo "Skipping results for an outdated pull request revision."
+          exit 0
+        fi
+
+        {
+          printf '<!-- view-component-release-benchmarks -->\n## Release benchmark results\n\n'
+          printf '[Workflow run](%s/%s/actions/runs/%s)\n' "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+          for rails in 8.1 main; do
+            printf '\n## Rails %s\n\n' "$rails"
+            report="artifacts/performance-rails-$rails/report.md"
+            if [ -f "$report" ]; then
+              cat "$report"
+            else
+              echo "Benchmark results are unavailable. See the workflow run for errors."
+              echo "::warning::No benchmark report for Rails $rails" >&2
+            fi
+          done
+        } > benchmark-comment.md
+
+        comment_id=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments?per_page=100" \
+          --jq '[.[][] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- view-component-release-benchmarks -->")))] | first | .id // empty')
+        if [ -n "$comment_id" ]; then
+          gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" \
+            --field body=@benchmark-comment.md --silent
+        else
+          gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --field body=@benchmark-comment.md --silent
+        fi
   benchmark-rails:
     name: benchmark (Rails ${{ matrix.rails_version }})
     if: github.event_name == 'pull_request'
@@ -30,6 +87,7 @@ jobs:
         rails_version: ["8.1", "main"]
     env:
       BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails_version }}.gemfile
+      RELEASE_PR: ${{ github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'release-') }}
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
@@ -39,6 +97,16 @@ jobs:
         persist-credentials: false
         ref: ${{ github.event.pull_request.base.sha }}
         path: tmp/base
+        fetch-depth: ${{ env.RELEASE_PR == 'true' && '0' || '1' }}
+    - name: Use previous release as benchmark base
+      if: env.RELEASE_PR == 'true'
+      id: release
+      working-directory: tmp/base
+      shell: bash
+      run: |
+        tag=$(git describe --first-parent --tags --abbrev=0 --match 'v[0-9]*')
+        git checkout --detach "$tag"
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
     - name: Setup Ruby
       uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1
       with:
@@ -48,12 +116,16 @@ jobs:
       shell: bash
       env:
         PASSES: 5
+        BASE_REF: ${{ steps.release.outputs.tag || github.event.pull_request.base.sha }}
       run: |
         for round in 1 2 3; do
           VIEW_COMPONENT_LIB=tmp/base/lib bundle exec ruby performance/measure.rb "tmp/performance/base/$round.json"
           bundle exec ruby performance/measure.rb "tmp/performance/head/$round.json"
         done
-        bundle exec ruby performance/compare.rb tmp/performance/base tmp/performance/head | tee -a "$GITHUB_STEP_SUMMARY"
+        {
+          printf 'Base: `%s`; head: `%s` (pull request merge commit).\n\n' "$BASE_REF" "$GITHUB_SHA"
+          bundle exec ruby performance/compare.rb tmp/performance/base tmp/performance/head
+        } | tee -a "$GITHUB_STEP_SUMMARY" tmp/performance/report.md
     - name: Upload performance results
       uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
       if: always()
