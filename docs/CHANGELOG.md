@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Cover shared helper dependencies in the boot benchmark and add a cold cache digest benchmark to the CI performance check.
+
+    *Joel Hawksley*
+
 * Speed up cache digests of components that render shared dependencies, such as a helper module included by most components. The Digestor looks a template up once per edge of the tree rather than once per component, so each synthetic template was rebuilt, and its sources re-parsed, for every place it was rendered from, and every component digested at boot rebuilt the tree of everything it renders. Templates, dependencies and parsed sources are now shared within one digest computation and across boot-time precomputation, and dependencies whose digest is already known are no longer walked again. On an app with 1,547 components, one cold digest drops from 70 s to 0.5 s and boot-time precomputation from 144 s to 13 s, with identical digests.
 
     *Erik Axel Nielsen*

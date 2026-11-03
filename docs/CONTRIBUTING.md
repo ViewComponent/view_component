@@ -91,7 +91,9 @@ bundle exec appraisal rails-8.0 rake
 
 ### Performance
 
-CI compares each pull request against its base branch on Rails 8.1 and Rails main. For each scenario in `performance/measure.rb`, it divides the component render time by the render time of an equivalent partial. It also boots a production app with 300 generated ERB components and 300 generated Slim components, each rendering another component, and divides the time spent in ViewComponent (requiring it, loading components, and compiling them) by the rest of boot. It fails if any ratio is more than 5% higher than the base branch's ratio.
+CI compares each pull request against its base branch on Rails 8.1 and Rails main. For each rendering scenario in `performance/measure.rb`, it divides the component render time by the render time of an equivalent partial. It also measures cold component digests relative to cold partial digests, clearing Action View's digest caches and using a new lookup context for every call.
+
+The digest and boot scenarios use 300 generated ERB components and 300 generated Slim components. Each renders another component and includes a shared helper that references multiple components, exercising overlapping and cyclic dependencies. The boot scenario divides the time spent in ViewComponent (requiring it, loading components, compiling them, and precomputing digests) by the rest of boot. CI fails if any scenario's ratio is more than 5% higher than the base branch's ratio.
 
 To run the comparison locally:
 
