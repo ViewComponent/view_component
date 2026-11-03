@@ -245,7 +245,16 @@ module ViewComponent
       end
 
       def file_digest(path)
-        CacheDigest.memoize([:file_digest, path]) { ActiveSupport::Digest.hexdigest(::File.binread(path)) }
+        CacheDigest.memoize([:file_digest, path]) do
+          # Reuse source reads unless text mode can transcode or translate newlines.
+          source = if ::File::ALT_SEPARATOR.nil? &&
+              (Encoding.default_internal.nil? || Encoding.default_internal == Encoding.default_external)
+            CompileCache.read_file(path)
+          else
+            ::File.binread(path)
+          end
+          ActiveSupport::Digest.hexdigest(source)
+        end
       end
 
       # Built once at load time rather than memoized, so no class-level state

@@ -368,7 +368,8 @@ module ViewComponent
 
         each_node(program, nesting) do |node, scope|
           if node.is_a?(Prism::ConstantReadNode) || node.is_a?(Prism::ConstantPathNode)
-            names << [node.slice, scope] if CONSTANT_NAME.match?(node.slice)
+            name = node.slice
+            names << [name, scope] if CONSTANT_NAME.match?(name)
           elsif render_call?(node)
             if rendered_component(node, scope)
               component_calls << node
@@ -389,9 +390,10 @@ module ViewComponent
       # Class/module bodies add one lexical scope, even for qualified names:
       # `class UI::Card` adds Card, not UI, to Module.nesting.
       def each_node(program, nesting = [])
-        nodes = [[program, nesting]]
-        while (entry = nodes.pop)
-          node, scope = entry
+        # Keep scopes and nodes in one stack rather than allocating a pair per node.
+        nodes = [nesting, program]
+        while (node = nodes.pop)
+          scope = nodes.pop
           yield node, scope
 
           body = nil
@@ -403,7 +405,7 @@ module ViewComponent
           end
 
           node.compact_child_nodes.reverse_each do |child|
-            nodes << [child, child.equal?(body) ? body_scope : scope]
+            nodes.push(child.equal?(body) ? body_scope : scope, child)
           end
         end
       end

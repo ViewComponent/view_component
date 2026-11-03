@@ -175,6 +175,26 @@ class CacheableTest < ViewComponent::TestCase
     assert_equal ["view_component/cache_digest/child_component"], dependencies
   end
 
+  def test_dependency_discovery_restores_lexical_scope_after_nested_bodies
+    source = <<~RUBY
+      module CacheDigestNamespace
+        class ParentComponent
+          ChildComponent
+        end
+        ChildComponent
+      end
+      ChildComponent
+    RUBY
+    dependencies, partials = ViewComponent::CacheDigest.renders_in(source, "test/template")
+
+    assert_equal [
+      "view_component/cache_digest/cache_digest_namespace/parent_component",
+      "view_component/cache_digest/cache_digest_namespace/child_component",
+      "view_component/cache_digest/child_component"
+    ], dependencies
+    assert_empty partials
+  end
+
   def test_qualified_class_declarations_do_not_add_enclosing_namespaces_to_nesting
     source = "class CacheDigestNamespace::ParentComponent; render ChildComponent.new; end"
     dependencies, = ViewComponent::CacheDigest.renders_in(source, "test/template")
@@ -507,24 +527,77 @@ class CacheableTest < ViewComponent::TestCase
 
   def test_shared_source_files_are_hashed_once_per_computation
     resolver = ViewComponent::CacheDigest::Resolver.instance
-    path = CacheableComponent.identifier
-    reads = 0
-    binread = File.method(:binread)
-    read = lambda do |filename, *args|
-      reads += 1 if filename == path
-      binread.call(filename, *args)
+    source = File.binread(CacheableComponent.identifier)
+    hashes = 0
+    hexdigest = ActiveSupport::Digest.method(:hexdigest)
+    hash_source = lambda do |content|
+      hashes += 1 if content.b == source
+      hexdigest.call(content)
     end
     expected = resolver.source_for(CacheableComponent)
 
-    File.stub(:binread, read) do
+    ActiveSupport::Digest.stub(:hexdigest, hash_source) do
       ViewComponent::CacheDigest.memoizing do
         assert_equal expected, resolver.source_for(CacheableComponent)
         resolver.source_for(CacheableSubclassComponent)
-        assert_equal 1, reads
+        assert_equal 1, hashes
       end
 
       assert_equal expected, resolver.source_for(CacheableComponent)
-      assert_equal 2, reads
+      assert_equal 2, hashes
+    end
+  end
+
+  def test_cold_digests_share_ruby_reads_between_hashing_and_dependency_discovery
+    skip "Text reads can change source bytes" if File::ALT_SEPARATOR ||
+      (Encoding.default_internal && Encoding.default_internal != Encoding.default_external)
+
+    clear_digest_cache
+    path = CacheableComponent.identifier
+    reads = 0
+    read = File.method(:read)
+    binread = File.method(:binread)
+
+    File.stub(:read, lambda { |filename, *args|
+      reads += 1 if filename == path
+      read.call(filename, *args)
+    }) do
+      File.stub(:binread, lambda { |filename, *args|
+        reads += 1 if filename == path
+        binread.call(filename, *args)
+      }) do
+        CacheableComponent.cache_digest
+        assert_equal 1, reads
+
+        clear_digest_cache
+        CacheableComponent.cache_digest
+        assert_equal 2, reads
+      end
+    end
+  ensure
+    clear_digest_cache
+  end
+
+  def test_source_hashes_use_binary_reads_when_text_reads_transcode
+    path = CacheableComponent.identifier
+    expected = ActiveSupport::Digest.hexdigest(File.binread(path))
+
+    Encoding.stub(:default_internal, Encoding::UTF_16LE) do
+      File.stub(:read, ->(*) { flunk "read transcoded source" }) do
+        assert_equal expected, ViewComponent::CacheDigest::Resolver.instance.send(:file_digest, path)
+      end
+    end
+  end
+
+  def test_shared_source_reads_preserve_encoded_bytes_and_line_endings
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, "source.rb")
+      File.binwrite(path, "# caf\u00e9\r\n")
+      expected = ActiveSupport::Digest.hexdigest(File.binread(path))
+
+      ViewComponent::CompileCache.with_sidecar_files_cache do
+        assert_equal expected, ViewComponent::CacheDigest::Resolver.instance.send(:file_digest, path)
+      end
     end
   end
 

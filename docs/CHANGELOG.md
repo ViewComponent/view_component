@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Reduce source-file reads and dependency-scanning allocations during cold cache digests and boot-time precomputation.
+
+    *Joel Hawksley*
+
 * Share sidecar directory listings and source reads during cold cache digests, and hash shared Ruby and sidecar files once per digest computation or boot-time precomputation.
 
     *Joel Hawksley*
