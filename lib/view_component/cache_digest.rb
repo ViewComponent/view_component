@@ -468,7 +468,8 @@ module ViewComponent
         if interpolated.any?
           paths = partial_paths_in(interpolated.map { |target| "render(#{target.slice})" }.join("\n"), name)
           # Rails expands only directory wildcards with a literal prefix.
-          unresolved = paths.select { |path| path.include?("*") && !path.match?(%r{\A[^*]+/\*\z}) }
+          # Older parsers can return truncated paths without any wildcard.
+          unresolved = paths.reject { |path| path.match?(%r{\A[^*]+/\*\z}) }
           static = literal.grep(Prism::StringNode)
           unresolved -= partial_paths_in(static.map { |target| "render(#{target.slice})" }.join("\n"), name)
         end

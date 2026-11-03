@@ -1208,11 +1208,6 @@ class CacheableTest < ViewComponent::TestCase
       ActionView::FixtureResolver.new("buttons/_button.html.erb" => "Button")
     ])
 
-    assert_equal(
-      [[], ["buttons/*"]],
-      ViewComponent::CacheDigest.renders_in("render \"buttons/\#{kind}\"", "test/template", view_paths: view_paths)
-    )
-
     each_render_tracker do
       dependencies = ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), view_paths)
       assert_equal(

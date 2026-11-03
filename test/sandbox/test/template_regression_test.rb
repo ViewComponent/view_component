@@ -203,6 +203,11 @@ class TemplateRegressionTest < ViewComponent::TestCase
   end
 
   def test_supported_interpolated_partial_edits_change_component_digest
+    parser = ViewComponent::CacheDigest::RENDER_PARSER.new("test/template", "render \"buttons/\#{kind}\"")
+    unless parser.render_calls.any? { |path| path.gsub(%r{/_}, "/") == "buttons/*" }
+      skip "Action View's render parser does not support interpolated directory wildcards"
+    end
+
     with_component_files(
       "wildcard_component.rb" => "class TemplateRegressionFixtures::WildcardComponent < ViewComponent::Base; end",
       "wildcard_component.html.erb" => "<%= render \"buttons/\#{kind}\" %>",
