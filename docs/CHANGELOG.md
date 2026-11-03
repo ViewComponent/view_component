@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Comment on release pull requests with benchmark results compared to the previous release.
+
+    *Joel Hawksley*
+
 * Reduce source-file reads and dependency-scanning allocations during cold cache digests and boot-time precomputation.
 
     *Joel Hawksley*
