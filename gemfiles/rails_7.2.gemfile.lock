@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    view_component (4.22.0)
+    view_component (4.23.0)
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       prism (>= 1.0)

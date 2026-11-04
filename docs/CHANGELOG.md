@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.23.0
+
 * Restore request-dependent URL generation when using `render_preview` inside `with_request_url`.
 
     *Joel Hawksley*
