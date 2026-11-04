@@ -21,6 +21,10 @@ module ViewComponent
           dependencies = super
           source = template.source
 
+          # Synthetic templates already declare every dependency found in their
+          # sources, as paths.
+          next dependencies if name.start_with?("#{CacheDigest::VIRTUAL_PATH_PREFIX}/")
+
           # `# Template Dependency: SomeComponent` names a class, which Rails
           # would resolve as a template path and never find. Swap it for the path
           # the component is digested under, so the declaration resolves instead
@@ -29,8 +33,6 @@ module ViewComponent
             dependencies = dependencies - [declared] + [virtual_path]
           end
 
-          # Synthetic templates already declare every dependency found in their sources.
-          next dependencies if name.start_with?("#{CacheDigest::VIRTUAL_PATH_PREFIX}/")
           next dependencies unless CacheDigest.template_dependencies?(source, template.handler)
 
           component_paths, inferred_partials =
