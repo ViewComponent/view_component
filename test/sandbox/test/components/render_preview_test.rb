@@ -75,18 +75,9 @@ class RenderPreviewTest < ViewComponent::TestCase
 
   def test_render_preview_preserves_route_parameters_when_preview_parameters_overlap
     with_request_url("/products/42?id=query-id") do
-      render_args = RequestUrlComponentPreview.method(:render_args)
-      preview_parameters = nil
-      capture_parameters = lambda do |name, **options|
-        preview_parameters = options[:params].to_h
-        render_args.call(name, **options)
-      end
+      render_preview(:with_id, from: RequestUrlComponentPreview, params: {id: "preview-id"})
 
-      RequestUrlComponentPreview.stub(:render_args, capture_parameters) do
-        render_preview(:default, from: RequestUrlComponentPreview, params: {id: "preview-id"})
-      end
-
-      assert_equal "preview-id", preview_parameters["id"]
+      assert_selector(".content", exact_text: "preview-id")
       assert_link "Request-dependent link", href: "/products/42?bar=baz", exact: true
       assert_equal "42", vc_test_request.path_parameters[:id]
       assert_equal "query-id", vc_test_request.query_parameters["id"]
