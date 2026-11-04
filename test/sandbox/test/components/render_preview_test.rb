@@ -63,6 +63,54 @@ class RenderPreviewTest < ViewComponent::TestCase
     end
   end
 
+  def test_render_preview_uses_the_request_url_for_request_dependent_links
+    with_request_url("/products") do
+      fragment = render_preview(:default, from: RequestUrlComponentPreview)
+
+      assert_equal "/products", vc_test_request.path
+      assert_selector(".path", text: "/products")
+      assert_equal "/products?bar=baz", fragment.at_css("a")["href"]
+    end
+  end
+
+  def test_render_preview_preserves_route_parameters_when_preview_parameters_overlap
+    with_request_url("/products/42?id=query-id") do
+      render_args = RequestUrlComponentPreview.method(:render_args)
+      preview_parameters = nil
+      capture_parameters = lambda do |name, **options|
+        preview_parameters = options[:params].to_h
+        render_args.call(name, **options)
+      end
+
+      RequestUrlComponentPreview.stub(:render_args, capture_parameters) do
+        render_preview(:default, from: RequestUrlComponentPreview, params: {id: "preview-id"})
+      end
+
+      assert_equal "preview-id", preview_parameters["id"]
+      assert_link "Request-dependent link", href: "/products/42?bar=baz", exact: true
+      assert_equal "42", vc_test_request.path_parameters[:id]
+      assert_equal "query-id", vc_test_request.query_parameters["id"]
+    end
+  end
+
+  def test_render_preview_parameters_override_request_query_parameters
+    with_request_url("/products?title=Query+title") do
+      render_preview(:with_params, from: PreviewComponentPreview, params: {title: "Preview title"})
+
+      assert_text "Preview title"
+      assert_no_text "Query title"
+      assert_equal "Query title", vc_test_request.query_parameters["title"]
+    end
+  end
+
+  def test_render_preview_preserves_the_request_host_and_protocol_for_links
+    with_request_url("/products/42", host: "app.example.com:8443", protocol: :https) do
+      render_preview(:default, from: RequestUrlComponentPreview)
+
+      assert_link "Absolute request-dependent link", href: "https://app.example.com:8443/products/42?bar=baz"
+    end
+  end
+
   def test_render_preview_runs_locale_callbacks_and_restores_the_locale
     render_args = PreviewComponentPreview.method(:render_args)
     locales = []
