@@ -89,14 +89,16 @@ module ViewComponent
       controller_class = Rails.application.config.view_component.previews.controller.constantize
       request = ActionDispatch::TestRequest.new(vc_test_request.env.dup)
       query_parameters = vc_test_request.query_parameters.deep_dup.merge(params.stringify_keys)
-      request.path_parameters = vc_test_request.path_parameters.except(*params.keys.map(&:to_sym)).merge(
-        controller: controller_class.controller_path,
-        action: "previews",
-        path: "#{from.preview_name}/#{name}"
-      )
+      request.path_parameters = vc_test_request.path_parameters.deep_dup
       request.set_header("action_dispatch.request.query_parameters", query_parameters)
       request.set_header(Rack::QUERY_STRING, query_parameters.to_query)
       previews_controller = __vc_test_helpers_build_controller(controller_class, request: request)
+      # Dispatch the preview without replacing the request's URL generation context.
+      previews_controller.params = request.parameters.merge(params.stringify_keys).merge(
+        "controller" => controller_class.controller_path,
+        "action" => "previews",
+        "path" => "#{from.preview_name}/#{name}"
+      )
       previews_controller.set_response!(ActionDispatch::Response.new)
       previews_controller.process(:previews)
       @rendered_content = previews_controller.response.body

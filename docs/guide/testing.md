@@ -231,6 +231,15 @@ class ExampleComponentTest < ViewComponent::TestCase
 end
 ```
 
+`with_request_url` also applies to request-dependent URL generation inside `render_preview`:
+
+```ruby
+with_request_url "/products/42" do
+  render_preview(:default, from: ExampleComponentPreview)
+  assert_link "French", href: "/products/42?locale=fr"
+end
+```
+
 ## Setting `request.host`
 
 Since 3.3.0

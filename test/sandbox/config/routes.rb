@@ -8,6 +8,7 @@ Sandbox::Application.routes.draw do
   get :content, to: "integration_examples#content"
   get :variants, to: "integration_examples#variants"
   get :products, to: "integration_examples#products"
+  get "products/:id", to: "integration_examples#products"
   get :inline_products, to: "integration_examples#inline_products"
   get :cached, to: "integration_examples#cached"
   get :render_check, to: "integration_examples#render_check"

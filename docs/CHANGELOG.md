@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Restore request-dependent URL generation when using `render_preview` inside `with_request_url`.
+
+    *Joel Hawksley*
+
 * Speed up cold cache digests by skipping the `# Template Dependency:` scan for sources that declare none, and by not translating class names in synthetic templates, which only declare paths.
 
     *Erik Axel Nielsen*
