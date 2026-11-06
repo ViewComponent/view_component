@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Add `bin/rails view_component:herb:check`, which compiles component HTML+ERB templates through Herb, and run it with `bin/rails herb:check` on Rails 8.2, as sidecar and inline templates aren't in the view paths that task reads.
+
+    *Clément Joubert*
+
 ## 4.23.0
 
 * Restore request-dependent URL generation when using `render_preview` inside `with_request_url`.
