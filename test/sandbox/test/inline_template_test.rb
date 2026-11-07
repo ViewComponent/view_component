@@ -249,7 +249,7 @@ class InlineErbTest < ViewComponent::TestCase
   # is enabled. This test verifies that components can be compiled and rendered when
   # coverage is running.
   test "file-based templates compile without segfault when coverage is running" do
-    skip unless Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0
+    skip unless Rails.gem_version >= Gem::Version.new("8.1.0.alpha")
 
     with_new_cache do
       with_coverage_running do
@@ -267,7 +267,7 @@ class InlineErbTest < ViewComponent::TestCase
   # Regression test for segfault when coverage is running but annotations are DISABLED.
   # This is the common case in CI environments.
   test "file-based templates compile without segfault when coverage is running and annotations disabled" do
-    skip unless Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0
+    skip unless Rails.gem_version >= Gem::Version.new("8.1.0.alpha")
 
     without_template_annotations do
       with_coverage_running do
@@ -284,7 +284,7 @@ class InlineErbTest < ViewComponent::TestCase
   end
 
   test "inline templates compile without segfault when coverage is running" do
-    skip unless Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0
+    skip unless Rails.gem_version >= Gem::Version.new("8.1.0.alpha")
 
     with_new_cache do
       with_coverage_running do

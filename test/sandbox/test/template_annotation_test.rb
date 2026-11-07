@@ -9,7 +9,7 @@ class TemplateAnnotationTest < ViewComponent::TestCase
   # conditions, otherwise backtraces point at the wrong line and, when coverage
   # is running, template source is stripped away.
   def setup
-    skip unless Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0
+    skip unless Rails.gem_version >= Gem::Version.new("8.1.0.alpha")
   end
 
   def teardown
@@ -53,6 +53,17 @@ class TemplateAnnotationTest < ViewComponent::TestCase
     assert_includes @rendered_content, "Hello, CSS!"
   end
 
+  def test_line_numbers_are_compensated_on_later_major_versions
+    template = ViewComponent::Template::File.new(
+      component: RaisingFormatsComponent,
+      details: ActionView::TemplateDetails.new(nil, :erb, :html, nil),
+      path: "#{Rails.root}/app/components/raising_formats_component.html.erb"
+    )
+
+    with_rails_version("9.0.0") { assert template.send(:erb_newline_compensation_needed?) }
+    with_rails_version("8.0.3") { refute template.send(:erb_newline_compensation_needed?) }
+  end
+
   private
 
   def template_line_number(error, template_file)
@@ -70,5 +81,22 @@ class TemplateAnnotationTest < ViewComponent::TestCase
     yield
   ensure
     Coverage.result unless already_running
+  end
+
+  def with_rails_version(version)
+    major, minor = version.split(".").map(&:to_i)
+    original = {MAJOR: Rails::VERSION::MAJOR, MINOR: Rails::VERSION::MINOR, STRING: Rails::VERSION::STRING}
+
+    replace_version_constants(MAJOR: major, MINOR: minor, STRING: version)
+    yield
+  ensure
+    replace_version_constants(**original)
+  end
+
+  def replace_version_constants(**constants)
+    constants.each do |name, value|
+      Rails::VERSION.send(:remove_const, name)
+      Rails::VERSION.const_set(name, value)
+    end
   end
 end
