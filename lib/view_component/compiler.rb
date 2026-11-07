@@ -88,6 +88,14 @@ module ViewComponent
       gather_templates.map { |template| template.format || :html }.uniq
     end
 
+    # Templates the component compiles from source: sidecar files and inline
+    # templates, but not `#call` methods or templates inherited from a parent.
+    #
+    # @private
+    def source_templates
+      gather_templates.reject(&:inline_call?)
+    end
+
     # @private
     def templates_for_call(method_name)
       gather_templates.select { |template| template.call_method_name == method_name }

@@ -14,6 +14,7 @@ module ViewComponent
   autoload :CompileCache
   autoload :Config
   autoload :Deprecation
+  autoload :HerbChecker
   autoload :InlineTemplate
   autoload :Instrumentation
   autoload :Preview

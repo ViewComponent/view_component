@@ -110,6 +110,10 @@ module ViewComponent
       end
     end
 
+    rake_tasks do
+      load "view_component/tasks/herb.rake" if ViewComponent::HerbChecker.supported?
+    end
+
     initializer "compiler mode" do |_app|
       ViewComponent::Compiler.__vc_development_mode = (Rails.env.development? || Rails.env.test?)
     end
