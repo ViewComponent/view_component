@@ -5,6 +5,10 @@ module ViewComponent
     DEFAULT_FORMAT = :html
     private_constant :DEFAULT_FORMAT
 
+    # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).
+    ERB_NEWLINE_RAILS_VERSION = Gem::Version.new("8.1.0.alpha")
+    private_constant :ERB_NEWLINE_RAILS_VERSION
+
     DataWithSource = Struct.new(:format, :identifier, :short_identifier, :type)
 
     attr_reader :details, :path
@@ -209,7 +213,7 @@ module ViewComponent
     attr_reader :lineno
 
     def erb_newline_compensation_needed?
-      Rails::VERSION::MAJOR >= 8 && Rails::VERSION::MINOR > 0 &&
+      Rails.gem_version >= ERB_NEWLINE_RAILS_VERSION &&
         details.handler == :erb &&
         annotated?
     end
