@@ -61,6 +61,7 @@ class HerbCheckerTest < ActiveSupport::TestCase
 
     assert_equal 1, failures.size
     assert_equal :inline, failures.first.template.type
+    assert_match(/#{File.basename(__FILE__)}:\d+ \(/, failures.first.identifier)
   end
 
   def test_reports_erb_output_in_attribute_names
@@ -102,7 +103,8 @@ class HerbCheckerTest < ActiveSupport::TestCase
     end
 
     assert_equal ["environment"], application["view_component:herb:check"].prerequisites
-    assert_equal ["view_component:herb:check"], application["herb:check"].prerequisites
+    assert_equal ["environment"], application["view_component:herb:report"].prerequisites
+    assert_equal ["view_component:herb:report"], application["herb:check"].prerequisites
   end
 
   private

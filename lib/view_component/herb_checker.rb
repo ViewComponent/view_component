@@ -12,7 +12,11 @@ module ViewComponent
     Failure = Data.define(:component, :template, :error) do
       # @return [String]
       def identifier
-        "#{template.handler_template.short_identifier} (#{component.name || component.inspect})"
+        location = template.handler_template.short_identifier
+        # Herb counts lines from the start of the template, not of the Ruby file.
+        location = "#{location}:#{component.__vc_inline_template.lineno}" if template.type == :inline
+
+        "#{location} (#{component.name || component.inspect})"
       end
     end
 
@@ -34,19 +38,19 @@ module ViewComponent
 
       handler = ActionView::Template::Handlers::ERB.new
 
-      components.flat_map do |component|
-        component.__vc_compiler.source_templates.filter_map do |template|
-          next unless template.html? && template.details.handler == :erb
+      # Share directory listings and file reads across components, as eager
+      # loading does.
+      CompileCache.with_sidecar_files_cache do
+        components.flat_map do |component|
+          component.__vc_compiler.source_templates.filter_map do |template|
+            next unless template.html? && template.details.handler == :erb
 
-          visitors = [::Herb::Engine::Validators::SecurityValidator.new]
-
-          begin
             handler.call(
               template.handler_template,
               template.handler_source,
               implementation: ActionView::Template::Handlers::ERB::Herb,
               validate_ruby: true,
-              visitors: visitors
+              visitors: [::Herb::Engine::Validators::SecurityValidator.new]
             )
             nil
           rescue ::Herb::Engine::CompilationError, ::Herb::Engine::SecurityError => error

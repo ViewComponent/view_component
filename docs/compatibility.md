@@ -18,7 +18,7 @@ ViewComponent is tested against ERB, Haml, and Slim, but it should support most 
 
 Rails 8.2 can compile HTML+ERB templates through [Herb](https://github.com/marcoroth/herb) (`config.action_view.erb_implementation = :herb`), and ships `bin/rails herb:check` to find templates that don't compile with it before adopting it. Component templates, sidecar and inline, compile through Herb too, but aren't in the view paths `herb:check` reads.
 
-`bin/rails view_component:herb:check` compiles the HTML+ERB templates of every component through Herb and reports the ones that fail. `bin/rails herb:check` runs it first, so one command covers both views and components.
+`bin/rails view_component:herb:check` compiles the HTML+ERB templates of every component through Herb and reports the ones that fail. `bin/rails herb:check` reports component failures first, then checks the views, and fails if either does, so one command covers both.
 
 ## Bridgetown (Static Site Generator)
 
