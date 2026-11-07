@@ -53,17 +53,6 @@ class TemplateAnnotationTest < ViewComponent::TestCase
     assert_includes @rendered_content, "Hello, CSS!"
   end
 
-  def test_line_numbers_are_compensated_on_later_major_versions
-    template = ViewComponent::Template::File.new(
-      component: RaisingFormatsComponent,
-      details: ActionView::TemplateDetails.new(nil, :erb, :html, nil),
-      path: "#{Rails.root}/app/components/raising_formats_component.html.erb"
-    )
-
-    with_rails_version("9.0.0") { assert template.send(:erb_newline_compensation_needed?) }
-    with_rails_version("8.0.3") { refute template.send(:erb_newline_compensation_needed?) }
-  end
-
   private
 
   def template_line_number(error, template_file)
@@ -82,6 +71,23 @@ class TemplateAnnotationTest < ViewComponent::TestCase
   ensure
     Coverage.result unless already_running
   end
+end
+
+# The version check doesn't depend on the installed Rails, so it runs on every
+# version, unlike the tests above.
+class TemplateAnnotationRailsVersionTest < ActiveSupport::TestCase
+  def test_line_numbers_are_compensated_on_later_major_versions
+    template = ViewComponent::Template::File.new(
+      component: RaisingFormatsComponent,
+      details: ActionView::TemplateDetails.new(nil, :erb, :html, nil),
+      path: "#{Rails.root}/app/components/raising_formats_component.html.erb"
+    )
+
+    with_rails_version("9.0.0") { assert template.send(:erb_newline_compensation_needed?) }
+    with_rails_version("8.0.3") { refute template.send(:erb_newline_compensation_needed?) }
+  end
+
+  private
 
   def with_rails_version(version)
     major, minor = version.split(".").map(&:to_i)
