@@ -251,7 +251,7 @@ module ViewComponent
       old_controller&.instance_variable_set(:@_url_options, nil)
       yield
     ensure
-      vc_test_request.set_header("HTTP_HOST", old_request_host)
+      vc_test_request.host = old_request_host
       vc_test_request.request_method = old_request_method
       vc_test_request.set_header(Rack::RACK_URL_SCHEME, old_request_scheme)
       vc_test_request.instance_variable_set(:@protocol, old_request_protocol)

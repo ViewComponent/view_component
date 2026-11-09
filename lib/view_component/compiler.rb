@@ -141,7 +141,7 @@ module ViewComponent
           case @current_template
           #{calls}
           else
-            raise ViewComponent::MissingTemplateError.new(self.class.name, details)
+            raise ViewComponent::MissingTemplateError.new(self.class.name, @lookup_context)
           end
         RUBY
       end

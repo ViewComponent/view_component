@@ -18,6 +18,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Fix missing-template errors and request URL restoration with Rails main.
+
+    *Joel Hawksley*
+
 * Keep compensating ERB line numbers for the annotation newline on future major Rails versions. The version check required a minor version above 0, so it would have stopped compensating on the next major's `.0` release.
 
     *Clément Joubert*
