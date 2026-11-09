@@ -14,6 +14,10 @@ nav_order: 6
 
     *Joel Hawksley*
 
+* Keep compensating ERB line numbers for the annotation newline on future major Rails versions. The version check required a minor version above 0, so it would have stopped compensating on the next major's `.0` release.
+
+    *Clément Joubert*
+
 ## 4.23.0
 
 * Restore request-dependent URL generation when using `render_preview` inside `with_request_url`.
