@@ -165,11 +165,13 @@ task :eager_load_check do
 end
 
 # Gems that are used, but not loaded by `rake all_tests`.
+# Older Rails needs redis for eager loading; Rails main uses redis-client.
 GEMS_NOT_LOADED_BY_TESTS = %w[
   appraisal appraisal-run audition erb_lint m rubocop-md standard yard-lint
   benchmark-ips
   bundler rails
   propshaft puma sprockets-rails
+  redis
 ].freeze
 
 desc "Fail if a gem in the Gemfile or gemspec wasn't loaded by the test suite"
