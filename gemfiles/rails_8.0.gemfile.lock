@@ -199,21 +199,21 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
-    nokogiri (1.19.3-aarch64-linux-gnu)
+    nokogiri (1.19.5-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.3-aarch64-linux-musl)
+    nokogiri (1.19.5-aarch64-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.19.3-arm-linux-gnu)
+    nokogiri (1.19.5-arm-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.3-arm-linux-musl)
+    nokogiri (1.19.5-arm-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.19.3-arm64-darwin)
+    nokogiri (1.19.5-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.3-x86_64-darwin)
+    nokogiri (1.19.5-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.3-x86_64-linux-gnu)
+    nokogiri (1.19.5-x86_64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.3-x86_64-linux-musl)
+    nokogiri (1.19.5-x86_64-linux-musl)
       racc (~> 1.4)
     parallel (1.27.0)
     parser (3.3.10.0)
@@ -391,7 +391,7 @@ GEM
     yard (0.9.37)
     yard-activesupport-concern (0.0.1)
       yard (>= 0.8)
-    yard-lint (1.5.1)
+    yard-lint (1.13.1)
       yard (~> 0.9)
       zeitwerk (~> 2.6)
     zeitwerk (2.7.3)
@@ -426,17 +426,17 @@ DEPENDENCIES
   minitest (~> 6)
   minitest-memory
   minitest-mock
-  nokogiri (= 1.19.3)
+  nokogiri (= 1.19.5)
   propshaft (~> 1)
   puma (>= 6)
   rails (~> 8.0.0)
   rails-dom-testing (~> 2.3.0)
   rake (~> 13)
   reactionview
-  redis
+  redis (>= 4, < 6)
   rspec-rails (~> 8)
   rubocop-md (~> 2)
-  simplecov (< 1)
+  simplecov (< 2)
   simplecov-console (< 1)
   slim (~> 5)
   sprockets-rails (~> 3)
@@ -446,10 +446,10 @@ DEPENDENCIES
   warning
   yard (< 1)
   yard-activesupport-concern (< 1)
-  yard-lint (~> 1.5)
+  yard-lint (~> 1.8)
 
 RUBY VERSION
   ruby 3.4.4p34
 
 BUNDLED WITH
-  4.1.0.dev
+  4.0.12

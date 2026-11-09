@@ -6,6 +6,7 @@ appraise "rails-7.1" do
   gem "rails", "~> 7.1.0"
 
   group :development, :test do
+    remove_gem "audition"
     gem "turbo-rails", "~> 1"
     gem "rspec-rails", "~> 7"
   end
@@ -17,6 +18,7 @@ appraise "rails-7.2" do
   gem "rails", "~> 7.2.0"
 
   group :development, :test do
+    remove_gem "audition"
     gem "turbo-rails", "~> 2"
     gem "rspec-rails", "~> 7"
   end
@@ -28,6 +30,7 @@ appraise "rails-8.0" do
   gem "rails", "~> 8.0.0"
 
   group :development, :test do
+    remove_gem "audition"
     gem "turbo-rails", "~> 2"
     gem "rspec-rails", "~> 8"
   end
