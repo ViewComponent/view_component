@@ -1521,9 +1521,8 @@ class CacheableTest < ViewComponent::TestCase
 
   # Run the block under both of Action View's ERB trackers.
   def each_render_tracker
-    handler = ActionView::Template.handler_for_extension(:erb)
     trackers = ActionView::DependencyTracker.instance_variable_get(:@trackers)
-    original = trackers[handler]
+    ActionView::DependencyTracker.instance_variable_set(:@trackers, trackers.dup)
 
     # Rails 7.1 names the Ruby tracker `RipperTracker`.
     ruby_tracker = %i[RubyTracker RipperTracker].find { ActionView::DependencyTracker.const_defined?(_1) }
@@ -1534,7 +1533,7 @@ class CacheableTest < ViewComponent::TestCase
       yield
     end
   ensure
-    trackers[handler] = original
+    ActionView::DependencyTracker.instance_variable_set(:@trackers, trackers)
   end
 
   def digest_of(virtual_path)

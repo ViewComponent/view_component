@@ -63,6 +63,10 @@ When a new version of Rails is released:
 
 _You main need to run `RUBY_VERSION="4.1.0dev" bundle exec appraisal rails-main bundle lock` to lock the rails-main lockfile._
 
+### Updating Rails main
+
+The **Update Rails main** workflow runs every Monday at 09:00 UTC and supports manual runs from the Actions tab.
+
 ## Submitting a pull request
 
 1. [Fork](https://github.com/viewcomponent/view_component/fork) and clone the repository.

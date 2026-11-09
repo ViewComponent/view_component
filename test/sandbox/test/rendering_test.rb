@@ -1237,6 +1237,7 @@ class RenderingTest < ViewComponent::TestCase
         exception.message,
         "No templates for MultipleFormatsComponent match the request"
       )
+      assert_includes exception.message, ":xml"
     end
   end
 
