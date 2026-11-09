@@ -109,17 +109,20 @@ class UpdateRailsMainWorkflowTest < Minitest::Test
     refute steps.any? { |entry| entry["continue-on-error"] || entry["if"] == "always()" }
   end
 
-  def test_changelog_check_exempts_only_the_automated_lockfiles
+  def test_changelog_check_exempts_all_gemfile_lockfiles
     lint = YAML.load_file(File.join(ROOT, ".github/workflows/lint.yml"))
     script = lint.dig("jobs", "changelog", "steps").first.fetch("run")
     script = script.gsub("${{needs.changedfiles.outputs.markdown}}", "")
 
-    [LOCKFILES, LOCKFILES + ["Gemfile.lock", "docs/Gemfile.lock"]].each do |paths|
+    lockfiles = LOCKFILES + ["Gemfile.lock", "docs/Gemfile.lock", "gemfiles/rails_8.1.gemfile.lock",
+      "custom.gemfile.lock", "test/fixtures/Gemfile.lock"]
+    [LOCKFILES, lockfiles].each do |paths|
       stdout, stderr, status = run_shell(script.gsub("${{needs.changedfiles.outputs.all}}", paths.join(" ")))
       assert status.success?, "#{stdout}\n#{stderr}"
     end
 
-    ["lib/view_component/base.rb", "gemfiles/rails_8.1.gemfile.lock", "gemfiles/rails_main.gemfile"].each do |path|
+    ["lib/view_component/base.rb", "Gemfile", "gemfiles/rails_main.gemfile",
+      "package-lock.json", "Gemfile.lock.backup", "NotGemfile.lock"].each do |path|
       stdout, _stderr, status = run_shell(script.gsub("${{needs.changedfiles.outputs.all}}", (LOCKFILES + [path]).join(" ")))
       refute status.success?, path
       assert_includes stdout, "Please make sure that you add a docs/CHANGELOG.md entry"
