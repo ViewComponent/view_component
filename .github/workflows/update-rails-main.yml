@@ -1,9 +1,6 @@
 name: Update Rails main
 
 on:
-  push:
-    branches:
-      - joelhawksley-rails-sha-updates
   schedule:
     - cron: "0 9 * * 1"
   workflow_dispatch:
@@ -31,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: joelhawksley-rails-sha-updates
+          ref: main
           persist-credentials: false
       - name: Checkout Rails main
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -96,15 +93,15 @@ jobs:
         uses: peter-evans/create-pull-request@15733dbdfeedb4f7fdb73d13c6f5ac83b710fab8 # v8
         with:
           token: ${{ github.token }}
-          branch: automation/test-update-rails-main
-          base: joelhawksley-rails-sha-updates
+          branch: automation/update-rails-main
+          base: main
           delete-branch: true
           add-paths: |
             gemfiles/rails_main.gemfile.lock
             gemfiles/rails_main_head.gemfile.lock
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           commit-message: Update Rails main
-          title: Test Rails main updater (do not merge)
+          title: Update Rails main
           body: |
             Update both Rails main builds to `${{ steps.rails.outputs.revision }}`.
 

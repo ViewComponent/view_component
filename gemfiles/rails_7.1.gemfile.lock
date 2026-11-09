@@ -401,7 +401,7 @@ GEM
     yard (0.9.37)
     yard-activesupport-concern (0.0.1)
       yard (>= 0.8)
-    yard-lint (1.13.1)
+    yard-lint (1.8.0)
       yard (~> 0.9)
       zeitwerk (~> 2.6)
     zeitwerk (2.7.3)
