@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 9cc62ec2a5c4ac56f7571f05489da9d27c6df69d
+  revision: 126d0d64d529d4c55d34d6f38e8c7ca3366923ea
   branch: main
   specs:
     actioncable (8.2.0.alpha)
@@ -52,11 +52,12 @@ GIT
       activesupport (= 8.2.0.alpha)
       builder (~> 3.1)
       erubi (~> 1.11)
+      herb (>= 0.10)
       rails-dom-testing (~> 2.2)
-      rails-html-sanitizer (~> 1.7)
+      rails-html-sanitizer (~> 1.7, >= 1.7.2)
     activejob (8.2.0.alpha)
       activesupport (= 8.2.0.alpha)
-      globalid (>= 0.3.6)
+      globalid (>= 1.4.0)
     activemodel (8.2.0.alpha)
       activesupport (= 8.2.0.alpha)
     activerecord (8.2.0.alpha)
@@ -68,7 +69,7 @@ GIT
       activejob (= 8.2.0.alpha)
       activerecord (= 8.2.0.alpha)
       activesupport (= 8.2.0.alpha)
-      marcel (~> 1.0)
+      marcel (~> 2.0)
     activesupport (8.2.0.alpha)
       base64
       bigdecimal
@@ -80,6 +81,7 @@ GIT
       logger (>= 1.4.2)
       minitest (>= 5.1)
       psych (>= 4)
+      ractor-dispatch (>= 0.3.0)
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
@@ -190,7 +192,7 @@ GEM
     ffi (1.17.4-x86_64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
     ffi (1.17.4-x86_64-linux-musl)
-    globalid (1.3.0)
+    globalid (1.4.0)
       activesupport (>= 6.1)
     haml (7.2.0)
       temple (>= 0.8.2)
@@ -219,9 +221,9 @@ GEM
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
-    loofah (2.25.1)
+    loofah (2.25.3)
       crass (~> 1.0.2)
-      nokogiri (>= 1.12.0)
+      nokogiri (>= 1.19.5)
     m (1.7.0)
       rake
     mail (2.9.0)
@@ -230,7 +232,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    marcel (1.1.0)
+    marcel (2.1.0)
     matrix (0.4.3)
     memo_wise (1.13.0)
     method_source (1.1.0)
@@ -299,12 +301,13 @@ GEM
       rack (>= 1.3)
     rackup (2.3.1)
       rack (>= 3)
+    ractor-dispatch (0.3.0)
     rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.7.0)
-      loofah (~> 2.25)
+    rails-html-sanitizer (1.7.2)
+      loofah (~> 2.25, >= 2.25.3)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
     rainbow (3.1.1)
     rake (13.4.2)
@@ -518,7 +521,6 @@ CHECKSUMS
   better_html (2.2.0) sha256=e68ab66ab09696b708333bbf35e8aa3c107500ba7892f528e2111624bdd8cf76
   bigdecimal (4.1.2) sha256=53d217666027eab4280346fba98e7d5b66baaae1b9c3c1c0ffe89d48188a3fbd
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
-  bundler (4.0.21) sha256=7cbf5499b426076aa16c8d28a59e4c2c3aad5a438402abcd961f0119f29f1dd0
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
@@ -542,7 +544,7 @@ CHECKSUMS
   ffi (1.17.4-x86_64-darwin) sha256=aa70390523cf3235096cf64962b709b4cfbd5c082a2cb2ae714eb0fe2ccda496
   ffi (1.17.4-x86_64-linux-gnu) sha256=9d3db14c2eae074b382fa9c083fe95aec6e0a1451da249eab096c34002bc752d
   ffi (1.17.4-x86_64-linux-musl) sha256=3fdf9888483de005f8ef8d1cf2d3b20d86626af206cbf780f6a6a12439a9c49e
-  globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
+  globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
   haml (7.2.0) sha256=87fd2b71f7feab1724337b090a7d767f5ab2d42f08c974f3ead673f18cfcd55a
   herb (0.10.1-aarch64-linux-gnu) sha256=fd9f4f8e0bcd9a421de55ff8810066550e9bcba8c8bf53737b32a04eb2fcbc49
   herb (0.10.1-aarch64-linux-musl) sha256=bc6dac577c25bb7b35fe812987a9da7056aabd3a9394941c2aadf68bcca7c58e
@@ -560,10 +562,10 @@ CHECKSUMS
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
-  loofah (2.25.1) sha256=d436c73dbd0c1147b16c4a41db097942d217303e1f7728704b37e4df9f6d2e04
+  loofah (2.25.3) sha256=545f14eef0cc2a7de80df560530d593232b7c07e515c5c4e37532d9cb5b0185c
   m (1.7.0) sha256=058f793da8150c51353cc59366ffae7774683e868bede3c78f81d920fb9d633a
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
-  marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
+  marcel (2.1.0) sha256=f8b0327111dc7e516331eeefe052e981ce50e2bd826c1042a53cdf047fcc3512
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   memo_wise (1.13.0) sha256=30220c38c4cef410849bc73553c58664dc2c91c6379e4a1df22aea02358b716b
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
@@ -601,9 +603,10 @@ CHECKSUMS
   rack-session (2.1.2) sha256=595434f8c0c3473ae7d7ac56ecda6cc6dfd9d37c0b2b5255330aa1576967ffe8
   rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
   rackup (2.3.1) sha256=6c79c26753778e90983761d677a48937ee3192b3ffef6bc963c0950f94688868
+  ractor-dispatch (0.3.0) sha256=cd2d46743303e00fe500df168b4dde85080160fd9f04539cada4b4dd5e588f68
   rails (8.2.0.alpha)
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
-  rails-html-sanitizer (1.7.0) sha256=28b145cceaf9cc214a9874feaa183c3acba036c9592b19886e0e45efc62b1e89
+  rails-html-sanitizer (1.7.2) sha256=a21ef45b7a6639fc8e2282473c547514cb86ae271616162a946bf89148fa2424
   railties (8.2.0.alpha)
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
@@ -671,4 +674,4 @@ RUBY VERSION
   ruby 4.0.1
 
 BUNDLED WITH
-  4.0.21
+  4.0.20
