@@ -1,6 +1,9 @@
 name: Update Rails main
 
 on:
+  push:
+    branches:
+      - joelhawksley-rails-sha-updates
   schedule:
     - cron: "0 9 * * 1"
   workflow_dispatch:
