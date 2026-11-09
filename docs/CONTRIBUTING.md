@@ -63,6 +63,12 @@ When a new version of Rails is released:
 
 _You main need to run `RUBY_VERSION="4.1.0dev" bundle exec appraisal rails-main bundle lock` to lock the rails-main lockfile._
 
+### Updating Rails main
+
+The **Update Rails main** workflow runs every Monday at 09:00 UTC and supports manual runs from the Actions tab. It updates both Rails main lockfiles to the same Rails commit using Ruby 4.0 and Ruby head, preserving the Rack pin.
+
+The workflow creates or updates one pull request using `GITHUB_TOKEN`. A maintainer must select **Approve workflows to run** on the pull request before reviewing CI results and merging. Resolution failures stop the workflow without publishing partial updates. Automated changes limited to these two lockfiles don't require a changelog entry.
+
 ## Submitting a pull request
 
 1. [Fork](https://github.com/viewcomponent/view_component/fork) and clone the repository.

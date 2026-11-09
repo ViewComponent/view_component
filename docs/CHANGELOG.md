@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Update both Rails main builds to the same Rails commit through a weekly automated pull request.
+
+    *Joel Hawksley*
+
 ## 4.23.0
 
 * Restore request-dependent URL generation when using `render_preview` inside `with_request_url`.

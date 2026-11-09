@@ -71,9 +71,9 @@ jobs:
     steps:
       - name: echo changed files
         run: |
-          # Filter out Gemfile.lock files from changed files
+          # Exclude dependency lockfiles updated by automation.
           ALL_FILES="${{needs.changedfiles.outputs.all}}"
-          FILTERED_FILES=$(echo "$ALL_FILES" | tr ' ' '\n' | grep -v '^Gemfile\.lock$' | grep -v '^docs/Gemfile\.lock$' | tr '\n' ' ' | xargs)
+          FILTERED_FILES=$(echo "$ALL_FILES" | tr ' ' '\n' | sed -E '/^(Gemfile\.lock|docs\/Gemfile\.lock|gemfiles\/rails_main(_head)?\.gemfile\.lock)$/d' | tr '\n' ' ' | xargs)
 
           # Only require changelog if there are other files changed
           if [[ -n "$FILTERED_FILES" ]] && [[ ! "${{needs.changedfiles.outputs.markdown}}" == *"CHANGELOG.md"* ]]; then
