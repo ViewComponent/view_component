@@ -8,7 +8,7 @@ require "tmpdir"
 class PerformanceTest < Minitest::Test
   ROOT = File.expand_path("../..", __dir__)
 
-  def test_measures_rendering_cold_digests_and_boot
+  def test_measures_rendering_cold_digests_boot_and_executor
     Dir.mktmpdir do |directory|
       output = File.join(directory, "performance.json")
       stdout, stderr, status = Open3.capture3(
@@ -23,7 +23,7 @@ class PerformanceTest < Minitest::Test
       assert status.success?, "#{stdout}\n#{stderr}"
 
       results = JSON.parse(File.read(output))
-      assert_equal %w[component inline_call inline_erb_template slots collection cold_digest boot], results["scenarios"].keys
+      assert_equal %w[component inline_call inline_erb_template slots collection cold_digest boot executor], results["scenarios"].keys
       results["scenarios"].each_value do |scenario|
         assert_equal 1, scenario["ratios"].size
         assert_equal scenario["ratios"].first, scenario["ratio"]
@@ -34,20 +34,20 @@ class PerformanceTest < Minitest::Test
     end
   end
 
-  def test_comparison_rejects_cold_digest_and_boot_regressions
+  def test_comparison_rejects_cold_digest_boot_and_executor_regressions
     Dir.mktmpdir do |directory|
       base = File.join(directory, "base.json")
       head = File.join(directory, "head.json")
       results = {
         "rails" => "8.1",
         "ruby" => RUBY_DESCRIPTION,
-        "scenarios" => %w[cold_digest boot].to_h do |name|
+        "scenarios" => %w[cold_digest boot executor].to_h do |name|
           [name, {"ratio" => 1.0, "ratios" => [1.0], "component_allocations" => 100}]
         end
       }
       File.write(base, JSON.generate(results))
 
-      %w[cold_digest boot].each do |name|
+      %w[cold_digest boot executor].each do |name|
         results["scenarios"].each do |scenario_name, scenario|
           scenario["ratio"] = (scenario_name == name) ? 2.0 : 1.0
           scenario["ratios"] = [scenario["ratio"]]

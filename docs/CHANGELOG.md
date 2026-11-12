@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Check component templates for changes from the Rails reloader instead of every executor run, avoiding filesystem scans for Action Cable broadcasts and other executor-only work.
+
+    *Joel Hawksley*
+
 * Avoid missing-template digest errors for namespaced component renders when using Rails' regex ERB dependency tracker.
 
     *Joel Hawksley*
