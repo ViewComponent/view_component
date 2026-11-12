@@ -108,7 +108,12 @@ module ViewComponent
     #     end
     #   end
     # end
+    #
+    # A slot that doesn't wrap a component raises `NoMethodError` for
+    # undefined methods, like any other object.
     def method_missing(symbol, *args, **kwargs, &block)
+      return super unless __vc_component_instance?
+
       @__vc_component_instance.public_send(symbol, *args, **kwargs, &block)
     end
 

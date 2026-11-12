@@ -197,6 +197,33 @@ class SlotableTest < ViewComponent::TestCase
     assert component.items.first.respond_to?(:classes)
   end
 
+  def test_slot_without_component_raises_no_method_error
+    component = SlotsComponent.new
+
+    render_inline component do |c|
+      c.with_title { "Title" }
+      c.with_subtitle.with_content("Subtitle")
+      c.with_footer { "Footer" }
+    end
+
+    default_component = SlotableDefaultComponent.new
+    render_inline default_component
+
+    {
+      block: component.title,
+      with_content: component.subtitle,
+      lambda: component.footer,
+      default: default_component.header
+    }.each do |kind, slot|
+      error = assert_raises(NoMethodError) { slot.unknown_method }
+      assert_equal :unknown_method, error.name
+      assert slot.equal?(error.receiver), "#{kind} slot: raised on #{error.receiver.class}"
+
+      error = assert_raises(NoMethodError) { slot.to_a }
+      assert slot.equal?(error.receiver), "#{kind} slot: to_a raised on #{error.receiver.class}"
+    end
+  end
+
   def test_slot_forwards_kwargs_to_component
     component = SlotsComponent.new
 

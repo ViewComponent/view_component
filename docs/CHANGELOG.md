@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Raise `NoMethodError` on the slot instead of on `nil` when calling an undefined method on a slot without a component, including methods only `nil` defines such as `to_a` or `=~`, which used to return `nil`'s result.
+
+    *Clément Joubert*
+
 * Update both Rails main builds to the same Rails commit through a weekly automated pull request.
 
     *Joel Hawksley*
