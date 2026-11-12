@@ -2,7 +2,8 @@
 # frozen_string_literal: true
 
 # Measures rendering and cold cache digests relative to ActionView partials,
-# and time spent in ViewComponent during app boot relative to the rest of boot.
+# time spent in ViewComponent during app boot relative to the rest of boot,
+# and development executor overhead relative to Rails without ViewComponent.
 #
 #   bundle exec ruby performance/measure.rb [OUTPUT_JSON]
 #
@@ -233,6 +234,35 @@ Dir.mktmpdir do |root|
   }
   puts format("%-20s ratio %.3f  view_component %.3fms  rest of boot %.3fms", "boot", result["ratio"], result["component_ms"], result["reference_ms"])
   results["boot"] = result
+
+  # Non-template directories also contribute to the polling watcher's glob cost.
+  (component_count * 2).times do |i|
+    directory = File.join(root, "app", "models", "model#{i}")
+    FileUtils.mkdir_p(directory)
+    File.write(File.join(directory, "record.rb"), "module Model#{i}; class Record; end; end\n")
+  end
+
+  executor_runs = [true, false].map do |reference|
+    args = [RbConfig.ruby, File.expand_path("executor.rb", __dir__), root]
+    args << "reference" if reference
+    output = IO.popen({"VIEW_COMPONENT_LIB" => view_component_lib}, args, &:read)
+    raise "executor benchmark failed" unless $?.success?
+    JSON.parse(output)
+  end
+  reference_run, component_run = executor_runs
+  reference_samples, component_samples = executor_runs.map { |run| run.fetch("samples") }
+  ratios = reference_samples.zip(component_samples).map { |ref, component| component["seconds"] / ref["seconds"] }
+  result = {
+    "ratio" => median.call(ratios),
+    "ratios" => ratios,
+    "iterations" => {"reference" => reference_run["iterations"], "component" => component_run["iterations"]},
+    "reference_ms" => median.call(reference_samples.map { |sample| sample["seconds"] }) * 1000,
+    "component_ms" => median.call(component_samples.map { |sample| sample["seconds"] }) * 1000,
+    "reference_allocations" => median.call(reference_samples.map { |sample| sample["allocations"] }),
+    "component_allocations" => median.call(component_samples.map { |sample| sample["allocations"] })
+  }
+  puts format("%-20s ratio %.3f  view_component %.3fms  rails %.3fms", "executor", result["ratio"], result["component_ms"], result["reference_ms"])
+  results["executor"] = result
 end
 
 git_sha = IO.popen(["git", "-C", view_component_lib, "rev-parse", "HEAD"], err: File::NULL, &:read).strip

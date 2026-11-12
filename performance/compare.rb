@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 # Compares performance/measure.rb runs and fails when any scenario's
-# component/partial render or cold digest ratio, or boot ratio, regresses by
+# render, cold digest, boot, or development executor ratio regresses by
 # more than THRESHOLD (default 0.05).
 #
 #   ruby performance/compare.rb base.json head.json
@@ -31,7 +31,7 @@ threshold = Float(ENV.fetch("THRESHOLD", 0.05))
 
 puts "### ViewComponent performance (Rails #{head["rails"]}, #{head["ruby"].split.first(2).join(" ")})"
 puts
-puts "Ratios are component render time / equivalent partial render time; for `cold_digest`, cold component digest time / cold partial digest time; and for `boot`, time spent in ViewComponent during boot / the rest of boot. Lower is faster."
+puts "Ratios are component render time / equivalent partial render time; for `cold_digest`, cold component digest time / cold partial digest time; for `boot`, time spent in ViewComponent during boot / the rest of boot; and for `executor`, development executor time with ViewComponent / Rails alone. Lower is faster."
 puts
 puts "| Scenario | Base ratio | Head ratio | Change | Allocations (base → head) | |"
 puts "| --- | ---: | ---: | ---: | ---: | --- |"

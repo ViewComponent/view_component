@@ -14,13 +14,29 @@ require "view_component"
 class TemplateCachingTest < ActiveSupport::TestCase
   include ActiveSupport::Testing::Isolation
 
-  def test_executor_checks_for_template_changes_when_templates_are_not_cached
+  def test_executor_does_not_check_for_template_changes_when_templates_are_not_cached
+    checks = 0
+    watcher = Object.new
+    watcher.define_singleton_method(:updated?) { checks += 1 }
+    watcher.define_singleton_method(:execute_if_updated) { checks += 1 }
+    ViewComponent::CompileCache.stub(:template_watcher, watcher) do
+      app = boot_app("development")
+      refute ActionView::Base.cache_template_loading
+      Thread.new { app.executor.wrap {} }.value
+    end
+
+    assert_equal 0, checks
+  end
+
+  def test_reloader_checks_for_template_changes_when_templates_are_not_cached
     watcher = Minitest::Mock.new
+    watcher.expect(:updated?, true)
     watcher.expect(:execute_if_updated, nil)
     ViewComponent::CompileCache.stub(:template_watcher, watcher) do
       app = boot_app("development")
       refute ActionView::Base.cache_template_loading
-      app.executor.wrap {}
+      assert_includes app.reloaders, watcher
+      app.reloader.wrap {}
     end
 
     watcher.verify
@@ -28,7 +44,7 @@ class TemplateCachingTest < ActiveSupport::TestCase
 
   # Applications and engines often add autoload paths as Pathnames, which
   # ActiveSupport::FileUpdateChecker can't build its glob from.
-  def test_executor_watches_autoload_paths_given_as_pathnames
+  def test_reloader_watches_autoload_paths_given_as_pathnames
     Dir.mktmpdir do |root|
       FileUtils.mkdir_p(File.join(root, "lib/components"))
       app = boot_app("development", root: root) do
@@ -36,7 +52,7 @@ class TemplateCachingTest < ActiveSupport::TestCase
       end
       refute ActionView::Base.cache_template_loading
 
-      app.executor.wrap {}
+      app.reloader.wrap {}
     end
   end
 
@@ -311,13 +327,14 @@ class TemplateCachingTest < ActiveSupport::TestCase
   private
 
   def component_request(app, component_name, variants:)
-    app.routes.draw do
+    app.routes.prepend do
       get "/", to: lambda { |_env|
         context = ActionController::Base.new.view_context
         context.lookup_context.variants = variants
         [200, {"content-type" => "text/html"}, [component_name.constantize.new.render_in(context)]]
       }
     end
+    app.routes.draw {}
     Rack::MockRequest.new(app)
   end
 

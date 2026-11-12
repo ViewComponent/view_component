@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Check component templates for changes from the Rails reloader instead of every executor run, avoiding filesystem scans for Action Cable broadcasts and other executor-only work.
+
+    *Joel Hawksley*
+
 * Raise `NoMethodError` on the slot instead of on `nil` when calling an undefined method on a slot without a component, including methods only `nil` defines such as `to_a` or `=~`, which used to return `nil`'s result.
 
     *Clément Joubert*

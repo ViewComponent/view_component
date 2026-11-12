@@ -99,6 +99,8 @@ CI compares each pull request against its base branch on Rails 8.1 and Rails mai
 
 The digest and boot scenarios use 300 generated ERB components and 300 generated Slim components. Each renders another component and includes a shared helper that references multiple components, exercising overlapping and cyclic dependencies. The boot scenario divides the time spent in ViewComponent (requiring it, loading components, compiling them, and precomputing digests) by the rest of boot. CI fails if any scenario's ratio is more than 5% higher than the baseline's ratio.
 
+The executor scenario runs empty `app.executor.wrap` jobs on four threads in development with template caching disabled and the polling file watcher. It uses the generated components plus 600 model directories and compares against Rails without ViewComponent, catching template scans on executor-only paths such as Action Cable broadcasts.
+
 For same-repository `release-*` pull requests, the baseline is the most recent release tag on the base branch's first-parent history instead. CI posts both Rails comparisons in one pull request comment, including regressions, and updates that comment on subsequent runs.
 
 To run the comparison locally:

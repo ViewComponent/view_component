@@ -152,7 +152,9 @@ module ViewComponent
 
         template_watcher = CompileCache.template_watcher(app.config.file_watcher)
 
-        app.executor.to_run :before do
+        app.reloaders << template_watcher
+        app.reloader.to_run do
+          require_unload_lock!
           template_watcher.execute_if_updated
         end
       end
