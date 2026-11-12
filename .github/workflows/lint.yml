@@ -14,12 +14,12 @@ jobs:
       with:
         persist-credentials: false
     - name: Check for trailing whitespace
-      uses: raisedevs/find-trailing-whitespace@restrict-to-plaintext-only
+      uses: raisedevs/find-trailing-whitespace@737a2cca1ec8819763333a28eac9c83a74bef225
     - name: Check for merge conflicts
       run: git diff --check
       shell: bash
     - name: Ensure all files have newline at EOF
-      uses: Logerfo/newline-action@0.0.4
+      uses: Logerfo/newline-action@d994478bb3b285adf473adcc612693cbd08bd3a4 # 0.0.4
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
   prose:
@@ -41,7 +41,7 @@ jobs:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
         persist-credentials: false
-    - uses: avto-dev/markdown-lint@v1
+    - uses: avto-dev/markdown-lint@04d43ee9191307b50935a753da3b775ab695eceb # v1
       with:
         config: '.github/lint/markdown.json'
         args: 'docs/**/*.md'
@@ -70,13 +70,15 @@ jobs:
     needs: changedfiles
     steps:
       - name: echo changed files
+        env:
+          ALL_FILES: ${{ needs.changedfiles.outputs.all }}
+          MARKDOWN_FILES: ${{ needs.changedfiles.outputs.markdown }}
         run: |
           # Exclude all Gemfile lockfiles.
-          ALL_FILES="${{needs.changedfiles.outputs.all}}"
           FILTERED_FILES=$(echo "$ALL_FILES" | tr ' ' '\n' | sed -E '/(^|\/)(Gemfile|[^/]+\.gemfile)\.lock$/d' | tr '\n' ' ' | xargs)
 
           # Only require changelog if there are other files changed
-          if [[ -n "$FILTERED_FILES" ]] && [[ ! "${{needs.changedfiles.outputs.markdown}}" == *"CHANGELOG.md"* ]]; then
+          if [[ -n "$FILTERED_FILES" ]] && [[ ! "$MARKDOWN_FILES" == *"CHANGELOG.md"* ]]; then
             echo "::error file=CHANGELOG.md,line=1,col=1::Please make sure that you add a docs/CHANGELOG.md entry to describe the changes in this pull request."
             exit 1
           fi
@@ -87,10 +89,10 @@ jobs:
       with:
         persist-credentials: false
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
       with:
         ruby-version: 4.0
-    - uses: actions/cache@v5
+    - uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
       with:
         path: vendor/bundle
         key: gems-build-rails-8-ruby-3.2-${{ hashFiles('**/Gemfile.lock') }}
@@ -110,7 +112,7 @@ jobs:
         fetch-depth: 0
         persist-credentials: false
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
       with:
         ruby-version: 4.0
         bundler-cache: true
@@ -123,7 +125,7 @@ jobs:
       with:
         persist-credentials: false
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
       with:
         ruby-version: 4.0
         bundler-cache: true

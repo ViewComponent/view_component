@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Harden GitHub Actions workflows and dependency updates to address code-scanning alerts.
+
+    *Joel Hawksley*
+
 * Check component templates for changes from the Rails reloader instead of every executor run, avoiding filesystem scans for Action Cable broadcasts and other executor-only work.
 
     *Joel Hawksley*

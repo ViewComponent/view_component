@@ -108,7 +108,7 @@ jobs:
         git checkout --detach "$tag"
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
     - name: Setup Ruby
-      uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1
+      uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
       with:
         ruby-version: 4.0
         bundler-cache: true
@@ -159,7 +159,7 @@ jobs:
       with:
         persist-credentials: false
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
       with:
         ruby-version: ${{ matrix.ruby_version }}
         bundler-cache: true
@@ -171,7 +171,7 @@ jobs:
         RAILS_VERSION: ${{ matrix.rails_version }}
         RUBY_VERSION: ${{ matrix.ruby_version }}
     - name: Upload coverage results
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
       if: always()
       with:
         name: simplecov-resultset-rails${{matrix.rails_version}}-ruby${{matrix.ruby_version}}-${{matrix.mode}}
@@ -218,14 +218,14 @@ jobs:
         path: 'view_component'
         persist-credentials: false
     - name: Setup Ruby
-      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1
+      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
       with:
         ruby-version: 4.0
         working-directory: 'primer_view_components'
     - name: Resolve Primer dependencies against this checkout
       run: bundle lock
     - name: Cache Ruby gems
-      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1
+      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
       with:
         ruby-version: 4.0
         bundler-cache: true
@@ -256,12 +256,12 @@ jobs:
       with:
         persist-credentials: false
     - name: Setup Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1
       with:
         ruby-version: 4.0
         bundler-cache: true
     - name: Download coverage results
-      uses: actions/download-artifact@v5
+      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
     - name: Collate simplecov
       run: |
         bundle exec rake coverage:report
