@@ -35,8 +35,24 @@ module ViewComponent
 
           next dependencies unless CacheDigest.template_dependencies?(source, template.handler)
 
+          # ERB's regex tracker guesses different paths than the Ruby parser,
+          # especially for namespaced components. Ask the registered tracker
+          # about isolated render calls without reentering this extension.
+          if template.handler.is_a?(ActionView::Template::Handlers::ERB)
+            tracker = lambda do |calls|
+              isolated = ActionView::Template.new(
+                calls.map { |call| "<% #{call} %>" }.join("\n"),
+                template.identifier,
+                template.handler,
+                locals: [],
+                virtual_path: name
+              )
+              super(name, isolated, view_paths)
+            end
+          end
+
           component_paths, inferred_partials =
-            CacheDigest.template_renders_in(CacheDigest.compiled_source(template), name, view_paths: view_paths)
+            CacheDigest.template_renders_in(CacheDigest.compiled_source(template), name, view_paths: view_paths, &tracker)
           # Older ERB trackers omit the underscore on unqualified partial paths.
           inferred_partials |= inferred_partials.map { |path| path.delete_prefix("_") }
           declared = source.scan(CacheDigest::EXPLICIT_DEPENDENCY).flatten

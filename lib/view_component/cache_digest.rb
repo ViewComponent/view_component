@@ -178,14 +178,16 @@ module ViewComponent
       # @param source [String] Ruby source
       # @param name [String] virtual path the source is being digested under
       # @param view_paths [ActionView::PathSet, nil] paths to check dynamic partial guesses against
+      # @yieldparam calls [Array<String>] Ruby render calls to track with the template's tracker
+      # @yieldreturn [Array<String>] partial paths inferred by that tracker
       # @return [Array(Array<String>, Array<String>)] synthetic virtual paths of
       #   components and inferred partial virtual paths
-      def template_renders_in(source, name, view_paths: nil)
+      def template_renders_in(source, name, view_paths: nil, &tracker)
         components, component_calls, other_calls = partition_render_calls(Prism.parse(source).value)
 
         [
           component_paths(components),
-          (partials_rendered_by(component_calls, name) - partials_rendered_by(other_calls, name)) |
+          (partials_rendered_by(component_calls, name, &tracker) - partials_rendered_by(other_calls, name, &tracker)) |
             unresolved_partials_rendered_by(other_calls, name, view_paths)
         ]
       end
@@ -439,15 +441,14 @@ module ViewComponent
         renderable if renderable.is_a?(Class) && renderable < ViewComponent::Base
       end
 
-      # Partials Action View's render parser finds in the given calls,
-      # normalized to the form its trackers report. The calls are parsed
-      # together, so the parser runs once rather than once per call. Blocks are
-      # left out, as any renders inside them are calls of their own.
+      # Partials the given tracker, or Action View's render parser, finds in
+      # the given calls. Calls are tracked together rather than once per call.
+      # Blocks are left out, as any renders inside them are calls of their own.
       def partials_rendered_by(calls, name)
         return [] if calls.empty?
 
-        source = calls.map { |call| "#{call.name}(#{call.arguments&.slice})" }.join("\n")
-        partial_paths_in(source, name)
+        sources = calls.map { |call| "#{call.name}(#{call.arguments&.slice})" }
+        block_given? ? yield(sources) : partial_paths_in(sources.join("\n"), name)
       end
 
       def partial_paths_in(source, name)
