@@ -1392,6 +1392,9 @@ class CacheableTest < ViewComponent::TestCase
     source = <<~ERB
       <%= render ErbComponent.new(message: "a") %>
       <%= render(CacheableComponent.with_collection([])) %>
+      <%= render CacheDigestNamespace::ChildComponent.new %>
+      <%= render(CacheDigestNamespace::ChildComponent.with_collection([])) %>
+      <%= render ::CacheDigestNamespace::ChildComponent.new %>
       <%= render "integration_examples/erb_partial" %>
     ERB
 
@@ -1402,7 +1405,8 @@ class CacheableTest < ViewComponent::TestCase
         [
           "integration_examples/erb_partial",
           "view_component/cache_digest/erb_component",
-          "view_component/cache_digest/cacheable_component"
+          "view_component/cache_digest/cacheable_component",
+          "view_component/cache_digest/cache_digest_namespace/child_component"
         ],
         dependencies
       )
@@ -1412,13 +1416,59 @@ class CacheableTest < ViewComponent::TestCase
   def test_partials_named_like_inferred_component_partials_are_kept
     source = <<~ERB
       <%= render ErbComponent.new(message: "a") %>
+      <%= render CacheDigestNamespace::ChildComponent.new %>
       <%= render "news/new" %>
+      <%= render "CacheDigestNamespaces/CacheDigestNamespace" %>
     ERB
 
     each_render_tracker do
       dependencies = ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
 
-      assert_equal ["news/new", "view_component/cache_digest/erb_component"], dependencies
+      assert_equal(
+        [
+          "news/new",
+          "CacheDigestNamespaces/CacheDigestNamespace",
+          "view_component/cache_digest/erb_component",
+          "view_component/cache_digest/cache_digest_namespace/child_component"
+        ],
+        dependencies
+      )
+    end
+  end
+
+  def test_namespaced_component_renders_do_not_log_missing_templates
+    resolver = ActionView::FixtureResolver.new(
+      "test/_template.html.erb" => "<%= render CacheDigestNamespace::ChildComponent.new %>"
+    )
+
+    each_render_tracker do
+      clear_digest_cache
+      ActionView::Base.logger.stub(:error, ->(message) { flunk message }) do
+        refute_empty ActionView::Digestor.digest(
+          name: "test/_template",
+          format: :html,
+          finder: ActionView::LookupContext.new([resolver])
+        )
+      end
+    end
+  ensure
+    clear_digest_cache
+  end
+
+  def test_explicit_dependencies_named_like_inferred_component_partials_are_kept
+    source = <<~ERB
+      <%# Template Dependency: CacheDigestNamespaces/CacheDigestNamespace %>
+      <%= render CacheDigestNamespace::ChildComponent.new %>
+    ERB
+
+    each_render_tracker do
+      assert_equal(
+        [
+          "CacheDigestNamespaces/CacheDigestNamespace",
+          "view_component/cache_digest/cache_digest_namespace/child_component"
+        ],
+        ActionView::DependencyTracker.find_dependencies("test/template", build_template(source), [])
+      )
     end
   end
 
