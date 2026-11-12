@@ -2,9 +2,13 @@ version: 2
 updates:
   - package-ecosystem: "bundler"
     directory: "/"
+    cooldown:
+      default-days: 7
     schedule:
       interval: "daily"
   - package-ecosystem: "bundler"
     directory: "/docs"
+    cooldown:
+      default-days: 7
     schedule:
       interval: "daily"

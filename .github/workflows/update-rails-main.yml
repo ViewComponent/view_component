@@ -90,7 +90,7 @@ jobs:
           end
           RUBY
       - name: Create or update pull request
-        uses: peter-evans/create-pull-request@15733dbdfeedb4f7fdb73d13c6f5ac83b710fab8 # v8
+        uses: peter-evans/create-pull-request@15733dbdfeedb4f7fdb73d13c6f5ac83b710fab8 # v8.1.2
         with:
           token: ${{ github.token }}
           branch: automation/update-rails-main
