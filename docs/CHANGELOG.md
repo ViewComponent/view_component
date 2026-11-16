@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Update all bundle lockfiles through a daily automated pull request.
+
+    *Joel Hawksley*
+
 ## 4.24.0
 
 * Harden GitHub Actions workflows and dependency updates to address code-scanning alerts.

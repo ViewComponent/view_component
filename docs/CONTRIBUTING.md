@@ -67,6 +67,12 @@ _You main need to run `RUBY_VERSION="4.1.0dev" bundle exec appraisal rails-main 
 
 The **Update Rails main** workflow runs every Monday at 09:00 UTC and supports manual runs from the Actions tab.
 
+### Updating dependencies
+
+The **Update dependencies** workflow runs daily at 09:00 UTC and supports manual runs from the Actions tab. It runs `bundle update` for the root, documentation, and all appraisal Gemfiles using their supported Ruby versions, then opens or updates a single pull request when lockfiles change.
+
+Enable **Allow GitHub Actions to create and approve pull requests** in the repository's Actions settings. Pull requests created with `GITHUB_TOKEN` don't trigger other workflows automatically.
+
 ## Submitting a pull request
 
 1. [Fork](https://github.com/viewcomponent/view_component/fork) and clone the repository.
