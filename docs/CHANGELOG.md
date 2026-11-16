@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Update all bundle lockfiles through a daily automated pull request.
+* Update all bundle lockfiles and both Rails main builds through a single daily automated pull request.
 
     *Joel Hawksley*
 
