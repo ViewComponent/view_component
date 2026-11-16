@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "active_job"
+require "active_job/test_case"
+require "turbo/broadcastable/test_helper"
 
 class SerializableProxyTest < ViewComponent::TestCase
   def test_render_later_returns_proxy
