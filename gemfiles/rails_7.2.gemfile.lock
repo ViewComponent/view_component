@@ -171,7 +171,7 @@ GEM
     jbuilder (2.15.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
-    json (3.1.0)
+    json (2.21.2)
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -436,6 +436,7 @@ DEPENDENCIES
   erb_lint
   haml (~> 7)
   jbuilder (~> 2)
+  json (< 3)
   m (~> 1)
   method_source (~> 1)
   minitest (~> 6)

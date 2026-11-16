@@ -21,11 +21,21 @@ jobs:
       pull-requests: write
     env:
       BUNDLE_VERSION: system
+      BUNDLE_LOCAL__RAILS: ${{ github.workspace }}/tmp/rails
+      # The shallow Rails checkout does not contain the previously locked revisions.
+      BUNDLE_DISABLE_LOCAL_REVISION_CHECK: "true"
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: main
+          persist-credentials: false
+      - name: Checkout Rails main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: rails/rails
+          ref: main
+          path: tmp/rails
           persist-credentials: false
       - name: Setup Ruby 3.2
         uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
@@ -51,6 +61,24 @@ jobs:
         uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: "4.0"
+      - name: Record Rails revisions
+        id: rails
+        shell: bash
+        run: |
+          echo "revision=$(git -C tmp/rails rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          ruby <<'RUBY'
+          require "bundler"
+
+          File.open(ENV.fetch("GITHUB_OUTPUT"), "a") do |output|
+            %w[main main_head].each do |version|
+              lockfile = Bundler::LockfileParser.new(File.read("gemfiles/rails_#{version}.gemfile.lock"))
+              source = lockfile.sources.find do |entry|
+                entry.is_a?(Bundler::Source::Git) && entry.uri == "https://github.com/rails/rails.git"
+              end
+              output.puts "#{version}=#{source.options.fetch("revision")}"
+            end
+          end
+          RUBY
       - name: Update root, Rails 8.1, and Rails main dependencies
         run: |
           for gemfile in Gemfile gemfiles/rails_8.1.gemfile gemfiles/rails_main.gemfile; do
@@ -61,7 +89,25 @@ jobs:
         with:
           ruby-version: head
       - name: Update Ruby head dependencies
-        run: bundle update --gemfile gemfiles/rails_main_head.gemfile
+        run: bundle lock --update --add-checksums --gemfile gemfiles/rails_main_head.gemfile
+      - name: Verify Rails revisions
+        env:
+          EXPECTED_REVISION: ${{ steps.rails.outputs.revision }}
+        run: |
+          ruby <<'RUBY'
+          require "bundler"
+
+          %w[main main_head].each do |version|
+            path = "gemfiles/rails_#{version}.gemfile.lock"
+            lockfile = Bundler::LockfileParser.new(File.read(path))
+            source = lockfile.sources.find do |entry|
+              entry.is_a?(Bundler::Source::Git) && entry.uri == "https://github.com/rails/rails.git"
+            end
+            unless source && source.options["revision"] == ENV.fetch("EXPECTED_REVISION") && source.options["branch"] == "main"
+              abort "#{path} must track Rails main at #{ENV.fetch("EXPECTED_REVISION")}"
+            end
+          end
+          RUBY
       - name: Create or update pull request
         uses: peter-evans/create-pull-request@15733dbdfeedb4f7fdb73d13c6f5ac83b710fab8 # v8.1.2
         with:
@@ -77,6 +123,11 @@ jobs:
           commit-message: Update dependencies
           title: Update dependencies
           body: |
-            Run `bundle update` for the root, documentation, and all appraisal Gemfiles.
+            Update dependencies for the root, documentation, and all appraisal Gemfiles.
+
+            Update both Rails main builds to `${{ steps.rails.outputs.revision }}`.
+
+            - [Ruby 4.0 Rails changes](https://github.com/rails/rails/compare/${{ steps.rails.outputs.main }}...${{ steps.rails.outputs.revision }})
+            - [Ruby head Rails changes](https://github.com/rails/rails/compare/${{ steps.rails.outputs.main_head }}...${{ steps.rails.outputs.revision }})
 
             Created with `GITHUB_TOKEN`; other workflows will not run automatically.
