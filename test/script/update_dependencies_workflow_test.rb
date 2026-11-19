@@ -49,6 +49,7 @@ class UpdateDependenciesWorkflowTest < Minitest::Test
       "RUBY_EXECUTABLE" => RbConfig.ruby,
       "BUNDLE_EXECUTABLE" => Gem.bin_path("bundler", "bundle", Bundler::VERSION),
       "BUNDLE_GEMFILE" => nil,
+      "BUNDLE_LOCKFILE" => nil,
       "BUNDLE_APP_CONFIG" => File.join(@directory, ".bundle"),
       "RUBYOPT" => nil
     }
