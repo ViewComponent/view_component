@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Fix automated dependency updates when Ruby head includes unpublished default gems.
+* Fix automated dependency updates when Ruby head includes unpublished default gems, including frozen CI installs.
 
     *Joel Hawksley*
 
