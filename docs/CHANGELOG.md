@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix automated dependency updates when Ruby head includes unpublished default gems.
+
+    *Joel Hawksley*
+
 * Update all bundle lockfiles and both Rails main builds through a single daily automated pull request.
 
     *Joel Hawksley*
