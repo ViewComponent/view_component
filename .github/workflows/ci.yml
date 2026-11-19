@@ -237,6 +237,16 @@ jobs:
         cache-dependency-path: |
           primer_view_components/package-lock.json
           primer_view_components/demo/package-lock.json
+    - name: Set up Chrome 156
+      id: chrome
+      run: |
+        curl --fail --silent --show-error --location \
+          https://storage.googleapis.com/chrome-for-testing-public/156.0.8078.79/linux64/chrome-linux64.zip \
+          -o "$RUNNER_TEMP/chrome.zip"
+        unzip -q "$RUNNER_TEMP/chrome.zip" -d "$RUNNER_TEMP/chrome-156"
+        chrome_path="$RUNNER_TEMP/chrome-156/chrome-linux64/chrome"
+        "$chrome_path" --version
+        echo "chrome-path=$chrome_path" >> "$GITHUB_OUTPUT"
     - name: Install JavaScript dependencies
       run: |
         npm ci
@@ -245,6 +255,7 @@ jobs:
       shell: bash
       env:
         RAKE_TASKS: ${{ matrix.tasks }}
+        BROWSER_PATH: ${{ steps.chrome.outputs.chrome-path }}
       run: |
         read -r -a tasks <<< "$RAKE_TASKS"
         bundle exec rake "${tasks[@]}"

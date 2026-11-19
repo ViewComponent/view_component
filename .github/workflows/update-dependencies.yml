@@ -89,8 +89,15 @@ jobs:
         with:
           ruby-version: head
       - name: Update Ruby head dependencies
-        # Ruby head can ship default gems that are not published, so checksums cannot be generated.
-        run: bundle lock --update --gemfile gemfiles/rails_main_head.gemfile
+        # Ruby head can ship unpublished default gems. Existing checksum sections survive
+        # `bundle lock` and leave empty entries that frozen installs reject.
+        run: |
+          bundle lock --update --gemfile gemfiles/rails_main_head.gemfile
+          ruby <<'RUBY'
+          path = "gemfiles/rails_main_head.gemfile.lock"
+          File.write(path, File.read(path).sub(/^CHECKSUMS\n(?:  .*\n)*\n/, ""))
+          RUBY
+          BUNDLE_FROZEN=true bundle install --gemfile gemfiles/rails_main_head.gemfile
       - name: Verify Rails revisions
         env:
           EXPECTED_REVISION: ${{ steps.rails.outputs.revision }}
