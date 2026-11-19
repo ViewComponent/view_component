@@ -238,7 +238,6 @@ jobs:
           primer_view_components/package-lock.json
           primer_view_components/demo/package-lock.json
     - name: Set up Chrome 156
-      if: matrix.suite == 'System'
       id: chrome
       run: |
         curl --fail --silent --show-error --location \

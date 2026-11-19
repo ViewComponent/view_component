@@ -10,7 +10,7 @@ nav_order: 6
 
 ## main
 
-* Pin Chrome in Primer ViewComponents compatibility system tests to match upstream.
+* Pin Chrome in all Primer ViewComponents compatibility suites to match upstream system tests.
 
     *Joel Hawksley*
 
