@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "active_job"
+require "active_job/base"
 require "active_job/test_case"
 require "turbo/broadcastable/test_helper"
 
