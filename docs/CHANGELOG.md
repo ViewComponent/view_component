@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Pin Chrome in Primer ViewComponents compatibility system tests to match upstream.
+
+    *Joel Hawksley*
+
 * Fix automated dependency updates when Ruby head includes unpublished default gems, including frozen CI installs.
 
     *Joel Hawksley*
