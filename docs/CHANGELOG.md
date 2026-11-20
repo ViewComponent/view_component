@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix inherited `#call` methods overriding subclass sidecar templates for non-HTML requests.
+
+    *Joel Hawksley*
+
 * Pin Chrome in all Primer ViewComponents compatibility suites to match upstream system tests.
 
     *Joel Hawksley*

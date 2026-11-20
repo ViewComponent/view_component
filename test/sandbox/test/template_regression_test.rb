@@ -7,6 +7,33 @@ module TemplateRegressionFixtures
 end
 
 class TemplateRegressionTest < ViewComponent::TestCase
+  def test_sidecar_template_overrides_inherited_call_for_every_format
+    with_component_files(
+      "parent_component.rb" => <<~RUBY,
+        class TemplateRegressionFixtures::ParentComponent < ViewComponent::Base
+          def call = tag.div("parent call")
+        end
+      RUBY
+      "child_component.rb" => "class TemplateRegressionFixtures::ChildComponent < TemplateRegressionFixtures::ParentComponent; end",
+      "child_component.html.erb" => "child template",
+      "grandchild_component.rb" => "class TemplateRegressionFixtures::GrandchildComponent < TemplateRegressionFixtures::ChildComponent; end"
+    ) do
+      context = vc_test_controller.view_context
+
+      2.times do
+        [TemplateRegressionFixtures::ChildComponent, TemplateRegressionFixtures::GrandchildComponent].each do |component|
+          [:turbo_stream, :html, :xml].each do |format|
+            context.lookup_context.formats = [format]
+            assert_includes component.new.render_in(context), "child template"
+          end
+        end
+
+        ViewComponent::CompileCache.invalidate!
+        TemplateRegressionFixtures::ParentComponent.__vc_compile
+      end
+    end
+  end
+
   def test_ordered_format_fallbacks_do_not_share_output_cache
     with_component_files(
       "formats_component.rb" => <<~RUBY,

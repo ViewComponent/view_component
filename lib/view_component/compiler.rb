@@ -255,7 +255,9 @@ module ViewComponent
               if inherited.any?
                 # A format and a variant can share a public call_* alias.
                 inherited.each do |template|
-                  next if templates.any? { |own| own.variant == template.variant && own.format == template.format }
+                  next if templates.any? do |own|
+                    own.variant == template.variant && (own.format || :html) == (template.format || :html)
+                  end
 
                   templates << Template::Inherited.new(component: @component, template: template)
                 end
