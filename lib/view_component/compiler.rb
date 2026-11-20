@@ -85,7 +85,7 @@ module ViewComponent
     #
     # @return [Array<Symbol>]
     def template_formats
-      gather_templates.map { |template| template.format || :html }.uniq
+      gather_templates.map { |template| template.format || Template::DEFAULT_FORMAT }.uniq
     end
 
     # @private
@@ -256,7 +256,8 @@ module ViewComponent
                 # A format and a variant can share a public call_* alias.
                 inherited.each do |template|
                   next if templates.any? do |own|
-                    own.variant == template.variant && (own.format || :html) == (template.format || :html)
+                    own.variant == template.variant &&
+                      (own.format || Template::DEFAULT_FORMAT) == (template.format || Template::DEFAULT_FORMAT)
                   end
 
                   templates << Template::Inherited.new(component: @component, template: template)
