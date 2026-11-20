@@ -10,6 +10,8 @@ nav_order: 6
 
 ## main
 
+## 4.25.0
+
 * Fix inherited `#call` methods overriding subclass sidecar templates for non-HTML requests.
 
     *Joel Hawksley*
