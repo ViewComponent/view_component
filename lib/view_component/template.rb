@@ -3,7 +3,6 @@
 module ViewComponent
   class Template
     DEFAULT_FORMAT = :html
-    private_constant :DEFAULT_FORMAT
 
     # Rails 8.1 added a newline to compiled ERB output (rails/rails#53731).
     ERB_NEWLINE_RAILS_VERSION = Gem::Version.new("8.1.0.alpha")
