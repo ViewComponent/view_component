@@ -10,6 +10,10 @@ nav_order: 6
 
 ## main
 
+* Fix gem publishing workflow failures when waiting for a release to propagate on RubyGems.
+
+    *Joel Hawksley*
+
 ## 4.25.0
 
 * Fix inherited `#call` methods overriding subclass sidecar templates for non-HTML requests.
