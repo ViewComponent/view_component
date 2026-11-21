@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: df8c05111eff6302d32df1920a3408533f091e3a
+  revision: 227bca45236d677c28e969edfea828a1ebb36a7c
   branch: main
   specs:
     actioncable (8.2.0.alpha)
@@ -123,7 +123,8 @@ GEM
       railties
     addressable (2.9.2)
       public_suffix (>= 2.0.2, < 8.0)
-    ansi (1.6.0)
+    ansi (1.6.1)
+      logger
     appraisal (2.5.0)
       bundler
       rake
