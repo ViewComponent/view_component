@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: df8c05111eff6302d32df1920a3408533f091e3a
+  revision: 227bca45236d677c28e969edfea828a1ebb36a7c
   branch: main
   specs:
     actioncable (8.2.0.alpha)
@@ -123,7 +123,8 @@ GEM
       railties
     addressable (2.9.2)
       public_suffix (>= 2.0.2, < 8.0)
-    ansi (1.6.0)
+    ansi (1.6.1)
+      logger
     appraisal (2.5.0)
       bundler
       rake
@@ -528,7 +529,7 @@ CHECKSUMS
   activestorage (8.2.0.alpha)
   activesupport (8.2.0.alpha)
   addressable (2.9.2) sha256=9117c7e7d6ee07230e75ce41fb9401ae55354dc654fcd0e862ba41d539e9a610
-  ansi (1.6.0) sha256=ac9ea0c0ea8d32fb4e271348e609963ac78882f34b73836c2a02b3622e666658
+  ansi (1.6.1) sha256=0465a830a375a15f513096d7bbc1ff9fd49e5db94b6c598e5c25e63d1f3e55a9
   appraisal (2.5.0) sha256=36989221be127913b0dba8d114da2001e6b2dceea7bd4951200eaba764eed3ce
   appraisal-run (1.1.0) sha256=93179b8fe4d7a3469a703dab69deccc88432bfe43f979acdebbe514e21af9789
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
