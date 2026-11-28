@@ -83,9 +83,10 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    addressable (2.9.2)
+    addressable (2.10.0)
       public_suffix (>= 2.0.2, < 8.0)
-    ansi (1.6.0)
+    ansi (1.6.1)
+      logger
     appraisal (2.5.0)
       bundler
       rake
@@ -130,9 +131,9 @@ GEM
     cruise (0.3.0-x86_64-linux-gnu)
     cruise (0.3.0-x86_64-linux-musl)
     csv (3.3.7)
-    cuprite (0.20.1)
+    cuprite (0.21)
       capybara (~> 3.0)
-      ferrum (~> 0.20.1)
+      ferrum (~> 0.21.0)
     date (3.6.0)
     diff-lcs (1.6.2)
     drb (2.2.3)
@@ -146,7 +147,7 @@ GEM
       rubocop (>= 1)
       smart_properties
     erubi (1.13.1)
-    ferrum (0.20.2)
+    ferrum (0.21.0)
       addressable (~> 2.5)
       base64 (~> 0.2)
       concurrent-ruby (~> 1.1)
@@ -185,7 +186,7 @@ GEM
     jbuilder (2.15.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
-    json (3.1.0)
+    json (3.2.0)
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -263,10 +264,10 @@ GEM
       activesupport (>= 7.0.0)
       rack
     public_suffix (7.0.5)
-    puma (8.1.2)
+    puma (8.1.3)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.2.8)
+    rack (3.2.9)
     rack-session (2.1.2)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -355,7 +356,7 @@ GEM
       rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.53.0)
+    rubocop-ast (1.54.0)
       ast (~> 2.4)
       parser (>= 3.3.7.2)
       prism (>= 1.7)
@@ -430,16 +431,16 @@ GEM
     useragent (0.16.11)
     warning (1.6.0)
     websocket (1.2.11)
-    websocket-driver (0.9.0)
+    websocket-driver (0.9.1)
       base64
       websocket-extensions (>= 0.2.0)
-    websocket-extensions (0.2.0)
+    websocket-extensions (0.3.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.45)
+    yard (0.9.46)
     yard-activesupport-concern (0.0.1)
       yard (>= 0.8)
-    yard-lint (1.13.1)
+    yard-lint (1.15.0)
       yard (~> 0.9)
       zeitwerk (~> 2.6)
     zeitwerk (2.8.3)
@@ -507,8 +508,8 @@ CHECKSUMS
   activerecord (8.1.4.1) sha256=bd65599ca0b5d210937f835d42c7aff69d271741c75aab022730be6cbce67e87
   activestorage (8.1.4.1) sha256=0f4e2f114f3584723a80a2c089aacc6170e765a0b2c385c9782e26ed78f05c66
   activesupport (8.1.4.1) sha256=16ac4f341ca65c85a1fcdb8ac73f68891aae9e3c4a6f9c3a27daed8b00017ed7
-  addressable (2.9.2) sha256=9117c7e7d6ee07230e75ce41fb9401ae55354dc654fcd0e862ba41d539e9a610
-  ansi (1.6.0) sha256=ac9ea0c0ea8d32fb4e271348e609963ac78882f34b73836c2a02b3622e666658
+  addressable (2.10.0) sha256=5e13b9c001adf01dd65ad6e0d2a91d2bc07885c0ff2b83f48cbcd95e08d9de62
+  ansi (1.6.1) sha256=0465a830a375a15f513096d7bbc1ff9fd49e5db94b6c598e5c25e63d1f3e55a9
   appraisal (2.5.0) sha256=36989221be127913b0dba8d114da2001e6b2dceea7bd4951200eaba764eed3ce
   appraisal-run (1.1.0) sha256=93179b8fe4d7a3469a703dab69deccc88432bfe43f979acdebbe514e21af9789
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
@@ -532,7 +533,7 @@ CHECKSUMS
   cruise (0.3.0-x86_64-linux-gnu) sha256=a7bdd7c72307a450a9d37f3c7a90c118230ea6122663b32b8c8e52cad32adfa8
   cruise (0.3.0-x86_64-linux-musl) sha256=54ed6809f1d476bf99a3043bc256cca0efed8bbc9df93a55f4e49eac2bbcb7f4
   csv (3.3.7) sha256=15a3f16f6628da8664d455eb634e7f22031bcf53044923caf56975109e71b9f8
-  cuprite (0.20.1) sha256=98694e0ca7be79f066db4dcdb46fada42fb058c2c38aafd9c1d1567bc4b08994
+  cuprite (0.21) sha256=fa5b3232fda92d15eaf6a5404eefee4c7289aac33acd1e20462d1850e9bc58bf
   date (3.6.0) sha256=18ac945c4e24ebd93534f8eab8c2fd8c5604b3e977105b3798d62a1e8d27b580
   diff-lcs (1.6.2) sha256=9ae0d2cba7d4df3075fe8cd8602a8604993efc0dfa934cff568969efb1909962
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
@@ -540,7 +541,7 @@ CHECKSUMS
   erb (6.0.7) sha256=c5ca6dc25b0ef974a44dc8f59fe847577122483b1968a38dec305c60bf91ee92
   erb_lint (0.9.0) sha256=dfb5e40ad839e8d1f0d56ca85ec9a7ac4c9cd966ec281138282f35b323ca7c31
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
-  ferrum (0.20.2) sha256=0bfa34ca95cf81800092c7dafaf8f6fdf75cd24e973300c653ac0669a1c42068
+  ferrum (0.21.0) sha256=7e86981a13c8aad62d31dfb9d44894e071aadc7a09f3b913f19df6be1fe68b5e
   ffi (1.17.4-aarch64-linux-gnu) sha256=b208f06f91ffd8f5e1193da3cae3d2ccfc27fc36fba577baf698d26d91c080df
   ffi (1.17.4-aarch64-linux-musl) sha256=9286b7a615f2676245283aef0a0a3b475ae3aae2bb5448baace630bb77b91f39
   ffi (1.17.4-arm-linux-gnu) sha256=d6dbddf7cb77bf955411af5f187a65b8cd378cb003c15c05697f5feee1cb1564
@@ -563,7 +564,7 @@ CHECKSUMS
   io-console (0.9.5) sha256=83dd9bbf4c4680416629245b39cd4212eb5f4d9a4ea91804870c1f6b846414d5
   irb (1.19.0) sha256=55ee56acbdd6c9fe06a2e6909f46a24e5c41f45f16906bab04e8049cf46f1d27
   jbuilder (2.15.1) sha256=2430bec28fb0cebacb5875b1009cf9d8bc3c303ccb810c4c8b062a4b51457637
-  json (3.1.0) sha256=3ce7ccf8fde58960177a3a756c31f292a4c1e1dedee884547096a5b0604e3bd8
+  json (3.2.0) sha256=4a4e222a9ee6ffb296ab3171b6b39d85fec83afc4e7b57eee17edf68c74aec87
   language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
@@ -608,9 +609,9 @@ CHECKSUMS
   prism (2.1.0-x86_64-linux-musl) sha256=249f45981726923e259b927902246219fa25ad10a76f43849c9aee1a3d3ec5b8
   propshaft (1.3.2) sha256=1d56a3e56a92c21bfc29caf07406b5386b00d4c47ddf357cf989a5a234b1389e
   public_suffix (7.0.5) sha256=1a8bb08f1bbea19228d3bed6e5ed908d1cb4f7c2726d18bd9cadf60bc676f623
-  puma (8.1.2) sha256=3a6d9a34c9a4d0175eabd11b703939b5d43ebe08bc2534ac7dfd4df33a6ceedc
+  puma (8.1.3) sha256=a12de11fb2f20f8a3ef25a5b1447eabe7142846719eeb9672ee8ec0705b8c3a8
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
-  rack (3.2.8) sha256=1fecc85e463ebc7a2a945fff829ffcd549babeb1556384796fad946c28dc4ec7
+  rack (3.2.9) sha256=8235c1d08f0c461bedcff4413bbeba888173e5b09e1332ae951c98f0ee460dcc
   rack-session (2.1.2) sha256=595434f8c0c3473ae7d7ac56ecda6cc6dfd9d37c0b2b5255330aa1576967ffe8
   rack-test (2.3.0) sha256=b118d177cc002c572fc1b6fd8d19c9ed5881a36e8d6f689f9e618f9f861241e8
   rackup (2.3.1) sha256=6c79c26753778e90983761d677a48937ee3192b3ffef6bc963c0950f94688868
@@ -633,7 +634,7 @@ CHECKSUMS
   rspec-rails (8.1.0) sha256=5e6c6a4e7f7d644b56e412d410824f6480c1e5a9c61b8448998236b4a4dbf3be
   rspec-support (3.13.8) sha256=e4160030309b7e3e9d9863dfe720a35dfcc577162f5402cd68fc8c5258a0ffd6
   rubocop (1.91.0) sha256=9c82b7bf391c5d7e3798c5b9996e22a1fe3bd7468e351dfdeb96140c058296d0
-  rubocop-ast (1.53.0) sha256=027984d28485d6502ae4c72f9341080f54f538599f5dbb54f81875a4ddcad574
+  rubocop-ast (1.54.0) sha256=11f7cadec54e593e905b1bb78f2b28bdd4b8e13b34cb82fe49c876e3dd5008c1
   rubocop-md (2.0.4) sha256=0d076b6b5e99dea2ddc928c4bd702497decb9a8400da7808091e02ebcafcfb93
   rubocop-performance (1.26.1) sha256=cd19b936ff196df85829d264b522fd4f98b6c89ad271fa52744a8c11b8f71834
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
@@ -670,12 +671,12 @@ CHECKSUMS
   view_component (4.25.0)
   warning (1.6.0) sha256=a49cdfae19fb77d19afff2efbe45f8ab759e9cd25b4e4ce2c79dbaf46bdb6c9e
   websocket (1.2.11) sha256=b7e7a74e2410b5e85c25858b26b3322f29161e300935f70a0e0d3c35e0462737
-  websocket-driver (0.9.0) sha256=4dfcc6ac0ea1b6771daf5fb54cbbca131e4d5922ea0a65ba2da980370dadbe9f
-  websocket-extensions (0.2.0) sha256=6fb0d0f687aa8adc8eafa5ce68db36dfd6a8ebf232515040ce27c33c1291e589
+  websocket-driver (0.9.1) sha256=8b6c5c0834f77f53b86d486cc761c99d60df807a8264267ea52fca0da660bb1e
+  websocket-extensions (0.3.0) sha256=1492aabd79218294b564e67e9ee6a90abdac1a2981d35a49848bbc39754f0752
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
-  yard (0.9.45) sha256=52e211493f7cb8a3ebf7e104a25a1e73937a3103092545d34cb88fafebb3dc51
+  yard (0.9.46) sha256=9b1ee37b5da942811dc584d8bb2dfd0efca0a72c44be30bf8282c34955902855
   yard-activesupport-concern (0.0.1) sha256=be790cb0efc23e2e87677063598ac8b743586154657bbd9655a7f03ce78390ef
-  yard-lint (1.13.1) sha256=d695e4681507ff715fca1a929ec85b83211c3e8ba65adee92cb8078fa04a2051
+  yard-lint (1.15.0) sha256=e96da1b8cd052c5af09616db7729c7e9aa651a984c63ea322f55c9e422e52480
   zeitwerk (2.8.3) sha256=2c85125a8467ce069e20123d1e709a08955c9d29c118c25b46b7b7fafdbb92e5
 
 RUBY VERSION
